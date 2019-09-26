@@ -1,56 +1,38 @@
 //===================================================================================================================================
-//【Splash.h】
+//【SplashSprite.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
-// [更新日]2019/09/20
+// [作成日]2019/09/23
+// [更新日]2019/09/23
 //===================================================================================================================================
 #pragma once
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "AbstractScene.h"
-//#include "Splash2D.h"
 #include "Sprite.h"
-#include "SplashSprite.h"
 
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
-namespace splashNS
+namespace splashSpriteNS
 {
 	//スプラッシュスプライト情報の定義
-	const int WIDTH = 800;
-	const int HEIGHT = 568;
-	const D3DXVECTOR3 POSITION = D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 2, 0.0f);
-	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 0);
-
-	//シーン時間
-	const float SCENE_TIME = 10.0f;
+	const int WIDTH				= 800;
+	const int HEIGHT			= 568;
+	const D3DXVECTOR3 POSITION	= D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 2, 0.0f);
+	const D3DXVECTOR3 ROTATION	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	const D3DCOLOR COLOR		= D3DCOLOR_RGBA(255, 255, 255, 0);
 }
 
 //===================================================================================================================================
-//【スプラッシュシーンクラス】
+//【スプラッシュスプライトクラス】
 //===================================================================================================================================
-class Splash :public AbstractScene
+class SplashSprite :public Sprite
 {
-private:
-	// スプラッシュSprite
-	SplashSprite* splashSprite;
 
 public:
-	Splash();
-	~Splash();
-	virtual void initialize() override;
-	virtual void update(float frameTime) override;
-	virtual void render() override;
-	virtual void collisions() override;
-	virtual void AI() override;
-	virtual void uninitialize() override;
-	void renderUI();
-
-#ifdef _DEBUG
-	virtual void createGUI() override;
-#endif
+	SplashSprite();
+	~SplashSprite();
+	void update(float rate);
 };
 

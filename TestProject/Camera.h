@@ -2,7 +2,7 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/09/24
 //===================================================================================================================================
 #pragma once
 
@@ -19,7 +19,8 @@
 namespace cameraNS {
 	const float LIMIT_BOTTOM_Y = -10.0f;
 	const float LIMIT_TOP_Y = 40.0f;
-
+	const float INIT_NEAR_Z = 0.1f;
+	const float INIT_FAR_Z = 10000.0f;
 }
 
 //===================================================================================================================================
@@ -34,6 +35,8 @@ public:
 
 	float fieldOfView;					//視野角
 	float aspect;						//画面縦横比
+	float nearZ;						//視認近距離
+	float farZ;							//視認遠距離
 	DWORD windowWidth;
 	DWORD windowHeight;
 	bool onGaze;						//=true 注視ありモード
@@ -56,6 +59,7 @@ public:
 	~Camera();
 	HRESULT initialize(DWORD _windowWidth, DWORD _windowHeight);
 	void update();
+	void outputGUI();
 
 	void rotation(D3DXVECTOR3 axis, float angle);
 	void lockOn(D3DXVECTOR3 lockOnTarget,float frameTime);
@@ -90,4 +94,7 @@ public:
 	void setTargetZ(D3DXVECTOR3* targetAxisZ) { targetZ = targetAxisZ; }
 	void setRelativeGaze(D3DXVECTOR3 _relativeGaze) { relativeGaze = _relativeGaze;}
 	HRESULT setViewProjection();
+	void setNearZ(float value);
+	void setFarZ(float value);
+
 };

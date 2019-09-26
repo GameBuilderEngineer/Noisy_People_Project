@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/09/19
+// [更新日]2019/09/24
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -11,11 +11,11 @@
 #include "Director.h"
 #include "Splash.h"
 #include "Title.h"
-//#include "Tutorial.h"
-//#include "Operation.h"
-//#include "Credit.h"
-//#include "Game.h"
-//#include "Result.h"
+#include "Tutorial.h"
+#include "Operation.h"
+#include "Credit.h"
+#include "Game.h"
+#include "Result.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -44,13 +44,12 @@ Director::~Director() {
 	SAFE_DELETE(imgui);
 	SAFE_DELETE(memory);
 #endif // _DEBUG
-	//SAFE_DELETE(camera);
 	SAFE_DELETE(input);
 	SAFE_DELETE(scene);
+	SAFE_DELETE(textureLoader);
 	//SAFE_DELETE(sound);
-	//SAFE_DELETE(textureLoader);
-	//SAFE_DELETE(staticMeshLoader);
-	//SAFE_DELETE(shaderLoader);
+	SAFE_DELETE(staticMeshLoader);
+	SAFE_DELETE(shaderLoader);
 	//SAFE_DELETE(textManager);
 	//SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);
@@ -90,14 +89,14 @@ HRESULT Director::initialize() {
 	window->setInput();
 
 	//textureLoader
-	//textureLoader = new TextureLoader;
-	//textureLoader->load(d3d->device);
+	textureLoader = new TextureLoader;
+	textureLoader->load(getDevice());
 
 	//メッシュ読み込み
 	// Xファイルからメッシュをロードする	
 	//StaticMesh
-	//staticMeshLoader = new StaticMeshLoader;
-	//staticMeshLoader->load(d3d->device);
+	staticMeshLoader = new StaticMeshLoader;
+	staticMeshLoader->load(getDevice());
 
 	//HierarchyMesh
 	//setVisualDirectory();
@@ -106,8 +105,8 @@ HRESULT Director::initialize() {
 
 	//シェーダー読込
 	//Shader
-	//shaderLoader = new ShaderLoader;
-	//shaderLoader->load(d3d->device);
+	shaderLoader = new ShaderLoader;
+	shaderLoader->load(d3d->device);
 
 	//テキストデータ読込
 	//textManager = new TextManager();
@@ -199,6 +198,12 @@ void Director::run(HINSTANCE _instance) {
 // [用途]基本的にループする内容
 //===================================================================================================================================
 void Director::mainLoop() {
+	//リセット
+	if (input->wasKeyPressed(VK_F5))
+	{
+		scene->changeScene(SceneList::SPLASH);
+		changeNextScene();
+	}
 	if (scene->checkChangeOrder())//シーン切替フラグの確認
 		changeNextScene();
 
@@ -392,13 +397,12 @@ void Director::changeNextScene() {
 	{
 	case SceneList::SPLASH:					scene = new Splash(); break;
 	case SceneList::TITLE:					scene = new Title(); break;
-	//case SceneList::SELECT:					scene = new CharacterSelect(); break;
-	//case SceneList::TUTORIAL:				scene = new Tutorial(); break;
-	//case SceneList::OPERATION:				scene = new Operation(); break;
-	//case SceneList::CREDIT:					scene = new Credit(); break;
-	//case SceneList::GAME:					scene = new Game(); break;
-	//case SceneList::RESULT:					scene = new Result(); break;
-	//case SceneList::NONE_SCENE:				break;
+	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
+	case SceneList::OPERATION:				scene = new Operation(); break;
+	case SceneList::CREDIT:					scene = new Credit(); break;
+	case SceneList::GAME:					scene = new Game(); break;
+	case SceneList::RESULT:					scene = new Result(); break;
+	case SceneList::NONE_SCENE:				break;
 	}
 	//scene->setGameMaster(gameMaster);//ゲーム管理情報をシーンへセット
 	//scene->setAnimationLoader(animationLoader);

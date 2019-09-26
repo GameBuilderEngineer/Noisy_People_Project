@@ -136,6 +136,24 @@
     <Filter Include="Game Layer\Scene\Tutorial">
       <UniqueIdentifier>{3caaa803-1a3e-409a-94b2-1181033f6eeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Splash\SplashSprite">
+      <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\SelectItem">
+      <UniqueIdentifier>{6ebe25ac-c757-49a9-8891-66d344020c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player">
+      <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Object\InstancingObject">
+      <UniqueIdentifier>{8da1c1b8-ded5-4529-912b-d06adff668d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Object\StaticMeshObject">
+      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Object\SkinMeshObject">
+      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -233,6 +251,30 @@
     </ClCompile>
     <ClCompile Include="Ray.cpp">
       <Filter>Constant Layer\Collision\Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Loader Layer\TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshLoader.cpp">
+      <Filter>Loader Layer\StaticMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashSprite.cpp">
+      <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game Layer\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Constant Layer\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingBillboard.cpp">
+      <Filter>Constant Layer\InstancingBillboad</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshObject.cpp">
+      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Loader Layer\ShaderLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +382,30 @@
     </ClInclude>
     <ClInclude Include="Ray.h">
       <Filter>Constant Layer\Collision\Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Loader Layer\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshLoader.h">
+      <Filter>Loader Layer\StaticMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashSprite.h">
+      <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game Layer\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Constant Layer\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>Constant Layer\InstancingBillboad</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshObject.h">
+      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLoader.h">
+      <Filter>Loader Layer\ShaderLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

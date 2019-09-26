@@ -11,13 +11,14 @@
 //===================================================================================================================================
 #include <vector>
 #include "AbstractScene.h"
+#include "Player.h"
+#include "StaticMeshObject.h"
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
 //#include "InstancingBillboard.h"
 
 //#include "Object.h"
-//#include "Player.h"
 //#include "Text.h"
 
 //===================================================================================================================================
@@ -25,33 +26,15 @@
 //===================================================================================================================================
 namespace gameNS
 {
-	//プレイヤー数
-	enum {
-		PLAYER1,
-		PLAYER2,
-		NUM_PLAYER,
-	};
 
 	//プレイヤー初期位置
-	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
-	{
-		D3DXVECTOR3(0,100,0),
-		D3DXVECTOR3(0,-100,0)
-	};
-
+	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[NUM_PLAYER] =
-	{
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
-#ifdef _DEBUG
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
-#else
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
-#endif // _DEBUG
-	};
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f);
 
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10,0);
+	//カメラ相対注視位置
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,0,0);
 
 	//const int NUM_SAMPLE = 1000;
 
@@ -72,7 +55,10 @@ private:
 	//Object testCube;				//Sample
 
 	//プレイヤー
-	//Player *player[gameNS::NUM_PLAYER];
+	Player *player;
+
+	//フィールド
+	StaticMeshObject* testField;	
 
 public:
 	Game();
@@ -84,7 +70,7 @@ public:
 	virtual void AI() override;
 	virtual void uninitialize() override;
 
-	//void render3D(Camera currentCamera);
+	void render3D(Camera currentCamera);
 	void renderUI();
 
 #ifdef _DEBUG

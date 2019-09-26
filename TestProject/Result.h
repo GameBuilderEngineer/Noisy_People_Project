@@ -2,7 +2,7 @@
 //【Result.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/09/23
 //===================================================================================================================================
 #pragma once
 
@@ -19,27 +19,7 @@
 //===================================================================================================================================
 namespace resultNS
 {
-	static const float EFFECT_MAX = 1500;	// エフェクト上限
-
-	const float SELECT_TIME = (60.0f);
-	//const float POSITION_TIME_X = ((uiCharacterSelectNS::POSITION_X_TIME) - 20.0f);
-	//const float POSITION_TIME_Y = ((uiCharacterSelectNS::POSITION_Y_TIME) - 125.0f);
-
-	enum PLAYER_TYPE
-	{
-		PLAYER_1,
-		PLAYER_2,
-		PLAYER_TYPE_MAX
-	};
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[resultNS::PLAYER_TYPE::PLAYER_TYPE_MAX] =
-	{
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
-#ifdef _DEBUG
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
-#else
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
-#endif // _DEBUG
-	};
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION =	D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f);
 }
 
 //===================================================================================================================================

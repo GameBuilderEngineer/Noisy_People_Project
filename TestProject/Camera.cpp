@@ -2,13 +2,14 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/09/24
 //===================================================================================================================================
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
 #include "Camera.h"
+#include "ImguiManager.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -24,6 +25,8 @@ Camera::Camera()
 	D3DXQuaternionIdentity(&relativeQuaternion);
 	posture = D3DXQUATERNION(0, 0, 0, 1);
 	D3DXMatrixRotationQuaternion(&world, &posture);
+	nearZ = INIT_NEAR_Z;
+	farZ = INIT_FAR_Z;
 }
 
 //===================================================================================================================================
@@ -121,6 +124,35 @@ void Camera::lockOn(D3DXVECTOR3 lockOnTarget,float frameTime)
 }
 
 //===================================================================================================================================
+//【ImGUIへの出力】
+//===================================================================================================================================
+void Camera::outputGUI()
+{
+#ifdef _DEBUG
+	if (ImGui::CollapsingHeader("Camera Property"))
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		float limitTop = 1000;
+		float limitBottom = -1000;
+
+		ImGui::SliderFloat("fieldOfView", &fieldOfView, 0, limitTop);							//視野角
+		ImGui::SliderFloat("nearZ", &nearZ, INIT_NEAR_Z, INIT_FAR_Z);							//視認近距離
+		ImGui::SliderFloat("farZ", &farZ, INIT_FAR_Z, INIT_FAR_Z*10);							//視認遠距離
+
+		ImGui::SliderFloat3("position", position, limitBottom, limitTop);						//位置
+		ImGui::SliderFloat3("gazePosition", gazePosition, limitBottom, limitTop);				//注視位置
+		ImGui::SliderFloat4("relativeQuaternion", relativeQuaternion, limitBottom, limitTop);	//相対位置
+		ImGui::SliderFloat3("upVector", upVector, -1, 1);										//上方ベクトル
+		ImGui::SliderFloat4("posture", posture, limitBottom, limitTop);							//姿勢クォータニオン
+
+		ImGui::Checkbox("onGaze", &onGaze);												//注視フラグ
+
+	}
+#endif // _DEBUG
+}
+
+
+//===================================================================================================================================
 //【setter】
 //===================================================================================================================================
 //ウィンドウサイズによるアスペクト比の設定
@@ -139,9 +171,11 @@ HRESULT Camera::setViewProjection()
 {
 	D3DXMatrixLookAtLH(&view, &position, &gazePosition, &upVector);
 	// プロジェクション
-	D3DXMatrixPerspectiveFovLH(&projection, fieldOfView, aspect, 0.1f, 1000.0f);
+	D3DXMatrixPerspectiveFovLH(&projection, fieldOfView, aspect, nearZ, farZ);
 	return S_OK;
 }
+void Camera::setNearZ(float value) { nearZ = value; }
+void Camera::setFarZ(float value) { farZ = value; }
 
 //===================================================================================================================================
 //【getter】

@@ -2,27 +2,27 @@
 //【AbstractScene.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/19
-// [更新日]2019/09/20
+// [更新日]2019/09/23
 //===================================================================================================================================
 #pragma once
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
+#include <string>
 #include "Base.h"
-//#include "Camera.h"
-#include "Input.h"
 #include "Direct3D9.h"
-//#include "Light.h"
+#include "Input.h"
+#include "ImguiManager.h"
+#include "Camera.h"
+#include "Light.h"
 //#include "Sound.h"
-//#include "TextureLoader.h"
-//#include "StaticMeshLoader.h"
+#include "TextureLoader.h"
+#include "StaticMeshLoader.h"
 //#include "ShaderLoader.h"
 //#include "TextManager.h"
 //#include "GameMaster.h"
 //#include "AnimationLoader.h"
-#include <string>
-#include "ImguiManager.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -53,9 +53,9 @@ protected:
 	LPDIRECT3DDEVICE9 device;
 	Direct3D9* direct3D9;
 	Input* input;
+	Camera* camera;
+	Light* light;
 	//Sound* sound;
-	//Camera* camera;
-	//Light* light;
 	//TextureLoader* textureLoader;
 	//StaticMeshLoader* staticMeshLoader;
 	//ShaderLoader* shaderLoader;
@@ -64,6 +64,7 @@ protected:
 	//GameMaster* gameMaster;
 	float sceneTimer;
 	float frameTime = 0.0f;//フレームタイム保存変数
+	float stopTimer = 0.0f;	//処理落ち時間
 	bool onChange;
 	int nextScene;	
 	std::string sceneName;

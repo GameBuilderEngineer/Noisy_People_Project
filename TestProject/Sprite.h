@@ -59,6 +59,8 @@ private:
 	float				radius;							// 半径
 	float				initialRadius;					// 元の半径
 
+	bool				onReadFile;						//このクラス内でファイルからテクスチャを読み込んだか
+
 public:
 	//--------
 	// Method
@@ -66,16 +68,16 @@ public:
 	// Regular use
 	Sprite();
 	~Sprite();
-	void initialize(LPDIRECT3DDEVICE9 device, const char* fileName,				// 初期化処理（テクスチャをファイルから読み込む）
+	void initialize(const char* fileName,										// 初期化処理（テクスチャをファイルから読み込む）
 		int _pivot, int _width, int _height, D3DXVECTOR3 position,
 		D3DXVECTOR3 rotation, D3DCOLOR color);
-	void initialize(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9 _texture,		// 初期化処理（テクスチャをポインタで渡す）
+	void initialize(LPDIRECT3DTEXTURE9 _texture,								// 初期化処理（テクスチャをポインタで渡す）
 		int _pivot, int _width, int _height, D3DXVECTOR3 _position,
 		D3DXVECTOR3 _rotation, D3DCOLOR color);
-	void render(LPDIRECT3DDEVICE9 device);										// 描画
+	void render();										// 描画
 
 	// Function to set parameters
-	HRESULT setTextureFromFile(LPDIRECT3DDEVICE9 device, const char* fileName);	// テクスチャをファイルから読み込む
+	HRESULT setTextureFromFile(const char* fileName);							// テクスチャをファイルから読み込む
 	void setTexturePointer(LPDIRECT3DTEXTURE9 _texture);						// テクスチャをポインタでセットする
 	void setUVCoord(D3DXVECTOR2 v0, D3DXVECTOR2 v1,
 		D3DXVECTOR2 v2, D3DXVECTOR2 v3);										// UV座標を設定

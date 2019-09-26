@@ -2,7 +2,7 @@
 //【Result.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/09/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -95,9 +95,6 @@ void Result::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	// カメラ更新
-	//camera->update();
-
 	// Enterまたは〇ボタンでタイトルへ
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
@@ -105,17 +102,8 @@ void Result::update(float _frameTime)
 	{
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
-		// 遷移
+		// シーン遷移
 		changeScene(nextScene);
-	}
-
-	// シーンエフェクトの更新
-	//sceneEffect.update(_frameTime);
-
-	for (int i = 0; i < EFFECT_MAX; i++)
-	{
-		// シーンエフェクト発生
-		//sceneEffect.generateSceneEffect(1, D3DXVECTOR3((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50)));
 	}
 
 }
@@ -125,9 +113,7 @@ void Result::update(float _frameTime)
 //===================================================================================================================================
 void Result::render()
 {
-	//1Pカメラ・ウィンドウ
-	//device->SetTransform(D3DTS_VIEW, &camera[PLAYER_TYPE::PLAYER_1].view);
-	//device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER_TYPE::PLAYER_1].projection);
+	//描画対象をウィンドウ全体に切替
 	direct3D9->changeViewportFullWindow();
 
 	//render3D(camera[PLAYER_TYPE::PLAYER_1]);

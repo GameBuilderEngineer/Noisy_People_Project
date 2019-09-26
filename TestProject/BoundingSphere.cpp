@@ -2,13 +2,14 @@
 //【BoundingSphere.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/09/24
 //===================================================================================================================================
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
 #include "BoundingSphere.h"
+#include "Direct3D9.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -30,8 +31,9 @@ BoundingSphere::~BoundingSphere()
 //【初期化】
 //===================================================================================================================================
 //メッシュ情報から初期化
-void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* _position, LPD3DXMESH ownerMesh)
+void BoundingSphere::initialize(D3DXVECTOR3* _position, LPD3DXMESH ownerMesh)
 {
+	LPDIRECT3DDEVICE9 device = getDevice();
 	position = _position;
 
 	// メッシュの頂点バッファをロックする
@@ -53,8 +55,9 @@ void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* _position,
 
 }
 //半径情報から初期化
-void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,float _raidus)
+void BoundingSphere::initialize(float _raidus)
 {
+	LPDIRECT3DDEVICE9 device = getDevice();
 	radius = _raidus;
 	//メッシュを作成
 	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
@@ -63,8 +66,10 @@ void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,float _raidus)
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
-void BoundingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)
+void BoundingSphere::render(D3DXMATRIX owner)
 {
+	LPDIRECT3DDEVICE9 device = getDevice();
+
 	// ライティングモードを設定
 	device->SetRenderState(D3DRS_LIGHTING, true);
 	// レンダリングモードの設定

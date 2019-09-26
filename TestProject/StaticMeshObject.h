@@ -1,41 +1,34 @@
 //===================================================================================================================================
-//【Ray.h】
+//【Object.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
-// [更新日]2019/09/20
+// [作成日]2019/09/23
+// [更新日]2019/09/24
 //===================================================================================================================================
 #pragma once
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "Base.h"
+#include "Object.h"
 
 //===================================================================================================================================
-//【レイクラス：コライダー】
+//【スタティックメッシュオブジェクト】
 //===================================================================================================================================
-class Ray : public Base
+class StaticMeshObject : public Object
 {
-public:
+protected:
 	//Data
-	D3DXVECTOR3 start;		//始点
-	D3DXVECTOR3 direction;	//方向
+	StaticMesh* staticMesh;	//スタティックメッシュ
 
-	float distance;			//衝突対象との距離
-	D3DXVECTOR3 normal;		//衝突対象の法線
-#ifdef _DEBUG
-	D3DXCOLOR color;		//描画色
-#endif // _DEBUG
-
+public:
 	//Method
-	Ray();
-	~Ray();
-	void initialize(D3DXVECTOR3 _start,D3DXVECTOR3 _direction);
-	void update(D3DXVECTOR3 _start,D3DXVECTOR3 _direction);
-	void render(float length);
-	
-	bool rayIntersect(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix);
-	D3DXVECTOR3 slip(D3DXVECTOR3 L, D3DXVECTOR3 N);
-	//HRESULT findVerticesOnPoly(LPD3DXMESH, DWORD, D3DXVECTOR3*);
+	StaticMeshObject(StaticMesh* _staticMesh);
+	~StaticMeshObject();
+
+	void render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+
+	//getter
+	StaticMesh* getStaticMesh();
 };
+
 

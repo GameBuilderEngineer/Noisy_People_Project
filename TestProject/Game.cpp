@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/09/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -39,44 +39,42 @@ Game::~Game()
 //===================================================================================================================================
 void Game::initialize() {
 
+	//player
+	player = new Player;
+
+
+	//camera
+	camera = new Camera;
+	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	camera->setTarget(player->getPosition());
+	camera->setTargetX(&player->getAxisX()->direction);
+	camera->setTargetY(&player->getAxisY()->direction);
+	camera->setTargetZ(&player->getAxisZ()->direction);
+	camera->setRelative(CAMERA_RELATIVE_QUATERNION);
+	camera->setGaze(D3DXVECTOR3(0, 0, 0));
+	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
+	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
+	camera->setFieldOfView( (D3DX_PI/18) * 10 );
+
+	//light
+	light = new Light;
+	light->initialize();
+
+	//テストフィールド
+	testField = new StaticMeshObject(staticMeshNS::getStaticMesh(staticMeshNS::FIELD));
+	testField->initialize(&D3DXVECTOR3(0, 0, 0));
+	testField->activation();
+
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
-	//player
-	//player[0] = new Player;
-	//player[1] = new Player;
 
-	//camera
-	//camera = new Camera[NUM_PLAYER];
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{
-	//	camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
-	//	camera[i].setTarget(player[i]->getPosition());
-	//	camera[i].setTargetX(&player[i]->getAxisX()->direction);
-	//	camera[i].setTargetY(&player[i]->getAxisY()->direction);
-	//	camera[i].setTargetZ(&player[i]->getAxisZ()->direction);
-	//	camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[i]);
-	//	camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
-	//	camera[i].setRelativeGaze(D3DXVECTOR3(0, 10, 0));
-	//	camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-	//	camera[i].setFieldOfView(D3DX_PI / 2.5);
-	//}
 
-	//light
-	//light = new Light;
-	//light->initialize(direct3D9);
-
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{//プレイヤーの初期化
-		//player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
-		//player[i]->setInput(input);			//入力クラスのセット
-		//player[i]->setAnimationModel(animationLoader->getAnimationModel(i, gameMaster->getPlayerInfomation()[i].modelType));
-		//player[i]->setCamera(&camera[i]);	//カメラのセット
-		//player[i]->setSound(sound);			//サウンドのセット
-		//player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
-		//player[i]->animationPlayer->setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::GAME);
-		//player[i]->animationPlayer->resetAnimation();
-	//}
+	//プレイヤーの初期化
+	player->initialize(inputNS::DINPUT_1P, 0);
+	player->setCamera(camera);	//カメラのセット
+	player->configurationGravityWithRay(testField->getPosition(),testField->getStaticMesh()->mesh,testField->getMatrixWorld());	//重力を設定
+	
 
 	//テキストの初期化
 	//text.initialize(direct3D9->device,10,10, 0xff00ff00);
@@ -134,10 +132,10 @@ void Game::initialize() {
 //【終了処理】
 //===================================================================================================================================
 void Game::uninitialize() {
-	//SAFE_DELETE(light);
-	//SAFE_DELETE_ARRAY(camera);
-	//SAFE_DELETE(player[0])
-	//SAFE_DELETE(player[1])
+	SAFE_DELETE(camera);
+	SAFE_DELETE(light);
+	SAFE_DELETE(testField);
+	SAFE_DELETE(player);
 }
 
 //===================================================================================================================================
@@ -195,11 +193,12 @@ void Game::update(float _frameTime) {
 	//	changeScene(SceneList::RESULT);
 	//}
 
+	//テストフィールドの更新
+	testField->update();
+
 	//【プレイヤーの更新】
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{
-	//	player[i]->update(frameTime);
-	//}
+	player->update(frameTime);
+	
 
 	//D3DXCOLOR* colorList = new D3DXCOLOR[3000];
 	//float sinValue = (sinf(gameMaster->getGameTime() * 4)+1.0f)/2.0f;
@@ -210,6 +209,7 @@ void Game::update(float _frameTime) {
 	//}
 	//plane.setColorBuffer(direct3D9->device, 3000, colorList);
 	//SAFE_DELETE_ARRAY(colorList);
+	camera->update();
 }
 
 //===================================================================================================================================
@@ -218,16 +218,11 @@ void Game::update(float _frameTime) {
 void Game::render() {
 
 	//1Pカメラ・ウィンドウ
-	//device->SetTransform(D3DTS_VIEW, &camera[PLAYER1].view);
-	//device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER1].projection);
-	direct3D9->changeViewport1PWindow();
-	//render3D(camera[PLAYER1]);
+	device->SetTransform(D3DTS_VIEW, &camera->view);
+	device->SetTransform(D3DTS_PROJECTION, &camera->projection);
+	direct3D9->changeViewportFullWindow();
+	render3D(*camera);
 
-	//2Pカメラ・ウィンドウ
-	//device->SetTransform(D3DTS_VIEW, &camera[PLAYER2].view);
-	//device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER2].projection);
-	direct3D9->changeViewport2PWindow();
-	//render3D(camera[PLAYER2]);
 
 	//UI
 	direct3D9->changeViewportFullWindow();
@@ -238,7 +233,10 @@ void Game::render() {
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-//void Game::render3D(Camera currentCamera) {
+void Game::render3D(Camera currentCamera) {
+
+	//テストフィールドの描画
+	testField->render(*shaderNS::effect(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//（サンプル）ポイントスプライトの描画
 	//pointSprite.render(direct3D9->device, currentCamera.position);
@@ -252,15 +250,12 @@ void Game::render() {
 	//testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 
+	// プレイヤーの描画
+	player->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	// プレイヤーの他のオブジェクトの描画
+	player->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{
-	//	// プレイヤーの描画
-	//	player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position, *shaderLoader->getEffect(shaderNS::TOON), *textureLoader->getTexture(textureLoaderNS::TOON_SHADE), *textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	//	// プレイヤーの他のオブジェクトの描画
-	//	player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	//}
-//}
+}
 
 //===================================================================================================================================
 //【UI/2D描画】
@@ -306,5 +301,10 @@ void Game::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	player->outputGUI();			//プレイヤー
+	testField->outputGUI();			//テストフィールド
+	camera->outputGUI();			//カメラ
+
 }
 #endif // _DEBUG

@@ -39,8 +39,13 @@
 #ifdef _DEBUG
 //Debug
 #define APP_NAME (LPSTR)"Test ver.prototype-Debug-"
+#if FALSE
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
+#else
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+#endif
 //#define   new                   new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #define   malloc(s)             _malloc_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
 #define   calloc(c, s)          _calloc_dbg(c, s, _NORMAL_BLOCK, __FILE__, __LINE__)

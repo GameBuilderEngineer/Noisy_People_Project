@@ -5,6 +5,7 @@
 // 作成日 : 2019/9/19
 //=============================================================================
 #include "Sprite.h"
+#include "Direct3D9.h"
 using namespace SpriteNS;
 
 //=============================================================================
@@ -12,6 +13,7 @@ using namespace SpriteNS;
 //=============================================================================
 Sprite::Sprite()
 {
+	onReadFile = false;
 	texture = NULL;
 }
 
@@ -21,19 +23,19 @@ Sprite::Sprite()
 //=============================================================================
 Sprite::~Sprite()
 {
-	SAFE_RELEASE(texture)
+	if(onReadFile)	SAFE_RELEASE(texture)
 }
 
 
 //=============================================================================
 // 初期化処理（テクスチャをファイルから読み込む）
 //=============================================================================
-void Sprite::initialize(LPDIRECT3DDEVICE9 device, const char* fileName, int _pivot,
+void Sprite::initialize(const char* fileName, int _pivot,
 	int _width, int _height, D3DXVECTOR3 _position, D3DXVECTOR3 _rotation, D3DCOLOR color)
 {
 	if (fileName)
 	{
-		setTextureFromFile(device, fileName);
+		setTextureFromFile(fileName);
 	}
 
 	setUVCoord(D3DXVECTOR2(0.0, 0.0), D3DXVECTOR2(1.0, 0.0), D3DXVECTOR2(0.0, 1.0), D3DXVECTOR2(1.0, 1.0));
@@ -51,7 +53,7 @@ void Sprite::initialize(LPDIRECT3DDEVICE9 device, const char* fileName, int _piv
 //=============================================================================
 // 初期化処理（テクスチャをポインタで渡す）
 //=============================================================================
-void Sprite::initialize(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9 _texture, int _pivot,
+void Sprite::initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
 	int _width, int _height, D3DXVECTOR3 _position, D3DXVECTOR3 _rotation, D3DCOLOR color)
 {
 	if (_texture)
@@ -74,19 +76,34 @@ void Sprite::initialize(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9 _texture, i
 //=============================================================================
 // 描画処理
 //=============================================================================
-void Sprite::render(LPDIRECT3DDEVICE9 device)
+void Sprite::render()
 {
+	LPDIRECT3DDEVICE9 device = getDevice();								//デバイスの取得
+
+	// αテストを有効に
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// 透過処理の設定
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);	// 透過処理の設定
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);	// 透過処理の設定
+
 	device->SetFVF(FVF_VERTEX_2D);
 	device->SetTexture(0, texture);
 	device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, vertexWk, sizeof(SpriteNS::Vertex2D));
+
+	// αテストを無効に
+	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 
 //=============================================================================
 // テクスチャをファイルから読み込む
 //=============================================================================
-HRESULT Sprite::setTextureFromFile(LPDIRECT3DDEVICE9 device, const char* fileName)
+HRESULT Sprite::setTextureFromFile(const char* fileName)
 {
+	LPDIRECT3DDEVICE9 device = getDevice();	//デバイスの取得
+
 	//setVisualDirectory();	// カレントディレクトリの変更
 
 	if (FAILED(D3DXCreateTextureFromFile(device, fileName, &texture)))
@@ -94,6 +111,7 @@ HRESULT Sprite::setTextureFromFile(LPDIRECT3DDEVICE9 device, const char* fileNam
 		MessageBox(NULL, "テクスチャの読み込みに失敗しました", fileName, MB_OK);
 		return E_FAIL;
 	}
+	onReadFile = true;
 	return S_OK;
 }
 

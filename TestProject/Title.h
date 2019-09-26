@@ -18,29 +18,13 @@
 //===================================================================================================================================
 namespace titleNS
 {
-	enum PLAYER_TYPE
+	enum TRANSITION_SCENE_LIST
 	{
-		PLAYER_1,
-		PLAYER_2,
-		PLAYER_TYPE_MAX
-	};
-	
-	static const float EFFECT_MAX = 1500;	// エフェクト上限
-
-	// プレイヤー座標
-	const D3DXVECTOR3 PLAYER_POSITION[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX] =
-	{
-		D3DXVECTOR3(-8.0f, 101.0f, 33.0f),
-		D3DXVECTOR3(-15.0f, 95.0f, 30.0f)
-	};
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX] =
-	{
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
-#ifdef _DEBUG
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
-#else
-		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
-#endif // _DEBUG
+		GAME,
+		CREDIT,
+		OPERATION,
+		TUTORIAL,
+		NUM_TRANSITION_SCENE
 	};
 
 }
@@ -54,7 +38,7 @@ private:
 	//Player player[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX];	//	プレイヤー
 	//SceneEffect sceneEffect;								//	シーンエフェクト
 	//UITitle uiTitle;										//	タイトルUI
-	//InstancingBillboard plane;								//	インスタンシングビルボード
+	//InstancingBillboard plane;							//	インスタンシングビルボード
 public:
 	Title(void);
 	~Title(void);

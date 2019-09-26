@@ -2,7 +2,7 @@
 //【Director.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/09/19
+// [更新日]2019/09/24
 //===================================================================================================================================
 #pragma once
 
@@ -15,15 +15,15 @@
 #include "Direct3D9.h"
 #include "ImguiManager.h"
 #include "Input.h"
+#include "VirtualController.h"
 #include "AbstractScene.h"
+#include "TextureLoader.h"
+#include "StaticMeshLoader.h"
+#include "ShaderLoader.h"
 //#include "Camera.h"
 //#include "Sound.h"
-//#include "VirtualController.h"
-//#include "TextureLoader.h"
-//#include "StaticMeshLoader.h"
-//#include "ShaderLoader.h"
 //#include "TextManager.h"
-//#include "GameMaster.h"
+#include "GameMaster.h"
 //#include "AnimationLoader.h"
 //#include <thread>
 
@@ -56,12 +56,11 @@ public:
 	HWND wnd;								//ウィンドウハンドル
 	Direct3D9* d3d;							//DirectX9クラス・デバイス
 	Input* input;							//Inputクラス
-	//Camera* camera;							//カメラクラス
 	//Sound* sound;
 	AbstractScene* scene;					//抽象シーンクラス
-	//TextureLoader* textureLoader;			//テクスチャ読込クラス
-	//StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス
-	//ShaderLoader* shaderLoader;				//シェーダー読込クラス
+	TextureLoader* textureLoader;			//テクスチャ読込クラス
+	StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス
+	ShaderLoader* shaderLoader;				//シェーダー読込クラス
 	//TextManager* textManager;				//テキストデータ読込クラス
 	//GameMaster* gameMaster;					//ゲーム運営クラス
 	//AnimationLoader* animationLoader;		//アニメーション読込クラス
@@ -86,7 +85,7 @@ public:
 	void render();							//描画
 	void setFrameTime();					//frameTimeの設定
 	void displayFPS();						//FPS表示
-	void fixFPS();						//FPS60補正
+	void fixFPS();							//固定FPS補正
 	void changeNextScene();					//シーンの切り替え
 };
 //void threadA();

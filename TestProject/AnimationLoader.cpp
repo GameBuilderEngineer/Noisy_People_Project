@@ -1,41 +1,47 @@
 //===================================================================================================================================
-//【Ray.h】
+//【AnimationLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
-// [更新日]2019/09/20
+// [作成日]2019/09/12
+// [更新日]2019/09/12
 //===================================================================================================================================
-#pragma once
+#include "AnimationLoader.h"
 
 //===================================================================================================================================
-//【インクルード】
+//【コンストラクタ】
 //===================================================================================================================================
-#include "Base.h"
-
-//===================================================================================================================================
-//【レイクラス：コライダー】
-//===================================================================================================================================
-class Ray : public Base
+AnimationLoader::AnimationLoader()
 {
-public:
-	//Data
-	D3DXVECTOR3 start;		//始点
-	D3DXVECTOR3 direction;	//方向
-
-	float distance;			//衝突対象との距離
-	D3DXVECTOR3 normal;		//衝突対象の法線
-#ifdef _DEBUG
-	D3DXCOLOR color;		//描画色
-#endif // _DEBUG
-
-	//Method
-	Ray();
-	~Ray();
-	void initialize(D3DXVECTOR3 _start,D3DXVECTOR3 _direction);
-	void update(D3DXVECTOR3 _start,D3DXVECTOR3 _direction);
-	void render(float length);
 	
-	bool rayIntersect(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix);
-	D3DXVECTOR3 slip(D3DXVECTOR3 L, D3DXVECTOR3 N);
-	//HRESULT findVerticesOnPoly(LPD3DXMESH, DWORD, D3DXVECTOR3*);
-};
+}
 
+
+//===================================================================================================================================
+//【デストラクタ】
+//===================================================================================================================================
+AnimationLoader::~AnimationLoader()
+{
+
+	for (int i = 0; i < animationPlayerNS::PLAYER_TYPE_MAX; i++)
+	{
+		for (int j = 0; j < animationPlayerNS::MODEL_TYPE_MAX; j++)
+		{
+			animation[i][j].release();
+		}
+	}
+}
+
+void AnimationLoader::initialize(LPDIRECT3DDEVICE9 device)
+{
+	for (int i = 0; i < animationPlayerNS::PLAYER_TYPE_MAX; i++)
+	{
+		for (int j = 0; j < animationPlayerNS::MODEL_TYPE_MAX; j++)
+		{
+			animation[i][j].initialize(device, i, j);
+		}
+	}
+}
+
+AnimationPlayer* AnimationLoader::getAnimationModel(int playerIndex,int modelType)
+{
+	return &animation[playerIndex][modelType];
+}

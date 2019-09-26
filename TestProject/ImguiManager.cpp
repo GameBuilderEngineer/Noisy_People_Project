@@ -110,9 +110,9 @@ void ImguiManager::update()
 //===================================================================================================================================
 void ImguiManager::render()
 {
-	getDevice()->SetRenderState(D3DRS_ZENABLE, false);
-	getDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-	getDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
+	//getDevice()->SetRenderState(D3DRS_ZENABLE, false);
+	//getDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	//getDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
 
 	ImGui::EndFrame();
 	ImGui::Render();
