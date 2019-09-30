@@ -66,6 +66,7 @@ public:
 	void SetEnemyType(int enemyId,int enemyType);
 	void SetEnemyPos(int enemyId,const D3DXVECTOR3 pos);
 	void SetEnemyRotY(int enemyId,float rotY);
+	void AddEnemyFormat(void);
 
 private:
 	ENEMY_FILE		enemyFile;				//エネミー構造体 
