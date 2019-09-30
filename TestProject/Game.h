@@ -60,8 +60,10 @@ private:
 	//フィールド
 	StaticMeshObject* testField;	
 
+	//サウンド
+	SOUND *sound;
 public:
-	Game();
+	Game(SOUND* soundClass);
 	~Game();
 	virtual void initialize() override;
 	virtual void update(float frameTime) override;

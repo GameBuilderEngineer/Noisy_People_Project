@@ -154,6 +154,15 @@
     <Filter Include="Constant Layer\Object\SkinMeshObject">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Sound">
+      <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer">
+      <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Enemy">
+      <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -275,6 +284,12 @@
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Constant Layer\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyTools.cpp">
+      <Filter>Tools Layer\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -406,6 +421,12 @@
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Constant Layer\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyTools.h">
+      <Filter>Tools Layer\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
