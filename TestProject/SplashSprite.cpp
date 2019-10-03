@@ -22,7 +22,7 @@ using namespace splashSpriteNS;
 SplashSprite::SplashSprite()
 {
 	initialize(
-		*textureNS::getTexture(textureNS::SPLASH),	//テクスチャポインタ
+		*textureNS::reference(textureNS::SPLASH),	//テクスチャポインタ
 		SpriteNS::CENTER,							//原点
 		WIDTH,										//幅
 		HEIGHT,										//高さ

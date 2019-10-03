@@ -19,7 +19,7 @@ using namespace playerNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Player::Player() :StaticMeshObject(staticMeshNS::getStaticMesh(staticMeshNS::SAMPLE_STATIC_MESH))
+Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_STATIC_MESH))
 {
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
 	onGravity = true;
@@ -69,7 +69,6 @@ void Player::outputGUI()
 		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
 		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
 		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		ImGui::Checkbox("operationAlpha", &operationAlpha);								//透過値の操作有効フラグ
 
 		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);						//透過値の操作有効フラグ
 	}
@@ -143,7 +142,7 @@ void Player::update(float frameTime)
 //======================
 //【トゥーンレンダー】
 //======================
-void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
+void Player::toonRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
 	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
 	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
@@ -155,7 +154,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 //======================
 void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	StaticMeshObject::render(*shaderNS::effect(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
+	StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
 	//他のオブジェクトの描画
 	//otherRender(device,view,projection,cameraPosition);
 }

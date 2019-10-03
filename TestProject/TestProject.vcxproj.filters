@@ -154,6 +154,9 @@
     <Filter Include="Constant Layer\Object\SkinMeshObject">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\LinkedList">
+      <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -276,6 +279,7 @@
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClCompile>
+    <ClCompile Include="LinkedList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -407,6 +411,7 @@
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClInclude>
+    <ClInclude Include="LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
@@ -425,5 +430,28 @@
     <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
     </Text>
+    <Text Include="01 Data File\DumpFuzzyRecognition.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\dumpMapData.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\DumpRecuasionArea.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\memo.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\wasuremonoPosCheck.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="01 Data File\FOT-NewRodinPro-UB.otf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
+    <Font Include="01 Data File\unicode.futurabb.ttf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
   </ItemGroup>
 </Project>

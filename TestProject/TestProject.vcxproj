@@ -146,6 +146,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LinkedList.h" />
     <ClInclude Include="MemoryViewer.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Operation.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Operation.cpp" />
@@ -215,8 +217,17 @@
     <ResourceCompile Include="Icon.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="01 Data File\DumpFuzzyRecognition.txt" />
+    <Text Include="01 Data File\dumpMapData.txt" />
+    <Text Include="01 Data File\DumpRecuasionArea.txt" />
+    <Text Include="01 Data File\memo.txt" />
+    <Text Include="01 Data File\wasuremonoPosCheck.txt" />
     <Text Include="Readme\Readme.txt" />
     <Text Include="Readme\コーディング規約.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="01 Data File\FOT-NewRodinPro-UB.otf" />
+    <Font Include="01 Data File\unicode.futurabb.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

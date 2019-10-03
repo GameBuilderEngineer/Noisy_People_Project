@@ -56,7 +56,6 @@ protected:
 	bool onRender;				//描画有効化フラグ
 	bool onLighting;			//光源処理フラグ
 	bool onTransparent;			//透過フラグ
-	bool operationAlpha;		//透過値の操作有効フラグ
 
 	//方向6軸
 	Ray axisX;					//x軸
@@ -127,7 +126,6 @@ public:
 	void activation();								//アクティブ化
 	void inActivation();							//非アクティブ化
 	void switchTransparent(bool flag);				//透過の切り替え
-	void switchOperationAlpha(bool flag);			//透過値操作フラグの切り替え
 	void setRenderFlag(bool frag);					//描画フラグのセット
 
 	//描画数をセット

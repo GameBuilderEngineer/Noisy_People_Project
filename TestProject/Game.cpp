@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/23
+// [更新日]2019/09/30
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -42,7 +42,6 @@ void Game::initialize() {
 	//player
 	player = new Player;
 
-
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -61,13 +60,12 @@ void Game::initialize() {
 	light->initialize();
 
 	//テストフィールド
-	testField = new StaticMeshObject(staticMeshNS::getStaticMesh(staticMeshNS::FIELD));
+	testField = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::FIELD));
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 	testField->activation();
 
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
-
 
 
 	//プレイヤーの初期化
@@ -218,8 +216,7 @@ void Game::update(float _frameTime) {
 void Game::render() {
 
 	//1Pカメラ・ウィンドウ
-	device->SetTransform(D3DTS_VIEW, &camera->view);
-	device->SetTransform(D3DTS_PROJECTION, &camera->projection);
+	camera->renderReady();
 	direct3D9->changeViewportFullWindow();
 	render3D(*camera);
 
@@ -236,7 +233,7 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	testField->render(*shaderNS::effect(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	testField->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//（サンプル）ポイントスプライトの描画
 	//pointSprite.render(direct3D9->device, currentCamera.position);

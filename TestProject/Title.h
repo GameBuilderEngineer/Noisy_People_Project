@@ -10,6 +10,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "AbstractScene.h"
+#include "InstancingBillboard.h"
 //#include "UITitle.h"
 //#include "SceneEffect.h"
 
@@ -39,6 +40,8 @@ private:
 	//SceneEffect sceneEffect;								//	シーンエフェクト
 	//UITitle uiTitle;										//	タイトルUI
 	//InstancingBillboard plane;							//	インスタンシングビルボード
+	InstancingBillboard plane;
+
 public:
 	Title(void);
 	~Title(void);
@@ -47,7 +50,7 @@ public:
 	virtual void update(float _frameTime) override;
 	void updateInput(void);
 	virtual void render() override;
-	//void render3D(Camera _currentCamera);
+	void render3D(Camera _currentCamera);
 	void render2D();
 	virtual void collisions(void) override;
 	virtual void AI(void) override;

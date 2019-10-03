@@ -132,7 +132,7 @@ public:
 	//processing
 	virtual void initialize(int playerType, int modelType);
 	virtual void update(float frameTime);
-	void toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,
+	void toonRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,
 		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);

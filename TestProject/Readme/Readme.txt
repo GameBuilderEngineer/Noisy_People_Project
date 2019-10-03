@@ -35,6 +35,7 @@ Resorce LayerEEEEƒeƒNƒXƒ`ƒƒ‚âo—Íƒtƒ@ƒCƒ‹A‚R‚cƒ‚ƒfƒ‹ƒf[ƒ^AƒTƒEƒ“ƒhƒf[ƒ^‚
 		|
 		|-director->Director::run()
 		|				|-Director::initialize()
+		|					|-scene->initialize()
 		|				|-Director::mainLoop()
 		|					|-Director::changeNextScene()
 		|					|			|-scene->uninitialize()

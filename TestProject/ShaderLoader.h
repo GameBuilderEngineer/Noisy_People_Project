@@ -17,7 +17,7 @@ namespace shaderNS
 	};
 
 	//ŠO•”QÆŠÖ”
-	LPD3DXEFFECT* effect(int shaderNo);
+	LPD3DXEFFECT* reference(int shaderNo);
 }
 
 class ShaderLoader :public Base
