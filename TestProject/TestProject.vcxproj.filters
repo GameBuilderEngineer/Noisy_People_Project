@@ -288,7 +288,15 @@
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClCompile>
-    <ClCompile Include="LinkedList.cpp" />
+    <ClCompile Include="LinkedList.cpp">
+      <Filter>Constant Layer\LinkedList</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Constant Layer\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyTools.cpp">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -420,7 +428,15 @@
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClInclude>
-    <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="LinkedList.h">
+      <Filter>Constant Layer\LinkedList</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Constant Layer\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyTools.h">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
