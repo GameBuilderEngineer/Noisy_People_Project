@@ -54,7 +54,7 @@ void ENEMY_TOOLS::SetEnemyRotY(int enemyId, float rotY)
 //===================================================================================================================================
 ENEMY_FILE ENEMY_TOOLS::InputEnemyFile(void)
 {
-	FILE	*fp;					//ファイル
+	FILE	*fp = NULL;					//ファイル
 	fopen("enemy.enemy", "rb");
 
 	ENEMY_FILE tmpEnemyFile;
@@ -79,21 +79,13 @@ ENEMY_FILE ENEMY_TOOLS::InputEnemyFile(void)
 //===================================================================================================================================
 void ENEMY_TOOLS::OutputEnemyFile(void)
 {
-	FILE	*fp;					//ファイル
+	FILE	*fp = NULL;					//ファイル
 	fopen("enemy.enemy", "wb");
 
 	//ENEMY_FILEの書き出し
 	fwrite(&enemyFile, sizeof(ENEMY_FILE), 1, fp);
 
 	fclose(fp);
-}
-
-//===================================================================================================================================
-//【エネミーの回転Y軸を設定】
-//===================================================================================================================================
-void ENEMY_TOOLS::SetEnemyRotY(int enemyId, float rotY)
-{
-	enemyFile.efmt[enemyId].rotY = rotY;
 }
 
 //===================================================================================================================================
