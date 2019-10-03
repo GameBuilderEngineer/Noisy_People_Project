@@ -20,6 +20,7 @@
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
+#include "Sound.h"
 //#include "Camera.h"
 //#include "Sound.h"
 //#include "TextManager.h"
@@ -56,7 +57,7 @@ public:
 	HWND wnd;								//ウィンドウハンドル
 	Direct3D9* d3d;							//DirectX9クラス・デバイス
 	Input* input;							//Inputクラス
-	//Sound* sound;
+	SOUND* sound;
 	AbstractScene* scene;					//抽象シーンクラス
 	TextureLoader* textureLoader;			//テクスチャ読込クラス
 	StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス

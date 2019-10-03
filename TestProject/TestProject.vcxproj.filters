@@ -157,6 +157,15 @@
     <Filter Include="Constant Layer\LinkedList">
       <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Sound">
+      <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer">
+      <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Enemy">
+      <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">

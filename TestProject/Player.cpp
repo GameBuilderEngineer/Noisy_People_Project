@@ -33,6 +33,8 @@ Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
+
+	onSound = false;						//サウンドのGUIフラグ
 }
 
 //===================================================================================================================================
@@ -49,6 +51,9 @@ Player::~Player()
 void Player::outputGUI()
 {
 #ifdef _DEBUG
+
+	//ImGui::Text(sceneName.c_str());
+
 	if (ImGui::CollapsingHeader("PlayerInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
@@ -69,12 +74,30 @@ void Player::outputGUI()
 		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
 		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
 		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
+		ImGui::Checkbox("sound", &onSound);												//サウンド
 
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);						//透過値の操作有効フラグ
+		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
+
+		// サウンドGUI
+		outputSoundGUI();
 	}
 #endif // _DEBUG
 }
 
+//===================================================================================================================================
+//【サウンドGUIの出力】
+//===================================================================================================================================
+void Player::outputSoundGUI()
+{
+	if (!onSound)return;
+	ImGui::Begin("PlayerInformation(Sound)");
+	if (ImGui::CollapsingHeader("PlayerInformation(Sound)"))
+	{
+		ImGui::SliderInt("volume", &volume, 0, 100);									//ボリューム
+
+	}
+	ImGui::End();
+}
 
 //===================================================================================================================================
 //【初期化】
@@ -130,10 +153,9 @@ void Player::update(float frameTime)
 	
 	//オブジェクト：更新
 	Object::update();
-
+	
 	//カメラの操作
 	controlCamera(frameTime);
-
 }
 
 //===================================================================================================================================
