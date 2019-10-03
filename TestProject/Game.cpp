@@ -214,7 +214,7 @@ void Game::update(float _frameTime) {
 	//3Dサウンド
 	//プレイヤーの位置と向き
 	
-	sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
+	//sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
 }
 
 //===================================================================================================================================
