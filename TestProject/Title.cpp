@@ -111,7 +111,7 @@ void Title::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
 		// ƒTƒEƒ“ƒh‚ÌÄ¶
-		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+		SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, TITLE_SE_LIST::SE_01, false);
 		updateInput();
 		changeScene(nextScene);
 	}

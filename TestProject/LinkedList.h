@@ -33,7 +33,7 @@ class LinkedList:Base
 protected:
 	Node<T>* head;		//先頭ダミーノード
 	Node<T>* current;	//着目ダミーノード
-	Node<T>** nodeList;		//全ノードのポインタ配列
+	Node<T>** nodeList;	//全ノードのポインタ配列
 public:
 	Node<T>* getNode(int i) { return nodeList[i]; }
 	T* getValue(int i) { return &nodeList[i]->value; }//ノード内の値にアクセス
