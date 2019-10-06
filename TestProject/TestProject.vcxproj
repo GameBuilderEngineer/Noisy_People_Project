@@ -149,7 +149,6 @@
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="MemoryViewer.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="Operation.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointSprite.h" />
     <ClInclude Include="Ray.h" />
@@ -193,7 +192,6 @@
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Operation.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />

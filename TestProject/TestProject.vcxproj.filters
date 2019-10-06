@@ -67,9 +67,6 @@
     <Filter Include="Game Layer\Scene\Title">
       <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene\Operation">
-      <UniqueIdentifier>{ce58847b-c228-432a-8446-8eb92fe952ea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Scene\Result">
       <UniqueIdentifier>{2c09a369-b6e9-48fe-9f8c-07e62bbd5daa}</UniqueIdentifier>
     </Filter>
@@ -216,9 +213,6 @@
     <ClCompile Include="Tutorial.cpp">
       <Filter>Game Layer\Scene\Tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="Operation.cpp">
-      <Filter>Game Layer\Scene\Operation</Filter>
-    </ClCompile>
     <ClCompile Include="Result.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
     </ClCompile>
@@ -347,9 +341,6 @@
     </ClInclude>
     <ClInclude Include="Tutorial.h">
       <Filter>Game Layer\Scene\Tutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="Operation.h">
-      <Filter>Game Layer\Scene\Operation</Filter>
     </ClInclude>
     <ClInclude Include="Result.h">
       <Filter>Game Layer\Scene\Result</Filter>

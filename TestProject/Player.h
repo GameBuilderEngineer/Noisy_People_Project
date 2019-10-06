@@ -95,60 +95,62 @@ class Player : public StaticMeshObject
 {
 protected:
 	//汎用デバイス・クラス
-	LPDIRECT3DDEVICE9 device;
-	Input* input;
-	int type;
-	//Sound* sound;										//サウンドクラス
+	LPDIRECT3DDEVICE9					device;
+	Input*										input;
 
 	//ステータス
-	Camera* camera;										//カメラへのポインタ
-	playerNS::OperationKeyTable keyTable;				//操作Keyテーブル
-	int state;											//状態変数
+	int												type;								//プレイヤータイプ
+	Camera*									camera;							//操作するカメラへのポインタ
+	playerNS::OperationKeyTable		keyTable;						//操作Keyテーブル
+	int												state;							//状態変数
 
 	//球コリジョン
-	BoundingSphere bodyCollide;
+	BoundingSphere							bodyCollide;
 
 	//重力処理に利用
-	LPD3DXMESH attractorMesh;							//重力（引力）発生メッシュ
-	D3DXMATRIX* attractorMatrix;						//重力（引力）発生オブジェクトマトリックス
+	LPD3DXMESH								attractorMesh;				//重力（引力）発生メッシュ
+	D3DXMATRIX*							attractorMatrix;				//重力（引力）発生オブジェクトマトリックス
 
 	//タイマー
-	float invincibleTimer;								//無敵時間
+	float											invincibleTimer;				//無敵時間
 
 	//操作関係
-	float reverseValueXAxis;							//操作X軸
-	float reverseValueYAxis;							//操作Y軸
-	bool onJump;										//ジャンプフラグ
+	float											reverseValueXAxis;			//操作X軸
+	float											reverseValueYAxis;			//操作Y軸
+	bool											onJump;						//ジャンプフラグ
 
 	//接地関係
-	float difference;									//フィールド補正差分
-	bool onGround;										//接地判定
+	float											difference;						//フィールド補正差分
+	bool											onGround;						//接地判定
 
 public:
 
 	Player();
 	~Player();
 
-	//processing
+	//基本処理
 	virtual void initialize(int playerType, int modelType);
 	virtual void update(float frameTime);
-	void toonRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,
-		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-
-	//operation
-	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
-	void moveOperation();
-	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
-	void jump();
-	void reset();
-	void updateGround(float frameTime, bool onJump);
-	void controlCamera(float frameTime);
 	virtual void outputGUI() override;
 
+	//接地処理
+	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
+	void updateGround(float frameTime, bool onJump);
+
+	//操作
+	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);		//移動
+	void moveOperation();									//移動操作
+	void jump();													//ジャンプ
+	void controlCamera(float frameTime);				//カメラ操作
+
+
+	//リセット
+	void reset();
+
 	//setter
-	void setCamera(Camera* _camera);
+	void setCamera(Camera* _camera);				//操作対象カメラのセット
 
 	//getter
 	int getState();

@@ -38,11 +38,11 @@ class Object:public Base
 protected:
 	//Data
 	//ステータス変数
-	D3DXVECTOR3 position;		//位置
+	D3DXVECTOR3 position;				//位置
 	D3DXQUATERNION quaternion;	//回転
-	D3DXVECTOR3 scale;			//スケール
-	float radius;				//衝突半径
-	float alpha;				//透過値
+	D3DXVECTOR3 scale;					//スケール
+	float radius;								//衝突半径
+	float alpha;								//透過値
 	int fillMode;
 
 	//移動系変数
@@ -88,15 +88,12 @@ public:
 	//processing
 	HRESULT initialize(D3DXVECTOR3* _position);
 	void update();
-	//通常レンダー
+
+	//デバッグ用ユーティリティレンダー
 	void debugRender();
-	//トゥーンレンダー
-	//void toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
-	//	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine);
-	//インスタンシングレンダー
-	//void instancingRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
-	//	LPD3DXEFFECT effect);
-	virtual void outputGUI();	//ImGUIへObjectの情報を出力
+
+	//ImGUIへObjectの情報を出力
+	virtual void outputGUI();	
 
 	//getter
 	//LPD3DXMESH* getMesh() { return &staticMesh->mesh; }
