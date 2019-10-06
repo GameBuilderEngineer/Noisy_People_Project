@@ -175,6 +175,9 @@
     <Filter Include="Constant Layer\Sound\SoundBase">
       <UniqueIdentifier>{22e4816c-9d4e-4bea-8666-160b78119822}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Sound\3D">
+      <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -314,6 +317,9 @@
     </ClCompile>
     <ClCompile Include="SoundBase.cpp">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSound.cpp">
+      <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -463,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="SoundBase.h">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSound.h">
+      <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
