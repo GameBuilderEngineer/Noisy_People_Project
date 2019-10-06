@@ -2,7 +2,7 @@
 //【TextureLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/22
-// [更新日]2019/09/24
+// [更新日]2019/10/05
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -58,6 +58,8 @@ TextureLoader::TextureLoader()
 	textureName[TOON_SHADE] = { "Shade.bmp" };
 	textureName[LIGHT_001] = { "Light_001.png" };
 	textureName[TARGET] = { "stencil.png" };
+	textureName[SAMPLE_TREE] = { "tree.png" };
+	textureName[SAMPLE_GRASS] = { "middleGrass.png" };
 
 }
 
