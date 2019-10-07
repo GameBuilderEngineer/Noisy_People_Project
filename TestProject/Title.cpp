@@ -188,7 +188,7 @@ void Title::render3D(Camera _currentCamera)
 	//sceneEffect.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// プレーン( インスタンシング )
-	//plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	plane.render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// タイトルプレイヤー描画
 	//player[0].toonRender
@@ -249,5 +249,6 @@ void Title::createGUI()
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", plane.getList().nodeNum);
+
 }
 #endif // _DEBUG

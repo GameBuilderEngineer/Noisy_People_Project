@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/09/24
+// [更新日]2019/10/04
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -162,23 +162,11 @@ void Player::update(float frameTime)
 //【描画】
 //===================================================================================================================================
 //======================
-//【トゥーンレンダー】
-//======================
-void Player::toonRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
-	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
-{
-	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
-	// 他のオブジェクトの描画
-	//otherRender(device,view,projection,cameraPosition);
-}
-//======================
-//【通常描画】
+//【本体描画】
 //======================
 void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
-	//他のオブジェクトの描画
-	//otherRender(device,view,projection,cameraPosition);
 }
 //======================
 //【本体以外の他のオブジェクト描画】

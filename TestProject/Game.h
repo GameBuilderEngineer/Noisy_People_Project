@@ -2,7 +2,7 @@
 //【Game.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/10/05
 //===================================================================================================================================
 #pragma once
 
@@ -13,10 +13,10 @@
 #include "AbstractScene.h"
 #include "Player.h"
 #include "StaticMeshObject.h"
+#include "InstancingBillboard.h"
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
-//#include "InstancingBillboard.h"
 
 //#include "Object.h"
 //#include "Text.h"
@@ -59,6 +59,9 @@ private:
 
 	//フィールド
 	StaticMeshObject* testField;	
+
+	//インスタンシングビルボードテスト
+	InstancingBillboard instancingBillboardTest;
 
 	//サウンド
 	SOUND *sound;

@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/09/24
+// [更新日]2019/10/06
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -12,7 +12,6 @@
 #include "Splash.h"
 #include "Title.h"
 #include "Tutorial.h"
-#include "Operation.h"
 #include "Credit.h"
 #include "Game.h"
 #include "Result.h"
@@ -399,7 +398,6 @@ void Director::changeNextScene() {
 	case SceneList::SPLASH:					scene = new Splash(); break;
 	case SceneList::TITLE:					scene = new Title(); break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
-	case SceneList::OPERATION:				scene = new Operation(); break;
 	case SceneList::CREDIT:					scene = new Credit(); break;
 	case SceneList::GAME:					scene = new Game(sound); break;
 	case SceneList::RESULT:					scene = new Result(); break;

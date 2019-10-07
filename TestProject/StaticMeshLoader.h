@@ -2,7 +2,7 @@
 //【StaticMeshLoader.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/23
+// [更新日]2019/10/04
 //===================================================================================================================================
 #pragma once
 
@@ -16,18 +16,18 @@
 //===================================================================================================================================
 struct StaticMesh
 {
-	LPDIRECT3DVERTEXBUFFER9			vertexBuffer;		//頂点情報バッファ
-	LPDIRECT3DINDEXBUFFER9			indexBuffer;		//インデックスバッファ
-	LPD3DXMESH						mesh;				//メッシュ情報
-	D3DMATERIAL9*					materials;			//マテリアル情報格納先
-	LPD3DXBUFFER					bufferMaterial;		//メッシュのマテリアルバッファ
-	LPDIRECT3DTEXTURE9*				textures;			//テクスチャ情報格納先
-	DWORD							numMaterial;		//マテリアル情報の数
-	D3DVERTEXELEMENT9				vertexElement[65];	//頂点属性
-	LPDIRECT3DVERTEXDECLARATION9	declaration;		//頂点宣言
-	DWORD							numBytesPerVertex;	//頂点サイズ
-	D3DXATTRIBUTERANGE*				attributeTable;		//属性テーブル
-	DWORD							attributeTableSize;	//属性テーブルサイズ
+	LPDIRECT3DVERTEXBUFFER9				vertexBuffer;				//頂点情報バッファ
+	LPDIRECT3DINDEXBUFFER9				indexBuffer;				//インデックスバッファ
+	LPD3DXMESH										mesh;						//メッシュ情報
+	D3DMATERIAL9*								materials;					//マテリアル情報格納先
+	LPD3DXBUFFER									bufferMaterial;			//メッシュのマテリアルバッファ
+	LPDIRECT3DTEXTURE9*						textures;					//テクスチャ情報格納先
+	DWORD												numMaterial;				//マテリアル情報の数
+	D3DVERTEXELEMENT9						vertexElement[65];	//頂点属性
+	LPDIRECT3DVERTEXDECLARATION9	declaration;				//頂点宣言
+	DWORD												numBytesPerVertex;	//頂点サイズ
+	D3DXATTRIBUTERANGE*					attributeTable;			//属性テーブル
+	DWORD												attributeTableSize;		//属性テーブルサイズ
 };
 
 //===================================================================================================================================
