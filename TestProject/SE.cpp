@@ -17,7 +17,7 @@ const char * const SEManager::titleSEPathList[] = { "BGM_Character_Select.wav","
 //===================================================================================================================================
 SEManager::~SEManager()
 {
-	SAFE_DELETE_ARRAY(bufferList)
+	SAFE_DELETE_ARRAY(bufferList);
 }
 
 //===================================================================================================================================
@@ -28,7 +28,7 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 	//サウンドディレクトリに設定する
 	setSoundDirectory();
 
-	SAFE_DELETE_ARRAY(bufferList)
+	SAFE_DELETE_ARRAY(bufferList);
 
 	switch (scene)
 	{
@@ -53,8 +53,6 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 		bufferMax = TITLE_SE_LIST::SE_MAX;
 		break;
 	case SceneList::TUTORIAL:
-		break;
-	case SceneList::OPERATION:
 		break;
 	case SceneList::CREDIT:
 		break;

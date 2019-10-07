@@ -85,17 +85,17 @@ SoundInterface::SoundInterface()
 SoundInterface::~SoundInterface()
 {
 	//SE
-	SAFE_DELETE(SE)
+	SAFE_DELETE(SE);
 
 	//エンドポイントボイス
 	SAFE_DESTROY_VOICE(EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_BGM])
 	SAFE_DESTROY_VOICE(EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_SE])
 
 	//マスターボイス
-	SAFE_DESTROY_VOICE(MasteringVoice)
+	SAFE_DESTROY_VOICE(MasteringVoice);
 
 	//インターフェース
-	SAFE_RELEASE(XAudio2Interface)
+	SAFE_RELEASE(XAudio2Interface);
 
 	//COMライブラリ
 	CoUninitialize();

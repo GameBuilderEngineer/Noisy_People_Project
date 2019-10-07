@@ -31,7 +31,7 @@ SoundBase::~SoundBase()
 {
 	uninitSoundStop();
 	soundParametersList->terminate();
-	SAFE_DELETE(soundParametersList)
+	SAFE_DELETE(soundParametersList);
 }
 //===================================================================================================================================
 //y’âŽ~(‘S•”‚ÌƒTƒEƒ“ƒh)z
@@ -126,7 +126,7 @@ void	 SoundBase::updateSound(void)
 			//Ä¶‚µI‚í‚Á‚½
 			if (voiceState.BuffersQueued == 0)
 			{
-				SAFE_DELETE(tmpSoundParameters)
+				SAFE_DELETE(tmpSoundParameters);
 				soundParametersList->listUpdate();
 			}
 		}
