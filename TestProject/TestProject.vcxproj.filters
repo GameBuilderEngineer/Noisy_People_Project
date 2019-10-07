@@ -318,9 +318,6 @@
     <ClCompile Include="SoundBase.cpp">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClCompile>
-    <ClCompile Include="3DSound.cpp">
-      <Filter>Constant Layer\Sound\3D</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -469,9 +466,6 @@
     </ClInclude>
     <ClInclude Include="SoundBase.h">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
-    </ClInclude>
-    <ClInclude Include="3DSound.h">
-      <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

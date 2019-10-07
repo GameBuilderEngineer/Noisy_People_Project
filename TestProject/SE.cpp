@@ -35,18 +35,18 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 	case SceneList::SPLASH:
 		break;
 	case SceneList::TITLE:
-		bufferList = new LIST_BUFFER[TITLE_SE_LIST::SE_MAX];
+		SEManager::bufferList = new LIST_BUFFER[TITLE_SE_LIST::SE_MAX];
 		for (int i = 0; i < TITLE_SE_LIST::SE_MAX; i++)
 		{
-			memset(&bufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			memset(&SEManager::bufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
 
 			FILE *fp = nullptr;
-			fp = fopen(titleSEPathList[i], "rb");
-			bufferList[i].wavFile = LoadWavChunk(fp);
+			fp = fopen(SEManager::titleSEPathList[i], "rb");
+			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
 
-			bufferList[i].buffer.pAudioData = (BYTE*)bufferList[i].wavFile.data.waveData;
-			bufferList[i].buffer.AudioBytes = bufferList[i].wavFile.data.waveSize;
-			bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
+			SEManager::bufferList[i].buffer.AudioBytes = SEManager::bufferList[i].wavFile.data.waveSize;
+			SEManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
 
 			fclose(fp);
 		}
