@@ -130,8 +130,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="3DSound.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Credit.h" />
@@ -142,6 +144,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
     <ClInclude Include="EnemyTools.h" />
+    <ClInclude Include="SE.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="ImguiManager.h" />
@@ -164,6 +167,7 @@
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="ShaderLoader.h" />
+    <ClInclude Include="SoundBase.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="SplashSprite.h" />
     <ClInclude Include="Sprite.h" />
@@ -177,8 +181,10 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3DSound.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Credit.cpp" />
@@ -206,9 +212,11 @@
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
+    <ClCompile Include="SE.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="EnemyTools.cpp" />
+    <ClCompile Include="SoundBase.cpp" />
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="SplashSprite.cpp" />
     <ClCompile Include="Sprite.cpp" />

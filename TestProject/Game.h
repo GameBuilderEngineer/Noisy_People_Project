@@ -63,10 +63,8 @@ private:
 	//インスタンシングビルボードテスト
 	InstancingBillboard instancingBillboardTest;
 
-	//サウンド
-	SOUND *sound;
 public:
-	Game(SOUND* soundClass);
+	Game();
 	~Game();
 	virtual void initialize() override;
 	virtual void update(float frameTime) override;

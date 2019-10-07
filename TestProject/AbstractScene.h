@@ -16,7 +16,6 @@
 #include "ImguiManager.h"
 #include "Camera.h"
 #include "Light.h"
-#include "Sound.h"
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 //#include "ShaderLoader.h"
@@ -54,7 +53,6 @@ protected:
 	Input* input;
 	Camera* camera;
 	Light* light;
-	SOUND* sound;
 	//TextureLoader* textureLoader;
 	//StaticMeshLoader* staticMeshLoader;
 	//ShaderLoader* shaderLoader;

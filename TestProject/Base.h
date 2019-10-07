@@ -14,7 +14,8 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-#include <dsound.h>
+#include <xaudio2.h>
+#include <x3daudio.h>
 
 //===================================================================================================================================
 //【必要なライブラリファイルのロード】
@@ -23,7 +24,8 @@
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"dxguid.lib")
-#pragma comment(lib,"dsound.lib")
+#pragma comment(lib,"xaudio2.lib")
+#pragma comment(lib,"x3daudio.lib")
 
 //===================================================================================================================================
 //【警告非表示】

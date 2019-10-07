@@ -1,61 +1,41 @@
 //===================================================================================================================================
-//【Title.h】
-// [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
-// [更新日]2019/09/20
+//【SE.h】
+// [作成者]HAL東京GP12A332 16 蔡 友剛
+// [作成日]2019/10/04
+// [更新日]2019/10/04
 //===================================================================================================================================
 #pragma once
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "AbstractScene.h"
-#include "InstancingBillboard.h"
-#include "Sound.h"
-//#include "SceneEffect.h"
+#include "Base.h"
+#include "LinkedList.h"
+#include "SoundBase.h"
 
 //===================================================================================================================================
-//【名前空間】
+//【列挙型定数】
 //===================================================================================================================================
-namespace titleNS
+enum TITLE_SE_LIST
 {
-	enum TRANSITION_SCENE_LIST
-	{
-		GAME,
-		CREDIT,
-		OPERATION,
-		TUTORIAL,
-		NUM_TRANSITION_SCENE
-	};
-
-}
+	SE_01,
+	SE_02,
+	SE_MAX
+};
 
 //===================================================================================================================================
-//【タイトルシーンクラス】
+//【サウンド(XAudio2)】
+//サウンドのSEクラス
 //===================================================================================================================================
-class Title : public AbstractScene
+class SEManager : public SoundBase
 {
-private:
-	//Player player[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX];	//	プレイヤー
-	//SceneEffect sceneEffect;								//	シーンエフェクト
-	//UITitle uiTitle;										//	タイトルUI
-	//InstancingBillboard plane;							//	インスタンシングビルボード
-	InstancingBillboard plane;
-
 public:
-	Title(void);
-	~Title(void);
-	virtual void initialize() override;
-	virtual void uninitialize(void) override;
-	virtual void update(float _frameTime) override;
-	void updateInput(void);
-	virtual void render() override;
-	void render3D(Camera _currentCamera);
-	void render2D();
-	virtual void collisions(void) override;
-	virtual void AI(void) override;
+	SEManager() {};
+	~SEManager();
 
-#ifdef _DEBUG
-	virtual void createGUI() override;
-#endif
+	//変数
+	static const char * const titleSEPathList[];
+	
+	//関数
+	static void		SwitchAudioBuffer(int scene);		//ステージ遷移に合わせて必要なサウンドバッファを用意する
 };

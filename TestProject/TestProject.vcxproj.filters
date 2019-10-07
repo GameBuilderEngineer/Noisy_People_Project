@@ -163,6 +163,18 @@
     <Filter Include="Tools Layer\Enemy">
       <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Sound\BGM">
+      <UniqueIdentifier>{cf8887db-979b-457b-812f-0a56ca931807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\SE">
+      <UniqueIdentifier>{b901a311-0b7c-47c0-9aec-df053154a9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\SoundBase">
+      <UniqueIdentifier>{22e4816c-9d4e-4bea-8666-160b78119822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\3D">
+      <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -290,6 +302,18 @@
     </ClCompile>
     <ClCompile Include="EnemyTools.cpp">
       <Filter>Tools Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="BGM.cpp">
+      <Filter>Constant Layer\Sound\BGM</Filter>
+    </ClCompile>
+    <ClCompile Include="SE.cpp">
+      <Filter>Constant Layer\Sound\SE</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundBase.cpp">
+      <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSound.cpp">
+      <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -427,6 +451,18 @@
     </ClInclude>
     <ClInclude Include="EnemyTools.h">
       <Filter>Tools Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="BGM.h">
+      <Filter>Constant Layer\Sound\BGM</Filter>
+    </ClInclude>
+    <ClInclude Include="SE.h">
+      <Filter>Constant Layer\Sound\SE</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundBase.h">
+      <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSound.h">
+      <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

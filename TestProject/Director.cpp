@@ -15,6 +15,7 @@
 #include "Credit.h"
 #include "Game.h"
 #include "Result.h"
+#include "SE.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -46,9 +47,9 @@ Director::~Director() {
 	SAFE_DELETE(input);
 	SAFE_DELETE(scene);
 	SAFE_DELETE(textureLoader);
-	SAFE_DELETE(sound);
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
+	SAFE_DELETE(soundInterface);
 	//SAFE_DELETE(textManager);
 	//SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);
@@ -118,13 +119,8 @@ HRESULT Director::initialize() {
 	//animationLoader = new AnimationLoader();
 	//animationLoader->initialize(d3d->device);
 
-	// サウンド読み込み
-	//setSoundDirectory();
-	sound = new SOUND;
-	//sound->initialize(window->wnd);
-
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::AGING, soundNS::METHOD::PLAY);
+	//sound
+	soundInterface = new SoundInterface();
 
 	//scene
 	scene = new Splash();
@@ -399,7 +395,7 @@ void Director::changeNextScene() {
 	case SceneList::TITLE:					scene = new Title(); break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
 	case SceneList::CREDIT:					scene = new Credit(); break;
-	case SceneList::GAME:					scene = new Game(sound); break;
+	case SceneList::GAME:					scene = new Game(); break;
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
@@ -407,6 +403,9 @@ void Director::changeNextScene() {
 	//scene->setAnimationLoader(animationLoader);
 	scene->initialize();
 	currentSceneName = scene->getSceneName();
+	
+	//サウンド
+	SEManager::SwitchAudioBuffer(nextScene);	//シーンの更新
 }
 
 //void threadA()
