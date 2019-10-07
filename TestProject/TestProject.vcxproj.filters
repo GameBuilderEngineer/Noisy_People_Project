@@ -88,9 +88,6 @@
     <Filter Include="Constant Layer\UtilityFunction">
       <UniqueIdentifier>{67a99837-b6b6-453d-93d2-139efecd001b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Fader">
-      <UniqueIdentifier>{e78bd21f-864f-49e7-8659-84f4545b250c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\Collision">
       <UniqueIdentifier>{a9883b2d-bc39-4ae3-bb06-06638e6d8752}</UniqueIdentifier>
     </Filter>
@@ -153,6 +150,12 @@
     </Filter>
     <Filter Include="Constant Layer\Object\SkinMeshObject">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Direct3D9\Fader">
+      <UniqueIdentifier>{e78bd21f-864f-49e7-8659-84f4545b250c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\UI">
+      <UniqueIdentifier>{7973ea53-16c3-48ec-bc80-a3e5f246985e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,7 +238,7 @@
       <Filter>Constant Layer\UtilityFunction</Filter>
     </ClCompile>
     <ClCompile Include="Fader.cpp">
-      <Filter>Constant Layer\Fader</Filter>
+      <Filter>Constant Layer\Direct3D9\Fader</Filter>
     </ClCompile>
     <ClCompile Include="PointSprite.cpp">
       <Filter>Constant Layer\PointSprite</Filter>
@@ -275,6 +278,9 @@
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Gauge.cpp">
+      <Filter>Game Layer\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,7 +372,7 @@
       <Filter>Constant Layer\UtilityFunction</Filter>
     </ClInclude>
     <ClInclude Include="Fader.h">
-      <Filter>Constant Layer\Fader</Filter>
+      <Filter>Constant Layer\Direct3D9\Fader</Filter>
     </ClInclude>
     <ClInclude Include="PointSprite.h">
       <Filter>Constant Layer\PointSprite</Filter>
@@ -406,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Gauge.h">
+      <Filter>Game Layer\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
