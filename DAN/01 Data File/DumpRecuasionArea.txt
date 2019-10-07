@@ -1,0 +1,92 @@
+リカージョンエリアデータ
+出力元：EnvironmentAnalysis.cpp/recognizeRecursionArea()
+0
+recursionRecognition->center = (-49.00, 28.70,49.00) 
+recursionRecognition->totalHit = 0
+recursionRecognition->totalAmount = 0
+recursionRecognition->radius = 15.00
+1
+recursionRecognition->center = (-36.03, 28.79,59.15) 
+recursionRecognition->totalHit = 0
+recursionRecognition->totalAmount = 0
+recursionRecognition->radius = 15.00
+2
+recursionRecognition->center = (-40.53, 42.61,46.55) 
+recursionRecognition->totalHit = 0
+recursionRecognition->totalAmount = 0
+recursionRecognition->radius = 15.00
+3
+recursionRecognition->center = (-55.10, 36.26,35.70) 
+recursionRecognition->totalHit = 0
+recursionRecognition->totalAmount = 0
+recursionRecognition->radius = 15.00
+4
+recursionRecognition->center = (-59.60, 18.51,41.60) 
+recursionRecognition->totalHit = 1
+recursionRecognition->totalAmount = 200
+recursionRecognition->radius = 15.00
+5
+recursionRecognition->center = (-47.82, 13.89,56.09) 
+recursionRecognition->totalHit = 2
+recursionRecognition->totalAmount = 400
+recursionRecognition->radius = 15.00
+6
+recursionRecognition->center = (-49.00, 28.70,49.00) 
+recursionRecognition->totalHit = 2
+recursionRecognition->totalAmount = 400
+recursionRecognition->radius = 25.00
+7
+recursionRecognition->center = (-30.85, 28.47,62.15) 
+recursionRecognition->totalHit = 2
+recursionRecognition->totalAmount = 400
+recursionRecognition->radius = 25.00
+8
+recursionRecognition->center = (-36.94, 47.19,45.09) 
+recursionRecognition->totalHit = 1
+recursionRecognition->totalAmount = 200
+recursionRecognition->radius = 25.00
+9
+recursionRecognition->center = (-56.67, 38.59,30.40) 
+recursionRecognition->totalHit = 0
+recursionRecognition->totalAmount = 0
+recursionRecognition->radius = 25.00
+10
+recursionRecognition->center = (-62.77, 14.55,38.39) 
+recursionRecognition->totalHit = 2
+recursionRecognition->totalAmount = 400
+recursionRecognition->radius = 25.00
+11
+recursionRecognition->center = (-46.81, 8.29,58.01) 
+recursionRecognition->totalHit = 3
+recursionRecognition->totalAmount = 600
+recursionRecognition->radius = 25.00
+12
+recursionRecognition->center = (-49.00, 28.70,49.00) 
+recursionRecognition->totalHit = 3
+recursionRecognition->totalAmount = 600
+recursionRecognition->radius = 35.00
+13
+recursionRecognition->center = (-22.72, 27.66,65.91) 
+recursionRecognition->totalHit = 2
+recursionRecognition->totalAmount = 400
+recursionRecognition->radius = 35.00
+14
+recursionRecognition->center = (-31.13, 53.49,42.36) 
+recursionRecognition->totalHit = 1
+recursionRecognition->totalAmount = 200
+recursionRecognition->radius = 35.00
+15
+recursionRecognition->center = (-58.35, 41.62,22.10) 
+recursionRecognition->totalHit = 2
+recursionRecognition->totalAmount = 400
+recursionRecognition->radius = 35.00
+16
+recursionRecognition->center = (-66.76, 8.45,33.12) 
+recursionRecognition->totalHit = 2
+recursionRecognition->totalAmount = 400
+recursionRecognition->radius = 35.00
+17
+recursionRecognition->center = (-44.74, -0.18,60.20) 
+recursionRecognition->totalHit = 6
+recursionRecognition->totalAmount = 1200
+recursionRecognition->radius = 35.00
