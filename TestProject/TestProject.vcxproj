@@ -130,7 +130,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="3DSound.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BGM.h" />
@@ -181,7 +180,6 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3DSound.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BGM.cpp" />
