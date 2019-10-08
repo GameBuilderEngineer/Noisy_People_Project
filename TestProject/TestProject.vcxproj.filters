@@ -67,9 +67,6 @@
     <Filter Include="Game Layer\Scene\Title">
       <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene\Operation">
-      <UniqueIdentifier>{ce58847b-c228-432a-8446-8eb92fe952ea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Scene\Result">
       <UniqueIdentifier>{2c09a369-b6e9-48fe-9f8c-07e62bbd5daa}</UniqueIdentifier>
     </Filter>
@@ -154,8 +151,29 @@
     <Filter Include="Constant Layer\Object\SkinMeshObject">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Enemy">
-      <UniqueIdentifier>{e3981fa3-7567-4b30-83b0-b516344a8ee8}</UniqueIdentifier>
+    <Filter Include="Constant Layer\LinkedList">
+      <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound">
+      <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer">
+      <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Enemy">
+      <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\BGM">
+      <UniqueIdentifier>{cf8887db-979b-457b-812f-0a56ca931807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\SE">
+      <UniqueIdentifier>{b901a311-0b7c-47c0-9aec-df053154a9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\SoundBase">
+      <UniqueIdentifier>{22e4816c-9d4e-4bea-8666-160b78119822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\3D">
+      <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -215,9 +233,6 @@
     </ClCompile>
     <ClCompile Include="Tutorial.cpp">
       <Filter>Game Layer\Scene\Tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="Operation.cpp">
-      <Filter>Game Layer\Scene\Operation</Filter>
     </ClCompile>
     <ClCompile Include="Result.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
@@ -279,14 +294,23 @@
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Game Layer\Enemy</Filter>
+    <ClCompile Include="LinkedList.cpp">
+      <Filter>Constant Layer\LinkedList</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyManager.cpp">
-      <Filter>Game Layer\Enemy</Filter>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Constant Layer\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="NavigationMesh.cpp">
-      <Filter>Game Layer\Enemy</Filter>
+    <ClCompile Include="EnemyTools.cpp">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="BGM.cpp">
+      <Filter>Constant Layer\Sound\BGM</Filter>
+    </ClCompile>
+    <ClCompile Include="SE.cpp">
+      <Filter>Constant Layer\Sound\SE</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundBase.cpp">
+      <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -356,9 +380,6 @@
     <ClInclude Include="Tutorial.h">
       <Filter>Game Layer\Scene\Tutorial</Filter>
     </ClInclude>
-    <ClInclude Include="Operation.h">
-      <Filter>Game Layer\Scene\Operation</Filter>
-    </ClInclude>
     <ClInclude Include="Result.h">
       <Filter>Game Layer\Scene\Result</Filter>
     </ClInclude>
@@ -419,14 +440,23 @@
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Game Layer\Enemy</Filter>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Constant Layer\LinkedList</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyManager.h">
-      <Filter>Game Layer\Enemy</Filter>
+    <ClInclude Include="Sound.h">
+      <Filter>Constant Layer\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="NavigationMesh.h">
-      <Filter>Game Layer\Enemy</Filter>
+    <ClInclude Include="EnemyTools.h">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="BGM.h">
+      <Filter>Constant Layer\Sound\BGM</Filter>
+    </ClInclude>
+    <ClInclude Include="SE.h">
+      <Filter>Constant Layer\Sound\SE</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundBase.h">
+      <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -446,5 +476,28 @@
     <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
     </Text>
+    <Text Include="01 Data File\DumpFuzzyRecognition.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\dumpMapData.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\DumpRecuasionArea.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\memo.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\wasuremonoPosCheck.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="01 Data File\FOT-NewRodinPro-UB.otf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
+    <Font Include="01 Data File\unicode.futurabb.ttf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
   </ItemGroup>
 </Project>

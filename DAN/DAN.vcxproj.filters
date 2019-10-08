@@ -1,0 +1,503 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Constant Layer">
+      <UniqueIdentifier>{d06e7814-3312-485e-a549-154968781f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer">
+      <UniqueIdentifier>{6ea48a6a-2db4-426d-920c-46004fad2066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Base">
+      <UniqueIdentifier>{78719cad-d79b-4198-b7f4-7136cc21021f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Entry">
+      <UniqueIdentifier>{302c4bc2-7d3a-4590-849b-dc997d519043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Director">
+      <UniqueIdentifier>{ac8ea6bd-cd66-4c0d-b6a9-b751668a208f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Window">
+      <UniqueIdentifier>{4935992b-a248-43f0-bda5-cd86a6f20f76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Readme">
+      <UniqueIdentifier>{5cf713e1-532d-469a-921f-eb2022ae8805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer">
+      <UniqueIdentifier>{1fb35c8e-1d94-4afc-92c3-3ceea78c357b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\01 Data File">
+      <UniqueIdentifier>{f74de526-5881-470c-bc66-24e20a307b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\02 Visual File">
+      <UniqueIdentifier>{fdbdd74a-8587-4f03-baa5-a0b48e615d48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\03 Shader File">
+      <UniqueIdentifier>{b0237335-8aa3-483e-9705-7984d7b03435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\04 Sound File">
+      <UniqueIdentifier>{0812ec83-eadc-44f2-b337-ecb078e41f3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Direct3D9">
+      <UniqueIdentifier>{943d0fe6-0741-479f-adb9-6927ed030ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Icon">
+      <UniqueIdentifier>{c82cc8bd-bbde-49fe-a87c-14c35e9acf6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Imgui">
+      <UniqueIdentifier>{e424cf6a-e3a2-4222-b0ff-491778f88740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Imgui\imguiLib">
+      <UniqueIdentifier>{c7d60ed6-ce1f-4269-87ab-549521c4255e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Input">
+      <UniqueIdentifier>{93eb08ab-e317-43d0-8739-cd495f492290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\AbstractScene">
+      <UniqueIdentifier>{fd05661e-10e2-441f-8d21-6e1eb4a8e104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene">
+      <UniqueIdentifier>{cd8e8a79-c498-4eb4-abdb-8f2692ceec36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\MemoryViewer">
+      <UniqueIdentifier>{3b26cda4-5a87-4203-8a61-d7d497b4335f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash">
+      <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Title">
+      <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Result">
+      <UniqueIdentifier>{2c09a369-b6e9-48fe-9f8c-07e62bbd5daa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Game">
+      <UniqueIdentifier>{0d7ffe8c-9ab6-484a-af3f-b6631db469ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\GameMaster">
+      <UniqueIdentifier>{bbdbb2d7-1fec-484a-8148-f8d253d7bd5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Camera">
+      <UniqueIdentifier>{8bf42127-736c-4c29-a482-43edd18212b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Light">
+      <UniqueIdentifier>{c4858452-ff41-4da1-a0b0-173a944b8cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\UtilityFunction">
+      <UniqueIdentifier>{67a99837-b6b6-453d-93d2-139efecd001b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Fader">
+      <UniqueIdentifier>{e78bd21f-864f-49e7-8659-84f4545b250c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision">
+      <UniqueIdentifier>{a9883b2d-bc39-4ae3-bb06-06638e6d8752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\BoundingSphere">
+      <UniqueIdentifier>{bc2e7cff-5c02-4d41-8417-0ab44ab971fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\Ray">
+      <UniqueIdentifier>{824199bf-383a-44ba-956c-f042628ca2d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\PointSprite">
+      <UniqueIdentifier>{ace4a432-4445-46c2-b06f-dfec172f5b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sprite">
+      <UniqueIdentifier>{f6f2ee87-035e-412d-aba0-74d7cc67e621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Object">
+      <UniqueIdentifier>{b3d85d5a-80d7-414f-ad7d-efb141d2e5f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\InstancingBillboad">
+      <UniqueIdentifier>{c7fc4d22-60cc-438c-9022-a2683d4c6534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer">
+      <UniqueIdentifier>{23d9b99c-945e-4d5a-96ff-bf38fd6c7119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\ShaderLoader">
+      <UniqueIdentifier>{61bee9a8-0209-44e6-b9b9-7a6ac5f388b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\SkinMeshLoader">
+      <UniqueIdentifier>{85092c95-064d-4f23-865b-ccd6629f076a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\StaticMeshLoader">
+      <UniqueIdentifier>{bcd5ab4a-5f6e-4227-a090-1168f54d2fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\TextLoader">
+      <UniqueIdentifier>{bc7abbe0-f26f-45ff-a60d-a8eb8b79ddb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\TextureLoader">
+      <UniqueIdentifier>{484d792e-e9dd-4432-bde3-fb8d167f0958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Credit">
+      <UniqueIdentifier>{7b2807bf-899c-4bd1-9960-4f1688e88dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial">
+      <UniqueIdentifier>{3caaa803-1a3e-409a-94b2-1181033f6eeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash\SplashSprite">
+      <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\SelectItem">
+      <UniqueIdentifier>{6ebe25ac-c757-49a9-8891-66d344020c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player">
+      <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Object\InstancingObject">
+      <UniqueIdentifier>{8da1c1b8-ded5-4529-912b-d06adff668d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Object\StaticMeshObject">
+      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Object\SkinMeshObject">
+      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\LinkedList">
+      <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound">
+      <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer">
+      <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Enemy">
+      <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\BGM">
+      <UniqueIdentifier>{cf8887db-979b-457b-812f-0a56ca931807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\SE">
+      <UniqueIdentifier>{b901a311-0b7c-47c0-9aec-df053154a9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\SoundBase">
+      <UniqueIdentifier>{22e4816c-9d4e-4bea-8666-160b78119822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\3D">
+      <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Base.cpp">
+      <Filter>Constant Layer\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Entry.cpp">
+      <Filter>Constant Layer\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Director.cpp">
+      <Filter>Constant Layer\Director</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Constant Layer\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D9.cpp">
+      <Filter>Constant Layer\Direct3D9</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiManager.cpp">
+      <Filter>Constant Layer\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui.cpp">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_demo.cpp">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_draw.cpp">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_impl_dx9.cpp">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_impl_win32.cpp">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_widgets.cpp">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectInputController.cpp">
+      <Filter>Constant Layer\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Constant Layer\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractScene.cpp">
+      <Filter>Constant Layer\AbstractScene</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryViewer.cpp">
+      <Filter>Constant Layer\MemoryViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Splash.cpp">
+      <Filter>Game Layer\Scene\Splash</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>Game Layer\Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>Game Layer\Scene\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>Game Layer\Scene\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Game Layer\Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMaster.cpp">
+      <Filter>Constant Layer\GameMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Constant Layer\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Constant Layer\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="UtilityFunction.cpp">
+      <Filter>Constant Layer\UtilityFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="Fader.cpp">
+      <Filter>Constant Layer\Fader</Filter>
+    </ClCompile>
+    <ClCompile Include="PointSprite.cpp">
+      <Filter>Constant Layer\PointSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Credit.cpp">
+      <Filter>Game Layer\Scene\Credit</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>Constant Layer\Collision\BoundingSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>Constant Layer\Collision\Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Loader Layer\TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshLoader.cpp">
+      <Filter>Loader Layer\StaticMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashSprite.cpp">
+      <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game Layer\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Constant Layer\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingBillboard.cpp">
+      <Filter>Constant Layer\InstancingBillboad</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshObject.cpp">
+      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Loader Layer\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedList.cpp">
+      <Filter>Constant Layer\LinkedList</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Constant Layer\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyTools.cpp">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="BGM.cpp">
+      <Filter>Constant Layer\Sound\BGM</Filter>
+    </ClCompile>
+    <ClCompile Include="SE.cpp">
+      <Filter>Constant Layer\Sound\SE</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundBase.cpp">
+      <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Base.h">
+      <Filter>Constant Layer\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Director.h">
+      <Filter>Constant Layer\Director</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Constant Layer\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D9.h">
+      <Filter>Constant Layer\Direct3D9</Filter>
+    </ClInclude>
+    <ClInclude Include="Icon.h">
+      <Filter>Constant Layer\Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiManager.h">
+      <Filter>Constant Layer\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imconfig.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_impl_dx9.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_impl_win32.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_internal.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_rectpack.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_textedit.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_truetype.h">
+      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInputController.h">
+      <Filter>Constant Layer\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Constant Layer\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualController.h">
+      <Filter>Constant Layer\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractScene.h">
+      <Filter>Constant Layer\AbstractScene</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryViewer.h">
+      <Filter>Constant Layer\MemoryViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Splash.h">
+      <Filter>Game Layer\Scene\Splash</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>Game Layer\Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>Game Layer\Scene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
+      <Filter>Game Layer\Scene\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Game Layer\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMaster.h">
+      <Filter>Constant Layer\GameMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Constant Layer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Constant Layer\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilityFunction.h">
+      <Filter>Constant Layer\UtilityFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="Fader.h">
+      <Filter>Constant Layer\Fader</Filter>
+    </ClInclude>
+    <ClInclude Include="PointSprite.h">
+      <Filter>Constant Layer\PointSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Credit.h">
+      <Filter>Game Layer\Scene\Credit</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Constant Layer\Collision\BoundingSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Constant Layer\Collision\Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Loader Layer\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshLoader.h">
+      <Filter>Loader Layer\StaticMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashSprite.h">
+      <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game Layer\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Constant Layer\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>Constant Layer\InstancingBillboad</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshObject.h">
+      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLoader.h">
+      <Filter>Loader Layer\ShaderLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Constant Layer\LinkedList</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Constant Layer\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyTools.h">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="BGM.h">
+      <Filter>Constant Layer\Sound\BGM</Filter>
+    </ClInclude>
+    <ClInclude Include="SE.h">
+      <Filter>Constant Layer\Sound\SE</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundBase.h">
+      <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon.ico">
+      <Filter>Constant Layer\Icon</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Icon.rc">
+      <Filter>Constant Layer\Icon</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme\Readme.txt">
+      <Filter>Readme</Filter>
+    </Text>
+    <Text Include="Readme\コーディング規約.txt">
+      <Filter>Readme</Filter>
+    </Text>
+    <Text Include="01 Data File\DumpFuzzyRecognition.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\dumpMapData.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\DumpRecuasionArea.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\memo.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\wasuremonoPosCheck.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="01 Data File\FOT-NewRodinPro-UB.otf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
+    <Font Include="01 Data File\unicode.futurabb.ttf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
+  </ItemGroup>
+</Project>

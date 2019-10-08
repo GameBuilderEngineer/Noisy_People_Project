@@ -59,6 +59,7 @@ public:
 	~Camera();
 	HRESULT initialize(DWORD _windowWidth, DWORD _windowHeight);
 	void update();
+	void renderReady();
 	void outputGUI();
 
 	void rotation(D3DXVECTOR3 axis, float angle);

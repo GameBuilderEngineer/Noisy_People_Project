@@ -21,11 +21,11 @@
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
 //#include "Camera.h"
-//#include "Sound.h"
 //#include "TextManager.h"
 #include "GameMaster.h"
 //#include "AnimationLoader.h"
 //#include <thread>
+#include "Sound.h"
 
 //===================================================================================================================================
 //【列挙型定数】
@@ -56,11 +56,11 @@ public:
 	HWND wnd;								//ウィンドウハンドル
 	Direct3D9* d3d;							//DirectX9クラス・デバイス
 	Input* input;							//Inputクラス
-	//Sound* sound;
 	AbstractScene* scene;					//抽象シーンクラス
 	TextureLoader* textureLoader;			//テクスチャ読込クラス
 	StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス
 	ShaderLoader* shaderLoader;				//シェーダー読込クラス
+	SoundInterface *soundInterface;			//サウンドのインターフェースクラス
 	//TextManager* textManager;				//テキストデータ読込クラス
 	//GameMaster* gameMaster;					//ゲーム運営クラス
 	//AnimationLoader* animationLoader;		//アニメーション読込クラス
