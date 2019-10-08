@@ -12,6 +12,7 @@
 #include <vector>
 #include "AbstractScene.h"
 #include "Player.h"
+#include "EnemyManager.h"
 #include "StaticMeshObject.h"
 
 //#include "GameMaster.h"
@@ -56,6 +57,9 @@ private:
 
 	//プレイヤー
 	Player *player;
+
+	// エネミー関係
+	EnemyManager enemyManager;
 
 	//フィールド
 	StaticMeshObject* testField;	
