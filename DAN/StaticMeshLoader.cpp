@@ -50,6 +50,8 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[SAMPLE_SCISSORS]									= { "scissors.x" };
 	fileName[SAMPLE_PLAYSTATION]							= { "playstation.x" };
 	fileName[SAMPLE_HAT]											= { "hat.x" };
+
+	fileName[DEAD_TREE]											= { "deadTree001.x" };
 }
 
 //===================================================================================================================================

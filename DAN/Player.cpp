@@ -19,7 +19,7 @@ using namespace playerNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_STATIC_MESH))
+Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE))
 {
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
 	onGravity = true;
@@ -152,7 +152,7 @@ void Player::update(float frameTime)
 	postureControl(axisY.direction, -gravityRay.direction,3.0f * frameTime);
 	
 	//オブジェクト：更新
-	Object::update();
+	StaticMeshObject::update();
 	
 	//カメラの操作
 	controlCamera(frameTime);

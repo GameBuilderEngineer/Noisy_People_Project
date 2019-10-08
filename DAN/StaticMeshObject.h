@@ -2,7 +2,7 @@
 //【Object.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/24
+// [更新日]2019/10/08
 //===================================================================================================================================
 #pragma once
 
@@ -25,6 +25,9 @@ public:
 	StaticMeshObject(StaticMesh* _staticMesh);
 	~StaticMeshObject();
 
+	void update();
+	void updateBuffer();
+	void updatePosition();
 	void render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	//getter

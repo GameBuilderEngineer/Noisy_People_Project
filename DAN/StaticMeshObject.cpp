@@ -2,7 +2,7 @@
 //【StaticMeshObject.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/23
+// [更新日]2019/10/08
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -17,6 +17,28 @@
 StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 {
 	this->staticMesh = _staticMesh;
+
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 device = getDevice();
+
+	//頂点宣言
+	D3DVERTEXELEMENT9 vertexElement[65];
+	int i = 0;
+	while(staticMesh->vertexElement[i].Type != D3DDECLTYPE_UNUSED)
+	{
+		vertexElement[i] = staticMesh->vertexElement[i];
+		i++;
+	}
+	vertexElement[i] = { 1, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 };
+	i++;
+	vertexElement[i] = D3DDECL_END();
+	i++;
+	device->CreateVertexDeclaration(vertexElement, &declaration);
+
+	//位置バッファの作成
+	device->CreateVertexBuffer(sizeof(D3DXVECTOR3) * 1/*instanceNum*/, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+	copyVertexBuffer(sizeof(D3DXVECTOR3)*1/*instanceNum*/, position, positionBuffer);
+
 }
 
 //===================================================================================================================================
@@ -26,6 +48,43 @@ StaticMeshObject::~StaticMeshObject()
 {
 
 }
+
+//===================================================================================================================================
+//【更新】
+//===================================================================================================================================
+void StaticMeshObject::update()
+{
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 device = getDevice();
+
+	Object::update();
+
+	updatePosition();
+
+
+}
+
+//===================================================================================================================================
+//【バッファのリソース更新】
+//===================================================================================================================================
+void StaticMeshObject::updateBuffer()
+{
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 device = getDevice();
+
+	//位置情報バッファの再作成
+	SAFE_RELEASE(positionBuffer);
+	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*1/*instanceNum*/, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+}
+
+//===================================================================================================================================
+//【位置バッファを更新する】
+//===================================================================================================================================
+void StaticMeshObject::updatePosition()
+{
+	copyVertexBuffer(sizeof(D3DXVECTOR3)*1, position, positionBuffer);
+}
+
 
 //===================================================================================================================================
 //【描画】
@@ -67,12 +126,11 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
 
 	//頂点宣言を追加
-	device->SetVertexDeclaration(staticMesh->declaration);
+	device->SetVertexDeclaration(declaration);
 
 	//ストリームにメッシュの頂点バッファをバインド
 	device->SetStreamSource(0, staticMesh->vertexBuffer, 0, staticMesh->numBytesPerVertex);
 	device->SetStreamSource(1, positionBuffer, 0, sizeof(D3DXVECTOR3));
-
 
 	//インデックスバッファをセット
 	device->SetIndices(staticMesh->indexBuffer);

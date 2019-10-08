@@ -57,6 +57,9 @@ namespace staticMeshNS {
 		SAMPLE_SCISSORS,
 		SAMPLE_PLAYSTATION,
 		SAMPLE_HAT,
+
+		DEAD_TREE,
+		
 		MESH_NUM,
 	};
 

@@ -2,7 +2,7 @@
 //【Base.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/05
+// [更新日]2019/10/07
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -40,7 +40,7 @@
 //===================================================================================================================================
 #ifdef _DEBUG
 //Debug
-#define APP_NAME (LPSTR)"Test ver.prototype-Debug-"
+#define APP_NAME (LPSTR)"D/A:Nature"
 #if FALSE
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
@@ -56,7 +56,7 @@
 #define   _expand(p, s)         _expand_dbg(p, s, _NORMAL_BLOCK, __FILE__, __LINE__)
 #else
 //Release
-#define APP_NAME (LPSTR)"Test ver.prototype-Release-"
+#define APP_NAME (LPSTR)"D/A:Nature"
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
 #endif // _DEBUG

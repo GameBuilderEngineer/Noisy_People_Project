@@ -74,14 +74,14 @@ namespace playerNS{
 		STATE_NUM
 	};
 
-	const int MAX_HP					= 100;		//ＨＰ最大値
-	const float SPEED					= 100.0f;	//速度
-	const float DASH_MAGNIFICATION		= 2.0f;		//ダッシュ倍率
-	const float JUMP_FORCE				= 30.0f;	//ジャンプ力
-	const float GRAVITY_FORCE			= 9.8f*7.0;	//重力
-	const float DIFFERENCE_FIELD		= 0.2f;		//フィールド補正差分
-	const float INVINCIBLE_TIME			= 3.0f;		//無敵時間
-	const float CAMERA_SPEED			= 1.0f;		//カメラの速さ
+	const int	MAX_HP							= 100;			//ＨＰ最大値
+	const float SPEED								= 100.0f;		//速度
+	const float DASH_MAGNIFICATION		= 2.0f;			//ダッシュ倍率
+	const float JUMP_FORCE						= 30.0f;		//ジャンプ力
+	const float GRAVITY_FORCE				= 9.8f*7.0;	//重力
+	const float DIFFERENCE_FIELD			= 0.2f;			//フィールド補正差分
+	const float INVINCIBLE_TIME				= 3.0f;			//無敵時間
+	const float CAMERA_SPEED					= 1.0f;			//カメラの速さ
 
 	//プレイヤーのスタートポジション
 	const D3DXVECTOR3 START_POSITION =	D3DXVECTOR3(0, 1000, 0);
