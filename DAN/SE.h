@@ -20,6 +20,7 @@ enum TITLE_SE_LIST
 {
 	SE_01,
 	SE_02,
+	SE_03,
 	SE_MAX
 };
 

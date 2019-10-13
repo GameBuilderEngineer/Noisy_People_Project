@@ -40,10 +40,10 @@ void	 SoundBase::uninitSoundStop(void)
 {
 	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
 
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		tmpSoundParameters = soundParametersList->getValue(i);
-
+		
 		if (tmpSoundParameters->isPlaying)		//再生している
 		{
 			XAUDIO2_VOICE_STATE voiceState;
@@ -184,6 +184,7 @@ void SoundBase::MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *
 	tmpSoundParameters->SourceVoice->SubmitSourceBuffer(&listBuffer->buffer);
 
 	//ノードの更新処理
+	soundParametersList->insertAfter(soundParametersList->getNode(soundParametersList->nodeNum - 1));
 	soundParametersList->listUpdate();
 
 	//再生
