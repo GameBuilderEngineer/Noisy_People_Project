@@ -91,7 +91,7 @@ public:
 
 protected:
 	static WAV_FILE	LoadWavChunk(FILE *fp);								//WAVファイルの読み込み処理
-	void				MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *listBuffer);
+	void				MakeSourceVoice(int soundId, bool loop, LIST_BUFFER *listBuffer);
 	void				uninitSoundStop(void);									//停止(全部のサウンド)
 	LIST_BUFFER		*GetBuffer(int soundId, bool loop);
 

@@ -65,7 +65,7 @@ void SoundBase::playSound(int soundId, bool loop)
 {
 	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
 
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		tmpSoundParameters = soundParametersList->getValue(i);
 
@@ -79,7 +79,7 @@ void SoundBase::playSound(int soundId, bool loop)
 	}
 
 	//リスト中に存在しない、再生していないボイスがない時は新しく追加する
-	MakeSourceVoice(tmpSoundParameters, GetBuffer(soundId, loop));
+	MakeSourceVoice(soundId, loop, GetBuffer(soundId, loop));
 }
 
 //===================================================================================================================================
@@ -89,7 +89,7 @@ void	 SoundBase::stopSound(int soundId, bool loop)
 {
 	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
 
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		tmpSoundParameters = soundParametersList->getValue(i);
 
@@ -114,7 +114,7 @@ void	 SoundBase::stopSound(int soundId, bool loop)
 void	 SoundBase::updateSound(void)
 {
 	//再生状態をチェック
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
@@ -148,7 +148,7 @@ LIST_BUFFER *SoundBase::GetBuffer(int soundId, bool loop)
 //===================================================================================================================================
 //【ソースボイスの作成】
 //===================================================================================================================================
-void SoundBase::MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *listBuffer)
+void SoundBase::MakeSourceVoice(int soundId, bool loop, LIST_BUFFER *listBuffer)
 {
 	//波形のフォーマット
 	WAVEFORMATEX pcm;
@@ -156,9 +156,9 @@ void SoundBase::MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *
 
 	//再生のパラメータ
 	SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(soundParametersList->nodeNum - 1);
-	tmpSoundParameters->stopPoint = soundParameters->stopPoint;
-	tmpSoundParameters->soundId = soundParameters->soundId;
-	tmpSoundParameters->loop = soundParameters->loop;
+	tmpSoundParameters->stopPoint = 0;
+	tmpSoundParameters->soundId = soundId;
+	tmpSoundParameters->loop = loop;
 	tmpSoundParameters->isPlaying = false;
 
 	//波形のフォーマット
