@@ -15,6 +15,7 @@ int	SoundBase::bufferMax = 0;
 
 //===================================================================================================================================
 //【コンストラクタ】
+//・ノードの準備
 //===================================================================================================================================
 SoundBase::SoundBase()
 {
@@ -38,11 +39,9 @@ SoundBase::~SoundBase()
 //===================================================================================================================================
 void	 SoundBase::uninitSoundStop(void)
 {
-	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
-
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
-		tmpSoundParameters = soundParametersList->getValue(i);
+		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 		
 		if (tmpSoundParameters->isPlaying)		//再生している
 		{
@@ -63,11 +62,9 @@ void	 SoundBase::uninitSoundStop(void)
 //===================================================================================================================================
 void SoundBase::playSound(int soundId, bool loop)
 {
-	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
-
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
-		tmpSoundParameters = soundParametersList->getValue(i);
+		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
 		if ((!tmpSoundParameters->isPlaying) &&				//再生していない
 			(tmpSoundParameters->soundId == soundId))		//IDが一致する
@@ -87,11 +84,9 @@ void SoundBase::playSound(int soundId, bool loop)
 //===================================================================================================================================
 void	 SoundBase::stopSound(int soundId, bool loop)
 {
-	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
-
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
-		tmpSoundParameters = soundParametersList->getValue(i);
+		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
 		if ((tmpSoundParameters->isPlaying) &&				//再生している
 			(tmpSoundParameters->soundId == soundId))		//IDが一致する
@@ -126,7 +121,8 @@ void	 SoundBase::updateSound(void)
 			//再生し終わった
 			if (voiceState.BuffersQueued == 0)
 			{
-				SAFE_DELETE(tmpSoundParameters);
+				SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
+				soundParametersList->remove(soundParametersList->getNode(i));
 				soundParametersList->listUpdate();
 			}
 		}

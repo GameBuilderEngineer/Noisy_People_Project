@@ -241,7 +241,7 @@ void Director::update() {
 	scene->update(frameTime);
 	scene->collisions();
 	scene->AI();
-	//sound->updateSound
+	soundInterface->UpdateSound();
 #ifdef _DEBUG
 	if (*scene->getShowGUI())
 	{
