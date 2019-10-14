@@ -13,6 +13,7 @@
 IXAudio2 *SoundInterface::XAudio2Interface = nullptr;
 XAUDIO2_VOICE_SENDS SoundInterface::SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX] = { NULL };
 SEManager *SoundInterface::SE = new SEManager();
+BGMManager *SoundInterface::BGM = new BGMManager();
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -87,6 +88,9 @@ SoundInterface::~SoundInterface()
 {
 	//SE
 	SAFE_DELETE(SE);
+	
+	//BGM
+	SAFE_DELETE(BGM);
 
 	//エンドポイントボイス
 	SAFE_DESTROY_VOICE(EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_BGM])
@@ -126,6 +130,8 @@ void SoundInterface::UpdateSound(void)
 {
 	//SEの更新処理
 	SE->updateSound();
+	//BGMの更新処理
+	BGM->updateSound();
 
 	//ImGUI
 #ifdef _DEBUG
@@ -143,7 +149,8 @@ void SoundInterface::outputSoundGUI(void)
 	
 	//SE
 	SE->outputSEGUI();
-	
+	BGM->outputBGMGUI();
+
 	ImGui::End();
 #endif
 }
@@ -155,11 +162,27 @@ void SoundInterface::playSound(int endpointVoiceId, int soundId, bool loop)
 {
 	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
-
+		BGM->playSound(endpointVoiceId,soundId, loop);
 	}
 	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
 	{
 		//SE
-		SE->playSound(soundId, loop);
+		SE->playSound(endpointVoiceId,soundId, loop);
+	}
+}
+
+//===================================================================================================================================
+//【停止】
+//===================================================================================================================================
+void SoundInterface::stopSound(int endpointVoiceId, int soundId, bool loop)
+{
+	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	{
+		BGM->stopSound(endpointVoiceId, soundId, loop);
+	}
+	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	{
+		//SE
+		SE->stopSound(endpointVoiceId, soundId, loop);
 	}
 }

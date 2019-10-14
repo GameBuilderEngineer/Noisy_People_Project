@@ -22,8 +22,10 @@ Splash::Splash()
 	nextScene = SceneList::TITLE;
 
 	//サウンドの再生
-	SEManager::SwitchAudioBuffer(SceneList::SPLASH);	//シーンの更新
+	SEManager::SwitchAudioBuffer(SceneList::SPLASH);		//シーンの更新
+	BGMManager::SwitchAudioBuffer(SceneList::SPLASH);	//シーンの更新
 	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false);
+	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true);
 }
 
 //===================================================================================================================================
@@ -31,6 +33,8 @@ Splash::Splash()
 //===================================================================================================================================
 Splash::~Splash()
 {
+	//サウンドの停止
+	SoundInterface::stopSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true);
 }
 
 //===================================================================================================================================
@@ -49,10 +53,6 @@ void Splash::uninitialize()
 {
 	//スプラッシュの削除
 	SAFE_DELETE(splashSprite);
-
-	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_SPLASH);
-
 }
 
 //===================================================================================================================================

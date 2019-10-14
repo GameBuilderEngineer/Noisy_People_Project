@@ -16,8 +16,41 @@
 //===================================================================================================================================
 //【列挙型定数】
 //===================================================================================================================================
+enum SPLASH_BGM_LIST
+{
+	SPLASH_BGM_01,
+	SPLASH_BGM_MAX
+};
+
+enum TITLE_BGM_LIST
+{
+	TITLE_BGM_01,
+	TITLE_BGM_MAX
+};
+
+enum GAME_BGM_LIST
+{
+	GAME_BGM_01,
+	GAME_BGM_MAX
+};
 
 //===================================================================================================================================
 //【サウンド(XAudio2)】
 //サウンドのBGMクラス
 //===================================================================================================================================
+class BGMManager : public SoundBase
+{
+public:
+	BGMManager() {};
+	~BGMManager();
+
+	//変数
+	static const char * const splashBGMPathList[];
+	static const char * const titleBGMPathList[];
+	static const char * const gameBGMPathList[];
+	static int	BGMScene;
+
+	//関数
+	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	void				outputBGMGUI(void);				//ImGUIへの出力
+};

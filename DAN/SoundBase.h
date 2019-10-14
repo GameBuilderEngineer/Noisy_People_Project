@@ -73,6 +73,7 @@ typedef struct //再生パラメータ
 	int					soundId;			//サウンドID
 	bool					loop;			//ループ
 	short				stopPoint;		//停止位置
+	int					endpointVoiceId;//エンドポイントボイスID
 }SOUND_PARAMETERS;
 
 //===================================================================================================================================
@@ -85,19 +86,21 @@ public:
 	SoundBase();
 	~SoundBase();
 
-	void	 playSound(int soundId, bool loop);					//再生
-	void	 stopSound(int soundId, bool loop);					//停止
-	void	 updateSound(void);									//更新処理
+	void	 playSound(int endpointVoiceId,int soundId, bool loop);	//再生
+	void	 stopSound(int endpointVoiceId, int soundId, bool loop);	//停止
+	void	 updateSound(void);										//更新処理
 
 protected:
 	static WAV_FILE	LoadWavChunk(FILE *fp);								//WAVファイルの読み込み処理
-	void				MakeSourceVoice(int soundId, bool loop, LIST_BUFFER *listBuffer);
+	void				MakeSourceVoice(int endpointVoiceId,int soundId, bool loop, LIST_BUFFER *listBuffer);
 	void				uninitSoundStop(void);									//停止(全部のサウンド)
-	LIST_BUFFER		*GetBuffer(int soundId, bool loop);
+	LIST_BUFFER		*GetBuffer(int endpointVoiceId, int soundId, bool loop);
 
 	//バッファリスト
-	static LIST_BUFFER *bufferList;
-	static int			bufferMax;
+	static LIST_BUFFER *SEBufferList;
+	static int			SEBufferMax;
+	static LIST_BUFFER *BGMBufferList;
+	static int			BGMBufferMax;
 
 	//ボイスリスト
 	LinkedList <SOUND_PARAMETERS>*soundParametersList;
