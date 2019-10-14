@@ -24,9 +24,10 @@ Game::Game()
 	sceneName = "Scene -Game-";
 
 	nextScene = SceneList::RESULT;
-	SEManager::SwitchAudioBuffer(SceneList::TITLE);	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::GAME);	//シーンの更新
 	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false);
 	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false);
+	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, false);
 }
 
 //===================================================================================================================================
@@ -35,7 +36,7 @@ Game::Game()
 Game::~Game()
 {
 	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_GAME);
+	SoundInterface::stopSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, false);
 }
 
 //===================================================================================================================================

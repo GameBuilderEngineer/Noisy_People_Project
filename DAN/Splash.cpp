@@ -22,8 +22,7 @@ Splash::Splash()
 	nextScene = SceneList::TITLE;
 
 	//サウンドの再生
-	SEManager::SwitchAudioBuffer(SceneList::SPLASH);		//シーンの更新
-	BGMManager::SwitchAudioBuffer(SceneList::SPLASH);	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);	//シーンの更新
 	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false);
 	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true);
 }
