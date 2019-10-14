@@ -31,7 +31,7 @@ SEManager::~SEManager()
 void SEManager::outputSEGUI(void)
 {
 #ifdef _DEBUG
-	if (ImGui::CollapsingHeader("SEInformation"))
+	if (!ImGui::CollapsingHeader("SEInformation"))
 	{
 		ImGui::Text("Buffer List:%d", SEBufferMax);
 

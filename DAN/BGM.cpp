@@ -31,7 +31,7 @@ BGMManager::~BGMManager()
 void BGMManager::outputBGMGUI(void)
 {
 #ifdef _DEBUG
-	if (ImGui::CollapsingHeader("BGMInformation"))
+	if (!ImGui::CollapsingHeader("BGMInformation"))
 	{
 		ImGui::Text("Buffer List:%d", BGMBufferMax);
 
