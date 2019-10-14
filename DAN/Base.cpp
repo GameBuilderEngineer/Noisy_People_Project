@@ -9,6 +9,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
+#include "Sound.h"
 
 //===================================================================================================================================
 //【グローバル変数】
@@ -77,11 +78,22 @@ void setShaderDirectory()
 //サウンドディレクトリへのセット関数		
 //[用途]サウンドデータを格納するサウンドディレクトリへカレントディレクトリを切り替える
 //-----------------------------------------------------------------------------------------------------------------------------------
-void setSoundDirectory()
+void setSoundDirectory(int endpointVoiceId)
 {
 	char tmporary[512] = { 0 };
 	strcpy(tmporary, rootPath);
-	strcat(tmporary, "\\04 Sound File");
+	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	{
+		strcat(tmporary, "\\04 Sound File\\SE");
+	}
+	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	{
+		strcat(tmporary, "\\04 Sound File\\BGM");
+	}
+	else
+	{
+		strcat(tmporary, "\\04 Sound File");
+	}
 	SetCurrentDirectory(tmporary);
 }
 

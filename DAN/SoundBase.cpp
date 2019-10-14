@@ -67,7 +67,8 @@ void SoundBase::playSound(int soundId, bool loop)
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
 		if ((!tmpSoundParameters->isPlaying) &&				//Ä¶‚µ‚Ä‚¢‚È‚¢
-			(tmpSoundParameters->soundId == soundId))		//ID‚ªˆê’v‚·‚é
+			(tmpSoundParameters->soundId == soundId) &&		//ID‚ªˆê’v‚·‚é
+			(tmpSoundParameters->loop == loop))				//ƒ‹[ƒvî•ñ‚àˆê’v‚·‚é
 		{
 			tmpSoundParameters->SourceVoice->Start();
 			tmpSoundParameters->isPlaying = true;
@@ -88,8 +89,9 @@ void	 SoundBase::stopSound(int soundId, bool loop)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((tmpSoundParameters->isPlaying) &&				//Ä¶‚µ‚Ä‚¢‚é
-			(tmpSoundParameters->soundId == soundId))		//ID‚ªˆê’v‚·‚é
+		if ((!tmpSoundParameters->isPlaying) &&				//Ä¶‚µ‚Ä‚¢‚È‚¢
+			(tmpSoundParameters->soundId == soundId) &&		//ID‚ªˆê’v‚·‚é
+			(tmpSoundParameters->loop == loop))				//ƒ‹[ƒvî•ñ‚àˆê’v‚·‚é
 		{
 			XAUDIO2_VOICE_STATE voiceState;
 			tmpSoundParameters->SourceVoice->GetState(&voiceState);

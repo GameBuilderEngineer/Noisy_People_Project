@@ -33,8 +33,6 @@ Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TR
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
-
-	onSound = false;						//サウンドのGUIフラグ
 }
 
 //===================================================================================================================================
@@ -74,29 +72,10 @@ void Player::outputGUI()
 		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
 		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
 		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		ImGui::Checkbox("sound", &onSound);												//サウンド
 
 		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
-
-		// サウンドGUI
-		outputSoundGUI();
 	}
 #endif // _DEBUG
-}
-
-//===================================================================================================================================
-//【サウンドGUIの出力】
-//===================================================================================================================================
-void Player::outputSoundGUI()
-{
-	if (!onSound)return;
-	ImGui::Begin("PlayerInformation(Sound)");
-	if (ImGui::CollapsingHeader("PlayerInformation(Sound)"))
-	{
-		ImGui::SliderInt("volume", &volume, 0, 100);									//ボリューム
-
-	}
-	ImGui::End();
 }
 
 //===================================================================================================================================

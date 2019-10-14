@@ -9,6 +9,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Game.h"
+#include "Sound.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -23,6 +24,9 @@ Game::Game()
 	sceneName = "Scene -Game-";
 
 	nextScene = SceneList::RESULT;
+	SEManager::SwitchAudioBuffer(SceneList::TITLE);	//シーンの更新
+	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false);
+	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false);
 }
 
 //===================================================================================================================================

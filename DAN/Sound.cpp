@@ -5,6 +5,7 @@
 // [XV“ú]2019/10/04
 //===================================================================================================================================
 #include "Sound.h"
+#include "ImguiManager.h"
 
 //===================================================================================================================================
 //yƒOƒ[ƒoƒ‹•Ï”z
@@ -125,18 +126,38 @@ void SoundInterface::UpdateSound(void)
 {
 	//SE‚ÌXVˆ—
 	SE->updateSound();
+
+	//ImGUI
+#ifdef _DEBUG
+	outputSoundGUI();
+#endif
+}
+
+//===================================================================================================================================
+//yImGUI‚Ö‚Ìo—Íz
+//===================================================================================================================================
+void SoundInterface::outputSoundGUI(void)
+{
+#ifdef _DEBUG
+	ImGui::Begin("SoundInformation");
+	
+	//SE
+	SE->outputSEGUI();
+	
+	ImGui::End();
+#endif
 }
 
 //===================================================================================================================================
 //yÄ¶z
 //===================================================================================================================================
-void SoundInterface::playSound(int soundType, int soundId, bool loop)
+void SoundInterface::playSound(int endpointVoiceId, int soundId, bool loop)
 {
-	if (soundType == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
 
 	}
-	else if (soundType == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
 	{
 		//SE
 		SE->playSound(soundId, loop);

@@ -20,6 +20,10 @@ Splash::Splash()
 	sceneName = "Scene -Splash-";
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
+
+	//サウンドの再生
+	SEManager::SwitchAudioBuffer(SceneList::SPLASH);	//シーンの更新
+	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false);
 }
 
 //===================================================================================================================================
@@ -34,9 +38,6 @@ Splash::~Splash()
 //===================================================================================================================================
 void Splash::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_SPLASH, soundNS::METHOD::PLAY);
-
 	// スプラッシュspriteの作成
 	splashSprite = new SplashSprite;
 }
@@ -81,7 +82,10 @@ void Splash::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-		)changeScene(nextScene);
+		)
+	{
+		changeScene(nextScene);
+	}
 
 	// フェードが終わったらタイトルへ
 	if(sceneTimer > SCENE_TIME)changeScene(nextScene);

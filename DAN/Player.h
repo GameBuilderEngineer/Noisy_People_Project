@@ -123,10 +123,6 @@ protected:
 	float											difference;						//フィールド補正差分
 	bool											onGround;						//接地判定
 
-	//サウンドGUI
-	bool onSound;										//サウンドGUIのフラグ
-	int volume;											//ボリューム
-	void outputSoundGUI();								//サウンドGUIの中身
 public:
 
 	Player();

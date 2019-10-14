@@ -28,6 +28,10 @@ Title::Title(void)
 	// 今のシーン( タイトル )
 	sceneName = ("Scene -Title-");
 	nextScene = SceneList::GAME;
+
+	SEManager::SwitchAudioBuffer(SceneList::TITLE);	//シーンの更新
+	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false);
+	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false);
 }
 
 //============================================================================================================================================
@@ -110,10 +114,6 @@ void Title::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
-		// サウンドの再生
-		SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, TITLE_SE_LIST::SE_01, false);
-		SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, TITLE_SE_LIST::SE_02, false);
-		SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, TITLE_SE_LIST::SE_03, false);
 		updateInput();
 		changeScene(nextScene);
 	}
