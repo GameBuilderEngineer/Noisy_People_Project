@@ -189,5 +189,6 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 //===================================================================================================================================
 StaticMesh* StaticMeshObject::getStaticMesh()
 {
+
 	return staticMesh;
 }

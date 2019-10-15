@@ -1,0 +1,197 @@
+頂点宣言構造体の中身
+出力元：NavigationMesh.cpp
+
+[0]Type : 2
+Usage : 0
+
+[1]Type : 2
+Usage : 3
+
+[2]Type : 4
+Usage : 10
+
+[3]Type : 1
+Usage : 5
+
+[4]Type : 17
+Usage : 0
+
+[5]Type : 2
+Usage : 7
+
+[6]Type : 17
+Usage : 0
+
+[7]Type : 204
+Usage : 204
+
+[8]Type : 204
+Usage : 204
+
+[9]Type : 204
+Usage : 204
+
+[10]Type : 204
+Usage : 204
+
+[11]Type : 204
+Usage : 204
+
+[12]Type : 204
+Usage : 204
+
+[13]Type : 204
+Usage : 204
+
+[14]Type : 204
+Usage : 204
+
+[15]Type : 204
+Usage : 204
+
+[16]Type : 204
+Usage : 204
+
+[17]Type : 204
+Usage : 204
+
+[18]Type : 204
+Usage : 204
+
+[19]Type : 204
+Usage : 204
+
+[20]Type : 204
+Usage : 204
+
+[21]Type : 204
+Usage : 204
+
+[22]Type : 204
+Usage : 204
+
+[23]Type : 204
+Usage : 204
+
+[24]Type : 204
+Usage : 204
+
+[25]Type : 204
+Usage : 204
+
+[26]Type : 204
+Usage : 204
+
+[27]Type : 204
+Usage : 204
+
+[28]Type : 204
+Usage : 204
+
+[29]Type : 204
+Usage : 204
+
+[30]Type : 204
+Usage : 204
+
+[31]Type : 204
+Usage : 204
+
+[32]Type : 204
+Usage : 204
+
+[33]Type : 204
+Usage : 204
+
+[34]Type : 204
+Usage : 204
+
+[35]Type : 204
+Usage : 204
+
+[36]Type : 204
+Usage : 204
+
+[37]Type : 204
+Usage : 204
+
+[38]Type : 204
+Usage : 204
+
+[39]Type : 204
+Usage : 204
+
+[40]Type : 204
+Usage : 204
+
+[41]Type : 204
+Usage : 204
+
+[42]Type : 204
+Usage : 204
+
+[43]Type : 204
+Usage : 204
+
+[44]Type : 204
+Usage : 204
+
+[45]Type : 204
+Usage : 204
+
+[46]Type : 204
+Usage : 204
+
+[47]Type : 204
+Usage : 204
+
+[48]Type : 204
+Usage : 204
+
+[49]Type : 204
+Usage : 204
+
+[50]Type : 204
+Usage : 204
+
+[51]Type : 204
+Usage : 204
+
+[52]Type : 204
+Usage : 204
+
+[53]Type : 204
+Usage : 204
+
+[54]Type : 204
+Usage : 204
+
+[55]Type : 204
+Usage : 204
+
+[56]Type : 204
+Usage : 204
+
+[57]Type : 204
+Usage : 204
+
+[58]Type : 204
+Usage : 204
+
+[59]Type : 204
+Usage : 204
+
+[60]Type : 204
+Usage : 204
+
+[61]Type : 204
+Usage : 204
+
+[62]Type : 204
+Usage : 204
+
+[63]Type : 204
+Usage : 204
+
+[64]Type : 204
+Usage : 204

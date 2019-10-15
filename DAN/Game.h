@@ -14,6 +14,12 @@
 #include "Player.h"
 #include "StaticMeshObject.h"
 #include "InstancingBillboard.h"
+#include "EnemyManager.h"
+#include "AIDirector.h"
+#include "NavigationMesh.h"
+#include "TreeManager.h"
+#include "ItemManager.h"
+
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -31,7 +37,8 @@ namespace gameNS
 	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f);
+	//const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,3.0f,-5.0f,0.0f);
 
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,0,0);
@@ -62,6 +69,20 @@ private:
 
 	//インスタンシングビルボードテスト
 	InstancingBillboard instancingBillboardTest;
+
+	// エネミー
+	EnemyManager enemyManager;
+	Enemy* enemy;
+
+	// ツリー
+	TreeManager* treeManager;
+
+	// アイテム
+	ItemManager* itemManager;
+
+	// AI
+	AIDirector* aiDirector;
+	NavigationMesh* naviAI;
 
 public:
 	Game();

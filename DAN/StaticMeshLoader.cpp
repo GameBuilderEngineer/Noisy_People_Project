@@ -28,30 +28,38 @@ StaticMeshLoader::StaticMeshLoader()
 	//外部参照用ポインタへ代入
 	pointerStaticMeshLoader = this;
 
-	fileName[FIELD]														= { "testField.x" };
-	fileName[CUBE]														= { "cube.x" };
-	fileName[SAMPLE_HIERARCHY_MESH]						= { "HierarchyMesh.x" };
-	fileName[PLANET]													= { "planet.x" };
-	fileName[SAMPLE_ROBOT001]								= { "RobotB.x" };
-	fileName[SAMPLE_ROBOT002]								= { "robotB_still_back.x" };
-	fileName[SAMPLE_SKINNED_MESH]						= { "SkinnedMesh.x" };
-	fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };
-	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };
+	fileName[FIELD]								= { "testField.x" };
+	fileName[CUBE]								= { "cube.x" };
+	fileName[SAMPLE_HIERARCHY_MESH]				= { "HierarchyMesh.x" };
+	fileName[PLANET]							= { "planet.x" };
+	fileName[SAMPLE_ROBOT001]					= { "RobotB.x" };
+	fileName[SAMPLE_ROBOT002]					= { "robotB_still_back.x" };
+	fileName[SAMPLE_SKINNED_MESH]				= { "SkinnedMesh.x" };
+	fileName[STAR_REGULAR_POLYHEDRON]			= { "starRegularPolyhedron.x" };
+	fileName[STAR_REGULAR_POLYHEDRON_X10]		= { "x10starRegularPolyhedron.x" };
 	fileName[STAR_REGULAR_POLYHEDRON_X100]		= { "x100starRegularPolyhedron.x" };
-	fileName[SAMPLE_STATIC_MESH]							= { "StaticMesh.x" };
-	fileName[SAMPLE_TOON_MESH]								= { "Toon_6Color.x" };
-	fileName[SAMPLE_BUNNY]										= { "toybunny.x" };
-	fileName[SAMPLE_PAPER]										= { "paper.x" };
-	fileName[SAMPLE_REDBULL]									= { "redbull.x" };
-	fileName[SAMPLE_SHOES]										= { "shoes.x" };
-	fileName[SAMPLE_TEAPOT]									= { "teapot.x" };
-	fileName[SAMPLE_LIGHT]										= { "light.x" };
-	fileName[SAMPLE_BALL]											= { "soccerball.x" };
-	fileName[SAMPLE_SCISSORS]									= { "scissors.x" };
-	fileName[SAMPLE_PLAYSTATION]							= { "playstation.x" };
-	fileName[SAMPLE_HAT]											= { "hat.x" };
+	fileName[SAMPLE_STATIC_MESH]				= { "StaticMesh.x" };
+	fileName[SAMPLE_TOON_MESH]					= { "Toon_6Color.x" };
+	fileName[SAMPLE_BUNNY]						= { "toybunny.x" };
+	fileName[SAMPLE_PAPER]						= { "paper.x" };
+	fileName[SAMPLE_REDBULL]					= { "redbull.x" };
+	fileName[SAMPLE_SHOES]						= { "shoes.x" };
+	fileName[SAMPLE_TEAPOT]						= { "teapot.x" };
+	fileName[SAMPLE_LIGHT]						= { "light.x" };
+	fileName[SAMPLE_BALL]						= { "soccerball.x" };
+	fileName[SAMPLE_SCISSORS]					= { "scissors.x" };
+	fileName[SAMPLE_PLAYSTATION]				= { "playstation.x" };
+	fileName[SAMPLE_HAT]						= { "hat.x" };
+	fileName[DEAD_TREE]							= { "deadTree001.x" };
+	fileName[YAMADA_LAND]						= { "SandBox_01_TestIsland.x" };
+	fileName[NAKAGOMI_LAND]						= { "nakagomiLand.x" };
+	fileName[YAMADA_ROBOT]						= { "SandBox_03_Robot.x" };
+	fileName[SAMPLE_NAVMESH]					= { "SandBox_02_NavMesh.x" };
+	fileName[DICE]								= { "dice.x" };
+	fileName[YAMADA_PLANE] = { "plane.x" };
+	fileName[YAMADA_ROBOT2] = { "Robot.x" };
+	fileName[YAMADA_TEST_ZONE] = { "SandBox.x" };
 
-	fileName[DEAD_TREE]											= { "deadTree001.x" };
 }
 
 //===================================================================================================================================

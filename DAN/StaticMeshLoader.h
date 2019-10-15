@@ -18,16 +18,16 @@ struct StaticMesh
 {
 	LPDIRECT3DVERTEXBUFFER9				vertexBuffer;				//頂点情報バッファ
 	LPDIRECT3DINDEXBUFFER9				indexBuffer;				//インデックスバッファ
-	LPD3DXMESH										mesh;						//メッシュ情報
-	D3DMATERIAL9*								materials;					//マテリアル情報格納先
-	LPD3DXBUFFER									bufferMaterial;			//メッシュのマテリアルバッファ
-	LPDIRECT3DTEXTURE9*						textures;					//テクスチャ情報格納先
-	DWORD												numMaterial;				//マテリアル情報の数
-	D3DVERTEXELEMENT9						vertexElement[65];	//頂点属性
-	LPDIRECT3DVERTEXDECLARATION9	declaration;				//頂点宣言
-	DWORD												numBytesPerVertex;	//頂点サイズ
-	D3DXATTRIBUTERANGE*					attributeTable;			//属性テーブル
-	DWORD												attributeTableSize;		//属性テーブルサイズ
+	LPD3DXMESH							mesh;						//メッシュ情報
+	D3DMATERIAL9*						materials;					//マテリアル情報格納先
+	LPD3DXBUFFER						bufferMaterial;				//メッシュのマテリアルバッファ
+	LPDIRECT3DTEXTURE9*					textures;					//テクスチャ情報格納先
+	DWORD								numMaterial;				//マテリアル情報の数
+	D3DVERTEXELEMENT9					vertexElement[65];			//頂点属性
+	LPDIRECT3DVERTEXDECLARATION9		declaration;				//頂点宣言
+	DWORD								numBytesPerVertex;			//頂点サイズ
+	D3DXATTRIBUTERANGE*					attributeTable;				//属性テーブル
+	DWORD								attributeTableSize;			//属性テーブルサイズ
 };
 
 //===================================================================================================================================
@@ -57,8 +57,15 @@ namespace staticMeshNS {
 		SAMPLE_SCISSORS,
 		SAMPLE_PLAYSTATION,
 		SAMPLE_HAT,
-
 		DEAD_TREE,
+		YAMADA_LAND,
+		NAKAGOMI_LAND,
+		YAMADA_ROBOT,
+		SAMPLE_NAVMESH,
+		YAMADA_ROBOT2,
+		YAMADA_PLANE,
+		DICE,
+		YAMADA_TEST_ZONE,
 		
 		MESH_NUM,
 	};

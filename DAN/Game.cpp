@@ -42,6 +42,22 @@ void Game::initialize() {
 	//player
 	player = new Player;
 
+	//-----中込テストゾーンその１---------------
+	//enemy = new Enemy;
+	//camera = new Camera;
+
+	//camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	//camera->setTarget(enemy->getPosition());
+	//camera->setTargetX(&enemy->getAxisX()->direction);
+	//camera->setTargetY(&enemy->getAxisY()->direction);
+	//camera->setTargetZ(&enemy->getAxisZ()->direction);
+	//camera->setRelative(CAMERA_RELATIVE_QUATERNION);
+	//camera->setGaze(D3DXVECTOR3(0, 0, 0));
+	//camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
+	//camera->setUpVector(D3DXVECTOR3(0, 1, 0));
+	//camera->setFieldOfView((D3DX_PI / 18) * 10);
+	//-------------------------------------------
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -60,7 +76,7 @@ void Game::initialize() {
 	light->initialize();
 
 	//テストフィールド
-	testField = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::FIELD));
+	testField = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 	testField->activation();
 
@@ -83,9 +99,27 @@ void Game::initialize() {
 	//インスタンシングビルボードテスト
 	instancingBillboardTest.initialize(
 		*shaderNS::reference(shaderNS::INSTANCE_BILLBOARD),
-		*textureNS::reference(textureNS::SAMPLE_TREE)
-	);
+		*textureNS::reference(textureNS::SAMPLE_TREE));
 
+	//-----中込テストゾーンその2---------------
+	//enemy->setDebugEnvironment();
+	//enemy->setCamera(camera);	//カメラのセット
+	//enemy->configurationGravityWithRay(testField->getPosition(), testField->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
+	//-----------------------------------------
+
+	// ツリー
+	treeManager = new TreeManager;
+	treeManager->initialize();
+
+	// アイテム
+	itemManager = new ItemManager;
+	itemManager->initialize();
+
+	// AI
+	aiDirector = new AIDirector;
+	aiDirector->initialize();
+	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	naviAI->initialize();
 }
 
 //===================================================================================================================================
@@ -96,6 +130,9 @@ void Game::uninitialize() {
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(player);
+	SAFE_DELETE(treeManager);
+	SAFE_DELETE(itemManager);
+	SAFE_DELETE(aiDirector);
 }
 
 //===================================================================================================================================
@@ -119,9 +156,27 @@ void Game::update(float _frameTime) {
 
 	//プレイヤーの更新
 	player->update(frameTime);
+
+	// エネミーの更新
+	//enemy->update(frameTime);
+
+	// ツリーの更新
+	treeManager->update(frameTime);
+
+	// アイテムの更新
+	if (input->wasKeyPressed('0'))
+	{
+		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
+		itemManager->createItem(&unko);
+	}
+	if (input->wasKeyPressed('9'))
+	{
+		itemManager->uninitialize();
+	}
+	itemManager->update(frameTime);
 	
-	//カメラの更新
-	camera->update();
+	////カメラの更新
+	//camera->update();
 
 	//3Dサウンド
 	//プレイヤーの位置と向き
@@ -171,6 +226,14 @@ void Game::render3D(Camera currentCamera) {
 	// プレイヤーの他のオブジェクトの描画
 	player->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// エネミーの描画
+	//enemy->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	// ツリーの描画
+	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	// アイテムの描画
+	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 }
 
 //===================================================================================================================================
@@ -186,7 +249,6 @@ void Game::renderUI() {
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
-
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
@@ -196,16 +258,23 @@ void Game::renderUI() {
 //===================================================================================================================================
 void Game::collisions() 
 {
-
+	// プレイヤーとアイテム
+	std::vector<Item*> itemList = itemManager->getList();
+	for (size_t i = 0; i < itemList.size(); i++)
+	{	
+		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
+			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
+		{
+			player->addSpeed(D3DXVECTOR3(0, 10, 0));
+		}
+	}
 }
 
 //===================================================================================================================================
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-#ifdef USING_AI
-
-#endif// USING_AI
+	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -220,8 +289,11 @@ void Game::createGUI()
 	ImGui::Text("node:%d", instancingBillboardTest.getList().nodeNum);
 
 	player->outputGUI();			//プレイヤー
+	//enemy->outputGUI();			//エネミー
+	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
+	naviAI->outputGUI();			//ナビゲーションAI
 
 }
 #endif // _DEBUG
