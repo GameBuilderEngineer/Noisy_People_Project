@@ -61,8 +61,8 @@ public:
 	static XAUDIO2_VOICE_SENDS			GetSendList(int endpointVoiceId);						//送信リストを取得する
 	static IXAudio2						*GetXAudio2Interface(void);								//XAudio2のインタフェースを取得する
 	static void							SwitchAudioBuffer(int scene);							//シーンの更新
-	static void							playSound(int endpointVoiceId, int soundId, bool loop);	//再生
-	static void							stopSound(int endpointVoiceId, int soundId, bool loop);	//停止
+	static void							playSound(const PLAY_PARAMETERS playParameters);			//再生
+	static void							stopSound(const PLAY_PARAMETERS playParameters);			//停止
 	void									UpdateSound(void);										//更新処理
 	void									outputSoundGUI(void);									//ImGUIへの出力
 };

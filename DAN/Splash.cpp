@@ -21,10 +21,18 @@ Splash::Splash()
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
 
-	//サウンドの再生
-	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);	//シーンの更新
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false);
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true);
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);
+
+	//再生パラメータ
+	memset(playParameters, 0, sizeof(playParameters));
+	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true ,NULL,true, filterParameters };
+
+	//再生
+	SoundInterface::playSound(playParameters[0]);
+	SoundInterface::playSound(playParameters[1]);
 }
 
 //===================================================================================================================================
@@ -33,7 +41,7 @@ Splash::Splash()
 Splash::~Splash()
 {
 	//サウンドの停止
-	SoundInterface::stopSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true);
+	SoundInterface::stopSound(playParameters[1]);
 }
 
 //===================================================================================================================================

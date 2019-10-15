@@ -29,10 +29,20 @@ Title::Title(void)
 	sceneName = ("Scene -Title-");
 	nextScene = SceneList::GAME;
 
-	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);	//シーンの更新
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false);
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false);
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, false);
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);	
+
+	//再生パラメータ
+	memset(playParameters, 0, sizeof(playParameters));
+	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false,NULL,true, filterParameters };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, false,NULL,true, filterParameters };
+
+	//再生
+	SoundInterface::playSound(playParameters[0]);
+	SoundInterface::playSound(playParameters[1]);
+	SoundInterface::playSound(playParameters[2]);
 }
 
 //============================================================================================================================================
@@ -41,7 +51,7 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// サウンドの停止
-	SoundInterface::stopSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, false);
+	SoundInterface::stopSound(playParameters[2]);
 }
 
 //============================================================================================================================================

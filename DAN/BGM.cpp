@@ -16,6 +16,16 @@ const char * const BGMManager::splashBGMPathList[] = { "BGM_Splash.wav" };
 const char * const BGMManager::titleBGMPathList[] = { "BGM_Title.wav" };
 const char * const BGMManager::gameBGMPathList[] = { "BGM_Game.wav" };
 int BGMManager::BGMScene = SceneList::SPLASH;
+float BGMManager::startTime = 0;
+float BGMManager::currentTime = 0;
+
+//===================================================================================================================================
+//【コンストラクタ】
+//===================================================================================================================================
+BGMManager::BGMManager()
+{
+
+}
 
 //===================================================================================================================================
 //【デストラクタ】
@@ -23,6 +33,77 @@ int BGMManager::BGMScene = SceneList::SPLASH;
 BGMManager::~BGMManager()
 {
 	SAFE_DELETE_ARRAY(BGMBufferList);
+}
+
+//===================================================================================================================================
+//【再生速度の設定】
+//===================================================================================================================================
+void	 BGMManager::SetSpeed(float speed)
+{
+	//ターゲット情報
+	SOUND_PARAMETERS targetSoundParameters;
+	targetSoundParameters.playParameters.endpointVoiceId = ENDPOINT_VOICE_LIST::ENDPOINT_BGM;
+	targetSoundParameters.playParameters.soundId = GAME_BGM_LIST::GAME_BGM_01;
+	targetSoundParameters.playParameters.loop = true;
+
+	if (BGMScene == SceneList::GAME)
+	{
+		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
+		{
+			SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
+			if ((tmpSoundParameters->playParameters.endpointVoiceId == targetSoundParameters.playParameters.endpointVoiceId) &&
+				(tmpSoundParameters->playParameters.soundId == targetSoundParameters.playParameters.soundId) &&
+				(tmpSoundParameters->isSpeed))
+			{
+				//バッファ
+				LIST_BUFFER *tmpBuffer = GetBuffer(targetSoundParameters.playParameters.endpointVoiceId,
+					targetSoundParameters.playParameters.soundId,
+					targetSoundParameters.playParameters.loop);
+
+				//停止処理
+				tmpSoundParameters->SourceVoice->Stop(XAUDIO2_PLAY_TAILS);
+				XAUDIO2_VOICE_STATE state = { 0 };
+				tmpSoundParameters->SourceVoice->Discontinuity();
+				tmpSoundParameters->SourceVoice->FlushSourceBuffers();
+				tmpSoundParameters->SourceVoice->GetState(&state);
+
+				//キューに何でもないければ
+				if (state.BuffersQueued == 0)
+				{
+					//再生速度
+					tmpSoundParameters->SourceVoice->SetSourceSampleRate(
+						tmpBuffer->wavFile.fmt.fmtSampleRate * tmpSoundParameters->playParameters.speed);
+
+					//停止位置
+					tmpSoundParameters->stopPoint = state.SamplesPlayed;
+					while (tmpSoundParameters->stopPoint >= (int)(tmpBuffer->wavFile.data.waveSize/(int)sizeof(long)))
+					{
+						tmpSoundParameters->stopPoint -= (int)(tmpBuffer->wavFile.data.waveSize / (int)sizeof(long));
+					}
+
+					//再生位置
+					tmpBuffer->buffer.PlayBegin = tmpSoundParameters->stopPoint;
+
+					//バッファの提出
+					tmpSoundParameters->SourceVoice->SubmitSourceBuffer(&tmpBuffer->buffer);
+					
+					//再生処理
+					tmpSoundParameters->SourceVoice->Start();
+
+					//再生速度
+					tmpSoundParameters->isSpeed = false;
+				}
+			}			
+		}
+	}
+}
+
+//===================================================================================================================================
+//【再生速度の設定(On)】
+//===================================================================================================================================
+void BGMManager::SetSpeedOn(void)
+{
+
 }
 
 //===================================================================================================================================
@@ -38,6 +119,7 @@ void BGMManager::outputBGMGUI(void)
 		ImGui::Text("Playing List:");
 		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 		{
+			XAUDIO2_VOICE_STATE state = { 0 };
 			SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 			{
 				if (tmpSoundParameters->isPlaying)		//再生している
@@ -45,10 +127,14 @@ void BGMManager::outputBGMGUI(void)
 					switch (BGMScene)
 					{
 					case SceneList::SPLASH:
-						ImGui::Text("%s", splashBGMPathList[tmpSoundParameters->soundId]);
+						tmpSoundParameters->SourceVoice->GetState(&state);
+						ImGui::Text("%s", splashBGMPathList[tmpSoundParameters->playParameters.soundId]);
+						ImGui::Text("%d", ((int)state.SamplesPlayed / 44100));
 						break;
 					case SceneList::TITLE:
-						ImGui::Text("%s", titleBGMPathList[tmpSoundParameters->soundId]);
+						tmpSoundParameters->SourceVoice->GetState(&state);
+						ImGui::Text("%s", titleBGMPathList[tmpSoundParameters->playParameters.soundId]);
+						ImGui::Text("%d", ((int)state.SamplesPlayed / 44100));
 						break;
 					case SceneList::TUTORIAL:
 
@@ -57,7 +143,11 @@ void BGMManager::outputBGMGUI(void)
 
 						break;
 					case SceneList::GAME:
-						ImGui::Text("%s", gameBGMPathList[tmpSoundParameters->soundId]);
+						tmpSoundParameters->SourceVoice->GetState(&state);
+						ImGui::Text("%s", gameBGMPathList[tmpSoundParameters->playParameters.soundId]);
+						ImGui::Text("%d", ((int)state.SamplesPlayed/44100));
+
+						ImGui::Checkbox("Speed Up卍", &tmpSoundParameters->isSpeed);
 						break;
 					case SceneList::RESULT:
 
@@ -100,7 +190,7 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 			FILE *fp = nullptr;
 			fp = fopen(BGMManager::splashBGMPathList[i], "rb");
 			BGMManager::BGMBufferList[i].wavFile = LoadWavChunk(fp);
-
+			BGMManager::BGMBufferList[i].soundId = i;
 			BGMManager::BGMBufferList[i].buffer.pAudioData = (BYTE*)BGMManager::BGMBufferList[i].wavFile.data.waveData;
 			BGMManager::BGMBufferList[i].buffer.AudioBytes = BGMManager::BGMBufferList[i].wavFile.data.waveSize;
 			BGMManager::BGMBufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -118,7 +208,7 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 			FILE *fp = nullptr;
 			fp = fopen(BGMManager::titleBGMPathList[i], "rb");
 			BGMManager::BGMBufferList[i].wavFile = LoadWavChunk(fp);
-
+			BGMManager::BGMBufferList[i].soundId = i;
 			BGMManager::BGMBufferList[i].buffer.pAudioData = (BYTE*)BGMManager::BGMBufferList[i].wavFile.data.waveData;
 			BGMManager::BGMBufferList[i].buffer.AudioBytes = BGMManager::BGMBufferList[i].wavFile.data.waveSize;
 			BGMManager::BGMBufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -140,7 +230,7 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 			FILE *fp = nullptr;
 			fp = fopen(BGMManager::gameBGMPathList[i], "rb");
 			BGMManager::BGMBufferList[i].wavFile = LoadWavChunk(fp);
-
+			BGMManager::BGMBufferList[i].soundId = i;
 			BGMManager::BGMBufferList[i].buffer.pAudioData = (BYTE*)BGMManager::BGMBufferList[i].wavFile.data.waveData;
 			BGMManager::BGMBufferList[i].buffer.AudioBytes = BGMManager::BGMBufferList[i].wavFile.data.waveSize;
 			BGMManager::BGMBufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;

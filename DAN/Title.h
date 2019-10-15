@@ -12,6 +12,8 @@
 #include "AbstractScene.h"
 #include "InstancingBillboard.h"
 #include "Sound.h"
+#include "SoundBase.h"
+
 //#include "SceneEffect.h"
 
 //===================================================================================================================================
@@ -41,6 +43,9 @@ private:
 	//UITitle uiTitle;										//	タイトルUI
 	//InstancingBillboard plane;							//	インスタンシングビルボード
 	InstancingBillboard plane;
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[3];
 
 public:
 	Title(void);

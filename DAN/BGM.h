@@ -41,16 +41,26 @@ enum GAME_BGM_LIST
 class BGMManager : public SoundBase
 {
 public:
-	BGMManager() {};
+	BGMManager();
 	~BGMManager();
 
 	//変数
 	static const char * const splashBGMPathList[];
 	static const char * const titleBGMPathList[];
 	static const char * const gameBGMPathList[];
-	static int	BGMScene;
+	static int		BGMScene;
+	static float		startTime;
+	static float		currentTime;
 
 	//関数
 	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void				outputBGMGUI(void);				//ImGUIへの出力
+	void				SetSpeed(float speed);			//再生速度の設定
+	void				SetSpeedOn(void);				//再生速度の設定(On)
+
+	//debug用
+#ifdef _DEBUG
+
+#endif
+
 };

@@ -45,10 +45,10 @@ void SEManager::outputSEGUI(void)
 					switch (SEScene)
 					{
 					case SceneList::SPLASH:
-						ImGui::Text("%s", splashSEPathList[tmpSoundParameters->soundId]);
+						ImGui::Text("%s", splashSEPathList[tmpSoundParameters->playParameters.soundId]);
 						break;
 					case SceneList::TITLE:
-						ImGui::Text("%s", titleSEPathList[tmpSoundParameters->soundId]);
+						ImGui::Text("%s", titleSEPathList[tmpSoundParameters->playParameters.soundId]);
 						break;
 					case SceneList::TUTORIAL:
 
@@ -57,7 +57,7 @@ void SEManager::outputSEGUI(void)
 
 						break;
 					case SceneList::GAME:
-						ImGui::Text("%s", gameSEPathList[tmpSoundParameters->soundId]);
+						ImGui::Text("%s", gameSEPathList[tmpSoundParameters->playParameters.soundId]);
 						break;
 					case SceneList::RESULT:
 

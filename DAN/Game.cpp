@@ -9,7 +9,6 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Game.h"
-#include "Sound.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -24,10 +23,23 @@ Game::Game()
 	sceneName = "Scene -Game-";
 
 	nextScene = SceneList::RESULT;
-	SoundInterface::SwitchAudioBuffer(SceneList::GAME);	//シーンの更新
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false);
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false);
-	SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, false);
+
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::GAME);
+
+	//再生パラメータ
+	memset(playParameters, 0, sizeof(playParameters));
+	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,true, filterParameters };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.5f,true, filterParameters };
+
+	//再生
+	SoundInterface::playSound(playParameters[0]);
+	SoundInterface::playSound(playParameters[1]);
+	SoundInterface::playSound(playParameters[2]);
+
+	//BGMManager::startTime = frameTime;
 }
 
 //===================================================================================================================================
@@ -36,7 +48,7 @@ Game::Game()
 Game::~Game()
 {
 	// サウンドの停止
-	SoundInterface::stopSound(ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, false);
+	SoundInterface::stopSound(playParameters[2]);
 }
 
 //===================================================================================================================================
@@ -128,9 +140,6 @@ void Game::update(float _frameTime) {
 	//カメラの更新
 	camera->update();
 
-	//3Dサウンド
-	//プレイヤーの位置と向き
-	
 	//sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
 }
 

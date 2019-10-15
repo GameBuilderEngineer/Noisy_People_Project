@@ -140,8 +140,10 @@ void SoundInterface::UpdateSound(void)
 {
 	//SE‚ÌXVˆ—
 	SE->updateSound();
+
 	//BGM‚ÌXVˆ—
 	BGM->updateSound();
+	BGM->SetSpeed(BGMManager::currentTime);
 
 	//ImGUI
 #ifdef _DEBUG
@@ -168,31 +170,31 @@ void SoundInterface::outputSoundGUI(void)
 //===================================================================================================================================
 //yÄ¶z
 //===================================================================================================================================
-void SoundInterface::playSound(int endpointVoiceId, int soundId, bool loop)
+void SoundInterface::playSound(const PLAY_PARAMETERS playParameters)
 {
-	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
-		BGM->playSound(endpointVoiceId,soundId, loop);
+		BGM->playSound(playParameters);
 	}
-	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
 	{
 		//SE
-		SE->playSound(endpointVoiceId,soundId, loop);
+		SE->playSound(playParameters);
 	}
 }
 
 //===================================================================================================================================
 //y’âŽ~z
 //===================================================================================================================================
-void SoundInterface::stopSound(int endpointVoiceId, int soundId, bool loop)
+void SoundInterface::stopSound(const PLAY_PARAMETERS playParameters)
 {
-	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
-		BGM->stopSound(endpointVoiceId, soundId, loop);
+		BGM->stopSound(playParameters);
 	}
-	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
 	{
 		//SE
-		SE->stopSound(endpointVoiceId, soundId, loop);
+		SE->stopSound(playParameters);
 	}
 }

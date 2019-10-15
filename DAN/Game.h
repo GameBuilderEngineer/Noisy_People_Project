@@ -14,6 +14,8 @@
 #include "Player.h"
 #include "StaticMeshObject.h"
 #include "InstancingBillboard.h"
+#include "Sound.h"
+#include "SoundBase.h"
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -62,6 +64,9 @@ private:
 
 	//インスタンシングビルボードテスト
 	InstancingBillboard instancingBillboardTest;
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[3];
 
 public:
 	Game();

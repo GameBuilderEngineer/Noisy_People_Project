@@ -14,6 +14,7 @@
 #include "Sprite.h"
 #include "SplashSprite.h"
 #include "Sound.h"
+#include "SoundBase.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -38,6 +39,9 @@ class Splash :public AbstractScene
 private:
 	// スプラッシュSprite
 	SplashSprite* splashSprite;
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[2];
 
 public:
 	Splash();
