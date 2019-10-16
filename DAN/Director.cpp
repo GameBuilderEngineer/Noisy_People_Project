@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/06
+// [更新日]2019/10/16
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -49,7 +49,7 @@ Director::~Director() {
 	SAFE_DELETE(textureLoader);
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
-	SAFE_DELETE(soundInterface);
+	//SAFE_DELETE(soundInterface);
 	//SAFE_DELETE(textManager);
 	//SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);

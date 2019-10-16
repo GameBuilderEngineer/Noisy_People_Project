@@ -41,10 +41,16 @@ namespace InstancingBillboardNS {
 		float existenceTimer;				//ê∂ë∂éûä‘
 
 		Instance() {
-			ZeroMemory(this, sizeof(Instance));
-			existenceTimer = 1.0f;
+			position				= D3DXVECTOR3(0.0f,0.0f,0.0f);
+			rotation				= D3DXVECTOR3(0.0f,0.0f,0.0f);
+			scale					= D3DXVECTOR3(1.0f,1.0f,1.0f);
+			speed				= D3DXVECTOR3(0.0f,0.0f,0.0f);
+			uv						= D3DXVECTOR2(0.0f,0.0f);
+			color					= D3DCOLOR_RGBA(255,255,255,255);
+			existenceTimer	= 1.0f;
 		}
-		void update(float frameTime)
+
+		virtual void update(float frameTime)
 		{
 			existenceTimer -= frameTime;
 			if (existenceTimer <= 0)return;

@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "StaticMeshObject.h"
 #include "InstancingBillboard.h"
+#include "Stone.h"
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -31,7 +32,7 @@ namespace gameNS
 	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,10.0f,-20.0f,0.0f);
 
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,0,0);
@@ -56,12 +57,50 @@ private:
 
 	//プレイヤー
 	Player *player;
+	StaticMeshObject* playerRenderer;
 
 	//フィールド
-	StaticMeshObject* testField;	
+	Object* testField;
+	StaticMeshObject* testFieldRenderer;
 
 	//インスタンシングビルボードテスト
 	InstancingBillboard instancingBillboardTest;
+
+	//石
+	Stone* stone;
+
+	//色々なオブジェクトの描画サンプルテスト
+
+	//スタティックメッシュで、１個のオブジェクトのみを描画するとき【静的】
+	//StaticSingleStaticMeshObjectTest ssSMO
+
+	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【静的】
+	//StaticMultiStaticMeshObjectTest smSMO
+
+	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【動的】
+	//DynamicMultiStaticMeshObjectTest dmSMO
+
+	//ビルボードで、1個のオブジェクトを描画するとき【静的】
+	//StaticSingleInstancingBillboardTest ssIB
+
+	//ビルボードで、複数のオブジェクトをインスタンシング描画するとき【静的】
+	//StaticMultiInstancingBillboardTest smIB
+
+	//ビルボードで、複数のオブジェクトをインスタンシング描画するとき【動的】
+	//DynamicMultiInstancingBillboardTest dmIB
+
+	//板で、１個のオブジェクトをインスタンシング描画するとき【静的】
+	//StaticSingleInstancingPlaneTest ssIP
+
+	//板で、複数のオブジェクトをインスタンシング描画するとき【静的】
+	//StaticMultiInstancingPlaneTest smIP
+
+	//板で、複数のオブジェクトをインスタンシング描画するとき【動的】
+	//DynamicMultiInstancingPlaneTest dmIP
+
+
+
+
 
 public:
 	Game();

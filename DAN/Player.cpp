@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/10/04
+// [更新日]2019/10/16
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -19,22 +19,24 @@ using namespace playerNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE))
+Player::Player() 
 {
+	Object::initialize(&(D3DXVECTOR3)playerNS::START_POSITION);
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
+
 	onGravity = true;
 	radius = 5.0f;
 	activation();
 	state = GROUND;
 
-	invincibleTimer = 0.0f;					//無敵時間
-	onGround = false;						//接地判定
+	invincibleTimer = 0.0f;							//無敵時間
+	onGround = false;									//接地判定
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
-	onJump = false;							//ジャンプフラグ
+	onJump = false;										//ジャンプフラグ
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 
-	onSound = false;						//サウンドのGUIフラグ
+	onSound = false;									//サウンドのGUIフラグ
 }
 
 //===================================================================================================================================
@@ -51,32 +53,26 @@ Player::~Player()
 void Player::outputGUI()
 {
 #ifdef _DEBUG
-
-	//ImGui::Text(sceneName.c_str());
-
 	if (ImGui::CollapsingHeader("PlayerInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		float limitTop = 1000;
 		float limitBottom = -1000;
+		float value = D3DXVec3Length(&speed);
 
-		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
+		ImGui::SliderFloat3("position", position, limitBottom, limitTop);					//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);						//スケール
-		ImGui::SliderFloat("radius", &radius, 0, limitTop);								//半径
-		ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
+		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);							//スケール
+		ImGui::SliderFloat("radius", &radius, 0, limitTop);										//半径
+		ImGui::SliderFloat("alpha", &alpha, 0, 255);												//透過値
 		ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);						//速度
+		ImGui::Text("speedValue:%f", value);												//速度の値
 		ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
 		ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);					//重力
 
-		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		ImGui::Checkbox("sound", &onSound);												//サウンド
-
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
+		ImGui::Checkbox("onGravity", &onGravity);												//重力有効化フラグ
+		ImGui::Checkbox("onActive", &onActive);												//アクティブ化フラグ
+		ImGui::Checkbox("sound", &onSound);													//サウンド
 
 		// サウンドGUI
 		outputSoundGUI();
@@ -108,9 +104,9 @@ void Player::initialize(int playerType, int modelType) {
 	input = getInput();
 	type = playerType;
 	keyTable = KEY_TABLE_1P;
-	StaticMeshObject::initialize(&(D3DXVECTOR3)START_POSITION);
-	bodyCollide.initialize(&position, staticMesh->mesh);
-	radius = bodyCollide.getRadius();
+	bodyCollide.initialize(&position,1.7f);
+	radius= bodyCollide.getRadius();
+	//bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::SAMPLE_ROBOT001)->mesh);
 }
 
 //===================================================================================================================================
@@ -142,17 +138,17 @@ void Player::update(float frameTime)
 	//加速度処理
 	if (D3DXVec3Length(&acceleration) > 0.05f)
 	{//加速度が小さい場合、加算しない
-		speed += acceleration;
+		speed +=acceleration;
 	}
 
 	//位置更新
 	position += speed*frameTime;
-	
+
 	//姿勢制御
 	postureControl(axisY.direction, -gravityRay.direction,3.0f * frameTime);
 	
 	//オブジェクト：更新
-	StaticMeshObject::update();
+	Object::update();
 	
 	//カメラの操作
 	controlCamera(frameTime);
@@ -166,7 +162,7 @@ void Player::update(float frameTime)
 //======================
 void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
+	//StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
 }
 //======================
 //【本体以外の他のオブジェクト描画】
@@ -233,13 +229,24 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	//操作方向をカメラのXZ方向に準拠した移動ベクトルへ変換する
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	if (onGround) {
-		addSpeed(moveDirection*SPEED);
+		addSpeed(moveDirection*SPEED*dash());
 	}
 	else {
-		addSpeed(moveDirection*SPEED/10);
+		addSpeed(moveDirection*SPEED/5);
 	}
 	//姿勢制御
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
+}
+
+//===================================================================================================================================
+//【ダッシュ】
+// [処理内容]入力に応じてダッシュ倍率を返す
+//===================================================================================================================================
+float Player::dash()
+{
+	if (input->isKeyDown(keyTable.dash))
+		return playerNS::DASH_MAGNIFICATION;
+	return 1.0f;
 }
 
 //===================================================================================================================================

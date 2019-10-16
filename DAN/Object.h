@@ -35,35 +35,31 @@ namespace objectNS {
 //===================================================================================================================================
 class Object:public Base
 {
-protected:
+public:
 	//Data
 	//ステータス変数
-	D3DXVECTOR3 position;				//位置
-	D3DXQUATERNION quaternion;	//回転
-	D3DXVECTOR3 scale;					//スケール
-	float radius;								//衝突半径
-	float alpha;								//透過値
-	int fillMode;
+	D3DXVECTOR3 position;					//位置
+	D3DXQUATERNION quaternion;		//回転
+	D3DXVECTOR3 scale;						//スケール
+	float radius;									//衝突半径
+	float alpha;									//透過値
 
 	//移動系変数
-	D3DXVECTOR3 speed;			//速度
-	D3DXVECTOR3 acceleration;	//加速度
-	D3DXVECTOR3 gravity;		//重力
+	D3DXVECTOR3 speed;					//速度
+	D3DXVECTOR3 acceleration;			//加速度
+	D3DXVECTOR3 gravity;					//重力
 
 	//各種フラグ
-	bool onGravity;				//重力有効化フラグ
-	bool onActive;				//アクティブ化フラグ
-	bool onRender;				//描画有効化フラグ
-	bool onLighting;			//光源処理フラグ
-	bool onTransparent;			//透過フラグ
+	bool onGravity;								//重力有効化フラグ
+	bool onActive;								//アクティブ化フラグ
 
 	//方向6軸
-	Ray axisX;					//x軸
-	Ray axisY;					//y軸
-	Ray axisZ;					//z軸
-	Ray reverseAxisX;			//-x軸
-	Ray reverseAxisY;			//-y軸
-	Ray reverseAxisZ;			//-z軸
+	Ray axisX;										//x軸
+	Ray axisY;										//y軸
+	Ray axisZ;										//z軸
+	Ray reverseAxisX;							//-x軸
+	Ray reverseAxisY;							//-y軸
+	Ray reverseAxisZ;							//-z軸
 
 	//重力Ray
 	Ray gravityRay;
@@ -71,16 +67,12 @@ protected:
 	//行列（位置・回転・ワールド）：スケール追加予定
 	D3DXMATRIX matrixPosition;
 	D3DXMATRIX matrixRotation;
+	D3DXMATRIX matrixScale;
 	D3DXMATRIX matrixWorld;
 
-	//インスタンシング変数
-	//描画する数
-	int renderNum;
-	//インスタンシング描画時の各オブジェクトの位置バッファー
-	LPDIRECT3DVERTEXBUFFER9 positionBuffer;
-	LPDIRECT3DVERTEXDECLARATION9 declaration;	// 頂点宣言
+	//タイマー
+	float existenceTimer;						//存在時間
 
-public:
 	//Method
 	Object();
 	~Object();
@@ -96,7 +88,6 @@ public:
 	virtual void outputGUI();	
 
 	//getter
-	//LPD3DXMESH* getMesh() { return &staticMesh->mesh; }
 	D3DXMATRIX *getMatrixWorld() { return &matrixWorld; }	
 	D3DXVECTOR3* getPosition() { return &position; };
 	D3DXQUATERNION getQuaternion() { return quaternion; };
@@ -122,13 +113,6 @@ public:
 	void setAlpha(float value);
 	void activation();								//アクティブ化
 	void inActivation();							//非アクティブ化
-	void switchTransparent(bool flag);				//透過の切り替え
-	void setRenderFlag(bool frag);					//描画フラグのセット
-
-	//描画数をセット
-	//num:描画する数を指定
-	//positionBuffer:各オブジェクトの位置を保存した配列のポインタ
-	//void setInstancing(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* _positionList);
 
 	//姿勢制御
 	void postureControl(D3DXVECTOR3 currentDirection, D3DXVECTOR3 nextDirection,float t)

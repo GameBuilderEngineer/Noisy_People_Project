@@ -2,7 +2,7 @@
 //【StaticMeshLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/23
+// [更新日]2019/10/16
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -52,6 +52,12 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[SAMPLE_HAT]											= { "hat.x" };
 
 	fileName[DEAD_TREE]											= { "deadTree001.x" };
+	fileName[GREEN_TREE_001]									= { "greenTree001.x" };
+	fileName[GREEN_TREE_002]									= { "greenTree002.x" };
+	fileName[GRASS]													= { "grass001.x" };
+	fileName[STONE_001]											= { "stone001.x" };
+	fileName[STONE_002]											= { "stone002.x" };
+	fileName[STONE_003]											= { "stone003.x" };
 }
 
 //===================================================================================================================================
@@ -74,7 +80,7 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		staticMesh[i].bufferMaterial = NULL;
 		D3DXLoadMeshFromX(
 			(LPCSTR)fileName[i],
-			D3DXMESH_SYSTEMMEM,
+			D3DXMESH_MANAGED,
 			device,
 			NULL,
 			&staticMesh[i].bufferMaterial,

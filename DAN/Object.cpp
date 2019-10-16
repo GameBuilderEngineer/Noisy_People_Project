@@ -22,28 +22,39 @@ using namespace objectNS;
 //===================================================================================================================================
 Object::Object()
 {
-	ZeroMemory(this, sizeof(Object));			//メンバ変数を0で初期化
-	alpha = 1.0f;								//α値の設定
-	fillMode = objectNS::FILLMODE::SOLID;		//描画方法
-	onLighting = true;							//ライティングフラグ
-	onTransparent = false;						//透過フラグ
-	D3DXMatrixIdentity(&matrixRotation);
-	quaternion = D3DXQUATERNION(0, 0, 0, 1);
-	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));
-	axisY.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 1, 0));
-	axisZ.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 0, 1));
-	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(-1, 0, 0));
-	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, -1, 0));
-	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 0, -1));
-	renderNum = 1;
+	ZeroMemory(&position, sizeof(D3DXVECTOR3));												//位置
+	quaternion = D3DXQUATERNION(0, 0, 0, 1);													//回転
+	ZeroMemory(&scale, sizeof(D3DXVECTOR3));													//スケール
+	radius = 0.0f;																								//半径
+	alpha = 1.0f;																									//α値の設定
+
+	ZeroMemory(&speed, sizeof(D3DXVECTOR3));													//速度
+
+	onGravity = false;																							//重力フラグ
+	onActive = true;																								//アクティブフラグ
+
+	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));						//x軸
+	axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));						//y軸
+	axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));						//z軸
+	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));			//-x軸
+	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));			//-y軸
+	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));			//-z軸
 #ifdef _DEBUG
-	axisX.color			= D3DXCOLOR(255, 0, 0, 255);
-	axisY.color			= D3DXCOLOR(0, 255, 0, 255);
-	axisZ.color			= D3DXCOLOR(0, 0, 255, 255);
-	reverseAxisX.color	= D3DXCOLOR(255, 0, 0, 255);
-	reverseAxisY.color	= D3DXCOLOR(0, 255, 0, 255);
-	reverseAxisZ.color	= D3DXCOLOR(0, 0, 255, 255);
+	axisX.color				= D3DXCOLOR(255, 0, 0, 255);											//x軸カラー
+	axisY.color				= D3DXCOLOR(0, 255, 0, 255);											//y軸カラー
+	axisZ.color				= D3DXCOLOR(0, 0, 255, 255);											//z軸カラー
+	reverseAxisX.color	= D3DXCOLOR(255, 0, 0, 255);											//-x軸カラー
+	reverseAxisY.color	= D3DXCOLOR(0, 255, 0, 255);											//-y軸カラー
+	reverseAxisZ.color	= D3DXCOLOR(0, 0, 255, 255);											//-z軸カラー
 #endif // _DEBUG
+
+	ZeroMemory(&matrixPosition, sizeof(D3DXMATRIX));										//位置行列
+	D3DXMatrixIdentity(&matrixRotation);																//回転行列
+	ZeroMemory(&matrixScale, sizeof(D3DXMATRIX));											//スケール行列
+	ZeroMemory(&matrixWorld, sizeof(D3DXMATRIX));											//ワールド行列
+
+	existenceTimer = 1.0f;																					//存在時間
+
 }
 
 //===================================================================================================================================
@@ -246,22 +257,18 @@ void Object::outputGUI()
 		float limitTop		= 1000;
 		float limitBottom	= -1000;
 
-		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
+		ImGui::SliderFloat3("position", position, limitBottom, limitTop);					//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);						//スケール
-		ImGui::SliderFloat("radius", &radius, 0, limitTop);								//半径
-		ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
+		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);							//スケール
+		ImGui::SliderFloat("radius", &radius, 0, limitTop);										//半径
+		ImGui::SliderFloat("alpha", &alpha, 0, 255);												//透過値
 		ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);						//速度
 		ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
 		ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);					//重力
-
-		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
 		
-		ImGui::SliderInt("renderNum", &renderNum,1,(int)limitTop);						//透過値の操作有効フラグ
+		ImGui::Checkbox("onGravity", &onGravity);												//重力有効化フラグ
+		ImGui::Checkbox("onActive", &onActive);												//アクティブ化フラグ
+		
 	}
 #endif // _DEBUG
 }
@@ -277,27 +284,15 @@ void Object::setGravity(D3DXVECTOR3 source, float power)
 
 void Object::activation()
 {
-	onRender = true;
 	onActive = true;
 }
 
 void Object::inActivation()
 {
-	onRender = false;
 	onActive = false;
 }
 
 void Object::setAlpha(float value)
 {
 	alpha = value;
-}
-
-void Object::switchTransparent(bool flag)
-{
-	onTransparent = flag;
-}
-
-void Object::setRenderFlag(bool flag)
-{
-	onRender = flag;
 }

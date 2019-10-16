@@ -53,25 +53,30 @@ void Game::initialize() {
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
-	camera->setFieldOfView( (D3DX_PI/18) * 10 );
+	camera->setFieldOfView( (D3DX_PI/18) * 9 );
 
 	//light
 	light = new Light;
 	light->initialize();
 
 	//テストフィールド
-	testField = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::FIELD));
+	testField = new Object();
+	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::FIELD));
+	testFieldRenderer->generateObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
-	testField->activation();
-
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
 	//プレイヤーの初期化
 	player->initialize(inputNS::DINPUT_1P, 0);
-	player->setCamera(camera);	//カメラのセット
-	player->configurationGravityWithRay(testField->getPosition(),testField->getStaticMesh()->mesh,testField->getMatrixWorld());	//重力を設定
-	
+	player->setCamera(camera);	//カメラポインタのセット
+	playerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON));
+	playerRenderer->generateObject(player);
+	player->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
+
+	//石の初期化
+	stone = new Stone();
+
+	// サウンドの再生
+	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
 	//テキストの初期化
 	//text.initialize(direct3D9->device,10,10, 0xff00ff00);
@@ -83,7 +88,7 @@ void Game::initialize() {
 	//インスタンシングビルボードテスト
 	instancingBillboardTest.initialize(
 		*shaderNS::reference(shaderNS::INSTANCE_BILLBOARD),
-		*textureNS::reference(textureNS::SAMPLE_TREE)
+		*textureNS::reference(textureNS::LIGHT_001)
 	);
 
 }
@@ -95,7 +100,10 @@ void Game::uninitialize() {
 	SAFE_DELETE(camera);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
+	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(player);
+	SAFE_DELETE(playerRenderer);
+	SAFE_DELETE(stone);
 }
 
 //===================================================================================================================================
@@ -112,20 +120,24 @@ void Game::update(float _frameTime) {
 	if (frameTime > 0.10)return;
 
 	//インスタンシングビルボードテスト
-	instancingBillboardTest.update(frameTime);
+	//instancingBillboardTest.update(frameTime);
 
 	//テストフィールドの更新
 	testField->update();
+	testFieldRenderer->update();
 
 	//プレイヤーの更新
 	player->update(frameTime);
-	
+	playerRenderer->update();
+
+	//石の更新
+	stone->update();
+
 	//カメラの更新
 	camera->update();
 
 	//3Dサウンド
-	//プレイヤーの位置と向き
-	
+	//プレイヤーの位置と向き	
 	//sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
 }
 
@@ -152,25 +164,18 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	testField->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	//（サンプル）ポイントスプライトの描画
-	//pointSprite.render(direct3D9->device, currentCamera.position);
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//（サンプル）プレーンの描画(インスタンシング)
 	instancingBillboardTest.render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//xFileStaticMeshテスト描画
-	//testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-	//testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-
 	// プレイヤーの描画
-	player->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	playerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
 	player->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	//石の描画
+	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 }
 
 //===================================================================================================================================
@@ -178,17 +183,16 @@ void Game::render3D(Camera currentCamera) {
 //===================================================================================================================================
 void Game::renderUI() {
 
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
-	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
-	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-
+	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	// αテストを無効に
-	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	//device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 //===================================================================================================================================
@@ -219,7 +223,7 @@ void Game::createGUI()
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", instancingBillboardTest.getList().nodeNum);
 
-	player->outputGUI();			//プレイヤー
+	player->outputGUI();				//プレイヤー
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 

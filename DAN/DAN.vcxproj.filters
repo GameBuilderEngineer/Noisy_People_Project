@@ -142,9 +142,6 @@
     <Filter Include="Game Layer\Player">
       <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Object\InstancingObject">
-      <UniqueIdentifier>{8da1c1b8-ded5-4529-912b-d06adff668d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\Object\StaticMeshObject">
       <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
     </Filter>
@@ -174,6 +171,9 @@
     </Filter>
     <Filter Include="Constant Layer\Sound\3D">
       <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Stone">
+      <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -312,6 +312,7 @@
     <ClCompile Include="SoundBase.cpp">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClCompile>
+    <ClCompile Include="Stone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -458,6 +459,7 @@
     <ClInclude Include="SoundBase.h">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClInclude>
+    <ClInclude Include="Stone.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

@@ -160,6 +160,7 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);
 	effect->SetTexture("planeTexture", texture);
+
 	effect->Begin(0, 0);
 	effect->BeginPass(0);
 		
@@ -168,10 +169,17 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->EndPass();
 	effect->End();
 
+	device->SetStreamSource(0, NULL, 0, NULL);
+	device->SetStreamSource(1, NULL, 0, NULL);
+	device->SetStreamSource(2, NULL, 0, NULL);
+	device->SetStreamSource(3, NULL, 0, NULL);
+
+
 	//後始末
-	device->SetStreamSourceFreq(0, 1);
-	device->SetStreamSourceFreq(1, 1);
-	device->SetStreamSourceFreq(2, 1);
+	device->SetStreamSourceFreq(0, 0);
+	device->SetStreamSourceFreq(1, 0);
+	device->SetStreamSourceFreq(2, 0);
+	device->SetStreamSourceFreq(3, 0);
 	// αブレンドを切る
 	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
@@ -263,8 +271,6 @@ void InstancingBillboard::offRender()
 //===================================================================================================================================
 void InstancingBillboard::update(float frameTime)
 {
-	didGenerate = false;
-	didDelete = false;
 
 	//削除処理
 	for (int i = 0; i < instanceList->nodeNum; i++)
@@ -300,12 +306,16 @@ void InstancingBillboard::update(float frameTime)
 		updateAccessList();	//リストの更新
 		updateBuffer();			//バッファの更新
 		updateArray();			//コピー配列の更新
+		didGenerate = false;
+		didDelete = false;
 	}
 	
 	//値の更新
 	updatePosition();
 	updateColor();
 	updateUV();
+
+
 }
 
 //===================================================================================================================================
@@ -320,6 +330,7 @@ void InstancingBillboard::updateBuffer()
 		SAFE_RELEASE(positionBuffer);		//位置バッファの解放
 		SAFE_RELEASE(uvBuffer);				//UVバッファの解放
 		SAFE_RELEASE(colorBuffer);			//カラーバッファの解放
+		return;
 	}
 
 	//位置情報バッファの再作成

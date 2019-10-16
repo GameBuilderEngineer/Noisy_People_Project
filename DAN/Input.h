@@ -121,11 +121,11 @@ public:
 	void keyDown(WPARAM);									// キーダウン状態を保存する
 	void keyPress(WPARAM);									// キープレス状態を保存する
 	void keyUp(WPARAM);										// キーアップ状態を保存する
-	void keyIn(WPARAM);										// textIn string に入力したばかりの文字を保存する
-	bool isKeyDown(UCHAR vkey) const;						// 指定された仮想キーがダウンしている場合はtrue、そうでない場合はfalseを返します。
-	bool wasKeyPressed(UCHAR vkey) const;					// 指定されたVIRTUAL KEYが最後のフレームで押された場合はtrueを返します。// キーの押下は、各フレームの最後で消去されます。
+	void keyIn(WPARAM);											// textIn string に入力したばかりの文字を保存する
+	bool isKeyDown(UCHAR vkey) const;					// 指定された仮想キーがダウンしている場合はtrue、そうでない場合はfalseを返します。
+	bool wasKeyPressed(UCHAR vkey) const;				// 指定されたVIRTUAL KEYが最後のフレームで押された場合はtrueを返します。// キーの押下は、各フレームの最後で消去されます。
 	bool anyKeyPressed() const;								// 直近のフレームでキーが押された場合はtrueを返します。// キーの押下は、各フレームの最後で消去されます。
-	void clearKeyPress(UCHAR vkey);							// 指定されたキーをクリアする
+	void clearKeyPress(UCHAR vkey);						// 指定されたキーをクリアする
 	void clearTextIn() { textIn.clear(); }					// クリアテキスト入力バッファ
 	std::string getTextIn() { return textIn; }				// テキスト入力を文字列として返す
 	char getCharIn() { return charIn; }						// 最後に入力した文字を返します

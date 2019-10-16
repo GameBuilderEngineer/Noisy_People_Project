@@ -1,8 +1,8 @@
 //===================================================================================================================================
-//【BoundingSphere.h】
+//【Stone.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
-// [更新日]2019/09/24
+// [作成日]2019/10/14
+// [更新日]2019/10/14
 //===================================================================================================================================
 #pragma once
 
@@ -10,31 +10,22 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
+#include "StaticMeshObject.h"
 
 //===================================================================================================================================
-//【バウンディングスフィアクラス：コライダー】
+//【石クラス】
 //===================================================================================================================================
-class BoundingSphere : public Base
+class Stone :	public Base
 {
 private:
-	//Data
-	D3DXVECTOR3*	position;	//位置
-	float			radius;		//半径
-	D3DXVECTOR3		center;		//中心
-	LPD3DXMESH		mesh;		//メッシュ
+	StaticMeshObject* renderer;
+	bool needUpdate;
 public:
-	//Method
-	BoundingSphere();
-	~BoundingSphere();
-	void initialize(D3DXVECTOR3* position, LPD3DXMESH ownerMesh);
-	void initialize(D3DXVECTOR3* position, float _raidus);
-	void render(D3DXMATRIX owner);
-	bool collide(D3DXVECTOR3 targetCenter,float targetRadius, D3DXMATRIX ownerMatrix, D3DXMATRIX targetMatrix);
-
-	//setter
-
-	//getter
-	float getRadius();
-	D3DXVECTOR3 getCenter();
-	LPD3DXMESH	getMesh();
+	Stone();
+	~Stone();
+	void initialize();
+	void update();
+	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	void generate(D3DXVECTOR3 position);
 };
+

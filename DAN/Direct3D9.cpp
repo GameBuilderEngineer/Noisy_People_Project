@@ -63,6 +63,7 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 		D3DCREATE_HARDWARE_VERTEXPROCESSING,
 		&d3dpp, &device)))
 	{
+		MessageBox(0, "HARDWAREモードでDIRECT3Dデバイスを作成できません\nSOFTWAREモードで再試行します", NULL, MB_OK);
 		if (FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, targetWnd,
 			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 			&d3dpp, &device)))
