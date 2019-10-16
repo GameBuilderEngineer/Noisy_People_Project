@@ -38,7 +38,7 @@ BGMManager::~BGMManager()
 //===================================================================================================================================
 //yÄ¶‘¬“x‚ÌÝ’èz
 //===================================================================================================================================
-void	 BGMManager::SetSpeed(float speed)
+void	 BGMManager::SetSpeed(void)
 {
 	//ƒ^[ƒQƒbƒgî•ñ
 	SOUND_PARAMETERS targetSoundParameters;
@@ -146,8 +146,8 @@ void BGMManager::outputBGMGUI(void)
 						tmpSoundParameters->SourceVoice->GetState(&state);
 						ImGui::Text("%s", gameBGMPathList[tmpSoundParameters->playParameters.soundId]);
 						ImGui::Text("%d", ((int)state.SamplesPlayed/44100));
-
-						ImGui::Checkbox("Speed Up™Â", &tmpSoundParameters->isSpeed);
+						ImGui::SliderFloat("Speed", &tmpSoundParameters->playParameters.speed, 1.0f, 3.0f);
+						ImGui::Checkbox("Speed!", &tmpSoundParameters->isSpeed);
 						break;
 					case SceneList::RESULT:
 

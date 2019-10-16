@@ -143,7 +143,7 @@ void SoundInterface::UpdateSound(void)
 
 	//BGM‚ÌXVˆ—
 	BGM->updateSound();
-	BGM->SetSpeed(BGMManager::currentTime);
+	BGM->SetSpeed();
 
 	//ImGUI
 #ifdef _DEBUG

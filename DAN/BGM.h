@@ -55,7 +55,7 @@ public:
 	//関数
 	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void				outputBGMGUI(void);				//ImGUIへの出力
-	void				SetSpeed(float speed);			//再生速度の設定
+	void				SetSpeed(void);					//再生速度の設定
 	void				SetSpeedOn(void);				//再生速度の設定(On)
 
 	//debug用
