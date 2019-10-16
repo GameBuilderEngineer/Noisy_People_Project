@@ -136,6 +136,7 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Credit.h" />
+    <ClInclude Include="DeadTree.h" />
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
@@ -175,6 +176,8 @@
     <ClInclude Include="Stone.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="TreeTypeA.h" />
+    <ClInclude Include="TreeTypeB.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="VirtualController.h" />
@@ -187,6 +190,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Credit.cpp" />
+    <ClCompile Include="DeadTree.cpp" />
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
@@ -224,6 +228,8 @@
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="TreeTypeA.cpp" />
+    <ClCompile Include="TreeTypeB.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="Window.cpp" />

@@ -15,6 +15,9 @@
 #include "StaticMeshObject.h"
 #include "InstancingBillboard.h"
 #include "Stone.h"
+#include "DeadTree.h"
+#include "TreeTypeA.h"
+#include "TreeTypeB.h"
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -66,6 +69,13 @@ private:
 	//インスタンシングビルボードテスト
 	InstancingBillboard instancingBillboardTest;
 
+
+	//枯木
+	DeadTree* deadTree;
+	//木Ａ
+	TreeTypeA* treeA;
+	//木B
+	TreeTypeB* treeB;
 	//石
 	Stone* stone;
 

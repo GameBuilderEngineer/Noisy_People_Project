@@ -72,8 +72,16 @@ void Game::initialize() {
 	playerRenderer->generateObject(player);
 	player->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
 
+	//枯木の初期化
+	deadTree = new DeadTree();
+	//木Aの初期化
+	treeA = new TreeTypeA();
+	//木Bの初期化
+	treeB = new TreeTypeB();
 	//石の初期化
 	stone = new Stone();
+
+
 
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
@@ -103,6 +111,9 @@ void Game::uninitialize() {
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(player);
 	SAFE_DELETE(playerRenderer);
+	SAFE_DELETE(deadTree);
+	SAFE_DELETE(treeA);
+	SAFE_DELETE(treeB);
 	SAFE_DELETE(stone);
 }
 
@@ -130,6 +141,12 @@ void Game::update(float _frameTime) {
 	player->update(frameTime);
 	playerRenderer->update();
 
+	//枯木の更新
+	deadTree->update();
+	//木Aの更新
+	treeA->update();
+	//木Bの更新
+	treeB->update();
 	//石の更新
 	stone->update();
 
@@ -174,8 +191,15 @@ void Game::render3D(Camera currentCamera) {
 	// プレイヤーの他のオブジェクトの描画
 	player->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	//枯木の描画
+	deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//木Aの描画
+	treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//木Bの描画
+	treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//石の描画
 	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 }
 
 //===================================================================================================================================

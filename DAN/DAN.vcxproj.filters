@@ -175,6 +175,9 @@
     <Filter Include="Game Layer\Stone">
       <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Tree">
+      <UniqueIdentifier>{7f5b9b64-5296-48ad-96c6-8061de1bebb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -312,7 +315,12 @@
     <ClCompile Include="SoundBase.cpp">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClCompile>
-    <ClCompile Include="Stone.cpp" />
+    <ClCompile Include="Stone.cpp">
+      <Filter>Game Layer\Stone</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTypeA.cpp" />
+    <ClCompile Include="TreeTypeB.cpp" />
+    <ClCompile Include="DeadTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -459,7 +467,12 @@
     <ClInclude Include="SoundBase.h">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClInclude>
-    <ClInclude Include="Stone.h" />
+    <ClInclude Include="Stone.h">
+      <Filter>Game Layer\Stone</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTypeA.h" />
+    <ClInclude Include="TreeTypeB.h" />
+    <ClInclude Include="DeadTree.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
