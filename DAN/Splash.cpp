@@ -41,6 +41,7 @@ Splash::Splash()
 Splash::~Splash()
 {
 	//ƒTƒEƒ“ƒh‚Ì’â~
+	SoundInterface::stopSound(playParameters[0]);
 	SoundInterface::stopSound(playParameters[1]);
 }
 

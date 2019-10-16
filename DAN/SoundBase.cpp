@@ -275,7 +275,7 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 			tmpWavFile.data.waveSize = size;
 
 			// データの読み込み
-			tmpWavFile.data.waveData = (short *)malloc(tmpWavFile.data.waveSize);
+			tmpWavFile.data.waveData = new (short[tmpWavFile.data.waveSize / (int)sizeof(short)]);
 			fread(tmpWavFile.data.waveData, tmpWavFile.data.waveSize, 1, fp);
 
 			// フラグ処理
@@ -291,8 +291,6 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 			fseek(fp, size, SEEK_CUR);
 		}
 	}
-
-	fclose(fp);
 
 	return tmpWavFile;
 }

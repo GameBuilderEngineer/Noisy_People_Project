@@ -48,6 +48,8 @@ Game::Game()
 Game::~Game()
 {
 	// ƒTƒEƒ“ƒh‚Ì’â~
+	SoundInterface::stopSound(playParameters[0]);
+	SoundInterface::stopSound(playParameters[1]);
 	SoundInterface::stopSound(playParameters[2]);
 }
 

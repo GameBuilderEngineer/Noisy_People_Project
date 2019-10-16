@@ -84,18 +84,23 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 	//サウンドディレクトリに設定する
 	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_SE);
 
-	SAFE_DELETE_ARRAY(SEBufferList);
-
 	//シーンの更新
-	SEScene = scene;
+	SEManager::SEScene = scene;
 
-	switch (SEScene)
+	//解放処理
+	for (int i = 0; i < SEManager::SEBufferMax; i++)
+	{
+		SAFE_DELETE_ARRAY(SEManager::SEBufferList[i].wavFile.data.waveData);
+	}
+	SAFE_DELETE_ARRAY(SEManager::SEBufferList);
+
+	switch (SEManager::SEScene)
 	{
 	case SceneList::SPLASH:
 		SEManager::SEBufferList = new LIST_BUFFER[SPLASH_SE_LIST::SPLASH_SE_MAX];
 		for (int i = 0; i < SPLASH_SE_LIST::SPLASH_SE_MAX; i++)
 		{
-			memset(&SEManager::SEBufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			SEManager::SEBufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
 			fp = fopen(SEManager::splashSEPathList[i], "rb");
@@ -113,7 +118,7 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 		SEManager::SEBufferList = new LIST_BUFFER[TITLE_SE_LIST::TITLE_SE_MAX];
 		for (int i = 0; i < TITLE_SE_LIST::TITLE_SE_MAX; i++)
 		{
-			memset(&SEManager::SEBufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			SEManager::SEBufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
 			fp = fopen(SEManager::titleSEPathList[i], "rb");
@@ -135,7 +140,7 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 		SEManager::SEBufferList = new LIST_BUFFER[GAME_SE_LIST::GAME_SE_MAX];
 		for (int i = 0; i < GAME_SE_LIST::GAME_SE_MAX; i++)
 		{
-			memset(&SEManager::SEBufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			SEManager::SEBufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
 			fp = fopen(SEManager::gameSEPathList[i], "rb");

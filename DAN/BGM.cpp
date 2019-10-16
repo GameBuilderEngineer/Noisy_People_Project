@@ -124,6 +124,8 @@ void BGMManager::outputBGMGUI(void)
 			{
 				if (tmpSoundParameters->isPlaying)		//再生している
 				{
+					float backUpSpeed = tmpSoundParameters->playParameters.speed;
+
 					switch (BGMScene)
 					{
 					case SceneList::SPLASH:
@@ -147,7 +149,6 @@ void BGMManager::outputBGMGUI(void)
 						ImGui::Text("%s", gameBGMPathList[tmpSoundParameters->playParameters.soundId]);
 						ImGui::Text("%d", ((int)state.SamplesPlayed/44100));
 						ImGui::SliderFloat("Speed", &tmpSoundParameters->playParameters.speed, 1.0f, 3.0f);
-						ImGui::Checkbox("Speed!", &tmpSoundParameters->isSpeed);
 						break;
 					case SceneList::RESULT:
 
@@ -158,6 +159,12 @@ void BGMManager::outputBGMGUI(void)
 					default:
 						break;
 					}
+
+					if (backUpSpeed != tmpSoundParameters->playParameters.speed)
+					{
+						tmpSoundParameters->isSpeed = true;
+						BGMManager::SetSpeed();
+					};
 
 				}
 			}
@@ -174,18 +181,23 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 	//サウンドディレクトリに設定する
 	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_BGM);
 
-	SAFE_DELETE_ARRAY(BGMBufferList);
-
 	//シーンの更新
-	BGMScene = scene;
+	BGMManager::BGMScene = scene;
 
-	switch (BGMScene)
+	//解放
+	for (int i = 0; i < BGMManager::BGMBufferMax; i++)
+	{
+		SAFE_DELETE_ARRAY(BGMManager::BGMBufferList[i].wavFile.data.waveData);
+	}
+	SAFE_DELETE_ARRAY(BGMManager::BGMBufferList);
+
+	switch (BGMManager::BGMScene)
 	{
 	case SceneList::SPLASH:
 		BGMManager::BGMBufferList = new LIST_BUFFER[SPLASH_BGM_LIST::SPLASH_BGM_MAX];
 		for (int i = 0; i < SPLASH_BGM_LIST::SPLASH_BGM_MAX; i++)
 		{
-			memset(&BGMManager::BGMBufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			BGMManager::BGMBufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
 			fp = fopen(BGMManager::splashBGMPathList[i], "rb");
@@ -203,7 +215,7 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 		BGMManager::BGMBufferList = new LIST_BUFFER[TITLE_BGM_LIST::TITLE_BGM_MAX];
 		for (int i = 0; i < TITLE_BGM_LIST::TITLE_BGM_MAX; i++)
 		{
-			memset(&BGMManager::BGMBufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			BGMManager::BGMBufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
 			fp = fopen(BGMManager::titleBGMPathList[i], "rb");
@@ -225,7 +237,7 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 		BGMManager::BGMBufferList = new LIST_BUFFER[GAME_BGM_LIST::GAME_BGM_MAX];
 		for (int i = 0; i < GAME_BGM_LIST::GAME_BGM_MAX; i++)
 		{
-			memset(&BGMManager::BGMBufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			BGMManager::BGMBufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
 			fp = fopen(BGMManager::gameBGMPathList[i], "rb");

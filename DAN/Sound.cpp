@@ -129,8 +129,8 @@ IXAudio2 *SoundInterface::GetXAudio2Interface(void)
 void SoundInterface::SwitchAudioBuffer(int scene)
 {
 	//シーンの更新
-	SEManager::SwitchAudioBuffer(scene);	
 	BGMManager::SwitchAudioBuffer(scene);
+	SEManager::SwitchAudioBuffer(scene);	
 }
 
 //===================================================================================================================================
