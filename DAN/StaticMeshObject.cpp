@@ -308,5 +308,6 @@ void StaticMeshObject::outputGUI()
 //===================================================================================================================================
 StaticMesh* StaticMeshObject::getStaticMesh()
 {
+
 	return staticMesh;
 }

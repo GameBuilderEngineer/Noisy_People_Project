@@ -28,9 +28,6 @@
     <Filter Include="Resorce Layer\01 Data File">
       <UniqueIdentifier>{f74de526-5881-470c-bc66-24e20a307b24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resorce Layer\02 Visual File">
-      <UniqueIdentifier>{fdbdd74a-8587-4f03-baa5-a0b48e615d48}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resorce Layer\03 Shader File">
       <UniqueIdentifier>{b0237335-8aa3-483e-9705-7984d7b03435}</UniqueIdentifier>
     </Filter>
@@ -171,6 +168,21 @@
     </Filter>
     <Filter Include="Constant Layer\Sound\3D">
       <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\02 Visual File">
+      <UniqueIdentifier>{fdbdd74a-8587-4f03-baa5-a0b48e615d48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy">
+      <UniqueIdentifier>{7a098705-447e-48a5-b312-660761073be3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MetaAI">
+      <UniqueIdentifier>{61acdd25-3097-4d98-b7f5-7b868895cb2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Tree">
+      <UniqueIdentifier>{ffb95cd0-ab47-490b-a1ac-bea73ce39236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Item">
+      <UniqueIdentifier>{0025d4b5-8404-4e24-95de-cdbafbb5d176}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Layer\Stone">
       <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
@@ -314,6 +326,51 @@
     </ClCompile>
     <ClCompile Include="SoundBase.cpp">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationMesh.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="AIDirector.cpp">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClCompile>
+    <ClCompile Include="Sensor.cpp">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMaker.cpp">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationGenerator.cpp">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitalTree.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalogTree.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeManager.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Battery.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemManager.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexAccessor.cpp">
+      <Filter>Constant Layer\UtilityFunction</Filter>
     </ClCompile>
     <ClCompile Include="Stone.cpp">
       <Filter>Game Layer\Stone</Filter>
@@ -474,6 +531,51 @@
     <ClInclude Include="SoundBase.h">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationMesh.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="AIDirector.h">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sensor.h">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMaker.h">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationGenerator.h">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitalTree.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalogTree.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeManager.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Battery.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemManager.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexAccessor.h">
+      <Filter>Constant Layer\UtilityFunction</Filter>
+    </ClInclude>
     <ClInclude Include="Stone.h">
       <Filter>Game Layer\Stone</Filter>
     </ClInclude>
@@ -528,5 +630,10 @@
     <Font Include="01 Data File\unicode.futurabb.ttf">
       <Filter>Resorce Layer\01 Data File</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="02 Visual File\testField.x">
+      <Filter>Resorce Layer\02 Visual File</Filter>
+    </None>
   </ItemGroup>
 </Project>

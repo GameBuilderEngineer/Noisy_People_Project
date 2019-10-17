@@ -52,6 +52,15 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STONE_001]											= { "stone001.x" };								//05
 	fileName[STONE_002]											= { "stone002.x" };								//06
 	fileName[STONE_003]											= { "stone003.x" };								//07
+
+	fileName[YAMADA_LAND]										= { "SandBox_01_TestIsland.x" };			//01
+	fileName[NAKAGOMI_LAND]									= { "nakagomiLand.x" };						//02
+	fileName[YAMADA_ROBOT]										= { "SandBox_03_Robot.x" };					//03
+	fileName[SAMPLE_NAVMESH]									= { "SandBox_02_NavMesh.x" };			//04
+	fileName[DICE]														= { "dice.x" };										//05
+	fileName[YAMADA_PLANE]										= { "plane.x" };										//06
+	fileName[YAMADA_ROBOT2]									= { "Robot.x" };										//07
+	fileName[YAMADA_TEST_ZONE]								= { "SandBox.x" };									//08
 }
 
 //===================================================================================================================================

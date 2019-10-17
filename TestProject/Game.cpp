@@ -72,6 +72,8 @@ void Game::initialize() {
 	player->setCamera(camera);	//カメラのセット
 	player->configurationGravityWithRay(testField->getPosition(),testField->getStaticMesh()->mesh,testField->getMatrixWorld());	//重力を設定
 	
+	// エネミー関係初期化
+	enemyManager.initialize();
 
 	//テキストの初期化
 	//text.initialize(direct3D9->device,10,10, 0xff00ff00);
@@ -96,6 +98,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(player);
+	enemyManager.uninitialize();
 }
 
 //===================================================================================================================================
@@ -119,6 +122,16 @@ void Game::update(float _frameTime) {
 
 	//プレイヤーの更新
 	player->update(frameTime);
+
+	if (input->wasKeyPressed('7'))
+	{
+		enemyNS::EnemyData enemyData = { 5 };
+		enemyManager.createEnemy(enemyData);
+	}
+	if (input->wasKeyPressed('8'))
+	{
+		enemyManager.uninitialize();
+	}
 	
 	//カメラの更新
 	camera->update();
@@ -220,6 +233,7 @@ void Game::createGUI()
 	ImGui::Text("node:%d", instancingBillboardTest.getList().nodeNum);
 
 	player->outputGUI();			//プレイヤー
+	enemyManager.outputGUI();		//エネミー
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 

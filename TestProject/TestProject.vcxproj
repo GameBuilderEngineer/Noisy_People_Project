@@ -139,6 +139,8 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="Fader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="MemoryViewer.h" />
+    <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointSprite.h" />
@@ -189,6 +192,8 @@
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="Fader.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -205,6 +210,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
+    <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />

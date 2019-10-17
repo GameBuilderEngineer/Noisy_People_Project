@@ -18,6 +18,11 @@
 #include "TreeTypeA.h"
 #include "TreeTypeB.h"
 #include "TestEffect.h"
+#include "EnemyManager.h"
+#include "AIDirector.h"
+#include "NavigationMesh.h"
+#include "TreeManager.h"
+#include "ItemManager.h"
 
 //#include "InstancingBillboard.h"
 //#include "GameMaster.h"
@@ -112,6 +117,20 @@ private:
 
 
 
+
+	// エネミー
+	EnemyManager enemyManager;
+	Enemy* enemy;
+
+	// ツリー
+	TreeManager* treeManager;
+
+	// アイテム
+	ItemManager* itemManager;
+
+	// AI
+	AIDirector* aiDirector;
+	NavigationMesh* naviAI;
 
 public:
 	Game();
