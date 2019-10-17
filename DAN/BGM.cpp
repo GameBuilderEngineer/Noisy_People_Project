@@ -66,13 +66,13 @@ void	 BGMManager::SetSpeed(void)
 			{
 				//再生速度
 				tmpSoundParameters->SourceVoice->SetSourceSampleRate(
-					tmpBuffer->wavFile.fmt.fmtSampleRate * tmpSoundParameters->playParameters.speed);
+					(UINT32)(tmpBuffer->wavFile.fmt.fmtSampleRate * tmpSoundParameters->playParameters.speed));
 
 				//停止位置
-				tmpSoundParameters->stopPoint = state.SamplesPlayed;
-				while (tmpSoundParameters->stopPoint >= (int)(tmpBuffer->wavFile.data.waveSize / (int)sizeof(long)))
+				tmpSoundParameters->stopPoint = (long)state.SamplesPlayed;
+				while (tmpSoundParameters->stopPoint >= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel))
 				{
-					tmpSoundParameters->stopPoint -= (int)(tmpBuffer->wavFile.data.waveSize / (int)sizeof(long));
+					tmpSoundParameters->stopPoint -= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel);
 				}
 
 				//再生位置
@@ -107,9 +107,11 @@ void BGMManager::outputBGMGUI(void)
 #ifdef _DEBUG
 	if (!ImGui::CollapsingHeader("BGMInformation"))
 	{
-		ImGui::Text("Buffer List:%d", BGMBufferMax);
+		//使用中のバッファ数
+		ImGui::Text("Number of buffers:%d", BGMBufferMax);
+		//使用中のボイス数
+		ImGui::Text("Number of voice:%d", soundParametersList->nodeNum - 1);
 
-		ImGui::Text("Playing List:");
 		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 		{
 			//サウンドのパラメーター
@@ -124,10 +126,10 @@ void BGMManager::outputBGMGUI(void)
 			//再生位置&情報取得
 			XAUDIO2_VOICE_STATE state = { 0 };
 			tmpSoundParameters->SourceVoice->GetState(&state);
-			long playPoint = state.SamplesPlayed;
-			while (playPoint >= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(long)))
+			long playPoint = (long)state.SamplesPlayed;
+			while (playPoint >= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel))
 			{
-				playPoint -= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(long));
+				playPoint -= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel);
 			}
 
 			//再生している
@@ -167,7 +169,7 @@ void BGMManager::outputBGMGUI(void)
 				}
 
 				//波形の描画
-				ImGui::Text("Sound Wave");
+				ImGui::Text("Sound wave");
 				float lines[11025];
 				for (int j = 11024; j >= 0; j--)
 				{
@@ -180,6 +182,7 @@ void BGMManager::outputBGMGUI(void)
 				}
 				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 30);
 				ImGui::PlotLines("", lines, 11025, 0, nullptr, FLT_MAX, FLT_MAX, plotextent);
+				ImGui::ProgressBar(playPoint / (float)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel));
 
 				//速度調整
 				ImGui::Text("%d", ((int)state.SamplesPlayed / 44100));

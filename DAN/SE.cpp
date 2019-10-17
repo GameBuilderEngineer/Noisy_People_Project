@@ -33,44 +33,46 @@ void SEManager::outputSEGUI(void)
 #ifdef _DEBUG
 	if (!ImGui::CollapsingHeader("SEInformation"))
 	{
-		ImGui::Text("Buffer List:%d", SEBufferMax);
+		//使用中のバッファ数
+		ImGui::Text("Number of buffers:%d", SEBufferMax);
+		//使用中のボイス数
+		ImGui::Text("Number of voice:%d", soundParametersList->nodeNum - 1);
 
-		ImGui::Text("Playing List:");
 		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 		{
 			SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
+
+			if (tmpSoundParameters->isPlaying)		//再生している
 			{
-				if (tmpSoundParameters->isPlaying)		//再生している
+				switch (SEScene)
 				{
-					switch (SEScene)
-					{
-					case SceneList::SPLASH:
-						ImGui::Text("%s", splashSEPathList[tmpSoundParameters->playParameters.soundId]);
-						break;
-					case SceneList::TITLE:
-						ImGui::Text("%s", titleSEPathList[tmpSoundParameters->playParameters.soundId]);
-						break;
-					case SceneList::TUTORIAL:
+				case SceneList::SPLASH:
+					ImGui::Text("%s", splashSEPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::TITLE:
+					ImGui::Text("%s", titleSEPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::TUTORIAL:
 
-						break;
-					case SceneList::CREDIT:
+					break;
+				case SceneList::CREDIT:
 
-						break;
-					case SceneList::GAME:
-						ImGui::Text("%s", gameSEPathList[tmpSoundParameters->playParameters.soundId]);
-						break;
-					case SceneList::RESULT:
+					break;
+				case SceneList::GAME:
+					ImGui::Text("%s", gameSEPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::RESULT:
 
-						break;
-					case SceneList::NONE_SCENE:
+					break;
+				case SceneList::NONE_SCENE:
 
-						break;
-					default:
-						break;
-					}
-
+					break;
+				default:
+					break;
 				}
+
 			}
+
 		}
 	}
 #endif
