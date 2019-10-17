@@ -40,60 +40,53 @@ BGMManager::~BGMManager()
 //===================================================================================================================================
 void	 BGMManager::SetSpeed(void)
 {
-	//ターゲット情報
-	SOUND_PARAMETERS targetSoundParameters;
-	targetSoundParameters.playParameters.endpointVoiceId = ENDPOINT_VOICE_LIST::ENDPOINT_BGM;
-	targetSoundParameters.playParameters.soundId = GAME_BGM_LIST::GAME_BGM_01;
-	targetSoundParameters.playParameters.loop = true;
+	////ターゲット情報
+	//SOUND_PARAMETERS targetSoundParameters;
+	//targetSoundParameters.playParameters.endpointVoiceId = ENDPOINT_VOICE_LIST::ENDPOINT_BGM;
+	//targetSoundParameters.playParameters.soundId = GAME_BGM_LIST::GAME_BGM_01;
+	//targetSoundParameters.playParameters.loop = true;
 
-	if (BGMScene == SceneList::GAME)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
-		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
+		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
+		if(tmpSoundParameters->isSpeed)
 		{
-			SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
-			if ((tmpSoundParameters->playParameters.endpointVoiceId == targetSoundParameters.playParameters.endpointVoiceId) &&
-				(tmpSoundParameters->playParameters.soundId == targetSoundParameters.playParameters.soundId) &&
-				(tmpSoundParameters->isSpeed))
+			//バッファ
+			LIST_BUFFER *tmpBuffer = GetBuffer(tmpSoundParameters->playParameters.endpointVoiceId, tmpSoundParameters->playParameters.soundId, tmpSoundParameters->playParameters.loop);
+
+			//停止処理
+			tmpSoundParameters->SourceVoice->Stop(XAUDIO2_PLAY_TAILS);
+			XAUDIO2_VOICE_STATE state = { 0 };
+			tmpSoundParameters->SourceVoice->Discontinuity();
+			tmpSoundParameters->SourceVoice->FlushSourceBuffers();
+			tmpSoundParameters->SourceVoice->GetState(&state);
+
+			//キューに何でもないければ
+			if (state.BuffersQueued == 0)
 			{
-				//バッファ
-				LIST_BUFFER *tmpBuffer = GetBuffer(targetSoundParameters.playParameters.endpointVoiceId,
-					targetSoundParameters.playParameters.soundId,
-					targetSoundParameters.playParameters.loop);
+				//再生速度
+				tmpSoundParameters->SourceVoice->SetSourceSampleRate(
+					tmpBuffer->wavFile.fmt.fmtSampleRate * tmpSoundParameters->playParameters.speed);
 
-				//停止処理
-				tmpSoundParameters->SourceVoice->Stop(XAUDIO2_PLAY_TAILS);
-				XAUDIO2_VOICE_STATE state = { 0 };
-				tmpSoundParameters->SourceVoice->Discontinuity();
-				tmpSoundParameters->SourceVoice->FlushSourceBuffers();
-				tmpSoundParameters->SourceVoice->GetState(&state);
-
-				//キューに何でもないければ
-				if (state.BuffersQueued == 0)
+				//停止位置
+				tmpSoundParameters->stopPoint = state.SamplesPlayed;
+				while (tmpSoundParameters->stopPoint >= (int)(tmpBuffer->wavFile.data.waveSize / (int)sizeof(long)))
 				{
-					//再生速度
-					tmpSoundParameters->SourceVoice->SetSourceSampleRate(
-						tmpBuffer->wavFile.fmt.fmtSampleRate * tmpSoundParameters->playParameters.speed);
-
-					//停止位置
-					tmpSoundParameters->stopPoint = state.SamplesPlayed;
-					while (tmpSoundParameters->stopPoint >= (int)(tmpBuffer->wavFile.data.waveSize/(int)sizeof(long)))
-					{
-						tmpSoundParameters->stopPoint -= (int)(tmpBuffer->wavFile.data.waveSize / (int)sizeof(long));
-					}
-
-					//再生位置
-					tmpBuffer->buffer.PlayBegin = tmpSoundParameters->stopPoint;
-
-					//バッファの提出
-					tmpSoundParameters->SourceVoice->SubmitSourceBuffer(&tmpBuffer->buffer);
-					
-					//再生処理
-					tmpSoundParameters->SourceVoice->Start();
-
-					//再生速度
-					tmpSoundParameters->isSpeed = false;
+					tmpSoundParameters->stopPoint -= (int)(tmpBuffer->wavFile.data.waveSize / (int)sizeof(long));
 				}
-			}			
+
+				//再生位置
+				tmpBuffer->buffer.PlayBegin = tmpSoundParameters->stopPoint;
+
+				//バッファの提出
+				tmpSoundParameters->SourceVoice->SubmitSourceBuffer(&tmpBuffer->buffer);
+
+				//再生処理
+				tmpSoundParameters->SourceVoice->Start();
+
+				//再生速度
+				tmpSoundParameters->isSpeed = false;
+			}
 		}
 	}
 }
@@ -119,55 +112,86 @@ void BGMManager::outputBGMGUI(void)
 		ImGui::Text("Playing List:");
 		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 		{
-			XAUDIO2_VOICE_STATE state = { 0 };
+			//サウンドのパラメーター
 			SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
+
+			//バッファ
+			LIST_BUFFER *tmpBuffer = GetBuffer(
+				tmpSoundParameters->playParameters.endpointVoiceId,
+				tmpSoundParameters->playParameters.soundId,
+				tmpSoundParameters->playParameters.loop);
+
+			//再生位置&情報取得
+			XAUDIO2_VOICE_STATE state = { 0 };
+			tmpSoundParameters->SourceVoice->GetState(&state);
+			long playPoint = state.SamplesPlayed;
+			while (playPoint >= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(long)))
 			{
-				if (tmpSoundParameters->isPlaying)		//再生している
-				{
-					float backUpSpeed = tmpSoundParameters->playParameters.speed;
-
-					switch (BGMScene)
-					{
-					case SceneList::SPLASH:
-						tmpSoundParameters->SourceVoice->GetState(&state);
-						ImGui::Text("%s", splashBGMPathList[tmpSoundParameters->playParameters.soundId]);
-						ImGui::Text("%d", ((int)state.SamplesPlayed / 44100));
-						break;
-					case SceneList::TITLE:
-						tmpSoundParameters->SourceVoice->GetState(&state);
-						ImGui::Text("%s", titleBGMPathList[tmpSoundParameters->playParameters.soundId]);
-						ImGui::Text("%d", ((int)state.SamplesPlayed / 44100));
-						break;
-					case SceneList::TUTORIAL:
-
-						break;
-					case SceneList::CREDIT:
-
-						break;
-					case SceneList::GAME:
-						tmpSoundParameters->SourceVoice->GetState(&state);
-						ImGui::Text("%s", gameBGMPathList[tmpSoundParameters->playParameters.soundId]);
-						ImGui::Text("%d", ((int)state.SamplesPlayed/44100));
-						ImGui::SliderFloat("Speed", &tmpSoundParameters->playParameters.speed, 1.0f, 3.0f);
-						break;
-					case SceneList::RESULT:
-
-						break;
-					case SceneList::NONE_SCENE:
-
-						break;
-					default:
-						break;
-					}
-
-					if (backUpSpeed != tmpSoundParameters->playParameters.speed)
-					{
-						tmpSoundParameters->isSpeed = true;
-						BGMManager::SetSpeed();
-					};
-
-				}
+				playPoint -= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(long));
 			}
+
+			//再生している
+			if (tmpSoundParameters->isPlaying)
+			{
+				//速度のバックアップ
+				float backUpSpeed = tmpSoundParameters->playParameters.speed;
+
+				switch (BGMScene)
+				{
+				case SceneList::SPLASH:
+					//サウンド名
+					ImGui::Text("%s", splashBGMPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::TITLE:
+					//サウンド名
+					ImGui::Text("%s", titleBGMPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::TUTORIAL:
+
+					break;
+				case SceneList::CREDIT:
+
+					break;
+				case SceneList::GAME:
+					//サウンド名
+					ImGui::Text("%s", gameBGMPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::RESULT:
+
+					break;
+				case SceneList::NONE_SCENE:
+
+					break;
+				default:
+					break;
+				}
+
+				//波形の描画
+				ImGui::Text("Sound Wave");
+				float lines[11025];
+				for (int j = 11024; j >= 0; j--)
+				{
+					if (playPoint - j < 0)
+					{
+						lines[j] = 0.0f;
+						continue;
+					}
+					lines[j] = tmpBuffer->wavFile.data.waveData[playPoint - j];
+				}
+				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 30);
+				ImGui::PlotLines("", lines, 11025, 0, nullptr, FLT_MAX, FLT_MAX, plotextent);
+
+				//速度調整
+				ImGui::Text("%d", ((int)state.SamplesPlayed / 44100));
+				ImGui::SliderFloat("Speed", &tmpSoundParameters->playParameters.speed, 0.1f, 3.0f);
+
+				if (backUpSpeed != tmpSoundParameters->playParameters.speed)
+				{
+					tmpSoundParameters->isSpeed = true;
+					BGMManager::SetSpeed();
+				};
+			}
+
 		}
 	}
 #endif
