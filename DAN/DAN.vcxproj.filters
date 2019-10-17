@@ -318,9 +318,16 @@
     <ClCompile Include="Stone.cpp">
       <Filter>Game Layer\Stone</Filter>
     </ClCompile>
-    <ClCompile Include="TreeTypeA.cpp" />
-    <ClCompile Include="TreeTypeB.cpp" />
-    <ClCompile Include="DeadTree.cpp" />
+    <ClCompile Include="DeadTree.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTypeA.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTypeB.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -470,9 +477,16 @@
     <ClInclude Include="Stone.h">
       <Filter>Game Layer\Stone</Filter>
     </ClInclude>
-    <ClInclude Include="TreeTypeA.h" />
-    <ClInclude Include="TreeTypeB.h" />
-    <ClInclude Include="DeadTree.h" />
+    <ClInclude Include="DeadTree.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTypeA.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTypeB.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

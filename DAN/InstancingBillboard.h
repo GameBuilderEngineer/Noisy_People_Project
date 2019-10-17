@@ -2,7 +2,7 @@
 //【InstancingBillboard.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/27
-// [更新日]2019/10/08
+// [更新日]2019/10/17
 //===================================================================================================================================
 #pragma once
 
@@ -10,7 +10,6 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
-#include "Object.h"
 #include "LinkedList.h"
 
 //===================================================================================================================================
@@ -34,40 +33,34 @@ namespace InstancingBillboardNS {
 	public:
 		D3DXVECTOR3		position;	//ポジション
 		D3DXVECTOR3		rotation;	//回転
-		D3DXVECTOR3		scale;		//サイズ
-		D3DXVECTOR3		speed;		//サイズ
+		D3DXVECTOR2		scale;		//サイズ
+		D3DXVECTOR3		speed;		//スピード
 		D3DXVECTOR2		uv;			//UV
 		D3DXCOLOR			color;		//カラー
-		float existenceTimer;				//生存時間
+		float lifeTimer;						//生存時間
+		float limitTime;						//生存限界時間
 
 		Instance() {
 			position				= D3DXVECTOR3(0.0f,0.0f,0.0f);
 			rotation				= D3DXVECTOR3(0.0f,0.0f,0.0f);
-			scale					= D3DXVECTOR3(1.0f,1.0f,1.0f);
+			scale					= D3DXVECTOR2(1.0f,1.0f);
 			speed				= D3DXVECTOR3(0.0f,0.0f,0.0f);
 			uv						= D3DXVECTOR2(0.0f,0.0f);
 			color					= D3DCOLOR_RGBA(255,255,255,255);
-			existenceTimer	= 1.0f;
+			lifeTimer			= 1.0f;
 		}
 
 		virtual void update(float frameTime)
 		{
-			existenceTimer -= frameTime;
-			if (existenceTimer <= 0)return;
-			position += speed*frameTime;
-			if (position.x > 500)position.x = -500;
-			else if(position.x < -500)position.x = 500;
-			if (position.y > 500)position.y = -500;
-			else if(position.y < -500)position.y = 500;
-			if (position.z > 500)position.z = -500;
-			else if(position.z < -500)position.z = 500;
+			lifeTimer += frameTime;
+			if (lifeTimer >= limitTime)return;
 		}
 
 	};
 	//===================================================================================================================================
 	//【インスタンスリストクラス】
 	//===================================================================================================================================
-	class InstanceList:public LinkedList<InstancingBillboardNS::Instance>
+	class InstanceList:public LinkedList<InstancingBillboardNS::Instance*>
 	{
 	};
 }
@@ -91,11 +84,15 @@ protected:
 	LPDIRECT3DVERTEXBUFFER9				vertexBuffer;			//頂点バッファ
 	LPDIRECT3DINDEXBUFFER9				indexBuffer;			//インデックスバッファ
 	LPDIRECT3DVERTEXBUFFER9				positionBuffer;		//位置バッファ
+	LPDIRECT3DVERTEXBUFFER9				rotationBuffer;		//回転バッファ
+	LPDIRECT3DVERTEXBUFFER9				scaleBuffer;			//スケールバッファ
 	LPDIRECT3DVERTEXBUFFER9				colorBuffer;			//カラーバッファ
 	LPDIRECT3DVERTEXBUFFER9				uvBuffer;				//UVバッファ
 
 	//copy用配列
 	D3DXVECTOR3*									position;				//位置配列
+	D3DXVECTOR3*									rotation;				//回転配列
+	D3DXVECTOR2*									scale;					//スケール配列
 	D3DXCOLOR*									color;					//カラー配列
 	D3DXVECTOR2*									uv;						//UV配列
 
@@ -106,27 +103,30 @@ protected:
 
 	//インスタンスリスト
 	InstancingBillboardNS::InstanceList*	instanceList;			//インスタンスリスト
+	int														instanceNum=0;	//インスタンスの数
 
 public:
 	//Method
 	InstancingBillboard();
-	~InstancingBillboard();
+	virtual ~InstancingBillboard();
 
 	//基本関数
 	virtual HRESULT initialize(LPD3DXEFFECT effect,LPDIRECT3DTEXTURE9 texture);							//初期化
-	void update(float frameTime);																										//更新
+	virtual void update(float frameTime);																										//更新
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);	//描画
 
 	//描画をオフにする
 	void offRender();
 
 	//リスト操作
-	void generateInstance(InstancingBillboardNS::Instance newInstance);		//描画するインスタンスを生成
+	void generateInstance(InstancingBillboardNS::Instance* newInstance);		//描画するインスタンスを生成
 	void deleteInstance(int instanceNo);														//描画するインスタンスを削除
 	void updateAccessList();																			//ランダムアクセス用配列の更新：インスタンスの生成または削除を行った時に更新を行う。
 
 	//各バッファ値更新
 	void updatePosition();																				//位置バッファを更新する
+	void updateRotation();																			//回転バッファを更新する
+	void updateScale();																				//スケールバッファを更新する
 	void updateUV();																					//UVバッファを更新する
 	void updateColor();																				//カラーバッファを更新する
 

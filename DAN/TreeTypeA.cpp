@@ -32,9 +32,9 @@ void TreeTypeA::initialize() {
 	D3DXVECTOR3 position;
 	for (int i = 0; i < 400; i++)
 	{
-		position.x = (float)((rand() % 800) - 400);
+		position.x = (float)((rand() % 2000) - 1000);
 		position.y = 0.0f;
-		position.z = (float)((rand() % 800) - 400);
+		position.z = (float)((rand() % 2000) - 1000);
 		generate(position);
 	}
 	needUpdate = true;

@@ -1,7 +1,7 @@
 //===================================================================================================================================
-//【Title.h】
+//【TestEffect.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
+// [作成日]2019/10/17
 // [更新日]2019/10/17
 //===================================================================================================================================
 #pragma once
@@ -9,48 +9,41 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "AbstractScene.h"
-#include "TestEffect.h"
-#include "Sound.h"
+#include "InstancingBillboard.h"
 
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
-namespace titleNS
+namespace testEffectNS
 {
-	enum TRANSITION_SCENE_LIST
+	//===================================================================================================================================
+	//【テストエフェクトインスタンスクラス】
+	//[使い方]	インスタンスクラスを継承して新たなクラスを作成し、
+	//				のvoid update(float frameTime)関数をオーバーライドして、新たな振る舞いを作成する
+	//===================================================================================================================================
+	class TestEffectInstance :public InstancingBillboardNS::Instance
 	{
-		GAME,
-		CREDIT,
-		OPERATION,
-		TUTORIAL,
-		NUM_TRANSITION_SCENE
+	public:
+		//コンストラクタ
+		TestEffectInstance();
+		//更新
+		virtual void update(float frameTime) override;
 	};
-
 }
 
 //===================================================================================================================================
-//【タイトルシーンクラス】
+//【テストエフェクトレンダラークラス】
+//[使い方]	基本的には継承して、基底クラスの関数を使用していけばＯＫ
+//				加えて何か仕様を追加したい場合は、適宜変更
+//				基底クラスが、インスタンスの更新・削除・リスト管理を行ってくれている[実質マネージャー]
 //===================================================================================================================================
-class Title : public AbstractScene
+class TestEffect :public InstancingBillboard
 {
 private:
-	TestEffect* testEffect;
 
 public:
-	Title(void);
-	~Title(void);
-	virtual void initialize() override;
-	virtual void uninitialize(void) override;
-	virtual void update(float _frameTime) override;
-	void updateInput(void);
-	virtual void render() override;
-	void render3D(Camera _currentCamera);
-	void render2D();
-	virtual void collisions(void) override;
-	virtual void AI(void) override;
-
-#ifdef _DEBUG
-	virtual void createGUI() override;
-#endif
+	TestEffect();
+	~TestEffect();
+	void update(float frameTime);
 };
+

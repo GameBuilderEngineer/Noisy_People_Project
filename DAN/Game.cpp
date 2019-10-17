@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/10/04
+// [更新日]2019/10/16
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -44,7 +44,7 @@ void Game::initialize() {
 
 	//camera
 	camera = new Camera;
-	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	camera->initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
 	camera->setTarget(player->getPosition());
 	camera->setTargetX(&player->getAxisX()->direction);
 	camera->setTargetY(&player->getAxisY()->direction);
@@ -81,8 +81,6 @@ void Game::initialize() {
 	//石の初期化
 	stone = new Stone();
 
-
-
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
@@ -90,14 +88,8 @@ void Game::initialize() {
 	//text.initialize(direct3D9->device,10,10, 0xff00ff00);
 	//text2.initialize(direct3D9->device,11,11, 0xff0000ff);
 
-	//ポイントスプライト
-	//pointSprite.initilaize(direct3D9->device);
-
-	//インスタンシングビルボードテスト
-	instancingBillboardTest.initialize(
-		*shaderNS::reference(shaderNS::INSTANCE_BILLBOARD),
-		*textureNS::reference(textureNS::LIGHT_001)
-	);
+	//エフェクト（インスタンシング）テスト
+	testEffect = new TestEffect();
 
 }
 
@@ -115,6 +107,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(treeA);
 	SAFE_DELETE(treeB);
 	SAFE_DELETE(stone);
+	SAFE_DELETE(testEffect);
 }
 
 //===================================================================================================================================
@@ -130,8 +123,8 @@ void Game::update(float _frameTime) {
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 0.10)return;
 
-	//インスタンシングビルボードテスト
-	//instancingBillboardTest.update(frameTime);
+	//エフェクト（インスタンシング）テスト
+	testEffect->update(frameTime);
 
 	//テストフィールドの更新
 	testField->update();
@@ -161,13 +154,17 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Game::render() {
-
+void Game::render() {	
+		
 	//1Pカメラ・ウィンドウ
 	camera->renderReady();
-	direct3D9->changeViewportFullWindow();
+	direct3D9->changeViewport1PWindow();
 	render3D(*camera);
 
+	//2Pカメラ・ウィンドウ
+	camera->renderReady();
+	direct3D9->changeViewport2PWindow();
+	render3D(*camera);
 
 	//UI
 	direct3D9->changeViewportFullWindow();
@@ -183,8 +180,8 @@ void Game::render3D(Camera currentCamera) {
 	//テストフィールドの描画
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//（サンプル）プレーンの描画(インスタンシング)
-	instancingBillboardTest.render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//エフェクト（インスタンシング）テスト
+	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
 	playerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -207,7 +204,7 @@ void Game::render3D(Camera currentCamera) {
 //===================================================================================================================================
 void Game::renderUI() {
 
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						// αブレンドを行う
 	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
@@ -245,7 +242,7 @@ void Game::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Text("node:%d", instancingBillboardTest.getList().nodeNum);
+	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
 	player->outputGUI();				//プレイヤー
 	testField->outputGUI();			//テストフィールド

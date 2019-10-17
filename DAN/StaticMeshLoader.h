@@ -35,38 +35,32 @@ struct StaticMesh
 //===================================================================================================================================
 namespace staticMeshNS {
 	enum MESH_NUMBER {
-		FIELD,
-		CUBE,
-		SAMPLE_HIERARCHY_MESH,
-		PLANET,
-		SAMPLE_ROBOT001,
-		SAMPLE_ROBOT002,
-		SAMPLE_SKINNED_MESH,
-		STAR_REGULAR_POLYHEDRON,
-		STAR_REGULAR_POLYHEDRON_X10,
-		STAR_REGULAR_POLYHEDRON_X100,
-		SAMPLE_STATIC_MESH,
-		SAMPLE_TOON_MESH,
-		SAMPLE_BUNNY,
-		SAMPLE_PAPER,
-		SAMPLE_REDBULL,
-		SAMPLE_SHOES,
-		SAMPLE_TEAPOT,
-		SAMPLE_LIGHT,
-		SAMPLE_BALL,
-		SAMPLE_SCISSORS,
-		SAMPLE_PLAYSTATION,
-		SAMPLE_HAT,
+		FIELD,														//01
+		CUBE,														//02
+		STAR_REGULAR_POLYHEDRON,					//03
+		STAR_REGULAR_POLYHEDRON_X10,			//04
+		STAR_REGULAR_POLYHEDRON_X100,			//05
 
-		DEAD_TREE,
-		GREEN_TREE_001,
-		GREEN_TREE_002,
-		GRASS,
-		STONE_001,
-		STONE_002,
-		STONE_003,
-		
-		MESH_NUM,
+		SAMPLE_BUNNY,										//01
+		SAMPLE_PAPER,											//02
+		SAMPLE_REDBULL,										//03
+		SAMPLE_SHOES,										//04
+		SAMPLE_TEAPOT,										//05
+		SAMPLE_LIGHT,											//06
+		SAMPLE_BALL,											//07
+		SAMPLE_SCISSORS,									//08
+		SAMPLE_PLAYSTATION,								//09
+		SAMPLE_HAT,											//10
+
+		DEAD_TREE,												//01
+		GREEN_TREE_001,										//02
+		GREEN_TREE_002,										//03
+		GRASS,														//04
+		STONE_001,												//05
+		STONE_002,												//06
+		STONE_003,												//07
+
+		MESH_NUM,												//NUM
 	};
 
 	//äOïîéQè∆ópä÷êî

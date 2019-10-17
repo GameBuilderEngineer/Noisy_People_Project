@@ -2,7 +2,7 @@
 //【InstancingStaticMesh.fx】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/16
+// [更新日]2019/10/17
 //===================================================================================================================================
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //グローバル
@@ -19,12 +19,13 @@ float3		lightDirection		= float3(1.0f, 1.0f, 1.0f);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 sampler textureSampler = sampler_state
 {
-	texture		= <textureDecal>;
-	MinFilter	= LINEAR;
-	MagFilter	= LINEAR;
-	MipFilter	= NONE;
-	AddressU	= Wrap;
-	AddressV	= Wrap;
+	texture				= <textureDecal>;
+	MinFilter			= ANISOTROPIC;
+	MagFilter			= POINT;
+	MipFilter			= POINT;
+	MaxAnisotropy	= 4;
+	AddressU			= Wrap;
+	AddressV			= Wrap;
 };
 
 struct VS_OUT
@@ -96,6 +97,14 @@ float4 PS(VS_OUT In) : COLOR0
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 technique mainTechnique {
 	pass p0 {
+		//ステート設定
+		Zenable							= TRUE;			//Zバッファ有効
+		ZWriteEnable					= TRUE;			//Zバッファへの書き込み有効
+		//ShadeMode					= GOURAUD;		//グーロー・シェーディング
+		CullMode						= CCW;				//背面をカリング
+		//MultiSampleAntialias		= TRUE;			//アンチエイリアシングを有効
+
+		//シェーダ設定
 		VertexShader		= compile vs_3_0 VS();
 		PixelShader		= compile ps_3_0 PS();
 	}
