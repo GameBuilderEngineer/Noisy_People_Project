@@ -43,21 +43,26 @@ Enemy::~Enemy()
 //=============================================================================
 void Enemy::update(float frameTime)
 {
-	// 摩擦係数のリセット
-	friction = 1.0f;
-	isGoingMoveOperation = false;
-
-	StaticMeshObject::update();
-
-
+	// 事前処理
+	previousWork();
 
 #ifdef _DEBUG
 	moveOperation();
 	controlCamera(frameTime);
 #endif
+
 	groundingWork();			// 接地処理
 	updatePhysicalBehavior();	// 物理挙動
 	updatePhysics(frameTime);	// 物理の更新
+	StaticMeshObject::update(); // オブジェクトの更新
+
+	// エネミーデータの更新
+	enemyData->position = position;
+	enemyData->direction = axisZ.direction;
+	if (enemyData->state == DEAD)
+	{
+		enemyData->isAlive = false;
+	}
 }
 
 
@@ -68,6 +73,13 @@ void Enemy::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 {
 	StaticMeshObject::render(
 		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+}
+
+
+void Enemy::previousWork()
+{
+	friction = 1.0f;
+	isGoingMoveOperation = false;
 }
 
 
@@ -87,12 +99,12 @@ void Enemy::updatePhysicalBehavior()
 		setGravity(gravityDirection, GRAVITY_FORCE);
 	}
 
-	// 移動入力がないとき重力以外の加速度を切る
-	if (isGoingMoveOperation == false)
-	{
-		acceleration.x = 0.0f;
-		acceleration.z = 0.0f;
-	}
+	//// 移動入力がないとき重力以外の加速度を切る
+	//if (isGoingMoveOperation == false)
+	//{
+	//	acceleration.x = 0.0f;
+	//	acceleration.z = 0.0f;
+	//}
 
 	// 空中に浮くタイミングで加速度はリセットされる
 	if (onGround == false && onGroundBefore)

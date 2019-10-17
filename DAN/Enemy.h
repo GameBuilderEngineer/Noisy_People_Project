@@ -37,28 +37,84 @@ namespace enemyNS
 		VK_F12,		// ReverseCameraAxisY
 	};
 
-	struct EnemyData
+
+	// エネミーの種類
+	enum ENEMY_TYPE
 	{
-		int id;							// 識別番号(0..*)
-		int enemyType;					// エネミー種別
-		int enemyState;					// エネミーステート
-		int initialPosition;			// 初期座標
-		bool isDead;					// 死亡したかどうか
-		void initialize() { ZeroMemory(this, sizeof(EnemyData)); }
+		WOLF,
+		TIGER,
+		BEAR,
+		TYPE_MAX
 	};
 
+	// ステートの種類
+	enum ENEMY_STATE
+	{
+		CHASE,
+		PATROL,
+		REST,
+		DIE,
+		DEAD,
+		STATE_MAX
+	};
 
+	// 定数定義
 	const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(-35, 10, 0);
 	//const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(0, 0, 0);
-
 	const float MOVE_SPEED_MAX = 5.67f;		// 秒速5.67m
 	//const float MOVE_SPEED_MAX = 50.67f;		// 秒速5.67m
 	const float MOVE_FRICTION = 0.99f;
 	const float MOVE_ACC = MOVE_SPEED_MAX / MOVE_FRICTION;
-
 	const float GRAVITY_FORCE = 9.8f * 0.5;	// 重力
 	const float DIFFERENCE_FIELD = 0.2f;	// フィールド補正差分
 	const float CAMERA_SPEED = 1.0f;		// カメラの速さ
+
+
+	// エネミーの最大HPテーブル
+	const int ENEMY_HP_MAX[TYPE_MAX] =
+	{
+		100,		// WOLF
+		150,		// TIGER
+		200,		// BEAR
+	};
+
+
+	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
+	// エネミー配置ツールとのデータ交換に使用する
+	typedef struct EnemyInitialSettingData
+	{
+		int id;							// 識別番号(0..*)
+		int type;						// エネミー種別
+		int defaultState;				// 初期ステート	
+		D3DXVECTOR3 defaultPosition;	// 初期座標
+		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+	} ENEMYSET;
+ 
+
+	// EnemyDataクラスはエネミー固有のステータスを保持する
+	// EnemyクラスオブジェクトはEnemyDataのポインタを介してステータスを参照する
+	struct EnemyData
+	{
+		int id;							// 識別番号(0..*)
+		int type;						// エネミー種別
+		int state;						// ステート
+		int defaultState;				// 初期ステート	
+		D3DXVECTOR3 position;			// 座標
+		D3DXVECTOR3 defaultPosition;	// 初期座標
+		D3DXVECTOR3 direction;			// 正面方向
+		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+		int hp;							// HP
+		bool isAlive;					// 生存フラグ
+
+		void clear() { ZeroMemory(this, sizeof(EnemyData)); }
+		void revive()
+		{
+			position = defaultPosition;
+			direction = defaultDirection;
+			hp = type > 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
+			isAlive = true;
+		}
+	};
 }
 
 
@@ -71,7 +127,6 @@ private:
 	enemyNS::EnemyData* enemyData;		// エネミーデータ
 	static int numOfEnemy;				// エネミーの総数
 
-	BoundingSphere sphereCollider;		// バウンディングスフィア
 	 
 
 	// 物理挙動
@@ -96,11 +151,27 @@ private:
 	float reverseValueYAxis;			// 操作Y軸
 #endif
 
+	void previousWork();				// 事前処理
+	virtual void chase() = 0;			//「追跡」ステート
+	virtual void patrol() = 0;			//「警戒」ステート
+	virtual void rest() = 0;			//「休憩」ステート
+	virtual void die() = 0;				//「死亡」ステート
+
+
+	void sensor();
+
+
 public:
 	Enemy();
 	~Enemy();
 	virtual void update(float frameTime);
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+
+	BoundingSphere sphereCollider;		// バウンディングスフィア
+
+	void damage();
+
+
 
 	void groundingWork();
 	void updatePhysicalBehavior();

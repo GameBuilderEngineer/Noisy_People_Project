@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------------
 #include "NavigationMesh.h"
 #include "ImguiManager.h"
+#include "Direct3D9.h"
+
 
 
 //=============================================================================
@@ -21,6 +23,9 @@ NavigationMesh::NavigationMesh(StaticMesh* staticMesh):StaticMeshObject(staticMe
 //=============================================================================
 void NavigationMesh::initialize()
 {
+	position = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+	StaticMeshObject::initialize(&position);
+
 	numVertices = mesh->GetNumVertices();
 	stride = mesh->GetNumBytesPerVertex();
 	numFaces = mesh->GetNumFaces();
@@ -53,18 +58,43 @@ void NavigationMesh::initialize()
 	//mesh->GenerateAdjacency(0, adjacency);
 
 
-	D3DCOLOR setColor = D3DCOLOR_RGBA(255, 0, 0, 255);
+	D3DCOLOR white = D3DCOLOR_RGBA(255, 255, 255, 155);
+	D3DCOLOR red = D3DCOLOR_RGBA(255, 0, 0, 155);
 
 	BYTE* pVtx;
 	mesh->GetVertexBuffer(&vertexBuffer);
  	if (SUCCEEDED(vertexBuffer->Lock(0, 0, (void**)&pVtx, 0)))
 	{
+		bool isRed = false;
 		for (int i = 0; i < numVertices; i++)
 		{
 			D3DCOLOR* pColor = (D3DCOLOR*)vtxAccessor.getPointer(vtxAccess::COLOR, &pVtx[i * stride]);
-			*pColor = setColor;
-			D3DXVECTOR3* pos = (D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, &pVtx[i * stride]);
-			*pos = *pos +  D3DXVECTOR3(rand() % 3, rand() % 3, rand() % 3);
+			//if (i % 3 == 0)
+			//{
+			//	//if ((i * 3) % (5 * 3) == 0)
+			//	//{
+			//	//	isRed = true;
+			//	//}
+			//	//else
+			//	//{
+			//	//	isRed = false;
+			//	//}
+
+			//	isRed = isRed ? false : true;
+			//}
+
+			if (i == 5 || i == 14 || i == 15)
+			{
+				*pColor = red;
+			}
+			else
+			{
+				*pColor = white;
+			}
+
+
+			//D3DXVECTOR3* pos = (D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, &pVtx[i * stride]);
+			//*pos = *pos +  D3DXVECTOR3(rand() % 3, rand() % 3, rand() % 3);
 		}
 		vertexBuffer->Unlock();
 	}
@@ -209,7 +239,46 @@ void NavigationMesh::searchRoute(D3DXVECTOR3 from, D3DXVECTOR3 dest, SEARCH_FLAG
 //=============================================================================
 void NavigationMesh::debugRender()
 {
-}
+	D3DXMATERIAL *pD3DXMat;
+	D3DMATERIAL9 matDef;
+
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 device = getDevice();
+
+	// ワールドマトリックスの設定
+	device->SetTransform(D3DTS_WORLD, &matrixWorld);
+
+	// レンダーステートの設定
+	device->SetRenderState(D3DRS_LIGHTING, onLighting);
+	device->SetRenderState(D3DRS_FILLMODE, fillMode);
+
+	// 現在のマテリアルを取得
+	device->GetMaterial(&matDef);
+
+	// マテリアル情報に対するポインタを取得
+	pD3DXMat = (D3DXMATERIAL*)staticMesh->bufferMaterial->GetBufferPointer();
+
+	// テクスチャのαが低い場合デフォルトのブレンドだとポリゴンが消えるためポリゴンのαだけを採用する
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+	device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_CURRENT);
+	device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+	device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);// 色を掛け算してください
+
+	for (int nCntMat = 0; nCntMat < (int)staticMesh->numMaterial; nCntMat++)
+	{
+		// マテリアルの設定
+		device->SetMaterial(&pD3DXMat[nCntMat].MatD3D);
+
+		// テクスチャの設定
+		device->SetTexture(0, *staticMesh->textures);
+
+		// 描画
+		staticMesh->mesh->DrawSubset(nCntMat);
+	}
+
+	// マテリアルをデフォルトに戻す
+	device->SetMaterial(&matDef);}
 
 
 //=============================================================================

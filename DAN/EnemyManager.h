@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include <vector>
+#include "EnemyTools.h"
 #include "Enemy.h"
 
 
@@ -13,14 +14,6 @@
 //=============================================================================
 namespace enemyNS
 {
-	enum ENEMY_TYPE
-	{
-		WOLF,
-		TIGER,
-		BEAR,
-		ENMEY_TYPE_MAX
-	};
-	
 	const int INITIAL_RESERVE = 30;				// エネミーポインタの初期確保数
 }
 
@@ -33,7 +26,6 @@ class EnemyManager
 private:
 	std::vector<enemyNS::EnemyData> enemyDataList;		// エネミーデータリスト
 	std::vector<Enemy*> enemyList;						// エネミーポインタリスト
-
 public:
 	void initialize();
 	void uninitialize();

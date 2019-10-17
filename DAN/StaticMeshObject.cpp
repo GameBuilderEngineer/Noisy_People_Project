@@ -108,12 +108,13 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	if (onTransparent)
 	{//有効
 		//αブレンディングを設定する
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						//
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			//
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	//
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);	//
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);	//
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);					//加算合成を行う
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);	// ポリゴンのαと
+		device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);	// テクスチャのαを
+		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// 混ぜる
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);				// 加算合成を行う
 	}
 	else
 	{//無効
