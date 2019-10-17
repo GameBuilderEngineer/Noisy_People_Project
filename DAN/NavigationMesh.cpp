@@ -10,7 +10,7 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-NavigationMesh::NavigationMesh(StaticMesh* staticMesh):StaticMeshObject(staticMesh)
+NavigationMesh::NavigationMesh(StaticMesh* staticMesh)//:StaticMeshObject(staticMesh)
 {
 	mesh = staticMesh->mesh;	// 参照の長さを縮めるためにポインタをコピー
 }
@@ -24,7 +24,7 @@ void NavigationMesh::initialize()
 	numVertices = mesh->GetNumVertices();
 	stride = mesh->GetNumBytesPerVertex();
 	numFaces = mesh->GetNumFaces();
-	vtxAccessor.initialize(staticMesh);
+	//vtxAccessor.initialize(staticMesh);※菅野コメントアウト
 
 	//// 頂点バッファを配列にコピーする
 	//vtx = new BYTE[numVertices * stride];
@@ -230,11 +230,6 @@ void NavigationMesh::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
 }
 #endif // _DEBUG

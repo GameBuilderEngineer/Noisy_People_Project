@@ -29,7 +29,7 @@ struct Index3
 //=============================================================================
 //クラス定義
 //=============================================================================
-class NavigationMesh: public StaticMeshObject
+class NavigationMesh: public Object
 {
 private:
 	LPDIRECT3DVERTEXBUFFER9	vertexBuffer;		// 頂点バッファ

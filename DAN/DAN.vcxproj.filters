@@ -190,6 +190,9 @@
     <Filter Include="Game Layer\Tree">
       <UniqueIdentifier>{7f5b9b64-5296-48ad-96c6-8061de1bebb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\TestEffect">
+      <UniqueIdentifier>{5a3fa736-39c2-416f-a2b9-563a619ee044}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -384,7 +387,9 @@
     <ClCompile Include="TreeTypeB.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
-    <ClCompile Include="TestEffect.cpp" />
+    <ClCompile Include="TestEffect.cpp">
+      <Filter>Game Layer\TestEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -588,7 +593,9 @@
     <ClInclude Include="TreeTypeB.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
-    <ClInclude Include="TestEffect.h" />
+    <ClInclude Include="TestEffect.h">
+      <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

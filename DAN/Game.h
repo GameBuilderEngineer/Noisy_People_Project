@@ -114,10 +114,6 @@ private:
 	//板で、複数のオブジェクトをインスタンシング描画するとき【動的】
 	//DynamicMultiInstancingPlaneTest dmIP
 
-
-
-
-
 	// エネミー
 	EnemyManager enemyManager;
 	Enemy* enemy;

@@ -89,7 +89,7 @@ float4 PS(VS_OUT In) : COLOR0
 	float4 texel			= tex2D(textureSampler, In.uv);
 	float4 finalColor		= texel*lambert*0.5f + ambient*texel + diffuse*lambert + diffuse*ambient;
 
-	return finalColor;
+	return texel;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

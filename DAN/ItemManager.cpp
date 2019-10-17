@@ -52,7 +52,7 @@ void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 {
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
-		itemList[i]->render(view, projection, cameraPosition);
+		//itemList[i]->render(view, projection, cameraPosition);
 	}
 }
 

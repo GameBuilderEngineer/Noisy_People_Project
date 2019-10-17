@@ -33,7 +33,7 @@ namespace itemNS
 //=============================================================================
 //ƒNƒ‰ƒX’è‹`
 //=============================================================================
-class Item: public StaticMeshObject
+class Item: public Object
 {
 private:
 	itemNS::ItemData* itemData;
@@ -45,7 +45,7 @@ public:
 	Item(StaticMesh* _staticMesh, itemNS::ItemData* _itemData);
 	~Item();
 	virtual void update(float frameTime);
-	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	BoundingSphere sphereCollider;
 
 

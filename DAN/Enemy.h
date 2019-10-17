@@ -65,7 +65,7 @@ namespace enemyNS
 //=============================================================================
 //クラス定義
 //=============================================================================
-class Enemy: public StaticMeshObject
+class Enemy: public Object
 {
 private:
 	enemyNS::EnemyData* enemyData;		// エネミーデータ
@@ -100,7 +100,7 @@ public:
 	Enemy();
 	~Enemy();
 	virtual void update(float frameTime);
-	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	void groundingWork();
 	void updatePhysicalBehavior();
@@ -115,7 +115,6 @@ public:
 	void moveOperation();									// 移動操作
 	bool isGoingMoveOperation;
 
-
 	// Getter
 	static int getNumOfEnemy();								// エネミーの数を取得
 	enemyNS::EnemyData* getEnemyData();						// エネミーデータを取得
@@ -123,4 +122,5 @@ public:
 	//setter
 	void setDataToEnemy(enemyNS::EnemyData* _enemyData);	// エネミーデータをエネミーに設定
 	void setCamera(Camera* _camera);						// 操作対象カメラのセット
+
 };

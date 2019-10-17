@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/10/16
+// [更新日]2019/10/17
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -63,10 +63,10 @@ void Player::initialize(int playerType, int modelType)
 	input = getInput();
 	type = playerType;
 	keyTable = KEY_TABLE_1P;
-	StaticMeshObject::initialize(&(D3DXVECTOR3)START_POSITION);
+	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 
 	// コライダの初期化
-	bodyCollide.initialize(&position, staticMesh->mesh);
+	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);
 	radius = bodyCollide.getRadius();
 	// プレイヤー原点が足元のためプレイヤー中心座標にコライダをセット
 	centralPosition = position + bodyCollide.getCenter();
@@ -132,17 +132,17 @@ void Player::update(float frameTime)
 	//	postureControl(axisY.direction, groundNor, 3.0f * frameTime);
 	//}
 	
-	StaticMeshObject::update();	// オブジェクトの更新
+	Object::update();	// オブジェクトの更新
 }
 
 
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-{
-	StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
-}
+//void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+//{
+//	Object::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
+//}
 
 
 //===================================================================================================================================
@@ -150,10 +150,9 @@ void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPo
 //===================================================================================================================================
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	//デバッグ時描画
 #ifdef _DEBUG
 	bodyCollide.render(matrixWorld);
-#endif // _DEBUG
+#endif	// _DEBUG
 }
 
 
@@ -466,7 +465,7 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	if (onGround)
 	{
-		acceleration = moveDirection * MOVE_ACC;
+		acceleration = moveDirection * MOVE_ACC * dash();
 	}
 	else
 	{
@@ -537,12 +536,7 @@ void Player::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
 		ImGui::Checkbox("sound", &onSound);												//サウンド
-
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 
 		// サウンドGUI
 		outputSoundGUI();
