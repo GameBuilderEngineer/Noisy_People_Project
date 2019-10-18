@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/10/04
+// [更新日]2019/10/17
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -20,9 +20,11 @@ using namespace playerNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2))
+Player::Player() 
 {
+	Object::initialize(&(D3DXVECTOR3)playerNS::START_POSITION);
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
+
 	onGravity = true;
 	activation();
 	state = NORMAL;
@@ -30,7 +32,7 @@ Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_
 	onGround = false;						//接地判定
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
-	onJump = false;							//ジャンプフラグ
+	onJump = false;										//ジャンプフラグ
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 	onSound = false;						//サウンドのGUIフラグ
 
@@ -61,9 +63,9 @@ void Player::initialize(int playerType, int modelType)
 	input = getInput();
 	type = playerType;
 	keyTable = KEY_TABLE_1P;
-	StaticMeshObject::initialize(&(D3DXVECTOR3)START_POSITION);
+	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 
-	bodyCollide.initialize(&position, staticMesh->mesh);	// コライダの初期化
+	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);	// コライダの初期化
 	radius = bodyCollide.getRadius();						// メッシュ半径を取得
 	centralPosition = position + bodyCollide.getCenter();	// 中心座標を設定
 	D3DXMatrixIdentity(&centralMatrixWorld);				// 中心座標ワールドマトリクスを初期化
@@ -128,25 +130,24 @@ void Player::update(float frameTime)
 	//	postureControl(axisY.direction, groundNor, 3.0f * frameTime);
 	//}
 	
-	StaticMeshObject::update();	// オブジェクトの更新
-	//D3DXMatrixTranslation(&centralMatrixWorld, centralPosition.x, centralPosition.y, centralPosition.z);
-	//axisX.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
-	//axisY.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
-	//axisZ.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
-	//reverseAxisX.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
-	//reverseAxisY.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
-	//reverseAxisZ.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
+	Object::update();	// オブジェクトの更新
+	D3DXMatrixTranslation(&centralMatrixWorld, centralPosition.x, centralPosition.y, centralPosition.z);
+	axisX.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
+	axisY.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
+	axisZ.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
+	reverseAxisX.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
+	reverseAxisY.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
+	reverseAxisZ.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
 }
 
 
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-{
-	
-	StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
-}
+//void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+//{
+//	Object::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
+//}
 
 
 //===================================================================================================================================
@@ -154,7 +155,6 @@ void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPo
 //===================================================================================================================================
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	//デバッグ時描画
 #ifdef _DEBUG
 	//bodyCollide.render(centralMatrixWorld);
 #endif // _DEBUG
@@ -465,7 +465,7 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	if (onGround)
 	{
-		acceleration += moveDirection * MOVE_ACC;
+		acceleration = moveDirection * MOVE_ACC * dash();
 	}
 	else
 	{
@@ -477,6 +477,17 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 
+
+//===================================================================================================================================
+//【ダッシュ】
+// [処理内容]入力に応じてダッシュ倍率を返す
+//===================================================================================================================================
+float Player::dash()
+{
+	if (input->isKeyDown(keyTable.dash))
+		return playerNS::DASH_MAGNIFICATION;
+	return 1.0f;
+}
 
 //===================================================================================================================================
 //【ジャンプ】
@@ -526,12 +537,7 @@ void Player::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
 		ImGui::Checkbox("sound", &onSound);												//サウンド
-
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 
 		// サウンドGUI
 		outputSoundGUI();

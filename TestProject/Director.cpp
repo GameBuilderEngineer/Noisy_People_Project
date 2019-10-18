@@ -49,7 +49,7 @@ Director::~Director() {
 	SAFE_DELETE(textureLoader);
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
-	SAFE_DELETE(soundInterface);
+	//SAFE_DELETE(soundInterface);
 	//SAFE_DELETE(textManager);
 	//SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);
@@ -120,7 +120,7 @@ HRESULT Director::initialize() {
 	//animationLoader->initialize(d3d->device);
 
 	//sound
-	soundInterface = new SoundInterface();
+	//soundInterface = new SoundInterface();
 
 	//scene
 	scene = new Splash();
@@ -405,7 +405,7 @@ void Director::changeNextScene() {
 	currentSceneName = scene->getSceneName();
 	
 	//サウンド
-	SEManager::SwitchAudioBuffer(nextScene);	//シーンの更新
+	//SEManager::SwitchAudioBuffer(nextScene);	//シーンの更新
 }
 
 //void threadA()

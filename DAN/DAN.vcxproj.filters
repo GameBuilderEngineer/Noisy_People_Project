@@ -139,9 +139,6 @@
     <Filter Include="Game Layer\Player">
       <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Object\InstancingObject">
-      <UniqueIdentifier>{8da1c1b8-ded5-4529-912b-d06adff668d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\Object\StaticMeshObject">
       <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
     </Filter>
@@ -189,6 +186,15 @@
     </Filter>
     <Filter Include="Game Layer\Tlop">
       <UniqueIdentifier>{06216772-8b7e-4fe7-8c4b-58c99e54a67c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Stone">
+      <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Tree">
+      <UniqueIdentifier>{7f5b9b64-5296-48ad-96c6-8061de1bebb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\TestEffect">
+      <UniqueIdentifier>{5a3fa736-39c2-416f-a2b9-563a619ee044}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -374,6 +380,21 @@
     </ClCompile>
     <ClCompile Include="telop.cpp">
       <Filter>Game Layer\Tlop</Filter>
+    </ClCompile>
+    <ClCompile Include="Stone.cpp">
+      <Filter>Game Layer\Stone</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadTree.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTypeA.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTypeB.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffect.cpp">
+      <Filter>Game Layer\TestEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -568,6 +589,21 @@
     </ClInclude>
     <ClInclude Include="telop.h">
       <Filter>Game Layer\Tlop</Filter>
+    </ClInclude>
+    <ClInclude Include="Stone.h">
+      <Filter>Game Layer\Stone</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadTree.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTypeA.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTypeB.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffect.h">
+      <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

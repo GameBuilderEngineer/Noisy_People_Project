@@ -41,7 +41,7 @@ void Battery::update(float frameTime)
 //=============================================================================
 void Battery::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	Item::render(view, projection, cameraPosition);
+	//Item::render(view, projection, cameraPosition);
 }
 
 

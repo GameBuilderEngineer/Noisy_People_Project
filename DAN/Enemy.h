@@ -121,7 +121,7 @@ namespace enemyNS
 //=============================================================================
 //クラス定義
 //=============================================================================
-class Enemy: public StaticMeshObject
+class Enemy: public Object
 {
 private:
 	enemyNS::EnemyData* enemyData;		// エネミーデータ
@@ -142,6 +142,7 @@ private:
 
 
 #ifdef _DEBUG
+#endif
 	// デバッグ用
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
 	Camera*	camera;						// 操作するカメラへのポインタ
@@ -149,7 +150,6 @@ private:
 	enemyNS::OperationKeyTable keyTable;// 操作キーテーブル
 	float reverseValueXAxis;			// 操作X軸
 	float reverseValueYAxis;			// 操作Y軸
-#endif
 
 	void previousWork();				// 事前処理
 	virtual void chase() = 0;			//「追跡」ステート
@@ -165,7 +165,7 @@ public:
 	Enemy();
 	~Enemy();
 	virtual void update(float frameTime);
-	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	BoundingSphere sphereCollider;		// バウンディングスフィア
 
@@ -186,7 +186,6 @@ public:
 	void moveOperation();									// 移動操作
 	bool isGoingMoveOperation;
 
-
 	// Getter
 	static int getNumOfEnemy();								// エネミーの数を取得
 	enemyNS::EnemyData* getEnemyData();						// エネミーデータを取得
@@ -194,4 +193,5 @@ public:
 	//setter
 	void setDataToEnemy(enemyNS::EnemyData* _enemyData);	// エネミーデータをエネミーに設定
 	void setCamera(Camera* _camera);						// 操作対象カメラのセット
+
 };

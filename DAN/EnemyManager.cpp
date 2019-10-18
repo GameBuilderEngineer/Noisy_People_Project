@@ -95,10 +95,10 @@ void EnemyManager::update(float frameTime)
 //=============================================================================
 void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	for (size_t i = 0; i < enemyList.size(); i++)
-	{
-		enemyList[i]->render(view, projection, cameraPosition);
-	}
+	//for (size_t i = 0; i < enemyList.size(); i++)
+	//{
+	//	enemyList[i]->render(view, projection, cameraPosition);
+	//}
 }
 
 

@@ -68,11 +68,21 @@ typedef struct	// バッファ構造体
 
 typedef struct //再生パラメータ
 {
+	int								endpointVoiceId;		//エンドポイントボイスID
+	int								soundId;				//サウンドID
+	bool								loop;				//ループ
+	float							speed;				//再生速度
+	bool								filterFlag;			//卍フィルター卍
+	XAUDIO2_FILTER_PARAMETERS		filterParameters;	//卍フィルター卍
+}PLAY_PARAMETERS;
+
+typedef struct //曲のパラメータ
+{
 	IXAudio2SourceVoice *SourceVoice;	//ソースボイス
+	PLAY_PARAMETERS		playParameters;	//再生パラメータ
+	bool					isSpeed;			//再生速度変更した?
 	bool					isPlaying;		//再生中?
-	int					soundId;			//サウンドID
-	bool					loop;			//ループ
-	short				stopPoint;		//停止位置
+	long					stopPoint;		//停止位置
 }SOUND_PARAMETERS;
 
 //===================================================================================================================================
@@ -85,19 +95,21 @@ public:
 	SoundBase();
 	~SoundBase();
 
-	void	 playSound(int soundId, bool loop);					//再生
-	void	 stopSound(int soundId, bool loop);					//停止
-	void	 updateSound(void);									//更新処理
+	void	 playSound(const PLAY_PARAMETERS playParameters);	//再生
+	void	 stopSound(const PLAY_PARAMETERS playParameters);	//停止
+	void	 updateSound(void);										//更新処理
 
 protected:
 	static WAV_FILE	LoadWavChunk(FILE *fp);								//WAVファイルの読み込み処理
-	void				MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *listBuffer);
-	void				uninitSoundStop(void);									//停止(全部のサウンド)
-	LIST_BUFFER		*GetBuffer(int soundId, bool loop);
+	void				MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer);
+	void				uninitSoundStop(void);								//停止(全部のサウンド)
+	LIST_BUFFER		*GetBuffer(int endpointVoiceId, int soundId, bool loop);
 
 	//バッファリスト
-	static LIST_BUFFER *bufferList;
-	static int			bufferMax;
+	static LIST_BUFFER *SEBufferList;
+	static int			SEBufferMax;
+	static LIST_BUFFER *BGMBufferList;
+	static int			BGMBufferMax;
 
 	//ボイスリスト
 	LinkedList <SOUND_PARAMETERS>*soundParametersList;
