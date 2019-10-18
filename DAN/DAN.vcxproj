@@ -138,6 +138,7 @@
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Create.h" />
     <ClInclude Include="Credit.h" />
     <ClInclude Include="DigitalTree.h" />
     <ClInclude Include="DeadTree.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Create.cpp" />
     <ClCompile Include="Credit.cpp" />
     <ClCompile Include="CreditTex.cpp" />
     <ClCompile Include="DeadTree.cpp" />

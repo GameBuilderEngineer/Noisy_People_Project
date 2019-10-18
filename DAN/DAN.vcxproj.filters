@@ -199,6 +199,9 @@
     <Filter Include="Constant Layer\Text">
       <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Create">
+      <UniqueIdentifier>{38969594-a3b8-4c26-be69-77225b90e266}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -417,6 +420,9 @@
     </ClCompile>
     <ClCompile Include="ResultUIcpp.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="Create.cpp">
+      <Filter>Game Layer\Scene\Create</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -647,6 +653,9 @@
     </ClInclude>
     <ClInclude Include="TestEffect.h">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Create.h">
+      <Filter>Game Layer\Scene\Create</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

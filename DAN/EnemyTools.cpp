@@ -55,17 +55,14 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 		EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
 
 		//•`‰æ—p
-		renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::STONE_003));
+		renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 		initialize();
-
-		//•`‰æ
 		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
 		{
 			generate(D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ));
 			renderer->updateAccessList();
 		}
 	}
-
 #endif
 }
 
@@ -151,7 +148,7 @@ void ENEMY_TOOLS::generate(D3DXVECTOR3 position)
 {
 	Object* object = new Object();
 	renderer->generateObject(object);
-	object->existenceTimer = -1;
+	object->existenceTimer = -1;		// < 0 ‚È‚çÁ‚¦‚é
 	object->initialize(&position);
 }
 

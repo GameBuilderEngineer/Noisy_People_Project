@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【Game.h】
+//【Create.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
 // [更新日]2019/10/18
@@ -26,11 +26,9 @@
 #include "Telop.h"
 
 
-#include "Sound.h"
-#include "SoundBase.h"
 #include "EnemyTools.h"
 //#include "InstancingBillboard.h"
-//#include "GameMaster.h"
+//#include "CreateMaster.h"
 //#include "PointSprite.h"
 
 //#include "Object.h"
@@ -39,16 +37,17 @@
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
-namespace gameNS
+namespace createNS
 {
+
 	//プレイヤー初期位置
-	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
+	const D3DXVECTOR3 PLAYER_POSITION = D3DXVECTOR3(0, 100, 0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,15.0f,-15.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 15.0f, -15.0f, 0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10.0f,0);
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0, 10.0f, 0);
 
 	//const int NUM_SAMPLE = 1000;
 
@@ -57,7 +56,7 @@ namespace gameNS
 //===================================================================================================================================
 //【ゲームシーンクラス】
 //===================================================================================================================================
-class Game : public AbstractScene
+class Create : public AbstractScene
 {
 private:
 
@@ -138,12 +137,9 @@ private:
 	AIDirector* aiDirector;
 	NavigationMesh* naviAI;
 
-	//再生パラメータ
-	PLAY_PARAMETERS playParameters[3];
-
 public:
-	Game();
-	~Game();
+	Create();
+	~Create();
 	virtual void initialize() override;
 	virtual void update(float frameTime) override;
 	virtual void render() override;

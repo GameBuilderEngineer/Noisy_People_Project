@@ -249,10 +249,20 @@ void Title::AI(void)
 #ifdef _DEBUG
 void Title::createGUI()
 {
+	bool createScene = false;
+
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	ImGui::Checkbox("Create Scene", &createScene);
 
+	//ツール用シーン
+	if (createScene)
+	{
+		selectStateMemory = titleUiNS::CREATE;
+		nextScene = (SceneList::CREATE);
+		changeScene(nextScene);
+	}
 }
 #endif // _DEBUG

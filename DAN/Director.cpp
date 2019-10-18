@@ -15,6 +15,7 @@
 #include "Credit.h"
 #include "Game.h"
 #include "Result.h"
+#include "Create.h"
 #include "SE.h"
 
 //===================================================================================================================================
@@ -403,6 +404,7 @@ void Director::changeNextScene() {
 	case SceneList::CREDIT:					scene = new Credit(); break;
 	case SceneList::GAME:					scene = new Game(); break;
 	case SceneList::RESULT:					scene = new Result(); break;
+	case SceneList::CREATE:					scene = new Create(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
 	//scene->setGameMaster(gameMaster);//ゲーム管理情報をシーンへセット

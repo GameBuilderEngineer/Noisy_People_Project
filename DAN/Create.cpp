@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【Game.cpp】
+//【Create.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
 // [更新日]2019/10/18
@@ -8,36 +8,21 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "Game.h"
+#include "Create.h"
 
 //===================================================================================================================================
 //【using宣言】
 //===================================================================================================================================
-using namespace gameNS;
+using namespace createNS;
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Game::Game()
+Create::Create()
 {
-	sceneName = "Scene -Game-";
+	sceneName = "Scene -Create-";
 
 	nextScene = SceneList::RESULT;
-
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::GAME);
-
-	//再生パラメータ
-	memset(playParameters, 0, sizeof(playParameters));
-	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,true, filterParameters };
-	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,true, filterParameters };
-
-	//再生
-	SoundInterface::playSound(playParameters[0]);
-	SoundInterface::playSound(playParameters[1]);
-	SoundInterface::playSound(playParameters[2]);
 
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;
@@ -46,13 +31,8 @@ Game::Game()
 //===================================================================================================================================
 //【デストラクタ】
 //===================================================================================================================================
-Game::~Game()
+Create::~Create()
 {
-	// サウンドの停止
-	SoundInterface::stopSound(playParameters[0]);
-	SoundInterface::stopSound(playParameters[1]);
-	SoundInterface::stopSound(playParameters[2]);
-
 	//エネミーツール
 	SAFE_DELETE(enemyTools);
 }
@@ -60,7 +40,7 @@ Game::~Game()
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
-void Game::initialize() {
+void Create::initialize() {
 
 	//player
 	player = new Player;
@@ -83,7 +63,7 @@ void Game::initialize() {
 
 	//camera
 	camera = new Camera;
-	camera->initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
+	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 	camera->setTarget(player->getPosition());
 	camera->setTargetX(&player->getAxisX()->direction);
 	camera->setTargetY(&player->getAxisY()->direction);
@@ -92,7 +72,7 @@ void Game::initialize() {
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
-	camera->setFieldOfView( (D3DX_PI/18) * 9 );
+	camera->setFieldOfView((D3DX_PI / 18) * 9);
 
 	//light
 	light = new Light;
@@ -158,7 +138,7 @@ void Game::initialize() {
 //===================================================================================================================================
 //【終了処理】
 //===================================================================================================================================
-void Game::uninitialize() {
+void Create::uninitialize() {
 	SAFE_DELETE(camera);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
@@ -179,7 +159,7 @@ void Game::uninitialize() {
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
-void Game::update(float _frameTime) {
+void Create::update(float _frameTime) {
 
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
@@ -219,7 +199,7 @@ void Game::update(float _frameTime) {
 
 	// テロップの更新
 	telop->update(frameTime);
-	
+
 	////カメラの更新
 	//camera->update();
 	playerRenderer->update();
@@ -234,7 +214,7 @@ void Game::update(float _frameTime) {
 	stone->update();
 
 	//エネミーツールの更新
-	//enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
 	enemyTools->update();
 
 	//カメラの更新
@@ -258,8 +238,8 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Game::render() {	
-		
+void Create::render() {
+
 	//1Pカメラ・ウィンドウ
 	camera->renderReady();
 	direct3D9->changeViewport1PWindow();
@@ -278,11 +258,11 @@ void Game::render() {
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Game::render3D(Camera currentCamera) {
+void Create::render3D(Camera currentCamera) {
 
 
 	//テストフィールドの描画
-	testField->setAlpha(0.1f); 
+	testField->setAlpha(0.1f);
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//エフェクト（インスタンシング）テスト
@@ -323,7 +303,7 @@ void Game::render3D(Camera currentCamera) {
 //===================================================================================================================================
 //【UI/2D描画】
 //===================================================================================================================================
-void Game::renderUI() {
+void Create::renderUI() {
 
 	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						// αブレンドを行う
 	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
@@ -342,12 +322,12 @@ void Game::renderUI() {
 //===================================================================================================================================
 //【衝突判定処理】
 //===================================================================================================================================
-void Game::collisions() 
+void Create::collisions()
 {
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getList();
 	for (size_t i = 0; i < itemList.size(); i++)
-	{	
+	{
 		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
 			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
 		{
@@ -359,7 +339,7 @@ void Game::collisions()
 //===================================================================================================================================
 //【AI処理】
 //===================================================================================================================================
-void Game::AI() {
+void Create::AI() {
 	aiDirector->run();		// メタAI実行
 }
 
@@ -367,7 +347,7 @@ void Game::AI() {
 //【GUI作成処理】
 //===================================================================================================================================
 #ifdef _DEBUG
-void Game::createGUI()
+void Create::createGUI()
 {
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
