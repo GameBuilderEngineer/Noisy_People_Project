@@ -1,8 +1,8 @@
 //===================================================================================================================================
 //【Title.h】
-// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成者]HAL東京GP12A332 25 染矢 晃介
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/10/17
 //===================================================================================================================================
 #pragma once
 
@@ -10,11 +10,12 @@
 //【インクルード】
 //===================================================================================================================================
 #include "AbstractScene.h"
-#include "InstancingBillboard.h"
+#include "TestEffect.h"
 #include "Sound.h"
 #include "SoundBase.h"
 
 //#include "SceneEffect.h"
+#include "TitleUI.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -38,15 +39,13 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
-	//Player player[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX];	//	プレイヤー
-	//SceneEffect sceneEffect;								//	シーンエフェクト
-	//UITitle uiTitle;										//	タイトルUI
-	//InstancingBillboard plane;							//	インスタンシングビルボード
-	InstancingBillboard plane;
+	TestEffect* testEffect;
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[3];
 
+	TitleUI titleUI;										//タイトルUI
+	int selectStateMemory;
 public:
 	Title(void);
 	~Title(void);

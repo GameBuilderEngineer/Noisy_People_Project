@@ -2,7 +2,7 @@
 //【Direct3D9.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/09/17
+// [更新日]2019/10/16
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -63,6 +63,7 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 		D3DCREATE_HARDWARE_VERTEXPROCESSING,
 		&d3dpp, &device)))
 	{
+		MessageBox(0, "HARDWAREモードでDIRECT3Dデバイスを作成できません\nSOFTWAREモードで再試行します", NULL, MB_OK);
 		if (FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, targetWnd,
 			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 			&d3dpp, &device)))
@@ -83,18 +84,18 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 		}
 	}
 
-	device->SetRenderState(D3DRS_ZENABLE, true);						//Zバッファー処理を有効にする
-	device->SetRenderState(D3DRS_LIGHTING, true);						//ライトを有効にする
-	device->SetRenderState(D3DRS_AMBIENT, 0x22111111);					//アンビエントライト（環境光）を設定する
-	device->SetRenderState(D3DRS_SPECULARENABLE, true);					//スペキュラ（光沢反射）を有効にする
-	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);				//カリングの無効化
-	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);				//反時計回りカリング有効化
-	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);				//時計回りカリング有効化
-	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);			//アンチエイリアシングをかける
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				//αブレンドを行う
+	device->SetRenderState(D3DRS_ZENABLE, true);										//Zバッファー処理を有効にする
+	device->SetRenderState(D3DRS_LIGHTING, true);										//ライトを有効にする
+	device->SetRenderState(D3DRS_AMBIENT, 0x22111111);							//アンビエントライト（環境光）を設定する
+	device->SetRenderState(D3DRS_SPECULARENABLE, true);							//スペキュラ（光沢反射）を有効にする
+	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);					//カリングの無効化
+	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);						//反時計回りカリング有効化
+	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);					//時計回りカリング有効化
+	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);					//アンチエイリアシングをかける
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						//αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			//αソースカラーの指定
-	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		//αデスティネーションカラーの指定
-	device->GetViewport(&viewPort);										//ビューポートを取得
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	//αデスティネーションカラーの指定
+	device->GetViewport(&viewPort);																//ビューポートを取得
 	return S_OK;
 }
 

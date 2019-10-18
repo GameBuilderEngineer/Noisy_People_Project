@@ -2,7 +2,7 @@
 //【StaticMeshLoader.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/04
+// [更新日]2019/10/16
 //===================================================================================================================================
 #pragma once
 
@@ -18,16 +18,16 @@ struct StaticMesh
 {
 	LPDIRECT3DVERTEXBUFFER9				vertexBuffer;				//頂点情報バッファ
 	LPDIRECT3DINDEXBUFFER9				indexBuffer;				//インデックスバッファ
-	LPD3DXMESH										mesh;						//メッシュ情報
-	D3DMATERIAL9*								materials;					//マテリアル情報格納先
-	LPD3DXBUFFER									bufferMaterial;			//メッシュのマテリアルバッファ
-	LPDIRECT3DTEXTURE9*						textures;					//テクスチャ情報格納先
-	DWORD												numMaterial;				//マテリアル情報の数
-	D3DVERTEXELEMENT9						vertexElement[65];	//頂点属性
-	LPDIRECT3DVERTEXDECLARATION9	declaration;				//頂点宣言
-	DWORD												numBytesPerVertex;	//頂点サイズ
-	D3DXATTRIBUTERANGE*					attributeTable;			//属性テーブル
-	DWORD												attributeTableSize;		//属性テーブルサイズ
+	LPD3DXMESH							mesh;						//メッシュ情報
+	D3DMATERIAL9*						materials;					//マテリアル情報格納先
+	LPD3DXBUFFER						bufferMaterial;				//メッシュのマテリアルバッファ
+	LPDIRECT3DTEXTURE9*					textures;					//テクスチャ情報格納先
+	DWORD								numMaterial;				//マテリアル情報の数
+	D3DVERTEXELEMENT9					vertexElement[65];			//頂点属性
+	LPDIRECT3DVERTEXDECLARATION9		declaration;				//頂点宣言
+	DWORD								numBytesPerVertex;			//頂点サイズ
+	D3DXATTRIBUTERANGE*					attributeTable;				//属性テーブル
+	DWORD								attributeTableSize;			//属性テーブルサイズ
 };
 
 //===================================================================================================================================
@@ -35,32 +35,41 @@ struct StaticMesh
 //===================================================================================================================================
 namespace staticMeshNS {
 	enum MESH_NUMBER {
-		FIELD,
-		CUBE,
-		SAMPLE_HIERARCHY_MESH,
-		PLANET,
-		SAMPLE_ROBOT001,
-		SAMPLE_ROBOT002,
-		SAMPLE_SKINNED_MESH,
-		STAR_REGULAR_POLYHEDRON,
-		STAR_REGULAR_POLYHEDRON_X10,
-		STAR_REGULAR_POLYHEDRON_X100,
-		SAMPLE_STATIC_MESH,
-		SAMPLE_TOON_MESH,
-		SAMPLE_BUNNY,
-		SAMPLE_PAPER,
-		SAMPLE_REDBULL,
-		SAMPLE_SHOES,
-		SAMPLE_TEAPOT,
-		SAMPLE_LIGHT,
-		SAMPLE_BALL,
-		SAMPLE_SCISSORS,
-		SAMPLE_PLAYSTATION,
-		SAMPLE_HAT,
+		FIELD,									//01
+		CUBE,									//02
+		STAR_REGULAR_POLYHEDRON,				//03
+		STAR_REGULAR_POLYHEDRON_X10,			//04
+		STAR_REGULAR_POLYHEDRON_X100,			//05
 
-		DEAD_TREE,
-		
-		MESH_NUM,
+		SAMPLE_BUNNY,							//01
+		SAMPLE_PAPER,							//02
+		SAMPLE_REDBULL,							//03
+		SAMPLE_SHOES,							//04
+		SAMPLE_TEAPOT,							//05
+		SAMPLE_LIGHT,							//06
+		SAMPLE_BALL,							//07
+		SAMPLE_SCISSORS,						//08
+		SAMPLE_PLAYSTATION,						//09
+		SAMPLE_HAT,								//10
+
+		DEAD_TREE,								//01
+		GREEN_TREE_001,							//02
+		GREEN_TREE_002,							//03
+		GRASS,									//04
+		STONE_001,								//05
+		STONE_002,								//06
+		STONE_003,								//07
+
+		YAMADA_LAND,							//01
+		NAKAGOMI_LAND,							//02
+		YAMADA_ROBOT,							//03
+		SAMPLE_NAVMESH,							//04
+		YAMADA_ROBOT2,							//05
+		YAMADA_PLANE,							//06
+		DICE,									//07
+		YAMADA_TEST_ZONE,						//08
+
+		MESH_NUM,								//NUM
 	};
 
 	//外部参照用関数

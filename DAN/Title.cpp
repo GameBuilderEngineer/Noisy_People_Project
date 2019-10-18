@@ -2,7 +2,7 @@
 //【Title.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/30
+// [更新日]2019/10/17
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -27,7 +27,7 @@ Title::Title(void)
 {
 	// 今のシーン( タイトル )
 	sceneName = ("Scene -Title-");
-	nextScene = SceneList::GAME;
+	nextScene = SceneList::TUTORIAL;
 
 	//シーンの更新
 	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);	
@@ -77,15 +77,11 @@ void Title::initialize()
 	light = new Light;
 	light->initialize();
 
-	// タイトルUIの初期化
-	//uiTitle.initialize(_direct3D9->device, _textureLoader, selectStateMemory);
+	//タイトルUIの初期化
+	titleUI.initialize();
 
-	//インスタンシングビルボードテスト
-	plane.initialize(
-		*shaderNS::reference(shaderNS::INSTANCE_BILLBOARD),
-		*textureNS::reference(textureNS::LIGHT_001)
-	);
-
+	//エフェクト（インスタンシング）テスト
+	testEffect = new TestEffect();
 }
 
 //============================================================================================================================================
@@ -99,8 +95,11 @@ void Title::uninitialize(void)
 	// カメラ
 	SAFE_DELETE(camera);
 
+	//エフェクト（インスタンシング）テスト
+	SAFE_DELETE(testEffect);
+
 	// タイトルUI
-	//uiTitle.release();
+	titleUI.uninitialize();
 
 }
 
@@ -112,7 +111,8 @@ void Title::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	plane.update(frameTime);
+	//エフェクト（インスタンシング）テスト
+	testEffect->update(frameTime);
 
 	// カメラ
 	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
@@ -120,8 +120,11 @@ void Title::update(float _frameTime)
 
 	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
 
+	//バーの移動
+	//if(input->wasKeyPressed()
+
 	// タイトルUI
-	//uiTitle.update(input, sound);
+	titleUI.update(input);
 
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
@@ -131,14 +134,7 @@ void Title::update(float _frameTime)
 		changeScene(nextScene);
 	}
 
-	// シーンエフェクトの更新
-	//sceneEffect.update(_frameTime);
-
-	//for (int i = 0; i < EFFECT_MAX; i++)
-	//{
-	//	// シーンエフェクト発生
-	//	sceneEffect.generateSceneEffect(1, D3DXVECTOR3((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50)));
-	//}
+	//カメラ
 	camera->update();
 }
 
@@ -147,34 +143,30 @@ void Title::update(float _frameTime)
 //============================================================================================================================================
 void Title::updateInput(void)
 {
-	//switch (uiTitle.getSelectState())
-	//{
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;
-	//	nextScene = (SceneList::SELECT);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL;
-	//	nextScene = (SceneList::TUTORIAL);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION;
-	//	nextScene = (SceneList::OPERATION);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT;
-	//	nextScene = (SceneList::CREDIT);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_EXIT:
-	//	PostQuitMessage(NULL);
-	//	break;
-	//default:
-	//	break;
-	//}
+	switch (titleUI.getSelectState())
+	{
+	case titleUiNS::TUTORIAL:
+		selectStateMemory = titleUiNS::TUTORIAL;
+		nextScene = (SceneList::TUTORIAL);
+		changeScene(nextScene);
+		break;
+	case titleUiNS::GAME:
+		selectStateMemory = titleUiNS::GAME;
+		nextScene = (SceneList::GAME);
+		changeScene(nextScene);
+		break;
+	case titleUiNS::CREDIT:
+		selectStateMemory = titleUiNS::CREDIT;
+		nextScene = (SceneList::CREDIT);
+		changeScene(nextScene);
+		break;
+	case titleUiNS::EXIT:
+		PostQuitMessage(NULL);
+		break;
+	
+	default:
+		break;
+	}
 }
 
 //============================================================================================================================================
@@ -199,11 +191,8 @@ void Title::render()
 //============================================================================================================================================
 void Title::render3D(Camera _currentCamera)
 {
-	// シーンエフェクトの描画
-	//sceneEffect.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
-
-	// プレーン( インスタンシング )
-	plane.render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	//エフェクト（インスタンシング）テスト
+	testEffect->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// タイトルプレイヤー描画
 	//player[0].toonRender
@@ -223,8 +212,8 @@ void Title::render3D(Camera _currentCamera)
 //============================================================================================================================================
 void Title::render2D()
 {
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);							// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
 	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
@@ -232,7 +221,7 @@ void Title::render2D()
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	// タイトルUI
-	//uiTitle.render(_device);
+	titleUI.render();
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -263,7 +252,7 @@ void Title::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Text("node:%d", plane.getList().nodeNum);
+	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
 }
 #endif // _DEBUG

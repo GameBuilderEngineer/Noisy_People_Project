@@ -9,6 +9,7 @@
 #include "Input.h"
 #include "Camera.h"
 
+
 //=============================================================================
 // 名前空間
 //=============================================================================
@@ -85,10 +86,10 @@ namespace enemyNS
 		int id;							// 識別番号(0..*)
 		int type;						// エネミー種別
 		int defaultState;				// 初期ステート	
-		D3DXVECTOR3 defaultPosition;		// 初期座標
+		D3DXVECTOR3 defaultPosition;	// 初期座標
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 	} ENEMYSET;
-
+ 
 
 	// EnemyDataクラスはエネミー固有のステータスを保持する
 	// EnemyクラスオブジェクトはEnemyDataのポインタを介してステータスを参照する
@@ -99,7 +100,7 @@ namespace enemyNS
 		int state;						// ステート
 		int defaultState;				// 初期ステート	
 		D3DXVECTOR3 position;			// 座標
-		D3DXVECTOR3 defaultPosition;		// 初期座標
+		D3DXVECTOR3 defaultPosition;	// 初期座標
 		D3DXVECTOR3 direction;			// 正面方向
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 		int hp;							// HP
@@ -120,13 +121,13 @@ namespace enemyNS
 //=============================================================================
 //クラス定義
 //=============================================================================
-class Enemy : public StaticMeshObject
+class Enemy: public Object
 {
 private:
 	enemyNS::EnemyData* enemyData;		// エネミーデータ
 	static int numOfEnemy;				// エネミーの総数
 
-
+	 
 
 	// 物理挙動
 	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
@@ -141,6 +142,7 @@ private:
 
 
 #ifdef _DEBUG
+#endif
 	// デバッグ用
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
 	Camera*	camera;						// 操作するカメラへのポインタ
@@ -148,7 +150,6 @@ private:
 	enemyNS::OperationKeyTable keyTable;// 操作キーテーブル
 	float reverseValueXAxis;			// 操作X軸
 	float reverseValueYAxis;			// 操作Y軸
-#endif
 
 	void previousWork();				// 事前処理
 	virtual void chase() = 0;			//「追跡」ステート
@@ -164,7 +165,7 @@ public:
 	Enemy();
 	~Enemy();
 	virtual void update(float frameTime);
-	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	BoundingSphere sphereCollider;		// バウンディングスフィア
 
@@ -185,7 +186,6 @@ public:
 	void moveOperation();									// 移動操作
 	bool isGoingMoveOperation;
 
-
 	// Getter
 	static int getNumOfEnemy();								// エネミーの数を取得
 	enemyNS::EnemyData* getEnemyData();						// エネミーデータを取得
@@ -193,4 +193,5 @@ public:
 	//setter
 	void setDataToEnemy(enemyNS::EnemyData* _enemyData);	// エネミーデータをエネミーに設定
 	void setCamera(Camera* _camera);						// 操作対象カメラのセット
+
 };

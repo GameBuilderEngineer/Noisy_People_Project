@@ -155,7 +155,7 @@ void Camera::outputGUI()
 		ImGui::SliderFloat3("upVector", upVector, -1, 1);										//上方ベクトル
 		ImGui::SliderFloat4("posture", posture, limitBottom, limitTop);							//姿勢クォータニオン
 
-		ImGui::Checkbox("onGaze", &onGaze);												//注視フラグ
+		ImGui::Checkbox("onGaze", &onGaze);														//注視フラグ
 
 	}
 #endif // _DEBUG

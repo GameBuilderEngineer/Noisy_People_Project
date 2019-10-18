@@ -2,7 +2,7 @@
 //【TextureLoader.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/05
+// [更新日]2019/10/17
 //===================================================================================================================================
 //===================================================================================================================================
 //課題
@@ -26,10 +26,18 @@ namespace textureNS
 		SPLASH,
 
 		// Tutorial
-		TUTORIAL,
+		TUTORIAL1,
+		TUTORIAL2,
 
 		// Title
 		TITLE_LOGO,
+		TITLE_MENU,
+		TITLE_INFO_TUTO,
+		TITLE_INFO_GAME,
+		TITLE_INFO_CREDIT,
+		TITLE_INFO_EXIT,
+		TITLE_COPYRIGHT,			
+		TITLE_BAR,				
 
 		// Operation
 		OPERATION_GAMEPAD,
@@ -54,6 +62,7 @@ namespace textureNS
 		TARGET,
 		SAMPLE_TREE,
 		SAMPLE_GRASS,
+		NEKO,
 
 		MAX_TEXTURE,
 	};

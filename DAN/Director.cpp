@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/06
+// [更新日]2019/10/16
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -203,10 +203,10 @@ void Director::mainLoop() {
 		changeNextScene();
 
 	setFrameTime();		//フレーム時間の初期化処理
-	update();			//メイン更新処理
-	render();			//メイン描画処理
-	fixFPS();			//固定FPS処理
-	displayFPS();		//windowネームへFPS表示
+	update();					//メイン更新処理
+	render();					//メイン描画処理
+	fixFPS();					//固定FPS処理
+	displayFPS();				//windowネームへFPS表示
 
 	//入力をクリア:すべてのキーチェックが行われた後これを呼び出す
 	input->clear(inputNS::MOUSE | inputNS::KEYS_PRESSED);
@@ -274,7 +274,6 @@ void Director::createGUI()
 	ImGui::Text("CPU %.2f ％", memory->getCpuUsege());
 	ImGui::Text("MEMORY %d kb", memory->getMemoryUsege());
 	ImGui::Text("PHYS_MEMORY %d kb", memory->getPhysMemorys());
-	
 #endif // _DEBUG
 }
 
@@ -283,6 +282,13 @@ void Director::createGUI()
 // [用途]アプリ全体の描画処理
 //===================================================================================================================================
 void Director::render() {
+
+#ifndef _DEBUG
+	//sleepRenderTime += frameTime;
+	//if (sleepRenderTime < 1.000f / ((float)fixedFps * 3 / 4))return;
+	//sleepRenderTime = 0.0f;
+#endif // !_DEBUG
+
 #ifdef _DEBUG
 	//Debug
 	d3d->clear(imgui->getClearColor());

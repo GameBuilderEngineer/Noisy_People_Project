@@ -10,7 +10,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "AbstractScene.h"
-//#include "Tutorial2D.h"
+#include "TutorialTex.h"
 
 //===================================================================================================================================
 //【マクロ定義】
@@ -36,8 +36,8 @@ namespace tutorialNS
 class Tutorial : public AbstractScene
 {
 private:
-	// チュートリアル2D
-	//Tutorial2D tutorial2D;
+	//チュートリアル2D
+	TutorialTex tutorialTex;
 
 public:
 	Tutorial();

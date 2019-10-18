@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7A53624F-B978-43BC-BDE6-B56B5AA52812}</ProjectGuid>
     <RootNamespace>DAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -131,20 +131,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
+    <ClInclude Include="AIDirector.h" />
+    <ClInclude Include="AnalogTree.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="Battery.h" />
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Credit.h" />
+    <ClInclude Include="DigitalTree.h" />
+    <ClInclude Include="DeadTree.h" />
+    <ClInclude Include="CreditTex.h" />
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EventMaker.h" />
     <ClInclude Include="Fader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
     <ClInclude Include="EnemyTools.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="NavigationMesh.h" />
+    <ClInclude Include="OperationGenerator.h" />
+    <ClInclude Include="ResultUI.h" />
     <ClInclude Include="SE.h" />
+    <ClInclude Include="Sensor.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="ImguiManager.h" />
@@ -173,24 +187,45 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StaticMeshLoader.h" />
     <ClInclude Include="StaticMeshObject.h" />
+    <ClInclude Include="Stone.h" />
+    <ClInclude Include="telop.h" />
+    <ClInclude Include="TestEffect.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="TreeTypeA.h" />
+    <ClInclude Include="TreeTypeB.h" />
+    <ClInclude Include="Tree.h" />
+    <ClInclude Include="TreeManager.h" />
+    <ClInclude Include="TitleUI.h" />
     <ClInclude Include="Tutorial.h" />
+    <ClInclude Include="TutorialTex.h" />
     <ClInclude Include="UtilityFunction.h" />
+    <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
+    <ClCompile Include="AIDirector.cpp" />
+    <ClCompile Include="AnalogTree.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="Battery.cpp" />
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Credit.cpp" />
+    <ClCompile Include="CreditTex.cpp" />
+    <ClCompile Include="DeadTree.cpp" />
+    <ClCompile Include="DigitalTree.cpp" />
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Entry.cpp" />
+    <ClCompile Include="EventMaker.cpp" />
     <ClCompile Include="Fader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
@@ -203,15 +238,21 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InstancingBillboard.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
+    <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="OperationGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
+    <ClCompile Include="ResultUIcpp.cpp" />
     <ClCompile Include="SE.cpp" />
+    <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="EnemyTools.cpp" />
@@ -221,10 +262,22 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
     <ClCompile Include="StaticMeshObject.cpp" />
+    <ClCompile Include="Stone.cpp" />
+    <ClCompile Include="telop.cpp" />
+    <ClCompile Include="TestEffect.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="TitleUI.cpp" />
+    <ClCompile Include="TreeTypeA.cpp" />
+    <ClCompile Include="TreeTypeB.cpp" />
+    <ClCompile Include="Tree.cpp" />
+    <ClCompile Include="TreeManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
+    <ClCompile Include="TutorialTex.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
+    <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +298,9 @@
   <ItemGroup>
     <Font Include="01 Data File\FOT-NewRodinPro-UB.otf" />
     <Font Include="01 Data File\unicode.futurabb.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="02 Visual File\testField.x" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

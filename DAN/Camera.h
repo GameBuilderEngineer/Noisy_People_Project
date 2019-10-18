@@ -17,10 +17,10 @@
 //ÅyñºëOãÛä‘Åz
 //===================================================================================================================================
 namespace cameraNS {
-	const float LIMIT_BOTTOM_Y = -10.0f;
-	const float LIMIT_TOP_Y = 40.0f;
+	const float LIMIT_BOTTOM_Y = 0.0f;
+	const float LIMIT_TOP_Y = 20.0f;
 	const float INIT_NEAR_Z = 0.1f;
-	const float INIT_FAR_Z = 10000.0f;
+	const float INIT_FAR_Z = 30000.0f;
 }
 
 //===================================================================================================================================
