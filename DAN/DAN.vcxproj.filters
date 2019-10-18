@@ -175,6 +175,12 @@
     <Filter Include="Constant Layer\Sound\3D">
       <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Enemy">
+      <UniqueIdentifier>{61b61843-4de5-4962-b134-ce2f960ff957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\05 Tools File">
+      <UniqueIdentifier>{80c64e68-0b42-4e03-b91e-c31090616014}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -457,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="SoundBase.h">
       <Filter>Constant Layer\Sound\SoundBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

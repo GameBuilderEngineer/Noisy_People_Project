@@ -13,8 +13,8 @@
 //【グローバル変数】
 //===================================================================================================================================
 const char * const SEManager::splashSEPathList[] = { "SE_Attack.wav"};
-const char * const SEManager::titleSEPathList[] = { "SE_Game_Start.wav","SE_Installation_Memory_Pile.wav" };
-const char * const SEManager::gameSEPathList[] = { "SE_Game_Start.wav","SE_Installation_Memory_Pile.wav" };
+const char * const SEManager::titleSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
+const char * const SEManager::gameSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
 int SEManager::SEScene = SceneList::SPLASH;
 
 //===================================================================================================================================
@@ -35,12 +35,29 @@ void SEManager::outputSEGUI(void)
 	{
 		//使用中のバッファ数
 		ImGui::Text("Number of buffers:%d", SEBufferMax);
+		
 		//使用中のボイス数
 		ImGui::Text("Number of voice:%d", soundParametersList->nodeNum - 1);
 
 		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 		{
+			//サウンドのパラメーター
 			SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
+
+			//バッファ
+			LIST_BUFFER *tmpBuffer = GetBuffer(
+				tmpSoundParameters->playParameters.endpointVoiceId,
+				tmpSoundParameters->playParameters.soundId,
+				tmpSoundParameters->playParameters.loop);
+
+			//再生位置&情報取得
+			XAUDIO2_VOICE_STATE state = { 0 };
+			tmpSoundParameters->SourceVoice->GetState(&state);
+			long playPoint = (long)state.SamplesPlayed;
+			while (playPoint >= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel))
+			{
+				playPoint -= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel);
+			}
 
 			if (tmpSoundParameters->isPlaying)		//再生している
 			{
@@ -71,8 +88,36 @@ void SEManager::outputSEGUI(void)
 					break;
 				}
 
-			}
+				//波形の描画
+				int saveDataMax = 11024;	//取得するデータ数
+				int dataMax = (saveDataMax / tmpBuffer->wavFile.fmt.fmtChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
+				float *fData = new (float[dataMax]);
+				memset(fData, 0, sizeof(float)*dataMax);
+				fData[0] = (float)SHRT_MIN;
+				fData[dataMax - 1] = (float)SHRT_MAX;
+				int wtPos = dataMax - 2;
+				for (int j = saveDataMax - 1; j > 0; j -= tmpBuffer->wavFile.fmt.fmtChannel)
+				{
+					for (int k = 0; k < tmpBuffer->wavFile.fmt.fmtChannel; k++)
+					{
+						if (playPoint - j < 0)
+						{
+							fData[wtPos] = 0.0f;
+							continue;
+						}
 
+						fData[wtPos] += ((float)tmpBuffer->wavFile.data.waveData[playPoint - j - k] / (float)tmpBuffer->wavFile.fmt.fmtChannel);
+					}
+					wtPos--;
+				}
+				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 100);
+				ImGui::PlotLines("", fData, dataMax, 0, "Sound wave", FLT_MAX, FLT_MAX, plotextent);
+
+				SAFE_DELETE_ARRAY(fData);
+
+				//再生位置
+				ImGui::ProgressBar(playPoint / (float)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel));
+			}
 		}
 	}
 #endif

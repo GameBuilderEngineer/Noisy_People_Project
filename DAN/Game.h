@@ -16,6 +16,7 @@
 #include "InstancingBillboard.h"
 #include "Sound.h"
 #include "SoundBase.h"
+#include "EnemyTools.h"
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -68,6 +69,7 @@ private:
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[3];
 
+
 public:
 	Game();
 	~Game();
@@ -82,6 +84,9 @@ public:
 	void renderUI();
 
 #ifdef _DEBUG
+	//エネミーツール
+	ENEMY_TOOLS *enemyTools;
+
 	virtual void createGUI() override;
 #endif
 };

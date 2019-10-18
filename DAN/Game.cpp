@@ -39,7 +39,9 @@ Game::Game()
 	SoundInterface::playSound(playParameters[1]);
 	SoundInterface::playSound(playParameters[2]);
 
-	//BGMManager::startTime = frameTime;
+#ifdef _DEBUG
+	enemyTools = new ENEMY_TOOLS;
+#endif
 }
 
 //===================================================================================================================================
@@ -51,6 +53,10 @@ Game::~Game()
 	SoundInterface::stopSound(playParameters[0]);
 	SoundInterface::stopSound(playParameters[1]);
 	SoundInterface::stopSound(playParameters[2]);
+
+#ifdef _DEBUG
+	SAFE_DELETE(enemyTools);
+#endif
 }
 
 //===================================================================================================================================
@@ -142,7 +148,10 @@ void Game::update(float _frameTime) {
 	//カメラの更新
 	camera->update();
 
-	//sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
+	//エネミーツール
+#ifdef _DEBUG
+	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+#endif
 }
 
 //===================================================================================================================================

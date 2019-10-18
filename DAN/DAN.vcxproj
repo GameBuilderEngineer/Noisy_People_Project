@@ -139,6 +139,7 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />

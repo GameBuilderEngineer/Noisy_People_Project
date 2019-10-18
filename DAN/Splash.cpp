@@ -33,6 +33,8 @@ Splash::Splash()
 	//çƒê∂
 	SoundInterface::playSound(playParameters[0]);
 	SoundInterface::playSound(playParameters[1]);
+
+	enemyTools = new ENEMY_TOOLS;
 }
 
 //===================================================================================================================================

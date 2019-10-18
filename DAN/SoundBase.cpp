@@ -47,11 +47,6 @@ void	 SoundBase::uninitSoundStop(void)
 		
 		if (tmpSoundParameters->isPlaying)		//再生している
 		{
-			XAUDIO2_VOICE_STATE voiceState;
-			tmpSoundParameters->SourceVoice->GetState(&voiceState);
-
-			tmpSoundParameters->stopPoint = (short)voiceState.SamplesPlayed;
-
 			tmpSoundParameters->SourceVoice->Stop();
 			tmpSoundParameters->isPlaying = false;
 			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
@@ -275,7 +270,7 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 			tmpWavFile.data.waveSize = size;
 
 			// データの読み込み
-			tmpWavFile.data.waveData = new (short[tmpWavFile.data.waveSize / (int)sizeof(short)]);
+			tmpWavFile.data.waveData = new (short[tmpWavFile.data.waveSize / sizeof(short)]);
 			fread(tmpWavFile.data.waveData, tmpWavFile.data.waveSize, 1, fp);
 
 			// フラグ処理
