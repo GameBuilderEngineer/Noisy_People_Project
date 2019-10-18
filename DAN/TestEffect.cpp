@@ -24,7 +24,8 @@ TestEffectInstance::TestEffectInstance(): InstancingBillboardNS::Instance()
 {
 	//‰Šú’l‚ÌÝ’è
 	position = D3DXVECTOR3((float)(rand() % 2000 - 1000), 0.0f, (float)(rand() % 2000 - 1000));
-	rotation = D3DXVECTOR3((float)(rand() % 20 - 10), (float)(rand() % 20 - 10), (float)(rand() % 20 - 10));
+	//rotation = D3DXVECTOR3((float)(rand() % 20 - 10), (float)(rand() % 20 - 10), (float)(rand() % 20 - 10));
+	rotation = D3DXVECTOR3(0, 0, 0);
 	//instance.scale				= D3DXVECTOR2((float)(rand() % 20 + 1), (float)(rand() % 20 + 1));
 	scale = D3DXVECTOR2(20.0f, 20.0f);
 	//int pattern = rand()%6;
@@ -60,7 +61,7 @@ void TestEffectInstance::update(float frameTime)
 	uv.x = 0.25f*sinf(time * 3);
 	uv.y = 0.25f*cosf(time * 2);
 	//ˆÊ’u
-	position += speed * frameTime;
+	//position += speed * frameTime;
 	if (position.x > 1000)position.x = -1000;
 	else if (position.x < -1000)position.x = 1000;
 	if (position.y > 1000)position.y = -1000;
@@ -76,7 +77,7 @@ TestEffect::TestEffect():InstancingBillboard::InstancingBillboard()
 {
 	InstancingBillboard::initialize(
 		*shaderNS::reference(shaderNS::INSTANCE_BILLBOARD),
-		*textureNS::reference(textureNS::LIGHT_001));
+		*textureNS::reference(textureNS::NEKO));
 }
 
 //===================================================================================================================================

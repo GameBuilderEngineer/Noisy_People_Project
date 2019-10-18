@@ -2,7 +2,7 @@
 //【StaticMeshObject.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/16
+// [更新日]2019/10/17
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -21,13 +21,13 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 	this->staticMesh		= _staticMesh;
 	onRender				= true;
 	didDelete				= false;
-	didGenerate			= false;
-	onTransparent		= false;
+	didGenerate				= false;
+	onTransparent			= false;
 	objectNum				= 0;
-	fillMode					= staticMeshObjectNS::FILLMODE::SOLID;
+	fillMode				= staticMeshObjectNS::FILLMODE::SOLID;
 	positionBuffer			= NULL;
 	declaration				= NULL;
-	position					= NULL;
+	position				= NULL;
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[65];

@@ -8,13 +8,13 @@
 #include "ImguiManager.h"
 using namespace itemNS;
 
-
 //=============================================================================
 // èâä˙âª
 //=============================================================================
 void ItemManager::initialize()
 {
 	itemList.reserve(INITIAL_RESERVE);
+	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 }
 
 
@@ -30,6 +30,9 @@ void ItemManager::uninitialize()
 
 	std::vector<Item*> temp;
 	itemList.swap(temp);
+
+	SAFE_DELETE(batteryRenderer);
+	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 }
 
 
@@ -42,6 +45,7 @@ void ItemManager::update(float frameTime)
 	{
 		itemList[i]->update(frameTime);
 	}
+	batteryRenderer->update();
 }
 
 
@@ -50,10 +54,11 @@ void ItemManager::update(float frameTime)
 //=============================================================================
 void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	for (size_t i = 0; i < itemList.size(); i++)
-	{
+	//for (size_t i = 0; i < itemList.size(); i++)
+	//{
 		//itemList[i]->render(view, projection, cameraPosition);
-	}
+	//}
+	batteryRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
@@ -66,6 +71,7 @@ void ItemManager::createItem(ItemData* itemData)
 	{
 	case BATTERY:
 		itemList.emplace_back(new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData));
+		batteryRenderer->generateObject(new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData));
 		break;
 	}
 }

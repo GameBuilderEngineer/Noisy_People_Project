@@ -87,6 +87,7 @@ private:
 
 
 #ifdef _DEBUG
+#endif
 	// デバッグ用
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
 	Camera*	camera;						// 操作するカメラへのポインタ
@@ -94,7 +95,6 @@ private:
 	enemyNS::OperationKeyTable keyTable;// 操作キーテーブル
 	float reverseValueXAxis;			// 操作X軸
 	float reverseValueYAxis;			// 操作Y軸
-#endif
 
 public:
 	Enemy();

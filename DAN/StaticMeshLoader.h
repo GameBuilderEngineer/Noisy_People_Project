@@ -35,41 +35,41 @@ struct StaticMesh
 //===================================================================================================================================
 namespace staticMeshNS {
 	enum MESH_NUMBER {
-		FIELD,														//01
-		CUBE,														//02
-		STAR_REGULAR_POLYHEDRON,					//03
+		FIELD,									//01
+		CUBE,									//02
+		STAR_REGULAR_POLYHEDRON,				//03
 		STAR_REGULAR_POLYHEDRON_X10,			//04
 		STAR_REGULAR_POLYHEDRON_X100,			//05
 
-		SAMPLE_BUNNY,										//01
-		SAMPLE_PAPER,											//02
-		SAMPLE_REDBULL,										//03
-		SAMPLE_SHOES,										//04
-		SAMPLE_TEAPOT,										//05
-		SAMPLE_LIGHT,											//06
-		SAMPLE_BALL,											//07
-		SAMPLE_SCISSORS,									//08
-		SAMPLE_PLAYSTATION,								//09
-		SAMPLE_HAT,											//10
+		SAMPLE_BUNNY,							//01
+		SAMPLE_PAPER,							//02
+		SAMPLE_REDBULL,							//03
+		SAMPLE_SHOES,							//04
+		SAMPLE_TEAPOT,							//05
+		SAMPLE_LIGHT,							//06
+		SAMPLE_BALL,							//07
+		SAMPLE_SCISSORS,						//08
+		SAMPLE_PLAYSTATION,						//09
+		SAMPLE_HAT,								//10
 
-		DEAD_TREE,												//01
-		GREEN_TREE_001,										//02
-		GREEN_TREE_002,										//03
-		GRASS,														//04
-		STONE_001,												//05
-		STONE_002,												//06
-		STONE_003,												//07
+		DEAD_TREE,								//01
+		GREEN_TREE_001,							//02
+		GREEN_TREE_002,							//03
+		GRASS,									//04
+		STONE_001,								//05
+		STONE_002,								//06
+		STONE_003,								//07
 
-		YAMADA_LAND,											//01
-		NAKAGOMI_LAND,										//02
-		YAMADA_ROBOT,										//03
-		SAMPLE_NAVMESH,									//04
-		YAMADA_ROBOT2,										//05
-		YAMADA_PLANE,										//06
-		DICE,														//07
-		YAMADA_TEST_ZONE,								//08
+		YAMADA_LAND,							//01
+		NAKAGOMI_LAND,							//02
+		YAMADA_ROBOT,							//03
+		SAMPLE_NAVMESH,							//04
+		YAMADA_ROBOT2,							//05
+		YAMADA_PLANE,							//06
+		DICE,									//07
+		YAMADA_TEST_ZONE,						//08
 
-		MESH_NUM,												//NUM
+		MESH_NUM,								//NUM
 	};
 
 	//äOïîéQè∆ópä÷êî

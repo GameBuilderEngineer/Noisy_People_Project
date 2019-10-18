@@ -7,39 +7,38 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //グローバル
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float4x4		matrixProjection;
-float4x4		matrixView;
+float4x4	matrixProjection;
+float4x4	matrixView;
 texture		textureDecal;
 float4		diffuse;
-float4		ambient				= float4(0.1f, 0.1f, 0.1f, 0.1f);
-float3		lightDirection		= float3(1.0f, 1.0f, 1.0f);
+float4		lightDirection		= float4(1.0f, 1.0f, 1.0f, 0.2f);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //定義
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 sampler textureSampler = sampler_state
 {
-	texture				= <textureDecal>;
-	MinFilter			= ANISOTROPIC;
-	MagFilter			= POINT;
-	MipFilter			= POINT;
+	texture			= <textureDecal>;
+	MinFilter		= ANISOTROPIC;
+	MagFilter		= POINT;
+	MipFilter		= POINT;
 	MaxAnisotropy	= 4;
-	AddressU			= Wrap;
-	AddressV			= Wrap;
+	AddressU		= Wrap;
+	AddressV		= Wrap;
 };
 
 struct VS_OUT
 {
-	float4 position				: POSITION;
-	float2 uv						: TEXCOORD0;
-	float3 normal					: NORMAL;
+	float4 position	: POSITION;
+	float2 uv		: TEXCOORD0;
+	float4 color	: COLOR0;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //バーテックス・シェーダー
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 VS_OUT VS(
-	float4 position	: POSITION,
+	float4 position		: POSITION,
 	float2 localUV		: TEXCOORD0,
 	float3 normal		: NORMAL,
 	float3 pos			: TEXCOORD1)
@@ -74,8 +73,10 @@ VS_OUT VS(
 	Out.position = mul(Out.position, worldMatrix);
 	
 	Out.uv = localUV;
+	float ambient = lightDirection.w;
+	float4 lambert = max(ambient,saturate(dot(normal, lightDirection)));
 
-	Out.normal = normal;
+	Out.color = lambert*diffuse;
 
 	return Out;
 }
@@ -85,11 +86,9 @@ VS_OUT VS(
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float4 PS(VS_OUT In) : COLOR0
 {
-	float4 lambert		= saturate(dot(In.normal, lightDirection));
-	float4 texel			= tex2D(textureSampler, In.uv);
-	float4 finalColor		= texel*lambert*0.5f + ambient*texel + diffuse*lambert + diffuse*ambient;
-
-	return texel;
+	float4 texel		= tex2D(textureSampler, In.uv);
+	float4 finalColor	= texel*In.color;
+	return finalColor;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,14 +97,14 @@ float4 PS(VS_OUT In) : COLOR0
 technique mainTechnique {
 	pass p0 {
 		//ステート設定
-		Zenable							= TRUE;			//Zバッファ有効
-		ZWriteEnable					= TRUE;			//Zバッファへの書き込み有効
-		//ShadeMode					= GOURAUD;		//グーロー・シェーディング
-		CullMode						= CCW;				//背面をカリング
-		//MultiSampleAntialias		= TRUE;			//アンチエイリアシングを有効
+		Zenable					= TRUE;			//Zバッファ有効
+		ZWriteEnable			= TRUE;			//Zバッファへの書き込み有効
+		//ShadeMode				= GOURAUD;		//グーロー・シェーディング
+		CullMode				= CCW;				//背面をカリング
+		//MultiSampleAntialias	= TRUE;			//アンチエイリアシングを有効
 
 		//シェーダ設定
-		VertexShader		= compile vs_3_0 VS();
-		PixelShader		= compile ps_3_0 PS();
+		VertexShader			= compile vs_3_0 VS();
+		PixelShader				= compile ps_3_0 PS();
 	}
 }
