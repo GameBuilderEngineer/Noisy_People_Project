@@ -49,7 +49,7 @@ Director::~Director() {
 	SAFE_DELETE(textureLoader);
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
-	//SAFE_DELETE(soundInterface);
+	SAFE_DELETE(soundInterface);
 	//SAFE_DELETE(textManager);
 	//SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);

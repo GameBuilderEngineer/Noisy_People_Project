@@ -621,12 +621,12 @@
     <ClInclude Include="TreeTypeB.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
-    <ClInclude Include="TestEffect.h" />
     <ClInclude Include="TextManager.h">
       <Filter>Loader Layer\TextLoader</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
       <Filter>Constant Layer\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Stone.h">
       <Filter>Game Layer\Stone</Filter>
     </ClInclude>
@@ -644,6 +644,9 @@
     </ClInclude>
     <ClInclude Include="ResultUI.h">
       <Filter>Game Layer\Scene\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffect.h">
+      <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

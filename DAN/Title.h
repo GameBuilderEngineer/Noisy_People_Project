@@ -44,7 +44,6 @@ private:
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[3];
 
-	InstancingBillboard plane;
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;
 public:
