@@ -35,7 +35,7 @@ TestEffectInstance::TestEffectInstance(): InstancingBillboardNS::Instance()
 	case 0:speed = D3DXVECTOR3(0, 0, -30.0f);			break;
 	case 1:speed = D3DXVECTOR3(0, 0, 30.0f);			break;
 	case 2:speed = D3DXVECTOR3(0, -30.0f, 0.0f);		break;
-	case 3:speed = D3DXVECTOR3(0, 30.0f, 0.0f);		break;
+	case 3:speed = D3DXVECTOR3(0, 30.0f, 0.0f);			break;
 	case 4:speed = D3DXVECTOR3(-30, 0, 0.0f);			break;
 	case 5:speed = D3DXVECTOR3(30, 0, 0.0f);			break;
 	}
