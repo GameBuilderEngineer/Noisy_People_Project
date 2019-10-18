@@ -93,7 +93,6 @@ void ENEMY_TOOLS::CreatNewEnemyFile(void)
 ENEMY_TOOLS::~ENEMY_TOOLS()
 {
 #ifdef _DEBUG
-
 	//ファイルの書き出し
 	OutputEnemyFile();
 
@@ -268,10 +267,10 @@ enemyNS::ENEMYSET ENEMY_TOOLS::GetEnemySet(short enemyId)
 {
 	enemyNS::ENEMYSET tmpEnemySet	= { 0 };
 	tmpEnemySet.id					= enemyFile.efmt[enemyId].enemyId;
-	tmpEnemySet.type					= enemyFile.efmt[enemyId].enemyType;
-	tmpEnemySet.defaultState			= enemyFile.efmt[enemyId].enemyState;
+	tmpEnemySet.type				= enemyFile.efmt[enemyId].enemyType;
+	tmpEnemySet.defaultState		= enemyFile.efmt[enemyId].enemyState;
 	tmpEnemySet.defaultPosition		= D3DXVECTOR3(enemyFile.efmt[enemyId].posX, enemyFile.efmt[enemyId].posY, enemyFile.efmt[enemyId].posZ);
-	tmpEnemySet.defaultDirection		= D3DXVECTOR3(enemyFile.efmt[enemyId].dirX, enemyFile.efmt[enemyId].dirY, enemyFile.efmt[enemyId].dirZ);
+	tmpEnemySet.defaultDirection	= D3DXVECTOR3(enemyFile.efmt[enemyId].dirX, enemyFile.efmt[enemyId].dirY, enemyFile.efmt[enemyId].dirZ);
 
 	
 	return tmpEnemySet;
