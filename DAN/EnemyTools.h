@@ -72,7 +72,9 @@ private:
 
 	//変数
 	ENEMY_FILE enemyFile;					//エネミー構造体
-	static int EnemyListboxCurrent;
+	int EnemyListboxCurrent;				//エネミー選択用(リストボックス)
+	int EnemyListboxType;					//エネミーの種類(リストボックス)
+	int EnemyListboxState;					//エネミーの状態(リストボックス)
 
 	//関数
 	void OutputEnemyFile(void);				//エネミーファイルの書き出し処理

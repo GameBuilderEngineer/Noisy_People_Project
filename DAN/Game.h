@@ -28,6 +28,7 @@
 
 #include "Sound.h"
 #include "SoundBase.h"
+#include "EnemyTools.h"
 //#include "InstancingBillboard.h"
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -79,6 +80,9 @@ private:
 	//インスタンシングビルボードテスト
 	//InstancingBillboard instancingBillboardTest;
 	TestEffect* testEffect;
+
+	//エネミーツール
+	ENEMY_TOOLS *enemyTools;
 
 	//枯木
 	DeadTree* deadTree;

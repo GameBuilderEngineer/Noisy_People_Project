@@ -8,11 +8,6 @@
 #include "ImguiManager.h"
 
 //===================================================================================================================================
-//【グローバル変数】
-//===================================================================================================================================
-int ENEMY_TOOLS::EnemyListboxCurrent = 0;
-
-//===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 ENEMY_TOOLS::ENEMY_TOOLS()
@@ -55,8 +50,11 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 		fclose(fp);
 	}
 
-	//初期化
-	EnemyListboxCurrent = 0;
+	//エネミー情報
+	EnemyListboxCurrent	= 0;
+	EnemyListboxType	= enemyNS::ENEMY_TYPE::WOLF;
+	EnemyListboxState	= enemyNS::ENEMY_STATE::CHASE;
+
 #endif
 }
 
@@ -286,15 +284,19 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 	bool creatFlag = false;
 	bool deleteFlag = false;
 	
-	//エネミー情報
-	short enemyType = enemyNS::ENEMY_TYPE::TIGER;
-	short enemyState = enemyNS::ENEMY_STATE::CHASE;
-
 	ImGui::Begin("Enemy Tools");
 
 	//機能
 	ImGui::Checkbox("New Enemy", &creatFlag);
 	ImGui::Checkbox("Delete", &deleteFlag);
+
+	//エネミーの種類
+	const char* listboxEnemyType[] = { "WOLF", "TIGER", "BEAR" };
+	ImGui::ListBox("Enemy Type", &EnemyListboxType, listboxEnemyType, enemyNS::ENEMY_TYPE::TYPE_MAX);
+
+	//エネミーの状態
+	const char* listboxEnemyState[] = { "CHASE", "PATROL", "REST","DIE","DEAD" };
+	ImGui::ListBox("Enemy State", &EnemyListboxState, listboxEnemyState, enemyNS::ENEMY_STATE::STATE_MAX);
 
 	//エネミーの情報
 	if (enemyFile.enmy.enemyMax != NULL)
@@ -314,8 +316,9 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 		ImGui::Text("Enemy dir:%f %f %f", enemyFile.efmt[EnemyListboxCurrent].dirX,
 			enemyFile.efmt[EnemyListboxCurrent].dirY,
 			enemyFile.efmt[EnemyListboxCurrent].dirZ);
-		ImGui::Text("Enemy Type:%d  Enemy State:%d", 
-			enemyFile.efmt[EnemyListboxCurrent].enemyType, enemyFile.efmt[EnemyListboxCurrent].enemyState);
+		ImGui::Text("Enemy Type:%s  Enemy State:%s",
+			listboxEnemyType[enemyFile.efmt[EnemyListboxCurrent].enemyType],
+			listboxEnemyState[enemyFile.efmt[EnemyListboxCurrent].enemyState]);
 
 		//メモリ解放
 		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
@@ -345,7 +348,7 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 	if (creatFlag)
 	{
 		//作成
-		AddEnemyFormat(enemyType, enemyState, pos, dir);
+		AddEnemyFormat(EnemyListboxType, EnemyListboxState, pos, dir);
 
 		//進む
 		EnemyListboxCurrent = enemyFile.enmy.enemyMax - 1;
