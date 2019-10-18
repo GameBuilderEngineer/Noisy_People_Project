@@ -406,6 +406,18 @@
     <ClCompile Include="Text.cpp">
       <Filter>Constant Layer\Text</Filter>
     </ClCompile>
+    <ClCompile Include="CreditTex.cpp">
+      <Filter>Game Layer\Scene\Credit</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialTex.cpp">
+      <Filter>Game Layer\Scene\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleUI.cpp">
+      <Filter>Game Layer\Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultUIcpp.cpp">
+      <Filter>Game Layer\Scene\Result</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -620,6 +632,18 @@
     </ClInclude>
     <ClInclude Include="TestEffect.h">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditTex.h">
+      <Filter>Game Layer\Scene\Credit</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialTex.h">
+      <Filter>Game Layer\Scene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleUI.h">
+      <Filter>Game Layer\Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultUI.h">
+      <Filter>Game Layer\Scene\Result</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

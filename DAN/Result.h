@@ -10,6 +10,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "AbstractScene.h"
+#include "ResultUI.h"
 //#include "Sprite.h"
 //#include "UIResult.h"
 //#include "SceneEffect.h"

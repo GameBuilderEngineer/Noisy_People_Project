@@ -32,17 +32,26 @@ TextureLoader::TextureLoader()
 	textureName[SPLASH] = { "Splash.png" };
 
 	// Tutorial
-	textureName[TUTORIAL] = { "tutorial1.png" };
+	textureName[TUTORIAL1] = { "tutorial01.png" };
+	textureName[TUTORIAL2] = { "tutorial02.png" };
 
 	// Title
-	textureName[TITLE_LOGO] = { "Title_Logo.png" };
+	textureName[TITLE_LOGO] = { "DAN_Logo.png" };
+	textureName[TITLE_MENU] = { "Title_Menu.png" };
+	textureName[TITLE_INFO_TUTO] = { "Tutorial_info.png" };
+	textureName[TITLE_INFO_GAME] = { "GameStart_info.png" };
+	textureName[TITLE_INFO_CREDIT] = { "Credits_info.png" };
+	textureName[TITLE_INFO_EXIT] = { "Exit_info.png" };
+	textureName[TITLE_COPYRIGHT] = { "Copyrights.png" };
+	textureName[TITLE_BAR] = {"Select_Bar.png"};
+
 
 	// Operation
 	textureName[OPERATION_GAMEPAD] = { "Operation_GamePad.png" };
 	textureName[OPERATION_KEYBOARD] = { "Operation_KeyBoard.png" };
 
 	// Credit
-	textureName[CREDIT] = { "Credit.png" };
+	textureName[CREDIT] = { "Credit_01.png" };
 
 	// Game
 	textureName[UI_COUNT_DOWN_ONE] = { "Game_CountDown_One.png" };

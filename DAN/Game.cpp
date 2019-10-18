@@ -233,6 +233,18 @@ void Game::update(float _frameTime) {
 	camera->update();
 
 	//sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
+
+	// Enterまたは〇ボタンでリザルトへ
+	if (input->wasKeyPressed(VK_RETURN) ||
+		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	{
+		// サウンドの再生
+		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+		// シーン遷移
+		changeScene(nextScene);
+	}
+
 }
 
 //===================================================================================================================================

@@ -52,7 +52,7 @@ void Tutorial::initialize()
 
 
 	// チュートリアル2D初期化
-	//tutorial2D.initialize(direct3D9->device, 0, _textureLoader);
+	tutorialTex.initialize();
 }
 
 //===================================================================================================================================
@@ -60,7 +60,7 @@ void Tutorial::initialize()
 //===================================================================================================================================
 void Tutorial::uninitialize()
 {
-
+	tutorialTex.uninitialize();
 }
 
 //===================================================================================================================================
@@ -83,8 +83,8 @@ void Tutorial::update(float _frameTime)
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_PAPER, soundNS::METHOD::PLAY);
 
-		// チュートリアルを次へ
-		//tutorial2D.next++;
+		//チュートリアルを次へ
+		tutorialTex.nextPage++;
 
 		return;
 	}
@@ -97,11 +97,11 @@ void Tutorial::update(float _frameTime)
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
 
-		//if (tutorial2D.next > 0)
-		//{
-		//	// チュートリアルを前へ
-		//	tutorial2D.next--;
-		//}
+		if (tutorialTex.nextPage > 0)
+		{
+			// チュートリアルを前へ
+			tutorialTex.nextPage--;
+		}
 		return;
 	}
 
@@ -114,13 +114,13 @@ void Tutorial::update(float _frameTime)
 	}
 
 	// チュートリアルが最後まで行ったらタイトルへ
-	//if (tutorial2D.next >= NEXT_MAX)
-	//{
-	//	changeScene(nextScene);
-	//}
+	if (tutorialTex.nextPage >= tutorialTex::TUTORIAL_2D_SCENE_MAX)
+	{
+		changeScene(nextScene);
+	}
 
 	// チュートリアル2D更新
-	//tutorial2D.update();
+	tutorialTex.update();
 
 }
 
@@ -151,8 +151,8 @@ void Tutorial::render3D()
 //===================================================================================================================================
 void Tutorial::renderUI()
 {
-	// チュートリアル2D描画
-	//tutorial2D.render(device);
+	//チュートリアル2D描画
+	tutorialTex.render();
 }
 
 //===================================================================================================================================

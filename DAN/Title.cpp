@@ -27,7 +27,7 @@ Title::Title(void)
 {
 	// 今のシーン( タイトル )
 	sceneName = ("Scene -Title-");
-	nextScene = SceneList::GAME;
+	nextScene = SceneList::TUTORIAL;
 
 	//シーンの更新
 	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);	
@@ -77,8 +77,8 @@ void Title::initialize()
 	light = new Light;
 	light->initialize();
 
-	// タイトルUIの初期化
-	//uiTitle.initialize(_direct3D9->device, _textureLoader, selectStateMemory);
+	//タイトルUIの初期化
+	titleUI.initialize();
 
 	//エフェクト（インスタンシング）テスト
 	testEffect = new TestEffect();
@@ -99,7 +99,8 @@ void Title::uninitialize(void)
 	SAFE_DELETE(testEffect);
 
 	// タイトルUI
-	//uiTitle.release();
+	titleUI.uninitialize();
+
 }
 
 //============================================================================================================================================
@@ -112,6 +113,18 @@ void Title::update(float _frameTime)
 
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
+
+	// カメラ
+	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
+	//camera[0].update();
+
+	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
+
+	//バーの移動
+	//if(input->wasKeyPressed()
+
+	// タイトルUI
+	titleUI.update(input);
 
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
@@ -130,34 +143,30 @@ void Title::update(float _frameTime)
 //============================================================================================================================================
 void Title::updateInput(void)
 {
-	//switch (uiTitle.getSelectState())
-	//{
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;
-	//	nextScene = (SceneList::SELECT);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL;
-	//	nextScene = (SceneList::TUTORIAL);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION;
-	//	nextScene = (SceneList::OPERATION);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT:
-	//	selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT;
-	//	nextScene = (SceneList::CREDIT);
-	//	changeScene(nextScene);
-	//	break;
-	//case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_EXIT:
-	//	PostQuitMessage(NULL);
-	//	break;
-	//default:
-	//	break;
-	//}
+	switch (titleUI.getSelectState())
+	{
+	case titleUiNS::TUTORIAL:
+		selectStateMemory = titleUiNS::TUTORIAL;
+		nextScene = (SceneList::TUTORIAL);
+		changeScene(nextScene);
+		break;
+	case titleUiNS::GAME:
+		selectStateMemory = titleUiNS::GAME;
+		nextScene = (SceneList::GAME);
+		changeScene(nextScene);
+		break;
+	case titleUiNS::CREDIT:
+		selectStateMemory = titleUiNS::CREDIT;
+		nextScene = (SceneList::CREDIT);
+		changeScene(nextScene);
+		break;
+	case titleUiNS::EXIT:
+		PostQuitMessage(NULL);
+		break;
+	
+	default:
+		break;
+	}
 }
 
 //============================================================================================================================================
@@ -212,7 +221,7 @@ void Title::render2D()
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	// タイトルUI
-	//uiTitle.render(_device);
+	titleUI.render();
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

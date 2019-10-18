@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7A53624F-B978-43BC-BDE6-B56B5AA52812}</ProjectGuid>
     <RootNamespace>DAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -141,6 +141,7 @@
     <ClInclude Include="Credit.h" />
     <ClInclude Include="DigitalTree.h" />
     <ClInclude Include="DeadTree.h" />
+    <ClInclude Include="CreditTex.h" />
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="OperationGenerator.h" />
+    <ClInclude Include="ResultUI.h" />
     <ClInclude Include="SE.h" />
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="Sound.h" />
@@ -196,7 +198,9 @@
     <ClInclude Include="TreeTypeB.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="TreeManager.h" />
+    <ClInclude Include="TitleUI.h" />
     <ClInclude Include="Tutorial.h" />
+    <ClInclude Include="TutorialTex.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
@@ -212,6 +216,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Credit.cpp" />
+    <ClCompile Include="CreditTex.cpp" />
     <ClCompile Include="DeadTree.cpp" />
     <ClCompile Include="DigitalTree.cpp" />
     <ClCompile Include="Direct3D9.cpp" />
@@ -245,6 +250,7 @@
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
+    <ClCompile Include="ResultUIcpp.cpp" />
     <ClCompile Include="SE.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
@@ -263,11 +269,13 @@
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TreeTypeA.cpp" />
     <ClCompile Include="TreeTypeB.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="TreeManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
+    <ClCompile Include="TutorialTex.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="Window.cpp" />
