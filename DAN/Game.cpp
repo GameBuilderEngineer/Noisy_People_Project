@@ -233,6 +233,10 @@ void Game::update(float _frameTime) {
 	//石の更新
 	stone->update();
 
+	//エネミーツールの更新
+	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+	enemyTools->update();
+
 	//カメラの更新
 	camera->update();
 
@@ -249,8 +253,6 @@ void Game::update(float _frameTime) {
 		changeScene(nextScene);
 	}
 
-	//エネミーツール
-	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
 }
 
 //===================================================================================================================================
@@ -302,6 +304,9 @@ void Game::render3D(Camera currentCamera) {
 
 	// エネミーの描画
 	//enemy->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//エネミーツールの描画(test用)
+	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);

@@ -10,6 +10,7 @@
 //【ライブラリのロード】
 //===================================================================================================================================
 #include "Base.h"
+#include "StaticMeshObject.h"
 #include "Player.h"
 #include "Enemy.h"
 
@@ -56,7 +57,7 @@ typedef struct	//ENEMYファイル構造体
 //【エネミーツール】
 //エネミーツール用クラス
 //===================================================================================================================================
-class ENEMY_TOOLS
+class ENEMY_TOOLS : public Base
 {
 public:
 	ENEMY_TOOLS();
@@ -68,6 +69,12 @@ public:
 	void SetEnemy(short enemyId, short enemyType, short enemyState, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
 	void outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
 
+	//描画用
+	void initialize();
+	void update();
+	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	void generate(D3DXVECTOR3 position);
+
 private:
 
 	//変数
@@ -75,6 +82,10 @@ private:
 	int EnemyListboxCurrent;				//エネミー選択用(リストボックス)
 	int EnemyListboxType;					//エネミーの種類(リストボックス)
 	int EnemyListboxState;					//エネミーの状態(リストボックス)
+
+	//描画用
+	StaticMeshObject* renderer;
+	bool needUpdate;
 
 	//関数
 	void OutputEnemyFile(void);				//エネミーファイルの書き出し処理
