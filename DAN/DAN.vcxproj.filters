@@ -381,9 +381,6 @@
     <ClCompile Include="telop.cpp">
       <Filter>Game Layer\Tlop</Filter>
     </ClCompile>
-    <ClCompile Include="Stone.cpp">
-      <Filter>Game Layer\Stone</Filter>
-    </ClCompile>
     <ClCompile Include="DeadTree.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
@@ -392,6 +389,9 @@
     </ClCompile>
     <ClCompile Include="TreeTypeB.cpp">
       <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="Stone.cpp">
+      <Filter>Game Layer\Stone</Filter>
     </ClCompile>
     <ClCompile Include="TestEffect.cpp">
       <Filter>Game Layer\TestEffect</Filter>
@@ -590,9 +590,6 @@
     <ClInclude Include="telop.h">
       <Filter>Game Layer\Tlop</Filter>
     </ClInclude>
-    <ClInclude Include="Stone.h">
-      <Filter>Game Layer\Stone</Filter>
-    </ClInclude>
     <ClInclude Include="DeadTree.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
@@ -601,6 +598,9 @@
     </ClInclude>
     <ClInclude Include="TreeTypeB.h">
       <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="Stone.h">
+      <Filter>Game Layer\Stone</Filter>
     </ClInclude>
     <ClInclude Include="TestEffect.h">
       <Filter>Game Layer\TestEffect</Filter>
