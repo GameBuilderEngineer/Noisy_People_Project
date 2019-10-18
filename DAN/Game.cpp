@@ -236,7 +236,9 @@ void Game::render() {
 //===================================================================================================================================
 void Game::render3D(Camera currentCamera) {
 
+
 	//テストフィールドの描画
+	testField->setAlpha(0.1f); 
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//エフェクト（インスタンシング）テスト
@@ -264,6 +266,11 @@ void Game::render3D(Camera currentCamera) {
 
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+#ifdef DEBUG_NAVIMESH
+	// ナビゲーションメッシュの描画
+	naviAI->debugRender();
+#endif
 }
 
 //===================================================================================================================================

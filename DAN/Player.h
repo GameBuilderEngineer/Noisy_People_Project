@@ -94,9 +94,9 @@ namespace playerNS{
 	const float MOVE_FRICTION				= 0.93f;								// 地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									// 壁ずり摩擦係数
 	const float GROUND_FRICTION				= 0.25;									// 着地摩擦係数
-	const float GRAVITY_FORCE				= 9.8f * 0.5;							// 重力
-	const float JUMP_SPEED					= 7.0f;									// ジャンプ初速
-	const float JUMP_CONTROL_SPEED			= 0.5f;									// ジャンプ高さコントール速度
+	const float GRAVITY_FORCE				= 9.8f * 2;								// 重力
+	const float JUMP_SPEED					= 6.0f;									// ジャンプ初速
+	const float JUMP_CONTROL_SPEED			= 1.0f;									// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION			= 2.0f;									// ダッシュ倍率
 	// Another
 	const float DIFFERENCE_FIELD			= 0.05f;								// フィールド補正差分
@@ -155,8 +155,8 @@ private:
 	Input*						input;							// 入力系
 	Camera*						camera;							//操作するカメラへのポインタ
 
-	// temporary
-	D3DXVECTOR3					centralPosition;				// モデル中心座標
+	D3DXVECTOR3					centralPosition;			// 中心座標
+	D3DXMATRIX					centralMatrixWorld;			// 中心座標ワールドマトリクス
 
 public:
 	Player();

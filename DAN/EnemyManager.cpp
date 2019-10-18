@@ -13,7 +13,47 @@ using namespace enemyNS;
 //=============================================================================
 void EnemyManager::initialize()
 {
+	// ファイルからエネミー初期ステータスを読み込む
+	FILE	*fp = NULL;
+	fopen("enemy.enemy", "rb");
+
+	ENEMY_FILE tmpEnemyFile;
+	memset(&tmpEnemyFile, 0, sizeof(ENEMY_FILE));
+
+	//ENMYの読み込み
+	fread(&tmpEnemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
+
+	//メモリ確保
+	tmpEnemyFile.efmt = new ENEMY_EFMT[tmpEnemyFile.enmy.enemyMax];
+
+	//EFMTの読み込み
+	fread(&tmpEnemyFile.efmt, sizeof(ENEMY_EFMT), tmpEnemyFile.enmy.enemyMax, fp);
+
+	fclose(fp);
+
+	// エネミーデータリストの追加
+	EnemyData enemyData;
+	enemyDataList.reserve(tmpEnemyFile.enmy.enemyMax);
+	for (int i = 0; i < tmpEnemyFile.enmy.enemyMax; i++)
+	{
+		enemyData.clear();
+
+		//enemyData.id = tmpEnemyFile.efmt->chunkId;
+
+		enemyDataList.push_back(enemyData);
+	}
+	
+	// エネミーオブジェクトの作成
 	enemyList.reserve(INITIAL_RESERVE);
+	for (size_t i = 0; enemyDataList.size(); i++)
+	{
+		if (/* プレイヤーの初期位置と近ければ */1)
+		{
+			createEnemy(&enemyDataList[i]);
+		}
+	}
+
+	SAFE_DELETE_ARRAY(tmpEnemyFile.efmt);
 }
 
 
@@ -40,6 +80,12 @@ void EnemyManager::update(float frameTime)
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
 		enemyList[i]->update(frameTime);
+
+		// 撃退したエネミーオブジェクトを破棄する
+		if (enemyList[i]->getEnemyData()->isAlive == false)
+		{
+			destroyEnemy(enemyList[i]->getEnemyData()->id);
+		}
 	}
 }
 
@@ -61,7 +107,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 //=============================================================================
 void EnemyManager::createEnemy(EnemyData* enemyData)
 {
-	switch (enemyData->enemyType)
+	switch (enemyData->type)
 	{
 	case WOLF:
 		break;
@@ -71,7 +117,7 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 		break;
 
 	default:
-		enemyList.emplace_back(new Enemy);
+		//enemyList.emplace_back(new Enemy);
 		break;
 	}
 
