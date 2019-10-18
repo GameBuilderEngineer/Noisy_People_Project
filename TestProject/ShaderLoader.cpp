@@ -76,7 +76,7 @@ void ShaderLoader::release()
 //===================================================================================================================================
 //yŠO•”ŽQÆŠÖ”z
 //===================================================================================================================================
-LPD3DXEFFECT* shaderNS::effect(int shaderNo)
+LPD3DXEFFECT* shaderNS::reference(int shaderNo)
 {
 	return pointerShaderLoader->getEffect(shaderNo);
 }

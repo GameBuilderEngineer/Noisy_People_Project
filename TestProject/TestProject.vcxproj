@@ -70,12 +70,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Credit.h" />
@@ -133,7 +142,6 @@
     <ClInclude Include="Fader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
-    <ClInclude Include="Gauge.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="ImguiManager.h" />
     <ClInclude Include="Imgui\imconfig.h" />
@@ -147,14 +155,15 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LinkedList.h" />
     <ClInclude Include="MemoryViewer.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="Operation.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointSprite.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="ShaderLoader.h" />
+    <ClInclude Include="SoundBase.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="SplashSprite.h" />
     <ClInclude Include="Sprite.h" />
@@ -170,6 +179,7 @@
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Credit.cpp" />
@@ -191,14 +201,18 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Operation.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
+    <ClCompile Include="SE.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="EnemyTools.cpp" />
+    <ClCompile Include="SoundBase.cpp" />
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="SplashSprite.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -217,8 +231,17 @@
     <ResourceCompile Include="Icon.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="01 Data File\DumpFuzzyRecognition.txt" />
+    <Text Include="01 Data File\dumpMapData.txt" />
+    <Text Include="01 Data File\DumpRecuasionArea.txt" />
+    <Text Include="01 Data File\memo.txt" />
+    <Text Include="01 Data File\wasuremonoPosCheck.txt" />
     <Text Include="Readme\Readme.txt" />
     <Text Include="Readme\コーディング規約.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="01 Data File\FOT-NewRodinPro-UB.otf" />
+    <Font Include="01 Data File\unicode.futurabb.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

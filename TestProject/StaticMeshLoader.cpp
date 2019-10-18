@@ -28,32 +28,28 @@ StaticMeshLoader::StaticMeshLoader()
 	//外部参照用ポインタへ代入
 	pointerStaticMeshLoader = this;
 
-	fileName[FIELD]								= { "testField.x" };
-	fileName[CUBE]								= { "cube.x" };
-	fileName[SAMPLE_HIERARCHY_MESH]				= { "HierarchyMesh.x" };
-	fileName[MAGNET_S]							= { "magnetS.x" };
-	fileName[MAGNET_N]							= { "magnetN.x" };
-	fileName[PLANET]							= { "planet.x" };
-	fileName[SAMPLE_ROBOT001]					= { "RobotB.x" };
-	fileName[SAMPLE_ROBOT002]					= { "robotB_still_back.x" };
-	fileName[SAMPLE_SKINNED_MESH]				= { "SkinnedMesh.x" };
-	fileName[STAR]								= { "star.x" };
-	fileName[STAR_REGULAR_POLYHEDRON]			= { "starRegularPolyhedron.x" };
-	fileName[STAR_REGULAR_POLYHEDRON_X10]		= { "x10starRegularPolyhedron.x" };
+	fileName[FIELD]														= { "testField.x" };
+	fileName[CUBE]														= { "cube.x" };
+	fileName[SAMPLE_HIERARCHY_MESH]						= { "HierarchyMesh.x" };
+	fileName[PLANET]													= { "planet.x" };
+	fileName[SAMPLE_ROBOT001]								= { "RobotB.x" };
+	fileName[SAMPLE_ROBOT002]								= { "robotB_still_back.x" };
+	fileName[SAMPLE_SKINNED_MESH]						= { "SkinnedMesh.x" };
+	fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };
+	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };
 	fileName[STAR_REGULAR_POLYHEDRON_X100]		= { "x100starRegularPolyhedron.x" };
-	fileName[SAMPLE_STATIC_MESH]				= { "StaticMesh.x" };
-	fileName[SAMPLE_TOON_MESH]					= { "Toon_6Color.x" };
-	fileName[MEMORY_PILE]						= { "Memory_Pile.x" };
-	fileName[WASUREMONO_BUNNY]					= { "toybunny.x" };
-	fileName[WASUREMONO_PAPER]					= { "paper.x" };
-	fileName[WASUREMONO_REDBULL]				= { "redbull.x" };
-	fileName[WASUREMONO_SHOES]					= { "shoes.x" };
-	fileName[WASUREMONO_TEAPOT]					= { "teapot.x" };
-	fileName[WASUREMONO_LIGHT]					= { "light.x" };
-	fileName[WASUREMONO_BALL]					= { "soccerball.x" };
-	fileName[WASUREMONO_SCISSORS]				= { "scissors.x" };
-	fileName[WASUREMONO_PLAYSTATION]			= { "playstation.x" };
-	fileName[WASUREMONO_HAT]					= { "hat.x" };
+	fileName[SAMPLE_STATIC_MESH]							= { "StaticMesh.x" };
+	fileName[SAMPLE_TOON_MESH]								= { "Toon_6Color.x" };
+	fileName[SAMPLE_BUNNY]										= { "toybunny.x" };
+	fileName[SAMPLE_PAPER]										= { "paper.x" };
+	fileName[SAMPLE_REDBULL]									= { "redbull.x" };
+	fileName[SAMPLE_SHOES]										= { "shoes.x" };
+	fileName[SAMPLE_TEAPOT]									= { "teapot.x" };
+	fileName[SAMPLE_LIGHT]										= { "light.x" };
+	fileName[SAMPLE_BALL]											= { "soccerball.x" };
+	fileName[SAMPLE_SCISSORS]									= { "scissors.x" };
+	fileName[SAMPLE_PLAYSTATION]							= { "playstation.x" };
+	fileName[SAMPLE_HAT]											= { "hat.x" };
 }
 
 //===================================================================================================================================
@@ -138,7 +134,7 @@ void StaticMeshLoader::release(void)
 	{
 		for (DWORD num = 0; num < staticMesh[i].numMaterial; num++)
 		{
-			SAFE_RELEASE(staticMesh[i].textures[num])
+			SAFE_RELEASE(staticMesh[i].textures[num]);
 		}
 		SAFE_RELEASE(staticMesh[i].vertexBuffer);
 		SAFE_RELEASE(staticMesh[i].indexBuffer);
@@ -155,7 +151,7 @@ void StaticMeshLoader::release(void)
 //===================================================================================================================================
 //【外部参照用関数】
 //===================================================================================================================================
-StaticMesh* staticMeshNS::getStaticMesh(int staticMeshNo) {
+StaticMesh* staticMeshNS::reference(int staticMeshNo) {
 	return &pointerStaticMeshLoader->staticMesh[staticMeshNo];
 }
 

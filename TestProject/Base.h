@@ -2,7 +2,7 @@
 //【Base.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/09/17
+// [更新日]2019/10/05
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -14,7 +14,8 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-#include <dsound.h>
+#include <xaudio2.h>
+#include <x3daudio.h>
 
 //===================================================================================================================================
 //【必要なライブラリファイルのロード】
@@ -23,7 +24,8 @@
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"dxguid.lib")
-#pragma comment(lib,"dsound.lib")
+#pragma comment(lib,"xaudio2.lib")
+#pragma comment(lib,"x3daudio.lib")
 
 //===================================================================================================================================
 //【警告非表示】
@@ -59,12 +61,51 @@
 #define WINDOW_HEIGHT 1080
 #endif // _DEBUG
 //Common
-#define SAFE_DELETE(p) {if(p){delete(p);(p)=NULL;}}
-#define SAFE_DELETE_ARRAY(p) {if(p){delete[](p);(p)=NULL;}}
-#define SAFE_RELEASE(p) {if(p){(p)->Release();(p)=NULL;}}
 #define MFAIL(code,string) if(FAILED(code)){MessageBox(0,string,"error",MB_OK);return E_FAIL;}
 #define MFALSE(code,string) if(!(code)) {MessageBox(0,string,"error",MB_OK);return E_FAIL;}
 #define MSG(text) MessageBox(0,text,0,MB_OK);
+
+//===================================================================================================================================
+//【ポインタ参照項目を安全に処理するための関数テンプレート】
+// これらのテンプレートによって定義された関数は、
+// 通常の関数呼び出し構文を使用して呼び出すことができます。
+// コンパイラは、Tを呼び出すパラメータの型に置き換える関数を作成します。
+//===================================================================================================================================
+// ポインタ参照されるアイテムを安全に解放
+template<typename T>
+inline void safeRelease(T& ptr)
+{
+	if (ptr)
+	{
+		ptr->Release();
+		ptr = NULL;
+	}
+}
+#define SAFE_RELEASE safeRelease //後方互換性のために
+
+// ポインタ参照されるアイテムを安全に削除
+template<typename T>
+inline void safeDelete(T& ptr)
+{
+	if (ptr)
+	{
+		delete ptr;
+		ptr = NULL;
+	}
+}
+#define SAFE_DELETE safeDelete//後方互換性のために
+
+// ポインタ参照される配列を安全に削除
+template<typename T>
+inline void safeDeleteArray(T& ptr)
+{
+	if (ptr)
+	{
+		delete[] ptr;
+		ptr = NULL;
+	}
+}
+#define SAFE_DELETE_ARRAY safeDeleteArray //後方互換性のために
 
 //===================================================================================================================================
 //【定数定義】

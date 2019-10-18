@@ -27,7 +27,6 @@ Object::Object()
 	fillMode = objectNS::FILLMODE::SOLID;		//描画方法
 	onLighting = true;							//ライティングフラグ
 	onTransparent = false;						//透過フラグ
-	operationAlpha = false;						//α値操作フラグ
 	D3DXMatrixIdentity(&matrixRotation);
 	quaternion = D3DXQUATERNION(0, 0, 0, 1);
 	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));
@@ -62,6 +61,7 @@ HRESULT Object::initialize(D3DXVECTOR3* _position)
 {
 	//初期位置
 	memcpy(position, _position, sizeof(D3DXVECTOR3));
+	activation();
 	//事前更新
 	update();
 	return S_OK;
@@ -260,7 +260,6 @@ void Object::outputGUI()
 		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
 		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
 		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		ImGui::Checkbox("operationAlpha", &operationAlpha);								//透過値の操作有効フラグ
 		
 		ImGui::SliderInt("renderNum", &renderNum,1,(int)limitTop);						//透過値の操作有効フラグ
 	}
@@ -296,11 +295,6 @@ void Object::setAlpha(float value)
 void Object::switchTransparent(bool flag)
 {
 	onTransparent = flag;
-}
-
-void Object::switchOperationAlpha(bool flag)
-{
-	operationAlpha = flag;
 }
 
 void Object::setRenderFlag(bool flag)

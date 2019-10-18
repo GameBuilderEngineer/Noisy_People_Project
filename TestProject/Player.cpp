@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/09/24
+// [更新日]2019/10/04
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -19,7 +19,7 @@ using namespace playerNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Player::Player() :StaticMeshObject(staticMeshNS::getStaticMesh(staticMeshNS::SAMPLE_STATIC_MESH))
+Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_STATIC_MESH))
 {
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
 	onGravity = true;
@@ -33,6 +33,8 @@ Player::Player() :StaticMeshObject(staticMeshNS::getStaticMesh(staticMeshNS::SAM
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
+
+	onSound = false;						//サウンドのGUIフラグ
 }
 
 //===================================================================================================================================
@@ -49,6 +51,9 @@ Player::~Player()
 void Player::outputGUI()
 {
 #ifdef _DEBUG
+
+	//ImGui::Text(sceneName.c_str());
+
 	if (ImGui::CollapsingHeader("PlayerInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
@@ -69,13 +74,30 @@ void Player::outputGUI()
 		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
 		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
 		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		ImGui::Checkbox("operationAlpha", &operationAlpha);								//透過値の操作有効フラグ
+		ImGui::Checkbox("sound", &onSound);												//サウンド
 
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);						//透過値の操作有効フラグ
+		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
+
+		// サウンドGUI
+		outputSoundGUI();
 	}
 #endif // _DEBUG
 }
 
+//===================================================================================================================================
+//【サウンドGUIの出力】
+//===================================================================================================================================
+void Player::outputSoundGUI()
+{
+	if (!onSound)return;
+	ImGui::Begin("PlayerInformation(Sound)");
+	if (ImGui::CollapsingHeader("PlayerInformation(Sound)"))
+	{
+		ImGui::SliderInt("volume", &volume, 0, 100);									//ボリューム
+
+	}
+	ImGui::End();
+}
 
 //===================================================================================================================================
 //【初期化】
@@ -131,33 +153,20 @@ void Player::update(float frameTime)
 	
 	//オブジェクト：更新
 	Object::update();
-
+	
 	//カメラの操作
 	controlCamera(frameTime);
-
 }
 
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
 //======================
-//【トゥーンレンダー】
-//======================
-void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
-	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
-{
-	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
-	// 他のオブジェクトの描画
-	//otherRender(device,view,projection,cameraPosition);
-}
-//======================
-//【通常描画】
+//【本体描画】
 //======================
 void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	StaticMeshObject::render(*shaderNS::effect(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
-	//他のオブジェクトの描画
-	//otherRender(device,view,projection,cameraPosition);
+	StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
 }
 //======================
 //【本体以外の他のオブジェクト描画】

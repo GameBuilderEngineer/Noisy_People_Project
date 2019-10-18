@@ -67,9 +67,6 @@
     <Filter Include="Game Layer\Scene\Title">
       <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene\Operation">
-      <UniqueIdentifier>{ce58847b-c228-432a-8446-8eb92fe952ea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Scene\Result">
       <UniqueIdentifier>{2c09a369-b6e9-48fe-9f8c-07e62bbd5daa}</UniqueIdentifier>
     </Filter>
@@ -151,12 +148,6 @@
     <Filter Include="Constant Layer\Object\SkinMeshObject">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Direct3D9\Fader">
-      <UniqueIdentifier>{e78bd21f-864f-49e7-8659-84f4545b250c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\UI">
-      <UniqueIdentifier>{7973ea53-16c3-48ec-bc80-a3e5f246985e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -215,9 +206,6 @@
     </ClCompile>
     <ClCompile Include="Tutorial.cpp">
       <Filter>Game Layer\Scene\Tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="Operation.cpp">
-      <Filter>Game Layer\Scene\Operation</Filter>
     </ClCompile>
     <ClCompile Include="Result.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
@@ -278,9 +266,6 @@
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="Gauge.cpp">
-      <Filter>Game Layer\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,9 +335,6 @@
     <ClInclude Include="Tutorial.h">
       <Filter>Game Layer\Scene\Tutorial</Filter>
     </ClInclude>
-    <ClInclude Include="Operation.h">
-      <Filter>Game Layer\Scene\Operation</Filter>
-    </ClInclude>
     <ClInclude Include="Result.h">
       <Filter>Game Layer\Scene\Result</Filter>
     </ClInclude>
@@ -413,9 +395,6 @@
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClInclude>
-    <ClInclude Include="Gauge.h">
-      <Filter>Game Layer\UI</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
@@ -434,5 +413,28 @@
     <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
     </Text>
+    <Text Include="01 Data File\DumpFuzzyRecognition.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\dumpMapData.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\DumpRecuasionArea.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\memo.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="01 Data File\wasuremonoPosCheck.txt">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="01 Data File\FOT-NewRodinPro-UB.otf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
+    <Font Include="01 Data File\unicode.futurabb.ttf">
+      <Filter>Resorce Layer\01 Data File</Filter>
+    </Font>
   </ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ Sprite::Sprite()
 //=============================================================================
 Sprite::~Sprite()
 {
-	if(onReadFile)	SAFE_RELEASE(texture)
+	if (onReadFile)	SAFE_RELEASE(texture);
 }
 
 
