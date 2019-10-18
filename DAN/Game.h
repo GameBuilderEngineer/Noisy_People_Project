@@ -23,6 +23,9 @@
 #include "NavigationMesh.h"
 #include "TreeManager.h"
 #include "ItemManager.h"
+#include "Telop.h"
+
+
 #include "Sound.h"
 #include "SoundBase.h"
 //#include "InstancingBillboard.h"
@@ -124,6 +127,9 @@ private:
 
 	// アイテム
 	ItemManager* itemManager;
+
+	// テロップ
+	Telop* telop;
 
 	// AI
 	AIDirector* aiDirector;

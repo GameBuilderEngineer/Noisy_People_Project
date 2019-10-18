@@ -140,6 +140,10 @@ void Game::initialize() {
 	itemManager = new ItemManager;
 	itemManager->initialize();
 
+	// テロップ
+	telop = new Telop;
+	telop->initialize();
+
 	// AI
 	aiDirector = new AIDirector;
 	aiDirector->initialize();
@@ -164,6 +168,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(testEffect);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
+	SAFE_DELETE(telop);
 	SAFE_DELETE(aiDirector);
 }
 
@@ -207,6 +212,9 @@ void Game::update(float _frameTime) {
 		itemManager->uninitialize();
 	}
 	itemManager->update(frameTime);
+
+	// テロップの更新
+	telop->update(frameTime);
 	
 	////カメラの更新
 	//camera->update();
@@ -245,7 +253,6 @@ void Game::render() {
 	//UI
 	direct3D9->changeViewportFullWindow();
 	renderUI();
-
 }
 
 //===================================================================================================================================
@@ -304,7 +311,9 @@ void Game::renderUI() {
 	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	// αテストを無効に
-	//device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	telop->render();	// テロップの描画
 }
 
 //===================================================================================================================================

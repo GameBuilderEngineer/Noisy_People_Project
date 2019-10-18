@@ -151,10 +151,9 @@ private:
 	int							volume;							//ボリューム
 
 	// 汎用
-	LPDIRECT3DDEVICE9			device;							// Direct3Dデバイス
-	Input*						input;							// 入力系
-	Camera*						camera;							//操作するカメラへのポインタ
-
+	LPDIRECT3DDEVICE9			device;						// Direct3Dデバイス
+	Input*						input;						// 入力系
+	Camera*						camera;						// 操作するカメラへのポインタ
 	D3DXVECTOR3					centralPosition;			// 中心座標
 	D3DXMATRIX					centralMatrixWorld;			// 中心座標ワールドマトリクス
 

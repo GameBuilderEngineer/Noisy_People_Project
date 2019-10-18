@@ -184,6 +184,9 @@
     <Filter Include="Game Layer\Item">
       <UniqueIdentifier>{0025d4b5-8404-4e24-95de-cdbafbb5d176}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Tlop">
+      <UniqueIdentifier>{06216772-8b7e-4fe7-8c4b-58c99e54a67c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game Layer\Stone">
       <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
     </Filter>
@@ -378,8 +381,8 @@
     <ClCompile Include="VertexAccessor.cpp">
       <Filter>Constant Layer\UtilityFunction</Filter>
     </ClCompile>
-    <ClCompile Include="Stone.cpp">
-      <Filter>Game Layer\Stone</Filter>
+    <ClCompile Include="telop.cpp">
+      <Filter>Game Layer\Tlop</Filter>
     </ClCompile>
     <ClCompile Include="DeadTree.cpp">
       <Filter>Game Layer\Tree</Filter>
@@ -389,6 +392,9 @@
     </ClCompile>
     <ClCompile Include="TreeTypeB.cpp">
       <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="Stone.cpp">
+      <Filter>Game Layer\Stone</Filter>
     </ClCompile>
     <ClCompile Include="TestEffect.cpp">
       <Filter>Game Layer\TestEffect</Filter>
@@ -591,8 +597,8 @@
     <ClInclude Include="VertexAccessor.h">
       <Filter>Constant Layer\UtilityFunction</Filter>
     </ClInclude>
-    <ClInclude Include="Stone.h">
-      <Filter>Game Layer\Stone</Filter>
+    <ClInclude Include="telop.h">
+      <Filter>Game Layer\Tlop</Filter>
     </ClInclude>
     <ClInclude Include="DeadTree.h">
       <Filter>Game Layer\Tree</Filter>
@@ -609,6 +615,11 @@
     </ClInclude>
     <ClInclude Include="Text.h">
       <Filter>Constant Layer\Text</Filter>
+    <ClInclude Include="Stone.h">
+      <Filter>Game Layer\Stone</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffect.h">
+      <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
