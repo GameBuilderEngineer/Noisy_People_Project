@@ -39,6 +39,7 @@ private:
 	WORD* index;								// (頂点)インデックス情報
 	DWORD *adjacency;							// 隣接性情報
 	
+	StaticMesh* staticMesh;						//※仮に入れました。菅野
 
 	VertexAccessor vtxAccessor;					// 頂点アクセス
 	DWORD numVertices;

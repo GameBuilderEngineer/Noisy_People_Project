@@ -55,7 +55,7 @@ void Enemy::update(float frameTime)
 	groundingWork();			// 接地処理
 	updatePhysicalBehavior();	// 物理挙動
 	updatePhysics(frameTime);	// 物理の更新
-	StaticMeshObject::update(); // オブジェクトの更新
+	Object::update();			// オブジェクトの更新
 
 	// エネミーデータの更新
 	enemyData->position = position;

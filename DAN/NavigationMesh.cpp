@@ -14,7 +14,8 @@
 //=============================================================================
 NavigationMesh::NavigationMesh(StaticMesh* staticMesh)//:StaticMeshObject(staticMesh)
 {
-	mesh = staticMesh->mesh;	// 参照の長さを縮めるためにポインタをコピー
+	this->staticMesh = staticMesh;
+	mesh = this->staticMesh->mesh;	// 参照の長さを縮めるためにポインタをコピー
 }
 
 
@@ -24,7 +25,7 @@ NavigationMesh::NavigationMesh(StaticMesh* staticMesh)//:StaticMeshObject(static
 void NavigationMesh::initialize()
 {
 	position = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
-	StaticMeshObject::initialize(&position);
+	Object::initialize(&position);
 
 	numVertices = mesh->GetNumVertices();
 	stride = mesh->GetNumBytesPerVertex();
@@ -249,14 +250,14 @@ void NavigationMesh::debugRender()
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 
 	// レンダーステートの設定
-	device->SetRenderState(D3DRS_LIGHTING, onLighting);
-	device->SetRenderState(D3DRS_FILLMODE, fillMode);
+	device->SetRenderState(D3DRS_LIGHTING, true);
+	device->SetRenderState(D3DRS_FILLMODE, objectNS::SOLID);
 
 	// 現在のマテリアルを取得
 	device->GetMaterial(&matDef);
 
 	// マテリアル情報に対するポインタを取得
-	pD3DXMat = (D3DXMATERIAL*)staticMesh->bufferMaterial->GetBufferPointer();
+	pD3DXMat = (D3DXMATERIAL*) staticMesh->bufferMaterial->GetBufferPointer();
 
 	// テクスチャのαが低い場合デフォルトのブレンドだとポリゴンが消えるためポリゴンのαだけを採用する
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
