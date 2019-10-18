@@ -178,6 +178,9 @@
     <Filter Include="Game Layer\Tree">
       <UniqueIdentifier>{7f5b9b64-5296-48ad-96c6-8061de1bebb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Text">
+      <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -328,6 +331,12 @@
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
     <ClCompile Include="TestEffect.cpp" />
+    <ClCompile Include="TextManager.cpp">
+      <Filter>Loader Layer\TextLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Constant Layer\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -487,6 +496,12 @@
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
     <ClInclude Include="TestEffect.h" />
+    <ClInclude Include="TextManager.h">
+      <Filter>Loader Layer\TextLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Constant Layer\Text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

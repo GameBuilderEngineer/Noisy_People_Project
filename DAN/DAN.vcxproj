@@ -175,6 +175,8 @@
     <ClInclude Include="StaticMeshObject.h" />
     <ClInclude Include="Stone.h" />
     <ClInclude Include="TestEffect.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TreeTypeA.h" />
@@ -228,6 +230,8 @@
     <ClCompile Include="StaticMeshObject.cpp" />
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="TestEffect.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TreeTypeA.cpp" />
