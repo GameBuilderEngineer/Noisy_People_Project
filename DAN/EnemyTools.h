@@ -49,7 +49,7 @@ typedef struct	//EFMTチャンク
 
 typedef struct	//ENEMYファイル構造体
 {
-	ENEMY_ENMY enmy;	//ENMYチャンク
+	ENEMY_ENMY enmy;	//ENMYチャンク	
 	ENEMY_EFMT *efmt;	//EFMTチャンク
 }ENEMY_FILE;
 

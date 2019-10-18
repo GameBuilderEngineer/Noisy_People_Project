@@ -5,19 +5,77 @@
 // [更新日]2019/10/04
 //===================================================================================================================================
 #include "SE.h"
+#include "Sound.h"
+#include "ImguiManager.h"
 #include "AbstractScene.h"
 
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
-const char * const SEManager::titleSEPathList[] = { "BGM_Character_Select.wav","BGM_Credit.wav" };
+const char * const SEManager::splashSEPathList[] = { "SE_Attack.wav"};
+const char * const SEManager::titleSEPathList[] = { "SE_Game_Start.wav","SE_Installation_Memory_Pile.wav" };
+const char * const SEManager::gameSEPathList[] = { "SE_Game_Start.wav","SE_Installation_Memory_Pile.wav" };
+int SEManager::SEScene = SceneList::SPLASH;
 
 //===================================================================================================================================
-//【デストラップ】
+//【デストラクタ】
 //===================================================================================================================================
 SEManager::~SEManager()
 {
-	SAFE_DELETE_ARRAY(bufferList);
+	SAFE_DELETE_ARRAY(SEBufferList);
+}
+
+//===================================================================================================================================
+//【ImGUIへの出力】
+//===================================================================================================================================
+void SEManager::outputSEGUI(void)
+{
+#ifdef _DEBUG
+	if (!ImGui::CollapsingHeader("SEInformation"))
+	{
+		//使用中のバッファ数
+		ImGui::Text("Number of buffers:%d", SEBufferMax);
+		//使用中のボイス数
+		ImGui::Text("Number of voice:%d", soundParametersList->nodeNum - 1);
+
+		for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
+		{
+			SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
+
+			if (tmpSoundParameters->isPlaying)		//再生している
+			{
+				switch (SEScene)
+				{
+				case SceneList::SPLASH:
+					ImGui::Text("%s", splashSEPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::TITLE:
+					ImGui::Text("%s", titleSEPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::TUTORIAL:
+
+					break;
+				case SceneList::CREDIT:
+
+					break;
+				case SceneList::GAME:
+					ImGui::Text("%s", gameSEPathList[tmpSoundParameters->playParameters.soundId]);
+					break;
+				case SceneList::RESULT:
+
+					break;
+				case SceneList::NONE_SCENE:
+
+					break;
+				default:
+					break;
+				}
+
+			}
+
+		}
+	}
+#endif
 }
 
 //===================================================================================================================================
@@ -26,37 +84,77 @@ SEManager::~SEManager()
 void	 SEManager::SwitchAudioBuffer(int scene)
 {
 	//サウンドディレクトリに設定する
-	setSoundDirectory();
+	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_SE);
 
-	SAFE_DELETE_ARRAY(bufferList);
+	//シーンの更新
+	SEManager::SEScene = scene;
 
-	switch (scene)
+	//解放処理
+	for (int i = 0; i < SEManager::SEBufferMax; i++)
+	{
+		SAFE_DELETE_ARRAY(SEManager::SEBufferList[i].wavFile.data.waveData);
+	}
+	SAFE_DELETE_ARRAY(SEManager::SEBufferList);
+
+	switch (SEManager::SEScene)
 	{
 	case SceneList::SPLASH:
-		break;
-	case SceneList::TITLE:
-		SEManager::bufferList = new LIST_BUFFER[TITLE_SE_LIST::SE_MAX];
-		for (int i = 0; i < TITLE_SE_LIST::SE_MAX; i++)
+		SEManager::SEBufferList = new LIST_BUFFER[SPLASH_SE_LIST::SPLASH_SE_MAX];
+		for (int i = 0; i < SPLASH_SE_LIST::SPLASH_SE_MAX; i++)
 		{
-			memset(&SEManager::bufferList[i].buffer, 0, sizeof(XAUDIO2_BUFFER));
+			SEManager::SEBufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
-			fp = fopen(SEManager::titleSEPathList[i], "rb");
-			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
+			fp = fopen(SEManager::splashSEPathList[i], "rb");
+			SEManager::SEBufferList[i].wavFile = LoadWavChunk(fp);
 
-			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
-			SEManager::bufferList[i].buffer.AudioBytes = SEManager::bufferList[i].wavFile.data.waveSize;
-			SEManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+			SEManager::SEBufferList[i].buffer.pAudioData = (BYTE*)SEManager::SEBufferList[i].wavFile.data.waveData;
+			SEManager::SEBufferList[i].buffer.AudioBytes = SEManager::SEBufferList[i].wavFile.data.waveSize;
+			SEManager::SEBufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
 
 			fclose(fp);
 		}
-		bufferMax = TITLE_SE_LIST::SE_MAX;
+		SEBufferMax = SPLASH_SE_LIST::SPLASH_SE_MAX;
+		break;
+	case SceneList::TITLE:
+		SEManager::SEBufferList = new LIST_BUFFER[TITLE_SE_LIST::TITLE_SE_MAX];
+		for (int i = 0; i < TITLE_SE_LIST::TITLE_SE_MAX; i++)
+		{
+			SEManager::SEBufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(SEManager::titleSEPathList[i], "rb");
+			SEManager::SEBufferList[i].wavFile = LoadWavChunk(fp);
+
+			SEManager::SEBufferList[i].buffer.pAudioData = (BYTE*)SEManager::SEBufferList[i].wavFile.data.waveData;
+			SEManager::SEBufferList[i].buffer.AudioBytes = SEManager::SEBufferList[i].wavFile.data.waveSize;
+			SEManager::SEBufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
+		SEBufferMax = TITLE_SE_LIST::TITLE_SE_MAX;
 		break;
 	case SceneList::TUTORIAL:
 		break;
 	case SceneList::CREDIT:
 		break;
 	case SceneList::GAME:
+		SEManager::SEBufferList = new LIST_BUFFER[GAME_SE_LIST::GAME_SE_MAX];
+		for (int i = 0; i < GAME_SE_LIST::GAME_SE_MAX; i++)
+		{
+			SEManager::SEBufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(SEManager::gameSEPathList[i], "rb");
+			SEManager::SEBufferList[i].wavFile = LoadWavChunk(fp);
+
+			SEManager::SEBufferList[i].buffer.pAudioData = (BYTE*)SEManager::SEBufferList[i].wavFile.data.waveData;
+			SEManager::SEBufferList[i].buffer.AudioBytes = SEManager::SEBufferList[i].wavFile.data.waveSize;
+			SEManager::SEBufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
+		SEBufferMax = GAME_SE_LIST::GAME_SE_MAX;
 		break;
 	case SceneList::RESULT:	
 		break;

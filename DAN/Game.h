@@ -2,7 +2,7 @@
 //【Game.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/10/16
+// [更新日]2019/10/18
 //===================================================================================================================================
 #pragma once
 
@@ -23,7 +23,8 @@
 #include "NavigationMesh.h"
 #include "TreeManager.h"
 #include "ItemManager.h"
-
+#include "Sound.h"
+#include "SoundBase.h"
 //#include "InstancingBillboard.h"
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -127,6 +128,9 @@ private:
 	// AI
 	AIDirector* aiDirector;
 	NavigationMesh* naviAI;
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[3];
 
 public:
 	Game();

@@ -28,6 +28,21 @@ Title::Title(void)
 	// 今のシーン( タイトル )
 	sceneName = ("Scene -Title-");
 	nextScene = SceneList::GAME;
+
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);	
+
+	//再生パラメータ
+	memset(playParameters, 0, sizeof(playParameters));
+	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false,NULL,true, filterParameters };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, true,1.0f,true, filterParameters };
+
+	//再生
+	SoundInterface::playSound(playParameters[0]);
+	SoundInterface::playSound(playParameters[1]);
+	SoundInterface::playSound(playParameters[2]);
 }
 
 //============================================================================================================================================
@@ -36,7 +51,9 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_TITLE);
+	SoundInterface::stopSound(playParameters[0]);
+	SoundInterface::stopSound(playParameters[1]);
+	SoundInterface::stopSound(playParameters[2]);
 }
 
 //============================================================================================================================================
@@ -100,8 +117,6 @@ void Title::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
-		// サウンドの再生
-		//SoundInterface::playSound(ENDPOINT_VOICE_LIST::ENDPOINT_SE, TITLE_SE_LIST::SE_01, false);
 		updateInput();
 		changeScene(nextScene);
 	}

@@ -12,6 +12,9 @@
 #include "AbstractScene.h"
 #include "TestEffect.h"
 #include "Sound.h"
+#include "SoundBase.h"
+
+//#include "SceneEffect.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -36,6 +39,9 @@ class Title : public AbstractScene
 {
 private:
 	TestEffect* testEffect;
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[3];
 
 public:
 	Title(void);

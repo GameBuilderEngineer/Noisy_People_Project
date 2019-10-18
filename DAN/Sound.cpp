@@ -5,6 +5,7 @@
 // [更新日]2019/10/04
 //===================================================================================================================================
 #include "Sound.h"
+#include "ImguiManager.h"
 
 //===================================================================================================================================
 //【グローバル変数】
@@ -12,6 +13,7 @@
 IXAudio2 *SoundInterface::XAudio2Interface = nullptr;
 XAUDIO2_VOICE_SENDS SoundInterface::SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX] = { NULL };
 SEManager *SoundInterface::SE = new SEManager();
+BGMManager *SoundInterface::BGM = new BGMManager();
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -86,6 +88,9 @@ SoundInterface::~SoundInterface()
 {
 	//SE
 	SAFE_DELETE(SE);
+	
+	//BGM
+	SAFE_DELETE(BGM);
 
 	//エンドポイントボイス
 	SAFE_DESTROY_VOICE(EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_BGM])
@@ -119,26 +124,77 @@ IXAudio2 *SoundInterface::GetXAudio2Interface(void)
 }
 
 //===================================================================================================================================
+//【シーンの更新】
+//===================================================================================================================================
+void SoundInterface::SwitchAudioBuffer(int scene)
+{
+	//シーンの更新
+	BGMManager::SwitchAudioBuffer(scene);
+	SEManager::SwitchAudioBuffer(scene);	
+}
+
+//===================================================================================================================================
 //【更新処理】
 //===================================================================================================================================
 void SoundInterface::UpdateSound(void)
 {
 	//SEの更新処理
 	SE->updateSound();
+
+	//BGMの更新処理
+	BGM->updateSound();
+	BGM->SetSpeed();
+
+	//ImGUI
+#ifdef _DEBUG
+	outputSoundGUI();
+#endif
+}
+
+//===================================================================================================================================
+//【ImGUIへの出力】
+//===================================================================================================================================
+void SoundInterface::outputSoundGUI(void)
+{
+#ifdef _DEBUG
+	ImGui::Begin("SoundInformation");
+	
+	//SE
+	SE->outputSEGUI();
+	BGM->outputBGMGUI();
+
+	ImGui::End();
+#endif
 }
 
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-void SoundInterface::playSound(int soundType, int soundId, bool loop)
+void SoundInterface::playSound(const PLAY_PARAMETERS playParameters)
 {
-	if (soundType == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
-
+		BGM->playSound(playParameters);
 	}
-	else if (soundType == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
 	{
 		//SE
-		SE->playSound(soundId, loop);
+		SE->playSound(playParameters);
+	}
+}
+
+//===================================================================================================================================
+//【停止】
+//===================================================================================================================================
+void SoundInterface::stopSound(const PLAY_PARAMETERS playParameters)
+{
+	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	{
+		BGM->stopSound(playParameters);
+	}
+	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	{
+		//SE
+		SE->stopSound(playParameters);
 	}
 }

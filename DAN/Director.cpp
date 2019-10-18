@@ -83,6 +83,9 @@ HRESULT Director::initialize() {
 	imgui = new ImguiManager(wnd);
 #endif // _DEBUG
 
+	//sound
+	soundInterface = new SoundInterface();
+
 	//input
 	input = new Input();
 	input->initialize(instance, window->wnd, true);
@@ -118,9 +121,6 @@ HRESULT Director::initialize() {
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
 	//animationLoader->initialize(d3d->device);
-
-	//sound
-	soundInterface = new SoundInterface();
 
 	//scene
 	scene = new Splash();
@@ -241,7 +241,7 @@ void Director::update() {
 	scene->update(frameTime);
 	scene->collisions();
 	scene->AI();
-	//sound->updateSound
+	soundInterface->UpdateSound();
 #ifdef _DEBUG
 	if (*scene->getShowGUI())
 	{
@@ -391,7 +391,7 @@ void Director::displayFPS() {
 // [用途]シーンクラスが遷移状態になった場合にシーンを遷移させる処理
 //===================================================================================================================================
 void Director::changeNextScene() {
-	int nextScene = scene->checkNextScene();		//次のシーンIDを取得
+	int nextScene = scene->checkNextScene();			//次のシーンIDを取得	
 	//scene->copyGameMaster(gameMaster);				//ゲーム管理情報をDirectorへ保存
 	scene->uninitialize();
 	SAFE_DELETE(scene);								// シーンの削除
@@ -409,9 +409,6 @@ void Director::changeNextScene() {
 	//scene->setAnimationLoader(animationLoader);
 	scene->initialize();
 	currentSceneName = scene->getSceneName();
-	
-	//サウンド
-	SEManager::SwitchAudioBuffer(nextScene);	//シーンの更新
 }
 
 //void threadA()

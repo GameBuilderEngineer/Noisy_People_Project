@@ -20,6 +20,19 @@ Splash::Splash()
 	sceneName = "Scene -Splash-";
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
+
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);
+
+	//再生パラメータ
+	memset(playParameters, 0, sizeof(playParameters));
+	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true ,1.0f,true, filterParameters };
+
+	//再生
+	SoundInterface::playSound(playParameters[0]);
+	SoundInterface::playSound(playParameters[1]);
 }
 
 //===================================================================================================================================
@@ -27,6 +40,9 @@ Splash::Splash()
 //===================================================================================================================================
 Splash::~Splash()
 {
+	//サウンドの停止
+	SoundInterface::stopSound(playParameters[0]);
+	SoundInterface::stopSound(playParameters[1]);
 }
 
 //===================================================================================================================================
@@ -34,9 +50,6 @@ Splash::~Splash()
 //===================================================================================================================================
 void Splash::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_SPLASH, soundNS::METHOD::PLAY);
-
 	// スプラッシュspriteの作成
 	splashSprite = new SplashSprite;
 }
@@ -48,10 +61,6 @@ void Splash::uninitialize()
 {
 	//スプラッシュの削除
 	SAFE_DELETE(splashSprite);
-
-	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_SPLASH);
-
 }
 
 //===================================================================================================================================
@@ -81,7 +90,10 @@ void Splash::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-		)changeScene(nextScene);
+		)
+	{
+		changeScene(nextScene);
+	}
 
 	// フェードが終わったらタイトルへ
 	if(sceneTimer > SCENE_TIME)changeScene(nextScene);
