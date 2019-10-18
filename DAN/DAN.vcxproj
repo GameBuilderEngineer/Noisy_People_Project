@@ -184,6 +184,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StaticMeshLoader.h" />
     <ClInclude Include="StaticMeshObject.h" />
+    <ClInclude Include="telop.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tree.h" />
@@ -247,6 +248,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
     <ClCompile Include="StaticMeshObject.cpp" />
+    <ClCompile Include="telop.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tree.cpp" />

@@ -187,6 +187,9 @@
     <Filter Include="Game Layer\Item">
       <UniqueIdentifier>{0025d4b5-8404-4e24-95de-cdbafbb5d176}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Tlop">
+      <UniqueIdentifier>{06216772-8b7e-4fe7-8c4b-58c99e54a67c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -368,6 +371,9 @@
     </ClCompile>
     <ClCompile Include="VertexAccessor.cpp">
       <Filter>Constant Layer\UtilityFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="telop.cpp">
+      <Filter>Game Layer\Tlop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -559,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="VertexAccessor.h">
       <Filter>Constant Layer\UtilityFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="telop.h">
+      <Filter>Game Layer\Tlop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
