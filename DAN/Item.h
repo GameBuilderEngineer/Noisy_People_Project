@@ -25,7 +25,7 @@ namespace itemNS
 		int id;							// 識別番号
 		ITEM_TYPE itemType;				// アイテムタイプ
 		D3DXVECTOR3 initialPosition;	// 初期座標
-		void initialize() { ZeroMemory(this, sizeof(ItemData)); }
+		void zeroClear() { ZeroMemory(this, sizeof(ItemData)); }
 	};
 }
 
@@ -45,9 +45,7 @@ public:
 	Item(StaticMesh* _staticMesh, itemNS::ItemData* _itemData);
 	~Item();
 	virtual void update(float frameTime);
-	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	BoundingSphere sphereCollider;
-
 
 	// Getter
 	static int getNumOfItem();				// アイテムの数を取得

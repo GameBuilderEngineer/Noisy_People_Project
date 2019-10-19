@@ -13,47 +13,50 @@ using namespace enemyNS;
 //=============================================================================
 void EnemyManager::initialize()
 {
-	// ファイルからエネミー初期ステータスを読み込む
+#if 0
+	// エネミーファイルからエネミー初期ステータスを読み込む
 	FILE	*fp = NULL;
 	fopen("enemy.enemy", "rb");
-
-	ENEMY_FILE tmpEnemyFile;
-	memset(&tmpEnemyFile, 0, sizeof(ENEMY_FILE));
-
-	//ENMYの読み込み
-	fread(&tmpEnemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
-
-	//メモリ確保
-	tmpEnemyFile.efmt = new ENEMY_EFMT[tmpEnemyFile.enmy.enemyMax];
-
-	//EFMTの読み込み
-	fread(&tmpEnemyFile.efmt, sizeof(ENEMY_EFMT), tmpEnemyFile.enmy.enemyMax, fp);
-
+	ENEMY_FILE enemyFile;
+	memset(&enemyFile, 0, sizeof(ENEMY_FILE));
+	fread(&enemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
+	enemyFile.efmt = new ENEMY_EFMT[enemyFile.enmy.enemyMax];
+	fread(&enemyFile.efmt, sizeof(ENEMY_EFMT), enemyFile.enmy.enemyMax, fp);
 	fclose(fp);
 
 	// エネミーデータリストの追加
 	EnemyData enemyData;
-	enemyDataList.reserve(tmpEnemyFile.enmy.enemyMax);
-	for (int i = 0; i < tmpEnemyFile.enmy.enemyMax; i++)
+	enemyDataList.reserve(enemyFile.enmy.enemyMax + DYNAMIC_SPAWN_MAX);
+	for (int i = 0; i < enemyDataList.size(); i++)
 	{
-		enemyData.clear();
+		enemyData.zeroClear();
+		if (i >= enemyFile.enmy.enemyMax) { continue; }
 
-		//enemyData.id = tmpEnemyFile.efmt->chunkId;
+		//enemyFile.efmt[i].chunkId;
+		//enemyFile.efmt[i].posX;
 
 		enemyDataList.push_back(enemyData);
 	}
-	
+	SAFE_DELETE_ARRAY(enemyFile.efmt);
+	nextID = enemyDataList.back().id + 1;	// エネミーデータIDの最大値を更新
+#endif
+
+	// update()で動的な確保をせず済むようエネミーリストのキャパシティ（メモリ）を増やしておく
+	enemyList.reserve(ENEMY_OBJECT_MAX);
+
 	// エネミーオブジェクトの作成
-	enemyList.reserve(INITIAL_RESERVE);
 	for (size_t i = 0; enemyDataList.size(); i++)
 	{
-		if (/* プレイヤーの初期位置と近ければ */1)
+		if (/* プレイヤーの初期位置と近ければ */0)
 		{
 			createEnemy(&enemyDataList[i]);
 		}
 	}
 
-	SAFE_DELETE_ARRAY(tmpEnemyFile.efmt);
+	// 描画オブジェクトの作成
+	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
 }
 
 
@@ -62,13 +65,17 @@ void EnemyManager::initialize()
 //=============================================================================
 void EnemyManager::uninitialize()
 {
-	for (size_t i = 0; i < enemyList.size(); i++)
-	{
-		SAFE_DELETE(enemyList[i]);
-	}
+	// 全エネミーオブジェクトを破棄
+	destroyAllEnemy();
 
+	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Enemy*> temp;
 	enemyList.swap(temp);
+
+	// 描画オブジェクトの破棄
+	SAFE_DELETE(wolfRenderer);
+	SAFE_DELETE(tigerRenderer);
+	SAFE_DELETE(bearRenderer);
 }
 
 
@@ -95,10 +102,9 @@ void EnemyManager::update(float frameTime)
 //=============================================================================
 void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	//for (size_t i = 0; i < enemyList.size(); i++)
-	//{
-	//	enemyList[i]->render(view, projection, cameraPosition);
-	//}
+	wolfRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tigerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bearRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
@@ -107,6 +113,8 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 //=============================================================================
 void EnemyManager::createEnemy(EnemyData* enemyData)
 {
+	Enemy* enemy = NULL;
+
 	switch (enemyData->type)
 	{
 	case WOLF:
@@ -115,18 +123,15 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 		break;
 	case BEAR:
 		break;
-
 	default:
-		//enemyList.emplace_back(new Enemy);
 		break;
 	}
-
-	enemyList.back()->setDataToEnemy(enemyData);
 }
 
 
 //=============================================================================
 // エネミーオブジェクトの破棄
+// ※使用不可
 //=============================================================================
 void EnemyManager::destroyEnemy(int _id)
 {
@@ -134,10 +139,44 @@ void EnemyManager::destroyEnemy(int _id)
 	{
 		if (enemyList[i]->getEnemyData()->id == _id)
 		{
-			delete enemyList[i];
+			SAFE_DELETE(enemyList[i]);
 			enemyList.erase(enemyList.begin() + i);
+			break;
 		}
 	}
+	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
+}
+
+
+//=============================================================================
+// 全エネミーオブジェクトの破棄
+// ※仮実装
+//=============================================================================
+void EnemyManager::destroyAllEnemy()
+{
+	for (size_t i = 0; i < enemyList.size(); i++)
+	{
+		SAFE_DELETE(enemyList[i]);
+	}
+
+	enemyList.clear();
+	SAFE_DELETE(wolfRenderer);
+	SAFE_DELETE(tigerRenderer);
+	SAFE_DELETE(bearRenderer);
+	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+}
+
+
+//=============================================================================
+// エネミーIDを発行する
+//=============================================================================
+int EnemyManager::issueNewID()
+{
+	int ans = nextID;
+	nextID++;
+	return ans;
 }
 
 

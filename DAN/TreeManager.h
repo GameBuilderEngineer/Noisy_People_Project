@@ -23,8 +23,11 @@ namespace treeNS
 class TreeManager
 {
 private:
-	std::vector<treeNS::TreeData> treeDataList;	// ツリーデータリスト
 	std::vector<Tree*> treeList;				// ツリーポインタリスト
+	StaticMeshObject* greenA;
+	StaticMeshObject* deadA;
+	StaticMeshObject* greenB;
+	StaticMeshObject* deadB;
 
 public:
 	void initialize();
@@ -33,5 +36,6 @@ public:
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void createTree(treeNS::TreeData* treeData);
 	void destroyTree(int _id);
+	void destroyAllTree();
 	void outputGUI();
 };
