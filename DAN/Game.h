@@ -20,6 +20,7 @@
 #include "TreeManager.h"
 #include "ItemManager.h"
 
+#include "SpriteGauge.h"
 
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -83,6 +84,9 @@ private:
 	// AI
 	AIDirector* aiDirector;
 	NavigationMesh* naviAI;
+
+	//Spriteé¿å±
+	SpriteGauge* spriteGauge;
 
 public:
 	Game();

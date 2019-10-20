@@ -67,6 +67,9 @@ void ItemManager::createItem(ItemData* itemData)
 	case BATTERY:
 		itemList.emplace_back(new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData));
 		break;
+	case EXAMPLE:
+		itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
+		break;
 	}
 }
 

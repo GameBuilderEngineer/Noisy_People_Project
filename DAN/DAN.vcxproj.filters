@@ -369,6 +369,12 @@
     <ClCompile Include="VertexAccessor.cpp">
       <Filter>Constant Layer\UtilityFunction</Filter>
     </ClCompile>
+    <ClCompile Include="exampleItem.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGauge.cpp">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -559,6 +565,12 @@
     </ClInclude>
     <ClInclude Include="VertexAccessor.h">
       <Filter>Constant Layer\UtilityFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="exampleItem.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGauge.h">
+      <Filter>Constant Layer\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

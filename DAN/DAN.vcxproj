@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7A53624F-B978-43BC-BDE6-B56B5AA52812}</ProjectGuid>
     <RootNamespace>DAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -146,6 +146,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EventMaker.h" />
+    <ClInclude Include="exampleItem.h" />
     <ClInclude Include="Fader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Splash.h" />
     <ClInclude Include="SplashSprite.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteGauge.h" />
     <ClInclude Include="StaticMeshLoader.h" />
     <ClInclude Include="StaticMeshObject.h" />
     <ClInclude Include="TextureLoader.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EventMaker.cpp" />
+    <ClCompile Include="exampleItem.cpp" />
     <ClCompile Include="Fader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
@@ -245,6 +248,7 @@
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="SplashSprite.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteGauge.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
     <ClCompile Include="StaticMeshObject.cpp" />
     <ClCompile Include="TextureLoader.cpp" />

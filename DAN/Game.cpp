@@ -120,6 +120,11 @@ void Game::initialize() {
 	aiDirector->initialize();
 	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviAI->initialize();
+
+	//Sprite実験
+	spriteGauge = new SpriteGauge;
+	spriteGauge->initialize();
+
 }
 
 //===================================================================================================================================
@@ -133,6 +138,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(aiDirector);
+	SAFE_DELETE(spriteGauge);
 }
 
 //===================================================================================================================================
@@ -168,10 +174,16 @@ void Game::update(float _frameTime) {
 	{
 		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
 		itemManager->createItem(&unko);
+		
 	}
 	if (input->wasKeyPressed('9'))
 	{
 		itemManager->uninitialize();
+	}
+	if (input->wasKeyPressed('8'))
+	{
+		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
+		itemManager->createItem(&abc);
 	}
 	itemManager->update(frameTime);
 	
@@ -234,12 +246,14 @@ void Game::render3D(Camera currentCamera) {
 
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 }
 
 //===================================================================================================================================
 //【UI/2D描画】
 //===================================================================================================================================
 void Game::renderUI() {
+
 
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
@@ -249,6 +263,9 @@ void Game::renderUI() {
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
+	//Sprite実験
+	spriteGauge->render();
+	
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }

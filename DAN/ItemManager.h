@@ -7,6 +7,7 @@
 #include <vector>
 #include "Item.h"
 #include "Battery.h"
+#include "exampleItem.h"
 
 
 //=============================================================================
