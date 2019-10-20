@@ -13,7 +13,29 @@ using namespace treeNS;
 //=============================================================================
 void TreeManager::initialize()
 {
-	treeList.reserve(INITIAL_RESERVE);
+#if 0
+	// ツリーファイルを読み込む
+	FILE	*fp = NULL;
+	fopen("enemy.enemy", "rb");
+	ENEMY_FILE enemyFile;
+	memset(&enemyFile, 0, sizeof(ENEMY_FILE));
+	fread(&enemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
+	enemyFile.efmt = new ENEMY_EFMT[enemyFile.enmy.enemyMax];
+	fread(&enemyFile.efmt, sizeof(ENEMY_EFMT), enemyFile.enmy.enemyMax, fp);
+	fclose(fp);
+
+	for (size_t i = 0; i < enemyFile.enmy.enemyMax; i++)
+	{
+		tree.XX = //enemyFile.efmt[i].chunkId;
+	}
+	SAFE_DELETE_ARRAY(enemyFile.efmt);
+#endif
+
+	// 描画オブジェクトの作成
+	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 }
 
 
@@ -22,13 +44,18 @@ void TreeManager::initialize()
 //=============================================================================
 void TreeManager::uninitialize()
 {
-	for (size_t i = 0; i < treeList.size(); i++)
-	{
-		SAFE_DELETE(treeList[i]);
-	}
+	// 全ツリーオブジェクトを破棄
+	destroyAllTree();
 
+	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Tree*> temp;
 	treeList.swap(temp);
+
+	// 描画オブジェクトの破棄
+	SAFE_DELETE(greenA);
+	SAFE_DELETE(deadA);
+	SAFE_DELETE(greenB);
+	SAFE_DELETE(deadB);
 }
 
 
@@ -80,6 +107,7 @@ void TreeManager::createTree(TreeData* treeData)
 
 //=============================================================================
 // ツリーオブジェクトの破棄
+// ※使用不可
 //=============================================================================
 void TreeManager::destroyTree(int _id)
 {
@@ -87,11 +115,37 @@ void TreeManager::destroyTree(int _id)
 	{
 		if (treeList[i]->getTreeData()->id == _id)
 		{
-			delete treeList[i];
+			SAFE_DELETE(treeList[i]);
 			treeList.erase(treeList.begin() + i);
+			break;
 		}
 	}
+	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
 }
+
+
+//=============================================================================
+// 全ツリーオブジェクトの破棄
+// ※仮実装
+//=============================================================================
+void TreeManager::destroyAllTree()
+{
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		SAFE_DELETE(treeList[i]);
+	}
+
+	treeList.clear();
+	SAFE_DELETE(greenA);
+	SAFE_DELETE(deadA);
+	SAFE_DELETE(greenB);
+	SAFE_DELETE(deadB);
+	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+}
+
 
 
 //=============================================================================

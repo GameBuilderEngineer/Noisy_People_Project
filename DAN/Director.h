@@ -20,8 +20,7 @@
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
-//#include "Camera.h"
-//#include "TextManager.h"
+#include "TextManager.h"
 #include "GameMaster.h"
 //#include "AnimationLoader.h"
 //#include <thread>
@@ -45,13 +44,13 @@ class Director : public Base
 public:
 	//Data
 #ifdef _DEBUG
-	MemoryViewer* memory;
-	ImguiManager* imgui;					//imguiマネージャークラス
-	//std::thread* thread_a;
-	bool onGUI;								//GUI表示フラグ
+	MemoryViewer*		memory;
+	ImguiManager*		imgui;				//imguiマネージャークラス
+	//std::thread*		thread_a;
+	bool						onGUI;		//GUI表示フラグ
 #endif // _DEBUG
 
-	HINSTANCE instance;						//
+	HINSTANCE instance;						//インスタンス
 	Window* window;							//ウィンドウクラス・ハンドル
 	HWND wnd;								//ウィンドウハンドル
 	Direct3D9* d3d;							//DirectX9クラス・デバイス
@@ -62,7 +61,7 @@ public:
 	ShaderLoader* shaderLoader;				//シェーダー読込クラス
 	SoundInterface *soundInterface;			//サウンドのインターフェースクラス
 	//TextManager* textManager;				//テキストデータ読込クラス
-	//GameMaster* gameMaster;					//ゲーム運営クラス
+	//GameMaster* gameMaster;				//ゲーム運営クラス
 	//AnimationLoader* animationLoader;		//アニメーション読込クラス
 	std::string* currentSceneName;			//現在のシーンの名前
 	int fpsMode;							//フレームレート状態変数
@@ -71,6 +70,7 @@ public:
 	LARGE_INTEGER timeEnd;					// パフォーマンスカウンターの終了値
 	LARGE_INTEGER timerFreq;				// パフォーマンスカウンターの周波数
 	float frameTime;						//フレーム時間
+	float sleepRenderTime = 0.0f;			//描画待機時間
 	bool hiddenCursor;						//カーソル非表示フラグ
 	bool lockCursor;						//カーソル位置固定フラグ
 

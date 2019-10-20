@@ -8,13 +8,36 @@
 #include "ImguiManager.h"
 using namespace itemNS;
 
-
 //=============================================================================
 // 初期化
 //=============================================================================
 void ItemManager::initialize()
 {
-	itemList.reserve(INITIAL_RESERVE);
+#if 0
+	// アイテムデータリストの追加
+	ItemData itemData;
+	itemDataList.reserve(/*ツールで生成したファイルに格納されたアイテムデータの数*/ +NUM_SURPLUS_DATA);
+	for (int i = 0; i < itemDataList.size(); i++)
+	{
+		itemData.zeroClear();
+		if (i >= /*ツールで生成したファイルに格納されたアイテムデータの数*/ 0/*仮*/) continue;
+
+		// ファイルからデータを読み取る
+
+		// データリストに追加する
+		itemDataList.push_back(itemData);
+	}
+
+	// アイテムオブジェクトの作成
+	itemList.reserve(itemDataList.size());
+	for (size_t i = 0; itemDataList.size() - NUM_SURPLUS_DATA; i++)
+	{
+		createItem(&itemDataList[i]);
+	}
+#endif
+
+	// 描画オブジェクトを作成
+	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 }
 
 
@@ -23,13 +46,15 @@ void ItemManager::initialize()
 //=============================================================================
 void ItemManager::uninitialize()
 {
-	for (size_t i = 0; i < itemList.size(); i++)
-	{
-		SAFE_DELETE(itemList[i]);
-	}
+	// 全アイテムオブジェクトを破棄
+	destroyAllItem();
 
+	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Item*> temp;
 	itemList.swap(temp);
+
+	// 描画オブジェクトの破棄
+	SAFE_DELETE(batteryRenderer);
 }
 
 
@@ -42,6 +67,8 @@ void ItemManager::update(float frameTime)
 	{
 		itemList[i]->update(frameTime);
 	}
+
+	batteryRenderer->update();
 }
 
 
@@ -50,10 +77,7 @@ void ItemManager::update(float frameTime)
 //=============================================================================
 void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	for (size_t i = 0; i < itemList.size(); i++)
-	{
-		itemList[i]->render(view, projection, cameraPosition);
-	}
+	batteryRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
@@ -62,10 +86,14 @@ void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 //=============================================================================
 void ItemManager::createItem(ItemData* itemData)
 {
+	Item* item = NULL;
+
 	switch (itemData->itemType)
 	{
 	case BATTERY:
-		itemList.emplace_back(new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData));
+		item = new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData);
+		itemList.emplace_back(item);
+		batteryRenderer->generateObject(item);
 		break;
 	case EXAMPLE:
 		itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
@@ -76,6 +104,7 @@ void ItemManager::createItem(ItemData* itemData)
 
 //=============================================================================
 // アイテムオブジェクトの破棄
+// ※使用不可
 //=============================================================================
 void ItemManager::destroyItem(int _id)
 {
@@ -83,10 +112,30 @@ void ItemManager::destroyItem(int _id)
 	{
 		if (itemList[i]->getItemData()->id == _id)
 		{
-			delete itemList[i];
+			SAFE_DELETE(itemList[i]);
 			itemList.erase(itemList.begin() + i);
+			break;
 		}
 	}
+	// batteryRenderer->deleteObject();
+	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
+}
+
+
+//=============================================================================
+// 全アイテムオブジェクトの破棄
+// ※仮実装
+//=============================================================================
+void ItemManager::destroyAllItem()
+{
+	for (size_t i = 0; i < itemList.size(); i++)
+	{
+		SAFE_DELETE(itemList[i]);
+	}
+	
+	itemList.clear();
+	SAFE_DELETE(batteryRenderer);
+	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 }
 
 
@@ -122,7 +171,6 @@ void ItemManager::outputGUI()
 
 		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
-
 #endif
 }
 

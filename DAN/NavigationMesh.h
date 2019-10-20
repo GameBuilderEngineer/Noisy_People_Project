@@ -29,7 +29,7 @@ struct Index3
 //=============================================================================
 //クラス定義
 //=============================================================================
-class NavigationMesh: public StaticMeshObject
+class NavigationMesh: public Object
 {
 private:
 	LPDIRECT3DVERTEXBUFFER9	vertexBuffer;		// 頂点バッファ
@@ -39,6 +39,7 @@ private:
 	WORD* index;								// (頂点)インデックス情報
 	DWORD *adjacency;							// 隣接性情報
 	
+	StaticMesh* staticMesh;						//※仮に入れました。菅野
 
 	VertexAccessor vtxAccessor;					// 頂点アクセス
 	DWORD numVertices;

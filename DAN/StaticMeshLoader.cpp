@@ -2,7 +2,7 @@
 //【StaticMeshLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/23
+// [更新日]2019/10/16
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -28,38 +28,39 @@ StaticMeshLoader::StaticMeshLoader()
 	//外部参照用ポインタへ代入
 	pointerStaticMeshLoader = this;
 
-	fileName[FIELD]								= { "testField.x" };
-	fileName[CUBE]								= { "cube.x" };
-	fileName[SAMPLE_HIERARCHY_MESH]				= { "HierarchyMesh.x" };
-	fileName[PLANET]							= { "planet.x" };
-	fileName[SAMPLE_ROBOT001]					= { "RobotB.x" };
-	fileName[SAMPLE_ROBOT002]					= { "robotB_still_back.x" };
-	fileName[SAMPLE_SKINNED_MESH]				= { "SkinnedMesh.x" };
-	fileName[STAR_REGULAR_POLYHEDRON]			= { "starRegularPolyhedron.x" };
-	fileName[STAR_REGULAR_POLYHEDRON_X10]		= { "x10starRegularPolyhedron.x" };
-	fileName[STAR_REGULAR_POLYHEDRON_X100]		= { "x100starRegularPolyhedron.x" };
-	fileName[SAMPLE_STATIC_MESH]				= { "StaticMesh.x" };
-	fileName[SAMPLE_TOON_MESH]					= { "Toon_6Color.x" };
-	fileName[SAMPLE_BUNNY]						= { "toybunny.x" };
-	fileName[SAMPLE_PAPER]						= { "paper.x" };
-	fileName[SAMPLE_REDBULL]					= { "redbull.x" };
-	fileName[SAMPLE_SHOES]						= { "shoes.x" };
-	fileName[SAMPLE_TEAPOT]						= { "teapot.x" };
-	fileName[SAMPLE_LIGHT]						= { "light.x" };
-	fileName[SAMPLE_BALL]						= { "soccerball.x" };
-	fileName[SAMPLE_SCISSORS]					= { "scissors.x" };
-	fileName[SAMPLE_PLAYSTATION]				= { "playstation.x" };
-	fileName[SAMPLE_HAT]						= { "hat.x" };
-	fileName[DEAD_TREE]							= { "deadTree001.x" };
-	fileName[YAMADA_LAND]						= { "SandBox_01_TestIsland.x" };
-	fileName[NAKAGOMI_LAND]						= { "nakagomiLand.x" };
-	fileName[YAMADA_ROBOT]						= { "SandBox_03_Robot.x" };
-	fileName[SAMPLE_NAVMESH]					= { "SandBox_02_NavMesh.x" };
-	fileName[DICE]								= { "dice.x" };
-	fileName[YAMADA_PLANE] = { "plane.x" };
-	fileName[YAMADA_ROBOT2] = { "Robot.x" };
-	fileName[YAMADA_TEST_ZONE] = { "SandBox.x" };
+	fileName[FIELD]									= { "testField.x" };						//01
+	fileName[CUBE]									= { "cube.x" };								//02
+	fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };			//03
+	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
+	fileName[STAR_REGULAR_POLYHEDRON_X100]			= { "x100starRegularPolyhedron.x" };		//05
 
+	fileName[SAMPLE_BUNNY]							= { "toybunny.x" };							//01
+	fileName[SAMPLE_PAPER]							= { "paper.x" };							//02
+	fileName[SAMPLE_REDBULL]						= { "redbull.x" };							//03
+	fileName[SAMPLE_SHOES]							= { "shoes.x" };							//04
+	fileName[SAMPLE_TEAPOT]							= { "teapot.x" };							//05
+	fileName[SAMPLE_LIGHT]							= { "light.x" };							//06
+	fileName[SAMPLE_BALL]							= { "soccerball.x" };						//07
+	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
+	fileName[SAMPLE_PLAYSTATION]					= { "playstation.x" };						//09
+	fileName[SAMPLE_HAT]							= { "hat.x" };								//10
+
+	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
+	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
+	fileName[GREEN_TREE_002]						= { "greenTree002.x" };						//03
+	fileName[GRASS]									= { "grass001.x" };							//04
+	fileName[STONE_001]								= { "stone001.x" };							//05
+	fileName[STONE_002]								= { "stone002.x" };							//06
+	fileName[STONE_003]								= { "stone003.x" };							//07
+
+	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
+	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
+	fileName[YAMADA_ROBOT]							= { "SandBox_03_Robot.x" };					//03
+	fileName[SAMPLE_NAVMESH]						= { "SandBox_02_NavMesh.x" };				//04
+	fileName[DICE]									= { "dice.x" };								//05
+	fileName[YAMADA_PLANE]							= { "plane.x" };							//06
+	fileName[YAMADA_ROBOT2]							= { "Robot.x" };							//07
+	fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
 }
 
 //===================================================================================================================================
@@ -82,7 +83,7 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		staticMesh[i].bufferMaterial = NULL;
 		D3DXLoadMeshFromX(
 			(LPCSTR)fileName[i],
-			D3DXMESH_SYSTEMMEM,
+			D3DXMESH_MANAGED,
 			device,
 			NULL,
 			&staticMesh[i].bufferMaterial,
@@ -102,6 +103,10 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 			if (materials[num].pTextureFilename != NULL && lstrlen(materials[num].pTextureFilename) > 0)
 			{
 				D3DXCreateTextureFromFile(device,materials[num].pTextureFilename,&staticMesh[i].textures[num]);
+			}
+			else
+			{
+				D3DXCreateTextureFromFile(device, "white.png", &staticMesh[i].textures[num]);
 			}
 		}
 

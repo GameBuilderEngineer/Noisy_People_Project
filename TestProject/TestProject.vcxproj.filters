@@ -85,9 +85,6 @@
     <Filter Include="Constant Layer\UtilityFunction">
       <UniqueIdentifier>{67a99837-b6b6-453d-93d2-139efecd001b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Fader">
-      <UniqueIdentifier>{e78bd21f-864f-49e7-8659-84f4545b250c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\Collision">
       <UniqueIdentifier>{a9883b2d-bc39-4ae3-bb06-06638e6d8752}</UniqueIdentifier>
     </Filter>
@@ -150,30 +147,6 @@
     </Filter>
     <Filter Include="Constant Layer\Object\SkinMeshObject">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\LinkedList">
-      <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound">
-      <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tools Layer">
-      <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tools Layer\Enemy">
-      <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\BGM">
-      <UniqueIdentifier>{cf8887db-979b-457b-812f-0a56ca931807}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\SE">
-      <UniqueIdentifier>{b901a311-0b7c-47c0-9aec-df053154a9ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\SoundBase">
-      <UniqueIdentifier>{22e4816c-9d4e-4bea-8666-160b78119822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\3D">
-      <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -253,7 +226,7 @@
       <Filter>Constant Layer\UtilityFunction</Filter>
     </ClCompile>
     <ClCompile Include="Fader.cpp">
-      <Filter>Constant Layer\Fader</Filter>
+      <Filter>Constant Layer\Direct3D9\Fader</Filter>
     </ClCompile>
     <ClCompile Include="PointSprite.cpp">
       <Filter>Constant Layer\PointSprite</Filter>
@@ -293,24 +266,6 @@
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="LinkedList.cpp">
-      <Filter>Constant Layer\LinkedList</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>Constant Layer\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyTools.cpp">
-      <Filter>Tools Layer\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="BGM.cpp">
-      <Filter>Constant Layer\Sound\BGM</Filter>
-    </ClCompile>
-    <ClCompile Include="SE.cpp">
-      <Filter>Constant Layer\Sound\SE</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundBase.cpp">
-      <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -399,7 +354,7 @@
       <Filter>Constant Layer\UtilityFunction</Filter>
     </ClInclude>
     <ClInclude Include="Fader.h">
-      <Filter>Constant Layer\Fader</Filter>
+      <Filter>Constant Layer\Direct3D9\Fader</Filter>
     </ClInclude>
     <ClInclude Include="PointSprite.h">
       <Filter>Constant Layer\PointSprite</Filter>
@@ -439,24 +394,6 @@
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedList.h">
-      <Filter>Constant Layer\LinkedList</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Constant Layer\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyTools.h">
-      <Filter>Tools Layer\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="BGM.h">
-      <Filter>Constant Layer\Sound\BGM</Filter>
-    </ClInclude>
-    <ClInclude Include="SE.h">
-      <Filter>Constant Layer\Sound\SE</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundBase.h">
-      <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

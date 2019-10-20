@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/10/04
+// [更新日]2019/10/17
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -20,9 +20,11 @@ using namespace playerNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2))
+Player::Player() 
 {
+	Object::initialize(&(D3DXVECTOR3)playerNS::START_POSITION);
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
+
 	onGravity = true;
 	activation();
 	state = NORMAL;
@@ -30,7 +32,7 @@ Player::Player() :StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_
 	onGround = false;						//接地判定
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
-	onJump = false;							//ジャンプフラグ
+	onJump = false;										//ジャンプフラグ
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 	onSound = false;						//サウンドのGUIフラグ
 
@@ -61,14 +63,12 @@ void Player::initialize(int playerType, int modelType)
 	input = getInput();
 	type = playerType;
 	keyTable = KEY_TABLE_1P;
-	StaticMeshObject::initialize(&(D3DXVECTOR3)START_POSITION);
+	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 
-	// コライダの初期化
-	bodyCollide.initialize(&position, staticMesh->mesh);
-	radius = bodyCollide.getRadius();
-	// プレイヤー原点が足元のためプレイヤー中心座標にコライダをセット
-	centralPosition = position + bodyCollide.getCenter();
-	//bodyCollide.setPosition(&centralPosition);
+	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);	// コライダの初期化
+	radius = bodyCollide.getRadius();						// メッシュ半径を取得
+	centralPosition = position + bodyCollide.getCenter();	// 中心座標を設定
+	D3DXMatrixIdentity(&centralMatrixWorld);				// 中心座標ワールドマトリクスを初期化
 }
 
 
@@ -82,6 +82,7 @@ void Player::update(float frameTime)
 	isExecutingMoveOperation = false;
 	onJump = false;
 	centralPosition = position + bodyCollide.getCenter();
+	acceleration *= 0.0f;
 
 	switch (state)
 	{
@@ -102,16 +103,15 @@ void Player::update(float frameTime)
 	moveOperation();			// 移動操作
 	jumpOperation();			// ジャンプ操作
 #ifdef _DEBUG
-	if (input->isKeyDown('H'))	// ジャンプ中にHで飛べます。
-	{
+	if (input->isKeyDown('H'))
+	{// ジャンプ中にHで飛べます
 		acceleration.y = 0;
 		acceleration.x *= 2;
 		acceleration.z *= 2;
 		speed.y += 1.5f;
 	}
-								// リセット
 	if (input->wasKeyPressed(keyTable.reset))
-	{
+	{// リセット
 		reset();
 	}
 #endif // DEBUG
@@ -130,17 +130,24 @@ void Player::update(float frameTime)
 	//	postureControl(axisY.direction, groundNor, 3.0f * frameTime);
 	//}
 	
-	StaticMeshObject::update();	// オブジェクトの更新
+	Object::update();	// オブジェクトの更新
+	D3DXMatrixTranslation(&centralMatrixWorld, centralPosition.x, centralPosition.y, centralPosition.z);
+	axisX.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
+	axisY.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
+	axisZ.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
+	reverseAxisX.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
+	reverseAxisY.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
+	reverseAxisZ.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
 }
 
 
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-{
-	StaticMeshObject::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
-}
+//void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+//{
+//	Object::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
+//}
 
 
 //===================================================================================================================================
@@ -148,9 +155,8 @@ void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPo
 //===================================================================================================================================
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	//デバッグ時描画
 #ifdef _DEBUG
-	bodyCollide.render(matrixWorld);
+	//bodyCollide.render(centralMatrixWorld);
 #endif // _DEBUG
 }
 
@@ -206,51 +212,44 @@ void Player::grounding()
 //===================================================================================================================================
 void Player::wallScratch()
 {
-	// 軽量実装版（めり込み補正時に微妙にガタガタする）
-	ray.update(centralPosition, D3DXVECTOR3(speed.x, 0, speed.z));
-	if (ray.rayIntersect(attractorMesh, *attractorMatrix))
-	{
-		if (radius >= ray.distance)
-		{
-			// めり込み補正（現在位置 + 進行方向 * めり込み距離）
-			setPosition(position + ray.direction * (ray.distance - radius));
-			// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			setSpeed(slip(speed, ray.normal));
-			// 抵抗摩擦
-			friction *= WALL_FRICTION;
-		}
-	}
-
-	//// 微妙なガタガタを直そうとしたり登れる角度が明確である実装を目指そうとしたが
-	//// できなかった残骸　↑の実装でも成り立っているので↓は気が済んだら消すと思う
+	//// 軽量実装版（めり込み補正時に微妙にガタガタする）
 	//ray.update(centralPosition, D3DXVECTOR3(speed.x, 0, speed.z));
-	//ray.rayIntersect(attractorMesh, *attractorMatrix);
-	//float speedDirectionDistance = ray.distance;
-	//D3DXVECTOR3 wallNormal = ray.normal;
-
-	//centralPosition + (-ray.normal * ray.distance);
-	////D3DXVECTOR3 hitPosition = centralPosition + ray.direction * ray.distance;
-	////float distance2point = D3DXVec3Length(&(hitPosition - centralPosition));
-
-	////float radian;
-	////if (formedRadianAngle(&radian, -speed, ray.normal))
-	////{
-	////	if (radian <  0.1f)
-	////	{
-	////	}
-	////}
-
-	//ray.update(centralPosition, -wallNormal);
 	//if (ray.rayIntersect(attractorMesh, *attractorMatrix))
 	//{
 	//	if (radius >= ray.distance)
 	//	{
-	//		// めり込み補正（現在位置 + 壁法線方向 * めり込み距離）
-	//		setPosition(position + ray.direction * (ray.distance - radius));
+	//		// めり込み補正（現在位置 + 進行方向 * めり込み距離）
+	//		setPosition(position + (-ray.normal)* /*ray.direction */ (ray.distance - radius));
 	//		// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-	//		setSpeed(slip(speed, wallNormal));
+	//		setSpeed(slip(speed, ray.normal));
+	//		// 抵抗摩擦
+	//		friction *= WALL_FRICTION;
 	//	}
 	//}
+
+	bool hit = false;
+
+	// スピードベクトルから壁の法線情報を取得する
+	ray.update(centralPosition, D3DXVECTOR3(speed.x, 0, speed.z));
+	if (ray.rayIntersect(attractorMesh, *attractorMatrix))
+	{
+		ray.update(centralPosition, -ray.normal);
+		// 壁までの距離を取得する
+		hit = ray.rayIntersect(attractorMesh, *attractorMatrix);
+	}
+
+	// 壁ずり処理
+	if (hit)
+	{
+		if (radius >= ray.distance)
+		{
+			// めり込み補正（現在位置 + 壁法線方向 * めり込み距離）
+			setPosition(position + (-ray.normal) * (ray.distance - radius));
+
+			// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+			setSpeed(slip(speed, ray.normal));
+		}
+	}
 }
 #pragma endregion
 
@@ -306,18 +305,20 @@ void Player::physicalBehavior()
 		setGravity(gravityDirection, GRAVITY_FORCE);
 	}
 
-	// 移動入力がないとき加速度を切る
-	if (isExecutingMoveOperation == false)
-	{
-		acceleration.x = 0.0f;
-		acceleration.z = 0.0f;
-		if (onGround)
-		{
-			// 地上にいる場合は重力方向も切る
-			// ↓これを外すと最後に加速度.yに入っていた重力加速度がスリップして坂道滑り続ける
-			acceleration.y = 0.0f;
-		}
-	}
+	//// 移動入力がないとき加速度を切る
+	//if (isExecutingMoveOperation == false)
+	//{
+	//	acceleration.x = 0.0f;
+	//	acceleration.z = 0.0f;
+	//}
+
+	//if (onGround)
+	//{
+	//	// 地上にいる場合は重力方向も切る
+	//	// ↓これを外すと最後に加速度.yに入っていた重力加速度がスリップして坂道滑り続ける
+	//	acceleration.y = 0.0f;
+	//}
+
 
 	// 空中に浮くタイミングで加速度切る
 	if (onGround == false && onGroundBefore)
@@ -340,13 +341,13 @@ void Player::physicalBehavior()
 		friction *= MOVE_FRICTION;
 	}
 
-	// 停止
-	float speedPerSecond = D3DXVec3Length(&speed);
-	if (isExecutingMoveOperation == false &&
-		speedPerSecond < STOP_SPEED)
-	{
-		speed *= 0.0f;
-	}
+	//// 停止
+	//float speedPerSecond = D3DXVec3Length(&speed);
+	//if (isExecutingMoveOperation == false &&
+	//	speedPerSecond < STOP_SPEED)
+	//{
+	//	speed *= 0.0f;
+	//}
 
 	// 落下速度限界の設定
 	if (speed.y < -FALL_SPEED_MAX)
@@ -464,17 +465,29 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	if (onGround)
 	{
-		acceleration = moveDirection * MOVE_ACC;
+		acceleration = moveDirection * MOVE_ACC * dash();
 	}
 	else
 	{
-		acceleration.x = moveDirection.x * MOVE_ACC_WHEN_NOT_GROUND;
-		acceleration.z = moveDirection.z * MOVE_ACC_WHEN_NOT_GROUND;
+		//acceleration += moveDirection * MOVE_ACC_WHEN_NOT_GROUND;
+		acceleration.x += moveDirection.x * MOVE_ACC_WHEN_NOT_GROUND;
+		acceleration.z += moveDirection.z * MOVE_ACC_WHEN_NOT_GROUND;
 	}
 	//姿勢制御
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 
+
+//===================================================================================================================================
+//【ダッシュ】
+// [処理内容]入力に応じてダッシュ倍率を返す
+//===================================================================================================================================
+float Player::dash()
+{
+	if (input->isKeyDown(keyTable.dash))
+		return playerNS::DASH_MAGNIFICATION;
+	return 1.0f;
+}
 
 //===================================================================================================================================
 //【ジャンプ】
@@ -489,7 +502,7 @@ void Player::jump()
 
 	if (speed.y > 0)
 	{
-		speed.y += JUMP_CONTROL_SPEED;		// 上昇中は入力継続で飛距離が伸びる
+		acceleration.y += JUMP_CONTROL_SPEED;		// 上昇中は入力継続で飛距離が伸びる
 	}
 }
 #pragma endregion
@@ -524,12 +537,7 @@ void Player::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
 		ImGui::Checkbox("sound", &onSound);												//サウンド
-
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 
 		// サウンドGUI
 		outputSoundGUI();

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include <vector>
+#include "EnemyTools.h"
 #include "Enemy.h"
 
 
@@ -13,15 +14,11 @@
 //=============================================================================
 namespace enemyNS
 {
-	enum ENEMY_TYPE
-	{
-		WOLF,
-		TIGER,
-		BEAR,
-		ENMEY_TYPE_MAX
-	};
-	
-	const int INITIAL_RESERVE = 30;				// エネミーポインタの初期確保数
+	// 初期化時はデータリストに存在せずゲーム途中から作成されるエネミー(追加エネミー)
+	// その数を見越して事前に確保しておくポインタの余剰個数
+	const int DYNAMIC_SPAWN_MAX = 20;
+
+	const int ENEMY_OBJECT_MAX = 30;	// 同時に存在してよいエネミーの最大数
 }
 
 
@@ -33,6 +30,10 @@ class EnemyManager
 private:
 	std::vector<enemyNS::EnemyData> enemyDataList;		// エネミーデータリスト
 	std::vector<Enemy*> enemyList;						// エネミーポインタリスト
+	StaticMeshObject* wolfRenderer;
+	StaticMeshObject* tigerRenderer;
+	StaticMeshObject* bearRenderer;
+	int nextID;
 
 public:
 	void initialize();
@@ -41,5 +42,7 @@ public:
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void createEnemy(enemyNS::EnemyData* enemyData);
 	void destroyEnemy(int _id);
+	void destroyAllEnemy();
+	int issueNewID();
 	void outputGUI();
 };

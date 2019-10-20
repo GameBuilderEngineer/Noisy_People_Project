@@ -8,24 +8,22 @@
 
 using namespace enemyNS;
 
+int EnemyData::numOfEnemyData = 0;
 int Enemy::numOfEnemy = 0;
 
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Enemy::Enemy(): StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2))
+Enemy::Enemy()
 {
 	numOfEnemy++;
 
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 	onGravity = true;
-	sphereCollider.initialize(&position, staticMesh->mesh);
+	sphereCollider.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);
 	radius = sphereCollider.getRadius();
 	friction = 1.0f;
-
-	staticMesh->materials->Diffuse;
-  	int a = 1;
 }
 
 
@@ -43,11 +41,10 @@ Enemy::~Enemy()
 //=============================================================================
 void Enemy::update(float frameTime)
 {
-	// 摩擦係数のリセット
-	friction = 1.0f;
-	isGoingMoveOperation = false;
+	// 事前処理
+	previousWork();
 
-	StaticMeshObject::update();
+	Object::update();
 
 
 
@@ -55,19 +52,36 @@ void Enemy::update(float frameTime)
 	moveOperation();
 	controlCamera(frameTime);
 #endif
+
 	groundingWork();			// 接地処理
 	updatePhysicalBehavior();	// 物理挙動
 	updatePhysics(frameTime);	// 物理の更新
+	Object::update();			// オブジェクトの更新
+
+	// エネミーデータの更新
+	enemyData->position = position;
+	enemyData->direction = axisZ.direction;
+	if (enemyData->state == DEAD)
+	{
+		enemyData->isAlive = false;
+	}
 }
 
 
 //=============================================================================
 // 描画処理
 //=============================================================================
-void Enemy::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+//void Enemy::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+//{
+//	render(
+//		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+//}
+
+
+void Enemy::previousWork()
 {
-	StaticMeshObject::render(
-		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	friction = 1.0f;
+	isGoingMoveOperation = false;
 }
 
 
@@ -87,12 +101,12 @@ void Enemy::updatePhysicalBehavior()
 		setGravity(gravityDirection, GRAVITY_FORCE);
 	}
 
-	// 移動入力がないとき重力以外の加速度を切る
-	if (isGoingMoveOperation == false)
-	{
-		acceleration.x = 0.0f;
-		acceleration.z = 0.0f;
-	}
+	//// 移動入力がないとき重力以外の加速度を切る
+	//if (isGoingMoveOperation == false)
+	//{
+	//	acceleration.x = 0.0f;
+	//	acceleration.z = 0.0f;
+	//}
 
 	// 空中に浮くタイミングで加速度はリセットされる
 	if (onGround == false && onGroundBefore)
@@ -306,7 +320,7 @@ void Enemy::setDebugEnvironment()
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 
-	StaticMeshObject::initialize(&(D3DXVECTOR3)START_POSITION);
+	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 }
 
 
@@ -338,11 +352,6 @@ void Enemy::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-
-		ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
 #endif // _DEBUG
 }

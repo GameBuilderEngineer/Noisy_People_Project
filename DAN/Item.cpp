@@ -13,17 +13,15 @@ int Item::numOfItem = 0;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Item::Item(StaticMesh* _staticMesh, ItemData* _itemData): StaticMeshObject(_staticMesh)
+Item::Item(StaticMesh* _staticMesh, ItemData* _itemData)
 {
 	numOfItem++;
 
 	onGravity = true;
 	itemData = _itemData;
 	position = itemData->initialPosition;
-	StaticMeshObject::initialize(&position);
+	Object::initialize(&position);
 	sphereCollider.initialize(&position, _staticMesh->mesh);
-	//sphereCollider.initialize(2);
-
 }
 
 
@@ -41,22 +39,7 @@ Item::~Item()
 //=============================================================================
 void Item::update(float frameTime)
 {
-	StaticMeshObject::update();
-}
-
-
-//=============================================================================
-// 描画処理
-//=============================================================================
-void Item::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-{
-	StaticMeshObject::render(
-		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-
-//デバッグ時描画
-#ifdef _DEBUG
-	sphereCollider.render(matrixWorld);
-#endif // _DEBUG
+	Object::update();
 }
 
 

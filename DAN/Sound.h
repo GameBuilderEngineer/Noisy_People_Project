@@ -11,6 +11,7 @@
 //===================================================================================================================================
 #include "Base.h"
 #include "SE.h"
+#include "BGM.h"
 
 //===================================================================================================================================
 //【マクロ定義】
@@ -48,17 +49,20 @@ public:
 	SoundInterface();
 	~SoundInterface();
 
+	//クラス
+	static SEManager *SE;
+	static BGMManager *BGM;
+	
 	//変数
 	static IXAudio2						*XAudio2Interface;										//XAudio2 COM interface
 	static XAUDIO2_VOICE_SENDS			SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];				//XAudio2 Send List(BGM/SE Endpoint Voice)
 
-	//クラス
-	static SEManager *SE;
-
 	//関数
 	static XAUDIO2_VOICE_SENDS			GetSendList(int endpointVoiceId);						//送信リストを取得する
 	static IXAudio2						*GetXAudio2Interface(void);								//XAudio2のインタフェースを取得する
+	static void							SwitchAudioBuffer(int scene);							//シーンの更新
+	static void							playSound(const PLAY_PARAMETERS playParameters);			//再生
+	static void							stopSound(const PLAY_PARAMETERS playParameters);			//停止
 	void									UpdateSound(void);										//更新処理
-	
-	static void							playSound(int soundType, int soundId, bool loop);		//再生
+	void									outputSoundGUI(void);									//ImGUIへの出力
 };
