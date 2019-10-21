@@ -58,6 +58,10 @@ InstancingBillboard::~InstancingBillboard()
 	SAFE_DELETE_ARRAY(color);
 	SAFE_DELETE_ARRAY(uv);
 
+	for (int i = 0; i < instanceNum; i++)
+	{
+		SAFE_DELETE(*instanceList->getValue(i));			//リスト内の実体を削除	
+	}
 	instanceList->terminate();
 	SAFE_DELETE(instanceList);
 }
@@ -161,17 +165,18 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 
 	//Z深度バッファ
 	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
 
 	//αテスト
 	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	//device->SetRenderState(D3DRS_ALPHAREF, 0x00);
-	//加算合成を行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	// αソースカラーの指定
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//加算合成を行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
@@ -319,6 +324,7 @@ void InstancingBillboard::generateInstance(InstancingBillboardNS::Instance* inst
 void InstancingBillboard::deleteInstance(int i)
 {
 	if ((*instanceList->getValue(i))->lifeTimer <= (*instanceList->getValue(i))->limitTime)return;
+	SAFE_DELETE(*instanceList->getValue(i));			//リスト内の実体を削除
 	instanceList->remove(instanceList->getNode(i));		//リスト内のインスタンスを削除
 	didDelete = true;
 }

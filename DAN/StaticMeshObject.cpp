@@ -20,9 +20,10 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 	device					= getDevice();		//デバイスの取得
 	this->staticMesh		= _staticMesh;
 	onRender				= true;
+	onTransparent			= false;
+	onLight					= true;
 	didDelete				= false;
 	didGenerate				= false;
-	onTransparent			= false;
 	objectNum				= 0;
 	fillMode				= staticMeshObjectNS::FILLMODE::SOLID;
 	positionBuffer			= NULL;
@@ -52,6 +53,10 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 //===================================================================================================================================
 StaticMeshObject::~StaticMeshObject()
 {
+	for (int i = 0; i < objectNum; i++)
+	{
+		SAFE_DELETE(*objectList->getValue(i));
+	}
 	objectList->terminate();
 	SAFE_DELETE(objectList);
 }
@@ -93,8 +98,6 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	
 	//レンダーステートの設定
 	device->SetRenderState(D3DRS_FILLMODE, fillMode);
-	device->SetRenderState(D3DRS_ZENABLE, TRUE);
-	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	//透過処理
 	if (onTransparent)
@@ -135,7 +138,6 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	effect->SetMatrix("matrixView", &view);	
 	//effect->SetValue("positionList", position,objectNum*sizeof(D3DXVECTOR3));
 
-
 	// レンダリング
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
@@ -145,15 +147,16 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 		//シェーダー更新
 		//effect->CommitChanges();
 		effect->Begin(0, 0);
-		effect->BeginPass(0);
+		if(onLight)		effect->BeginPass(0);
+		else			effect->BeginPass(1);
 
 		//Drawコール
 		device->DrawIndexedPrimitive(
-			D3DPT_TRIANGLELIST,										//D3DPRIMITIVETYPE Type			:描画タイプ
-			0,																		//INT BaseVertexIndex				:オフセット
+			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type				:描画タイプ
+			0,													//INT BaseVertexIndex				:オフセット
 			staticMesh->attributeTable[i].VertexStart,			//UINT MinIndex						:その属性グループの頂点で最小のインデックス
 			staticMesh->attributeTable[i].VertexCount,			//UINT NumVertices					:頂点数（その属性グループの頂点数）
-			staticMesh->attributeTable[i].FaceStart * 3,			//UINT StartIndex						:インデックスのインデックス（インデックスバッファ内のインデックス）
+			staticMesh->attributeTable[i].FaceStart * 3,		//UINT StartIndex					:インデックスのインデックス（インデックスバッファ内のインデックス）
 			staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount				:ポリゴン数
 		
 		effect->EndPass();
@@ -244,12 +247,39 @@ void StaticMeshObject::generateObject(Object* object)
 }
 
 //===================================================================================================================================
+//【オブジェクトの全削除】
+//===================================================================================================================================
+void StaticMeshObject::allDelete()
+{
+	for (int i = 0; i < objectNum; i++)
+	{
+		SAFE_DELETE(*objectList->getValue(i));
+	}
+	objectList->allClear();
+}
+
+//===================================================================================================================================
+//【IDを使用してオブジェクトの削除】
+//===================================================================================================================================
+void StaticMeshObject::deleteObjectByID(int id)
+{
+	for (int i = 0; i < objectNum; i++)
+	{	
+		if ((*objectList->getValue(i))->id == id)
+		{
+			(*objectList->getValue(i))->existenceTimer = 0.0f;//存在時間を0にして削除可能状態にする
+			return;		//検索終了
+		}
+	}
+}
+
+//===================================================================================================================================
 //【オブジェクトの削除】
 //===================================================================================================================================
 void StaticMeshObject::deleteObject(int i)
 {
-	Object* obj = *objectList->getValue(i);
-	if (obj->existenceTimer >= 0)return;
+	if ((*objectList->getValue(i))->existenceTimer >= 0)return;
+	SAFE_DELETE(*objectList->getValue(i));
 	objectList->remove(objectList->getNode(i));		//リスト内のオブジェクトを削除
 	didDelete = true;
 }
@@ -302,6 +332,15 @@ void StaticMeshObject::outputGUI()
 	}
 }
 #endif // _DEBUG
+
+
+
+
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void StaticMeshObject::enableLight()	{ onLight = true; }
+void StaticMeshObject::disableLight()	{ onLight = false; }
 
 //===================================================================================================================================
 //【スタティックメッシュの取得】

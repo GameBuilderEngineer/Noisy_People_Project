@@ -28,6 +28,8 @@ namespace objectNS {
 		WIREFRAME	= (int)D3DFILL_WIREFRAME,
 		POINT		= (int)D3DFILL_POINT,
 	};
+
+	void resetCounter();
 }
 
 //===================================================================================================================================
@@ -38,6 +40,8 @@ class Object:public Base
 public:
 	//Data
 	//ステータス変数
+	static int			objectCounter;			//オブジェクトカウンター：IDの割当に使用
+	int					id;						//ID
 	D3DXVECTOR3			position;				//位置
 	D3DXQUATERNION		quaternion;				//回転
 	D3DXVECTOR3			scale;					//スケール

@@ -90,21 +90,43 @@ float4 PS(VS_OUT In) : COLOR0
 	float4 finalColor	= texel*In.color;
 	return finalColor;
 }
+//ライトを考慮しない
+float4 PS1(VS_OUT In) : COLOR0
+{
+	float4 texel		= tex2D(textureSampler, In.uv);
+	float4 finalColor	= texel;
+	return finalColor;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // テクニック
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 technique mainTechnique {
+	//ランバート拡散反射により出力
 	pass p0 {
 		//ステート設定
 		Zenable					= TRUE;			//Zバッファ有効
 		ZWriteEnable			= TRUE;			//Zバッファへの書き込み有効
-		//ShadeMode				= GOURAUD;		//グーロー・シェーディング
-		CullMode				= CCW;				//背面をカリング
-		//MultiSampleAntialias	= TRUE;			//アンチエイリアシングを有効
+		ShadeMode				= GOURAUD;		//グーロー・シェーディング
+		CullMode				= CCW;			//背面をカリング
+		MultiSampleAntialias	= TRUE;			//アンチエイリアシングを有効
 
 		//シェーダ設定
 		VertexShader			= compile vs_3_0 VS();
 		PixelShader				= compile ps_3_0 PS();
+	}
+
+	//ランバート拡散反射を考慮せずテクセルカラーのみで出力
+	pass p1 {
+		//ステート設定
+		Zenable					= TRUE;			//Zバッファ有効
+		ZWriteEnable			= FALSE;		//Zバッファへの書き込み有効
+		ShadeMode				= GOURAUD;		//グーロー・シェーディング
+		CullMode				= CCW;			//背面をカリング
+		MultiSampleAntialias	= TRUE;			//アンチエイリアシングを有効
+
+		//シェーダ設定
+		VertexShader			= compile vs_3_0 VS();
+		PixelShader				= compile ps_3_0 PS1();
 	}
 }

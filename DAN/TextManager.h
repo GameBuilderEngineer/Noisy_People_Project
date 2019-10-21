@@ -26,6 +26,7 @@ namespace textManagerNS
 		FUTURA,
 		TYPE_MAX
 	};
+	Text* reference(int textType);
 }
 
 //===================================================================================================================================
@@ -40,5 +41,5 @@ public:
 	Text* text[textManagerNS::TYPE::TYPE_MAX];				//	テキスト
 	TextManager(void);
 	~TextManager(void);
-	void initialize(LPDIRECT3DDEVICE9 _device);
+	void initialize();
 };

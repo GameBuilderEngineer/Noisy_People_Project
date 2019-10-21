@@ -16,10 +16,18 @@
 using namespace textManagerNS;
 
 //===================================================================================================================================
+//【グローバル変数】
+//===================================================================================================================================
+static TextManager* pointerTextManager;
+
+//===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 TextManager::TextManager(void)
 {
+	//グローバルポインタへ代入
+	pointerTextManager = this;
+
 	// ディレクトリの設定
 	setDataDirectory();
 
@@ -38,6 +46,7 @@ TextManager::TextManager(void)
 		case FUTURA:
 			dataName[i] = { "unicode.futurabb.ttf" };		//	フォントデータリソースの名前
 			fontName[i] = { "Futura-Black" };				//	フォントの名前
+			break;
 		default:
 			break;
 		}
@@ -73,7 +82,7 @@ TextManager::~TextManager(void)
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
-void TextManager::initialize(LPDIRECT3DDEVICE9 _device)
+void TextManager::initialize()
 {
 	// 初期化
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
@@ -81,23 +90,31 @@ void TextManager::initialize(LPDIRECT3DDEVICE9 _device)
 		switch (i)
 		{
 		case NEW_RODIN_CHARACTER_SELECT_TIME:
-			text[i]->initialize(_device, 80, 45, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+			text[i]->initialize(80, 45, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
 			break;
 		case NEW_RODIN_RESULT_CHINGIN_BACK:
-			text[i]->initialize(_device, 160, 90, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+			text[i]->initialize(160, 90, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
 			break;
 		case NEW_RODIN_RESULT_CHINGIN:
-			text[i]->initialize(_device, 160, 90, D3DXCOLOR(255, 255, 255, 255), fontName[i]);
+			text[i]->initialize(160, 90, D3DXCOLOR(255, 255, 255, 255), fontName[i]);
 			break;
 		case NEW_RODIN_GAME_TIME:
-			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+			text[i]->initialize(48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
 			break;
 		case FUTURA:
-			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+			text[i]->initialize(48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
 		default:
 			break;
 		}
 	}
 
 	return;
+}
+
+//===================================================================================================================================
+//【外部参照】
+//===================================================================================================================================
+Text* reference(int textType)
+{
+	return pointerTextManager->text[textType];
 }

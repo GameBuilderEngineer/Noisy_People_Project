@@ -199,6 +199,15 @@
     <Filter Include="Constant Layer\Text">
       <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Effekseer">
+      <UniqueIdentifier>{e49c7731-b0af-4124-b614-501370a0edcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Sky">
+      <UniqueIdentifier>{37485a13-b7c2-4de1-b39d-b550dff2fc37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\05 Effekseer File">
+      <UniqueIdentifier>{9e393723-fc8e-47da-809d-422b95ec02be}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game Layer\NaviAI">
       <UniqueIdentifier>{accd5b1a-788b-44e1-b16a-3215bd8aed77}</UniqueIdentifier>
     </Filter>
@@ -417,6 +426,12 @@
     </ClCompile>
     <ClCompile Include="ResultUIcpp.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="EffekseerManager.cpp">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky.cpp">
+      <Filter>Game Layer\Sky</Filter>
     </ClCompile>
     <ClCompile Include="Create.cpp">
       <Filter>Game Layer\Scene\Create</Filter>
@@ -659,6 +674,21 @@
     </ClInclude>
     <ClInclude Include="TestEffect.h">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="EffekseerManager.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\Effekseer.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerRendererDX9.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerSoundXAudio2.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky.h">
+      <Filter>Game Layer\Sky</Filter>
     </ClInclude>
     <ClInclude Include="NavigationMesh.h">
       <Filter>Game Layer\NaviAI</Filter>
