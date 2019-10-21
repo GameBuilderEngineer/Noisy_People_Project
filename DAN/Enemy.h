@@ -105,8 +105,11 @@ namespace enemyNS
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 		int hp;							// HP
 		bool isAlive;					// 生存フラグ
+		static int numOfEnemyData;		// エネミーデータの数
 
-		void clear() { ZeroMemory(this, sizeof(EnemyData)); }
+		EnemyData() { numOfEnemyData++; }
+		~EnemyData() { numOfEnemyData--; }
+		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
 		void revive()
 		{
 			position = defaultPosition;
@@ -114,6 +117,7 @@ namespace enemyNS
 			hp = type > 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
 			isAlive = true;
 		}
+		static int getNumOfEnemyData() { return numOfEnemyData; }
 	};
 }
 
@@ -126,8 +130,6 @@ class Enemy: public Object
 private:
 	enemyNS::EnemyData* enemyData;		// エネミーデータ
 	static int numOfEnemy;				// エネミーの総数
-
-	 
 
 	// 物理挙動
 	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ

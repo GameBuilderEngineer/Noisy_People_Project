@@ -14,7 +14,7 @@
 //=============================================================================
 namespace itemNS
 {	
-	const int INITIAL_RESERVE = 50;				// アイテムポインタの初期確保数
+	const int NUM_SURPLUS_DATA = 10;		// 初期アイテムデータ数に加えて確保する余剰分のベクター要素数
 }
 
 
@@ -35,6 +35,7 @@ public:
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void createItem(itemNS::ItemData* itemData);
 	void destroyItem(int _id);
+	void destroyAllItem();
 	void outputGUI();
 
 	// Getter

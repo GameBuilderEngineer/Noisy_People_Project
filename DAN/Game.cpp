@@ -213,7 +213,7 @@ void Game::update(float _frameTime) {
 	}
 	if (input->wasKeyPressed('9'))
 	{
-		itemManager->uninitialize();
+		itemManager->destroyAllItem();
 	}
 	itemManager->update(frameTime);
 
@@ -293,7 +293,7 @@ void Game::render3D(Camera currentCamera) {
 	// プレイヤーの他のオブジェクトの描画
 	player->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//枯木の描画
+	//木の描画
 	deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//木Aの描画
 	treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);

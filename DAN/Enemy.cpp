@@ -8,6 +8,7 @@
 
 using namespace enemyNS;
 
+int EnemyData::numOfEnemyData = 0;
 int Enemy::numOfEnemy = 0;
 
 
