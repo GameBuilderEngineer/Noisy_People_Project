@@ -24,7 +24,7 @@
 #include "TreeManager.h"
 #include "ItemManager.h"
 #include "Telop.h"
-
+#include "Sound.h"
 
 #include "EnemyTools.h"
 //#include "InstancingBillboard.h"

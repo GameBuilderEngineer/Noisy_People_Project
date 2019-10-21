@@ -91,8 +91,9 @@ private:
 	void OutputEnemyFile(void);				//エネミーファイルの書き出し処理
 	void CreatNewEnemyFile(void);			//エネミーファイルの新規作成
 	void AddEnemyFormat(short enemyType, short enemyState, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
-	void DeleteEnemyFormat(int target);		//エネミーのフォーマット構造体を消す
+	void DeleteEnemyFormat(short enemyId);	//エネミーのフォーマット構造体を消す
 	void UpdateEfmt(int oldEnemyMax);		//エネミーのフォーマット構造体を整理
+	//void SpinEnemy(short enemyId);
 	void SetEnemyType(short enemyId, short enemyType);
 	void SetEnemyState(short enemyId, short enemyState);
 	void SetEnemyPos(short enemyId,const D3DXVECTOR3 pos);

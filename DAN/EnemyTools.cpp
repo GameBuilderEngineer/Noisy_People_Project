@@ -55,7 +55,7 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 		EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
 
 		//描画用
-		renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+		renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 		initialize();
 		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
 		{
@@ -385,6 +385,9 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 
 	ImGui::End();
 
+	//選択中
+
+
 	//削除
 	if (deleteFlag)
 	{
@@ -411,11 +414,23 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 
 #endif
 }
+//
+////===================================================================================================================================
+////【エネミーツールの選択中を表す処理】
+////===================================================================================================================================
+//void ENEMY_TOOLS::SpinEnemy(short enemyId)
+//{
+//	//消す用(MAXなら消す)
+//	for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
+//	{
+//		renderer->
+//	}
+//}
 
 //===================================================================================================================================
 //【エネミーのフォーマット構造体を消す】
 //===================================================================================================================================
-void ENEMY_TOOLS::DeleteEnemyFormat(int target)
+void ENEMY_TOOLS::DeleteEnemyFormat(short enemyId)
 {
 	//消す用(MAXなら消す)
 	if (enemyFile.enmy.enemyMax != NULL)
@@ -428,13 +443,13 @@ void ENEMY_TOOLS::DeleteEnemyFormat(int target)
 		}
 
 		//TYPE_MAXなら消す
-		enemyFile.efmt[target].enemyType = enemyNS::ENEMY_TYPE::TYPE_MAX;
+		enemyFile.efmt[enemyId].enemyType = enemyNS::ENEMY_TYPE::TYPE_MAX;
 
 		//エネミーのフォーマット構造体を整理
 		UpdateEfmt(enemyFile.enmy.enemyMax + 1);
 
 		//描画用
-		renderer->deleteObject(enemyFile.enmy.enemyMax - target);
+		renderer->deleteObject(enemyFile.enmy.enemyMax - enemyId);
 		renderer->updateAccessList();
 		needUpdate = true;
 	}

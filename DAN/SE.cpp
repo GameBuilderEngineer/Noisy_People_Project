@@ -205,6 +205,9 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 		break;
 	case SceneList::NONE_SCENE:
 		break;
+	case SceneList::CREATE:
+		SEBufferMax = CREATE_SE_LIST::CREATE_SE_MAX;
+		break;
 	default:
 		break;
 	}

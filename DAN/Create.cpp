@@ -24,6 +24,9 @@ Create::Create()
 
 	nextScene = SceneList::RESULT;
 
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::CREATE);
+
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;
 }

@@ -340,6 +340,9 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 		break;
 	case SceneList::NONE_SCENE:
 		break;
+	case SceneList::CREATE:
+		BGMBufferMax = CREATE_BGM_LIST::CREATE_BGM_MAX;
+		break;
 	default:
 		break;
 	}
