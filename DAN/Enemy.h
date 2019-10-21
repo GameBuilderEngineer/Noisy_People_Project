@@ -139,10 +139,6 @@ private:
 	bool onGroundBefore;				// 直前フレームの接地判定
 	float friction;
 
-	//// 経路探索
-	//std::vector<D3DXVECTOR3> routeStack;// 経路スタック
-
-
 #ifdef _DEBUG
 #endif
 	// デバッグ用
@@ -160,25 +156,16 @@ private:
 	virtual void die() = 0;				//「死亡」ステート
 
 
-	void sensor();
-
-
 public:
-	Enemy();
+	Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
 	~Enemy();
 	virtual void update(float frameTime);
-	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-
 	BoundingSphere sphereCollider;		// バウンディングスフィア
 
-	void damage();
-
-
-
-	void groundingWork();
-	void updatePhysicalBehavior();
+	void grounding();
+	void physicalBehavior();
 	void updatePhysics(float frameTime);
-	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
+	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void outputGUI();
 
 	// Debug

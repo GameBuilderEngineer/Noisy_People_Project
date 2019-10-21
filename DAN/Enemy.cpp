@@ -8,22 +8,25 @@
 
 using namespace enemyNS;
 
-int EnemyData::numOfEnemyData = 0;
-int Enemy::numOfEnemy = 0;
+int EnemyData::numOfEnemyData = 0;	// エネミーデータの数
+int Enemy::numOfEnemy = 0;			// エネミーの数
 
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Enemy::Enemy()
+Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 {
-	numOfEnemy++;
+	numOfEnemy++;							// エネミーの数を加算
+	enemyData = _enemyData;					// エネミーデータをセット
 
-	difference = DIFFERENCE_FIELD;			//フィールド補正差分
+	difference = DIFFERENCE_FIELD;			// 必要性要検討
 	onGravity = true;
-	sphereCollider.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);
+	position = enemyData->position;
+	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	friction = 1.0f;
+	Object::initialize(&position);
 }
 
 
@@ -44,17 +47,13 @@ void Enemy::update(float frameTime)
 	// 事前処理
 	previousWork();
 
-	Object::update();
-
-
-
 #ifdef _DEBUG
-	moveOperation();
-	controlCamera(frameTime);
+	//moveOperation();
+	//controlCamera(frameTime);
 #endif
 
-	groundingWork();			// 接地処理
-	updatePhysicalBehavior();	// 物理挙動
+	grounding();				// 接地処理
+	physicalBehavior();			// 物理挙動
 	updatePhysics(frameTime);	// 物理の更新
 	Object::update();			// オブジェクトの更新
 
@@ -68,16 +67,6 @@ void Enemy::update(float frameTime)
 }
 
 
-//=============================================================================
-// 描画処理
-//=============================================================================
-//void Enemy::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-//{
-//	render(
-//		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-//}
-
-
 void Enemy::previousWork()
 {
 	friction = 1.0f;
@@ -88,7 +77,7 @@ void Enemy::previousWork()
 //=============================================================================
 // 物理挙動の更新
 //=============================================================================
-void Enemy::updatePhysicalBehavior()
+void Enemy::physicalBehavior()
 {
 	//------------
 	// 加速度処理
@@ -162,7 +151,7 @@ void Enemy::updatePhysics(float frameTime)
 //=============================================================================
 // 接地処理
 //=============================================================================
-void Enemy::groundingWork()
+void Enemy::grounding()
 {
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
 	gravityRay.update(position, gravityDirection);
@@ -199,7 +188,6 @@ void Enemy::groundingWork()
 		onGround = false;
 	}
 }
-
 
 
 //=============================================================================
@@ -258,33 +246,12 @@ void Enemy::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVE
 
 
 //=============================================================================
-//重力設定(レイ)
-//[内容]レイを使用して重力源のメッシュの法線を取りだしその法線を重力方向とする
-//[引数]
-// D3DXVECTOR3* attractorPosition	：引力発生地点
-// LPD3DXMESH _attractorMesh		：（レイ処理用）引力発生メッシュ
-// D3DXMATRIX _attractorMatrix		：（レイ処理用）引力発生行列
-//[戻値]なし
+// 重力発生メッシュ（接地メッシュ）の設定
 //=============================================================================
-void Enemy::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
+void Enemy::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-	// レイ判定を行うために必要な要素をセット
 	attractorMesh = _attractorMesh;
 	attractorMatrix = _attractorMatrix;
-
-	//// 重力線を作成
-	//D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	//gravityRay.initialize(position, gravityDirection);		//重力レイの初期化
-
-	//// レイ判定
-	//if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
-	//{// 重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
-	//	setGravity(-gravityRay.normal, GRAVITY_FORCE);
-	//}
-	//else
-	//{// 衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
-	//	setGravity(gravityDirection, GRAVITY_FORCE);
-	//}
 }
 
 

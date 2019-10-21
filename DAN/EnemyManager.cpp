@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "EnemyManager.h"
 #include "ImguiManager.h"
+#include "EnemyTools.h"
 using namespace enemyNS;
 
 
@@ -13,45 +14,33 @@ using namespace enemyNS;
 //=============================================================================
 void EnemyManager::initialize()
 {
-#if 0
-	// エネミーファイルからエネミー初期ステータスを読み込む
-	FILE	*fp = NULL;
-	fopen("enemy.enemy", "rb");
-	ENEMY_FILE enemyFile;
-	memset(&enemyFile, 0, sizeof(ENEMY_FILE));
-	fread(&enemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
-	enemyFile.efmt = new ENEMY_EFMT[enemyFile.enmy.enemyMax];
-	fread(&enemyFile.efmt, sizeof(ENEMY_EFMT), enemyFile.enmy.enemyMax, fp);
-	fclose(fp);
-
-	// エネミーデータリストの追加
+#if 1	// エネミーツールのデータを読み込む
+	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+	enemyDataList.reserve(enemyTools->GetEnemyMax());
 	EnemyData enemyData;
-	enemyDataList.reserve(enemyFile.enmy.enemyMax + DYNAMIC_SPAWN_MAX);
-	for (int i = 0; i < enemyDataList.size(); i++)
+	for (int i = 0; enemyTools->GetEnemyMax(); i++)
 	{
-		enemyData.zeroClear();
-		if (i >= enemyFile.enmy.enemyMax) { continue; }
-
-		//enemyFile.efmt[i].chunkId;
-		//enemyFile.efmt[i].posX;
-
+		enemyData.id = enemyTools->GetEnemySet(i).id;
+		enemyData.type = enemyTools->GetEnemySet(i).type;
+		enemyData.defaultState = enemyTools->GetEnemySet(i).defaultState;
+		enemyData.defaultPosition = enemyTools->GetEnemySet(i).defaultPosition;
+		enemyData.defaultDirection = enemyTools->GetEnemySet(i).defaultDirection;
 		enemyDataList.push_back(enemyData);
 	}
-	SAFE_DELETE_ARRAY(enemyFile.efmt);
+	SAFE_DELETE(enemyTools);
 	nextID = enemyDataList.back().id + 1;	// エネミーデータIDの最大値を更新
 #endif
 
-	// update()で動的な確保をせず済むようエネミーリストのキャパシティ（メモリ）を増やしておく
-	enemyList.reserve(ENEMY_OBJECT_MAX);
-
-	// エネミーオブジェクトの作成
+#if 1	// エネミーオブジェクトをデータを元に作成する
+	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 	for (size_t i = 0; enemyDataList.size(); i++)
 	{
-		if (/* プレイヤーの初期位置と近ければ */0)
+		if (1/* 本来はプレイヤーの初期位置と近ければ */)
 		{
 			createEnemy(&enemyDataList[i]);
 		}
 	}
+#endif
 
 	// 描画オブジェクトの作成
 	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
@@ -88,12 +77,15 @@ void EnemyManager::update(float frameTime)
 	{
 		enemyList[i]->update(frameTime);
 
-		// 撃退したエネミーオブジェクトを破棄する
-		if (enemyList[i]->getEnemyData()->isAlive == false)
-		{
-			destroyEnemy(enemyList[i]->getEnemyData()->id);
-		}
+		//// 撃退したエネミーオブジェクトを破棄する
+		//if (enemyList[i]->getEnemyData()->isAlive == false)
+		//{
+		//	destroyEnemy(enemyList[i]->getEnemyData()->id);
+		//}
 	}
+	wolfRenderer->update();
+	tigerRenderer->update();
+	bearRenderer->update();
 }
 
 
@@ -118,11 +110,18 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	switch (enemyData->type)
 	{
 	case WOLF:
+		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL), enemyData);
+		enemy->setAttractor(attractorMesh, attractorMatrix);
+		enemyList.emplace_back(enemy);
+		wolfRenderer->generateObject(enemy);
 		break;
+
 	case TIGER:
 		break;
+
 	case BEAR:
 		break;
+
 	default:
 		break;
 	}
@@ -177,6 +176,16 @@ int EnemyManager::issueNewID()
 	int ans = nextID;
 	nextID++;
 	return ans;
+}
+
+
+//=============================================================================
+// 重力発生メッシュ（接地メッシュ）の設定
+//=============================================================================
+void EnemyManager::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
+{
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
 }
 
 

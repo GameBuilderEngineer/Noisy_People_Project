@@ -179,7 +179,7 @@ void Player::grounding()
 		return;
 	}
 
-	if (radius + difference >= gravityRay.distance)
+	if (radius /*+ difference*/ >= gravityRay.distance)
 	{// プレイヤーは地上に接地している
 		onGround = true;
 

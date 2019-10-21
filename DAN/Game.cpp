@@ -39,8 +39,6 @@ Game::Game()
 	SoundInterface::playSound(playParameters[1]);
 	SoundInterface::playSound(playParameters[2]);
 
-	//エネミーツール
-	enemyTools = new ENEMY_TOOLS;
 }
 
 //===================================================================================================================================
@@ -53,8 +51,6 @@ Game::~Game()
 	SoundInterface::stopSound(playParameters[1]);
 	SoundInterface::stopSound(playParameters[2]);
 
-	//エネミーツール
-	SAFE_DELETE(enemyTools);
 }
 
 //===================================================================================================================================
@@ -136,6 +132,11 @@ void Game::initialize() {
 	//enemy->configurationGravityWithRay(testField->getPosition(), testField->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
 	//-----------------------------------------
 
+	// エネミー
+	enemyManager = new EnemyManager;
+	enemyManager->initialize();
+	enemyManager->setAttractor(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+
 	// ツリー
 	treeManager = new TreeManager;
 	treeManager->initialize();
@@ -170,6 +171,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(treeB);
 	SAFE_DELETE(stone);
 	SAFE_DELETE(testEffect);
+	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(telop);
@@ -187,7 +189,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 0.10)return;
+	//if (frameTime > 0.10)return;
 
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
@@ -200,7 +202,19 @@ void Game::update(float _frameTime) {
 	player->update(frameTime);
 
 	// エネミーの更新
+	enemyManager->update(frameTime);
 	//enemy->update(frameTime);
+	if (input->wasKeyPressed('8'))
+	{
+		enemyNS::EnemyData tinko;
+		tinko.type = enemyNS::WOLF;
+		tinko.position = *player->getPosition();
+		enemyManager->createEnemy(&tinko);
+	}
+	if (input->wasKeyPressed('7'))
+	{
+		enemyManager->destroyAllEnemy();
+	}
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -232,10 +246,6 @@ void Game::update(float _frameTime) {
 	treeB->update();
 	//石の更新
 	stone->update();
-
-	//エネミーツールの更新
-	//enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
-	enemyTools->update();
 
 	//カメラの更新
 	camera->update();
@@ -302,10 +312,8 @@ void Game::render3D(Camera currentCamera) {
 	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// エネミーの描画
+	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//enemy->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	//エネミーツールの描画(test用)
-	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);

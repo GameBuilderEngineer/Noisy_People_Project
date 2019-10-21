@@ -208,6 +208,7 @@
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
@@ -285,6 +286,7 @@
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico" />

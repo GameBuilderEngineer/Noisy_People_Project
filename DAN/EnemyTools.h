@@ -37,7 +37,7 @@ typedef struct	//EFMTチャンク
 	char chunkId[CHUNK_ID];	//チャンクID
 	short size;				//このチャンクのサイズ
 	short enemyId;			//敵のID
-	short enemyType;			//敵の種類
+	short enemyType;		//敵の種類
 	short enemyState;		//敵の状態
 	float posX;				//敵の生成位置(X)
 	float posY;				//敵の生成位置(Y)

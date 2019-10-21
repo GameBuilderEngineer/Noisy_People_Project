@@ -298,8 +298,6 @@ void Create::render3D(Camera currentCamera) {
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #ifdef DEBUG_NAVIMESH
-	// ナビゲーションメッシュの描画
-	naviAI->debugRender();
 #endif
 }
 

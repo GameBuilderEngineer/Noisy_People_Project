@@ -211,6 +211,9 @@ void ENEMY_TOOLS::SetEnemy(short enemyId, short enemyType, short enemyState, con
 //===================================================================================================================================
 void ENEMY_TOOLS::OutputEnemyFile(void)
 {
+	//パス
+	setToolsDirectory();
+
 	FILE	*fp = NULL;					//ファイル
 	fp = fopen(ENEMY_FILE_PATH, "wb");
 

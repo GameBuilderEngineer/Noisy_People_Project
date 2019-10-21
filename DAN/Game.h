@@ -28,7 +28,6 @@
 
 #include "Sound.h"
 #include "SoundBase.h"
-#include "EnemyTools.h"
 //#include "InstancingBillboard.h"
 //#include "GameMaster.h"
 //#include "PointSprite.h"
@@ -82,9 +81,6 @@ private:
 	//InstancingBillboard instancingBillboardTest;
 	TestEffect* testEffect;
 
-	//エネミーツール
-	ENEMY_TOOLS *enemyTools;
-
 	//枯木
 	DeadTree* deadTree;
 	//木Ａ
@@ -124,7 +120,7 @@ private:
 	//DynamicMultiInstancingPlaneTest dmIP
 
 	// エネミー
-	EnemyManager enemyManager;
+	EnemyManager* enemyManager;
 	Enemy* enemy;
 
 	// ツリー
