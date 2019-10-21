@@ -162,3 +162,4 @@ void setDataDirectory();							//ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”		[—p“r]ƒZ[ƒuƒ
 void setVisualDirectory();						//ƒrƒWƒ…ƒAƒ‹ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”	[—p“r]ƒeƒNƒXƒ`ƒƒ‚â3Dƒ‚ƒfƒ‹ƒf[ƒ^‚ğŠi”[‚·‚éƒrƒWƒ…ƒAƒ‹ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
 void setShaderDirectory();						//ƒVƒF[ƒ_[ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”	[—p“r]ƒVƒF[ƒ_[ƒtƒ@ƒCƒ‹‚ğŠi”[‚·‚éƒVƒF[ƒ_[ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
 void setSoundDirectory(int endpointVoiceId);		//ƒTƒEƒ“ƒhƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”		[—p“r]ƒTƒEƒ“ƒhƒf[ƒ^‚ğŠi”[‚·‚éƒTƒEƒ“ƒhƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
+void setToolsDirectory();						//ƒc[ƒ‹ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”		[—p“r]ƒc[ƒ‹ƒf[ƒ^‚ğŠi”[‚·‚éƒc[ƒ‹ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é

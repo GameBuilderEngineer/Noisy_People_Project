@@ -61,7 +61,6 @@ StaticMeshObject::~StaticMeshObject()
 //===================================================================================================================================
 void StaticMeshObject::update()
 {
-
 	for (int i = 0; i < objectNum; i++)
 	{
 		(*objectList->getValue(i))->update();			//XVˆ—

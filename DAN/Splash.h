@@ -15,6 +15,7 @@
 #include "SplashSprite.h"
 #include "Sound.h"
 #include "SoundBase.h"
+#include "EnemyTools.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -42,6 +43,9 @@ private:
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
+
+	//エネミーツール
+	ENEMY_TOOLS *enemyTools;
 
 public:
 	Splash();
