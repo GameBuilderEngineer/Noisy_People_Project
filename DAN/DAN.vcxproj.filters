@@ -202,6 +202,15 @@
     <Filter Include="Game Layer\Scene\Create">
       <UniqueIdentifier>{38969594-a3b8-4c26-be69-77225b90e266}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools Layer\Item">
+      <UniqueIdentifier>{56ac98f0-8c78-4db4-a080-f4a064c6558b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Tree">
+      <UniqueIdentifier>{08416a62-4fc1-438d-9a11-b54dc416b8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\MapObject">
+      <UniqueIdentifier>{78c1c572-0420-4a00-8a77-72463758a48a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -423,6 +432,15 @@
     </ClCompile>
     <ClCompile Include="Create.cpp">
       <Filter>Game Layer\Scene\Create</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemTools.cpp">
+      <Filter>Tools Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeToools.cpp">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectTool.cpp">
+      <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -656,6 +674,15 @@
     </ClInclude>
     <ClInclude Include="Create.h">
       <Filter>Game Layer\Scene\Create</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemTools.h">
+      <Filter>Tools Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeToools.h">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectTool.h">
+      <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
