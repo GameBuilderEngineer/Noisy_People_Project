@@ -178,6 +178,7 @@ public:
 			isRemaining = remove(head->next);
 		}
 		SAFE_DELETE_ARRAY(nodeList);				//ポインタ配列を削除
+		nodeNum = 0;
 	}
 
 };

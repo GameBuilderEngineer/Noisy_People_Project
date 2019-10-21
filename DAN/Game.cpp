@@ -226,6 +226,10 @@ void Game::update(float _frameTime) {
 	{
 		enemyManager->destroyAllEnemy();
 	}
+	if (input->wasKeyPressed('6'))
+	{
+		enemyManager->destroyEnemy(3);
+	}
 
 	// ツリーの更新
 	treeManager->update(frameTime);

@@ -18,11 +18,14 @@ int Enemy::numOfEnemy = 0;			// エネミーの数
 Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 {
 	numOfEnemy++;							// エネミーの数を加算
-	enemyData = _enemyData;					// エネミーデータをセット
+	//enemyData = _enemyData;					// エネミーデータをセット
 
 	difference = DIFFERENCE_FIELD;			// 必要性要検討
 	onGravity = true;
-	position = enemyData->position;
+	enemyData = new EnemyData;
+	enemyData->id = _enemyData->id;
+	enemyData->type = WOLF;
+	position = _enemyData->position;//enemyData->position;
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	friction = 1.0f;

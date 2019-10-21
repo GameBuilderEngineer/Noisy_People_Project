@@ -256,6 +256,7 @@ void StaticMeshObject::allDelete()
 		SAFE_DELETE(*objectList->getValue(i));
 	}
 	objectList->allClear();
+	objectNum = objectList->nodeNum;
 }
 
 //===================================================================================================================================
