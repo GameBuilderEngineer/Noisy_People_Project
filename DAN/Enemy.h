@@ -41,20 +41,20 @@ namespace enemyNS
 	// エネミーの種類
 	enum ENEMY_TYPE
 	{
-		WOLF,
-		TIGER,
-		BEAR,
-		TYPE_MAX
+		WOLF,			// オオカミ
+		TIGER,			// トラ
+		BEAR,			// クマ
+		TYPE_MAX		
 	};
 
 	// ステートの種類
 	enum ENEMY_STATE
 	{
-		CHASE,
-		PATROL,
-		REST,
-		DIE,
-		DEAD,
+		CHASE,			// 追跡ステート
+		PATROL,			// 警戒ステート
+		REST,			// 休憩ステート
+		DIE,			// 死亡ステート
+		DEAD,			// 撃退済み判定
 		STATE_MAX
 	};
 
@@ -110,11 +110,12 @@ namespace enemyNS
 		EnemyData() { numOfEnemyData++; }
 		~EnemyData() { numOfEnemyData--; }
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
-		void revive()
+		void setUp()
 		{
+			state = defaultState;
 			position = defaultPosition;
 			direction = defaultDirection;
-			hp = type > 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
+			hp = type >= 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
 			isAlive = true;
 		}
 		static int getNumOfEnemyData() { return numOfEnemyData; }

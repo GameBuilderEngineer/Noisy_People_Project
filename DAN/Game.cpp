@@ -134,8 +134,7 @@ void Game::initialize() {
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize();
-	enemyManager->setAttractor(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// ツリー
 	treeManager = new TreeManager;
@@ -207,8 +206,11 @@ void Game::update(float _frameTime) {
 	if (input->wasKeyPressed('8'))
 	{
 		enemyNS::EnemyData tinko;
+		tinko.zeroClear();
+		tinko.id = enemyManager->issueNewID();
 		tinko.type = enemyNS::WOLF;
-		tinko.position = *player->getPosition();
+		tinko.defaultPosition = *player->getPosition();
+		tinko.setUp();
 		enemyManager->createEnemy(&tinko);
 	}
 	if (input->wasKeyPressed('7'))

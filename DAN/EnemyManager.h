@@ -38,7 +38,7 @@ private:
 	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
 
 public:
-	void initialize();
+	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
@@ -46,6 +46,5 @@ public:
 	void destroyEnemy(int _id);
 	void destroyAllEnemy();
 	int issueNewID();
-	void setAttractor(LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
 	void outputGUI();
 };

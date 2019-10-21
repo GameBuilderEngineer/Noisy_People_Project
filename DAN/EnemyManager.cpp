@@ -12,40 +12,45 @@ using namespace enemyNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void EnemyManager::initialize()
+void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
+	// 接地フィールド情報をセット
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
+
+	// 描画オブジェクトの作成
+	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+
 #if 1	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
 	enemyDataList.reserve(enemyTools->GetEnemyMax());
 	EnemyData enemyData;
-	for (int i = 0; enemyTools->GetEnemyMax(); i++)
+	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 	{
 		enemyData.id = enemyTools->GetEnemySet(i).id;
 		enemyData.type = enemyTools->GetEnemySet(i).type;
 		enemyData.defaultState = enemyTools->GetEnemySet(i).defaultState;
 		enemyData.defaultPosition = enemyTools->GetEnemySet(i).defaultPosition;
 		enemyData.defaultDirection = enemyTools->GetEnemySet(i).defaultDirection;
+		enemyData.setUp();
 		enemyDataList.push_back(enemyData);
 	}
 	SAFE_DELETE(enemyTools);
-	nextID = enemyDataList.back().id + 1;	// エネミーデータIDの最大値を更新
+	nextID = enemyData.id + 1;	// エネミーデータIDの最大値を更新
 #endif
 
 #if 1	// エネミーオブジェクトをデータを元に作成する
 	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
-	for (size_t i = 0; enemyDataList.size(); i++)
+	for (size_t i = 0; i < enemyDataList.size(); i++)
 	{
-		if (1/* 本来はプレイヤーの初期位置と近ければ */)
+		if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
 		{
 			createEnemy(&enemyDataList[i]);
 		}
 	}
 #endif
-
-	// 描画オブジェクトの作成
-	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
 }
 
 
@@ -180,22 +185,11 @@ int EnemyManager::issueNewID()
 
 
 //=============================================================================
-// 重力発生メッシュ（接地メッシュ）の設定
-//=============================================================================
-void EnemyManager::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
-{
-	attractorMesh = _attractorMesh;
-	attractorMatrix = _attractorMatrix;
-}
-
-
-//=============================================================================
 // ImGuiに出力
 //=============================================================================
 void EnemyManager::outputGUI()
 {
 #ifdef _DEBUG
-
 	if (ImGui::CollapsingHeader("EnemyInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
@@ -222,6 +216,5 @@ void EnemyManager::outputGUI()
 
 		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
-
 #endif
 }
