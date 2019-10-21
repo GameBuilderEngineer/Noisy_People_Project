@@ -96,7 +96,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
+	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_PLANE));
 	testFieldRenderer->generateObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -244,7 +244,6 @@ void Game::update(float _frameTime) {
 		// シーン遷移
 		changeScene(nextScene);
 	}
-
 }
 
 //===================================================================================================================================
@@ -305,7 +304,7 @@ void Game::render3D(Camera currentCamera) {
 
 #ifdef DEBUG_NAVIMESH
 	// ナビゲーションメッシュの描画
-	naviAI->debugRender();
+	naviAI->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
 }
 
