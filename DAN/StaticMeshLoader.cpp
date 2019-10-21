@@ -61,6 +61,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[YAMADA_PLANE]							= { "plane.x" };							//06
 	fileName[YAMADA_ROBOT2]							= { "Robot.x" };							//07
 	fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
+	fileName[SKY_DOME]								= { "domebase.x" };							//09
 }
 
 //===================================================================================================================================
