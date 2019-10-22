@@ -201,7 +201,6 @@ void Game::update(float _frameTime) {
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 0.10)return;
 
-
 	//テストフィールドの更新
 	testField->update();
 	testFieldRenderer->update();

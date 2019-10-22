@@ -170,10 +170,11 @@ void EnemyManager::destroyEnemyData(int _id)
 
 		// 破棄するエネミーデータのIDに無効値を書き込んでおく（※assertDestructionOrder()）
 		enemyDataList.getValue(i)->id = -1;
-
 		// エネミーデータ構造体はノード内にメモリが取られているため
 		// ノードの破棄と合わせてエネミーデータも破棄されている
 		enemyDataList.remove(enemyDataList.getNode(i));
+		// 配列更新
+		enemyDataList.listUpdate();
 		break;
 	}
 
@@ -188,6 +189,8 @@ void EnemyManager::destroyAllEnemyData()
 	// エネミーデータ構造体はノード内にメモリが取られているため
 	// ノードの破棄と合わせてエネミーデータも破棄されている
 	enemyDataList.allClear();
+	// 配列更新
+	enemyDataList.listUpdate();
 }
 
 
