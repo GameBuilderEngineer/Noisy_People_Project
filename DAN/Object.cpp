@@ -18,42 +18,50 @@
 using namespace objectNS;
 
 //===================================================================================================================================
+//【スタティック変数】
+//===================================================================================================================================
+int Object::objectCounter = 0;	//IDの割当に使用
+
+//===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 Object::Object()
 {
-	ZeroMemory(&position, sizeof(D3DXVECTOR3));												//位置
-	quaternion				= D3DXQUATERNION(0, 0, 0, 1);										//回転
-	scale						= D3DXVECTOR3(1.0f,1.0f,1.0f);										//スケール
-	radius					= 0.0f;																				//半径
-	alpha						= 1.0f;																				//α値の設定
+	id					= objectCounter;									//IDの割当
+	objectCounter++;														//オブジェクトカウンターの加算：IDの割当に使用
 
-	ZeroMemory(&speed, sizeof(D3DXVECTOR3));													//速度
+	ZeroMemory(&position, sizeof(D3DXVECTOR3));								//位置
+	quaternion			= D3DXQUATERNION(0, 0, 0, 1);						//回転
+	scale				= D3DXVECTOR3(1.0f,1.0f,1.0f);						//スケール
+	radius				= 0.0f;												//半径
+	alpha				= 1.0f;												//α値の設定
 
-	onGravity				= false;																				//重力フラグ
-	onActive				= true;																				//アクティブフラグ
+	ZeroMemory(&speed, sizeof(D3DXVECTOR3));								//速度
 
-	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));						//x軸
-	axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));						//y軸
-	axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));						//z軸
-	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));			//-x軸
-	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));			//-y軸
-	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));			//-z軸
+	onGravity			= false;											//重力フラグ
+	onActive			= true;												//アクティブフラグ
+
+	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));			//x軸
+	axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));			//y軸
+	axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));			//z軸
+	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));	//-x軸
+	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));	//-y軸
+	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));	//-z軸
 #ifdef _DEBUG
-	axisX.color				= D3DXCOLOR(255, 0, 0, 255);											//x軸カラー
-	axisY.color				= D3DXCOLOR(0, 255, 0, 255);											//y軸カラー
-	axisZ.color				= D3DXCOLOR(0, 0, 255, 255);											//z軸カラー
-	reverseAxisX.color	= D3DXCOLOR(255, 0, 0, 255);											//-x軸カラー
-	reverseAxisY.color	= D3DXCOLOR(0, 255, 0, 255);											//-y軸カラー
-	reverseAxisZ.color	= D3DXCOLOR(0, 0, 255, 255);											//-z軸カラー
+	axisX.color			= D3DXCOLOR(255, 0, 0, 255);						//x軸カラー
+	axisY.color			= D3DXCOLOR(0, 255, 0, 255);						//y軸カラー
+	axisZ.color			= D3DXCOLOR(0, 0, 255, 255);						//z軸カラー
+	reverseAxisX.color	= D3DXCOLOR(255, 0, 0, 255);						//-x軸カラー
+	reverseAxisY.color	= D3DXCOLOR(0, 255, 0, 255);						//-y軸カラー
+	reverseAxisZ.color	= D3DXCOLOR(0, 0, 255, 255);						//-z軸カラー
 #endif // _DEBUG
 
-	ZeroMemory(&matrixPosition, sizeof(D3DXMATRIX));										//位置行列
-	D3DXMatrixIdentity(&matrixRotation);																//回転行列
-	ZeroMemory(&matrixScale, sizeof(D3DXMATRIX));											//スケール行列
-	ZeroMemory(&matrixWorld, sizeof(D3DXMATRIX));											//ワールド行列
+	ZeroMemory(&matrixPosition, sizeof(D3DXMATRIX));						//位置行列
+	D3DXMatrixIdentity(&matrixRotation);									//回転行列
+	ZeroMemory(&matrixScale, sizeof(D3DXMATRIX));							//スケール行列
+	ZeroMemory(&matrixWorld, sizeof(D3DXMATRIX));							//ワールド行列
 
-	existenceTimer = 1.0f;																					//存在時間
+	existenceTimer = 1.0f;													//存在時間
 
 }
 
@@ -135,7 +143,7 @@ void Object::outputGUI()
 		float limitTop		= 1000;
 		float limitBottom	= -1000;
 
-		ImGui::SliderFloat3("position", position, limitBottom, limitTop);					//位置
+		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
 		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);							//スケール
 		ImGui::SliderFloat("radius", &radius, 0, limitTop);										//半径
@@ -169,3 +177,11 @@ void Object::setGravity(D3DXVECTOR3 source, float power)
 void Object::activation()					{ onActive = true;}
 void Object::inActivation()				{ onActive = false;}
 void Object::setAlpha(float value)	{ alpha = value;}
+
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void objectNS::resetCounter()
+{
+	Object::objectCounter = 0;
+}

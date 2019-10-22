@@ -20,6 +20,8 @@ using namespace gameNS;
 //===================================================================================================================================
 Game::Game()
 {
+	objectNS::resetCounter();		//オブジェクトカウンターのリセット
+
 	sceneName = "Scene -Game-";
 
 	nextScene = SceneList::RESULT;
@@ -39,8 +41,6 @@ Game::Game()
 	SoundInterface::playSound(playParameters[1]);
 	SoundInterface::playSound(playParameters[2]);
 
-	//エネミーツール
-	enemyTools = new ENEMY_TOOLS;
 }
 
 //===================================================================================================================================
@@ -53,8 +53,6 @@ Game::~Game()
 	SoundInterface::stopSound(playParameters[1]);
 	SoundInterface::stopSound(playParameters[2]);
 
-	//エネミーツール
-	SAFE_DELETE(enemyTools);
 }
 
 //===================================================================================================================================
@@ -94,6 +92,14 @@ void Game::initialize() {
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView( (D3DX_PI/18) * 9 );
 
+	//エフェクシアーの設定
+	effekseerNS::setProjectionMatrix(
+		camera->fieldOfView, 
+		camera->windowWidth, 
+		camera->windowHeight, 
+		camera->nearZ, 
+		camera->farZ);
+
 	//light
 	light = new Light;
 	light->initialize();
@@ -119,6 +125,8 @@ void Game::initialize() {
 	treeB = new TreeTypeB();
 	//石の初期化
 	stone = new Stone();
+	//スカイドームの初期化
+	sky = new Sky();
 
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
@@ -135,6 +143,10 @@ void Game::initialize() {
 	//enemy->setCamera(camera);	//カメラのセット
 	//enemy->configurationGravityWithRay(testField->getPosition(), testField->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
 	//-----------------------------------------
+
+	// エネミー
+	enemyManager = new EnemyManager;
+	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// ツリー
 	treeManager = new TreeManager;
@@ -161,15 +173,15 @@ void Game::initialize() {
 void Game::uninitialize() {
 	SAFE_DELETE(camera);
 	SAFE_DELETE(light);
-	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
-	SAFE_DELETE(player);
 	SAFE_DELETE(playerRenderer);
 	SAFE_DELETE(deadTree);
 	SAFE_DELETE(treeA);
 	SAFE_DELETE(treeB);
 	SAFE_DELETE(stone);
+	SAFE_DELETE(sky);
 	SAFE_DELETE(testEffect);
+	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(telop);
@@ -189,9 +201,6 @@ void Game::update(float _frameTime) {
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 0.10)return;
 
-	//エフェクト（インスタンシング）テスト
-	testEffect->update(frameTime);
-
 	//テストフィールドの更新
 	testField->update();
 	testFieldRenderer->update();
@@ -200,7 +209,32 @@ void Game::update(float _frameTime) {
 	player->update(frameTime);
 
 	// エネミーの更新
-	//enemy->update(frameTime);
+	enemyManager->update(frameTime);
+#ifdef _DEBUG
+	if (input->wasKeyPressed('8'))	// 作成
+	{
+		enemyNS::ENEMYSET tinko =
+		{
+			enemyManager->issueNewID(),
+			enemyNS::WOLF,
+			enemyNS::CHASE,
+			*player->getPosition(),
+			D3DXVECTOR3(0, 0, 0)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
+		enemyManager->createEnemy(p);
+	}
+	if (input->wasKeyPressed('7'))	// 全破棄
+	{
+		enemyManager->destroyAllEnemy();
+		enemyManager->destroyAllEnemyData();
+	}
+	if (input->wasKeyPressed('6'))	
+	{
+		enemyManager->destroyEnemy(3);
+		enemyManager->destroyEnemyData(3);
+	}
+#endif
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -215,6 +249,17 @@ void Game::update(float _frameTime) {
 	{
 		itemManager->destroyAllItem();
 	}
+
+	//エフェクトの再生
+	if (input->wasKeyPressed('1'))
+	{
+		effekseerNS::play(effekseerNS::TEST0, *player->getPosition());
+	}
+	if (input->wasKeyPressed('2'))
+	{
+		effekseerNS::play(effekseerNS::TEST1, *player->getPosition());
+	}
+
 	itemManager->update(frameTime);
 
 	// テロップの更新
@@ -232,10 +277,12 @@ void Game::update(float _frameTime) {
 	treeB->update();
 	//石の更新
 	stone->update();
+	//スカイドームの更新
+	sky->update();
 
-	//エネミーツールの更新
-	//enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
-	enemyTools->update();
+	//エフェクト（インスタンシング）テスト
+	testEffect->update(frameTime);
+
 
 	//カメラの更新
 	camera->update();
@@ -252,7 +299,6 @@ void Game::update(float _frameTime) {
 		// シーン遷移
 		changeScene(nextScene);
 	}
-
 }
 
 //===================================================================================================================================
@@ -260,15 +306,19 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 void Game::render() {	
 		
-	//1Pカメラ・ウィンドウ
+	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	camera->renderReady();
 	direct3D9->changeViewport1PWindow();
 	render3D(*camera);
+	effekseerNS::setCameraMatrix(camera->position, camera->gazePosition, camera->upVector);
+	effekseerNS::render();
 
-	//2Pカメラ・ウィンドウ
+	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	camera->renderReady();
 	direct3D9->changeViewport2PWindow();
 	render3D(*camera);
+	effekseerNS::setCameraMatrix(camera->position, camera->gazePosition, camera->upVector);
+	effekseerNS::render();
 
 	//UI
 	direct3D9->changeViewportFullWindow();
@@ -279,7 +329,6 @@ void Game::render() {
 //【3D描画】
 //===================================================================================================================================
 void Game::render3D(Camera currentCamera) {
-
 
 	//テストフィールドの描画
 	testField->setAlpha(0.1f); 
@@ -301,12 +350,12 @@ void Game::render3D(Camera currentCamera) {
 	treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//石の描画
 	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//スカイドームの描画
+	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// エネミーの描画
+	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//enemy->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	//エネミーツールの描画(test用)
-	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -316,7 +365,7 @@ void Game::render3D(Camera currentCamera) {
 
 #ifdef DEBUG_NAVIMESH
 	// ナビゲーションメッシュの描画
-	naviAI->debugRender();
+	naviAI->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
 }
 
@@ -375,11 +424,10 @@ void Game::createGUI()
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
 	player->outputGUI();			//プレイヤー
-	//enemy->outputGUI();			//エネミー
+	enemyManager->outputGUI();		// エネミーマネージャ
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	naviAI->outputGUI();			//ナビゲーションAI
-
 }
 #endif // _DEBUG

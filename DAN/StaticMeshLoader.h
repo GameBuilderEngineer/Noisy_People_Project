@@ -68,6 +68,7 @@ namespace staticMeshNS {
 		YAMADA_PLANE,							//06
 		DICE,									//07
 		YAMADA_TEST_ZONE,						//08
+		SKY_DOME,								//09
 
 		MESH_NUM,								//NUM
 	};

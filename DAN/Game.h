@@ -24,15 +24,12 @@
 #include "TreeManager.h"
 #include "ItemManager.h"
 #include "Telop.h"
-
+#include "Sky.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
-#include "EnemyTools.h"
-//#include "InstancingBillboard.h"
 //#include "GameMaster.h"
 //#include "PointSprite.h"
-
 //#include "Object.h"
 //#include "Text.h"
 
@@ -45,10 +42,10 @@ namespace gameNS
 	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,15.0f,-15.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,5.0f,5.0f,0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10.0f,0);
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,5.0f,0);
 
 	//const int NUM_SAMPLE = 1000;
 
@@ -80,9 +77,6 @@ private:
 	//InstancingBillboard instancingBillboardTest;
 	TestEffect* testEffect;
 
-	//エネミーツール
-	ENEMY_TOOLS *enemyTools;
-
 	//枯木
 	DeadTree* deadTree;
 	//木Ａ
@@ -91,6 +85,8 @@ private:
 	TreeTypeB* treeB;
 	//石
 	Stone* stone;
+	//スカイドーム
+	Sky* sky;
 
 	//色々なオブジェクトの描画サンプルテスト
 
@@ -122,7 +118,7 @@ private:
 	//DynamicMultiInstancingPlaneTest dmIP
 
 	// エネミー
-	EnemyManager enemyManager;
+	EnemyManager* enemyManager;
 	Enemy* enemy;
 
 	// ツリー
@@ -161,12 +157,13 @@ public:
 
 
 //===================================================================================================================================
-//【ビルドスイッチ】
+//【デバッグ】
 //===================================================================================================================================
 #ifdef _DEBUG
 
 #if 1	// ここを1でナビメッシュデバッグモード
 #define DEBUG_NAVIMESH
 #endif
+
 
 #endif// _DEBUG

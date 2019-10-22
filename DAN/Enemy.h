@@ -15,6 +15,7 @@
 //=============================================================================
 namespace enemyNS
 {
+#if _DEBUG
 	struct OperationKeyTable
 	{
 		BYTE front;
@@ -36,25 +37,25 @@ namespace enemyNS
 		VK_F11,		// ReverseCameraAxisX
 		VK_F12,		// ReverseCameraAxisY
 	};
-
+#endif //_DEBUG
 
 	// エネミーの種類
 	enum ENEMY_TYPE
 	{
-		WOLF,
-		TIGER,
-		BEAR,
-		TYPE_MAX
+		WOLF,			// オオカミ
+		TIGER,			// トラ
+		BEAR,			// クマ
+		TYPE_MAX		
 	};
 
 	// ステートの種類
 	enum ENEMY_STATE
 	{
-		CHASE,
-		PATROL,
-		REST,
-		DIE,
-		DEAD,
+		CHASE,			// 追跡ステート
+		PATROL,			// 警戒ステート
+		REST,			// 休憩ステート
+		DIE,			// 死亡ステート
+		DEAD,			// 撃退済み判定
 		STATE_MAX
 	};
 
@@ -105,19 +106,16 @@ namespace enemyNS
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 		int hp;							// HP
 		bool isAlive;					// 生存フラグ
-		static int numOfEnemyData;		// エネミーデータの数
 
-		EnemyData() { numOfEnemyData++; }
-		~EnemyData() { numOfEnemyData--; }
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
-		void revive()
+		void setUp()
 		{
+			state = defaultState;
 			position = defaultPosition;
 			direction = defaultDirection;
-			hp = type > 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
+			hp = type >= 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
 			isAlive = true;
 		}
-		static int getNumOfEnemyData() { return numOfEnemyData; }
 	};
 }
 
@@ -139,12 +137,7 @@ private:
 	bool onGroundBefore;				// 直前フレームの接地判定
 	float friction;
 
-	//// 経路探索
-	//std::vector<D3DXVECTOR3> routeStack;// 経路スタック
-
-
 #ifdef _DEBUG
-#endif
 	// デバッグ用
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
 	Camera*	camera;						// 操作するカメラへのポインタ
@@ -152,6 +145,7 @@ private:
 	enemyNS::OperationKeyTable keyTable;// 操作キーテーブル
 	float reverseValueXAxis;			// 操作X軸
 	float reverseValueYAxis;			// 操作Y軸
+#endif	//_DEBUG
 
 	void previousWork();				// 事前処理
 	virtual void chase() = 0;			//「追跡」ステート
@@ -160,25 +154,16 @@ private:
 	virtual void die() = 0;				//「死亡」ステート
 
 
-	void sensor();
-
-
 public:
-	Enemy();
-	~Enemy();
-	virtual void update(float frameTime);
-	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-
 	BoundingSphere sphereCollider;		// バウンディングスフィア
 
-	void damage();
-
-
-
-	void groundingWork();
-	void updatePhysicalBehavior();
+	Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
+	~Enemy();
+	virtual void update(float frameTime);
+	void grounding();
+	void physicalBehavior();
 	void updatePhysics(float frameTime);
-	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
+	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void outputGUI();
 
 	// Debug
@@ -195,5 +180,6 @@ public:
 	//setter
 	void setDataToEnemy(enemyNS::EnemyData* _enemyData);	// エネミーデータをエネミーに設定
 	void setCamera(Camera* _camera);						// 操作対象カメラのセット
+	static void resetNumOfEnemy();							// エネミーの数をリセットする
 
 };

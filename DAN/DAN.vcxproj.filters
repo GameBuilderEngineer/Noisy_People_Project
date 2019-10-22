@@ -199,6 +199,18 @@
     <Filter Include="Constant Layer\Text">
       <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Effekseer">
+      <UniqueIdentifier>{e49c7731-b0af-4124-b614-501370a0edcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Sky">
+      <UniqueIdentifier>{37485a13-b7c2-4de1-b39d-b550dff2fc37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\05 Effekseer File">
+      <UniqueIdentifier>{9e393723-fc8e-47da-809d-422b95ec02be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\NaviAI">
+      <UniqueIdentifier>{accd5b1a-788b-44e1-b16a-3215bd8aed77}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game Layer\Scene\Create">
       <UniqueIdentifier>{38969594-a3b8-4c26-be69-77225b90e266}</UniqueIdentifier>
     </Filter>
@@ -351,9 +363,6 @@
     <ClCompile Include="EnemyManager.cpp">
       <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="NavigationMesh.cpp">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
@@ -389,9 +398,6 @@
     </ClCompile>
     <ClCompile Include="ItemManager.cpp">
       <Filter>Game Layer\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexAccessor.cpp">
-      <Filter>Constant Layer\UtilityFunction</Filter>
     </ClCompile>
     <ClCompile Include="telop.cpp">
       <Filter>Game Layer\Tlop</Filter>
@@ -430,8 +436,35 @@
     <ClCompile Include="ResultUIcpp.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
     </ClCompile>
+    <ClCompile Include="EffekseerManager.cpp">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky.cpp">
+      <Filter>Game Layer\Sky</Filter>
+    </ClCompile>
     <ClCompile Include="Create.cpp">
       <Filter>Game Layer\Scene\Create</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationMesh.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexAccessor.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="AStar.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshData.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiger.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Bear.cpp">
+      <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="ItemTools.cpp">
       <Filter>Tools Layer\Item</Filter>
@@ -591,9 +624,6 @@
     <ClInclude Include="EnemyManager.h">
       <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="NavigationMesh.h">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
@@ -629,9 +659,6 @@
     </ClInclude>
     <ClInclude Include="ItemManager.h">
       <Filter>Game Layer\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexAccessor.h">
-      <Filter>Constant Layer\UtilityFunction</Filter>
     </ClInclude>
     <ClInclude Include="telop.h">
       <Filter>Game Layer\Tlop</Filter>
@@ -672,8 +699,44 @@
     <ClInclude Include="TestEffect.h">
       <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
+    <ClInclude Include="EffekseerManager.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\Effekseer.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerRendererDX9.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerSoundXAudio2.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky.h">
+      <Filter>Game Layer\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationMesh.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexAccessor.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
     <ClInclude Include="Create.h">
       <Filter>Game Layer\Scene\Create</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiger.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h">
+      <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="ItemTools.h">
       <Filter>Tools Layer\Item</Filter>

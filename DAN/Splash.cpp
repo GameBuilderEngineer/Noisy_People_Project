@@ -2,12 +2,12 @@
 //【Splash.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/23
+// [更新日]2019/10/21
 //===================================================================================================================================
 #include "Splash.h"
 
 //===================================================================================================================================
-// 【using宣言】
+//【using宣言】
 //===================================================================================================================================
 using namespace splashNS;
 
@@ -34,6 +34,9 @@ Splash::Splash()
 	SoundInterface::playSound(playParameters[0]);
 	SoundInterface::playSound(playParameters[1]);
 
+	//エフェクシアーテスト
+	effekseerNS::setProjectionMatrix(90.0f / 180.0f * 3.14f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 10000.0f);
+
 	enemyTools = new ENEMY_TOOLS;
 }
 
@@ -45,6 +48,8 @@ Splash::~Splash()
 	//サウンドの停止
 	SoundInterface::stopSound(playParameters[0]);
 	SoundInterface::stopSound(playParameters[1]);
+
+	effekseerNS::stop(effekseerNS::TEST0);
 }
 
 //===================================================================================================================================
@@ -80,10 +85,15 @@ void Splash::update(float _frameTime)
 	sceneTimer += _frameTime;						//シーンタイムの更新
 	frameTime = _frameTime;							//フレームタイムの保存
 
-	// スプラッシュ2D更新
+	//スプラッシュ2D更新
 	float rate = sceneTimer / SCENE_TIME;
 	splashSprite->update(rate);
 
+	//エフェクトの再生
+	if (input->wasKeyPressed('1'))
+	{
+		effekseerNS::play(effekseerNS::TEST0,D3DXVECTOR3(0,0,0));
+	}
 
 	//Enter,Spaceまたは〇ボタン,Optionsでタイトルへ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -108,6 +118,10 @@ void Splash::render()
 {
 	//描画対象をウィンドウ全体に切替
 	direct3D9->changeViewportFullWindow();
+
+	//エフェクシアーテスト
+	effekseerNS::setCameraMatrix(D3DXVECTOR3(10.0f, 5.0f, 20.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	effekseerNS::render();
 
 	//UI
 	renderUI();

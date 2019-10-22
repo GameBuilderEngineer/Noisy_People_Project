@@ -91,7 +91,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Effekseer\Compiled\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ProjectDir)Effekseer\Compiled\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -109,10 +115,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Effekseer\Compiled\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(ProjectDir)Effekseer\Compiled\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,8 +143,10 @@
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="AIDirector.h" />
     <ClInclude Include="AnalogTree.h" />
+    <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Battery.h" />
+    <ClInclude Include="Bear.h" />
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
@@ -146,6 +158,10 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="EffekseerManager.h" />
+    <ClInclude Include="Effekseer\Compiled\include\Effekseer.h" />
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerRendererDX9.h" />
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerSoundXAudio2.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EventMaker.h" />
@@ -157,11 +173,13 @@
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="ItemTools.h" />
     <ClInclude Include="MapObjectTool.h" />
+    <ClInclude Include="MeshData.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="OperationGenerator.h" />
     <ClInclude Include="ResultUI.h" />
     <ClInclude Include="SE.h" />
     <ClInclude Include="Sensor.h" />
+    <ClInclude Include="Sky.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="ImguiManager.h" />
@@ -196,6 +214,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Tiger.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TreeToools.h" />
     <ClInclude Include="TreeTypeA.h" />
@@ -209,13 +228,16 @@
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="AIDirector.cpp" />
     <ClCompile Include="AnalogTree.cpp" />
+    <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Battery.cpp" />
+    <ClCompile Include="Bear.cpp" />
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -227,6 +249,7 @@
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="EffekseerManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Entry.cpp" />
@@ -250,6 +273,7 @@
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="MapObjectTool.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
+    <ClCompile Include="MeshData.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OperationGenerator.cpp" />
@@ -261,6 +285,7 @@
     <ClCompile Include="SE.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
+    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="EnemyTools.cpp" />
     <ClCompile Include="SoundBase.cpp" />
@@ -275,6 +300,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TreeToools.cpp" />
@@ -287,6 +313,7 @@
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico" />

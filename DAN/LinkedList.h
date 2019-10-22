@@ -92,16 +92,16 @@ public:
 
 	//===================================================================================================================================
 	//【指定ノードの後ろに挿入】
-	// Prev0		:	[node	]	[target]		[node	]					:処理前の着目ノード位置
+	// Prev0	:	[node	]	[target]		[node	]				:処理前の着目ノード位置
 	// Next1	:	[node	]	[target]		[newNode]	[node	]	:着目ノードの次に新規追加
-	// Next2	:	[node	]	[node	]	[target]		[node	]	:新規ノードを着目ノードへ変更
+	// Next2	:	[node	]	[node  ]		[target ]	[node	]	:新規ノードを着目ノードへ変更
 	//===================================================================================================================================
 	void insertAfter(Node<T>* target)
 	{
 		//着目ノードの次の位置に新規追加
 		Node<T>* newNode = new Node<T>;
 		Node<T>* nextNode = target->next;					//変更前に対象ノードの次ノード保存する
-		target->next = target->next->prev = newNode;	//新規ノードの挿入
+		target->next = target->next->prev = newNode;		//新規ノードの挿入
 		setNode(newNode, target, nextNode);					//新規ノードのセット
 		nodeNum++;
 	}
@@ -178,6 +178,7 @@ public:
 			isRemaining = remove(head->next);
 		}
 		SAFE_DELETE_ARRAY(nodeList);				//ポインタ配列を削除
+		nodeNum = 0;
 	}
 
 };

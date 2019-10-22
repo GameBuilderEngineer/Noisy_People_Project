@@ -18,6 +18,7 @@
 #include "Light.h"
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
+#include "EffekseerManager.h"
 //#include "ShaderLoader.h"
 //#include "TextManager.h"
 //#include "GameMaster.h"
@@ -54,11 +55,6 @@ protected:
 	Input* input;
 	Camera* camera;
 	Light* light;
-	//TextureLoader* textureLoader;
-	//StaticMeshLoader* staticMeshLoader;
-	//ShaderLoader* shaderLoader;
-	//AnimationLoader* animationLoader;
-	//TextManager* textManager;
 	//GameMaster* gameMaster;
 	float sceneTimer;
 	float frameTime = 0.0f;//フレームタイム保存変数
