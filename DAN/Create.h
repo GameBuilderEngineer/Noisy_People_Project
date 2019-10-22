@@ -1,6 +1,6 @@
 //===================================================================================================================================
 //【Create.h】
-// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成者]HAL東京GP12A332 16 蔡 友剛
 // [作成日]2019/09/20
 // [更新日]2019/10/18
 //===================================================================================================================================
@@ -11,7 +11,7 @@
 //===================================================================================================================================
 #include <vector>
 #include "AbstractScene.h"
-#include "Player.h"
+#include "TmpObject.h"
 #include "StaticMeshObject.h"
 #include "Stone.h"
 #include "DeadTree.h"
@@ -70,8 +70,8 @@ private:
 	//Object testCube;					//Sample
 
 	//プレイヤー
-	Player *player;
-	StaticMeshObject* playerRenderer;
+	TmpObject *tmpObject;
+	StaticMeshObject* tmpObjRenderer[5];
 
 	//フィールド
 	Object* testField;

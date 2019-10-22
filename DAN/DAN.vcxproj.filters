@@ -475,6 +475,9 @@
     <ClCompile Include="MapObjectTool.cpp">
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
+    <ClCompile Include="TmpObject.cpp">
+      <Filter>Game Layer\Scene\Create</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -746,6 +749,9 @@
     </ClInclude>
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TmpObject.h">
+      <Filter>Game Layer\Scene\Create</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

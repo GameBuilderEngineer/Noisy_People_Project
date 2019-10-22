@@ -216,6 +216,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Tiger.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="TmpObject.h" />
     <ClInclude Include="TreeToools.h" />
     <ClInclude Include="TreeTypeA.h" />
     <ClInclude Include="TreeTypeB.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
+    <ClCompile Include="TmpObject.cpp" />
     <ClCompile Include="TreeToools.cpp" />
     <ClCompile Include="TreeTypeA.cpp" />
     <ClCompile Include="TreeTypeB.cpp" />

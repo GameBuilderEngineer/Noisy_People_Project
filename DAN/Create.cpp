@@ -1,6 +1,6 @@
 //===================================================================================================================================
 //【Create.cpp】
-// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成者]HAL東京GP12A332 16 蔡 友剛
 // [作成日]2019/09/20
 // [更新日]2019/10/18
 //===================================================================================================================================
@@ -51,16 +51,16 @@ Create::~Create()
 //===================================================================================================================================
 void Create::initialize() {
 
-	//player
-	player = new Player;
+	//tmpObj
+	tmpObject = new TmpObject;
 
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	camera->setTarget(player->getPosition());
-	camera->setTargetX(&player->getAxisX()->direction);
-	camera->setTargetY(&player->getAxisY()->direction);
-	camera->setTargetZ(&player->getAxisZ()->direction);
+	camera->setTarget(tmpObject->getPosition());
+	camera->setTargetX(&tmpObject->getAxisX()->direction);
+	camera->setTargetY(&tmpObject->getAxisY()->direction);
+	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
 	camera->setRelative(CAMERA_RELATIVE_QUATERNION);
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
@@ -78,11 +78,35 @@ void Create::initialize() {
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//プレイヤーの初期化
-	player->initialize(inputNS::DINPUT_1P, 0);
-	player->setCamera(camera);	//カメラポインタのセット
-	playerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
-	playerRenderer->generateObject(player);
-	player->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
+	tmpObject->initialize(inputNS::DINPUT_1P, 0);
+	tmpObject->setCamera(camera);	//カメラポインタのセット
+	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
+	{
+		int staticMeshNo = 0;
+		switch (i)
+		{
+		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER:
+			staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
+			break;
+		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_WOLF:
+			staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
+			break;
+		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_TIGER:
+			staticMeshNo = staticMeshNS::SAMPLE_BUNNY;
+			break;
+		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_BEAR:
+			staticMeshNo = staticMeshNS::SAMPLE_HAT;
+			break;
+		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_BATTERY:
+			staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
+			break;
+		default:
+			break;
+		}
+		tmpObjRenderer[i] = new StaticMeshObject(staticMeshNS::reference(staticMeshNo));
+		tmpObjRenderer[i]->generateObject(tmpObject);
+	}
+	tmpObject->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
 
 	//枯木の初期化
 	deadTree = new DeadTree();
@@ -126,7 +150,10 @@ void Create::uninitialize() {
 	//SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
 	//SAFE_DELETE(player);
-	SAFE_DELETE(playerRenderer);
+	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
+	{
+		SAFE_DELETE(tmpObjRenderer[i]);
+	}
 	SAFE_DELETE(deadTree);
 	SAFE_DELETE(treeA);
 	SAFE_DELETE(treeB);
@@ -158,7 +185,7 @@ void Create::update(float _frameTime) {
 	testFieldRenderer->update();
 
 	//エネミーツールの更新
-	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+	enemyTools->outputEnemyToolsGUI(*tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 	if (enemyTools->resetEnemy)
 	{
 		//最新のenemy.enemyの読み込み
@@ -167,10 +194,10 @@ void Create::update(float _frameTime) {
 	}
 
 	//アイテムツールの更新
-	itemTools->outputItemToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+	itemTools->outputItemToolsGUI(*tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 
 	//プレイヤーの更新
-	player->update(frameTime);
+	tmpObject->update(frameTime);
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
@@ -181,7 +208,7 @@ void Create::update(float _frameTime) {
 	// アイテムの更新
 	if (input->wasKeyPressed('0'))
 	{
-		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
+		itemNS::ItemData unko = { 0, itemNS::BATTERY, *tmpObject->getPosition() };
 		itemManager->createItem(&unko);
 	}
 	if (input->wasKeyPressed('9'))
@@ -192,7 +219,10 @@ void Create::update(float _frameTime) {
 
 	////カメラの更新
 	//camera->update();
-	playerRenderer->update();
+	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
+	{
+		tmpObjRenderer[i]->update();
+	}
 
 	//枯木の更新
 	deadTree->update();
@@ -263,9 +293,9 @@ void Create::render3D(Camera currentCamera) {
 	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
-	playerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	tmpObjRenderer[tmpObject->getItemListboxMesh()]->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
-	player->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+	tmpObject->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//枯木の描画
 	deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -313,10 +343,10 @@ void Create::collisions()
 	std::vector<Item*> itemList = itemManager->getList();
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
-		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
-			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
+		if (itemList[i]->sphereCollider.collide(tmpObject->getBodyCollide()->getCenter(),
+			tmpObject->getRadius(), *itemList[i]->getMatrixWorld(), *tmpObject->getMatrixWorld()))
 		{
-			player->addSpeed(D3DXVECTOR3(0, 10, 0));
+			tmpObject->addSpeed(D3DXVECTOR3(0, 10, 0));
 		}
 	}
 }
@@ -338,7 +368,7 @@ void Create::createGUI()
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
-	player->outputGUI();			//プレイヤー
+	tmpObject->outputGUI();			//プレイヤー
 	//enemy->outputGUI();			//エネミー
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
