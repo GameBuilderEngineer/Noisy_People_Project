@@ -4,6 +4,7 @@
 // çÏê¨äJénì˙ : 2019/10/4
 //-----------------------------------------------------------------------------
 #pragma once
+#include "Base.h"
 #include <vector>
 #include "LinkedList.h"
 #include "EnemyTools.h"
@@ -45,10 +46,14 @@ public:
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	enemyNS::EnemyData* createEnemyData(enemyNS::ENEMYSET enemySetting);
 	void createEnemy(enemyNS::EnemyData* enemyData);
+	void destroyEnemyData(int _id);
+	void destroyAllEnemyData();
 	void destroyEnemy(int _id);
 	void destroyAllEnemy();
+	void assertDestructionOrder();
 	int issueNewID();
 	void outputGUI();
+	void relocateEnemyAccordingToFile();
 
 	// Getter
 	LinkedList<enemyNS::EnemyData>* getEnemyDataList();

@@ -214,24 +214,30 @@ void Game::update(float _frameTime) {
 #ifdef _DEBUG
 	if (input->wasKeyPressed('8'))	// ì¬
 	{
-		enemyNS::EnemyData temp;
-		temp.zeroClear();
-		temp.id = enemyManager->issueNewID();
-		temp.type = enemyNS::TIGER;
-		temp.defaultPosition = *player->getPosition();
-		temp.setUp();
-		enemyManager->getEnemyDataList()->insertFront(temp);
-		enemyManager->getEnemyDataList()->listUpdate();
-		enemyManager->createEnemy(enemyManager->getEnemyDataList()->getValue(0));
+		enemyNS::ENEMYSET tinko =
+		{
+			enemyManager->issueNewID(),
+			enemyNS::WOLF,
+			enemyNS::CHASE,
+			*player->getPosition(),
+			D3DXVECTOR3(0, 0, 0)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
+		enemyManager->createEnemy(p);
 	}
 	if (input->wasKeyPressed('7'))	// ‘S”jŠü
 	{
 		enemyManager->destroyAllEnemy();
-		enemyManager->getEnemyDataList()->allClear();
+		enemyManager->destroyAllEnemyData();
 	}
 	if (input->wasKeyPressed('6'))	
 	{
 		enemyManager->destroyEnemy(3);
+		enemyManager->destroyEnemyData(3);
+	}
+	if (input->wasKeyPressed('5'))
+	{
+		enemyManager->relocateEnemyAccordingToFile();
 	}
 #endif
 

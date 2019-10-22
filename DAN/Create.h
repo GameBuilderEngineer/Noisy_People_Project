@@ -121,21 +121,13 @@ private:
 	//DynamicMultiInstancingPlaneTest dmIP
 
 	// エネミー
-	EnemyManager enemyManager;
-	Enemy* enemy;
+	EnemyManager* enemyManager;
 
 	// ツリー
 	TreeManager* treeManager;
 
 	// アイテム
 	ItemManager* itemManager;
-
-	// テロップ
-	Telop* telop;
-
-	// AI
-	AIDirector* aiDirector;
-	NavigationMesh* naviAI;
 
 public:
 	Create();
@@ -154,15 +146,3 @@ public:
 	virtual void createGUI() override;
 #endif
 };
-
-
-//===================================================================================================================================
-//【ビルドスイッチ】
-//===================================================================================================================================
-#ifdef _DEBUG
-
-#if 1	// ここを1でナビメッシュデバッグモード
-#define DEBUG_NAVIMESH
-#endif
-
-#endif// _DEBUG

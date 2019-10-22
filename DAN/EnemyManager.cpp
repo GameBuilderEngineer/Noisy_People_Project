@@ -3,6 +3,7 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
+#include <cassert>
 #include "EnemyManager.h"
 #include "ImguiManager.h"
 #include "EnemyTools.h"
@@ -14,8 +15,9 @@ using namespace enemyNS;
 //=============================================================================
 void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-	nextID = 0;
-	Enemy::resetNumOfEnemy();
+	nextID = 0;								// 次回発行IDを0に初期化
+	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
+	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 
 	// 接地フィールド情報をセット
 	attractorMesh = _attractorMesh;
@@ -25,7 +27,6 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
 	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_BUNNY));
 	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_HAT));
-
 
 #if 1	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
@@ -37,7 +38,6 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 #endif
 
 #if 1	// エネミーオブジェクトをツールデータを元に作成する
-	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 	for (size_t i = 0; i < enemyDataList.nodeNum; i++)
 	{
 		if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
@@ -54,22 +54,17 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 //=============================================================================
 void EnemyManager::uninitialize()
 {
-
-	//for (int i = 0; i < objectNum; i++)
-	//{
-	//	SAFE_DELETE(*objectList->getValue(i));
-	//}
-	//objectList->allClear();
-	//objectNum = objectList->nodeNum;
-
-	// 全エネミーオブジェクトを破棄
+	// 全てのエネミーオブジェクトを破棄
 	destroyAllEnemy();
+
+	// 全てのエネミーデータを破棄
+	destroyAllEnemyData();
 
 	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Enemy*> temp;
 	enemyList.swap(temp);
 
-	// 描画オブジェクトの破棄
+	// 描画オブジェクトを破棄
 	SAFE_DELETE(wolfRenderer);
 	SAFE_DELETE(tigerRenderer);
 	SAFE_DELETE(bearRenderer);
@@ -132,7 +127,7 @@ enemyNS::EnemyData* EnemyManager::createEnemyData(enemyNS::ENEMYSET enemySetting
 
 
 //=============================================================================
-// エネミーオブジェクトの作成
+// エネミーオブジェクトを作成
 //=============================================================================
 void EnemyManager::createEnemy(EnemyData* enemyData)
 {
@@ -165,7 +160,39 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 
 
 //=============================================================================
-// エネミーオブジェクトの破棄
+// エネミーデータの破棄
+//=============================================================================
+void EnemyManager::destroyEnemyData(int _id)
+{
+	for (int i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		if (enemyDataList.getValue(i)->id != _id) { continue; }
+
+		// 破棄するエネミーデータのIDに無効値を書き込んでおく（※assertDestructionOrder()）
+		enemyDataList.getValue(i)->id = -1;
+
+		// エネミーデータ構造体はノード内にメモリが取られているため
+		// ノードの破棄と合わせてエネミーデータも破棄されている
+		enemyDataList.remove(enemyDataList.getNode(i));
+		break;
+	}
+
+}
+
+
+//=============================================================================
+// 全てのエネミーデータを破棄
+//=============================================================================
+void EnemyManager::destroyAllEnemyData()
+{
+	// エネミーデータ構造体はノード内にメモリが取られているため
+	// ノードの破棄と合わせてエネミーデータも破棄されている
+	enemyDataList.allClear();
+}
+
+
+//=============================================================================
+// エネミーオブジェクトを破棄
 //=============================================================================
 void EnemyManager::destroyEnemy(int _id)
 {
@@ -189,12 +216,16 @@ void EnemyManager::destroyEnemy(int _id)
 		}
 		enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
 		break;
-	}	
+	}
+
+#ifdef _DEBUG
+	assertDestructionOrder();
+#endif//_DEBUG
 }
 
 
 //=============================================================================
-// 全エネミーオブジェクトの破棄
+// 全てのエネミーオブジェクトを破棄
 //=============================================================================
 void EnemyManager::destroyAllEnemy()
 {
@@ -202,6 +233,35 @@ void EnemyManager::destroyAllEnemy()
 	tigerRenderer->allDelete();
 	bearRenderer->allDelete();
 	enemyList.clear();	// ベクター要素数を0にする
+
+#ifdef _DEBUG
+	assertDestructionOrder();
+#endif//_DEBUG
+}
+
+
+//=============================================================================
+// 破棄順序違反
+//=============================================================================
+void EnemyManager::assertDestructionOrder()
+{
+	// エネミーの参照先のエネミーデータがエネミーデータリストにない場合のアサーション
+	// 先にデータを破棄して後にエネミーを破棄しようとする場合に該当する
+	int cnt = 0;
+	for (int i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		for (int k = 0; k < enemyList.size(); k++)
+		{
+			// エネミーデータ単体を破棄する際にIDに無効値が書き込まれているため
+			// 解放済みのメモリにデータが残っていたとしても下記if文条件は偽となる
+			if (enemyDataList.getValue(i)->id == enemyList[k]->getEnemyData()->id)
+			{
+				cnt++;
+			}
+		}
+	}
+	assert(cnt == enemyList.size());
+	assert(enemyDataList.nodeNum >= enemyList.size());
 }
 
 
@@ -225,30 +285,43 @@ void EnemyManager::outputGUI()
 	if (ImGui::CollapsingHeader("EnemyInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		//ImGui::Text("numOfEnemyData:%d\n", EnemyData::getNumOfEnemyData());
-		ImGui::Text("nodeNum:%d\n", enemyDataList.nodeNum);
-		ImGui::Text("nextID:%d\n", nextID);
-		ImGui::Text("numOfEnemy:%d\n", Enemy::getNumOfEnemy());
-
-		//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-		//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-		//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-		//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-		//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-		//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-		//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
-
-		//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-		//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-		//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-		//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
-
-		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
+		ImGui::Text("enemyDataList.nodeNum:%d\n", enemyDataList.nodeNum);
+		ImGui::Text("enemyList.size()     :%d\n", enemyList.size());
+		ImGui::Text("numOfEnemy           :%d\n", Enemy::getNumOfEnemy());
+		ImGui::Text("nextID				　:%d\n", nextID);
+		//for (int i = 0; i < enemyList.size(); i++)
+		//{
+		//	ImGui::Text("%d", enemyList[i]->getEnemyData()->id);
+		//}
 	}
 #endif
+}
+
+
+//=============================================================================
+// ファイルに準拠してエネミーオブジェクトを再配置する
+//=============================================================================
+void EnemyManager::relocateEnemyAccordingToFile()
+{
+	destroyAllEnemy();						// 全てのエネミーオブジェクトを破棄
+	destroyAllEnemyData();					// 全てのエネミーデータを破棄
+	nextID = 0;								// 次回発行IDを0に初期化
+	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
+	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
+
+	// エネミーツールのデータを読み込む
+	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+	{
+		createEnemyData(enemyTools->GetEnemySet(i));
+	}
+	SAFE_DELETE(enemyTools);
+
+	// エネミーオブジェクトをツールデータを元に作成する
+	for (size_t i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		createEnemy(enemyDataList.getValue(i));
+	}
 }
 
 

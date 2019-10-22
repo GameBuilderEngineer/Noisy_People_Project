@@ -48,22 +48,6 @@ void Create::initialize() {
 	//player
 	player = new Player;
 
-	//-----中込テストゾーンその１---------------
-	//enemy = new Enemy;
-	//camera = new Camera;
-
-	//camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//camera->setTarget(enemy->getPosition());
-	//camera->setTargetX(&enemy->getAxisX()->direction);
-	//camera->setTargetY(&enemy->getAxisY()->direction);
-	//camera->setTargetZ(&enemy->getAxisZ()->direction);
-	//camera->setRelative(CAMERA_RELATIVE_QUATERNION);
-	//camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	//camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
-	//camera->setUpVector(D3DXVECTOR3(0, 1, 0));
-	//camera->setFieldOfView((D3DX_PI / 18) * 10);
-	//-------------------------------------------
-
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -113,11 +97,9 @@ void Create::initialize() {
 	//エフェクト（インスタンシング）テスト
 	testEffect = new TestEffect();
 
-	//-----中込テストゾーンその2---------------
-	//enemy->setDebugEnvironment();
-	//enemy->setCamera(camera);	//カメラのセット
-	//enemy->configurationGravityWithRay(testField->getPosition(), testField->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
-	//-----------------------------------------
+	// エネミー
+	enemyManager = new EnemyManager;
+	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// ツリー
 	treeManager = new TreeManager;
@@ -127,15 +109,6 @@ void Create::initialize() {
 	itemManager = new ItemManager;
 	itemManager->initialize();
 
-	// テロップ
-	telop = new Telop;
-	telop->initialize();
-
-	// AI
-	aiDirector = new AIDirector;
-	aiDirector->initialize();
-	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
-	naviAI->initialize();
 }
 
 //===================================================================================================================================
@@ -153,10 +126,9 @@ void Create::uninitialize() {
 	SAFE_DELETE(treeB);
 	SAFE_DELETE(stone);
 	SAFE_DELETE(testEffect);
+	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
-	SAFE_DELETE(telop);
-	SAFE_DELETE(aiDirector);
 }
 
 //===================================================================================================================================
@@ -183,7 +155,7 @@ void Create::update(float _frameTime) {
 	player->update(frameTime);
 
 	// エネミーの更新
-	//enemy->update(frameTime);
+	enemyManager->update(frameTime);
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -199,9 +171,6 @@ void Create::update(float _frameTime) {
 		itemManager->uninitialize();
 	}
 	itemManager->update(frameTime);
-
-	// テロップの更新
-	telop->update(frameTime);
 
 	////カメラの更新
 	//camera->update();
@@ -286,7 +255,7 @@ void Create::render3D(Camera currentCamera) {
 	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// エネミーの描画
-	//enemy->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//エネミーツールの描画(test用)
 	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -297,8 +266,6 @@ void Create::render3D(Camera currentCamera) {
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-#ifdef DEBUG_NAVIMESH
-#endif
 }
 
 //===================================================================================================================================
@@ -316,8 +283,6 @@ void Create::renderUI() {
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
-	telop->render();	// テロップの描画
 }
 
 //===================================================================================================================================
@@ -341,7 +306,6 @@ void Create::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Create::AI() {
-	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -360,7 +324,6 @@ void Create::createGUI()
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
-	naviAI->outputGUI();			//ナビゲーションAI
 
 }
 #endif // _DEBUG

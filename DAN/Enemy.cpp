@@ -55,6 +55,8 @@ void Enemy::update(float frameTime)
 	updatePhysics(frameTime);	// 物理の更新
 	Object::update();			// オブジェクトの更新
 
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1.0f * frameTime);
+
 	// エネミーデータの更新
 	enemyData->position = position;
 	enemyData->direction = axisZ.direction;
