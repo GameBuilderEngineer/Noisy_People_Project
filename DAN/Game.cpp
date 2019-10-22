@@ -106,7 +106,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_PLANE));
+	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
 	testFieldRenderer->generateObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -199,7 +199,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	//if (frameTime > 0.10)return;
+	if (frameTime > 0.10)return;
 
 
 	//テストフィールドの更新
@@ -211,25 +211,29 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-	//enemy->update(frameTime);
-	if (input->wasKeyPressed('8'))
+#ifdef _DEBUG
+	if (input->wasKeyPressed('8'))	// 作成
 	{
-		enemyNS::EnemyData tinko;
-		tinko.zeroClear();
-		tinko.id = enemyManager->issueNewID();
-		tinko.type = enemyNS::WOLF;
-		tinko.defaultPosition = *player->getPosition();
-		tinko.setUp();
-		enemyManager->createEnemy(&tinko);
+		enemyNS::EnemyData temp;
+		temp.zeroClear();
+		temp.id = enemyManager->issueNewID();
+		temp.type = enemyNS::TIGER;
+		temp.defaultPosition = *player->getPosition();
+		temp.setUp();
+		enemyManager->getEnemyDataList()->insertFront(temp);
+		enemyManager->getEnemyDataList()->listUpdate();
+		enemyManager->createEnemy(enemyManager->getEnemyDataList()->getValue(0));
 	}
-	if (input->wasKeyPressed('7'))
+	if (input->wasKeyPressed('7'))	// 全破棄
 	{
 		enemyManager->destroyAllEnemy();
+		enemyManager->getEnemyDataList()->allClear();
 	}
-	if (input->wasKeyPressed('6'))
+	if (input->wasKeyPressed('6'))	
 	{
 		enemyManager->destroyEnemy(3);
 	}
+#endif
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -419,11 +423,10 @@ void Game::createGUI()
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
 	player->outputGUI();			//プレイヤー
-	//enemy->outputGUI();			//エネミー
+	enemyManager->outputGUI();		// エネミーマネージャ
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	naviAI->outputGUI();			//ナビゲーションAI
-
 }
 #endif // _DEBUG

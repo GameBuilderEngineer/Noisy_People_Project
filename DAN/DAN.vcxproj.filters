@@ -451,6 +451,12 @@
     <ClCompile Include="Wolf.cpp">
       <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Tiger.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Bear.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -706,6 +712,12 @@
       <Filter>Game Layer\Scene\Create</Filter>
     </ClInclude>
     <ClInclude Include="Wolf.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiger.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h">
       <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

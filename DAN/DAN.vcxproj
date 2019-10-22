@@ -146,6 +146,7 @@
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Battery.h" />
+    <ClInclude Include="Bear.h" />
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Tiger.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TreeTypeA.h" />
     <ClInclude Include="TreeTypeB.h" />
@@ -232,6 +234,7 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Battery.cpp" />
+    <ClCompile Include="Bear.cpp" />
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -292,6 +295,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TreeTypeA.cpp" />

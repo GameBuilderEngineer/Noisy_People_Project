@@ -144,9 +144,9 @@ void Create::initialize() {
 void Create::uninitialize() {
 	SAFE_DELETE(camera);
 	SAFE_DELETE(light);
-	SAFE_DELETE(testField);
+	//SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
-	SAFE_DELETE(player);
+	//SAFE_DELETE(player);
 	SAFE_DELETE(playerRenderer);
 	SAFE_DELETE(deadTree);
 	SAFE_DELETE(treeA);
