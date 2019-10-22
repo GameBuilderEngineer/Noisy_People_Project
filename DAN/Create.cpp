@@ -55,7 +55,7 @@ void Create::initialize() {
 
 	//camera
 	camera = new Camera;
-	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	camera->setTarget(player->getPosition());
 	camera->setTargetX(&player->getAxisX()->direction);
 	camera->setTargetY(&player->getAxisY()->direction);
@@ -225,19 +225,27 @@ void Create::update(float _frameTime) {
 //===================================================================================================================================
 void Create::render() {
 
-	//1Pカメラ・ウィンドウ
-	camera->renderReady();
-	direct3D9->changeViewport1PWindow();
-	render3D(*camera);
+	////1Pカメラ・ウィンドウ
+	//camera->renderReady();
+	//direct3D9->changeViewport1PWindow();
+	//render3D(*camera);
 
-	//2Pカメラ・ウィンドウ
+	////2Pカメラ・ウィンドウ
+	//camera->renderReady();
+	//direct3D9->changeViewport2PWindow();
+	//render3D(*camera);
+
+	//test(訳アリ)
 	camera->renderReady();
-	direct3D9->changeViewport2PWindow();
+	direct3D9->changeViewportFullWindow();
 	render3D(*camera);
+	effekseerNS::setCameraMatrix(camera->position, camera->gazePosition, camera->upVector);
+	effekseerNS::render();
 
 	//UI
 	direct3D9->changeViewportFullWindow();
 	renderUI();
+
 }
 
 //===================================================================================================================================
