@@ -69,7 +69,7 @@ void StaticMeshObject::update()
 	for (int i = 0; i < objectNum; i++)
 	{
 		(*objectList->getValue(i))->update();			//更新処理
-		//削除処理
+		deleteObject(i);								//削除処理
 	}
 
 
@@ -279,7 +279,7 @@ void StaticMeshObject::deleteObjectByID(int id)
 //===================================================================================================================================
 void StaticMeshObject::deleteObject(int i)
 {
-	if ((*objectList->getValue(i))->existenceTimer >= 0)return;
+	if ((*objectList->getValue(i))->existenceTimer > 0)return;
 	SAFE_DELETE(*objectList->getValue(i));
 	objectList->remove(objectList->getNode(i));		//リスト内のオブジェクトを削除
 	didDelete = true;
