@@ -13,6 +13,12 @@ using namespace treeNS;
 //=============================================================================
 void TreeManager::initialize()
 {
+	// 描画オブジェクトの作成
+	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+
 #if 0
 	// ツリーファイルを読み込む
 	FILE	*fp = NULL;
@@ -30,12 +36,6 @@ void TreeManager::initialize()
 	}
 	SAFE_DELETE_ARRAY(enemyFile.efmt);
 #endif
-
-	// 描画オブジェクトの作成
-	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 }
 
 

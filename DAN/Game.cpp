@@ -235,10 +235,6 @@ void Game::update(float _frameTime) {
 		enemyManager->destroyEnemy(3);
 		enemyManager->destroyEnemyData(3);
 	}
-	if (input->wasKeyPressed('5'))
-	{
-		enemyManager->relocateEnemyAccordingToFile();
-	}
 #endif
 
 	// ツリーの更新
