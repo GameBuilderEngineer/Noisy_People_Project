@@ -86,6 +86,9 @@ ITEM_TOOLS::~ITEM_TOOLS()
 //===================================================================================================================================
 void ITEM_TOOLS::CreatNewItemFile(void)
 {
+	//パス
+	setToolsDirectory();
+
 	//ファイル
 	FILE	 *fp = NULL;
 	fp = fopen(ITEM_FILE_PATH, "wb");

@@ -21,10 +21,12 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	difference = DIFFERENCE_FIELD;			// •K—v«—vŒŸ“¢
 	onGravity = true;
 	position = enemyData->position;
+	axisZ.direction = enemyData->direction;
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	friction = 1.0f;
 	Object::initialize(&position);
+	Object::axisZ.direction = axisZ.direction;
 }
 
 
