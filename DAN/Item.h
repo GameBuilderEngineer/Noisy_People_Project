@@ -20,6 +20,7 @@ namespace itemNS
 	};
 
 
+
 	struct ItemData
 	{
 		int id;							// ¯•Ê”Ô†

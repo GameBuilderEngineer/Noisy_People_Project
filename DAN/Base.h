@@ -42,9 +42,9 @@
 #ifdef _DEBUG
 //Debug
 #define APP_NAME (LPSTR)"D/A:Nature"
-#if FALSE
-#define WINDOW_WIDTH 960
-#define WINDOW_HEIGHT 540
+#if FLASE
+#define WINDOW_WIDTH 1200
+#define WINDOW_HEIGHT 960
 #else
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080

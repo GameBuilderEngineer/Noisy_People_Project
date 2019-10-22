@@ -171,6 +171,8 @@
     <ClInclude Include="EnemyTools.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="ItemTools.h" />
+    <ClInclude Include="MapObjectTool.h" />
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="OperationGenerator.h" />
@@ -214,6 +216,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Tiger.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="TreeToools.h" />
     <ClInclude Include="TreeTypeA.h" />
     <ClInclude Include="TreeTypeB.h" />
     <ClInclude Include="Tree.h" />
@@ -265,8 +268,10 @@
     <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+    <ClCompile Include="ItemTools.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LinkedList.cpp" />
+    <ClCompile Include="MapObjectTool.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
     <ClCompile Include="MeshData.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
@@ -298,6 +303,7 @@
     <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
+    <ClCompile Include="TreeToools.cpp" />
     <ClCompile Include="TreeTypeA.cpp" />
     <ClCompile Include="TreeTypeB.cpp" />
     <ClCompile Include="Tree.cpp" />

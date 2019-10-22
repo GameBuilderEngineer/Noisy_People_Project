@@ -32,9 +32,18 @@ namespace treeNS
 		VERY_LARGE
 	};
 
+	enum TREE_MODEL
+	{
+		TREE_01,
+		TREE_02,
+		TREE_03,
+		TREE_MAX
+	};
+
 	struct TreeData
 	{
 		int id;							// 識別番号
+		int modelId;					// モデルID
 		TREE_TYPE treeType;				// ツリータイプ
 		GREEN_STATE geenState;			// 緑化状態
 		TREE_SIZE treeSize;				// 木のサイズ
