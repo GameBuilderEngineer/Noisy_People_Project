@@ -420,6 +420,7 @@ void Director::displayFPS() {
 void Director::changeNextScene() {
 	int nextScene = scene->checkNextScene();		//次のシーンIDを取得	
 	//scene->copyGameMaster(gameMaster);			//ゲーム管理情報をDirectorへ保存
+	effekseerNS::stop();							//全エフェクト停止
 	scene->uninitialize();
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移

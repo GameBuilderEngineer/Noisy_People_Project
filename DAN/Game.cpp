@@ -106,7 +106,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_PLANE));
+	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
 	testFieldRenderer->generateObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -245,15 +245,53 @@ void Game::update(float _frameTime) {
 		itemManager->destroyAllItem();
 	}
 
+	//エフェクシアーのテスト
+#pragma region EffekseerTest
 	//エフェクトの再生
 	if (input->wasKeyPressed('1'))
 	{
-		effekseerNS::play(effekseerNS::TEST0, *player->getPosition());
+		effekseerNS::Instance* instance = new effekseerNS::Instance();
+		instance->position = *player->getPosition();
+		effekseerNS::play(instance);
 	}
 	if (input->wasKeyPressed('2'))
 	{
-		effekseerNS::play(effekseerNS::TEST1, *player->getPosition());
+		class Fire :public effekseerNS::Instance
+		{
+		public:
+			D3DXVECTOR3* syncPosition;
+			Fire() { 
+				effectNo = effekseerNS::TEST0;
+				deltaRadian = D3DXVECTOR3(0, 0.3, 0);
+			}
+			virtual void update() {
+				position = *syncPosition;
+
+				Instance::update();
+			};
+		};
+		Fire* instance = new Fire;
+		instance->position = *player->getPosition();
+		instance->syncPosition = player->getPosition();
+		effekseerNS::play(instance);
 	}
+	//エフェクトの一時停止：再生
+	if (input->wasKeyPressed('3'))
+	{
+		effekseerNS::pause(false);
+	}
+	//エフェクトの一時停止：停止
+	if (input->isKeyDown('4'))
+	{
+		effekseerNS::pause(true);
+	}
+	//エフェクトの停止
+	if (input->wasKeyPressed('G'))
+	{
+		effekseerNS::stop((*getEffekseerManager()->instanceList->getValue(0))->handle);
+	}
+#pragma endregion
+
 
 	itemManager->update(frameTime);
 
