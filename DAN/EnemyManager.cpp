@@ -167,17 +167,16 @@ void EnemyManager::destroyEnemyData(int _id)
 	for (int i = 0; i < enemyDataList.nodeNum; i++)
 	{
 		if (enemyDataList.getValue(i)->id != _id) { continue; }
-
-		// 破棄するエネミーデータのIDに無効値を書き込んでおく（※assertDestructionOrder()）
-		enemyDataList.getValue(i)->id = -1;
 		// エネミーデータ構造体はノード内にメモリが取られているため
 		// ノードの破棄と合わせてエネミーデータも破棄されている
 		enemyDataList.remove(enemyDataList.getNode(i));
-		// 配列更新
 		enemyDataList.listUpdate();
 		break;
 	}
 
+#ifdef _DEBUG
+	assertDestructionOrder();
+#endif//_DEBUG
 }
 
 
@@ -189,8 +188,11 @@ void EnemyManager::destroyAllEnemyData()
 	// エネミーデータ構造体はノード内にメモリが取られているため
 	// ノードの破棄と合わせてエネミーデータも破棄されている
 	enemyDataList.allClear();
-	// 配列更新
 	enemyDataList.listUpdate();
+
+#ifdef _DEBUG
+	assertDestructionOrder();
+#endif//_DEBUG
 }
 
 
@@ -220,10 +222,6 @@ void EnemyManager::destroyEnemy(int _id)
 		enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
 		break;
 	}
-
-#ifdef _DEBUG
-	assertDestructionOrder();
-#endif//_DEBUG
 }
 
 
@@ -236,10 +234,6 @@ void EnemyManager::destroyAllEnemy()
 	tigerRenderer->allDelete();
 	bearRenderer->allDelete();
 	enemyList.clear();	// ベクター要素数を0にする
-
-#ifdef _DEBUG
-	assertDestructionOrder();
-#endif//_DEBUG
 }
 
 
@@ -255,8 +249,6 @@ void EnemyManager::assertDestructionOrder()
 	{
 		for (int k = 0; k < enemyList.size(); k++)
 		{
-			// エネミーデータ単体を破棄する際にIDに無効値が書き込まれているため
-			// 解放済みのメモリにデータが残っていたとしても下記if文条件は偽となる
 			if (enemyDataList.getValue(i)->id == enemyList[k]->getEnemyData()->id)
 			{
 				cnt++;
@@ -291,7 +283,7 @@ void EnemyManager::outputGUI()
 		ImGui::Text("enemyDataList.nodeNum:%d\n", enemyDataList.nodeNum);
 		ImGui::Text("enemyList.size()     :%d\n", enemyList.size());
 		ImGui::Text("numOfEnemy           :%d\n", Enemy::getNumOfEnemy());
-		ImGui::Text("nextID				　:%d\n", nextID);
+		ImGui::Text("nextID	:%d\n", nextID);
 		//for (int i = 0; i < enemyList.size(); i++)
 		//{
 		//	ImGui::Text("%d", enemyList[i]->getEnemyData()->id);

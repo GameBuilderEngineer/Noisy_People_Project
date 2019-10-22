@@ -149,6 +149,7 @@ public:
 
 	void render3D(Camera currentCamera);
 	void renderUI();
+	void test();
 
 #ifdef _DEBUG
 	virtual void createGUI() override;

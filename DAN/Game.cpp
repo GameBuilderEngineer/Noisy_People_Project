@@ -210,45 +210,12 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-#ifdef _DEBUG
-	if (input->wasKeyPressed('8'))	// 作成
-	{
-		enemyNS::ENEMYSET tinko =
-		{
-			enemyManager->issueNewID(),
-			enemyNS::WOLF,
-			enemyNS::CHASE,
-			*player->getPosition(),
-			D3DXVECTOR3(0, 0, 0)
-		};
-		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
-		enemyManager->createEnemy(p);
-	}
-	if (input->wasKeyPressed('7'))	// 全破棄
-	{
-		enemyManager->destroyAllEnemy();
-		enemyManager->destroyAllEnemyData();
-	}
-	if (input->wasKeyPressed('6'))	
-	{
-		enemyManager->destroyEnemy(3);
-		enemyManager->destroyEnemyData(3);
-	}
-#endif
 
 	// ツリーの更新
 	treeManager->update(frameTime);
 
 	// アイテムの更新
-	if (input->wasKeyPressed('0'))
-	{
-		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
-		itemManager->createItem(&unko);
-	}
-	if (input->wasKeyPressed('9'))
-	{
-		itemManager->destroyAllItem();
-	}
+	itemManager->update(frameTime);
 
 	//エフェクトの再生
 	if (input->wasKeyPressed('1'))
@@ -259,8 +226,6 @@ void Game::update(float _frameTime) {
 	{
 		effekseerNS::play(effekseerNS::TEST1, *player->getPosition());
 	}
-
-	itemManager->update(frameTime);
 
 	// テロップの更新
 	telop->update(frameTime);
@@ -299,6 +264,10 @@ void Game::update(float _frameTime) {
 		// シーン遷移
 		changeScene(nextScene);
 	}
+
+#ifdef _DEBUG
+	test();
+#endif
 }
 
 //===================================================================================================================================
@@ -431,3 +400,53 @@ void Game::createGUI()
 	naviAI->outputGUI();			//ナビゲーションAI
 }
 #endif // _DEBUG
+
+
+void Game::test()
+{
+	// アイテムマネージャのテスト
+	if (input->wasKeyPressed('0'))
+	{
+		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
+		itemManager->createItem(&unko);
+	}
+	if (input->wasKeyPressed('9'))
+	{
+		itemManager->destroyAllItem();
+	}
+
+	//エネミーマネージャのテスト
+	if (input->wasKeyPressed('8'))	// 作成
+	{
+		enemyNS::ENEMYSET tinko =
+		{
+			enemyManager->issueNewID(),
+			enemyNS::WOLF,
+			enemyNS::CHASE,
+			*player->getPosition(),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
+		enemyManager->createEnemy(p);
+	}
+	if (input->wasKeyPressed('7'))	// 全破棄
+	{
+		enemyManager->destroyAllEnemy();
+		enemyManager->destroyAllEnemyData();
+	}
+	if (input->wasKeyPressed('6'))	// 0-50（ID）までランダムに破棄
+	{
+		static bool rec[50] = { false };
+		for (int i = 0; i < 50; i++)
+		{
+			int n = rand() % 50;
+			if (rec[n] == false)
+			{
+				rec[n] = true;
+				enemyManager->destroyEnemy(n);
+				enemyManager->destroyEnemyData(n);
+				break;
+			}
+		}
+	}
+}

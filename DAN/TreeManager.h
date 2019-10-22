@@ -23,10 +23,15 @@ class TreeManager
 {
 private:
 	std::vector<Tree*> treeList;				// ツリーポインタリスト
-	StaticMeshObject* greenA;
-	StaticMeshObject* deadA;
-	StaticMeshObject* greenB;
-	StaticMeshObject* deadB;
+	StaticMeshObject* tree1Renderer;
+	StaticMeshObject* leaf1Renderer;
+	StaticMeshObject* tree2Renderer;
+	StaticMeshObject* leaf2Renderer;
+	StaticMeshObject* tree3Renderer;
+	StaticMeshObject* leaf3Renderer;
+
+	int nextID;									// 次回ツリー発行ID
+
 
 public:
 	void initialize();

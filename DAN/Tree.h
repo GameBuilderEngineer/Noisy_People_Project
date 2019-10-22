@@ -44,9 +44,9 @@ namespace treeNS
 	{
 		int id;							// 識別番号
 		int modelId;					// モデルID
-		TREE_TYPE treeType;				// ツリータイプ
+		TREE_TYPE type;					// ツリータイプ
 		GREEN_STATE geenState;			// 緑化状態
-		TREE_SIZE treeSize;				// 木のサイズ
+		TREE_SIZE size;					// 木のサイズ
 		int hp;							// HP
 		int initialPosition;			// 初期座標
 		void initialize() { ZeroMemory(this, sizeof(TreeData)); }
@@ -61,7 +61,6 @@ class Tree: public StaticMeshObject
 {
 private:
 	treeNS::TreeData* treeData;
-
 
 	// Static
 	// ↓サイズの数静的メンバでもって自分のサイズのものを参照すればいい

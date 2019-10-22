@@ -13,28 +13,16 @@ using namespace treeNS;
 //=============================================================================
 void TreeManager::initialize()
 {
+	nextID = 0;								// 次回発行IDを0に初期化
+
 	// 描画オブジェクトの作成
-	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-
+	tree1Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	leaf1Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	tree2Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	leaf2Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	tree3Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	leaf3Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 #if 0
-	// ツリーファイルを読み込む
-	FILE	*fp = NULL;
-	fopen("enemy.enemy", "rb");
-	ENEMY_FILE enemyFile;
-	memset(&enemyFile, 0, sizeof(ENEMY_FILE));
-	fread(&enemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
-	enemyFile.efmt = new ENEMY_EFMT[enemyFile.enmy.enemyMax];
-	fread(&enemyFile.efmt, sizeof(ENEMY_EFMT), enemyFile.enmy.enemyMax, fp);
-	fclose(fp);
-
-	for (size_t i = 0; i < enemyFile.enmy.enemyMax; i++)
-	{
-		tree.XX = //enemyFile.efmt[i].chunkId;
-	}
-	SAFE_DELETE_ARRAY(enemyFile.efmt);
 #endif
 }
 
@@ -52,10 +40,12 @@ void TreeManager::uninitialize()
 	treeList.swap(temp);
 
 	// 描画オブジェクトの破棄
-	SAFE_DELETE(greenA);
-	SAFE_DELETE(deadA);
-	SAFE_DELETE(greenB);
-	SAFE_DELETE(deadB);
+	SAFE_DELETE(tree1Renderer);
+	SAFE_DELETE(leaf1Renderer);
+	SAFE_DELETE(tree2Renderer);
+	SAFE_DELETE(leaf2Renderer);
+	SAFE_DELETE(tree3Renderer);
+	SAFE_DELETE(leaf3Renderer);
 }
 
 
@@ -68,6 +58,13 @@ void TreeManager::update(float frameTime)
 	{
 		treeList[i]->update(frameTime);
 	}
+
+	tree1Renderer->update();
+	leaf1Renderer->update();
+	tree2Renderer->update();
+	leaf2Renderer->update();
+	tree3Renderer->update();
+	leaf3Renderer->update();
 }
 
 
@@ -76,10 +73,12 @@ void TreeManager::update(float frameTime)
 //=============================================================================
 void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	for (size_t i = 0; i < treeList.size(); i++)
-	{
-		treeList[i]->render(view, projection, cameraPosition);
-	}
+	tree1Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	leaf1Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tree2Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	leaf2Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tree3Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	leaf3Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
@@ -88,16 +87,17 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 //=============================================================================
 void TreeManager::createTree(TreeData* treeData)
 {
-	switch (treeData->treeType)
+	switch (treeData->modelId)
 	{
-	case ANALOG_TREE:
+	case TREE_01:
+		//if()
+		//if(treeData->geenState == GREEN){leaf1Renderer->generateObject()}
 		break;
 
-	case DIGITAL_TREE:
+	case TREE_02:
 		break;
 
-	default:
-		treeList.emplace_back(new Tree);
+	case TREE_03:
 		break;
 	}
 
@@ -136,14 +136,14 @@ void TreeManager::destroyAllTree()
 	}
 
 	treeList.clear();
-	SAFE_DELETE(greenA);
-	SAFE_DELETE(deadA);
-	SAFE_DELETE(greenB);
-	SAFE_DELETE(deadB);
-	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	//SAFE_DELETE(greenA);
+	//SAFE_DELETE(deadA);
+	//SAFE_DELETE(greenB);
+	//SAFE_DELETE(deadB);
+	//greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	//deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	//greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	//deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 }
 
 
