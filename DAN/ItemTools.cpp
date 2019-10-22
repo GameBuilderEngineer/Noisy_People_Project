@@ -62,6 +62,8 @@ ITEM_TOOLS::ITEM_TOOLS()
 		//}
 	}
 
+	//初期値
+	resetItem = false;
 }
 
 //===================================================================================================================================
@@ -86,9 +88,6 @@ ITEM_TOOLS::~ITEM_TOOLS()
 //===================================================================================================================================
 void ITEM_TOOLS::CreatNewItemFile(void)
 {
-	//パス
-	setToolsDirectory();
-
 	//ファイル
 	FILE	 *fp = NULL;
 	fp = fopen(ITEM_FILE_PATH, "wb");
@@ -339,6 +338,12 @@ void ITEM_TOOLS::outputItemToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir
 		{
 			ItemListboxCurrent = 0;
 		}
+
+		//ファイルのアップデート
+		OutputItemFile();
+
+		//外部関数用
+		resetItem = true;
 	}
 
 	//新規作成
@@ -349,6 +354,12 @@ void ITEM_TOOLS::outputItemToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir
 
 		//進む
 		ItemListboxCurrent = itemFile.item.itemMax - 1;
+
+		//ファイルのアップデート
+		OutputItemFile();
+
+		//外部関数用
+		resetItem = true;
 	}
 #endif
 }

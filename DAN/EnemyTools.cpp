@@ -405,8 +405,10 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 			EnemyListboxCurrent = 0;
 		}
 
+		//ファイルのアップデート
 		OutputEnemyFile();
 
+		//外部関数用
 		resetEnemy = true;
 	}
 
@@ -419,8 +421,10 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 		//進む
 		EnemyListboxCurrent = enemyFile.enmy.enemyMax - 1;
 
+		//ファイルのアップデート
 		OutputEnemyFile();
 
+		//外部関数用
 		resetEnemy = true;
 	}
 

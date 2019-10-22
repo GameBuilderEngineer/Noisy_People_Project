@@ -62,6 +62,9 @@ public:
 	ITEM_TOOLS();
 	~ITEM_TOOLS();
 
+	//•Ï”
+	bool resetItem;
+
 	//ŠÖ”
 	itemNS::ITEMSET GetItemSet(short itemId);
 	int GetItemMax(void);
