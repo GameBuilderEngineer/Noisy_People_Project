@@ -29,6 +29,9 @@ Create::Create()
 
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;
+	//アイテムツール
+	itemTools = new ITEM_TOOLS;
+
 }
 
 //===================================================================================================================================
@@ -38,6 +41,8 @@ Create::~Create()
 {
 	//エネミーツール
 	SAFE_DELETE(enemyTools);
+	//アイテムツール
+	SAFE_DELETE(itemTools);
 }
 
 //===================================================================================================================================
@@ -219,6 +224,9 @@ void Create::update(float _frameTime) {
 	//エネミーツールの更新
 	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
 	enemyTools->update();
+
+	//アイテムツールの更新
+	itemTools->outputItemToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
 
 	//カメラの更新
 	camera->update();

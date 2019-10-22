@@ -19,6 +19,15 @@ namespace itemNS
 		ITEM_TYPE_MAX
 	};
 
+	// ItemInitialSettingDataクラスはアイテム初期ステータスを保持する
+	// アイテム配置ツールとのデータ交換に使用する
+	typedef struct ItemInitialSettingData
+	{
+		int id;							// 識別番号(0..*)
+		int type;						// アイテム種別
+		D3DXVECTOR3 defaultPosition;	// 初期座標
+		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+	} ITEMSET;
 
 
 	struct ItemData

@@ -27,6 +27,8 @@
 #include "Sound.h"
 
 #include "EnemyTools.h"
+#include "ItemTools.h"
+
 //#include "InstancingBillboard.h"
 //#include "CreateMaster.h"
 //#include "PointSprite.h"
@@ -81,6 +83,8 @@ private:
 
 	//エネミーツール
 	ENEMY_TOOLS *enemyTools;
+	//アイテムツール
+	ITEM_TOOLS *itemTools;
 
 	//枯木
 	DeadTree* deadTree;
