@@ -2,7 +2,7 @@
 //【InstancingBillboard.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/27
-// [更新日]2019/10/17
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -19,18 +19,18 @@
 InstancingBillboard::InstancingBillboard()
 {
 	onRender			= false;
-	didGenerate		= false;
+	didGenerate			= false;
 	didDelete			= false;
 	vertexBuffer		= NULL;
-	indexBuffer		= NULL;
+	indexBuffer			= NULL;
 	positionBuffer		= NULL;
 	colorBuffer			= NULL;
 	uvBuffer			= NULL;
 	declation			= NULL;
-	effect					= NULL;
-	position				= NULL;
-	color					= NULL;
-	uv						= NULL;
+	effect				= NULL;
+	position			= NULL;
+	color				= NULL;
+	uv					= NULL;
 	texture				= NULL;
 	device				= getDevice();
 	srand((unsigned int)time(NULL));
@@ -98,7 +98,7 @@ HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[] = {
 		{ 0, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,	0 },	//頂点座標
-		{ 0, sizeof(D3DXVECTOR2),	D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },	//UV
+		{ 0, sizeof(D3DXVECTOR2),				D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },	//UV
 		{ 1, 0,									D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	1 },	//位置
 		{ 2, 0,									D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,			0 },	//カラー
 		{ 3, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	2 },	//相対UV
@@ -132,13 +132,13 @@ void InstancingBillboard::update(float frameTime)
 	for (int i = 0; i < instanceNum; i++)
 	{
 		(*instanceList->getValue(i))->update(frameTime);		//更新処理
-		deleteInstance(i);														//削除処理
+		deleteInstance(i);										//削除処理
 	}
 
 	//削除もしくは作成を行った場合のメモリ整理
 	if (didDelete || didGenerate)
 	{
-		updateAccessList();	//リストの更新
+		updateAccessList();		//リストの更新
 		updateBuffer();			//バッファの更新
 		updateArray();			//コピー配列の更新
 		didGenerate = false;

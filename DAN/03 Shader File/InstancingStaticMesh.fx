@@ -13,6 +13,7 @@ texture		textureDecal;
 float4		diffuse;
 float4		lightDirection		= float4(1.0f, 1.0f, 1.0f, 0.2f);
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //定義
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,10 +42,13 @@ VS_OUT VS(
 	float4 position		: POSITION,
 	float2 localUV		: TEXCOORD0,
 	float3 normal		: NORMAL,
-	float3 pos			: TEXCOORD1)
+	float4 matrix1		: TEXCOORD1,
+	float4 matrix2		: TEXCOORD2,
+	float4 matrix3		: TEXCOORD3,
+	float4 matrix4		: TEXCOORD4)
 {
 	VS_OUT Out;
-
+	
 	//頂点を保存
 	Out.position = float4(
 		position.x,
@@ -52,14 +56,16 @@ VS_OUT VS(
 		position.z,
 		1.0f);
 
-	//ワールド行列を用意する。（現在は移動情報のみ）
+
+	//ワールド行列を用意する。
 	float4x4 worldMatrix = float4x4(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		pos.x, pos.y, pos.z, 1.0f);
+		matrix1,
+		matrix2,
+		matrix3,
+		matrix4);
 
 	//あとで実装予定
+	//現在はCPU側で演算
 	//計算を全てGPU側で行った方が高速？？
 	//移動行列の適用
 	//回転行列の適用
@@ -69,13 +75,17 @@ VS_OUT VS(
 	worldMatrix = mul(worldMatrix, matrixView);
 	//プロジェクション行列
 	worldMatrix = mul(worldMatrix, matrixProjection);
-
+	//ワールド行列
 	Out.position = mul(Out.position, worldMatrix);
 	
+	//UV座標
 	Out.uv = localUV;
-	float ambient = lightDirection.w;
-	float4 lambert = max(ambient,saturate(dot(normal, lightDirection)));
 
+	//アンビエントカラー
+	float ambient = lightDirection.w;
+
+	//ランバート演算カラー
+	float4 lambert = max(ambient,saturate(dot(normal, lightDirection)));
 	Out.color = lambert*diffuse;
 
 	return Out;

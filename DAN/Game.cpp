@@ -288,7 +288,7 @@ void Game::update(float _frameTime) {
 	//エフェクトの停止
 	if (input->wasKeyPressed('G'))
 	{
-		effekseerNS::stop((*getEffekseerManager()->instanceList->getValue(0))->handle);
+		//effekseerNS::stop((*getEffekseerManager()->instanceList->getValue(0))->handle);
 	}
 #pragma endregion
 
@@ -315,7 +315,6 @@ void Game::update(float _frameTime) {
 
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
-
 
 	//カメラの更新
 	camera->update();
@@ -367,9 +366,6 @@ void Game::render3D(Camera currentCamera) {
 	testField->setAlpha(0.1f); 
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//エフェクト（インスタンシング）テスト
-	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
 	// プレイヤーの描画
 	playerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
@@ -395,6 +391,9 @@ void Game::render3D(Camera currentCamera) {
 
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//エフェクト（インスタンシング）テスト
+	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #ifdef DEBUG_NAVIMESH
 	// ナビゲーションメッシュの描画

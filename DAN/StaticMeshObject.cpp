@@ -2,7 +2,7 @@
 //【StaticMeshObject.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/17
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -26,9 +26,9 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 	didGenerate				= false;
 	objectNum				= 0;
 	fillMode				= staticMeshObjectNS::FILLMODE::SOLID;
-	positionBuffer			= NULL;
+	matrixBuffer			= NULL;
+	worldMatrix				= NULL;
 	declaration				= NULL;
-	position				= NULL;
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[65];
@@ -38,7 +38,13 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 		vertexElement[i] = staticMesh->vertexElement[i];
 		i++;
 	}
-	vertexElement[i] = { 1, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 };
+	vertexElement[i] = { 1, 0,					D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 };
+	i++;
+	vertexElement[i] = { 1, sizeof(float)*4,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 2 };
+	i++;
+	vertexElement[i] = { 1, sizeof(float)*4*2,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 3 };
+	i++;
+	vertexElement[i] = { 1, sizeof(float)*4*3,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 4 };
 	i++;
 	vertexElement[i] = D3DDECL_END();
 	i++;
@@ -53,6 +59,13 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 //===================================================================================================================================
 StaticMeshObject::~StaticMeshObject()
 {
+	SAFE_RELEASE(matrixBuffer);
+	SAFE_RELEASE(colorBuffer);
+	SAFE_RELEASE(uvBuffer);
+
+	SAFE_DELETE_ARRAY(worldMatrix);
+	SAFE_DELETE_ARRAY(color);
+
 	for (int i = 0; i < objectNum; i++)
 	{
 		SAFE_DELETE(*objectList->getValue(i));
@@ -72,7 +85,6 @@ void StaticMeshObject::update()
 		deleteObject(i);								//削除処理
 	}
 
-
 	if (didDelete || didGenerate)
 	{
 		objectList->listUpdate();
@@ -83,8 +95,7 @@ void StaticMeshObject::update()
 	}
 
 	//値の更新
-	updatePosition();
-
+	updateWorldMatrix();
 }
 
 //===================================================================================================================================
@@ -120,13 +131,14 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA		| objectNum);
 	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(2, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
 
 	//頂点宣言を追加
 	device->SetVertexDeclaration(declaration);
 
 	//ストリームにメッシュの頂点バッファをバインド
 	device->SetStreamSource(0, staticMesh->vertexBuffer,	0, staticMesh->numBytesPerVertex);
-	device->SetStreamSource(1, positionBuffer,						0, sizeof(D3DXVECTOR3));
+	device->SetStreamSource(1, matrixBuffer,						0, sizeof(D3DXMATRIX));
 
 	//インデックスバッファをセット
 	device->SetIndices(staticMesh->indexBuffer);
@@ -174,9 +186,9 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 }
 
 //===================================================================================================================================
-//【位置バッファを更新する】
+//【ワールドマトリックスバッファを更新する】
 //===================================================================================================================================
-void StaticMeshObject::updatePosition()
+void StaticMeshObject::updateWorldMatrix()
 {
 	objectNum = objectList->nodeNum;
 	if (objectNum <= 0)return;
@@ -185,41 +197,11 @@ void StaticMeshObject::updatePosition()
 	for (int i = 0; i < objectNum; i++)
 	{
 		obj = *objectList->getValue(i);
-		position[i] = obj->position;
+		worldMatrix[i] = obj->matrixWorld;
 	}
 
-	copyVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, position, positionBuffer);
+	copyVertexBuffer(sizeof(D3DXMATRIX)*objectNum, worldMatrix, matrixBuffer);
 
-}
-
-//===================================================================================================================================
-//【回転バッファを更新する】
-//===================================================================================================================================
-void StaticMeshObject::updateRotation()
-{
-	objectNum = objectList->nodeNum;
-	if (objectNum <= 0)return;
-
-	for (int i = 0; i < objectNum; i++)
-	{
-		//rotation[i] = (*objectList->getValue(i))->quaternion;
-	}
-	copyVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, rotation, rotationBuffer);
-}
-
-//===================================================================================================================================
-//【スケールバッファを更新する】
-//===================================================================================================================================
-void StaticMeshObject::updateScale()
-{
-	objectNum = objectList->nodeNum;
-	if (objectNum <= 0)return;
-
-	for (int i = 0; i < objectNum; i++)
-	{
-		scale[i] = (*objectList->getValue(i))->scale;
-	}
-	copyVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, scale, scaleBuffer);
 }
 
 //===================================================================================================================================
@@ -300,9 +282,9 @@ void StaticMeshObject::updateBuffer()
 {
 	objectNum = objectList->nodeNum;				//オブジェクトの数の取得
 
-	//位置情報バッファの再作成
-	SAFE_RELEASE(positionBuffer);
-	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+	//ワールドマトリックス情報バッファの再作成
+	SAFE_RELEASE(matrixBuffer);
+	device->CreateVertexBuffer(sizeof(D3DXMATRIX)*objectNum, 0, 0, D3DPOOL_MANAGED, &matrixBuffer, 0);
 }
 
 //===================================================================================================================================
@@ -313,9 +295,9 @@ void StaticMeshObject::updateArray()
 	//インスタンス数の取得
 	objectNum = objectList->nodeNum;
 
-	//位置バッファ用配列の再作成
-	SAFE_DELETE_ARRAY(position);
-	position = new D3DXVECTOR3[objectNum];
+	//ワールドマトリックスバッファ用配列の再作成
+	SAFE_DELETE_ARRAY(worldMatrix);
+	worldMatrix = new D3DXMATRIX[objectNum];
 
 }
 
@@ -333,9 +315,6 @@ void StaticMeshObject::outputGUI()
 	}
 }
 #endif // _DEBUG
-
-
-
 
 //===================================================================================================================================
 //【setter】
