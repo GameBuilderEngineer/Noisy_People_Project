@@ -53,15 +53,18 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 		EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
 		EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
 
-		//•`‰æ—p
-		renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
-		initialize();
-		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
-		{
-			generate(D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ));
-			renderer->updateAccessList();
-		}
+		////•`‰æ—p
+		//renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+		//initialize();
+		//for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
+		//{
+		//	generate(D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ));
+		//	renderer->updateAccessList();
+		//}
 	}
+
+	//‰Šú’l
+	resetEnemy = false;
 }
 
 //===================================================================================================================================
@@ -104,48 +107,48 @@ ENEMY_TOOLS::~ENEMY_TOOLS()
 		SAFE_DELETE_ARRAY(enemyFile.efmt);
 	}
 
-	//•`‰æ—p
-	SAFE_DELETE(renderer);
+	////•`‰æ—p
+	//SAFE_DELETE(renderer);
 }
 
-//===================================================================================================================================
-//y‰Šú‰»z•`‰æ—p
-//===================================================================================================================================
-void ENEMY_TOOLS::initialize()
-{
-	needUpdate = true;
-};
-
-//===================================================================================================================================
-//yXVz•`‰æ—p
-//===================================================================================================================================
-void ENEMY_TOOLS::update()
-{
-	if (!needUpdate)return;
-	renderer->updateBuffer();
-	renderer->updateArray();
-	renderer->update();
-	needUpdate = false;
-}
-
-//===================================================================================================================================
-//y•`‰æz•`‰æ—p
-//===================================================================================================================================
-void ENEMY_TOOLS::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
-{
-	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
-}
-
-//===================================================================================================================================
-//y¶¬z•`‰æ—p
-//===================================================================================================================================
-void ENEMY_TOOLS::generate(D3DXVECTOR3 position)
-{
-	Object* object = new Object();
-	renderer->generateObject(object);
-	object->existenceTimer = -1;		// < 0 ‚È‚çÁ‚¦‚é
-	object->initialize(&position);
-}
+////===================================================================================================================================
+////y‰Šú‰»z•`‰æ—p
+////===================================================================================================================================
+//void ENEMY_TOOLS::initialize()
+//{
+//	needUpdate = true;
+//};
+//
+////===================================================================================================================================
+////yXVz•`‰æ—p
+////===================================================================================================================================
+//void ENEMY_TOOLS::update()
+//{
+//	if (!needUpdate)return;
+//	renderer->updateBuffer();
+//	renderer->updateArray();
+//	renderer->update();
+//	needUpdate = false;
+//}
+//
+////===================================================================================================================================
+////y•`‰æz•`‰æ—p
+////===================================================================================================================================
+//void ENEMY_TOOLS::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+//{
+//	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
+//}
+//
+////===================================================================================================================================
+////y¶¬z•`‰æ—p
+////===================================================================================================================================
+//void ENEMY_TOOLS::generate(D3DXVECTOR3 position)
+//{
+//	Object* object = new Object();
+//	renderer->generateObject(object);
+//	object->existenceTimer = -1;		// < 0 ‚È‚çÁ‚¦‚é
+//	object->initialize(&position);
+//}
 
 //===================================================================================================================================
 //yƒGƒlƒ~[‚ÌŽí—Þ‚ðÝ’èz
@@ -199,6 +202,8 @@ void ENEMY_TOOLS::SetEnemy(short enemyId, short enemyType, short enemyState, con
 
 	//ƒTƒCƒY
 	enemyFile.efmt[enemyId].size = (short)sizeof(ENEMY_EFMT);
+	//ID
+	enemyFile.efmt[enemyId].enemyId = enemyId;
 }
 
 //===================================================================================================================================
@@ -239,10 +244,10 @@ void ENEMY_TOOLS::AddEnemyFormat(short enemyType, short enemyState, const D3DXVE
 	//ƒGƒlƒ~[‚ÌƒtƒH[ƒ}ƒbƒg\‘¢‘Ì‚ÌÅŒã‚É’Ç‰Á
 	SetEnemy(enemyFile.enmy.enemyMax - 1, enemyType, enemyState, pos, dir);
 
-	//•`‰æ—p
-	generate(pos);
-	renderer->updateAccessList();
-	needUpdate = true;
+	////•`‰æ—p
+	//generate(pos);
+	//renderer->updateAccessList();
+	//needUpdate = true;
 }
 
 //===================================================================================================================================
@@ -363,6 +368,7 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 		}
 
 		ImGui::ListBox("Enemy ", &EnemyListboxCurrent, ListboxIndexName, enemyFile.enmy.enemyMax);
+		ImGui::Text("Enemy ID:%d", enemyFile.efmt[EnemyListboxCurrent].enemyId);
 		ImGui::Text("Enemy pos:%f %f %f", enemyFile.efmt[EnemyListboxCurrent].posX,
 			enemyFile.efmt[EnemyListboxCurrent].posY,
 			enemyFile.efmt[EnemyListboxCurrent].posZ);
@@ -398,6 +404,10 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 		{
 			EnemyListboxCurrent = 0;
 		}
+
+		OutputEnemyFile();
+
+		resetEnemy = true;
 	}
 
 	//V‹Kì¬
@@ -408,6 +418,10 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 d
 
 		//i‚Þ
 		EnemyListboxCurrent = enemyFile.enmy.enemyMax - 1;
+
+		OutputEnemyFile();
+
+		resetEnemy = true;
 	}
 
 #endif
@@ -434,9 +448,9 @@ void ENEMY_TOOLS::DeleteEnemyFormat(short enemyId)
 		//ƒGƒlƒ~[‚ÌƒtƒH[ƒ}ƒbƒg\‘¢‘Ì‚ð®—
 		UpdateEfmt(enemyFile.enmy.enemyMax + 1);
 
-		//•`‰æ—p
-		renderer->deleteObject(enemyFile.enmy.enemyMax - enemyId);
-		renderer->updateAccessList();
-		needUpdate = true;
+		////•`‰æ—p
+		//renderer->deleteObject(enemyFile.enmy.enemyMax - enemyId);
+		//renderer->updateAccessList();
+		//needUpdate = true;
 	}
 }

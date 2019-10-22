@@ -29,6 +29,9 @@ Create::Create()
 
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;
+	//アイテムツール
+	itemTools = new ITEM_TOOLS;
+
 }
 
 //===================================================================================================================================
@@ -38,6 +41,8 @@ Create::~Create()
 {
 	//エネミーツール
 	SAFE_DELETE(enemyTools);
+	//アイテムツール
+	SAFE_DELETE(itemTools);
 }
 
 //===================================================================================================================================
@@ -151,6 +156,18 @@ void Create::update(float _frameTime) {
 	testField->update();
 	testFieldRenderer->update();
 
+	//エネミーツールの更新
+	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+	if (enemyTools->resetEnemy)
+	{
+		//最新のenemy.enemyの読み込み
+		enemyManager->relocateEnemyAccordingToFile();
+		enemyTools->resetEnemy = false;
+	}
+
+	//アイテムツールの更新
+	itemTools->outputItemToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+
 	//プレイヤーの更新
 	player->update(frameTime);
 
@@ -184,10 +201,6 @@ void Create::update(float _frameTime) {
 	treeB->update();
 	//石の更新
 	stone->update();
-
-	//エネミーツールの更新
-	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
-	enemyTools->update();
 
 	//カメラの更新
 	camera->update();
@@ -256,9 +269,6 @@ void Create::render3D(Camera currentCamera) {
 
 	// エネミーの描画
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	//エネミーツールの描画(test用)
-	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);

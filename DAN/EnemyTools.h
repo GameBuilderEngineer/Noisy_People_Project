@@ -13,6 +13,7 @@
 #include "StaticMeshObject.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "EnemyManager.h"
 
 //===================================================================================================================================
 //【マクロ】
@@ -63,6 +64,9 @@ public:
 	ENEMY_TOOLS();
 	~ENEMY_TOOLS();
 
+	//変数
+	bool resetEnemy;	//enemyManagerのrelocateEnemyAccordingToFile関数とやり取るための変数
+
 	//関数
 	enemyNS::ENEMYSET GetEnemySet(short enemyId);
 	int GetEnemyMax(void);
@@ -72,11 +76,11 @@ public:
 	//関数
 	void outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
 
-	//描画用
-	void initialize();
-	void update();
-	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void generate(D3DXVECTOR3 position);
+	////描画用
+	//void initialize();
+	//void update();
+	//void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	//void generate(D3DXVECTOR3 position);
 #endif
 
 private:
@@ -88,9 +92,9 @@ private:
 	int EnemyListboxState;					//エネミーの状態(リストボックス)
 
 #ifdef _DEBUG
-	//描画用
-	StaticMeshObject* renderer;
-	bool needUpdate;
+	////描画用
+	//StaticMeshObject* renderer;
+	//bool needUpdate;
 #endif
 
 //関数

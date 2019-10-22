@@ -24,6 +24,7 @@ ImguiManager::ImguiManager(HWND wnd)
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	// Enable docking(available in imgui `docking` branch at the moment)
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
