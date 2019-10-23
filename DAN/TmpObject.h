@@ -76,7 +76,7 @@ namespace tmpObjNS {
 	//const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(0, 0, 0);
 
 	// Physics
-	const float MOVE_ACC = 27.0f;									// 移動加速度
+	const float MOVE_ACC = 27.0f*1.5f;									// 移動加速度
 	const float MOVE_ACC_WHEN_NOT_GROUND = MOVE_ACC / 8.5f;			// 空中移動加速度
 	const float STOP_SPEED = 0.5f;									// 移動停止速度
 	const float FALL_SPEED_MAX = 60.0f;								// 落下最高速度

@@ -25,7 +25,7 @@ TmpObject::TmpObject()
 	Object::initialize(&(D3DXVECTOR3)tmpObjNS::START_POSITION);
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
 
-	onGravity = true;
+	onGravity = false;
 	activation();
 	onGround = false;						//接地判定
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
@@ -265,74 +265,74 @@ void TmpObject::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3
 	}
 }
 
-
-//===================================================================================================================================
-// 物理挙動
-//===================================================================================================================================
-void TmpObject::physicalBehavior()
-{
-	//------------
-	// 加速度処理
-	//------------
-	// 重力処理
-	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	gravityRay.update(position, gravityDirection);
-	if (onGround == false)
-	{
-		// 空中で重力をかける（地上では重力をかけない）
-		setGravity(gravityDirection, GRAVITY_FORCE);
-	}
-
-	//// 移動入力がないとき加速度を切る
-	//if (isExecutingMoveOperation == false)
-	//{
-	//	acceleration.x = 0.0f;
-	//	acceleration.z = 0.0f;
-	//}
-
-	//if (onGround)
-	//{
-	//	// 地上にいる場合は重力方向も切る
-	//	// ↓これを外すと最後に加速度.yに入っていた重力加速度がスリップして坂道滑り続ける
-	//	acceleration.y = 0.0f;
-	//}
-
-
-	// 空中に浮くタイミングで加速度切る
-	if (onGround == false && onGroundBefore)
-	{
-		acceleration *= 0.0f;
-	}
-
-	//----------
-	// 速度処理
-	//----------
-	// 着地するタイミングで速度が低下する
-	if (onGround && onGroundBefore == false)
-	{
-		friction *= GROUND_FRICTION;
-	}
-
-	// 地上摩擦係数
-	if (onGround)
-	{
-		friction *= MOVE_FRICTION;
-	}
-
-	//// 停止
-	//float speedPerSecond = D3DXVec3Length(&speed);
-	//if (isExecutingMoveOperation == false &&
-	//	speedPerSecond < STOP_SPEED)
-	//{
-	//	speed *= 0.0f;
-	//}
-
-	// 落下速度限界の設定
-	if (speed.y < -FALL_SPEED_MAX)
-	{
-		speed.y = -FALL_SPEED_MAX;
-	}
-}
+//
+////===================================================================================================================================
+//// 物理挙動
+////===================================================================================================================================
+//void TmpObject::physicalBehavior()
+//{
+//	//------------
+//	// 加速度処理
+//	//------------
+//	// 重力処理
+//	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+//	gravityRay.update(position, gravityDirection);
+//	if (onGround == false)
+//	{
+//		// 空中で重力をかける（地上では重力をかけない）
+//		setGravity(gravityDirection, GRAVITY_FORCE);
+//	}
+//
+//	//// 移動入力がないとき加速度を切る
+//	//if (isExecutingMoveOperation == false)
+//	//{
+//	//	acceleration.x = 0.0f;
+//	//	acceleration.z = 0.0f;
+//	//}
+//
+//	//if (onGround)
+//	//{
+//	//	// 地上にいる場合は重力方向も切る
+//	//	// ↓これを外すと最後に加速度.yに入っていた重力加速度がスリップして坂道滑り続ける
+//	//	acceleration.y = 0.0f;
+//	//}
+//
+//
+//	// 空中に浮くタイミングで加速度切る
+//	if (onGround == false && onGroundBefore)
+//	{
+//		acceleration *= 0.0f;
+//	}
+//
+//	//----------
+//	// 速度処理
+//	//----------
+//	// 着地するタイミングで速度が低下する
+//	if (onGround && onGroundBefore == false)
+//	{
+//		friction *= GROUND_FRICTION;
+//	}
+//
+//	// 地上摩擦係数
+//	if (onGround)
+//	{
+//		friction *= MOVE_FRICTION;
+//	}
+//
+//	//// 停止
+//	//float speedPerSecond = D3DXVec3Length(&speed);
+//	//if (isExecutingMoveOperation == false &&
+//	//	speedPerSecond < STOP_SPEED)
+//	//{
+//	//	speed *= 0.0f;
+//	//}
+//
+//	// 落下速度限界の設定
+//	if (speed.y < -FALL_SPEED_MAX)
+//	{
+//		speed.y = -FALL_SPEED_MAX;
+//	}
+//}
 
 
 //===================================================================================================================================
