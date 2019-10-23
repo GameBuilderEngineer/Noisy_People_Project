@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "BoundingSphere.h"
 
 
@@ -48,7 +48,7 @@ namespace treeNS
 //=============================================================================
 //クラス定義
 //=======================================================================T======
-class Tree: public StaticMeshObject
+class Tree: public StaticMeshRenderer
 {
 private:
 	treeNS::TreeData* treeData;

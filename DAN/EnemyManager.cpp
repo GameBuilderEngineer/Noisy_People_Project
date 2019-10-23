@@ -21,9 +21,9 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 	attractorMatrix = _attractorMatrix;
 
 	// 描画オブジェクトの作成
-	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
 
 #if 0	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
@@ -67,6 +67,7 @@ void EnemyManager::uninitialize()
 	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Enemy*> temp;
 	enemyList.swap(temp);
+
 
 	// 描画オブジェクトの破棄
 	SAFE_DELETE(wolfRenderer);
@@ -120,7 +121,7 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
-		wolfRenderer->generateObject(enemy);
+		wolfRenderer->registerObject(enemy);
 		break;
 
 	case TIGER:
@@ -148,7 +149,7 @@ void EnemyManager::destroyEnemy(int _id)
 			switch (enemyList[i]->getEnemyData()->type)
 			{
 			case WOLF:
-				wolfRenderer->deleteObjectByID(enemyList[i]->id);
+				wolfRenderer->unRegisterObjectByID(enemyList[i]->id);
 				break;
 
 			case TIGER:
@@ -162,13 +163,13 @@ void EnemyManager::destroyEnemy(int _id)
 				break;
 
 			}
-			//SAFE_DELETE(enemyList[i]);
+			SAFE_DELETE(enemyList[i]);
 
 			enemyList.erase(enemyList.begin() + i);
 			break;
 		}
 	}
-	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
+	// 今はStaticMeshRendererに登録されたオブジェクトを個別に破棄できない
 	
 }
 
@@ -179,10 +180,14 @@ void EnemyManager::destroyEnemy(int _id)
 //=============================================================================
 void EnemyManager::destroyAllEnemy()
 {
+	for (size_t i = 0; i < enemyList.size(); i++)
+	{
+		SAFE_DELETE(enemyList[i]);
+	}
 
-	wolfRenderer->allDelete();
-	tigerRenderer->allDelete();
-	bearRenderer->allDelete();
+	wolfRenderer->allUnRegister();
+	tigerRenderer->allUnRegister();
+	bearRenderer->allUnRegister();
 
 	enemyList.clear();
 }

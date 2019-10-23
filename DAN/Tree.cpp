@@ -13,7 +13,7 @@ int Tree::numOfTree = 0;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Tree::Tree(): StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL))
+Tree::Tree(): StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL))
 {
 	numOfTree++;
 }
@@ -41,7 +41,7 @@ void Tree::update(float frameTime)
 //=============================================================================
 void Tree::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	StaticMeshObject::render(
+	StaticMeshRenderer::render(
 		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 

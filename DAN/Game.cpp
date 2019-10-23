@@ -106,15 +106,15 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
-	testFieldRenderer->generateObject(testField);
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
+	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//プレイヤーの初期化
 	player->initialize(inputNS::DINPUT_1P, 0);
 	player->setCamera(camera);	//カメラポインタのセット
-	playerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
-	playerRenderer->generateObject(player);
+	playerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+	playerRenderer->registerObject(player);
 	player->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
 
 	//枯木の初期化
@@ -203,11 +203,12 @@ void Game::update(float _frameTime) {
 
 
 	//テストフィールドの更新
-	testField->update();
-	testFieldRenderer->update();
+	testField->update();			//オブジェクト
+	testFieldRenderer->update();	//レンダラー
 
 	//プレイヤーの更新
-	player->update(frameTime);
+	player->update(frameTime);		//オブジェクト
+	playerRenderer->update();		//レンダラー
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
@@ -298,10 +299,6 @@ void Game::update(float _frameTime) {
 	// テロップの更新
 	telop->update(frameTime);
 	
-	////カメラの更新
-	//camera->update();
-	playerRenderer->update();
-
 	//枯木の更新
 	deadTree->update();
 	//木Aの更新

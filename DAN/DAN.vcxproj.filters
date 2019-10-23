@@ -139,12 +139,6 @@
     <Filter Include="Game Layer\Player">
       <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Object\StaticMeshObject">
-      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Object\SkinMeshObject">
-      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\LinkedList">
       <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
     </Filter>
@@ -213,6 +207,12 @@
     </Filter>
     <Filter Include="Game Layer\Scene\Create">
       <UniqueIdentifier>{38969594-a3b8-4c26-be69-77225b90e266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\StaticMeshRenderer">
+      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\SkinMeshRenderer">
+      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -326,9 +326,6 @@
     </ClCompile>
     <ClCompile Include="InstancingBillboard.cpp">
       <Filter>Constant Layer\InstancingBillboad</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticMeshObject.cpp">
-      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
@@ -451,6 +448,9 @@
     <ClCompile Include="Wolf.cpp">
       <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="StaticMeshRenderer.cpp">
+      <Filter>Constant Layer\StaticMeshRenderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -572,9 +572,6 @@
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Constant Layer\InstancingBillboad</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticMeshObject.h">
-      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
@@ -707,6 +704,9 @@
     </ClInclude>
     <ClInclude Include="Wolf.h">
       <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshRenderer.h">
+      <Filter>Constant Layer\StaticMeshRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -310,9 +310,9 @@ void Director::render() {
 
 #ifndef _DEBUG
 	//描画スキップ
-	sleepRenderTime += frameTime;
-	if (sleepRenderTime < 1.000f / ((float)fixedFps * 5 / 6))return;
-	sleepRenderTime = 0.0f;
+	//sleepRenderTime += frameTime;
+	//if (sleepRenderTime < 1.000f / ((float)fixedFps * 5 / 6))return;
+	//sleepRenderTime = 0.0f;
 #endif // !_DEBUG
 
 #ifdef _DEBUG

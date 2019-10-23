@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【StaticMeshObject.cpp】
+//【StaticMeshRenderer.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
 // [更新日]2019/10/23
@@ -8,14 +8,14 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "Direct3D9.h"
 #include "ImguiManager.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
+StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 {
 	device					= getDevice();		//デバイスの取得
 	this->staticMesh		= _staticMesh;
@@ -23,9 +23,10 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 	onTransparent			= false;
 	onLight					= true;
 	didDelete				= false;
+	didRegister				= false;
 	didGenerate				= false;
 	objectNum				= 0;
-	fillMode				= staticMeshObjectNS::FILLMODE::SOLID;
+	fillMode				= staticMeshRendererNS::FILLMODE::SOLID;
 	matrixBuffer			= NULL;
 	worldMatrix				= NULL;
 	declaration				= NULL;
@@ -50,14 +51,14 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 	i++;
 	device->CreateVertexDeclaration(vertexElement, &declaration);
 
-	objectList = new staticMeshObjectNS::ObjectList();
+	objectList = new staticMeshRendererNS::ObjectList();
 
 }
 
 //===================================================================================================================================
 //【デストラクタ】
 //===================================================================================================================================
-StaticMeshObject::~StaticMeshObject()
+StaticMeshRenderer::~StaticMeshRenderer()
 {
 	SAFE_RELEASE(matrixBuffer);
 	SAFE_RELEASE(colorBuffer);
@@ -66,10 +67,6 @@ StaticMeshObject::~StaticMeshObject()
 	SAFE_DELETE_ARRAY(worldMatrix);
 	SAFE_DELETE_ARRAY(color);
 
-	for (int i = 0; i < objectNum; i++)
-	{
-		SAFE_DELETE(*objectList->getValue(i));
-	}
 	objectList->terminate();
 	SAFE_DELETE(objectList);
 }
@@ -77,21 +74,26 @@ StaticMeshObject::~StaticMeshObject()
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
-void StaticMeshObject::update()
+void StaticMeshRenderer::update()
 {
 	for (int i = 0; i < objectNum; i++)
 	{
 		(*objectList->getValue(i))->update();			//更新処理
-		deleteObject(i);								//削除処理
+		unRegisterObject(i);							//解除処理
 	}
 
-	if (didDelete || didGenerate)
+	if (didRegister|| didUnRegister)
 	{
+
 		objectList->listUpdate();
+		for (int i = 0; i < objectList->nodeNum; i++)
+		{
+			(*objectList->getValue(i))->update();			//更新処理
+		}
 		updateBuffer();
 		updateArray();
-		didGenerate = false;
-		didDelete = false;
+		didRegister = false;
+		didUnRegister = false;
 	}
 
 	//値の更新
@@ -101,7 +103,7 @@ void StaticMeshObject::update()
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	//描画が有効でない場合終了
 	if (onRender == false)return;
@@ -175,7 +177,6 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 		effect->End();
 	}
 
-	
 	device->SetStreamSource(0, NULL, 0, NULL);
 	device->SetStreamSource(1, NULL, 0, NULL);
 
@@ -188,7 +189,7 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 //===================================================================================================================================
 //【ワールドマトリックスバッファを更新する】
 //===================================================================================================================================
-void StaticMeshObject::updateWorldMatrix()
+void StaticMeshRenderer::updateWorldMatrix()
 {
 	objectNum = objectList->nodeNum;
 	if (objectNum <= 0)return;
@@ -201,13 +202,12 @@ void StaticMeshObject::updateWorldMatrix()
 	}
 
 	copyVertexBuffer(sizeof(D3DXMATRIX)*objectNum, worldMatrix, matrixBuffer);
-
 }
 
 //===================================================================================================================================
 //【カラーバッファを更新する】
 //===================================================================================================================================
-void StaticMeshObject::updateColor()
+void StaticMeshRenderer::updateColor()
 {
 	objectNum = objectList->nodeNum;
 	if (objectNum <= 0)return;
@@ -220,57 +220,65 @@ void StaticMeshObject::updateColor()
 }
 
 //===================================================================================================================================
-//【オブジェクトの生成】
+//【描画オブジェクトの登録】
 //===================================================================================================================================
-void StaticMeshObject::generateObject(Object* object)
+void StaticMeshRenderer::registerObject(Object* object)
 {
-	objectList->insertFront(object);			//オブジェクトを作成
-	didGenerate = true;
+	objectList->insertFront(object);			//オブジェクトポインタを作成
+	didRegister = true;
 }
 
 //===================================================================================================================================
-//【オブジェクトの全削除】
+//【描画オブジェクトの全解除】
 //===================================================================================================================================
-void StaticMeshObject::allDelete()
+void StaticMeshRenderer::allUnRegister()
 {
-	for (int i = 0; i < objectNum; i++)
-	{
-		SAFE_DELETE(*objectList->getValue(i));
-	}
 	objectList->allClear();
 	objectNum = objectList->nodeNum;
 }
 
 //===================================================================================================================================
-//【IDを使用してオブジェクトの削除】
+//【IDを使用して描画オブジェクトの解除】
 //===================================================================================================================================
-void StaticMeshObject::deleteObjectByID(int id)
+void StaticMeshRenderer::unRegisterObjectByID(int id)
 {
+	//総当たり検索
 	for (int i = 0; i < objectNum; i++)
 	{	
 		if ((*objectList->getValue(i))->id == id)
 		{
-			(*objectList->getValue(i))->existenceTimer = 0.0f;//存在時間を0にして削除可能状態にする
-			return;		//検索終了
+			//存在時間を0にして削除可能状態にする
+			(*objectList->getValue(i))->existenceTimer = 0.0f;
+			//検索終了
+			return;	
 		}
 	}
 }
 
 //===================================================================================================================================
-//【オブジェクトの削除】
+//【描画オブジェクトの解除】
 //===================================================================================================================================
-void StaticMeshObject::deleteObject(int i)
+void StaticMeshRenderer::unRegisterObject(int i)
 {
-	if ((*objectList->getValue(i))->existenceTimer > 0)return;
-	SAFE_DELETE(*objectList->getValue(i));
-	objectList->remove(objectList->getNode(i));		//リスト内のオブジェクトを削除
-	didDelete = true;
+	if (*objectList->getValue(i)) 
+	{
+		//有効値ならタイマーチェック後解除処理
+		if ((*objectList->getValue(i))->existenceTimer > 0)return;	//タイマーチェック
+		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+		didUnRegister = true;
+	}
+	else
+	{
+		//有効値でなければ自動的に解除
+		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+		didUnRegister = true;
+	}
 }
 
 //===================================================================================================================================
 //【ランダムアクセス用配列の更新】
 //===================================================================================================================================
-void StaticMeshObject::updateAccessList()
+void StaticMeshRenderer::updateAccessList()
 {
 	objectList->listUpdate();
 }
@@ -278,7 +286,7 @@ void StaticMeshObject::updateAccessList()
 //===================================================================================================================================
 //【バッファのリソース更新】
 //===================================================================================================================================
-void StaticMeshObject::updateBuffer()
+void StaticMeshRenderer::updateBuffer()
 {
 	objectNum = objectList->nodeNum;				//オブジェクトの数の取得
 
@@ -290,7 +298,7 @@ void StaticMeshObject::updateBuffer()
 //===================================================================================================================================
 //【copy用配列のメモリ更新】
 //===================================================================================================================================
-void StaticMeshObject::updateArray()
+void StaticMeshRenderer::updateArray()
 {
 	//インスタンス数の取得
 	objectNum = objectList->nodeNum;
@@ -305,7 +313,7 @@ void StaticMeshObject::updateArray()
 //【ImGUIへの出力】
 //===================================================================================================================================
 #ifdef _DEBUG
-void StaticMeshObject::outputGUI()
+void StaticMeshRenderer::outputGUI()
 {
 	Object* obj;
 	for (int i = 0; i < objectNum; i++)
@@ -319,13 +327,13 @@ void StaticMeshObject::outputGUI()
 //===================================================================================================================================
 //【setter】
 //===================================================================================================================================
-void StaticMeshObject::enableLight()	{ onLight = true; }
-void StaticMeshObject::disableLight()	{ onLight = false; }
+void StaticMeshRenderer::enableLight()	{ onLight = true; }
+void StaticMeshRenderer::disableLight()	{ onLight = false; }
 
 //===================================================================================================================================
 //【スタティックメッシュの取得】
 //===================================================================================================================================
-StaticMesh* StaticMeshObject::getStaticMesh()
+StaticMesh* StaticMeshRenderer::getStaticMesh()
 {
 
 	return staticMesh;

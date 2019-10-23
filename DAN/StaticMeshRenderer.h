@@ -1,8 +1,8 @@
 //===================================================================================================================================
-//【Object.h】
+//【StaticMeshRenderer.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/17
+// [更新日]2019/10/23
 //===================================================================================================================================
 #pragma once
 
@@ -15,7 +15,7 @@
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
-namespace staticMeshObjectNS
+namespace staticMeshRendererNS
 {
 	enum FILLMODE
 	{
@@ -31,9 +31,10 @@ namespace staticMeshObjectNS
 }
 
 //===================================================================================================================================
-//【スタティックメッシュオブジェクトクラス】
+//【スタティックメッシュレンダラークラス】
 //===================================================================================================================================
-class StaticMeshObject:public Base
+//StaticMeshRendererへ名称変更予定
+class StaticMeshRenderer:public Base
 {
 protected:
 	//Data
@@ -43,6 +44,8 @@ protected:
 	bool								onRender;				//描画フラグ
 	bool								onTransparent;			//透過フラグ
 	bool								onLight;				//ライトフラグ
+	bool								didRegister;			//登録フラグ
+	bool								didUnRegister;			//解除フラグ
 	bool								didGenerate;			//生成フラグ
 	bool								didDelete;				//削除フラグ
 	int									objectNum;				//オブジェクトの数
@@ -59,22 +62,22 @@ protected:
 	D3DXVECTOR2*						uv;						//カラー配列
 
 	//オブジェクトリスト
-	staticMeshObjectNS::ObjectList*		objectList;
+	staticMeshRendererNS::ObjectList*		objectList;
 
 public:
 	//Method
-	StaticMeshObject(StaticMesh* _staticMesh);
-	~StaticMeshObject();
+	StaticMeshRenderer(StaticMesh* _staticMesh);
+	~StaticMeshRenderer();
 
 	//基本関数
 	void update();
 	void render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
-	//リスト操作
-	void generateObject(Object* newObject);						//新たなオブジェクトの生成
-	void deleteObjectByID(int ID);								//描画するインスタンスをIDにより削除
-	void deleteObject(int instanceNo);							//描画するインスタンスを削除
-	void allDelete();											//描画するインスタンスを全削除
+	//リスト操作（登録/解除/更新）
+	void registerObject(Object* newObject);						//描画オブジェクトを登録
+	void unRegisterObjectByID(int ID);							//描画するオブジェクトをIDにより解除
+	void unRegisterObject(int instanceNo);						//描画するオブジェクトを解除
+	void allUnRegister();										//描画するオブジェクトを全解除
 	void updateAccessList();									//ランダムアクセス用配列の更新：インスタンスの生成または削除を行った時に更新を行う。
 
 	//各バッファ値更新

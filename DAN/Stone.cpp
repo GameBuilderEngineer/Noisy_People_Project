@@ -2,7 +2,7 @@
 //ÅyStone.cppÅz
 // [çÏê¨é“]HALìåãûGP12A332 11 êõñÏ é˜
 // [çÏê¨ì˙]2019/10/14
-// [çXêVì˙]2019/10/14
+// [çXêVì˙]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -14,7 +14,8 @@
 //ÅyÉRÉìÉXÉgÉâÉNÉ^Åz
 //===================================================================================================================================
 Stone::Stone() {
-	renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::STONE_003));
+	renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STONE_003));
+	num = 400;
 	initialize();
 };
 
@@ -22,6 +23,8 @@ Stone::Stone() {
 //ÅyÉfÉXÉgÉâÉNÉ^Åz
 //===================================================================================================================================
 Stone::~Stone() {
+	SAFE_DELETE_ARRAY(object);
+	renderer->allUnRegister();
 	SAFE_DELETE(renderer);
 };
 
@@ -29,13 +32,15 @@ Stone::~Stone() {
 //Åyèâä˙âªÅz
 //===================================================================================================================================
 void Stone::initialize() {
+	object = new Object[num];
 	D3DXVECTOR3 position;
-	for (int i = 0; i < 400; i++)
+	for (int i = 0; i < num; i++)
 	{
 		position.x = (float)((rand() % 2000) - 1000);
 		position.y = 0.0f;
 		position.z = (float)((rand() % 2000) - 1000);
-		generate(position);
+		object[i].initialize(&position);
+		renderer->registerObject(&object[i]);//ÉåÉìÉ_ÉâÅ[Ç÷ìoò^
 	}
 	needUpdate = true;
 };
@@ -56,14 +61,4 @@ void Stone::update()
 void Stone::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
-}
-
-//===================================================================================================================================
-//Åyê∂ê¨Åz
-//===================================================================================================================================
-void Stone::generate(D3DXVECTOR3 position)
-{
-	Object* object = new Object();
-	renderer->generateObject(object);
-	object->initialize(&position);
 }

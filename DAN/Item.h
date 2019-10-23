@@ -4,7 +4,7 @@
 // ì¬ŠJn“ú : 2019/  /
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "BoundingSphere.h"
 
 

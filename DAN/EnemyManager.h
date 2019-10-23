@@ -30,9 +30,9 @@ class EnemyManager
 private:
 	std::vector<enemyNS::EnemyData> enemyDataList;		// エネミーデータリスト
 	std::vector<Enemy*> enemyList;						// エネミーポインタリスト
-	StaticMeshObject* wolfRenderer;						// 描画オブジェクト
-	StaticMeshObject* tigerRenderer;					// 描画オブジェクト
-	StaticMeshObject* bearRenderer;						// 描画オブジェクト
+	StaticMeshRenderer* wolfRenderer;						// 描画オブジェクト
+	StaticMeshRenderer* tigerRenderer;					// 描画オブジェクト
+	StaticMeshRenderer* bearRenderer;						// 描画オブジェクト
 	int nextID;											// 次回エネミー発行ID
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス

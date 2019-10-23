@@ -55,7 +55,7 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 		EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
 
 		//•`‰æ—p
-		renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+		renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 		initialize();
 		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
 		{
@@ -147,7 +147,7 @@ void ENEMY_TOOLS::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 void ENEMY_TOOLS::generate(D3DXVECTOR3 position)
 {
 	Object* object = new Object();
-	renderer->generateObject(object);
+	renderer->registerObject(object);
 	object->existenceTimer = -1;		// < 0 ‚È‚çÁ‚¦‚é
 	object->initialize(&position);
 }
@@ -452,7 +452,7 @@ void ENEMY_TOOLS::DeleteEnemyFormat(short enemyId)
 		UpdateEfmt(enemyFile.enmy.enemyMax + 1);
 
 		//•`‰æ—p
-		renderer->deleteObject(enemyFile.enmy.enemyMax - enemyId);
+		renderer->unRegisterObject(enemyFile.enmy.enemyMax - enemyId);
 		renderer->updateAccessList();
 		needUpdate = true;
 	}

@@ -10,7 +10,7 @@
 //【ライブラリのロード】
 //===================================================================================================================================
 #include "Base.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "Player.h"
 #include "Enemy.h"
 
@@ -84,7 +84,7 @@ private:
 	int EnemyListboxState;					//エネミーの状態(リストボックス)
 
 	//描画用
-	StaticMeshObject* renderer;
+	StaticMeshRenderer* renderer;
 	bool needUpdate;
 
 	//関数
