@@ -16,12 +16,13 @@ void TreeManager::initialize()
 	nextID = 0;								// 次回発行IDを0に初期化
 
 	// 描画オブジェクトの作成
-	tree1Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	leaf1Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	tree2Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	leaf2Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	tree3Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	leaf3Renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	aTrunkRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	aLeafRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_PLAYSTATION));
+	bTrunkRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	bLeafRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	cTrunkRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	cLeafRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+
 #if 0
 #endif
 }
@@ -40,12 +41,12 @@ void TreeManager::uninitialize()
 	treeList.swap(temp);
 
 	// 描画オブジェクトの破棄
-	SAFE_DELETE(tree1Renderer);
-	SAFE_DELETE(leaf1Renderer);
-	SAFE_DELETE(tree2Renderer);
-	SAFE_DELETE(leaf2Renderer);
-	SAFE_DELETE(tree3Renderer);
-	SAFE_DELETE(leaf3Renderer);
+	SAFE_DELETE(aTrunkRenderer);
+	SAFE_DELETE(aLeafRenderer);
+	SAFE_DELETE(bTrunkRenderer);
+	SAFE_DELETE(bLeafRenderer);
+	SAFE_DELETE(cTrunkRenderer);
+	SAFE_DELETE(cLeafRenderer);
 }
 
 
@@ -59,12 +60,12 @@ void TreeManager::update(float frameTime)
 		treeList[i]->update(frameTime);
 	}
 
-	tree1Renderer->update();
-	leaf1Renderer->update();
-	tree2Renderer->update();
-	leaf2Renderer->update();
-	tree3Renderer->update();
-	leaf3Renderer->update();
+	aTrunkRenderer->update();
+	aLeafRenderer->update();
+	bTrunkRenderer->update();
+	bLeafRenderer->update();
+	cTrunkRenderer->update();
+	cLeafRenderer->update();
 }
 
 
@@ -73,77 +74,113 @@ void TreeManager::update(float frameTime)
 //=============================================================================
 void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	tree1Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	leaf1Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	tree2Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	leaf2Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	tree3Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	leaf3Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	aTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	aLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	cTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	cLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
 //=============================================================================
 // ツリーオブジェクトの作成
 //=============================================================================
-void TreeManager::createTree(TreeData* treeData)
+void TreeManager::createTree(TreeData treeData)
 {
-	switch (treeData->modelId)
+	Tree* tree = new Tree(treeData);	// ツリー作成
+
+	// 幹を作成
+	tree->setTrunk(new Object);
+	switch (treeData.model)
 	{
-	case TREE_01:
-		//if()
-		//if(treeData->geenState == GREEN){leaf1Renderer->generateObject()}
+	case A_MODEL:
+		aTrunkRenderer->generateObject(tree->getTrunk());
 		break;
 
-	case TREE_02:
+	case B_MODEL:
+		bTrunkRenderer->generateObject(tree->getTrunk());
 		break;
 
-	case TREE_03:
+	case C_MODEL:
+		cTrunkRenderer->generateObject(tree->getTrunk());
 		break;
 	}
 
-	treeList.back()->setDataToTree(treeData);
+	// リーフ作成
+	if (treeData.geenState == GREEN)
+	{
+		createLeaf(tree->getLeaf(), treeData.model);
+	}
+
+	treeList.push_back(tree);
 }
 
 
 //=============================================================================
-// ツリーオブジェクトの破棄
-// ※使用不可
+// リーフ作成
 //=============================================================================
-void TreeManager::destroyTree(int _id)
+void TreeManager::createLeaf(Object* leaf, int _model)
 {
-	for (size_t i = 0; i < treeList.size(); i++)
+	switch (_model)
 	{
-		if (treeList[i]->getTreeData()->id == _id)
-		{
-			SAFE_DELETE(treeList[i]);
-			treeList.erase(treeList.begin() + i);
-			break;
-		}
+	case A_MODEL:
+		leaf = new Object;
+		aLeafRenderer->generateObject(leaf);
+		break;
+
+	case B_MODEL:
+		leaf = new Object;
+		bLeafRenderer->generateObject(leaf);
+		break;
+
+	case C_MODEL:
+		leaf = new Object;
+		cLeafRenderer->generateObject(leaf);
+		break;
 	}
-	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
+}
+
+
+//=============================================================================
+// リーフ破棄
+//=============================================================================
+void TreeManager::destroyLeaf(Object* leaf, int _model)
+{
+	switch (_model)
+	{
+	case A_MODEL:
+		aLeafRenderer->deleteObjectByID(leaf->id);
+		break;
+
+	case B_MODEL:
+		aLeafRenderer->deleteObjectByID(leaf->id);
+		break;
+
+	case C_MODEL:
+		aLeafRenderer->deleteObjectByID(leaf->id);
+		break;
+	}
 }
 
 
 //=============================================================================
 // 全ツリーオブジェクトの破棄
-// ※仮実装
 //=============================================================================
 void TreeManager::destroyAllTree()
 {
-	for (size_t i = 0; i < treeList.size(); i++)
+	aLeafRenderer->allDelete();
+	aTrunkRenderer->allDelete();
+	bLeafRenderer->allDelete();
+	bTrunkRenderer->allDelete();
+	cLeafRenderer->allDelete();
+	cTrunkRenderer->allDelete();
+	
+	for (int i = 0; i < treeList.size(); i++)
 	{
 		SAFE_DELETE(treeList[i]);
 	}
-
 	treeList.clear();
-	//SAFE_DELETE(greenA);
-	//SAFE_DELETE(deadA);
-	//SAFE_DELETE(greenB);
-	//SAFE_DELETE(deadB);
-	//greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	//deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	//greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	//deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 }
 
 
@@ -163,23 +200,6 @@ void TreeManager::outputGUI()
 
 		ImGui::Text("numOfTree:%d", Tree::getNumOfTree());
 
-		//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-		//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-		//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-		//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-		//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-		//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-		//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
-
-		//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-		//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-		//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-		//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
-
-		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
 
 #endif

@@ -16,7 +16,6 @@ private:
 
 public:
 	virtual void update(float frameTime);
-	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	// Getter
 

@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshObject.h"
+#include "Object.h"
 #include "BoundingSphere.h"
 
 
@@ -13,18 +13,21 @@
 //=============================================================================
 namespace treeNS
 {
+	// ツリー種別
 	enum TREE_TYPE
 	{
 		ANALOG_TREE,
 		DIGITAL_TREE
 	};
 
+	// 緑化状態
 	enum GREEN_STATE
 	{
 		GREEN,
 		DEAD
 	};
 
+	// サイズ
 	enum TREE_SIZE
 	{
 		STANDARD,
@@ -32,51 +35,56 @@ namespace treeNS
 		VERY_LARGE
 	};
 
+	// モデル
 	enum TREE_MODEL
 	{
-		TREE_01,
-		TREE_02,
-		TREE_03,
+		A_MODEL,
+		B_MODEL,
+		C_MODEL,
 		TREE_MAX
 	};
 
-	struct TreeData
+
+	typedef struct TreeData
 	{
 		int id;							// 識別番号
-		int modelId;					// モデルID
+		int model	;					// モデルID
 		TREE_TYPE type;					// ツリータイプ
 		GREEN_STATE geenState;			// 緑化状態
 		TREE_SIZE size;					// 木のサイズ
 		int hp;							// HP
-		int initialPosition;			// 初期座標
-		void initialize() { ZeroMemory(this, sizeof(TreeData)); }
-	};
+		D3DXVECTOR3 initialPosition;	// 初期座標
+		D3DXVECTOR3 initialDirection;	// 初期方角
+		void zeroClear() { ZeroMemory(this, sizeof(TreeData)); }
+	} TREESET;
 }
-
 
 //=============================================================================
 //クラス定義
 //=======================================================================T======
-class Tree: public StaticMeshObject
+class Tree
 {
 private:
-	treeNS::TreeData* treeData;
-
-	// Static
-	// ↓サイズの数静的メンバでもって自分のサイズのものを参照すればいい
+	treeNS::TreeData treeData;			// ツリーデータ
+	Object *leaf;						// 葉オブジェクト
+	Object *trunk;						// 幹オブジェクト
 	BoundingSphere greeningArea;		// 緑化範囲
 	static int numOfTree;				// ツリーオブジェクトの総数
 
 public:
-	Tree();
+	Tree(treeNS::TreeData _treeData);
 	~Tree();
-	virtual void update(float frameTime);
-	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	void initialize();
+	void update(float frameTime);
 
 	// Getter
+	Object* getLeaf();
+	Object* getTrunk();
 	static int getNumOfTree();			// ツリーの数を取得
 	treeNS::TreeData* getTreeData();	// ツリーデータを取得
 
 	// Setter
-	void setDataToTree(treeNS::TreeData* _treeData);
+	void setDataToTree(treeNS::TreeData _treeData);
+	void setLeaf(Object* _leaf);
+	void setTrunk(Object* _trunk);
 };

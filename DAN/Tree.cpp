@@ -13,8 +13,16 @@ int Tree::numOfTree = 0;
 //=============================================================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //=============================================================================
-Tree::Tree(): StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL))
+Tree::Tree(treeNS::TreeData _treeData)
 {
+	treeData = _treeData;
+	trunk->position = treeData.initialPosition;
+	leaf->position = treeData.initialPosition;
+
+	// treeData.initialDirection‚ğŠî‚É‚µ‚½Œü‚«“]Š·
+
+	// treeData.size‚ğŠî‚É‚µ‚½Šg‘åk¬
+
 	numOfTree++;
 }
 
@@ -37,23 +45,17 @@ void Tree::update(float frameTime)
 
 
 //=============================================================================
-// •`‰æˆ—
-//=============================================================================
-void Tree::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-{
-	StaticMeshObject::render(
-		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-}
-
-
-//=============================================================================
 // Getter
 //=============================================================================
+Object* Tree::getLeaf() { return leaf; }
+Object* Tree::getTrunk() { return trunk; }
 int Tree::getNumOfTree(){ return numOfTree; }
-TreeData* Tree::getTreeData() { return treeData; }
+TreeData* Tree::getTreeData() { return &treeData; }
 
 
 //=============================================================================
 // Setter
 //=============================================================================
-void Tree::setDataToTree(TreeData* _treeData) { treeData = _treeData; }
+void Tree::setDataToTree(TreeData _treeData) { treeData = _treeData; }
+void Tree::setLeaf(Object* _leaf) { leaf = _leaf; }
+void Tree::setTrunk(Object* _trunk) {trunk = _trunk;}

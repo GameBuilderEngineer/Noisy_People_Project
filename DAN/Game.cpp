@@ -402,6 +402,9 @@ void Game::createGUI()
 #endif // _DEBUG
 
 
+//===================================================================================================================================
+//【なんかいろいろテストするところ】
+//===================================================================================================================================
 void Game::test()
 {
 	// アイテムマネージャのテスト
@@ -449,4 +452,14 @@ void Game::test()
 			}
 		}
 	}
+
+	//// ツリーマネージャのテスト
+	//if (input->wasKeyPressed('5'))
+	//{
+	//	treeNS::TreeData treeData;
+	//	treeData.geenState = treeNS::GREEN;
+	//	treeData.model = treeNS::A_MODEL;
+	//	treeData.initialPosition = *player->getPosition();
+	//	treeManager->createTree(treeData);
+	//}
 }

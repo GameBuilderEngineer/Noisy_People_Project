@@ -81,7 +81,7 @@ namespace enemyNS
 
 
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
-	// エネミー配置ツールとのデータ交換に使用する
+	// 新規エネミー作成やエネミー配置ツールとのデータ交換に使用する
 	typedef struct EnemyInitialSettingData
 	{
 		int id;							// 識別番号(0..*)

@@ -275,7 +275,6 @@ void Create::render3D(Camera currentCamera) {
 
 	// ƒAƒCƒeƒ€‚Ì•`‰æ
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
 }
 
 //===================================================================================================================================
