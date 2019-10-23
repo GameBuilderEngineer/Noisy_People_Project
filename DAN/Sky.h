@@ -2,7 +2,7 @@
 //【Sky.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/10/20
-// [更新日]2019/10/20
+// [更新日]2019/10/23
 //===================================================================================================================================
 #pragma once
 
@@ -10,12 +10,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Object.h"
-#include "StaticMeshObject.h"
-
-namespace skyNS
-{
-	const int NUM = 1;
-}
+#include "StaticMeshRenderer.h"
 
 //===================================================================================================================================
 //【スカイクラス】
@@ -23,7 +18,8 @@ namespace skyNS
 class Sky :	public Base
 {
 private:
-	StaticMeshObject* renderer;
+	Object* object;
+	StaticMeshRenderer* renderer;
 	bool needUpdate;
 public:
 	Sky();
@@ -31,6 +27,5 @@ public:
 	void initialize();
 	void update();
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void generate(D3DXVECTOR3 position);
 };
 

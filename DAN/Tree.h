@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Object.h"
+#include "StaticMeshRenderer.h"
 #include "BoundingSphere.h"
 
 

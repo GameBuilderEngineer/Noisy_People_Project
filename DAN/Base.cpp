@@ -117,7 +117,7 @@ void setEffekseerDirectory()
 {
 	char tmporary[512] = { 0 };
 	strcpy(tmporary, rootPath);
-	strcat(tmporary, "\\05 Effekseer File");
+	strcat(tmporary, "\\06 Effekseer File");
 	SetCurrentDirectory(tmporary);
 }
 

@@ -156,7 +156,7 @@ void Player::update(float frameTime)
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 #ifdef _DEBUG
-	//bodyCollide.render(centralMatrixWorld);
+	bodyCollide.render(centralMatrixWorld);
 #endif // _DEBUG
 }
 

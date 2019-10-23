@@ -24,9 +24,9 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 	attractorMatrix = _attractorMatrix;
 
 	// 描画オブジェクトの作成
-	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_BUNNY));
-	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_HAT));
+	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
 
 #if 1	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
@@ -139,7 +139,7 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
-		wolfRenderer->generateObject(enemy);
+		wolfRenderer->registerObject(enemy);
 		break;
 
 	case TIGER:
@@ -203,13 +203,13 @@ void EnemyManager::destroyEnemy(int _id)
 {
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
-		if (enemyList[i]->getEnemyData()->id != _id) { continue; }
-
-		switch (enemyList[i]->getEnemyData()->type)
+		if (enemyList[i]->getEnemyData()->id == _id)
 		{
-		case WOLF:
-			wolfRenderer->deleteObjectByID(enemyList[i]->id);
-			break;
+			switch (enemyList[i]->getEnemyData()->type)
+			{
+			case WOLF:
+				wolfRenderer->unRegisterObjectByID(enemyList[i]->id);
+				break;
 
 		case TIGER:
 			tigerRenderer->deleteObjectByID(enemyList[i]->id);
@@ -230,12 +230,14 @@ void EnemyManager::destroyEnemy(int _id)
 //=============================================================================
 void EnemyManager::destroyAllEnemy()
 {
-	wolfRenderer->allDelete();
-	tigerRenderer->allDelete();
-	bearRenderer->allDelete();
-	enemyList.clear();	// ベクター要素数を0にする
-}
+	for (size_t i = 0; i < enemyList.size(); i++)
+	{
+		SAFE_DELETE(enemyList[i]);
+	}
 
+	wolfRenderer->allUnRegister();
+	tigerRenderer->allUnRegister();
+	bearRenderer->allUnRegister();
 
 //=============================================================================
 // 破棄順序違反

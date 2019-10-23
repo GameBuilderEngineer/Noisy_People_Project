@@ -63,21 +63,38 @@ namespace effekseerNS
 
 	class Instance
 	{
-		::Effekseer::Effect*	effect;
+	public:
+		int	effectNo;
 		::Effekseer::Handle		handle;
+		D3DXVECTOR3 position;
+		D3DXVECTOR3 speed;
+		D3DXVECTOR3 rotation;
+		D3DXVECTOR3 deltaRadian;
+		D3DXVECTOR3 scale;
+		D3DXVECTOR3 deltaScale;
 
-		Instance()
+
+		Instance(int effectNo = TEST0)
 		{
-			effect = NULL;
-			handle = -1;
+			this->effectNo	= effectNo;
+			handle		= -1;
+			position	= D3DXVECTOR3(0,0,0);
+			speed		= D3DXVECTOR3(0,0,0);
+			rotation	= D3DXVECTOR3(0,0,0);
+			deltaRadian	= D3DXVECTOR3(0,0,0);
+			scale		= D3DXVECTOR3(1,1,1);
+			deltaScale	= D3DXVECTOR3(0,0,0);
 		}
+
+		virtual void update();
 	};
 
 	//===================================================================================================================================
 	//【外部参照】
 	//===================================================================================================================================
-	void play(int effekseerNo,D3DXVECTOR3 position);
-	void stop(int effekseerNo);
+	void play(Instance*);
+	void stop();
+	void stop(::Effekseer::Handle handle);
 	void setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf);
 	void setCameraMatrix(D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up);
 	void render();
@@ -111,7 +128,7 @@ public:
 	::Effekseer::Effect*				effect[effekseerNS::MAX_EFFEKSEER];
 
 	//ハンドルリスト
-	//LinkedList<effekseerNS::Instance>	instanceList;
+	LinkedList<effekseerNS::Instance*>*	instanceList;
 
 public:
 	EffekseerManager();
@@ -125,10 +142,12 @@ public:
 
 	void setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf);
 	void setCameraMatrix(D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up);
-	void play(int effekseerNo, D3DXVECTOR3 position);
-	void stop(int effekseerNo);
+	void play(effekseerNS::Instance* instance);
+	void stop();
+	void stop(::Effekseer::Handle handle);
 	void pause(bool flag);
 	void pause(::Effekseer::Handle handle, bool flag);
 
 };
 
+EffekseerManager* getEffekseerManager();

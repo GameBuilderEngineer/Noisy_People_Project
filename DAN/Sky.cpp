@@ -2,7 +2,7 @@
 //ÅySky.cppÅz
 // [çÏê¨é“]HALìåãûGP12A332 11 êõñÏ é˜
 // [çÏê¨ì˙]2019/10/20
-// [çXêVì˙]2019/10/20
+// [çXêVì˙]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -14,7 +14,7 @@
 //ÅyÉRÉìÉXÉgÉâÉNÉ^Åz
 //===================================================================================================================================
 Sky::Sky() {
-	renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SKY_DOME));
+	renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SKY_DOME));
 	renderer->disableLight();
 	initialize();
 };
@@ -23,6 +23,7 @@ Sky::Sky() {
 //ÅyÉfÉXÉgÉâÉNÉ^Åz
 //===================================================================================================================================
 Sky::~Sky() {
+	SAFE_DELETE(object);
 	SAFE_DELETE(renderer);
 };
 
@@ -30,12 +31,10 @@ Sky::~Sky() {
 //Åyèâä˙âªÅz
 //===================================================================================================================================
 void Sky::initialize() {
-	D3DXVECTOR3 position;
-	for (int i = 0; i < skyNS::NUM; i++)
-	{
-		position = D3DXVECTOR3(0,0,0);
-		generate(position);
-	}
+	object = new Object();
+	object->initialize(&D3DXVECTOR3(0, 0, 0));
+	object->scale = D3DXVECTOR3(15,15,15);
+	renderer->registerObject(object);
 	needUpdate = true;
 };
 
@@ -55,14 +54,4 @@ void Sky::update()
 void Sky::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
-}
-
-//===================================================================================================================================
-//Åyê∂ê¨Åz
-//===================================================================================================================================
-void Sky::generate(D3DXVECTOR3 position)
-{
-	Object* object = new Object();
-	renderer->generateObject(object);
-	object->initialize(&position);
 }

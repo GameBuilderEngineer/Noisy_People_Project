@@ -42,7 +42,7 @@ public:
 	//【getter】
 	//===================================================================================================================================
 	Node<T>* getNode(int i) { return nodeList[i]; }		//ランダムアクセス用リストにアクセス
-	T* getValue(int i) { return &nodeList[i]->value; }		//ノード内の値にアクセス
+	T* getValue(int i) { return &nodeList[i]->value; }	//ノード内の値にアクセス
 
 	//===================================================================================================================================
 	//【コンストラクタ】
@@ -153,17 +153,17 @@ public:
 	void listUpdate()
 	{
 		SAFE_DELETE_ARRAY(nodeList);				//ポインタ配列を削除
-		if (nodeNum <= 0)return;						//ノード数が0の場合終了
-		nodeList = new Node<T>*[nodeNum];	//全ノード数分のポインタメモリを確保
-		current = head->next;							//先頭アドレスの次のポインタから開始
-		int iterator = 0;										//list配列メモリアクセス防止イテレータ
+		if (nodeNum <= 0)return;					//ノード数が0の場合終了
+		nodeList = new Node<T>*[nodeNum];			//全ノード数分のポインタメモリを確保
+		current = head->next;						//先頭アドレスの次のポインタから開始
+		int iterator = 0;							//list配列メモリアクセス防止イテレータ
 		
 		//while終了条件：現在の指し示すノードが先頭ノードかつイテレータが全ノード数
 		while (current != head && iterator != nodeNum)
 		{
-			nodeList[iterator] = current;				//現在のノードポインタをポインタ配列へ記録
-			current = current->next;					//次のノードポインタへ移動
-			iterator++;										//iteratorを次へ
+			nodeList[iterator] = current;			//現在のノードポインタをポインタ配列へ記録
+			current = current->next;				//次のノードポインタへ移動
+			iterator++;								//iteratorを次へ
 		}
 	}
 

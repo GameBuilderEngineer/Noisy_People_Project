@@ -2,7 +2,7 @@
 //【Object.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/23
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -102,8 +102,8 @@ void Object::update()
 	D3DXMatrixScaling(&matrixScale, scale.x, scale.y, scale.z);
 
 	//ワールド行列＝スケール行列*回転行列*位置行列
-	D3DXMatrixIdentity(&matrixWorld);														//正規化
-	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixScale);			//*スケール行列
+	D3DXMatrixIdentity(&matrixWorld);									//正規化
+	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixScale);		//*スケール行列
 	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixRotation);		//*回転行列
 	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixPosition);		//*位置行列
 

@@ -12,7 +12,7 @@
 #include <vector>
 #include "AbstractScene.h"
 #include "Player.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "Stone.h"
 #include "DeadTree.h"
 #include "TreeTypeA.h"
@@ -71,11 +71,11 @@ private:
 
 	//プレイヤー
 	Player *player;
-	StaticMeshObject* playerRenderer;
+	StaticMeshRenderer* playerRenderer;
 
 	//フィールド
 	Object* testField;
-	StaticMeshObject* testFieldRenderer;
+	StaticMeshRenderer* testFieldRenderer;
 
 	//インスタンシングビルボードテスト
 	//InstancingBillboard instancingBillboardTest;
@@ -98,13 +98,13 @@ private:
 	//色々なオブジェクトの描画サンプルテスト
 
 	//スタティックメッシュで、１個のオブジェクトのみを描画するとき【静的】
-	//StaticSingleStaticMeshObjectTest ssSMO
+	//StaticSingleStaticMeshRendererTest ssSMO
 
 	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiStaticMeshObjectTest smSMO
+	//StaticMultiStaticMeshRendererTest smSMO
 
 	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiStaticMeshObjectTest dmSMO
+	//DynamicMultiStaticMeshRendererTest dmSMO
 
 	//ビルボードで、1個のオブジェクトを描画するとき【静的】
 	//StaticSingleInstancingBillboardTest ssIB

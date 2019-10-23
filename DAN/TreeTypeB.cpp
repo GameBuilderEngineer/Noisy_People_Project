@@ -2,7 +2,7 @@
 //【TreeTypeB.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/10/14
-// [更新日]2019/10/14
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -14,7 +14,8 @@
 //【コンストラクタ】
 //===================================================================================================================================
 TreeTypeB::TreeTypeB() {
-	renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	num = 400;
+	renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	initialize();
 };
 
@@ -22,6 +23,7 @@ TreeTypeB::TreeTypeB() {
 //【デストラクタ】
 //===================================================================================================================================
 TreeTypeB::~TreeTypeB() {
+	SAFE_DELETE_ARRAY(object);
 	SAFE_DELETE(renderer);
 };
 
@@ -29,13 +31,23 @@ TreeTypeB::~TreeTypeB() {
 //【初期化】
 //===================================================================================================================================
 void TreeTypeB::initialize() {
+	object = new Object[num];
 	D3DXVECTOR3 position;
-	for (int i = 0; i < 400; i++)
+	D3DXVECTOR3 deltaScale;
+	for (int i = 0; i < num; i++)
 	{
 		position.x = (float)((rand() % 2000) - 1000);
 		position.y = 0.0f;
 		position.z = (float)((rand() % 2000) - 1000);
-		generate(position);
+		object[i].initialize(&position);
+		
+		deltaScale.x = (float)((rand() % 100))*0.01;
+		deltaScale.y = (float)((rand() % 100))*0.01;
+		deltaScale.z = (float)((rand() % 100))*0.01;
+
+		object[i].scale += deltaScale;
+
+		renderer->registerObject(&object[i]);//レンダラーへ登録
 	}
 	needUpdate = true;
 };
@@ -58,12 +70,3 @@ void TreeTypeB::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 camer
 	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
 }
 
-//===================================================================================================================================
-//【生成】
-//===================================================================================================================================
-void TreeTypeB::generate(D3DXVECTOR3 position)
-{
-	Object* object = new Object();
-	renderer->generateObject(object);
-	object->initialize(&position);
-}

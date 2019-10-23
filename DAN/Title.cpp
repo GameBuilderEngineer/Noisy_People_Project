@@ -135,7 +135,7 @@ void Title::update(float _frameTime)
 	//エフェクトの再生
 	if (input->wasKeyPressed('1'))
 	{
-		effekseerNS::play(effekseerNS::TEST0, D3DXVECTOR3(0, 0, 0));
+		effekseerNS::play(new effekseerNS::Instance);
 	}
 
 	// タイトルUI
