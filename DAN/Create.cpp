@@ -80,6 +80,8 @@ void Create::initialize() {
 	//プレイヤーの初期化
 	tmpObject->initialize(inputNS::DINPUT_1P, 0);
 	tmpObject->setCamera(camera);	//カメラポインタのセット
+	tmpObject->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
+	tmpObjRenderer = new StaticMeshObject *[tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX];
 	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
 	{
 		int staticMeshNo = 0;
@@ -103,10 +105,9 @@ void Create::initialize() {
 		default:
 			break;
 		}
-		tmpObjRenderer[i] = new StaticMeshObject(staticMeshNS::reference(staticMeshNo));
+		tmpObjRenderer[i] = new StaticMeshObject (staticMeshNS::reference(staticMeshNo));
 		tmpObjRenderer[i]->generateObject(tmpObject);
 	}
-	tmpObject->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
 
 	//枯木の初期化
 	deadTree = new DeadTree();
@@ -116,13 +117,6 @@ void Create::initialize() {
 	treeB = new TreeTypeB();
 	//石の初期化
 	stone = new Stone();
-
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
-
-	//テキストの初期化
-	//text.initialize(direct3D9->device,10,10, 0xff00ff00);
-	//text2.initialize(direct3D9->device,11,11, 0xff0000ff);
 
 	//エフェクト（インスタンシング）テスト
 	testEffect = new TestEffect();
@@ -150,10 +144,14 @@ void Create::uninitialize() {
 	//SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
 	//SAFE_DELETE(player);
-	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
+	
+	//たつき待ち
+	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++) 
 	{
 		SAFE_DELETE(tmpObjRenderer[i]);
 	}
+	ES_SAFE_DELETE_ARRAY(tmpObjRenderer);
+	
 	SAFE_DELETE(deadTree);
 	SAFE_DELETE(treeA);
 	SAFE_DELETE(treeB);

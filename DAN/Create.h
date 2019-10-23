@@ -42,7 +42,7 @@
 //namespace createNS
 //{
 //
-//	//プレイヤー初期位置
+//	//仮オブジェクト初期位置
 //	const D3DXVECTOR3 PLAYER_POSITION = D3DXVECTOR3(0, 100, 0);
 //
 //	//カメラ相対位置
@@ -64,14 +64,14 @@ private:
 
 	//Text text;							//Sample
 	//Text text2;							//Sample
-	//PointSprite pointSprite;		//Sample
-	//InstancingBillboard plane;	//Sample
-	//Object testObject;				//Sample
-	//Object testCube;					//Sample
+	//PointSprite pointSprite;				//Sample
+	//InstancingBillboard plane;			//Sample
+	//Object testObject;					//Sample
+	//Object testCube;						//Sample
 
-	//プレイヤー
+	//仮オブジェクト
 	TmpObject *tmpObject;
-	StaticMeshObject* tmpObjRenderer[5];
+	StaticMeshObject** tmpObjRenderer;
 
 	//フィールド
 	Object* testField;
