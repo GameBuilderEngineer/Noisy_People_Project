@@ -13,12 +13,6 @@ using namespace treeNS;
 //=============================================================================
 void TreeManager::initialize()
 {
-	// 描画オブジェクトの作成
-	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-
 #if 0
 	// ツリーファイルを読み込む
 	FILE	*fp = NULL;
@@ -36,6 +30,12 @@ void TreeManager::initialize()
 	}
 	SAFE_DELETE_ARRAY(enemyFile.efmt);
 #endif
+
+	// 描画オブジェクトの作成
+	greenA = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	deadA = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	greenB = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	deadB = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 }
 
 
@@ -120,7 +120,7 @@ void TreeManager::destroyTree(int _id)
 			break;
 		}
 	}
-	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
+	// 今はStaticMeshRendererに登録されたオブジェクトを個別に破棄できない
 }
 
 
@@ -140,10 +140,10 @@ void TreeManager::destroyAllTree()
 	SAFE_DELETE(deadA);
 	SAFE_DELETE(greenB);
 	SAFE_DELETE(deadB);
-	greenA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	deadA = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	greenB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	deadB = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	greenA = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	deadA = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	greenB = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	deadB = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 }
 
 

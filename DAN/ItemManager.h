@@ -26,7 +26,7 @@ class ItemManager
 private:
 	std::vector<itemNS::ItemData> itemDataList;	// アイテムデータリスト
 	std::vector<Item*> itemList;				// アイテムポインタリスト
-	StaticMeshObject* batteryRenderer;
+	StaticMeshRenderer* batteryRenderer;
 
 public:
 	void initialize();

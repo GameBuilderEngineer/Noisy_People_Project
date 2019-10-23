@@ -106,15 +106,15 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
-	testFieldRenderer->generateObject(testField);
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
+	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//プレイヤーの初期化
 	player->initialize(inputNS::DINPUT_1P, 0);
 	player->setCamera(camera);	//カメラポインタのセット
-	playerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
-	playerRenderer->generateObject(player);
+	playerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+	playerRenderer->registerObject(player);
 	player->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
 
 	//枯木の初期化
@@ -199,42 +199,38 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 0.10)return;
+	//if (frameTime > 0.10)return;
+
 
 	//テストフィールドの更新
-	testField->update();
-	testFieldRenderer->update();
+	testField->update();			//オブジェクト
+	testFieldRenderer->update();	//レンダラー
 
 	//プレイヤーの更新
-	player->update(frameTime);
+	player->update(frameTime);		//オブジェクト
+	playerRenderer->update();		//レンダラー
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-#ifdef _DEBUG
-	if (input->wasKeyPressed('8'))	// 作成
+	//enemy->update(frameTime);
+	if (input->wasKeyPressed('8'))
 	{
-		enemyNS::ENEMYSET tinko =
-		{
-			enemyManager->issueNewID(),
-			enemyNS::WOLF,
-			enemyNS::CHASE,
-			*player->getPosition(),
-			D3DXVECTOR3(0, 0, 0)
-		};
-		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
-		enemyManager->createEnemy(p);
+		enemyNS::EnemyData tinko;
+		tinko.zeroClear();
+		tinko.id = enemyManager->issueNewID();
+		tinko.type = enemyNS::WOLF;
+		tinko.defaultPosition = *player->getPosition();
+		tinko.setUp();
+		enemyManager->createEnemy(&tinko);
 	}
-	if (input->wasKeyPressed('7'))	// 全破棄
+	if (input->wasKeyPressed('7'))
 	{
 		enemyManager->destroyAllEnemy();
-		enemyManager->destroyAllEnemyData();
 	}
-	if (input->wasKeyPressed('6'))	
+	if (input->wasKeyPressed('6'))
 	{
 		enemyManager->destroyEnemy(3);
-		enemyManager->destroyEnemyData(3);
 	}
-#endif
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -250,25 +246,59 @@ void Game::update(float _frameTime) {
 		itemManager->destroyAllItem();
 	}
 
+	//エフェクシアーのテスト
+#pragma region EffekseerTest
 	//エフェクトの再生
 	if (input->wasKeyPressed('1'))
 	{
-		effekseerNS::play(effekseerNS::TEST0, *player->getPosition());
+		effekseerNS::Instance* instance = new effekseerNS::Instance();
+		instance->position = *player->getPosition();
+		effekseerNS::play(instance);
 	}
 	if (input->wasKeyPressed('2'))
 	{
-		effekseerNS::play(effekseerNS::TEST1, *player->getPosition());
+		class Fire :public effekseerNS::Instance
+		{
+		public:
+			D3DXVECTOR3* syncPosition;
+			Fire() { 
+				effectNo = effekseerNS::TEST0;
+				deltaRadian = D3DXVECTOR3(0, 0.3, 0);
+			}
+			virtual void update() {
+				position = *syncPosition;
+
+				Instance::update();
+			};
+		};
+		Fire* instance = new Fire;
+		instance->position = *player->getPosition();
+		instance->syncPosition = player->getPosition();
+		effekseerNS::play(instance);
 	}
+	//エフェクトの一時停止：再生
+	if (input->wasKeyPressed('3'))
+	{
+		effekseerNS::pause(false);
+	}
+	//エフェクトの一時停止：停止
+	if (input->isKeyDown('4'))
+	{
+		effekseerNS::pause(true);
+	}
+	//エフェクトの停止
+	if (input->wasKeyPressed('G'))
+	{
+		//effekseerNS::stop((*getEffekseerManager()->instanceList->getValue(0))->handle);
+	}
+#pragma endregion
+
 
 	itemManager->update(frameTime);
 
 	// テロップの更新
 	telop->update(frameTime);
 	
-	////カメラの更新
-	//camera->update();
-	playerRenderer->update();
-
 	//枯木の更新
 	deadTree->update();
 	//木Aの更新
@@ -282,7 +312,6 @@ void Game::update(float _frameTime) {
 
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
-
 
 	//カメラの更新
 	camera->update();
@@ -334,9 +363,6 @@ void Game::render3D(Camera currentCamera) {
 	testField->setAlpha(0.1f); 
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//エフェクト（インスタンシング）テスト
-	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
 	// プレイヤーの描画
 	playerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
@@ -362,6 +388,9 @@ void Game::render3D(Camera currentCamera) {
 
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//エフェクト（インスタンシング）テスト
+	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #ifdef DEBUG_NAVIMESH
 	// ナビゲーションメッシュの描画
@@ -424,10 +453,11 @@ void Game::createGUI()
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
 	player->outputGUI();			//プレイヤー
-	enemyManager->outputGUI();		// エネミーマネージャ
+	//enemy->outputGUI();			//エネミー
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	naviAI->outputGUI();			//ナビゲーションAI
+
 }
 #endif // _DEBUG

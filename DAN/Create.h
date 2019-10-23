@@ -1,6 +1,6 @@
 //===================================================================================================================================
 //【Create.h】
-// [作成者]HAL東京GP12A332 16 蔡 友剛
+// [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
 // [更新日]2019/10/18
 //===================================================================================================================================
@@ -11,8 +11,8 @@
 //===================================================================================================================================
 #include <vector>
 #include "AbstractScene.h"
-#include "TmpObject.h"
-#include "StaticMeshObject.h"
+#include "Player.h"
+#include "StaticMeshRenderer.h"
 #include "Stone.h"
 #include "DeadTree.h"
 #include "TreeTypeA.h"
@@ -27,8 +27,6 @@
 #include "Sound.h"
 
 #include "EnemyTools.h"
-#include "ItemTools.h"
-
 //#include "InstancingBillboard.h"
 //#include "CreateMaster.h"
 //#include "PointSprite.h"
@@ -36,24 +34,24 @@
 //#include "Object.h"
 //#include "Text.h"
 
-////===================================================================================================================================
-////【名前空間】
-////===================================================================================================================================
-//namespace createNS
-//{
-//
-//	//仮オブジェクト初期位置
-//	const D3DXVECTOR3 PLAYER_POSITION = D3DXVECTOR3(0, 100, 0);
-//
-//	//カメラ相対位置
-//	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 5.0f, 5.0f, 0.0f);
-//
-//	//カメラ相対注視位置
-//	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0, 5.0f, 0);
-//
-//	//const int NUM_SAMPLE = 1000;
-//
-//}
+//===================================================================================================================================
+//【名前空間】
+//===================================================================================================================================
+namespace createNS
+{
+
+	//プレイヤー初期位置
+	const D3DXVECTOR3 PLAYER_POSITION = D3DXVECTOR3(0, 100, 0);
+
+	//カメラ相対位置
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 15.0f, -15.0f, 0.0f);
+
+	//カメラ相対注視位置
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0, 10.0f, 0);
+
+	//const int NUM_SAMPLE = 1000;
+
+}
 
 //===================================================================================================================================
 //【ゲームシーンクラス】
@@ -64,18 +62,18 @@ private:
 
 	//Text text;							//Sample
 	//Text text2;							//Sample
-	//PointSprite pointSprite;				//Sample
-	//InstancingBillboard plane;			//Sample
-	//Object testObject;					//Sample
-	//Object testCube;						//Sample
+	//PointSprite pointSprite;		//Sample
+	//InstancingBillboard plane;	//Sample
+	//Object testObject;				//Sample
+	//Object testCube;					//Sample
 
-	//仮オブジェクト
-	TmpObject *tmpObject;
-	StaticMeshObject** tmpObjRenderer;
+	//プレイヤー
+	Player *player;
+	StaticMeshRenderer* playerRenderer;
 
 	//フィールド
 	Object* testField;
-	StaticMeshObject* testFieldRenderer;
+	StaticMeshRenderer* testFieldRenderer;
 
 	//インスタンシングビルボードテスト
 	//InstancingBillboard instancingBillboardTest;
@@ -83,8 +81,6 @@ private:
 
 	//エネミーツール
 	ENEMY_TOOLS *enemyTools;
-	//アイテムツール
-	ITEM_TOOLS *itemTools;
 
 	//枯木
 	DeadTree* deadTree;
@@ -98,13 +94,13 @@ private:
 	//色々なオブジェクトの描画サンプルテスト
 
 	//スタティックメッシュで、１個のオブジェクトのみを描画するとき【静的】
-	//StaticSingleStaticMeshObjectTest ssSMO
+	//StaticSingleStaticMeshRendererTest ssSMO
 
 	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiStaticMeshObjectTest smSMO
+	//StaticMultiStaticMeshRendererTest smSMO
 
 	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiStaticMeshObjectTest dmSMO
+	//DynamicMultiStaticMeshRendererTest dmSMO
 
 	//ビルボードで、1個のオブジェクトを描画するとき【静的】
 	//StaticSingleInstancingBillboardTest ssIB
@@ -125,13 +121,21 @@ private:
 	//DynamicMultiInstancingPlaneTest dmIP
 
 	// エネミー
-	EnemyManager* enemyManager;
+	EnemyManager enemyManager;
+	Enemy* enemy;
 
 	// ツリー
 	TreeManager* treeManager;
 
 	// アイテム
 	ItemManager* itemManager;
+
+	// テロップ
+	Telop* telop;
+
+	// AI
+	AIDirector* aiDirector;
+	NavigationMesh* naviAI;
 
 public:
 	Create();
@@ -150,3 +154,15 @@ public:
 	virtual void createGUI() override;
 #endif
 };
+
+
+//===================================================================================================================================
+//【ビルドスイッチ】
+//===================================================================================================================================
+#ifdef _DEBUG
+
+#if 1	// ここを1でナビメッシュデバッグモード
+#define DEBUG_NAVIMESH
+#endif
+
+#endif// _DEBUG

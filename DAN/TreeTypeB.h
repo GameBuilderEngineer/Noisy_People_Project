@@ -10,7 +10,7 @@
 //ÅyÉCÉìÉNÉãÅ[ÉhÅz
 //===================================================================================================================================
 #include "Base.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 
 //===================================================================================================================================
 //ÅyêŒÉNÉâÉXÅz
@@ -18,7 +18,9 @@
 class TreeTypeB : public Base
 {
 private:
-	StaticMeshObject* renderer;
+	int num;
+	Object* object;
+	StaticMeshRenderer* renderer;
 	bool needUpdate;
 public:
 	TreeTypeB();
@@ -26,6 +28,5 @@ public:
 	void initialize();
 	void update();
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void generate(D3DXVECTOR3 position);
 };
 

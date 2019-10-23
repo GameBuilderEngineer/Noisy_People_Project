@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #include "ItemManager.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "ImguiManager.h"
 using namespace itemNS;
 
@@ -37,7 +37,7 @@ void ItemManager::initialize()
 #endif
 
 	// 描画オブジェクトを作成
-	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 }
 
 
@@ -93,7 +93,7 @@ void ItemManager::createItem(ItemData* itemData)
 	case BATTERY:
 		item = new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData);
 		itemList.emplace_back(item);
-		batteryRenderer->generateObject(item);
+		batteryRenderer->registerObject(item);
 		break;
 	}
 }
@@ -115,7 +115,7 @@ void ItemManager::destroyItem(int _id)
 		}
 	}
 	// batteryRenderer->deleteObject();
-	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
+	// 今はStaticMeshRendererに登録されたオブジェクトを個別に破棄できない
 }
 
 
@@ -131,8 +131,8 @@ void ItemManager::destroyAllItem()
 	}
 	
 	itemList.clear();
-	SAFE_DELETE(batteryRenderer);
-	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+
+	batteryRenderer->allUnRegister();
 }
 
 

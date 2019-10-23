@@ -36,6 +36,7 @@ EffekseerManager::EffekseerManager()
 	fileName[TEST0] = { L"test.efk" };
 	fileName[TEST1] = { L"r_square.efk" };
 
+	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }
 
 //===================================================================================================================================
@@ -60,7 +61,6 @@ void EffekseerManager::initialize()
 
 	// エフェクト管理用インスタンスの生成
 	manager = ::Effekseer::Manager::Create(2000);
-	//manager = ::Effekseer::Manager::Create(2000,false);
 
 	// 描画用インスタンスから描画機能を設定
 	manager->SetSpriteRenderer(renderer->CreateSpriteRenderer());
@@ -89,6 +89,9 @@ void EffekseerManager::initialize()
 
 	// 視点位置を確定
 	position = ::Effekseer::Vector3D(10.0f, 5.0f, 20.0f);
+
+	// カリングを行う範囲を設定
+	//manager->CreateCullingWorld(10000.0f, 10000.0f, 10000.0f, 6);
 
 	//エフェクシアーディレクトリへカレント
 	setEffekseerDirectory();
@@ -126,10 +129,14 @@ void EffekseerManager::setCameraMatrix(D3DXVECTOR3 position,D3DXVECTOR3 eye,D3DX
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-void EffekseerManager::play(int effekseerNo,D3DXVECTOR3 position)
+void EffekseerManager::play(effekseerNS::Instance* instance)
 {
-	//instance[effekseerNo].handle = 
-	manager->Play(effect[effekseerNo], position.x, position.y, position.z);
+	instance->handle = manager->Play(
+		effect[instance->effectNo], 
+		instance->position.x,
+		instance->position.y,
+		instance->position.z);
+	instanceList->insertFront(instance);
 }
 
 //===================================================================================================================================
@@ -139,6 +146,7 @@ void EffekseerManager::pause(bool flag)
 {
 	manager->SetPausedToAllEffects(flag);
 }
+
 //===================================================================================================================================
 //【一時停止/再度再生：1ハンドル】
 //===================================================================================================================================
@@ -148,11 +156,19 @@ void EffekseerManager::pause(::Effekseer::Handle handle,bool flag )
 }
 
 //===================================================================================================================================
-//【停止】
+//【全停止】
 //===================================================================================================================================
-void EffekseerManager::stop(int effekseerNo)
+void EffekseerManager::stop()
 {
-	//manager->StopEffect(instance[effekseerNo].handle);
+	manager->StopAllEffects();
+}
+
+//===================================================================================================================================
+//【停止：1ハンドル】
+//===================================================================================================================================
+void EffekseerManager::stop(::Effekseer::Handle handle)
+{
+	manager->StopEffect(handle);
 }
 
 //===================================================================================================================================
@@ -185,6 +201,12 @@ void EffekseerManager::uninitialize()
 	}
 	ES_SAFE_RELEASE(xa2);
 
+	for (int i = 0;i <instanceList->nodeNum; i++)
+	{
+		SAFE_DELETE(*instanceList->getValue(i));
+	}
+	instanceList->terminate();
+	SAFE_DELETE(instanceList);
 }
 
 //===================================================================================================================================
@@ -192,16 +214,32 @@ void EffekseerManager::uninitialize()
 //===================================================================================================================================
 void EffekseerManager::update()
 {
+	//リスト更新
+	instanceList->listUpdate();
+
+	//削除処理
+	int nodeNum = instanceList->nodeNum;
+	for (int i = 0; i < nodeNum; i++)
+	{
+		::Effekseer::Handle handle = (*instanceList->getValue(i))->handle;
+		if (!manager->Exists(handle))
+		{
+			SAFE_DELETE((*instanceList->getValue(i)));
+			instanceList->remove(instanceList->getNode(i));
+		}
+	}
+
+	//リスト更新
+	instanceList->listUpdate();
+
 	// エフェクトの移動処理を行う
-	//manager->AddLocation(handle, ::Effekseer::Vector3D(0.2f, 0.0f, 0.0f));
-
-
-	//今までのPlay等の処理をUpdate実行時に適用するようにする。
-	//manager->Flip();
+	for (int i = 0; i < instanceList->nodeNum; i++)
+	{
+		(*instanceList->getValue(i))->update();
+	}
 
 	// エフェクトの更新処理を行う
 	manager->Update();
-
 }
 
 //===================================================================================================================================
@@ -225,6 +263,7 @@ void EffekseerManager::end()
 //===================================================================================================================================
 void EffekseerManager::render()
 {
+	//manager->CalcCulling(renderer->GetCameraProjectionMatrix(), false);//カリングの計算
 	begin();
 	manager->Draw();
 	end();
@@ -233,17 +272,25 @@ void EffekseerManager::render()
 //===================================================================================================================================
 //【外部参照：再生】
 //===================================================================================================================================
-void effekseerNS::play(int effekseerNo,D3DXVECTOR3 position)
+void effekseerNS::play(effekseerNS::Instance* instance)
 {
-	pointerEffekseerManager->play(effekseerNo,position);
+	pointerEffekseerManager->play(instance);
+}
+
+//===================================================================================================================================
+//【外部参照：全停止】
+//===================================================================================================================================
+void effekseerNS::stop()
+{
+	pointerEffekseerManager->stop();
 }
 
 //===================================================================================================================================
 //【外部参照：停止】
 //===================================================================================================================================
-void effekseerNS::stop(int effekseerNo)
+void effekseerNS::stop(::Effekseer::Handle handle)
 {
-	pointerEffekseerManager->stop(effekseerNo);
+	pointerEffekseerManager->stop(handle);
 }
 
 //===================================================================================================================================
@@ -284,4 +331,26 @@ void effekseerNS::pause(bool flag)
 void effekseerNS::pause(::Effekseer::Handle handle, bool flag)
 {
 	pointerEffekseerManager->pause(handle, flag);
+}
+
+//===================================================================================================================================
+//【外部参照：マネージャー取得】
+//===================================================================================================================================
+EffekseerManager* getEffekseerManager()
+{
+	return pointerEffekseerManager;
+}
+
+//===================================================================================================================================
+//【インスタンス：更新】
+//===================================================================================================================================
+void effekseerNS::Instance::update()
+{
+	::Effekseer::Manager*	manager = pointerEffekseerManager->manager;
+	position	 += speed;
+	rotation	 += deltaRadian;
+	scale		 += deltaScale;
+	manager->SetLocation(handle, position.x,position.y,position.z);
+	manager->SetRotation(handle,rotation.x,rotation.y,rotation.z);
+	manager->SetScale(handle,scale.x,scale.y,scale.z);
 }

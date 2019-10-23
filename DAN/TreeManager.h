@@ -23,10 +23,10 @@ class TreeManager
 {
 private:
 	std::vector<Tree*> treeList;				// ツリーポインタリスト
-	StaticMeshObject* greenA;
-	StaticMeshObject* deadA;
-	StaticMeshObject* greenB;
-	StaticMeshObject* deadB;
+	StaticMeshRenderer* greenA;
+	StaticMeshRenderer* deadA;
+	StaticMeshRenderer* greenB;
+	StaticMeshRenderer* deadB;
 
 public:
 	void initialize();
