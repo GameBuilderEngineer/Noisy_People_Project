@@ -474,25 +474,37 @@ void Game::test()
 	}
 	if (input->wasKeyPressed('6'))	// 0-50（ID）までランダムに破棄
 	{
-		enemyManager->destroyEnemy(5);
-		enemyManager->destroyEnemyData(5);
+		//enemyManager->destroyEnemy(5);
+		//enemyManager->destroyEnemyData(5);
 
-		//static bool rec[50] = { false };
-		//for (int i = 0; i < 50; i++)
-		//{
-		//	int n = rand() % 50;
-		//	if (rec[n] == false)
-		//	{
-		//		rec[n] = true;
-		//		enemyManager->destroyEnemy(n);
-		//		enemyManager->destroyEnemyData(n);
-		//		break;
-		//	}
-		//}
+		static bool rec[50] = { false };
+		for (int i = 0; i < 50; i++)
+		{
+			int n = rand() % 50;
+			if (rec[n] == false)
+			{
+				rec[n] = true;
+				enemyManager->destroyEnemy(n);
+				enemyManager->destroyEnemyData(n);
+				break;
+			}
+		}
 	}
 
+	//enemyNS::ENEMYSET temp =
+	//{
+	//	enemyManager->issueNewEnemyID(),
+	//	enemyNS::WOLF,
+	//	enemyNS::CHASE,
+	//	D3DXVECTOR3(),
+	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	//};
+
+
+
+
 	// ツリーマネージャのテスト
-	if (input->wasKeyPressed('5'))
+	if (input->wasKeyPressed('5'))	// 作成
 	{
 		treeNS::TreeData treeData;
 		treeData.geenState = treeNS::GREEN;
@@ -500,14 +512,13 @@ void Game::test()
 		treeData.initialPosition = *player->getPosition();
 		treeManager->createTree(treeData);
 	}
-	if (input->wasKeyPressed('4'))
+	if (input->wasKeyPressed('4'))	// リーフ3番のみ描画を切る
 	{
 		treeManager->unRegisterLeafRendering(treeManager->getTreeList()[3]->getLeaf(),
 			treeManager->getTreeList()[3]->getTreeData()->model);
-	}
-	if (input->wasKeyPressed('3'))
+	}	
+	if (input->wasKeyPressed('3'))	// 全破棄
 	{
 		treeManager->destroyAllTree();
 	}
-
 }

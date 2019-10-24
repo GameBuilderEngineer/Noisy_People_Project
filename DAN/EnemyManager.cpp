@@ -220,10 +220,10 @@ void EnemyManager::destroyEnemy(int _enemyID)
 				bearRenderer->unRegisterObjectByID(enemyList[i]->id);
 				break;
 			}
+			SAFE_DELETE(enemyList[i]);				// インスタンス破棄
+			enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
+			break;
 		}
-		SAFE_DELETE(enemyList[i]);				// インスタンス破棄
-		enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
-		break;
 	}
 }
 
