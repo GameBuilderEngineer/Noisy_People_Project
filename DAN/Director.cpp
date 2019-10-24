@@ -239,6 +239,7 @@ void Director::mainLoop() {
 // [用途]アプリ全体の更新処理
 //===================================================================================================================================
 void Director::update() {
+	input->update(window->windowActivate);
 #ifdef _DEBUG
 	memory->update();
 	imgui->beginFrame();
@@ -247,7 +248,6 @@ void Director::update() {
 	createGUI();
 	imgui->endImGui();
 #else
-	input->update(window->windowActivate);
 	if (input->wasKeyPressed(VK_F1))
 	{
 		hiddenCursor = !hiddenCursor;

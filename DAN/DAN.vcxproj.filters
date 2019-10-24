@@ -451,6 +451,20 @@
     <ClCompile Include="StaticMeshRenderer.cpp">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="Bear.cpp" />
+    <ClCompile Include="Tiger.cpp" />
+    <ClCompile Include="TmpObject.cpp">
+      <Filter>Game Layer\Scene\Create</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectTool.cpp">
+      <Filter>Tools Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemTools.cpp">
+      <Filter>Tools Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeToools.cpp">
+      <Filter>Tools Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -707,6 +721,20 @@
     </ClInclude>
     <ClInclude Include="StaticMeshRenderer.h">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h" />
+    <ClInclude Include="Tiger.h" />
+    <ClInclude Include="TmpObject.h">
+      <Filter>Game Layer\Scene\Create</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectTool.h">
+      <Filter>Tools Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemTools.h">
+      <Filter>Tools Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeToools.h">
+      <Filter>Tools Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

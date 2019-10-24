@@ -9,7 +9,7 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "BoundingSphere.h"
 #include "Input.h"
 #include "Camera.h"
@@ -36,8 +36,8 @@ namespace tmpObjNS {
 		BYTE right;
 		BYTE left;
 		BYTE reset;
-		BYTE dash;
-		BYTE jump;
+		BYTE down;
+		BYTE fly;
 		BYTE reverseCameraX;
 		BYTE reverseCameraY;
 	};
@@ -73,17 +73,11 @@ namespace tmpObjNS {
 	const BYTE BUTTON_PILE = virtualControllerNS::L1;
 
 	const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(-35, 10, 0);
-	//const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(0, 0, 0);
 
 	// Physics
-	const float MOVE_ACC = 27.0f*1.5f;									// 移動加速度
-	const float MOVE_ACC_WHEN_NOT_GROUND = MOVE_ACC / 8.5f;			// 空中移動加速度
-	const float STOP_SPEED = 0.5f;									// 移動停止速度
+	const float MOVE_ACC = 27.0f*1.5f;								// 移動加速度
+	const float STOP_SPEED = 1.0f;									// 移動停止速度
 	const float FALL_SPEED_MAX = 60.0f;								// 落下最高速度
-	const float MOVE_FRICTION = 0.93f;								// 地面摩擦係数
-	const float WALL_FRICTION = 0.98;								// 壁ずり摩擦係数
-	const float GROUND_FRICTION = 0.25;								// 着地摩擦係数
-	const float GRAVITY_FORCE = 9.8f * 2;							// 重力
 	const float JUMP_SPEED = 6.0f;									// ジャンプ初速
 	const float JUMP_CONTROL_SPEED = 1.0f;							// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION = 2.0f;							// ダッシュ倍率
@@ -111,24 +105,9 @@ private:
 	bool						onJump;							// ジャンプフラグ
 	bool						jumping;						// ジャンプ中フラグ
 
-	//// UI用操作判定フラグ
-	//bool						isShotAble;
-	//bool						isJumpAble;
-	//bool						isVisionAble;
-	//bool						isSkyVisionAble;
-	//bool						isShiftAble;
-
 	// 衝突
 	BoundingSphere				bodyCollide;					// 球コリジョン
 	float						difference;						//フィールド補正差分
-	bool						onGround;						//接地判定
-	bool						onGroundBefore;					// 直前フレームの接地判定
-
-	// 物理
-	float						friction;						// 摩擦係数
-	Ray							ray;							// レイ
-	LPD3DXMESH					attractorMesh;					//重力（引力）発生メッシュ
-	D3DXMATRIX*					attractorMatrix;				//重力（引力）発生オブジェクトマトリックス
 
 	// 汎用
 	LPDIRECT3DDEVICE9			device;						// Direct3Dデバイス
@@ -150,25 +129,17 @@ public:
 	virtual void update(float frameTime);
 	void otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
-	// 衝突
-	void grounding();											// 接地処理
-	void wallScratch();											// 壁ずり処理
-
 	// 物理
 	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition,
 		LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
-	void physicalBehavior();									// 物理挙動
 	void updatePhysics(float frameTime);						// 物理の更新
 
 	//操作
 	void moveOperation();										// 移動操作
-	void jumpOperation();										// ジャンプ操作
 	void controlCamera(float frameTime);						// カメラ操作
 
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
-	void jump();												//ジャンプ
-	float dash();
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI

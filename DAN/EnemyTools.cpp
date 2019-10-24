@@ -12,13 +12,15 @@
 //===================================================================================================================================
 ENEMY_TOOLS::ENEMY_TOOLS()
 {
-#ifdef _DEBUG
 	//エネミーファイル構造体の初期化
 	enemyFile = { 0 };
 	enemyFile.efmt = nullptr;
 
 	//パス
 	setToolsDirectory();
+
+	//レンダラーの初期化
+	initRender();
 
 	//ファイル
 	FILE	*fp = NULL;
@@ -46,24 +48,240 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 			}
 		}
 
-
+		//ファイル
 		fclose(fp);
 
-		//エネミー情報
-		EnemyListboxCurrent = 0;
-		EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
-		EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
+		//オブジェクトの初期化
+		initObject();
+	}
 
-		//描画用
-		renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
-		initialize();
+	//エネミー情報
+	EnemyListboxCurrent = 0;
+	EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
+	EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
+}
+
+//===================================================================================================================================
+//【デストラクタ】
+//===================================================================================================================================
+ENEMY_TOOLS::~ENEMY_TOOLS()
+{
+	//ファイルの書き出し
+	OutputEnemyFile();
+
+	//フォーマットがない時
+	if (enemyFile.enmy.enemyMax != NULL)
+	{
+		SAFE_DELETE_ARRAY(enemyFile.efmt);
 		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
 		{
-			generate(D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ));
-			renderer->updateAccessList();
+			SAFE_DELETE(object[i]);
+		}
+		SAFE_DELETE_ARRAY(object);
+		SAFE_DELETE_ARRAY(bodyCollide);
+	}
+
+	//レンダラー
+	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
+	{
+		SAFE_DELETE(renderer[i]);
+	}
+	SAFE_DELETE_ARRAY(renderer);
+}
+
+//===================================================================================================================================
+//【エネミーの数を取得】
+//===================================================================================================================================
+int ENEMY_TOOLS::GetEnemyMax(void)
+{
+	return enemyFile.enmy.enemyMax;
+}
+
+//===================================================================================================================================
+//【エネミーセット構造体を取得】
+//===================================================================================================================================
+enemyNS::ENEMYSET ENEMY_TOOLS::GetEnemySet(short enemyId)
+{
+	enemyNS::ENEMYSET tmpEnemySet = { 0 };
+	tmpEnemySet.id = enemyFile.efmt[enemyId].enemyId;
+	tmpEnemySet.type = enemyFile.efmt[enemyId].enemyType;
+	tmpEnemySet.defaultState = enemyFile.efmt[enemyId].enemyState;
+	tmpEnemySet.defaultPosition = D3DXVECTOR3(enemyFile.efmt[enemyId].posX, enemyFile.efmt[enemyId].posY, enemyFile.efmt[enemyId].posZ);
+	tmpEnemySet.defaultDirection = D3DXVECTOR3(enemyFile.efmt[enemyId].dirX, enemyFile.efmt[enemyId].dirY, enemyFile.efmt[enemyId].dirZ);
+
+	return tmpEnemySet;
+}
+
+//===================================================================================================================================
+//【ImGUIへの出力】
+//===================================================================================================================================
+void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
+{
+#ifdef _DEBUG
+	if (GUIid == ENEMY_GUI_ID)
+	{
+		//フラグ
+		bool creatFlag = false;
+		bool deleteFlag = false;
+
+		//機能
+		ImGui::Checkbox("New Enemy", &creatFlag);
+		ImGui::Checkbox("Delete", &deleteFlag);
+
+		//エネミーの種類
+		const char* listboxEnemyType[] = { "WOLF", "TIGER", "BEAR" };
+		ImGui::ListBox("Enemy Type", &EnemyListboxType, listboxEnemyType, enemyNS::ENEMY_TYPE::TYPE_MAX);
+
+		//エネミーの状態
+		const char* listboxEnemyState[] = { "CHASE", "PATROL", "REST","DIE","DEAD" };
+		ImGui::ListBox("Enemy State", &EnemyListboxState, listboxEnemyState, enemyNS::ENEMY_STATE::STATE_MAX);
+
+		//エネミーの情報
+		if (enemyFile.enmy.enemyMax != NULL)
+		{
+			//メモリ確保
+			char **ListboxIndexName = new char*[enemyFile.enmy.enemyMax];
+			for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
+			{
+				ListboxIndexName[i] = new char[CHAR_MAX];
+				sprintf(ListboxIndexName[i], "%d", i);
+			}
+
+			ImGui::ListBox("Enemy ", &EnemyListboxCurrent, ListboxIndexName, enemyFile.enmy.enemyMax);
+			ImGui::Text("Enemy ID:%d", enemyFile.efmt[EnemyListboxCurrent].enemyId);
+			ImGui::Text("Enemy pos:%f %f %f", enemyFile.efmt[EnemyListboxCurrent].posX,
+				enemyFile.efmt[EnemyListboxCurrent].posY,
+				enemyFile.efmt[EnemyListboxCurrent].posZ);
+			ImGui::Text("Enemy dir:%f %f %f", enemyFile.efmt[EnemyListboxCurrent].dirX,
+				enemyFile.efmt[EnemyListboxCurrent].dirY,
+				enemyFile.efmt[EnemyListboxCurrent].dirZ);
+			ImGui::Text("Enemy Type:%s  Enemy State:%s",
+				listboxEnemyType[enemyFile.efmt[EnemyListboxCurrent].enemyType],
+				listboxEnemyState[enemyFile.efmt[EnemyListboxCurrent].enemyState]);
+
+			//メモリ解放
+			for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
+			{
+				delete[] ListboxIndexName[i];
+			}
+			delete[] ListboxIndexName;
+		}
+
+		//削除
+		if (deleteFlag)
+		{
+			//削除
+			DeleteEnemyFormat(EnemyListboxCurrent);
+		}
+
+		//新規作成
+		if (creatFlag)
+		{
+			//作成
+			AddEnemyFormat(EnemyListboxType, EnemyListboxState, pos, dir);
 		}
 	}
 #endif
+}
+
+//===================================================================================================================================
+//【レンダラーの初期化】描画用
+//===================================================================================================================================
+void ENEMY_TOOLS::initRender()
+{
+	//レンダーの初期化
+	renderer = new StaticMeshRenderer*[enemyNS::ENEMY_TYPE::TYPE_MAX];
+	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
+	{
+		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(GetStaticMeshNo(i)));
+	}
+
+	//更新フラグ
+	needUpdate = true;
+};
+
+//===================================================================================================================================
+//【オブジェクトの初期化】描画用
+//===================================================================================================================================
+void ENEMY_TOOLS::initObject()
+{
+	//オブジェクト
+	object = new Object*[enemyFile.enmy.enemyMax];
+	bodyCollide = new BoundingSphere[enemyFile.enmy.enemyMax];
+	for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
+	{
+		//オブジェクトの生成
+		object[i] = new Object();
+		generate(object[i], enemyFile.efmt[i].enemyType, D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ));
+		renderer[enemyFile.efmt[i].enemyType]->updateAccessList();
+
+		// コライダの初期化
+		bodyCollide->initialize(&D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ),
+			staticMeshNS::reference(GetStaticMeshNo(enemyFile.efmt[i].enemyType))->mesh);	
+	}
+}
+
+//===================================================================================================================================
+//【更新】描画用
+//===================================================================================================================================
+void ENEMY_TOOLS::update()
+{
+	if (!needUpdate)return;
+	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
+	{
+		renderer[i]->updateBuffer();
+		renderer[i]->updateArray();
+		renderer[i]->update();
+	}
+	needUpdate = false;
+}
+
+//===================================================================================================================================
+//【描画】描画用
+//===================================================================================================================================
+void ENEMY_TOOLS::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+{
+	if (enemyFile.enmy.enemyMax != NULL)
+	{
+		for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
+		{
+			renderer[i]->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
+		}
+	}
+}
+
+//===================================================================================================================================
+//【生成】描画用
+//===================================================================================================================================
+void ENEMY_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position)
+{
+	object->initialize(&position);
+	object->existenceTimer = 1.0f;		// < 0 なら消える
+	renderer[enemyType]->registerObject(object);
+}
+
+//===================================================================================================================================
+//【エネミーファイルの書き出し処理】
+//===================================================================================================================================
+void ENEMY_TOOLS::OutputEnemyFile(void)
+{
+	//パス
+	setToolsDirectory();
+
+	FILE	*fp = NULL;					//ファイル
+	fp = fopen(ENEMY_FILE_PATH, "wb");
+
+	//ENMYの書き出し
+	fwrite(&enemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
+
+	//EFMTの書き出し
+	for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
+	{
+		//EFMTの書き出し
+		fwrite(&enemyFile.efmt[i], sizeof(ENEMY_EFMT), 1, fp);
+	}
+
+	fclose(fp);
 }
 
 //===================================================================================================================================
@@ -77,7 +295,7 @@ void ENEMY_TOOLS::CreatNewEnemyFile(void)
 
 	//エネミーファイル構造体
 	ENEMY_FILE tmpEnemyFile;
-	
+
 	//チャンク
 	memcpy(tmpEnemyFile.enmy.chunkId, ENMY_CHUNK, sizeof(tmpEnemyFile.enmy.chunkId));
 
@@ -90,66 +308,59 @@ void ENEMY_TOOLS::CreatNewEnemyFile(void)
 	//書き出し
 	fwrite(&tmpEnemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
 
+	//ファイル
 	fclose(fp);
 }
 
 //===================================================================================================================================
-//【デストラクタ】
+//【レンダラーのリセット処理】描画用
 //===================================================================================================================================
-ENEMY_TOOLS::~ENEMY_TOOLS()
+void ENEMY_TOOLS::ResetRenderer(void)
 {
-#ifdef _DEBUG
-	//ファイルの書き出し
-	OutputEnemyFile();
+	//終了処理
+	for (int i = 0; i < enemyFile.enmy.enemyMax - 1; i++)
+	{
+		SAFE_DELETE(object[i]);
+	}
+	SAFE_DELETE_ARRAY(object);
 
 	if (enemyFile.enmy.enemyMax != NULL)
 	{
-		SAFE_DELETE_ARRAY(enemyFile.efmt);
+		for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
+		{
+			SAFE_DELETE(renderer[i]);
+		}
+		SAFE_DELETE_ARRAY(renderer);
+
+		//レンダラーの初期化
+		initRender();
+
+		//オブジェクトの初期化
+		initObject();
 	}
-
-	//描画用
-	SAFE_DELETE(renderer);
-
-#endif
 }
 
 //===================================================================================================================================
-//【初期化】描画用
+//【スタティックメッシュのIDを取得】描画用
 //===================================================================================================================================
-void ENEMY_TOOLS::initialize()
+int ENEMY_TOOLS::GetStaticMeshNo(short enemyType)
 {
-	needUpdate = true;
-};
-
-//===================================================================================================================================
-//【更新】描画用
-//===================================================================================================================================
-void ENEMY_TOOLS::update()
-{
-	if (!needUpdate)return;
-	renderer->updateBuffer();
-	renderer->updateArray();
-	renderer->update();
-	needUpdate = false;
-}
-
-//===================================================================================================================================
-//【描画】描画用
-//===================================================================================================================================
-void ENEMY_TOOLS::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
-{
-	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
-}
-
-//===================================================================================================================================
-//【生成】描画用
-//===================================================================================================================================
-void ENEMY_TOOLS::generate(D3DXVECTOR3 position)
-{
-	Object* object = new Object();
-	renderer->registerObject(object);
-	object->existenceTimer = -1;		// < 0 なら消える
-	object->initialize(&position);
+	int staticMeshNo = 0;
+	switch (enemyType)
+	{
+	case enemyNS::ENEMY_TYPE::WOLF:
+		staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
+		break;
+	case enemyNS::ENEMY_TYPE::TIGER:
+		staticMeshNo = staticMeshNS::SAMPLE_BUNNY;
+		break;
+	case enemyNS::ENEMY_TYPE::BEAR:
+		staticMeshNo = staticMeshNS::SAMPLE_HAT;
+		break;
+	default:
+		break;
+	}
+	return staticMeshNo;
 }
 
 //===================================================================================================================================
@@ -179,7 +390,7 @@ void ENEMY_TOOLS::SetEnemyPos(short enemyId, const D3DXVECTOR3 pos)
 }
 
 //===================================================================================================================================
-//【エネミーの回転Y軸を設定】
+//【エネミーの回転軸を設定】
 //===================================================================================================================================
 void ENEMY_TOOLS::SetEnemyDir(short enemyId, const D3DXVECTOR3 dir)
 {
@@ -204,58 +415,8 @@ void ENEMY_TOOLS::SetEnemy(short enemyId, short enemyType, short enemyState, con
 
 	//サイズ
 	enemyFile.efmt[enemyId].size = (short)sizeof(ENEMY_EFMT);
-}
-
-//===================================================================================================================================
-//【エネミーファイルの書き出し処理】
-//===================================================================================================================================
-void ENEMY_TOOLS::OutputEnemyFile(void)
-{
-	//パス
-	setToolsDirectory();
-
-	FILE	*fp = NULL;					//ファイル
-	fp = fopen(ENEMY_FILE_PATH, "wb");
-
-	//ENMYの書き出し
-	fwrite(&enemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
-
-	//EFMTの書き出し
-	for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
-	{
-		//EFMTの書き出し
-		fwrite(&enemyFile.efmt[i], sizeof(ENEMY_EFMT), 1, fp);
-	}
-
-	fclose(fp);
-}
-
-//===================================================================================================================================
-//【エネミーのフォーマット構造体を追加】
-//===================================================================================================================================
-void ENEMY_TOOLS::AddEnemyFormat(short enemyType, short enemyState, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
-{
-	//エネミーの数+1
-	enemyFile.enmy.enemyMax++;
-
-	//エネミーのフォーマット構造体を整理
-	UpdateEfmt(enemyFile.enmy.enemyMax - 1);
-
-	//エネミーのフォーマット構造体の最後に追加
-	SetEnemy(enemyFile.enmy.enemyMax - 1, enemyType, enemyState, pos, dir);
-
-	//描画用
-	generate(pos);
-	renderer->updateAccessList();
-	needUpdate = true;
-}
-
-//===================================================================================================================================
-//【エネミーの最大数を取得】
-//===================================================================================================================================
-int ENEMY_TOOLS::GetEnemyMax(void)
-{
-	return enemyFile.enmy.enemyMax;
+	//ID
+	enemyFile.efmt[enemyId].enemyId = enemyId;
 }
 
 //===================================================================================================================================
@@ -310,127 +471,6 @@ void ENEMY_TOOLS::UpdateEfmt(int oldEnemyMax)
 }
 
 //===================================================================================================================================
-//【エネミーセット構造体を取得】
-// 使い例:
-// ENEMYSET *enemySet = new (ENEMYSET[GetEnemyMax()]);
-// for(int i=0;i<GetEnemyMax();i++)
-// {  
-//   enemySet[i]=GetEnemySet(i);
-// }
-// ...
-// SAFE_DELETE_ARRAY(enemySet);
-//===================================================================================================================================
-enemyNS::ENEMYSET ENEMY_TOOLS::GetEnemySet(short enemyId)
-{
-	enemyNS::ENEMYSET tmpEnemySet	= { 0 };
-	tmpEnemySet.id					= enemyFile.efmt[enemyId].enemyId;
-	tmpEnemySet.type				= enemyFile.efmt[enemyId].enemyType;
-	tmpEnemySet.defaultState		= enemyFile.efmt[enemyId].enemyState;
-	tmpEnemySet.defaultPosition		= D3DXVECTOR3(enemyFile.efmt[enemyId].posX, enemyFile.efmt[enemyId].posY, enemyFile.efmt[enemyId].posZ);
-	tmpEnemySet.defaultDirection	= D3DXVECTOR3(enemyFile.efmt[enemyId].dirX, enemyFile.efmt[enemyId].dirY, enemyFile.efmt[enemyId].dirZ);
-	
-	return tmpEnemySet;
-}
-
-//===================================================================================================================================
-//【ImGUIへの出力】
-//===================================================================================================================================
-void ENEMY_TOOLS::outputEnemyToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
-{
-#ifdef _DEBUG
-	//フラグ
-	bool creatFlag = false;
-	bool deleteFlag = false;
-	
-	ImGui::Begin("Enemy Tools");
-
-	//機能
-	ImGui::Checkbox("New Enemy", &creatFlag);
-	ImGui::Checkbox("Delete", &deleteFlag);
-
-	//エネミーの種類
-	const char* listboxEnemyType[] = { "WOLF", "TIGER", "BEAR" };
-	ImGui::ListBox("Enemy Type", &EnemyListboxType, listboxEnemyType, enemyNS::ENEMY_TYPE::TYPE_MAX);
-
-	//エネミーの状態
-	const char* listboxEnemyState[] = { "CHASE", "PATROL", "REST","DIE","DEAD" };
-	ImGui::ListBox("Enemy State", &EnemyListboxState, listboxEnemyState, enemyNS::ENEMY_STATE::STATE_MAX);
-
-	//エネミーの情報
-	if (enemyFile.enmy.enemyMax != NULL)
-	{
-		//メモリ確保
-		char **ListboxIndexName = new char*[enemyFile.enmy.enemyMax];
-		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
-		{
-			ListboxIndexName[i] = new char[CHAR_MAX];
-			sprintf(ListboxIndexName[i], "%d", i);
-		}
-
-		ImGui::ListBox("Enemy ", &EnemyListboxCurrent, ListboxIndexName, enemyFile.enmy.enemyMax);
-		ImGui::Text("Enemy pos:%f %f %f", enemyFile.efmt[EnemyListboxCurrent].posX,
-			enemyFile.efmt[EnemyListboxCurrent].posY,
-			enemyFile.efmt[EnemyListboxCurrent].posZ);
-		ImGui::Text("Enemy dir:%f %f %f", enemyFile.efmt[EnemyListboxCurrent].dirX,
-			enemyFile.efmt[EnemyListboxCurrent].dirY,
-			enemyFile.efmt[EnemyListboxCurrent].dirZ);
-		ImGui::Text("Enemy Type:%s  Enemy State:%s",
-			listboxEnemyType[enemyFile.efmt[EnemyListboxCurrent].enemyType],
-			listboxEnemyState[enemyFile.efmt[EnemyListboxCurrent].enemyState]);
-
-		//メモリ解放
-		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
-		{
-			delete[] ListboxIndexName[i];
-		}
-		delete[] ListboxIndexName;
-	}
-
-	ImGui::End();
-
-	//選択中
-
-
-	//削除
-	if (deleteFlag)
-	{
-		//削除
-		DeleteEnemyFormat(EnemyListboxCurrent);
-	
-		//戻す
-		EnemyListboxCurrent--;
-		if (EnemyListboxCurrent < 0)
-		{
-			EnemyListboxCurrent = 0;
-		}
-	}
-
-	//新規作成
-	if (creatFlag)
-	{
-		//作成
-		AddEnemyFormat(EnemyListboxType, EnemyListboxState, pos, dir);
-
-		//進む
-		EnemyListboxCurrent = enemyFile.enmy.enemyMax - 1;
-	}
-
-#endif
-}
-//
-////===================================================================================================================================
-////【エネミーツールの選択中を表す処理】
-////===================================================================================================================================
-//void ENEMY_TOOLS::SpinEnemy(short enemyId)
-//{
-//	//消す用(MAXなら消す)
-//	for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
-//	{
-//		renderer->
-//	}
-//}
-
-//===================================================================================================================================
 //【エネミーのフォーマット構造体を消す】
 //===================================================================================================================================
 void ENEMY_TOOLS::DeleteEnemyFormat(short enemyId)
@@ -438,7 +478,7 @@ void ENEMY_TOOLS::DeleteEnemyFormat(short enemyId)
 	//消す用(MAXなら消す)
 	if (enemyFile.enmy.enemyMax != NULL)
 	{
-		//一つを消す
+		//エネミーの数-1
 		enemyFile.enmy.enemyMax--;
 		if (enemyFile.enmy.enemyMax < 0)
 		{
@@ -450,10 +490,42 @@ void ENEMY_TOOLS::DeleteEnemyFormat(short enemyId)
 
 		//エネミーのフォーマット構造体を整理
 		UpdateEfmt(enemyFile.enmy.enemyMax + 1);
-
-		//描画用
-		renderer->unRegisterObject(enemyFile.enmy.enemyMax - enemyId);
-		renderer->updateAccessList();
-		needUpdate = true;
 	}
+
+	//戻す
+	EnemyListboxCurrent--;
+	if (EnemyListboxCurrent < 0)
+	{
+		EnemyListboxCurrent = 0;
+	}
+
+	//ファイルの書き出し
+	OutputEnemyFile();
+
+	//レンダラーのリセット処理
+	ResetRenderer();
+}
+
+//===================================================================================================================================
+//【エネミーのフォーマット構造体を追加】
+//===================================================================================================================================
+void ENEMY_TOOLS::AddEnemyFormat(short enemyType, short enemyState, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
+{
+	//エネミーの数+1
+	enemyFile.enmy.enemyMax++;
+
+	//エネミーのフォーマット構造体を整理
+	UpdateEfmt(enemyFile.enmy.enemyMax - 1);
+
+	//エネミーのフォーマット構造体の最後に追加
+	SetEnemy(enemyFile.enmy.enemyMax - 1, enemyType, enemyState, pos, dir);
+
+	//進む
+	EnemyListboxCurrent = enemyFile.enmy.enemyMax - 1;
+
+	//ファイルの書き出し
+	OutputEnemyFile();
+
+	//レンダラーのリセット処理
+	ResetRenderer();
 }
