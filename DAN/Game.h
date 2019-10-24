@@ -26,6 +26,8 @@
 #include "Telop.h"
 #include "Sky.h"
 
+#include "SpriteGauge.h"
+
 #include "Sound.h"
 #include "SoundBase.h"
 //#include "GameMaster.h"
@@ -134,7 +136,10 @@ private:
 	NavigationMesh* naviAI;
 
 	//Ä¶ƒpƒ‰ƒ[ƒ^
-	PLAY_PARAMETERS playParameters[3];
+	PLAY_PARAMETERS playParameters[4];
+
+	//SpriteÀŒ±
+	SpriteGauge* spriteGauge;
 
 public:
 	Game();

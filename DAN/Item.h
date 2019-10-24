@@ -16,6 +16,7 @@ namespace itemNS
 	enum ITEM_TYPE
 	{
 		BATTERY,
+		EXAMPLE,
 		ITEM_TYPE_MAX
 	};
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include "Item.h"
 #include "Battery.h"
+#include "exampleItem.h"
 
 
 //=============================================================================
@@ -26,6 +27,7 @@ class ItemManager
 private:
 	std::vector<Item*> itemList;				// アイテムポインタリスト
 	StaticMeshRenderer* batteryRenderer;		// 描画オブジェクト
+	StaticMeshRenderer* exampleItemRender;		// テスト用アイテム
 	int nextID;									// 次回ツリー発行ID
 
 public:

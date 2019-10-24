@@ -10,6 +10,7 @@
 //===================================================================================================================================
 #include "Player.h"
 #include "ImguiManager.h"
+#include "UtilityFunction.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -69,6 +70,8 @@ void Player::initialize(int playerType, int modelType)
 	radius = bodyCollide.getRadius();						// メッシュ半径を取得
 	centralPosition = position + bodyCollide.getCenter();	// 中心座標を設定
 	D3DXMatrixIdentity(&centralMatrixWorld);				// 中心座標ワールドマトリクスを初期化
+
+	power = 300;				//キャラクター電力確認用
 }
 
 
@@ -83,6 +86,8 @@ void Player::update(float frameTime)
 	onJump = false;
 	centralPosition = position + bodyCollide.getCenter();
 	acceleration *= 0.0f;
+
+	power = power - 1;
 
 	switch (state)
 	{
@@ -524,7 +529,7 @@ void Player::outputGUI()
 		float limitTop = 1000;
 		float limitBottom = -1000;
 		ImGui::Text("speedVectorLength %f", D3DXVec3Length(&speed));
-
+		ImGui::Text("power %d", power);													//電力
 
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
@@ -584,8 +589,14 @@ void Player::reset()
 //【setter】
 //===================================================================================================================================
 void Player::setCamera(Camera* _camera) { camera = _camera; }
-
-
+void Player::addpower(int add)
+{
+	power = UtilityFunction::clamp( power + add, MIN_POWER, MAX_POWER);		//電力回復
+}					
+void Player::pullpower(int pull)
+{
+	power = UtilityFunction::clamp( power - pull, MIN_POWER, MAX_POWER);		//電力消費
+}
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================

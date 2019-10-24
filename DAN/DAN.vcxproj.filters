@@ -433,6 +433,13 @@
     <ClCompile Include="ResultUIcpp.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
     </ClCompile>
+    <ClCompile Include="exampleItem.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGauge.cpp">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffectOccurrence.cpp" />
     <ClCompile Include="EffekseerManager.cpp">
       <Filter>Constant Layer\Effekseer</Filter>
     </ClCompile>
@@ -747,6 +754,13 @@
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
+    <ClInclude Include="exampleItem.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGauge.h">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffectOccurrence.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

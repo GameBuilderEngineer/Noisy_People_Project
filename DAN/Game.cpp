@@ -35,6 +35,7 @@ Game::Game()
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,true, filterParameters };
 	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,true, filterParameters };
+	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };		//アイテム取得音
 
 	//再生
 	SoundInterface::playSound(playParameters[0]);
@@ -52,7 +53,7 @@ Game::~Game()
 	SoundInterface::stopSound(playParameters[0]);
 	SoundInterface::stopSound(playParameters[1]);
 	SoundInterface::stopSound(playParameters[2]);
-
+	SoundInterface::stopSound(playParameters[3]);
 }
 
 //===================================================================================================================================
@@ -165,6 +166,11 @@ void Game::initialize() {
 	aiDirector->initialize();
 	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviAI->initialize();
+
+	//Sprite実験
+	spriteGauge = new SpriteGauge;
+	spriteGauge->initialize();
+
 }
 
 //===================================================================================================================================
@@ -173,7 +179,9 @@ void Game::initialize() {
 void Game::uninitialize() {
 	SAFE_DELETE(camera);
 	SAFE_DELETE(light);
+	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
+	SAFE_DELETE(player);
 	SAFE_DELETE(playerRenderer);
 	SAFE_DELETE(deadTree);
 	SAFE_DELETE(treeA);
@@ -186,6 +194,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(telop);
 	SAFE_DELETE(aiDirector);
+	SAFE_DELETE(spriteGauge);
 }
 
 //===================================================================================================================================
@@ -217,6 +226,7 @@ void Game::update(float _frameTime) {
 
 	// アイテムの更新
 	itemManager->update(frameTime);
+
 
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
@@ -377,14 +387,17 @@ void Game::render3D(Camera currentCamera) {
 //===================================================================================================================================
 void Game::renderUI() {
 
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						// αブレンドを行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
-	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);			// αデスティネーションカラーの指定
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
 	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
+	//Sprite実験
+	spriteGauge->render();
+	
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
@@ -403,7 +416,11 @@ void Game::collisions()
 		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
 			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
 		{
-			//player->addSpeed(D3DXVECTOR3(0, 10, 0));
+			//itemManager->destroyItem();
+			player->addSpeed(D3DXVECTOR3(0, 10, 0));
+			player->addpower(playerNS::RECOVERY_POWER);				//電力加算
+			SoundInterface::playSound(playParameters[3]);	//SE再生
+			itemManager->destroyAllItem();					//デリート(今は全消し)
 		}
 	}
 }
@@ -447,6 +464,13 @@ void Game::test()
 		itemNS::ItemData unko = { itemManager->issueNewItemID(), itemNS::BATTERY, *player->getPosition() };
 		itemManager->createItem(unko);
 	}
+	// 3Dモデル表示確認用（アイテムの更新）
+	if (input->wasKeyPressed('P'))
+	{
+		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
+		itemManager->createItem(abc);
+	}
+
 	if (input->wasKeyPressed('9'))
 	{
 		itemManager->destroyAllItem();
@@ -467,6 +491,7 @@ void Game::test()
 		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
 		enemyManager->createEnemy(p);
 	}
+
 	if (input->wasKeyPressed('7'))	// 全破棄
 	{
 		enemyManager->destroyAllEnemy();
