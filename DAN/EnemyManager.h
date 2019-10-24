@@ -32,9 +32,9 @@ class EnemyManager
 private:
 	LinkedList<enemyNS::EnemyData> enemyDataList;		// エネミーデータリスト
 	std::vector<Enemy*> enemyList;						// エネミーポインタリスト
-	StaticMeshRenderer* wolfRenderer;						// 描画オブジェクト
+	StaticMeshRenderer* wolfRenderer;					// 描画オブジェクト
 	StaticMeshRenderer* tigerRenderer;					// 描画オブジェクト
-	StaticMeshRenderer* bearRenderer;						// 描画オブジェクト
+	StaticMeshRenderer* bearRenderer;					// 描画オブジェクト
 	int nextID;											// 次回エネミー発行ID
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
@@ -46,12 +46,12 @@ public:
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	enemyNS::EnemyData* createEnemyData(enemyNS::ENEMYSET enemySetting);
 	void createEnemy(enemyNS::EnemyData* enemyData);
-	void destroyEnemyData(int _id);
+	void destroyEnemyData(int _enemyID);
 	void destroyAllEnemyData();
-	void destroyEnemy(int _id);
+	void destroyEnemy(int _enemyID);
 	void destroyAllEnemy();
 	void assertDestructionOrder();
-	int issueNewID();
+	int issueNewEnemyID();
 	void outputGUI();
 	void relocateEnemyAccordingToFile();
 

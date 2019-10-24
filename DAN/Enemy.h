@@ -84,7 +84,7 @@ namespace enemyNS
 	// 新規エネミー作成やエネミー配置ツールとのデータ交換に使用する
 	typedef struct EnemyInitialSettingData
 	{
-		int id;							// 識別番号(0..*)
+		int enemyID;					// 識別番号(0..*)
 		int type;						// エネミー種別
 		int defaultState;				// 初期ステート	
 		D3DXVECTOR3 defaultPosition;	// 初期座標
@@ -96,7 +96,7 @@ namespace enemyNS
 	// EnemyクラスオブジェクトはEnemyDataのポインタを介してステータスを参照する
 	struct EnemyData
 	{
-		int id;							// 識別番号(0..*)
+		int enemyID;					// 識別番号(0..*)
 		int type;						// エネミー種別
 		int state;						// ステート
 		int defaultState;				// 初期ステート	

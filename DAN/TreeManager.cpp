@@ -16,12 +16,12 @@ void TreeManager::initialize()
 	nextID = 0;								// 次回発行IDを0に初期化
 
 	// 描画オブジェクトの作成
-	aTrunkRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	aLeafRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_PLAYSTATION));
-	bTrunkRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	bLeafRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-	cTrunkRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	cLeafRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_PLAYSTATION));
+	aLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	bTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 
 #if 0
 #endif
@@ -90,27 +90,37 @@ void TreeManager::createTree(TreeData treeData)
 {
 	Tree* tree = new Tree(treeData);	// ツリー作成
 
-	// 幹を作成
-	tree->setTrunk(new Object);
+	// 幹の描画をセット
 	switch (treeData.model)
 	{
 	case A_MODEL:
-		aTrunkRenderer->generateObject(tree->getTrunk());
+		aTrunkRenderer->registerObject(tree->getTrunk());
 		break;
 
 	case B_MODEL:
-		bTrunkRenderer->generateObject(tree->getTrunk());
+		bTrunkRenderer->registerObject(tree->getTrunk());
 		break;
 
 	case C_MODEL:
-		cTrunkRenderer->generateObject(tree->getTrunk());
+		cTrunkRenderer->registerObject(tree->getTrunk());
 		break;
 	}
 
-	// リーフ作成
-	if (treeData.geenState == GREEN)
+	// 葉の描画をセット
+	if (treeData.geenState != GREEN) return;
+	switch (treeData.model)
 	{
-		createLeaf(tree->getLeaf(), treeData.model);
+	case A_MODEL:
+		aLeafRenderer->registerObject(tree->getLeaf());
+		break;
+
+	case B_MODEL:
+		bLeafRenderer->registerObject(tree->getLeaf());
+		break;
+
+	case C_MODEL:
+		cLeafRenderer->registerObject(tree->getLeaf());
+		break;
 	}
 
 	treeList.push_back(tree);
@@ -118,47 +128,44 @@ void TreeManager::createTree(TreeData treeData)
 
 
 //=============================================================================
-// リーフ作成
+// リーフ描画登録
 //=============================================================================
-void TreeManager::createLeaf(Object* leaf, int _model)
+void TreeManager::registerLeafRendering(Object* leaf, int _model)
 {
 	switch (_model)
 	{
 	case A_MODEL:
-		leaf = new Object;
-		aLeafRenderer->generateObject(leaf);
+		aLeafRenderer->registerObject(leaf);
 		break;
 
 	case B_MODEL:
-		leaf = new Object;
-		bLeafRenderer->generateObject(leaf);
+		bLeafRenderer->registerObject(leaf);
 		break;
 
 	case C_MODEL:
-		leaf = new Object;
-		cLeafRenderer->generateObject(leaf);
+		cLeafRenderer->registerObject(leaf);
 		break;
 	}
 }
 
 
 //=============================================================================
-// リーフ破棄
+// リーフ描画解除
 //=============================================================================
-void TreeManager::destroyLeaf(Object* leaf, int _model)
+void TreeManager::unRegisterLeafRendering(Object* leaf, int _model)
 {
 	switch (_model)
 	{
 	case A_MODEL:
-		aLeafRenderer->deleteObjectByID(leaf->id);
+		aLeafRenderer->unRegisterObjectByID(leaf->id);
 		break;
 
 	case B_MODEL:
-		aLeafRenderer->deleteObjectByID(leaf->id);
+		aLeafRenderer->unRegisterObjectByID(leaf->id);
 		break;
 
 	case C_MODEL:
-		aLeafRenderer->deleteObjectByID(leaf->id);
+		aLeafRenderer->unRegisterObjectByID(leaf->id);
 		break;
 	}
 }
@@ -169,13 +176,14 @@ void TreeManager::destroyLeaf(Object* leaf, int _model)
 //=============================================================================
 void TreeManager::destroyAllTree()
 {
-	aLeafRenderer->allDelete();
-	aTrunkRenderer->allDelete();
-	bLeafRenderer->allDelete();
-	bTrunkRenderer->allDelete();
-	cLeafRenderer->allDelete();
-	cTrunkRenderer->allDelete();
-	
+	// 描画全解除
+	aLeafRenderer->allUnRegister();
+	aTrunkRenderer->allUnRegister();
+	bLeafRenderer->allUnRegister();
+	bTrunkRenderer->allUnRegister();
+	cLeafRenderer->allUnRegister();
+	cTrunkRenderer->allUnRegister();
+
 	for (int i = 0; i < treeList.size(); i++)
 	{
 		SAFE_DELETE(treeList[i]);
@@ -183,6 +191,16 @@ void TreeManager::destroyAllTree()
 	treeList.clear();
 }
 
+
+//=============================================================================
+// ツリーIDを発行する
+//=============================================================================
+int TreeManager::issueNewTreeID()
+{
+	int ans = nextID;
+	nextID++;
+	return ans;
+}
 
 
 //=============================================================================
@@ -201,6 +219,11 @@ void TreeManager::outputGUI()
 		ImGui::Text("numOfTree:%d", Tree::getNumOfTree());
 
 	}
-
 #endif
 }
+
+
+//=============================================================================
+// Getter
+//=============================================================================
+std::vector<Tree*>& TreeManager::getTreeList(){ return treeList; }

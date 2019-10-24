@@ -181,7 +181,7 @@ void Create::update(float _frameTime) {
 	if (input->wasKeyPressed('0'))
 	{
 		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
-		itemManager->createItem(&unko);
+		itemManager->createItem(unko);
 	}
 	if (input->wasKeyPressed('9'))
 	{

@@ -83,7 +83,7 @@ void EnemyManager::update(float frameTime)
 		// 撃退したエネミーオブジェクトを破棄する
 		if (enemyList[i]->getEnemyData()->isAlive == false)
 		{
-			destroyEnemy(enemyList[i]->getEnemyData()->id);
+			destroyEnemy(enemyList[i]->getEnemyData()->enemyID);
 		}
 	}
 	wolfRenderer->update();
@@ -110,7 +110,7 @@ enemyNS::EnemyData* EnemyManager::createEnemyData(enemyNS::ENEMYSET enemySetting
 {
 	// ENEMYSET構造体からEnemyDataを作る
 	EnemyData enemyData;
-	enemyData.id = enemySetting.id;
+	enemyData.enemyID = enemySetting.enemyID;
 	enemyData.type = enemySetting.type;
 	enemyData.defaultState = enemySetting.defaultState;
 	enemyData.defaultPosition = enemySetting.defaultPosition;
@@ -120,7 +120,7 @@ enemyNS::EnemyData* EnemyManager::createEnemyData(enemyNS::ENEMYSET enemySetting
 	enemyDataList.insertFront(enemyData);
 	enemyDataList.listUpdate();
 	// エネミーデータIDの最大値を更新（最後に追加したデータ + 1が次回発行IDとなる）
-	nextID = enemyData.id + 1;
+	nextID = enemyData.enemyID + 1;
 	// リストに追加したデータのポインタを返す
 	return enemyDataList.getValue(0);
 }
@@ -146,14 +146,14 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::SAMPLE_BUNNY), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
-		tigerRenderer->generateObject(enemy);
+		tigerRenderer->registerObject(enemy);
 		break;
 
 	case BEAR:
 		enemy = new Bear(staticMeshNS::reference(staticMeshNS::SAMPLE_HAT), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
-		bearRenderer->generateObject(enemy);
+		bearRenderer->registerObject(enemy);
 		break;
 	}
 }
@@ -162,11 +162,11 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 //=============================================================================
 // エネミーデータの破棄
 //=============================================================================
-void EnemyManager::destroyEnemyData(int _id)
+void EnemyManager::destroyEnemyData(int _enemyID)
 {
 	for (int i = 0; i < enemyDataList.nodeNum; i++)
 	{
-		if (enemyDataList.getValue(i)->id != _id) { continue; }
+		if (enemyDataList.getValue(i)->enemyID != _enemyID) { continue; }
 		// エネミーデータ構造体はノード内にメモリが取られているため
 		// ノードの破棄と合わせてエネミーデータも破棄されている
 		enemyDataList.remove(enemyDataList.getNode(i));
@@ -199,26 +199,29 @@ void EnemyManager::destroyAllEnemyData()
 //=============================================================================
 // エネミーオブジェクトを破棄
 //=============================================================================
-void EnemyManager::destroyEnemy(int _id)
+void EnemyManager::destroyEnemy(int _enemyID)
 {
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
-		if (enemyList[i]->getEnemyData()->id == _id)
+		if (enemyList[i]->getEnemyData()->enemyID == _enemyID)
 		{
+			// 描画の解除
 			switch (enemyList[i]->getEnemyData()->type)
 			{
 			case WOLF:
 				wolfRenderer->unRegisterObjectByID(enemyList[i]->id);
 				break;
 
-		case TIGER:
-			tigerRenderer->deleteObjectByID(enemyList[i]->id);
-			break;
+			case TIGER:
+				tigerRenderer->unRegisterObjectByID(enemyList[i]->id);
+				break;
 
-		case BEAR:
-			bearRenderer->deleteObjectByID(enemyList[i]->id);
-			break;
+			case BEAR:
+				bearRenderer->unRegisterObjectByID(enemyList[i]->id);
+				break;
+			}
 		}
+		SAFE_DELETE(enemyList[i]);				// インスタンス破棄
 		enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
 		break;
 	}
@@ -230,14 +233,18 @@ void EnemyManager::destroyEnemy(int _id)
 //=============================================================================
 void EnemyManager::destroyAllEnemy()
 {
+	// 描画全解除
+	wolfRenderer->allUnRegister();
+	tigerRenderer->allUnRegister();
+	bearRenderer->allUnRegister();
+
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
 		SAFE_DELETE(enemyList[i]);
 	}
+	enemyList.clear();
+}
 
-	wolfRenderer->allUnRegister();
-	tigerRenderer->allUnRegister();
-	bearRenderer->allUnRegister();
 
 //=============================================================================
 // 破棄順序違反
@@ -251,11 +258,15 @@ void EnemyManager::assertDestructionOrder()
 	{
 		for (int k = 0; k < enemyList.size(); k++)
 		{
-			if (enemyDataList.getValue(i)->id == enemyList[k]->getEnemyData()->id)
+			if (enemyDataList.getValue(i)->enemyID == enemyList[k]->getEnemyData()->enemyID)
 			{
 				cnt++;
 			}
 		}
+	}
+	if (cnt != enemyList.size())
+	{
+		int unko = 1;
 	}
 	assert(cnt == enemyList.size());
 	assert(enemyDataList.nodeNum >= enemyList.size());
@@ -265,7 +276,7 @@ void EnemyManager::assertDestructionOrder()
 //=============================================================================
 // エネミーIDを発行する
 //=============================================================================
-int EnemyManager::issueNewID()
+int EnemyManager::issueNewEnemyID()
 {
 	int ans = nextID;
 	nextID++;

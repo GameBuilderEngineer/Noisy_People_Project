@@ -19,24 +19,14 @@ namespace itemNS
 		ITEM_TYPE_MAX
 	};
 
-	// ItemInitialSettingDataクラスはアイテム初期ステータスを保持する
-	// アイテム配置ツールとのデータ交換に使用する
-	typedef struct ItemInitialSettingData
+	typedef struct ItemData
 	{
-		int id;							// 識別番号(0..*)
-		int type;						// アイテム種別
+		int itemID;						// 識別番号(0..*)
+		int type;						// アイテムタイプ
 		D3DXVECTOR3 defaultPosition;	// 初期座標
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
-	} ITEMSET;
-
-
-	struct ItemData
-	{
-		int id;							// 識別番号
-		ITEM_TYPE itemType;				// アイテムタイプ
-		D3DXVECTOR3 initialPosition;	// 初期座標
 		void zeroClear() { ZeroMemory(this, sizeof(ItemData)); }
-	};
+	}ITEMSET;
 }
 
 
@@ -46,21 +36,21 @@ namespace itemNS
 class Item: public Object
 {
 private:
-	itemNS::ItemData* itemData;
+	itemNS::ItemData itemData;
 
 	// Static
 	static int numOfItem;					// アイテムオブジェクトの総数
 
 public:
-	Item(StaticMesh* _staticMesh, itemNS::ItemData* _itemData);
+	BoundingSphere sphereCollider;			// コライダ
+	Item(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
 	~Item();
 	virtual void update(float frameTime);
-	BoundingSphere sphereCollider;
 
 	// Getter
 	static int getNumOfItem();				// アイテムの数を取得
 	itemNS::ItemData* getItemData();		// アイテムデータを取得
 
 	// Setter
-	void setDataToItem(itemNS::ItemData* _itemData);
+	void setDataToItem(itemNS::ItemData _itemData);
 };

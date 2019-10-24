@@ -14,7 +14,7 @@
 //=============================================================================
 namespace itemNS
 {	
-	const int NUM_SURPLUS_DATA = 10;		// 初期アイテムデータ数に加えて確保する余剰分のベクター要素数
+	const int NUM_SURPLUS_DATA = 10;			// 初期アイテムデータ数に加えて確保する余剰分のベクター要素数
 }
 
 
@@ -24,18 +24,19 @@ namespace itemNS
 class ItemManager
 {
 private:
-	std::vector<itemNS::ItemData> itemDataList;	// アイテムデータリスト
 	std::vector<Item*> itemList;				// アイテムポインタリスト
-	StaticMeshRenderer* batteryRenderer;
+	StaticMeshRenderer* batteryRenderer;		// 描画オブジェクト
+	int nextID;									// 次回ツリー発行ID
 
 public:
 	void initialize();
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	void createItem(itemNS::ItemData* itemData);
-	void destroyItem(int _id);
+	void createItem(itemNS::ItemData itemData);
+	void destroyItem(int _itemID);
 	void destroyAllItem();
+	int issueNewItemID();
 	void outputGUI();
 
 	// Getter

@@ -13,28 +13,7 @@ using namespace itemNS;
 //=============================================================================
 void ItemManager::initialize()
 {
-#if 0
-	// アイテムデータリストの追加
-	ItemData itemData;
-	itemDataList.reserve(/*ツールで生成したファイルに格納されたアイテムデータの数*/ +NUM_SURPLUS_DATA);
-	for (int i = 0; i < itemDataList.size(); i++)
-	{
-		itemData.zeroClear();
-		if (i >= /*ツールで生成したファイルに格納されたアイテムデータの数*/ 0/*仮*/) continue;
-
-		// ファイルからデータを読み取る
-
-		// データリストに追加する
-		itemDataList.push_back(itemData);
-	}
-
-	// アイテムオブジェクトの作成
-	itemList.reserve(itemDataList.size());
-	for (size_t i = 0; itemDataList.size() - NUM_SURPLUS_DATA; i++)
-	{
-		createItem(&itemDataList[i]);
-	}
-#endif
+	nextID = 0;		// 次回発行IDを0に初期化
 
 	// 描画オブジェクトを作成
 	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
@@ -84,11 +63,11 @@ void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 //=============================================================================
 // アイテムオブジェクトの作成
 //=============================================================================
-void ItemManager::createItem(ItemData* itemData)
+void ItemManager::createItem(ItemData itemData)
 {
 	Item* item = NULL;
 
-	switch (itemData->itemType)
+	switch (itemData.type)
 	{
 	case BATTERY:
 		item = new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData);
@@ -101,38 +80,52 @@ void ItemManager::createItem(ItemData* itemData)
 
 //=============================================================================
 // アイテムオブジェクトの破棄
-// ※使用不可
 //=============================================================================
-void ItemManager::destroyItem(int _id)
+void ItemManager::destroyItem(int _itemID)
 {
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
-		if (itemList[i]->getItemData()->id == _id)
+		if (itemList[i]->getItemData()->itemID == _itemID)
 		{
-			SAFE_DELETE(itemList[i]);
-			itemList.erase(itemList.begin() + i);
+			// 描画の解除
+			switch (itemList[i]->getItemData()->type)
+			{
+			case BATTERY:
+				batteryRenderer->unRegisterObjectByID(itemList[i]->id);
+				break;
+			}
+			SAFE_DELETE(itemList[i]);				// インスタンス破棄
+			itemList.erase(itemList.begin() + i);	// ベクター要素を消去
 			break;
 		}
 	}
-	// batteryRenderer->deleteObject();
-	// 今はStaticMeshRendererに登録されたオブジェクトを個別に破棄できない
 }
 
 
 //=============================================================================
 // 全アイテムオブジェクトの破棄
-// ※仮実装
 //=============================================================================
 void ItemManager::destroyAllItem()
 {
+	// 描画を全解除
+	batteryRenderer->allUnRegister();
+
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
 		SAFE_DELETE(itemList[i]);
 	}
-	
 	itemList.clear();
+}
 
-	batteryRenderer->allUnRegister();
+
+//=============================================================================
+// アイテムIDを発行する
+//=============================================================================
+int ItemManager::issueNewItemID()
+{
+	int ans = nextID;
+	nextID++;
+	return ans;
 }
 
 
@@ -149,24 +142,6 @@ void ItemManager::outputGUI()
 		//float limitBottom = -1000;
 
 		ImGui::Text("numOfItem:%d", Item::getNumOfItem());
-
-		//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-		//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-		//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-		//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-		//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-		//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-		//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
-
-		//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-		//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-		//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-		//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
-
-		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
 #endif
 }

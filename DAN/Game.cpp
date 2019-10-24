@@ -403,7 +403,7 @@ void Game::collisions()
 		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
 			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
 		{
-			player->addSpeed(D3DXVECTOR3(0, 10, 0));
+			//player->addSpeed(D3DXVECTOR3(0, 10, 0));
 		}
 	}
 }
@@ -444,12 +444,13 @@ void Game::test()
 	// アイテムマネージャのテスト
 	if (input->wasKeyPressed('0'))
 	{
-		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
-		itemManager->createItem(&unko);
+		itemNS::ItemData unko = { itemManager->issueNewItemID(), itemNS::BATTERY, *player->getPosition() };
+		itemManager->createItem(unko);
 	}
 	if (input->wasKeyPressed('9'))
 	{
 		itemManager->destroyAllItem();
+		//itemManager->destroyItem(3);
 	}
 
 	//エネミーマネージャのテスト
@@ -457,7 +458,7 @@ void Game::test()
 	{
 		enemyNS::ENEMYSET tinko =
 		{
-			enemyManager->issueNewID(),
+			enemyManager->issueNewEnemyID(),
 			enemyNS::WOLF,
 			enemyNS::CHASE,
 			*player->getPosition(),
@@ -473,27 +474,40 @@ void Game::test()
 	}
 	if (input->wasKeyPressed('6'))	// 0-50（ID）までランダムに破棄
 	{
-		static bool rec[50] = { false };
-		for (int i = 0; i < 50; i++)
-		{
-			int n = rand() % 50;
-			if (rec[n] == false)
-			{
-				rec[n] = true;
-				enemyManager->destroyEnemy(n);
-				enemyManager->destroyEnemyData(n);
-				break;
-			}
-		}
+		enemyManager->destroyEnemy(5);
+		enemyManager->destroyEnemyData(5);
+
+		//static bool rec[50] = { false };
+		//for (int i = 0; i < 50; i++)
+		//{
+		//	int n = rand() % 50;
+		//	if (rec[n] == false)
+		//	{
+		//		rec[n] = true;
+		//		enemyManager->destroyEnemy(n);
+		//		enemyManager->destroyEnemyData(n);
+		//		break;
+		//	}
+		//}
 	}
 
-	//// ツリーマネージャのテスト
-	//if (input->wasKeyPressed('5'))
-	//{
-	//	treeNS::TreeData treeData;
-	//	treeData.geenState = treeNS::GREEN;
-	//	treeData.model = treeNS::A_MODEL;
-	//	treeData.initialPosition = *player->getPosition();
-	//	treeManager->createTree(treeData);
-	//}
+	// ツリーマネージャのテスト
+	if (input->wasKeyPressed('5'))
+	{
+		treeNS::TreeData treeData;
+		treeData.geenState = treeNS::GREEN;
+		treeData.model = treeNS::A_MODEL;
+		treeData.initialPosition = *player->getPosition();
+		treeManager->createTree(treeData);
+	}
+	if (input->wasKeyPressed('4'))
+	{
+		treeManager->unRegisterLeafRendering(treeManager->getTreeList()[3]->getLeaf(),
+			treeManager->getTreeList()[3]->getTreeData()->model);
+	}
+	if (input->wasKeyPressed('3'))
+	{
+		treeManager->destroyAllTree();
+	}
+
 }

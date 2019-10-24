@@ -16,8 +16,8 @@ int Tree::numOfTree = 0;
 Tree::Tree(treeNS::TreeData _treeData)
 {
 	treeData = _treeData;
-	trunk->position = treeData.initialPosition;
-	leaf->position = treeData.initialPosition;
+	trunk.position = treeData.initialPosition;
+	leaf.position = treeData.initialPosition;
 
 	// treeData.initialDirection‚ðŠî‚É‚µ‚½Œü‚«“]Š·
 
@@ -47,8 +47,8 @@ void Tree::update(float frameTime)
 //=============================================================================
 // Getter
 //=============================================================================
-Object* Tree::getLeaf() { return leaf; }
-Object* Tree::getTrunk() { return trunk; }
+Object* Tree::getLeaf() { return &leaf; }
+Object* Tree::getTrunk() { return &trunk; }
 int Tree::getNumOfTree(){ return numOfTree; }
 TreeData* Tree::getTreeData() { return &treeData; }
 
@@ -57,5 +57,3 @@ TreeData* Tree::getTreeData() { return &treeData; }
 // Setter
 //=============================================================================
 void Tree::setDataToTree(TreeData _treeData) { treeData = _treeData; }
-void Tree::setLeaf(Object* _leaf) { leaf = _leaf; }
-void Tree::setTrunk(Object* _trunk) {trunk = _trunk;}

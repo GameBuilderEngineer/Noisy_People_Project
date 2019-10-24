@@ -48,7 +48,7 @@ namespace treeNS
 
 	typedef struct TreeData
 	{
-		int id;							// 識別番号
+		int treeID;						// 識別番号
 		int model	;					// モデルID
 		TREE_TYPE type;					// ツリータイプ
 		GREEN_STATE geenState;			// 緑化状態
@@ -67,15 +67,14 @@ class Tree
 {
 private:
 	treeNS::TreeData treeData;			// ツリーデータ
-	Object *leaf;						// 葉オブジェクト
-	Object *trunk;						// 幹オブジェクト
+	Object leaf;						// 葉オブジェクト
+	Object trunk;						// 幹オブジェクト
 	BoundingSphere greeningArea;		// 緑化範囲
 	static int numOfTree;				// ツリーオブジェクトの総数
 
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();
-	void initialize();
 	void update(float frameTime);
 
 	// Getter
@@ -86,6 +85,4 @@ public:
 
 	// Setter
 	void setDataToTree(treeNS::TreeData _treeData);
-	void setLeaf(Object* _leaf);
-	void setTrunk(Object* _trunk);
 };

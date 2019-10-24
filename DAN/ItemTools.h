@@ -10,7 +10,7 @@
 //【ライブラリのロード】
 //===================================================================================================================================
 #include "Base.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "Player.h"
 #include "Item.h"
 
