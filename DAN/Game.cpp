@@ -468,7 +468,7 @@ void Game::test()
 	if (input->wasKeyPressed('P'))
 	{
 		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
-		itemManager->createItem(&abc);
+		itemManager->createItem(abc);
 	}
 
 	if (input->wasKeyPressed('9'))

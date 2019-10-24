@@ -10,7 +10,7 @@ using namespace itemNS;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-exampleItem::exampleItem(StaticMesh* _staticMesh, ItemData* _itemData): Item(_staticMesh, _itemData)
+exampleItem::exampleItem(StaticMesh* _staticMesh, ItemData _itemData): Item(_staticMesh, _itemData)
 {
 
 }

@@ -15,7 +15,7 @@ private:
 	static StaticMesh* staticMesh;
 
 public:
-	exampleItem(StaticMesh* _staticMesh, itemNS::ItemData* _itemData);
+	exampleItem(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
 	static void initialize(StaticMesh* staticMesh);
 	virtual void update(float frametime);
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);

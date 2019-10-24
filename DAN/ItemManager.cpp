@@ -121,7 +121,7 @@ void ItemManager::destroyAllItem()
 {
 	// •`‰æ‚ð‘S‰ðœ
 	batteryRenderer->allUnRegister();
-	exampleRenderer->allUnRegister();
+	exampleItemRender->allUnRegister();
 
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
