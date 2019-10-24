@@ -5,8 +5,10 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include <vector>
+#include "Object.h"
 #include "VertexAccessor.h"
-#include "StaticMeshObject.h"
+#include "MeshData.h"
+#include "AStar.h"
 
 
 //=============================================================================
@@ -14,16 +16,14 @@
 //=============================================================================
 namespace navigationMeshNS
 {
-	struct VertexNaviMesh
+	struct Edge
 	{
+		D3DXVECTOR3 v0;		
+		D3DXVECTOR3 v1;
 	};
 
 }
 
-struct Index3
-{
-	DWORD index[3];
-};
 
 
 //=============================================================================
@@ -32,19 +32,11 @@ struct Index3
 class NavigationMesh: public Object
 {
 private:
-	LPDIRECT3DVERTEXBUFFER9	vertexBuffer;		// 頂点バッファ
+	StaticMesh* staticMesh;						// メッシュ情報
+	MeshData meshData;							// メッシュデータオブジェクト
+	VertexAccessor vtxAccessor;					// 頂点アクセスオブジェクト
+	AStar aStar;								// パス検索オブジェクト
 
-	LPD3DXMESH mesh;							// メッシュ
-	BYTE* vtx;									// 頂点情報
-	WORD* index;								// (頂点)インデックス情報
-	DWORD *adjacency;							// 隣接性情報
-	
-	StaticMesh* staticMesh;						//※仮に入れました。菅野
-
-	VertexAccessor vtxAccessor;					// 頂点アクセス
-	DWORD numVertices;
-	DWORD stride;
-	DWORD numFaces;
 
 public:
 	NavigationMesh(StaticMesh* staticMesh);
@@ -60,16 +52,14 @@ public:
 	};
 
 	// 経路探索
-	void searchRoute(D3DXVECTOR3 from, D3DXVECTOR3 dest, SEARCH_FLAG flag);
+	void pathSearch(D3DXVECTOR3 from, D3DXVECTOR3 dest, SEARCH_FLAG flag);
 
-	//BYTE* getVertexFromIndex(BYTE* pVtx, WORD index);
+	// ステアリング
+	void steering();
 
-	//WORD getIndexFromPolygon();
-	//BYTE* getVertexFromPolygon(DWORD polyIndex);
-	//Index3 getAdjacencyFromPolygon(DWORD polyIndex);
 
 #ifdef _DEBUG
-	void debugRender();
+	void debugRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void outputGUI();
 #endif // _DEBUG
 };

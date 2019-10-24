@@ -3,60 +3,49 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
+#include <cassert>
 #include "EnemyManager.h"
 #include "ImguiManager.h"
+#include "EnemyTools.h"
 using namespace enemyNS;
 
 
 //=============================================================================
 // 初期化
 //=============================================================================
-void EnemyManager::initialize()
+void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-#if 0
-	// エネミーファイルからエネミー初期ステータスを読み込む
-	FILE	*fp = NULL;
-	fopen("enemy.enemy", "rb");
-	ENEMY_FILE enemyFile;
-	memset(&enemyFile, 0, sizeof(ENEMY_FILE));
-	fread(&enemyFile.enmy, sizeof(ENEMY_ENMY), 1, fp);
-	enemyFile.efmt = new ENEMY_EFMT[enemyFile.enmy.enemyMax];
-	fread(&enemyFile.efmt, sizeof(ENEMY_EFMT), enemyFile.enmy.enemyMax, fp);
-	fclose(fp);
+	nextID = 0;								// 次回発行IDを0に初期化
+	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
+	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 
-	// エネミーデータリストの追加
-	EnemyData enemyData;
-	enemyDataList.reserve(enemyFile.enmy.enemyMax + DYNAMIC_SPAWN_MAX);
-	for (int i = 0; i < enemyDataList.size(); i++)
-	{
-		enemyData.zeroClear();
-		if (i >= enemyFile.enmy.enemyMax) { continue; }
-
-		//enemyFile.efmt[i].chunkId;
-		//enemyFile.efmt[i].posX;
-
-		enemyDataList.push_back(enemyData);
-	}
-	SAFE_DELETE_ARRAY(enemyFile.efmt);
-	nextID = enemyDataList.back().id + 1;	// エネミーデータIDの最大値を更新
-#endif
-
-	// update()で動的な確保をせず済むようエネミーリストのキャパシティ（メモリ）を増やしておく
-	enemyList.reserve(ENEMY_OBJECT_MAX);
-
-	// エネミーオブジェクトの作成
-	for (size_t i = 0; enemyDataList.size(); i++)
-	{
-		if (/* プレイヤーの初期位置と近ければ */0)
-		{
-			createEnemy(&enemyDataList[i]);
-		}
-	}
+	// 接地フィールド情報をセット
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
 
 	// 描画オブジェクトの作成
-	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+
+#if 1	// エネミーツールのデータを読み込む
+	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+	{
+		createEnemyData(enemyTools->GetEnemySet(i));
+	}
+	SAFE_DELETE(enemyTools);
+#endif
+
+#if 1	// エネミーオブジェクトをツールデータを元に作成する
+	for (size_t i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
+		{
+			createEnemy(enemyDataList.getValue(i));
+		}
+	}
+#endif
 }
 
 
@@ -65,14 +54,17 @@ void EnemyManager::initialize()
 //=============================================================================
 void EnemyManager::uninitialize()
 {
-	// 全エネミーオブジェクトを破棄
+	// 全てのエネミーオブジェクトを破棄
 	destroyAllEnemy();
+
+	// 全てのエネミーデータを破棄
+	destroyAllEnemyData();
 
 	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Enemy*> temp;
 	enemyList.swap(temp);
 
-	// 描画オブジェクトの破棄
+	// 描画オブジェクトを破棄
 	SAFE_DELETE(wolfRenderer);
 	SAFE_DELETE(tigerRenderer);
 	SAFE_DELETE(bearRenderer);
@@ -91,9 +83,12 @@ void EnemyManager::update(float frameTime)
 		// 撃退したエネミーオブジェクトを破棄する
 		if (enemyList[i]->getEnemyData()->isAlive == false)
 		{
-			destroyEnemy(enemyList[i]->getEnemyData()->id);
+			destroyEnemy(enemyList[i]->getEnemyData()->enemyID);
 		}
 	}
+	wolfRenderer->update();
+	tigerRenderer->update();
+	bearRenderer->update();
 }
 
 
@@ -109,7 +104,30 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 
 
 //=============================================================================
-// エネミーオブジェクトの作成
+// エネミーデータの作成
+//=============================================================================
+enemyNS::EnemyData* EnemyManager::createEnemyData(enemyNS::ENEMYSET enemySetting)
+{
+	// ENEMYSET構造体からEnemyDataを作る
+	EnemyData enemyData;
+	enemyData.enemyID = enemySetting.enemyID;
+	enemyData.type = enemySetting.type;
+	enemyData.defaultState = enemySetting.defaultState;
+	enemyData.defaultPosition = enemySetting.defaultPosition;
+	enemyData.defaultDirection = enemySetting.defaultDirection;
+	enemyData.setUp();
+	// リストに追加
+	enemyDataList.insertFront(enemyData);
+	enemyDataList.listUpdate();
+	// エネミーデータIDの最大値を更新（最後に追加したデータ + 1が次回発行IDとなる）
+	nextID = enemyData.enemyID + 1;
+	// リストに追加したデータのポインタを返す
+	return enemyDataList.getValue(0);
+}
+
+
+//=============================================================================
+// エネミーオブジェクトを作成
 //=============================================================================
 void EnemyManager::createEnemy(EnemyData* enemyData)
 {
@@ -118,61 +136,147 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	switch (enemyData->type)
 	{
 	case WOLF:
+		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL), enemyData);
+		enemy->setAttractor(attractorMesh, attractorMatrix);
+		enemyList.emplace_back(enemy);
+		wolfRenderer->registerObject(enemy);
 		break;
+
 	case TIGER:
+		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::SAMPLE_BUNNY), enemyData);
+		enemy->setAttractor(attractorMesh, attractorMatrix);
+		enemyList.emplace_back(enemy);
+		tigerRenderer->registerObject(enemy);
 		break;
+
 	case BEAR:
-		break;
-	default:
+		enemy = new Bear(staticMeshNS::reference(staticMeshNS::SAMPLE_HAT), enemyData);
+		enemy->setAttractor(attractorMesh, attractorMatrix);
+		enemyList.emplace_back(enemy);
+		bearRenderer->registerObject(enemy);
 		break;
 	}
 }
 
 
 //=============================================================================
-// エネミーオブジェクトの破棄
-// ※使用不可
+// エネミーデータの破棄
 //=============================================================================
-void EnemyManager::destroyEnemy(int _id)
+void EnemyManager::destroyEnemyData(int _enemyID)
+{
+	for (int i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		if (enemyDataList.getValue(i)->enemyID != _enemyID) { continue; }
+		// エネミーデータ構造体はノード内にメモリが取られているため
+		// ノードの破棄と合わせてエネミーデータも破棄されている
+		enemyDataList.remove(enemyDataList.getNode(i));
+		enemyDataList.listUpdate();
+		break;
+	}
+
+#ifdef _DEBUG
+	assertDestructionOrder();
+#endif//_DEBUG
+}
+
+
+//=============================================================================
+// 全てのエネミーデータを破棄
+//=============================================================================
+void EnemyManager::destroyAllEnemyData()
+{
+	// エネミーデータ構造体はノード内にメモリが取られているため
+	// ノードの破棄と合わせてエネミーデータも破棄されている
+	enemyDataList.allClear();
+	enemyDataList.listUpdate();
+
+#ifdef _DEBUG
+	assertDestructionOrder();
+#endif//_DEBUG
+}
+
+
+//=============================================================================
+// エネミーオブジェクトを破棄
+//=============================================================================
+void EnemyManager::destroyEnemy(int _enemyID)
 {
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
-		if (enemyList[i]->getEnemyData()->id == _id)
+		if (enemyList[i]->getEnemyData()->enemyID == _enemyID)
 		{
-			SAFE_DELETE(enemyList[i]);
-			enemyList.erase(enemyList.begin() + i);
-			break;
+			// 描画の解除
+			switch (enemyList[i]->getEnemyData()->type)
+			{
+			case WOLF:
+				wolfRenderer->unRegisterObjectByID(enemyList[i]->id);
+				break;
+
+			case TIGER:
+				tigerRenderer->unRegisterObjectByID(enemyList[i]->id);
+				break;
+
+			case BEAR:
+				bearRenderer->unRegisterObjectByID(enemyList[i]->id);
+				break;
+			}
 		}
+		SAFE_DELETE(enemyList[i]);				// インスタンス破棄
+		enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
+		break;
 	}
-	// 今はStaticMeshObjectに登録されたオブジェクトを個別に破棄できない
 }
 
 
 //=============================================================================
-// 全エネミーオブジェクトの破棄
-// ※仮実装
+// 全てのエネミーオブジェクトを破棄
 //=============================================================================
 void EnemyManager::destroyAllEnemy()
 {
+	// 描画全解除
+	wolfRenderer->allUnRegister();
+	tigerRenderer->allUnRegister();
+	bearRenderer->allUnRegister();
+
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
 		SAFE_DELETE(enemyList[i]);
 	}
-
 	enemyList.clear();
-	SAFE_DELETE(wolfRenderer);
-	SAFE_DELETE(tigerRenderer);
-	SAFE_DELETE(bearRenderer);
-	wolfRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	tigerRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	bearRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+}
+
+
+//=============================================================================
+// 破棄順序違反
+//=============================================================================
+void EnemyManager::assertDestructionOrder()
+{
+	// エネミーの参照先のエネミーデータがエネミーデータリストにない場合のアサーション
+	// 先にデータを破棄して後にエネミーを破棄しようとする場合に該当する
+	int cnt = 0;
+	for (int i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		for (int k = 0; k < enemyList.size(); k++)
+		{
+			if (enemyDataList.getValue(i)->enemyID == enemyList[k]->getEnemyData()->enemyID)
+			{
+				cnt++;
+			}
+		}
+	}
+	if (cnt != enemyList.size())
+	{
+		int unko = 1;
+	}
+	assert(cnt == enemyList.size());
+	assert(enemyDataList.nodeNum >= enemyList.size());
 }
 
 
 //=============================================================================
 // エネミーIDを発行する
 //=============================================================================
-int EnemyManager::issueNewID()
+int EnemyManager::issueNewEnemyID()
 {
 	int ans = nextID;
 	nextID++;
@@ -186,33 +290,51 @@ int EnemyManager::issueNewID()
 void EnemyManager::outputGUI()
 {
 #ifdef _DEBUG
-
 	if (ImGui::CollapsingHeader("EnemyInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		//float limitTop = 1000;
-		//float limitBottom = -1000;
-
-		ImGui::Text("numOfEnemy:%d", Enemy::getNumOfEnemy());
-
-		//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-		//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-		//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-		//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-		//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-		//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-		//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
-
-		//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-		//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-		//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-		//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
-
-		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
+		ImGui::Text("enemyDataList.nodeNum:%d\n", enemyDataList.nodeNum);
+		ImGui::Text("enemyList.size()     :%d\n", enemyList.size());
+		ImGui::Text("numOfEnemy           :%d\n", Enemy::getNumOfEnemy());
+		ImGui::Text("nextID	:%d\n", nextID);
+		//for (int i = 0; i < enemyList.size(); i++)
+		//{
+		//	ImGui::Text("%d", enemyList[i]->getEnemyData()->id);
+		//}
 	}
-
 #endif
 }
+
+
+//=============================================================================
+// ファイルに準拠してエネミーオブジェクトを再配置する
+//=============================================================================
+void EnemyManager::relocateEnemyAccordingToFile()
+{
+	destroyAllEnemy();						// 全てのエネミーオブジェクトを破棄
+	destroyAllEnemyData();					// 全てのエネミーデータを破棄
+	nextID = 0;								// 次回発行IDを0に初期化
+	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
+	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
+
+	// エネミーツールのデータを読み込む
+	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+	{
+		createEnemyData(enemyTools->GetEnemySet(i));
+	}
+	SAFE_DELETE(enemyTools);
+
+	// エネミーオブジェクトをツールデータを元に作成する
+	for (size_t i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		createEnemy(enemyDataList.getValue(i));
+	}
+}
+
+
+//=============================================================================
+// Getter
+//=============================================================================
+LinkedList<enemyNS::EnemyData>* EnemyManager::getEnemyDataList() { return &enemyDataList; }
+std::vector<Enemy*>& EnemyManager::getEnemyList() { return enemyList; }

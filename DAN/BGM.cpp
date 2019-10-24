@@ -102,13 +102,14 @@ void BGMManager::SetSpeedOn(void)
 //===================================================================================================================================
 //【ImGUIへの出力】
 //===================================================================================================================================
+#ifdef _DEBUG
 void BGMManager::outputBGMGUI(void)
 {
-#ifdef _DEBUG
 	if (!ImGui::CollapsingHeader("BGMInformation"))
 	{
 		//使用中のバッファ数
 		ImGui::Text("Number of buffers:%d", BGMBufferMax);
+		
 		//使用中のボイス数
 		ImGui::Text("Number of voice:%d", soundParametersList->nodeNum - 1);
 
@@ -169,19 +170,76 @@ void BGMManager::outputBGMGUI(void)
 				}
 
 				//波形の描画
-				ImGui::Text("Sound wave");
-				float lines[11025];
-				for (int j = 11024; j >= 0; j--)
+				int saveDataMax = 11024;	//取得するデータ数
+				int dataMax = (saveDataMax / tmpBuffer->wavFile.fmt.fmtChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
+				float *fData = new (float[dataMax]);
+				memset(fData, 0, sizeof(float)*dataMax);
+				fData[0] = (float)SHRT_MIN;
+				fData[dataMax - 1] = (float)SHRT_MAX;
+				int wtPos = dataMax - 2;
+				for (int j = saveDataMax - 1; j > 0; j -= tmpBuffer->wavFile.fmt.fmtChannel)
 				{
-					if (playPoint - j < 0)
+					for (int k = 0; k < tmpBuffer->wavFile.fmt.fmtChannel; k++)
 					{
-						lines[j] = 0.0f;
-						continue;
+						if (playPoint - j < 0)
+						{
+							fData[wtPos] = 0.0f;
+							continue;
+						}
+
+						fData[wtPos] += ((float)tmpBuffer->wavFile.data.waveData[playPoint - j - k] / (float)tmpBuffer->wavFile.fmt.fmtChannel);
 					}
-					lines[j] = tmpBuffer->wavFile.data.waveData[playPoint - j];
+					wtPos--;
 				}
-				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 30);
-				ImGui::PlotLines("", lines, 11025, 0, nullptr, FLT_MAX, FLT_MAX, plotextent);
+				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 100);
+				ImGui::PlotLines("", fData, dataMax, 0, "Sound wave", FLT_MAX, FLT_MAX, plotextent);
+
+				SAFE_DELETE_ARRAY(fData);
+
+				//for (int j = 11023; j > 0; j--)
+//{
+//	if (playPoint - j < 0)
+//	{
+//		lines[j] = 0.0f;
+//		continue;
+//	}
+//	lines[j] = (float)tmpBuffer->wavFile.data.waveData[playPoint - j];
+//}
+//for (int j = 11024 / tmpBuffer->wavFile.fmt.fmtChannel; j > 0; j--)
+//{
+//	for (int k = 0; k < tmpBuffer->wavFile.fmt.fmtChannel; k++)
+//	{
+//		if (playPoint - j * tmpBuffer->wavFile.fmt.fmtChannel < 0)
+//		{
+//			lines[j * tmpBuffer->wavFile.fmt.fmtChannel - k] = 0.0f;
+//			continue;
+//		}
+//		lines[j * tmpBuffer->wavFile.fmt.fmtChannel - k] = (float)tmpBuffer->wavFile.data.waveData[playPoint - (j * tmpBuffer->wavFile.fmt.fmtChannel - k)] / tmpBuffer->wavFile.fmt.fmtChannel;
+//	}
+//}
+				////test
+				//short data[10] = { 0,1,2,3,4,5,6,7,8,9 }; 
+				//int tmpChannel = 1;
+				//int saveDataMax = 10;
+				//int dataMax = (saveDataMax / tmpChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
+				//float *fData = new (float[dataMax]);
+				//memset(fData, 0, sizeof(float)*dataMax);
+				//fData[0] = (float)SHRT_MIN;
+				//fData[dataMax - 1] = (float)SHRT_MAX;
+				//int wtPos = dataMax - 2;
+				//for (int j = saveDataMax - 1; j > 0; j -= tmpChannel)
+				//{
+				//	for (int k = 0; k < tmpChannel; k++)
+				//	{
+				//		fData[wtPos] += ((float)data[j - k] / (float)tmpChannel);
+				//	}
+				//	wtPos--;
+				//}
+				//ImGui::PlotLines("", fData, dataMax, 0, "tmp wave", FLT_MAX, FLT_MAX, plotextent);
+				//ImGui::Text("0.5f 2.5f 4.5f 6.5f 8.5f");
+				//SAFE_DELETE_ARRAY(fData);
+
+				//再生位置
 				ImGui::ProgressBar(playPoint / (float)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel));
 
 				//速度調整
@@ -197,8 +255,8 @@ void BGMManager::outputBGMGUI(void)
 
 		}
 	}
-#endif
 }
+#endif
 
 //===================================================================================================================================
 //【ステージ遷移に合わせて必要なサウンドバッファを用意する】
@@ -281,6 +339,9 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 	case SceneList::RESULT:
 		break;
 	case SceneList::NONE_SCENE:
+		break;
+	case SceneList::CREATE:
+		BGMBufferMax = CREATE_BGM_LIST::CREATE_BGM_MAX;
 		break;
 	default:
 		break;

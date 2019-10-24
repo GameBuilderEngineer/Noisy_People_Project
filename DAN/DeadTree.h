@@ -2,7 +2,7 @@
 //【DeadTree.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/10/16
-// [更新日]2019/10/16
+// [更新日]2019/10/23
 //===================================================================================================================================
 #pragma once
 
@@ -10,7 +10,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 
 //===================================================================================================================================
 //【石クラス】
@@ -18,7 +18,9 @@
 class DeadTree : public Base
 {
 private:
-	StaticMeshObject* renderer;
+	int num;
+	Object* object;
+	StaticMeshRenderer* renderer;
 	bool needUpdate;
 public:
 	DeadTree();
@@ -26,6 +28,5 @@ public:
 	void initialize();
 	void update();
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void generate(D3DXVECTOR3 position);
 };
 

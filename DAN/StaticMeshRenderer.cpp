@@ -1,33 +1,35 @@
 //===================================================================================================================================
-//【StaticMeshObject.cpp】
+//【StaticMeshRenderer.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/17
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "Direct3D9.h"
 #include "ImguiManager.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
+StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 {
 	device					= getDevice();		//デバイスの取得
 	this->staticMesh		= _staticMesh;
 	onRender				= true;
-	didDelete				= false;
-	didGenerate				= false;
 	onTransparent			= false;
+	onLight					= true;
+	didDelete				= false;
+	didRegister				= false;
+	didGenerate				= false;
 	objectNum				= 0;
-	fillMode				= staticMeshObjectNS::FILLMODE::SOLID;
-	positionBuffer			= NULL;
+	fillMode				= staticMeshRendererNS::FILLMODE::SOLID;
+	matrixBuffer			= NULL;
+	worldMatrix				= NULL;
 	declaration				= NULL;
-	position				= NULL;
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[65];
@@ -37,21 +39,34 @@ StaticMeshObject::StaticMeshObject(StaticMesh* _staticMesh)
 		vertexElement[i] = staticMesh->vertexElement[i];
 		i++;
 	}
-	vertexElement[i] = { 1, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 };
+	vertexElement[i] = { 1, 0,					D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 };
+	i++;
+	vertexElement[i] = { 1, sizeof(float)*4,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 2 };
+	i++;
+	vertexElement[i] = { 1, sizeof(float)*4*2,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 3 };
+	i++;
+	vertexElement[i] = { 1, sizeof(float)*4*3,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 4 };
 	i++;
 	vertexElement[i] = D3DDECL_END();
 	i++;
 	device->CreateVertexDeclaration(vertexElement, &declaration);
 
-	objectList = new staticMeshObjectNS::ObjectList();
+	objectList = new staticMeshRendererNS::ObjectList();
 
 }
 
 //===================================================================================================================================
 //【デストラクタ】
 //===================================================================================================================================
-StaticMeshObject::~StaticMeshObject()
+StaticMeshRenderer::~StaticMeshRenderer()
 {
+	SAFE_RELEASE(matrixBuffer);
+	SAFE_RELEASE(colorBuffer);
+	SAFE_RELEASE(uvBuffer);
+
+	SAFE_DELETE_ARRAY(worldMatrix);
+	SAFE_DELETE_ARRAY(color);
+
 	objectList->terminate();
 	SAFE_DELETE(objectList);
 }
@@ -59,34 +74,36 @@ StaticMeshObject::~StaticMeshObject()
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
-void StaticMeshObject::update()
+void StaticMeshRenderer::update()
 {
-
 	for (int i = 0; i < objectNum; i++)
 	{
 		(*objectList->getValue(i))->update();			//更新処理
-		//削除処理
+		unRegisterObject(i);							//解除処理
 	}
 
-
-	if (didDelete || didGenerate)
+	if (didRegister|| didUnRegister)
 	{
+
 		objectList->listUpdate();
+		for (int i = 0; i < objectList->nodeNum; i++)
+		{
+			(*objectList->getValue(i))->update();			//更新処理
+		}
 		updateBuffer();
 		updateArray();
-		didGenerate = false;
-		didDelete = false;
+		didRegister = false;
+		didUnRegister = false;
 	}
 
 	//値の更新
-	updatePosition();
-
+	updateWorldMatrix();
 }
 
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	//描画が有効でない場合終了
 	if (onRender == false)return;
@@ -94,8 +111,6 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	
 	//レンダーステートの設定
 	device->SetRenderState(D3DRS_FILLMODE, fillMode);
-	device->SetRenderState(D3DRS_ZENABLE, TRUE);
-	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	//透過処理
 	if (onTransparent)
@@ -118,13 +133,14 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA		| objectNum);
 	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(2, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
 
 	//頂点宣言を追加
 	device->SetVertexDeclaration(declaration);
 
 	//ストリームにメッシュの頂点バッファをバインド
 	device->SetStreamSource(0, staticMesh->vertexBuffer,	0, staticMesh->numBytesPerVertex);
-	device->SetStreamSource(1, positionBuffer,						0, sizeof(D3DXVECTOR3));
+	device->SetStreamSource(1, matrixBuffer,						0, sizeof(D3DXMATRIX));
 
 	//インデックスバッファをセット
 	device->SetIndices(staticMesh->indexBuffer);
@@ -136,7 +152,6 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 	effect->SetMatrix("matrixView", &view);	
 	//effect->SetValue("positionList", position,objectNum*sizeof(D3DXVECTOR3));
 
-
 	// レンダリング
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
@@ -146,22 +161,22 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 		//シェーダー更新
 		//effect->CommitChanges();
 		effect->Begin(0, 0);
-		effect->BeginPass(0);
+		if(onLight)		effect->BeginPass(0);
+		else			effect->BeginPass(1);
 
 		//Drawコール
 		device->DrawIndexedPrimitive(
-			D3DPT_TRIANGLELIST,										//D3DPRIMITIVETYPE Type			:描画タイプ
-			0,																		//INT BaseVertexIndex				:オフセット
+			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type				:描画タイプ
+			0,													//INT BaseVertexIndex				:オフセット
 			staticMesh->attributeTable[i].VertexStart,			//UINT MinIndex						:その属性グループの頂点で最小のインデックス
 			staticMesh->attributeTable[i].VertexCount,			//UINT NumVertices					:頂点数（その属性グループの頂点数）
-			staticMesh->attributeTable[i].FaceStart * 3,			//UINT StartIndex						:インデックスのインデックス（インデックスバッファ内のインデックス）
+			staticMesh->attributeTable[i].FaceStart * 3,		//UINT StartIndex					:インデックスのインデックス（インデックスバッファ内のインデックス）
 			staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount				:ポリゴン数
 		
 		effect->EndPass();
 		effect->End();
 	}
 
-	
 	device->SetStreamSource(0, NULL, 0, NULL);
 	device->SetStreamSource(1, NULL, 0, NULL);
 
@@ -172,9 +187,9 @@ void StaticMeshObject::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX p
 }
 
 //===================================================================================================================================
-//【位置バッファを更新する】
+//【ワールドマトリックスバッファを更新する】
 //===================================================================================================================================
-void StaticMeshObject::updatePosition()
+void StaticMeshRenderer::updateWorldMatrix()
 {
 	objectNum = objectList->nodeNum;
 	if (objectNum <= 0)return;
@@ -183,47 +198,16 @@ void StaticMeshObject::updatePosition()
 	for (int i = 0; i < objectNum; i++)
 	{
 		obj = *objectList->getValue(i);
-		position[i] = obj->position;
+		worldMatrix[i] = obj->matrixWorld;
 	}
 
-	copyVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, position, positionBuffer);
-
-}
-
-//===================================================================================================================================
-//【回転バッファを更新する】
-//===================================================================================================================================
-void StaticMeshObject::updateRotation()
-{
-	objectNum = objectList->nodeNum;
-	if (objectNum <= 0)return;
-
-	for (int i = 0; i < objectNum; i++)
-	{
-		//rotation[i] = (*objectList->getValue(i))->quaternion;
-	}
-	copyVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, rotation, rotationBuffer);
-}
-
-//===================================================================================================================================
-//【スケールバッファを更新する】
-//===================================================================================================================================
-void StaticMeshObject::updateScale()
-{
-	objectNum = objectList->nodeNum;
-	if (objectNum <= 0)return;
-
-	for (int i = 0; i < objectNum; i++)
-	{
-		scale[i] = (*objectList->getValue(i))->scale;
-	}
-	copyVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, scale, scaleBuffer);
+	copyVertexBuffer(sizeof(D3DXMATRIX)*objectNum, worldMatrix, matrixBuffer);
 }
 
 //===================================================================================================================================
 //【カラーバッファを更新する】
 //===================================================================================================================================
-void StaticMeshObject::updateColor()
+void StaticMeshRenderer::updateColor()
 {
 	objectNum = objectList->nodeNum;
 	if (objectNum <= 0)return;
@@ -236,29 +220,65 @@ void StaticMeshObject::updateColor()
 }
 
 //===================================================================================================================================
-//【オブジェクトの生成】
+//【描画オブジェクトの登録】
 //===================================================================================================================================
-void StaticMeshObject::generateObject(Object* object)
+void StaticMeshRenderer::registerObject(Object* object)
 {
-	objectList->insertFront(object);			//オブジェクトを作成
-	didGenerate = true;
+	objectList->insertFront(object);			//オブジェクトポインタを作成
+	didRegister = true;
 }
 
 //===================================================================================================================================
-//【オブジェクトの削除】
+//【描画オブジェクトの全解除】
 //===================================================================================================================================
-void StaticMeshObject::deleteObject(int i)
+void StaticMeshRenderer::allUnRegister()
 {
-	Object* obj = *objectList->getValue(i);
-	if (obj->existenceTimer >= 0)return;
-	objectList->remove(objectList->getNode(i));		//リスト内のオブジェクトを削除
-	didDelete = true;
+	objectList->allClear();
+	objectNum = objectList->nodeNum;
+}
+
+//===================================================================================================================================
+//【IDを使用して描画オブジェクトの解除】
+//===================================================================================================================================
+void StaticMeshRenderer::unRegisterObjectByID(int id)
+{
+	//総当たり検索
+	for (int i = 0; i < objectNum; i++)
+	{	
+		if ((*objectList->getValue(i))->id == id)
+		{
+			//存在時間を0にして削除可能状態にする
+			(*objectList->getValue(i))->existenceTimer = 0.0f;
+			//検索終了
+			return;	
+		}
+	}
+}
+
+//===================================================================================================================================
+//【描画オブジェクトの解除】
+//===================================================================================================================================
+void StaticMeshRenderer::unRegisterObject(int i)
+{
+	if (*objectList->getValue(i)) 
+	{
+		//有効値ならタイマーチェック後解除処理
+		if ((*objectList->getValue(i))->existenceTimer > 0)return;	//タイマーチェック
+		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+		didUnRegister = true;
+	}
+	else
+	{
+		//有効値でなければ自動的に解除
+		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+		didUnRegister = true;
+	}
 }
 
 //===================================================================================================================================
 //【ランダムアクセス用配列の更新】
 //===================================================================================================================================
-void StaticMeshObject::updateAccessList()
+void StaticMeshRenderer::updateAccessList()
 {
 	objectList->listUpdate();
 }
@@ -266,26 +286,26 @@ void StaticMeshObject::updateAccessList()
 //===================================================================================================================================
 //【バッファのリソース更新】
 //===================================================================================================================================
-void StaticMeshObject::updateBuffer()
+void StaticMeshRenderer::updateBuffer()
 {
 	objectNum = objectList->nodeNum;				//オブジェクトの数の取得
 
-	//位置情報バッファの再作成
-	SAFE_RELEASE(positionBuffer);
-	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*objectNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+	//ワールドマトリックス情報バッファの再作成
+	SAFE_RELEASE(matrixBuffer);
+	device->CreateVertexBuffer(sizeof(D3DXMATRIX)*objectNum, 0, 0, D3DPOOL_MANAGED, &matrixBuffer, 0);
 }
 
 //===================================================================================================================================
 //【copy用配列のメモリ更新】
 //===================================================================================================================================
-void StaticMeshObject::updateArray()
+void StaticMeshRenderer::updateArray()
 {
 	//インスタンス数の取得
 	objectNum = objectList->nodeNum;
 
-	//位置バッファ用配列の再作成
-	SAFE_DELETE_ARRAY(position);
-	position = new D3DXVECTOR3[objectNum];
+	//ワールドマトリックスバッファ用配列の再作成
+	SAFE_DELETE_ARRAY(worldMatrix);
+	worldMatrix = new D3DXMATRIX[objectNum];
 
 }
 
@@ -293,7 +313,7 @@ void StaticMeshObject::updateArray()
 //【ImGUIへの出力】
 //===================================================================================================================================
 #ifdef _DEBUG
-void StaticMeshObject::outputGUI()
+void StaticMeshRenderer::outputGUI()
 {
 	Object* obj;
 	for (int i = 0; i < objectNum; i++)
@@ -305,9 +325,15 @@ void StaticMeshObject::outputGUI()
 #endif // _DEBUG
 
 //===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void StaticMeshRenderer::enableLight()	{ onLight = true; }
+void StaticMeshRenderer::disableLight()	{ onLight = false; }
+
+//===================================================================================================================================
 //【スタティックメッシュの取得】
 //===================================================================================================================================
-StaticMesh* StaticMeshObject::getStaticMesh()
+StaticMesh* StaticMeshRenderer::getStaticMesh()
 {
 
 	return staticMesh;

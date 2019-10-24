@@ -12,7 +12,7 @@
 #include <vector>
 #include "AbstractScene.h"
 #include "Player.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "Stone.h"
 #include "DeadTree.h"
 #include "TreeTypeA.h"
@@ -24,15 +24,14 @@
 #include "TreeManager.h"
 #include "ItemManager.h"
 #include "Telop.h"
+#include "Sky.h"
 
 #include "SpriteGauge.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
-//#include "InstancingBillboard.h"
 //#include "GameMaster.h"
 //#include "PointSprite.h"
-
 //#include "Object.h"
 //#include "Text.h"
 
@@ -41,15 +40,14 @@
 //===================================================================================================================================
 namespace gameNS
 {
-
 	//プレイヤー初期位置
 	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,15.0f,-15.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,5.0f,5.0f,0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10.0f,0);
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,5.0f,0);
 
 	//const int NUM_SAMPLE = 1000;
 
@@ -71,12 +69,11 @@ private:
 
 	//プレイヤー
 	Player *player;
-	StaticMeshObject* playerRenderer;
+	StaticMeshRenderer* playerRenderer;
 
 	//フィールド
 	Object* testField;
-	StaticMeshObject* testFieldRenderer;
-
+	StaticMeshRenderer* testFieldRenderer;
 	//インスタンシングビルボードテスト
 	//InstancingBillboard instancingBillboardTest;
 	TestEffect* testEffect;
@@ -89,17 +86,19 @@ private:
 	TreeTypeB* treeB;
 	//石
 	Stone* stone;
+	//スカイドーム
+	Sky* sky;
 
 	//色々なオブジェクトの描画サンプルテスト
 
 	//スタティックメッシュで、１個のオブジェクトのみを描画するとき【静的】
-	//StaticSingleStaticMeshObjectTest ssSMO
+	//StaticSingleStaticMeshRendererTest ssSMO
 
 	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiStaticMeshObjectTest smSMO
+	//StaticMultiStaticMeshRendererTest smSMO
 
 	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiStaticMeshObjectTest dmSMO
+	//DynamicMultiStaticMeshRendererTest dmSMO
 
 	//ビルボードで、1個のオブジェクトを描画するとき【静的】
 	//StaticSingleInstancingBillboardTest ssIB
@@ -120,7 +119,7 @@ private:
 	//DynamicMultiInstancingPlaneTest dmIP
 
 	// エネミー
-	EnemyManager enemyManager;
+	EnemyManager* enemyManager;
 	Enemy* enemy;
 
 	// ツリー
@@ -154,6 +153,7 @@ public:
 
 	void render3D(Camera currentCamera);
 	void renderUI();
+	void test();
 
 #ifdef _DEBUG
 	virtual void createGUI() override;
@@ -162,12 +162,13 @@ public:
 
 
 //===================================================================================================================================
-//【ビルドスイッチ】
+//【デバッグ】
 //===================================================================================================================================
 #ifdef _DEBUG
 
 #if 1	// ここを1でナビメッシュデバッグモード
 #define DEBUG_NAVIMESH
 #endif
+
 
 #endif// _DEBUG

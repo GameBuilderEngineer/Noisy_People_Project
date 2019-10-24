@@ -161,7 +161,7 @@ void Player::update(float frameTime)
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 #ifdef _DEBUG
-	//bodyCollide.render(centralMatrixWorld);
+	bodyCollide.render(centralMatrixWorld);
 #endif // _DEBUG
 }
 
@@ -184,7 +184,7 @@ void Player::grounding()
 		return;
 	}
 
-	if (radius + difference >= gravityRay.distance)
+	if (radius /*+ difference*/ >= gravityRay.distance)
 	{// プレイヤーは地上に接地している
 		onGround = true;
 

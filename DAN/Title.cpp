@@ -73,6 +73,15 @@ void Title::initialize()
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 10);
 
+	//エフェクシアーの設定
+	effekseerNS::setProjectionMatrix(
+		camera->fieldOfView,
+		camera->windowWidth,
+		camera->windowHeight,
+		camera->nearZ,
+		camera->farZ);
+
+
 	// Light
 	light = new Light;
 	light->initialize();
@@ -122,6 +131,12 @@ void Title::update(float _frameTime)
 
 	//バーの移動
 	//if(input->wasKeyPressed()
+
+	//エフェクトの再生
+	if (input->wasKeyPressed('1'))
+	{
+		effekseerNS::play(new effekseerNS::Instance);
+	}
 
 	// タイトルUI
 	titleUI.update(input);
@@ -177,6 +192,10 @@ void Title::render()
 	// カメラ・ウィンドウ
 	camera->renderReady();
 	direct3D9->changeViewportFullWindow();
+
+	//エフェクシアーテスト描画
+	effekseerNS::setCameraMatrix(camera->position, camera->gazePosition, camera->upVector);
+	effekseerNS::render();
 
 	// 3D
 	render3D(*camera);
@@ -249,10 +268,20 @@ void Title::AI(void)
 #ifdef _DEBUG
 void Title::createGUI()
 {
+	bool createScene = false;
+
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	ImGui::Checkbox("Create Scene", &createScene);
 
+	//ツール用シーン
+	if (createScene)
+	{
+		selectStateMemory = titleUiNS::CREATE;
+		nextScene = (SceneList::CREATE);
+		changeScene(nextScene);
+	}
 }
 #endif // _DEBUG

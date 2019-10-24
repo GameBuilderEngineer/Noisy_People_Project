@@ -2,7 +2,7 @@
 //【TreeTypeA.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/10/14
-// [更新日]2019/10/14
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -14,7 +14,8 @@
 //【コンストラクタ】
 //===================================================================================================================================
 TreeTypeA::TreeTypeA(){
-	renderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	num = 400;
 	initialize();
 };
 
@@ -22,6 +23,7 @@ TreeTypeA::TreeTypeA(){
 //【デストラクタ】
 //===================================================================================================================================
 TreeTypeA::~TreeTypeA(){
+	SAFE_DELETE_ARRAY(object);
 	SAFE_DELETE(renderer);
 };
 
@@ -29,13 +31,15 @@ TreeTypeA::~TreeTypeA(){
 //【初期化】
 //===================================================================================================================================
 void TreeTypeA::initialize() {
+	object = new Object[num];
 	D3DXVECTOR3 position;
-	for (int i = 0; i < 400; i++)
+	for (int i = 0; i < num; i++)
 	{
 		position.x = (float)((rand() % 2000) - 1000);
 		position.y = 0.0f;
 		position.z = (float)((rand() % 2000) - 1000);
-		generate(position);
+		object[i].initialize(&position);
+		renderer->registerObject(&object[i]);//レンダラーへ登録
 	}
 	needUpdate = true;
 };
@@ -56,14 +60,4 @@ void TreeTypeA::update()
 void TreeTypeA::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPositon);
-}
-
-//===================================================================================================================================
-//【生成】
-//===================================================================================================================================
-void TreeTypeA::generate(D3DXVECTOR3 position)
-{
-	Object* object = new Object();
-	renderer->generateObject(object);
-	object->initialize(&position);
 }

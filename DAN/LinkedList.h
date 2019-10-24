@@ -42,7 +42,7 @@ public:
 	//【getter】
 	//===================================================================================================================================
 	Node<T>* getNode(int i) { return nodeList[i]; }		//ランダムアクセス用リストにアクセス
-	T* getValue(int i) { return &nodeList[i]->value; }		//ノード内の値にアクセス
+	T* getValue(int i) { return &nodeList[i]->value; }	//ノード内の値にアクセス
 
 	//===================================================================================================================================
 	//【コンストラクタ】
@@ -92,16 +92,16 @@ public:
 
 	//===================================================================================================================================
 	//【指定ノードの後ろに挿入】
-	// Prev0		:	[node	]	[target]		[node	]					:処理前の着目ノード位置
+	// Prev0	:	[node	]	[target]		[node	]				:処理前の着目ノード位置
 	// Next1	:	[node	]	[target]		[newNode]	[node	]	:着目ノードの次に新規追加
-	// Next2	:	[node	]	[node	]	[target]		[node	]	:新規ノードを着目ノードへ変更
+	// Next2	:	[node	]	[node  ]		[target ]	[node	]	:新規ノードを着目ノードへ変更
 	//===================================================================================================================================
 	void insertAfter(Node<T>* target)
 	{
 		//着目ノードの次の位置に新規追加
 		Node<T>* newNode = new Node<T>;
 		Node<T>* nextNode = target->next;					//変更前に対象ノードの次ノード保存する
-		target->next = target->next->prev = newNode;	//新規ノードの挿入
+		target->next = target->next->prev = newNode;		//新規ノードの挿入
 		setNode(newNode, target, nextNode);					//新規ノードのセット
 		nodeNum++;
 	}
@@ -153,17 +153,17 @@ public:
 	void listUpdate()
 	{
 		SAFE_DELETE_ARRAY(nodeList);				//ポインタ配列を削除
-		if (nodeNum <= 0)return;						//ノード数が0の場合終了
-		nodeList = new Node<T>*[nodeNum];	//全ノード数分のポインタメモリを確保
-		current = head->next;							//先頭アドレスの次のポインタから開始
-		int iterator = 0;										//list配列メモリアクセス防止イテレータ
+		if (nodeNum <= 0)return;					//ノード数が0の場合終了
+		nodeList = new Node<T>*[nodeNum];			//全ノード数分のポインタメモリを確保
+		current = head->next;						//先頭アドレスの次のポインタから開始
+		int iterator = 0;							//list配列メモリアクセス防止イテレータ
 		
 		//while終了条件：現在の指し示すノードが先頭ノードかつイテレータが全ノード数
 		while (current != head && iterator != nodeNum)
 		{
-			nodeList[iterator] = current;				//現在のノードポインタをポインタ配列へ記録
-			current = current->next;					//次のノードポインタへ移動
-			iterator++;										//iteratorを次へ
+			nodeList[iterator] = current;			//現在のノードポインタをポインタ配列へ記録
+			current = current->next;				//次のノードポインタへ移動
+			iterator++;								//iteratorを次へ
 		}
 	}
 
@@ -178,6 +178,7 @@ public:
 			isRemaining = remove(head->next);
 		}
 		SAFE_DELETE_ARRAY(nodeList);				//ポインタ配列を削除
+		nodeNum = 0;
 	}
 
 };
