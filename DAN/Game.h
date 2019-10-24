@@ -137,7 +137,7 @@ private:
 	NavigationMesh* naviAI;
 
 	//Ä¶ƒpƒ‰ƒ[ƒ^
-	PLAY_PARAMETERS playParameters[3];
+	PLAY_PARAMETERS playParameters[4];
 
 	//SpriteÀŒ±
 	SpriteGauge* spriteGauge;

@@ -424,6 +424,7 @@
     <ClCompile Include="SpriteGauge.cpp">
       <Filter>Constant Layer\Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="TestEffectOccurrence.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -660,6 +661,7 @@
     <ClInclude Include="SpriteGauge.h">
       <Filter>Constant Layer\Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="TestEffectOccurrence.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

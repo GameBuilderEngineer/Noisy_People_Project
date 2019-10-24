@@ -14,6 +14,7 @@
 //【using宣言】
 //===================================================================================================================================
 using namespace gameNS;
+//using namespace playerNS;
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -33,6 +34,7 @@ Game::Game()
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,true, filterParameters };
 	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,true, filterParameters };
+	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };		//アイテム取得音
 
 	//再生
 	SoundInterface::playSound(playParameters[0]);
@@ -51,6 +53,7 @@ Game::~Game()
 	SoundInterface::stopSound(playParameters[0]);
 	SoundInterface::stopSound(playParameters[1]);
 	SoundInterface::stopSound(playParameters[2]);
+	SoundInterface::stopSound(playParameters[3]);
 }
 
 //===================================================================================================================================
@@ -218,6 +221,7 @@ void Game::update(float _frameTime) {
 	{
 		itemManager->destroyAllItem();
 	}
+	// 3Dモデル表示確認用（アイテムの更新）
 	if (input->wasKeyPressed('8'))
 	{
 		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
@@ -314,11 +318,6 @@ void Game::render3D(Camera currentCamera) {
 
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
-#ifdef DEBUG_NAVIMESH
-	// ナビゲーションメッシュの描画
-	naviAI->debugRender();
-#endif
 }
 
 //===================================================================================================================================
@@ -326,9 +325,9 @@ void Game::render3D(Camera currentCamera) {
 //===================================================================================================================================
 void Game::renderUI() {
 
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						// αブレンドを行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
-	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);			// αデスティネーションカラーの指定
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
 	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
@@ -355,7 +354,11 @@ void Game::collisions()
 		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
 			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
 		{
+			//itemManager->destroyItem();
 			player->addSpeed(D3DXVECTOR3(0, 10, 0));
+			player->addpower(playerNS::RECOVERY_POWER);				//電力加算
+			SoundInterface::playSound(playParameters[3]);	//SE再生
+			itemManager->destroyAllItem();					//デリート(今は全消し)
 		}
 	}
 }

@@ -28,7 +28,7 @@ private:
 	std::vector<itemNS::ItemData> itemDataList;	// アイテムデータリスト
 	std::vector<Item*> itemList;				// アイテムポインタリスト
 	StaticMeshObject* batteryRenderer;
-
+	StaticMeshObject* exampleItemRender;		// テスト用アイテム
 public:
 	void initialize();
 	void uninitialize();

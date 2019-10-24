@@ -38,6 +38,7 @@ void ItemManager::initialize()
 
 	// 描画オブジェクトを作成
 	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	exampleItemRender = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
 }
 
 
@@ -55,6 +56,7 @@ void ItemManager::uninitialize()
 
 	// 描画オブジェクトの破棄
 	SAFE_DELETE(batteryRenderer);
+	SAFE_DELETE(exampleItemRender);
 }
 
 
@@ -69,6 +71,7 @@ void ItemManager::update(float frameTime)
 	}
 
 	batteryRenderer->update();
+	exampleItemRender->update();
 }
 
 
@@ -78,6 +81,7 @@ void ItemManager::update(float frameTime)
 void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	batteryRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	exampleItemRender->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
@@ -87,6 +91,7 @@ void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 void ItemManager::createItem(ItemData* itemData)
 {
 	Item* item = NULL;
+	//Item* item2 = NULL;
 
 	switch (itemData->itemType)
 	{
@@ -96,7 +101,11 @@ void ItemManager::createItem(ItemData* itemData)
 		batteryRenderer->generateObject(item);
 		break;
 	case EXAMPLE:
-		itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
+		item = new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData);
+		itemList.emplace_back(item);
+		exampleItemRender->generateObject(item);
+		//itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
+
 		break;
 	}
 }
@@ -136,6 +145,9 @@ void ItemManager::destroyAllItem()
 	itemList.clear();
 	SAFE_DELETE(batteryRenderer);
 	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	SAFE_DELETE(exampleItemRender);
+	exampleItemRender = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+
 }
 
 

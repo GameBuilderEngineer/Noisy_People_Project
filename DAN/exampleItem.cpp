@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // クラス [.cpp]
-// Author : 
-// 作成開始日 : 2019/  /  
+// Author : 新里
+// 作成開始日 : 2019/ 10 / 17 
 //-----------------------------------------------------------------------------
 #include "exampleItem.h"
 #include "ImguiManager.h"
@@ -33,5 +33,5 @@ void exampleItem::update(float frameTime)
 //=============================================================================
 void exampleItem::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	Item::render(view, projection, cameraPosition);
+	//Item::render(view, projection, cameraPosition);
 }
