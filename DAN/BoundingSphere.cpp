@@ -51,27 +51,28 @@ void BoundingSphere::initialize(D3DXVECTOR3* _position, LPD3DXMESH ownerMesh)
 	ownerMesh->UnlockVertexBuffer();
 
 	//メッシュを作成
-	D3DXCreateSphere(device, radius, 12, 12, &mesh, NULL);
+	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
 
 }
 //半径情報から初期化
-void BoundingSphere::initialize(float _raidus)
+void BoundingSphere::initialize(D3DXVECTOR3* _position,float _raidus)
 {
 	LPDIRECT3DDEVICE9 device = getDevice();
+	position = _position;
 	radius = _raidus;
 	//メッシュを作成
 	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
 }
 
 //===================================================================================================================================
-//【初期化】
+//【描画】
 //===================================================================================================================================
 void BoundingSphere::render(D3DXMATRIX owner)
 {
 	LPDIRECT3DDEVICE9 device = getDevice();
 
 	// ライティングモードを設定
-	device->SetRenderState(D3DRS_LIGHTING, true);
+	device->SetRenderState(D3DRS_LIGHTING, false);
 	// レンダリングモードの設定
 	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);//ワイヤーフレーム表示
 	// アルファ・ブレンディングを行う
@@ -131,6 +132,11 @@ bool BoundingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius, D3DXM
 	}
 	return false;
 }
+
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+
 
 //===================================================================================================================================
 //【getter】

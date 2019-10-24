@@ -2,15 +2,15 @@
 //【ImguiManager.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/18
-// [更新日]2019/09/19
+// [更新日]2019/10/18
 //===================================================================================================================================
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
 #include "ImguiManager.h"
-#include "../TestProject/Imgui/imgui_impl_dx9.h"
-#include "../TestProject/Imgui/imgui_impl_win32.h"
+#include "../DAN/Imgui/imgui_impl_dx9.h"
+#include "../DAN/Imgui/imgui_impl_win32.h"
 #include "Direct3D9.h"
 
 //===================================================================================================================================
@@ -24,6 +24,7 @@ ImguiManager::ImguiManager(HWND wnd)
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	// Enable docking(available in imgui `docking` branch at the moment)
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();

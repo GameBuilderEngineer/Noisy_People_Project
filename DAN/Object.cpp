@@ -2,7 +2,7 @@
 //【Object.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/23
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -18,32 +18,51 @@
 using namespace objectNS;
 
 //===================================================================================================================================
+//【スタティック変数】
+//===================================================================================================================================
+int Object::objectCounter = 0;	//IDの割当に使用
+
+//===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 Object::Object()
 {
-	ZeroMemory(this, sizeof(Object));			//メンバ変数を0で初期化
-	alpha = 1.0f;								//α値の設定
-	fillMode = objectNS::FILLMODE::SOLID;		//描画方法
-	onLighting = true;							//ライティングフラグ
-	onTransparent = false;						//透過フラグ
-	D3DXMatrixIdentity(&matrixRotation);
-	quaternion = D3DXQUATERNION(0, 0, 0, 1);
-	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));
-	axisY.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 1, 0));
-	axisZ.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 0, 1));
-	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(-1, 0, 0));
-	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, -1, 0));
-	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 0, -1));
-	renderNum = 1;
+	id					= objectCounter;									//IDの割当
+	objectCounter++;														//オブジェクトカウンターの加算：IDの割当に使用
+
+	ZeroMemory(&position, sizeof(D3DXVECTOR3));								//位置
+	quaternion			= D3DXQUATERNION(0, 0, 0, 1);						//回転
+	scale				= D3DXVECTOR3(1.0f,1.0f,1.0f);						//スケール
+	radius				= 0.0f;												//半径
+	alpha				= 1.0f;												//α値の設定
+
+	ZeroMemory(&speed, sizeof(D3DXVECTOR3));								//速度
+
+	onGravity			= false;											//重力フラグ
+	onActive			= true;												//アクティブフラグ
+
+	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));			//x軸
+	axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));			//y軸
+	axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));			//z軸
+	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));	//-x軸
+	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));	//-y軸
+	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));	//-z軸
 #ifdef _DEBUG
-	axisX.color			= D3DXCOLOR(255, 0, 0, 255);
-	axisY.color			= D3DXCOLOR(0, 255, 0, 255);
-	axisZ.color			= D3DXCOLOR(0, 0, 255, 255);
-	reverseAxisX.color	= D3DXCOLOR(255, 0, 0, 255);
-	reverseAxisY.color	= D3DXCOLOR(0, 255, 0, 255);
-	reverseAxisZ.color	= D3DXCOLOR(0, 0, 255, 255);
+	axisX.color			= D3DXCOLOR(255, 0, 0, 255);						//x軸カラー
+	axisY.color			= D3DXCOLOR(0, 255, 0, 255);						//y軸カラー
+	axisZ.color			= D3DXCOLOR(0, 0, 255, 255);						//z軸カラー
+	reverseAxisX.color	= D3DXCOLOR(255, 0, 0, 255);						//-x軸カラー
+	reverseAxisY.color	= D3DXCOLOR(0, 255, 0, 255);						//-y軸カラー
+	reverseAxisZ.color	= D3DXCOLOR(0, 0, 255, 255);						//-z軸カラー
 #endif // _DEBUG
+
+	ZeroMemory(&matrixPosition, sizeof(D3DXMATRIX));						//位置行列
+	D3DXMatrixIdentity(&matrixRotation);									//回転行列
+	ZeroMemory(&matrixScale, sizeof(D3DXMATRIX));							//スケール行列
+	ZeroMemory(&matrixWorld, sizeof(D3DXMATRIX));							//ワールド行列
+
+	existenceTimer = 1.0f;													//存在時間
+
 }
 
 //===================================================================================================================================
@@ -73,12 +92,20 @@ HRESULT Object::initialize(D3DXVECTOR3* _position)
 void Object::update()
 {
 	if (onActive == false)return;
-	//ワールドトランスフォーム（ローカル座標→ワールド座標への変換）	
+	//位置行列の作成（位置座標→位置行列への変換）	
 	D3DXMatrixTranslation(&matrixPosition, position.x, position.y, position.z);
 
-	//クォータニオンを回転量パラメーターに使用する
+	//回転行列の作成（クォータニオン→回転行列への変換）
 	D3DXMatrixRotationQuaternion(&matrixRotation, &quaternion);
-	D3DXMatrixMultiply(&matrixWorld, &matrixRotation, &matrixPosition);
+	
+	//スケール行列の作成（スケール値→スケール行列への変換）
+	D3DXMatrixScaling(&matrixScale, scale.x, scale.y, scale.z);
+
+	//ワールド行列＝スケール行列*回転行列*位置行列
+	D3DXMatrixIdentity(&matrixWorld);									//正規化
+	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixScale);		//*スケール行列
+	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixRotation);		//*回転行列
+	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixPosition);		//*位置行列
 
 	//ワールド座標から自身の軸レイを更新する
 	axisX.update(position, D3DXVECTOR3(matrixWorld._11,matrixWorld._12,matrixWorld._13));
@@ -88,93 +115,6 @@ void Object::update()
 	reverseAxisY.update(position, -D3DXVECTOR3(matrixWorld._21, matrixWorld._22, matrixWorld._23));
 	reverseAxisZ.update(position, -D3DXVECTOR3(matrixWorld._31, matrixWorld._32, matrixWorld._33));
 }
-
-//===================================================================================================================================
-//【インスタンシング描画設定】
-//===================================================================================================================================
-//void Object::setInstancing(LPDIRECT3DDEVICE9 device,int num, D3DXVECTOR3* _positionList)
-//{
-//	renderNum = num;
-//	//位置情報バッファの作成
-//	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*num, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
-//	copyVertexBuffer(sizeof(D3DXVECTOR3)*num, _positionList, positionBuffer);
-//
-//	//頂点宣言
-//	D3DVERTEXELEMENT9 vertexElement[65];
-//	int i = 0;
-//	while(staticMesh->vertexElement[i].Type != D3DDECLTYPE_UNUSED)
-//	{
-//		vertexElement[i] = staticMesh->vertexElement[i];
-//		i++;
-//	}
-//	vertexElement[i] = { 1, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 };
-//	i++;
-//	vertexElement[i] = D3DDECL_END();
-//	i++;
-//	device->CreateVertexDeclaration(vertexElement, &declaration);
-//}
-
-//===================================================================================================================================
-//【インスタンシング描画】
-//===================================================================================================================================
-//void Object::instancingRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,LPD3DXEFFECT effect)
-//{
-//	if (onRender == false)return;
-//	//device->SetRenderState(D3DRS_LIGHTING, true);
-//
-//	D3DMATERIAL9 matDef;
-//	device->GetMaterial(&matDef);
-//
-//	//インスタンス宣言
-//	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | renderNum);
-//	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
-//
-//	//頂点宣言を追加
-//	device->SetVertexDeclaration(declaration);
-//
-//	//ストリームにメッシュの頂点バッファをバインド
-//	device->SetStreamSource(0, staticMesh->vertexBuffer, 0, staticMesh->numBytesPerVertex);
-//	device->SetStreamSource(1, positionBuffer, 0, sizeof(D3DXVECTOR3));
-//
-//	//インデックスバッファをセット
-//	device->SetIndices(staticMesh->indexBuffer);
-//
-//	effect->SetTechnique("mainTechnique");
-//	effect->SetMatrix("matrixProjection", &projection);
-//	effect->SetMatrix("matrixView", &view);
-//
-//	effect->Begin(0, 0);
-//	effect->BeginPass(0);
-//
-//	// レンダリング
-//	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
-//	{
-//		//device->SetMaterial(&staticMesh->materials[i]);
-//		effect->SetValue("diffuse", &staticMesh->materials[i].Diffuse,16);
-//		effect->SetTexture("textureDecal", staticMesh->textures[i]);
-//
-//		device->DrawIndexedPrimitive(
-//			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type
-//			0,													//INT BaseVertexIndex
-//			staticMesh->attributeTable[i].VertexStart,			//UINT MinIndex
-//			staticMesh->attributeTable[i].VertexCount,			//UINT NumVertices
-//			staticMesh->attributeTable[i].FaceStart * 3,		//UINT StartIndex
-//			staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount
-//	}
-//
-//	effect->EndPass();
-//	effect->End();
-//
-//	// マテリアルをデフォルトに戻す
-//	device->SetMaterial(&matDef);
-//	// テクスチャの設定をNULLにする
-//	device->SetTexture(0, NULL);
-//
-//	//後始末
-//	device->SetStreamSourceFreq(0, 1);
-//	device->SetStreamSourceFreq(1, 1);
-//
-//}
 
 //===================================================================================================================================
 //【デバッグ用描画】
@@ -192,49 +132,6 @@ void Object::debugRender()
 }
 
 //===================================================================================================================================
-//【トゥーンレンダー描画】
-//===================================================================================================================================
-//void Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon,
-//	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
-//{
-//	device->SetTransform(D3DTS_WORLD, &matrixWorld);
-//
-//	effect->SetTechnique("ToonShading");
-//	effect->SetMatrix("mProj", &projection);
-//	effect->SetMatrix("mView", &view);
-//	effect->SetMatrix("mWorld", &matrixWorld);
-//	effect->SetTexture("ShadeTexture", textureShade);
-//	effect->SetTexture("LineTexture", textureLine);
-//
-//	effect->SetVector("LightPos", &D3DXVECTOR4(0, 0, 5, 1));
-//	effect->SetVector("EyePos", (D3DXVECTOR4*)&cameraPositon);
-//	effect->Begin(NULL, 0);
-//
-//	// レンダリング			
-//	for (DWORD i = 0; i <staticMesh->numMaterial; i++)
-//	{
-//		effect->BeginPass(0);
-//		effect->SetFloatArray("Diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
-//		//effect->SetTexture("DecalTexture", meshTextures[i]);
-//		//device->SetMaterial(&meshMaterials[i]);
-//		//device->SetTexture(0, meshTextures[i]);
-//		staticMesh->mesh->DrawSubset(i);
-//		effect->EndPass();
-//	}
-//	effect->End();
-//
-//#ifdef _DEBUG
-//	axisX.render(10.0f);
-//	axisY.render(10.0f);
-//	axisZ.render(10.0f);
-//	reverseAxisX.render(10.0f);
-//	reverseAxisY.render(10.0f);
-//	reverseAxisZ.render(10.0f);
-//#endif // _DEBUG
-//
-//}
-
-//===================================================================================================================================
 //【ImGUIへの出力】
 //===================================================================================================================================
 void Object::outputGUI()
@@ -248,24 +145,23 @@ void Object::outputGUI()
 
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);						//スケール
-		ImGui::SliderFloat("radius", &radius, 0, limitTop);								//半径
-		ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
+		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);							//スケール
+		ImGui::SliderFloat("radius", &radius, 0, limitTop);										//半径
+		ImGui::SliderFloat("alpha", &alpha, 0, 255);												//透過値
 		ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);						//速度
 		ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
 		ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);					//重力
-
-		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("onRender", &onRender);											//描画有効化フラグ
-		ImGui::Checkbox("onLighting", &onLighting);										//光源処理フラグ
-		ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
 		
-		ImGui::SliderInt("renderNum", &renderNum,1,(int)limitTop);						//透過値の操作有効フラグ
+		ImGui::Checkbox("onGravity", &onGravity);												//重力有効化フラグ
+		ImGui::Checkbox("onActive", &onActive);												//アクティブ化フラグ
+		
 	}
 #endif // _DEBUG
 }
 
+//===================================================================================================================================
+//【重力を設定し、加速度へ加算する】
+//===================================================================================================================================
 void Object::setGravity(D3DXVECTOR3 source, float power)
 {
 	D3DXVec3Normalize(&gravity, &source);
@@ -275,29 +171,17 @@ void Object::setGravity(D3DXVECTOR3 source, float power)
 	if (onGravity)acceleration += gravity;
 }
 
-void Object::activation()
-{
-	onRender = true;
-	onActive = true;
-}
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void Object::activation()					{ onActive = true;}
+void Object::inActivation()				{ onActive = false;}
+void Object::setAlpha(float value)	{ alpha = value;}
 
-void Object::inActivation()
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void objectNS::resetCounter()
 {
-	onRender = false;
-	onActive = false;
-}
-
-void Object::setAlpha(float value)
-{
-	alpha = value;
-}
-
-void Object::switchTransparent(bool flag)
-{
-	onTransparent = flag;
-}
-
-void Object::setRenderFlag(bool flag)
-{
-	onRender = flag;
+	Object::objectCounter = 0;
 }

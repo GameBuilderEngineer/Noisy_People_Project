@@ -113,14 +113,3 @@ float UtilityFunction::wrap(float x, float low, float high)
 	return (n >= 0) ? (n + low) : (n + high);
 }
 
-//===================================================================================================================================
-//【クランプ関数】※使用不可
-//===================================================================================================================================
-template<typename T>
-T UtilityFunction::clamp(T x, T low, T high) {
-	assert(low <= high);
-	T result = max(x, low);
-	result = min(result, high);
-
-	return result;
-}

@@ -11,6 +11,7 @@
 //===================================================================================================================================
 #include "AbstractScene.h"
 //#include "Credit2D.h"
+#include "CreditTex.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -33,6 +34,7 @@ class Credit : public AbstractScene
 private:
 	// クレジット2D
 	//Credit2D credit2D;
+	CreditTex creditTex;
 public:
 	Credit();
 	~Credit();
@@ -45,6 +47,7 @@ public:
 
 	//void render3D();
 	void renderUI(LPDIRECT3DDEVICE9 device);
+
 
 #ifdef _DEBUG
 	virtual void createGUI() override;

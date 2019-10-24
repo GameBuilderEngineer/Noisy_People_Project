@@ -415,6 +415,7 @@ BOOL CALLBACK Input::enumJoysticksCallback(const DIDEVICEINSTANCE* instance, VOI
 
 void Input::update(bool windowActivate)
 {
+	(GetAsyncKeyState(VK_LSHIFT) & 0x8000)?keyDown(VK_LSHIFT):keyUp(VK_LSHIFT);
 	int connectNum = 0;
 	for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
 	{

@@ -25,7 +25,7 @@
 #include "GameMaster.h"
 //#include "AnimationLoader.h"
 //#include <thread>
-#include "Sound.h"
+//#include "Sound.h"
 
 //===================================================================================================================================
 //【列挙型定数】
@@ -60,7 +60,7 @@ public:
 	TextureLoader* textureLoader;			//テクスチャ読込クラス
 	StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス
 	ShaderLoader* shaderLoader;				//シェーダー読込クラス
-	SoundInterface *soundInterface;			//サウンドのインターフェースクラス
+	//SoundInterface *soundInterface;			//サウンドのインターフェースクラス
 	//TextManager* textManager;				//テキストデータ読込クラス
 	//GameMaster* gameMaster;					//ゲーム運営クラス
 	//AnimationLoader* animationLoader;		//アニメーション読込クラス

@@ -2,7 +2,7 @@
 //【InstancingBillboard.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/27
-// [更新日]2019/10/08
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -19,18 +19,18 @@
 InstancingBillboard::InstancingBillboard()
 {
 	onRender			= false;
-	didGenerate		= false;
+	didGenerate			= false;
 	didDelete			= false;
 	vertexBuffer		= NULL;
-	indexBuffer		= NULL;
+	indexBuffer			= NULL;
 	positionBuffer		= NULL;
 	colorBuffer			= NULL;
 	uvBuffer			= NULL;
 	declation			= NULL;
-	effect					= NULL;
-	position				= NULL;
-	color					= NULL;
-	uv						= NULL;
+	effect				= NULL;
+	position			= NULL;
+	color				= NULL;
+	uv					= NULL;
 	texture				= NULL;
 	device				= getDevice();
 	srand((unsigned int)time(NULL));
@@ -45,15 +45,23 @@ InstancingBillboard::~InstancingBillboard()
 	SAFE_RELEASE(vertexBuffer);
 	SAFE_RELEASE(indexBuffer);
 	SAFE_RELEASE(positionBuffer);
+	SAFE_RELEASE(rotationBuffer);
+	SAFE_RELEASE(scaleBuffer);
 	SAFE_RELEASE(colorBuffer);
 	SAFE_RELEASE(uvBuffer);
 	SAFE_RELEASE(declation);
 
 	//SAFE_DELETE
 	SAFE_DELETE_ARRAY(position);
+	SAFE_DELETE_ARRAY(rotation);
+	SAFE_DELETE_ARRAY(scale);
 	SAFE_DELETE_ARRAY(color);
 	SAFE_DELETE_ARRAY(uv);
 
+	for (int i = 0; i < instanceNum; i++)
+	{
+		SAFE_DELETE(*instanceList->getValue(i));			//リスト内の実体を削除	
+	}
 	instanceList->terminate();
 	SAFE_DELETE(instanceList);
 }
@@ -90,10 +98,12 @@ HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[] = {
 		{ 0, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,	0 },	//頂点座標
-		{ 0, sizeof(D3DXVECTOR2),	D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },	//UV
+		{ 0, sizeof(D3DXVECTOR2),				D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },	//UV
 		{ 1, 0,									D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	1 },	//位置
 		{ 2, 0,									D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,			0 },	//カラー
 		{ 3, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	2 },	//相対UV
+		{ 4, 0,									D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	3 },	//回転
+		{ 5, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	4 },	//スケール
 		D3DDECL_END()
 	};
 	device->CreateVertexDeclaration(vertexElement, &declation);
@@ -114,6 +124,37 @@ HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9
 }
 
 //===================================================================================================================================
+//【更新】
+//===================================================================================================================================
+void InstancingBillboard::update(float frameTime)
+{
+
+	for (int i = 0; i < instanceNum; i++)
+	{
+		(*instanceList->getValue(i))->update(frameTime);		//更新処理
+		deleteInstance(i);										//削除処理
+	}
+
+	//削除もしくは作成を行った場合のメモリ整理
+	if (didDelete || didGenerate)
+	{
+		updateAccessList();		//リストの更新
+		updateBuffer();			//バッファの更新
+		updateArray();			//コピー配列の更新
+		didGenerate = false;
+		didDelete = false;
+	}
+	
+	//値の更新
+	updatePosition();
+	updateRotation();
+	updateScale();
+	updateColor();
+	updateUV();
+
+}
+
+//===================================================================================================================================
 //【描画】
 //===================================================================================================================================
 void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
@@ -124,17 +165,18 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 
 	//Z深度バッファ
 	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
 
 	//αテスト
 	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	//device->SetRenderState(D3DRS_ALPHAREF, 0x00);
-	//加算合成を行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	// αソースカラーの指定
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//加算合成を行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
@@ -143,6 +185,8 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
 	device->SetStreamSourceFreq(2, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
 	device->SetStreamSourceFreq(3, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(4, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(5, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
 
 	// 頂点宣言を通知
 	device->SetVertexDeclaration(declation);
@@ -152,6 +196,8 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	device->SetStreamSource(1, positionBuffer,	0, sizeof(D3DXVECTOR3));								//位置バッファ
 	device->SetStreamSource(2, colorBuffer,		0, sizeof(D3DXCOLOR));									//カラーバッファ
 	device->SetStreamSource(3, uvBuffer,		0, sizeof(D3DXVECTOR2));								//UVバッファ
+	device->SetStreamSource(4, rotationBuffer,	0, sizeof(D3DXVECTOR3));								//回転バッファ
+	device->SetStreamSource(5, scaleBuffer,		0, sizeof(D3DXVECTOR2));								//スケールバッファ
 
 	//インデックスバッファをセット
 	device->SetIndices(indexBuffer);
@@ -160,6 +206,7 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);
 	effect->SetTexture("planeTexture", texture);
+
 	effect->Begin(0, 0);
 	effect->BeginPass(0);
 		
@@ -168,10 +215,20 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->EndPass();
 	effect->End();
 
+	device->SetStreamSource(0, NULL, 0, NULL);
+	device->SetStreamSource(1, NULL, 0, NULL);
+	device->SetStreamSource(2, NULL, 0, NULL);
+	device->SetStreamSource(3, NULL, 0, NULL);
+	device->SetStreamSource(4, NULL, 0, NULL);
+	device->SetStreamSource(5, NULL, 0, NULL);
+
 	//後始末
-	device->SetStreamSourceFreq(0, 1);
-	device->SetStreamSourceFreq(1, 1);
-	device->SetStreamSourceFreq(2, 1);
+	device->SetStreamSourceFreq(0, 0);
+	device->SetStreamSourceFreq(1, 0);
+	device->SetStreamSourceFreq(2, 0);
+	device->SetStreamSourceFreq(3, 0);
+	device->SetStreamSourceFreq(4, 0);
+	device->SetStreamSourceFreq(5, 0);
 	// αブレンドを切る
 	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
@@ -182,14 +239,44 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 //===================================================================================================================================
 void InstancingBillboard::updatePosition()
 {
-	int instanceNum = getInstanceNum();
+	instanceNum = getInstanceNum();
 	if (instanceNum <= 0)			return;	
 
 	for (int i = 0; i < instanceNum; i++)
 	{
-		position[i] = instanceList->getValue(i)->position;
+		position[i] = (*instanceList->getValue(i))->position;
 	}
 	copyVertexBuffer(sizeof(D3DXVECTOR3)*instanceNum, position, positionBuffer);
+}
+
+//===================================================================================================================================
+//【回転バッファを更新する】
+//===================================================================================================================================
+void InstancingBillboard::updateRotation()
+{
+	instanceNum = getInstanceNum();
+	if (instanceNum <= 0)			return;	
+
+	for (int i = 0; i < instanceNum; i++)
+	{
+		rotation[i] = (*instanceList->getValue(i))->rotation;
+	}
+	copyVertexBuffer(sizeof(D3DXVECTOR3)*instanceNum, rotation, rotationBuffer);
+}
+
+//===================================================================================================================================
+//【スケールバッファを更新する】
+//===================================================================================================================================
+void InstancingBillboard::updateScale()
+{
+	instanceNum = getInstanceNum();
+	if (instanceNum <= 0)			return;	
+
+	for (int i = 0; i < instanceNum; i++)
+	{
+		scale[i] = (*instanceList->getValue(i))->scale;
+	}
+	copyVertexBuffer(sizeof(D3DXVECTOR2)*instanceNum, scale, scaleBuffer);
 }
 
 //===================================================================================================================================
@@ -197,12 +284,12 @@ void InstancingBillboard::updatePosition()
 //===================================================================================================================================
 void InstancingBillboard::updateUV()
 {
-	int instanceNum = getInstanceNum();
+	instanceNum = getInstanceNum();
 	if (instanceNum <= 0)			return;	
 
 	for (int i = 0; i < instanceNum; i++)
 	{
-		uv[i] = instanceList->getValue(i)->uv;
+		uv[i] = (*instanceList->getValue(i))->uv;
 	}
 	copyVertexBuffer(sizeof(D3DXVECTOR2)*instanceNum, uv, uvBuffer);
 }
@@ -212,21 +299,20 @@ void InstancingBillboard::updateUV()
 //===================================================================================================================================
 void InstancingBillboard::updateColor()
 {
-	int instanceNum = getInstanceNum();
+	instanceNum = getInstanceNum();
 	if (instanceNum <= 0)			return;
 
 	for (int i = 0; i < instanceNum; i++)
 	{
-		color[i] = instanceList->getValue(i)->color;
+		color[i] = (*instanceList->getValue(i))->color;
 	}
 	copyVertexBuffer(sizeof(D3DXCOLOR)*instanceNum, color, colorBuffer);
 }
 
-
 //===================================================================================================================================
 //【インスタンスの生成】
 //===================================================================================================================================
-void InstancingBillboard::generateInstance(InstancingBillboardNS::Instance instance)
+void InstancingBillboard::generateInstance(InstancingBillboardNS::Instance* instance)
 {
 	instanceList->insertFront(instance);			//インスタンスを作成
 	didGenerate = true;
@@ -237,7 +323,8 @@ void InstancingBillboard::generateInstance(InstancingBillboardNS::Instance insta
 //===================================================================================================================================
 void InstancingBillboard::deleteInstance(int i)
 {
-	if (instanceList->getValue(i)->existenceTimer >= 0)return;
+	if ((*instanceList->getValue(i))->lifeTimer <= (*instanceList->getValue(i))->limitTime)return;
+	SAFE_DELETE(*instanceList->getValue(i));			//リスト内の実体を削除
 	instanceList->remove(instanceList->getNode(i));		//リスト内のインスタンスを削除
 	didDelete = true;
 }
@@ -247,7 +334,8 @@ void InstancingBillboard::deleteInstance(int i)
 //===================================================================================================================================
 void InstancingBillboard::updateAccessList()
 {
-	instanceList->listUpdate();		
+	instanceList->listUpdate();
+	instanceNum = instanceList->nodeNum;
 }
 
 //===================================================================================================================================
@@ -259,78 +347,39 @@ void InstancingBillboard::offRender()
 }
 
 //===================================================================================================================================
-//【更新】
-//===================================================================================================================================
-void InstancingBillboard::update(float frameTime)
-{
-	didGenerate = false;
-	didDelete = false;
-
-	//削除処理
-	for (int i = 0; i < instanceList->nodeNum; i++)
-	{
-		instanceList->getValue(i)->update(frameTime);
-		deleteInstance(i);
-	}
-
-	//生成処理（サンプル）
-	InstancingBillboardNS::Instance instance;
-	instance.position			= D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
-	instance.rotation			= D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
-	instance.scale				= D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
-	int pattern = rand()%6;
-	switch (pattern)
-	{
-	case 0:instance.speed		= D3DXVECTOR3(0,0,-30.0f);			break;
-	case 1:instance.speed		= D3DXVECTOR3(0,0,30.0f);			break;
-	case 2:instance.speed		= D3DXVECTOR3(0,-30.0f,0.0f);		break;
-	case 3:instance.speed		= D3DXVECTOR3(0,30.0f,0.0f);		break;
-	case 4:instance.speed		= D3DXVECTOR3(-30,0,0.0f);			break;
-	case 5:instance.speed		= D3DXVECTOR3(30,0,-0.0f);			break;
-	}
-	instance.color					= D3DCOLOR_RGBA(rand()%255,rand()%255,rand()%255,255);
-	instance.uv					= D3DXVECTOR2(0.0f, 0.0f);
-	instance.existenceTimer	= (float)(rand() % 1000);
-	generateInstance(instance);
-	
-
-	//削除もしくは作成を行った場合のメモリ整理
-	if (didDelete || didGenerate)
-	{
-		updateAccessList();	//リストの更新
-		updateBuffer();			//バッファの更新
-		updateArray();			//コピー配列の更新
-	}
-	
-	//値の更新
-	updatePosition();
-	updateColor();
-	updateUV();
-}
-
-//===================================================================================================================================
 //【バッファのリソース更新】
 //===================================================================================================================================
 void InstancingBillboard::updateBuffer() 
 {
 	//インスタンス数の取得
-	int instanceNum = getInstanceNum();
+	instanceNum = getInstanceNum();
 	if (instanceNum <= 0)
 	{
 		SAFE_RELEASE(positionBuffer);		//位置バッファの解放
+		SAFE_RELEASE(rotationBuffer);		//回転バッファの解放
+		SAFE_RELEASE(scaleBuffer);			//スケールバッファの解放
 		SAFE_RELEASE(uvBuffer);				//UVバッファの解放
 		SAFE_RELEASE(colorBuffer);			//カラーバッファの解放
+		return;
 	}
 
 	//位置情報バッファの再作成
 	SAFE_RELEASE(positionBuffer);
 	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*instanceNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
 
+	//回転情報バッファの再作成
+	SAFE_RELEASE(rotationBuffer);
+	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*instanceNum, 0, 0, D3DPOOL_MANAGED, &rotationBuffer, 0);
+
+	//スケール情報バッファの再作成
+	SAFE_RELEASE(scaleBuffer);
+	device->CreateVertexBuffer(sizeof(D3DXVECTOR2)*instanceNum, 0, 0, D3DPOOL_MANAGED, &scaleBuffer, 0);
+
 	//UV情報バッファの再作成
 	SAFE_RELEASE(uvBuffer);
 	device->CreateVertexBuffer(sizeof(D3DXVECTOR2)*instanceNum, 0, 0, D3DPOOL_MANAGED, &uvBuffer, 0);
 
-	//カラーバッファの再作成
+	//カラー情報バッファの再作成
 	SAFE_RELEASE(colorBuffer);
 	device->CreateVertexBuffer(sizeof(D3DXCOLOR)*instanceNum, 0, 0, D3DPOOL_MANAGED, &colorBuffer, 0);
 
@@ -342,11 +391,19 @@ void InstancingBillboard::updateBuffer()
 void InstancingBillboard::updateArray() 
 {
 	//インスタンス数の取得
-	int instanceNum = getInstanceNum();
+	instanceNum = getInstanceNum();
 
 	//位置バッファ用配列の再作成
 	SAFE_DELETE_ARRAY(position);
 	position = new D3DXVECTOR3[instanceNum];
+
+	//回転バッファ用配列の再作成
+	SAFE_DELETE_ARRAY(rotation);
+	rotation = new D3DXVECTOR3[instanceNum];
+
+	//スケールバッファ用配列の再作成
+	SAFE_DELETE_ARRAY(scale);
+	scale = new D3DXVECTOR2[instanceNum];
 
 	//UVバッファ用配列の再作成
 	SAFE_DELETE_ARRAY(uv);
@@ -358,9 +415,9 @@ void InstancingBillboard::updateArray()
 
 }
 
-
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
 InstancingBillboardNS::InstanceList InstancingBillboard::getList() { return *instanceList; }
 int InstancingBillboard::getInstanceNum() { return instanceList->nodeNum; }
+

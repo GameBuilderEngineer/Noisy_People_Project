@@ -2,9 +2,10 @@
 //yBase.hz
 // [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
 // [ì¬“ú]2019/09/17
-// [XV“ú]2019/10/07
+// [XV“ú]2019/10/21
 //===================================================================================================================================
 
+#define D3D_DEBUG_INFO
 //===================================================================================================================================
 //yƒCƒ“ƒNƒ‹[ƒhz
 //===================================================================================================================================
@@ -41,9 +42,9 @@
 #ifdef _DEBUG
 //Debug
 #define APP_NAME (LPSTR)"D/A:Nature"
-#if FALSE
-#define WINDOW_WIDTH 960
-#define WINDOW_HEIGHT 540
+#if FLASE
+#define WINDOW_WIDTH 1200
+#define WINDOW_HEIGHT 960
 #else
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
@@ -160,4 +161,6 @@ void setRootDirectory();						//ƒ‹[ƒgƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”			[—p“r]ƒ‹[ƒgƒ
 void setDataDirectory();						//ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”			[—p“r]ƒZ[ƒuƒf[ƒ^‚âƒeƒLƒXƒgƒf[ƒ^‚ğŠi”[‚·‚éƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
 void setVisualDirectory();						//ƒrƒWƒ…ƒAƒ‹ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”		[—p“r]ƒeƒNƒXƒ`ƒƒ‚â3Dƒ‚ƒfƒ‹ƒf[ƒ^‚ğŠi”[‚·‚éƒrƒWƒ…ƒAƒ‹ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
 void setShaderDirectory();						//ƒVƒF[ƒ_[ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”		[—p“r]ƒVƒF[ƒ_[ƒtƒ@ƒCƒ‹‚ğŠi”[‚·‚éƒVƒF[ƒ_[ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
-void setSoundDirectory();						//ƒTƒEƒ“ƒhƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”		[—p“r]ƒTƒEƒ“ƒhƒf[ƒ^‚ğŠi”[‚·‚éƒTƒEƒ“ƒhƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
+void setSoundDirectory(int endpointVoiceId);	//ƒTƒEƒ“ƒhƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”		[—p“r]ƒTƒEƒ“ƒhƒf[ƒ^‚ğŠi”[‚·‚éƒTƒEƒ“ƒhƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
+void setEffekseerDirectory();					//ƒGƒtƒFƒNƒVƒA[ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”	[—p“r]ƒGƒtƒFƒNƒVƒA[ƒtƒ@ƒCƒ‹‚ğŠi”[‚·‚éƒVƒF[ƒ_[ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é
+void setToolsDirectory();						//ƒc[ƒ‹ƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒZƒbƒgŠÖ”			[—p“r]ƒc[ƒ‹ƒf[ƒ^‚ğŠi”[‚·‚éƒc[ƒ‹ƒfƒBƒŒƒNƒgƒŠ‚ÖƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğØ‚è‘Ö‚¦‚é

@@ -10,11 +10,14 @@
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
-LIST_BUFFER *SoundBase::bufferList = nullptr;
-int	SoundBase::bufferMax = 0;
+LIST_BUFFER *SoundBase::SEBufferList = nullptr;
+LIST_BUFFER *SoundBase::BGMBufferList = nullptr;
+int	SoundBase::SEBufferMax = 0;
+int	SoundBase::BGMBufferMax = 0;
 
 //===================================================================================================================================
 //【コンストラクタ】
+//・ノードの準備
 //===================================================================================================================================
 SoundBase::SoundBase()
 {
@@ -38,22 +41,15 @@ SoundBase::~SoundBase()
 //===================================================================================================================================
 void	 SoundBase::uninitSoundStop(void)
 {
-	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
-
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
-		tmpSoundParameters = soundParametersList->getValue(i);
-
+		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
+		
 		if (tmpSoundParameters->isPlaying)		//再生している
 		{
-			XAUDIO2_VOICE_STATE voiceState;
-			tmpSoundParameters->SourceVoice->GetState(&voiceState);
-
-			tmpSoundParameters->stopPoint = (short)voiceState.SamplesPlayed;
-
 			tmpSoundParameters->SourceVoice->Stop();
 			tmpSoundParameters->isPlaying = false;
-			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice)
+			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
 		}
 	}
 }
@@ -61,48 +57,49 @@ void	 SoundBase::uninitSoundStop(void)
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-void SoundBase::playSound(int soundId, bool loop)
+void SoundBase::playSound(const PLAY_PARAMETERS playParameters)
 {
-	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
-
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
-		tmpSoundParameters = soundParametersList->getValue(i);
+		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
 		if ((!tmpSoundParameters->isPlaying) &&				//再生していない
-			(tmpSoundParameters->soundId == soundId))		//IDが一致する
+			(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&		//IDが一致する
+			(tmpSoundParameters->playParameters.loop == playParameters.loop))				//ループ情報も一致する
 		{
 			tmpSoundParameters->SourceVoice->Start();
+			if (tmpSoundParameters->playParameters.filterFlag)
+			{
+				tmpSoundParameters->SourceVoice->SetFilterParameters(&tmpSoundParameters->playParameters.filterParameters);
+			}
 			tmpSoundParameters->isPlaying = true;
 			return;
 		}
 	}
 
 	//リスト中に存在しない、再生していないボイスがない時は新しく追加する
-	MakeSourceVoice(tmpSoundParameters, GetBuffer(soundId, loop));
+	MakeSourceVoice(playParameters,
+		GetBuffer(playParameters.endpointVoiceId, playParameters.soundId, playParameters.loop));
 }
 
 //===================================================================================================================================
 //【停止】
 //===================================================================================================================================
-void	 SoundBase::stopSound(int soundId, bool loop)
+void	 SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 {
-	SOUND_PARAMETERS *tmpSoundParameters = nullptr;
-
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
-		tmpSoundParameters = soundParametersList->getValue(i);
+		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((tmpSoundParameters->isPlaying) &&				//再生している
-			(tmpSoundParameters->soundId == soundId))		//IDが一致する
-		{
-			XAUDIO2_VOICE_STATE voiceState;
-			tmpSoundParameters->SourceVoice->GetState(&voiceState);
-
-			tmpSoundParameters->stopPoint = (short)voiceState.SamplesPlayed;
-
+		if ((tmpSoundParameters->isPlaying) &&							//再生していない
+			(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&					//ID
+			(tmpSoundParameters->playParameters.loop == playParameters.loop)&&							//ループ情報
+			(tmpSoundParameters->playParameters.endpointVoiceId == playParameters.endpointVoiceId))	//エンドポイントボイスID
+		{			
 			tmpSoundParameters->SourceVoice->Stop();
-			tmpSoundParameters->isPlaying = false;
+			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
+			soundParametersList->remove(soundParametersList->getNode(i));
+			soundParametersList->listUpdate();
 			return;
 		}
 	}
@@ -114,11 +111,11 @@ void	 SoundBase::stopSound(int soundId, bool loop)
 void	 SoundBase::updateSound(void)
 {
 	//再生状態をチェック
-	for (int i = 0; i < soundParametersList->nodeNum; i++)
+	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if (tmpSoundParameters != NULL)
+		if ((tmpSoundParameters != NULL) && (!tmpSoundParameters->playParameters.loop))
 		{
 			XAUDIO2_VOICE_STATE voiceState;
 			tmpSoundParameters->SourceVoice->GetState(&voiceState);
@@ -126,7 +123,8 @@ void	 SoundBase::updateSound(void)
 			//再生し終わった
 			if (voiceState.BuffersQueued == 0)
 			{
-				SAFE_DELETE(tmpSoundParameters);
+				SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
+				soundParametersList->remove(soundParametersList->getNode(i));
 				soundParametersList->listUpdate();
 			}
 		}
@@ -136,19 +134,32 @@ void	 SoundBase::updateSound(void)
 //===================================================================================================================================
 //【サウンドバッファを取得】
 //===================================================================================================================================
-LIST_BUFFER *SoundBase::GetBuffer(int soundId, bool loop)
+LIST_BUFFER *SoundBase::GetBuffer(int endpointVoiceId, int soundId, bool loop)
 {
-	if (loop)
+	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
-		bufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+		if (loop)
+		{
+			BGMBufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+		}
+		return &BGMBufferList[soundId];
 	}
-	return &bufferList[soundId];
+	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	{
+		if (loop)
+		{
+			SEBufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+		}
+		return &SEBufferList[soundId];
+	}
+	
+	return nullptr;
 }
 
 //===================================================================================================================================
 //【ソースボイスの作成】
 //===================================================================================================================================
-void SoundBase::MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *listBuffer)
+void SoundBase::MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer)
 {
 	//波形のフォーマット
 	WAVEFORMATEX pcm;
@@ -156,10 +167,17 @@ void SoundBase::MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *
 
 	//再生のパラメータ
 	SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(soundParametersList->nodeNum - 1);
-	tmpSoundParameters->stopPoint = soundParameters->stopPoint;
-	tmpSoundParameters->soundId = soundParameters->soundId;
-	tmpSoundParameters->loop = soundParameters->loop;
+	tmpSoundParameters->playParameters = playParameters;
+	tmpSoundParameters->stopPoint = 0;
 	tmpSoundParameters->isPlaying = false;
+	tmpSoundParameters->isSpeed = false;
+
+	//再生速度の変更
+	if (tmpSoundParameters->playParameters.speed != NULL)
+	{
+		//後でtrueにする
+		tmpSoundParameters->isSpeed = false;
+	}
 
 	//波形のフォーマット
 	pcm.cbSize = 0;
@@ -171,23 +189,37 @@ void SoundBase::MakeSourceVoice(SOUND_PARAMETERS *soundParameters, LIST_BUFFER *
 	pcm.nAvgBytesPerSec = listBuffer->wavFile.fmt.fmtSampleRate*pcm.nBlockAlign;
 
 	//ソースボイスの作成
-	SoundInterface::GetXAudio2Interface()->CreateSourceVoice(
-		&tmpSoundParameters->SourceVoice,
-		&pcm,
-		XAUDIO2_VOICE_USEFILTER,
-		XAUDIO2_MAX_FREQ_RATIO,
-		NULL,
-		&SoundInterface::GetSendList(ENDPOINT_VOICE_LIST::ENDPOINT_SE),
-		NULL);
-
+	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	{
+		SoundInterface::GetXAudio2Interface()->CreateSourceVoice(
+			&tmpSoundParameters->SourceVoice,
+			&pcm,
+			XAUDIO2_VOICE_USEFILTER,
+			XAUDIO2_MAX_FREQ_RATIO,
+			NULL,
+			&SoundInterface::GetSendList(ENDPOINT_VOICE_LIST::ENDPOINT_BGM),
+			NULL);
+	}
+	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
+	{
+		SoundInterface::GetXAudio2Interface()->CreateSourceVoice(
+			&tmpSoundParameters->SourceVoice,
+			&pcm,
+			XAUDIO2_VOICE_USEFILTER,
+			XAUDIO2_MAX_FREQ_RATIO,
+			NULL,
+			&SoundInterface::GetSendList(ENDPOINT_VOICE_LIST::ENDPOINT_SE),
+			NULL);
+	}
 	//バッファの提出
 	tmpSoundParameters->SourceVoice->SubmitSourceBuffer(&listBuffer->buffer);
 
 	//ノードの更新処理
+	soundParametersList->insertAfter(soundParametersList->getNode(soundParametersList->nodeNum - 1));
 	soundParametersList->listUpdate();
 
 	//再生
-	playSound(tmpSoundParameters->soundId, tmpSoundParameters->loop);
+	playSound(playParameters);
 }
 
 //===================================================================================================================================
@@ -238,7 +270,7 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 			tmpWavFile.data.waveSize = size;
 
 			// データの読み込み
-			tmpWavFile.data.waveData = (short *)malloc(tmpWavFile.data.waveSize);
+			tmpWavFile.data.waveData = new (short[tmpWavFile.data.waveSize / sizeof(short)]);
 			fread(tmpWavFile.data.waveData, tmpWavFile.data.waveSize, 1, fp);
 
 			// フラグ処理
@@ -254,8 +286,6 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 			fseek(fp, size, SEEK_CUR);
 		}
 	}
-
-	fclose(fp);
 
 	return tmpWavFile;
 }

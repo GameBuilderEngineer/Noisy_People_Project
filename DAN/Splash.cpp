@@ -2,12 +2,12 @@
 //【Splash.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/23
+// [更新日]2019/10/21
 //===================================================================================================================================
 #include "Splash.h"
 
 //===================================================================================================================================
-// 【using宣言】
+//【using宣言】
 //===================================================================================================================================
 using namespace splashNS;
 
@@ -20,6 +20,24 @@ Splash::Splash()
 	sceneName = "Scene -Splash-";
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
+
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);
+
+	//再生パラメータ
+	memset(playParameters, 0, sizeof(playParameters));
+	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true ,1.0f,true, filterParameters };
+
+	//再生
+	SoundInterface::playSound(playParameters[0]);
+	SoundInterface::playSound(playParameters[1]);
+
+	//エフェクシアーテスト
+	effekseerNS::setProjectionMatrix(90.0f / 180.0f * 3.14f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 10000.0f);
+
+	enemyTools = new ENEMY_TOOLS;
 }
 
 //===================================================================================================================================
@@ -27,6 +45,11 @@ Splash::Splash()
 //===================================================================================================================================
 Splash::~Splash()
 {
+	//サウンドの停止
+	SoundInterface::stopSound(playParameters[0]);
+	SoundInterface::stopSound(playParameters[1]);
+
+	effekseerNS::stop(effekseerNS::TEST0);
 }
 
 //===================================================================================================================================
@@ -34,9 +57,6 @@ Splash::~Splash()
 //===================================================================================================================================
 void Splash::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_SPLASH, soundNS::METHOD::PLAY);
-
 	// スプラッシュspriteの作成
 	splashSprite = new SplashSprite;
 }
@@ -48,10 +68,6 @@ void Splash::uninitialize()
 {
 	//スプラッシュの削除
 	SAFE_DELETE(splashSprite);
-
-	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_SPLASH);
-
 }
 
 //===================================================================================================================================
@@ -69,10 +85,15 @@ void Splash::update(float _frameTime)
 	sceneTimer += _frameTime;						//シーンタイムの更新
 	frameTime = _frameTime;							//フレームタイムの保存
 
-	// スプラッシュ2D更新
+	//スプラッシュ2D更新
 	float rate = sceneTimer / SCENE_TIME;
 	splashSprite->update(rate);
 
+	//エフェクトの再生
+	if (input->wasKeyPressed('1'))
+	{
+		effekseerNS::play(new effekseerNS::Instance);
+	}
 
 	//Enter,Spaceまたは〇ボタン,Optionsでタイトルへ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -81,7 +102,10 @@ void Splash::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-		)changeScene(nextScene);
+		)
+	{
+		changeScene(nextScene);
+	}
 
 	// フェードが終わったらタイトルへ
 	if(sceneTimer > SCENE_TIME)changeScene(nextScene);
@@ -94,6 +118,10 @@ void Splash::render()
 {
 	//描画対象をウィンドウ全体に切替
 	direct3D9->changeViewportFullWindow();
+
+	//エフェクシアーテスト
+	effekseerNS::setCameraMatrix(D3DXVECTOR3(10.0f, 5.0f, 20.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	effekseerNS::render();
 
 	//UI
 	renderUI();

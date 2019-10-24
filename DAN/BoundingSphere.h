@@ -27,7 +27,7 @@ public:
 	BoundingSphere();
 	~BoundingSphere();
 	void initialize(D3DXVECTOR3* position, LPD3DXMESH ownerMesh);
-	void initialize(float _raidus);
+	void initialize(D3DXVECTOR3* position, float _raidus);
 	void render(D3DXMATRIX owner);
 	bool collide(D3DXVECTOR3 targetCenter,float targetRadius, D3DXMATRIX ownerMatrix, D3DXMATRIX targetMatrix);
 
