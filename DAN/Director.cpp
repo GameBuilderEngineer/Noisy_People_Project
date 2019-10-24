@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/19
+// [更新日]2019/10/24
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -56,7 +56,7 @@ Director::~Director() {
 	SAFE_DELETE(textManager);
 	SAFE_DELETE(fader);
 	SAFE_DELETE(effekseerManager);
-	//SAFE_DELETE(gameMaster);
+	SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
@@ -128,7 +128,7 @@ HRESULT Director::initialize() {
 	textManager->initialize();
 
 	//ゲーム管理クラス
-	//gameMaster = new GameMaster();
+	gameMaster = new GameMaster();
 
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
@@ -136,6 +136,7 @@ HRESULT Director::initialize() {
 
 	//scene
 	scene = new Splash();
+	scene->setGameMaster(gameMaster);
 	scene->initialize();
 
 	//fader
@@ -239,15 +240,14 @@ void Director::mainLoop() {
 // [用途]アプリ全体の更新処理
 //===================================================================================================================================
 void Director::update() {
+	input->update(window->windowActivate);
 #ifdef _DEBUG
 	memory->update();
 	imgui->beginFrame();
-	imgui->update();//デフォルトウィンドウ
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
 #else
-	input->update(window->windowActivate);
 	if (input->wasKeyPressed(VK_F1))
 	{
 		hiddenCursor = !hiddenCursor;
@@ -281,6 +281,12 @@ void Director::update() {
 		scene->createGUI();
 		imgui->endImGui();
 	}
+	if (*gameMaster->getShowGUI())
+	{
+		imgui->beginImGui("GameMasterGUI");
+		gameMaster->createGUI();
+		imgui->endImGui();
+	}
 #endif // _DEBUG
 }
 
@@ -295,6 +301,7 @@ void Director::createGUI()
 	ImGui::SliderInt("fpsMode", &fpsMode, VARIABLE_FPS, FIXED_FPS);
 	ImGui::SliderInt("fixedFPS", &fixedFps, MIN_FRAME_RATE, MAX_FRAME_RATE);
 	ImGui::Checkbox("SceneGUI", scene->getShowGUI());	
+	ImGui::Checkbox("gameMasterGUI", gameMaster->getShowGUI());	
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("CPU %.2f ％", memory->getCpuUsege());
 	ImGui::Text("MEMORY %d kb", memory->getMemoryUsege());
@@ -419,25 +426,23 @@ void Director::displayFPS() {
 //===================================================================================================================================
 void Director::changeNextScene() {
 	int nextScene = scene->checkNextScene();		//次のシーンIDを取得	
-	//scene->copyGameMaster(gameMaster);			//ゲーム管理情報をDirectorへ保存
 	effekseerNS::stop();							//全エフェクト停止
-	scene->uninitialize();
+	scene->uninitialize();							//シーン終了処理
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{
-	case SceneList::SPLASH:					scene = new Splash(); break;
-	case SceneList::TITLE:					scene = new Title(); break;
+	case SceneList::SPLASH:					scene = new Splash();	break;
+	case SceneList::TITLE:					scene = new Title();	break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
-	case SceneList::CREDIT:					scene = new Credit(); break;
-	case SceneList::GAME:					scene = new Game(); break;
-	case SceneList::RESULT:					scene = new Result(); break;
-	case SceneList::CREATE:					scene = new Create(); break;
+	case SceneList::CREDIT:					scene = new Credit();	break;
+	case SceneList::GAME:					scene = new Game();		break;
+	case SceneList::RESULT:					scene = new Result();	break;
+	case SceneList::CREATE:					scene = new Create();	break;
 	case SceneList::NONE_SCENE:				break;
 	}
-	//scene->setGameMaster(gameMaster);//ゲーム管理情報をシーンへセット
-	//scene->setAnimationLoader(animationLoader);
-	scene->initialize();
-	currentSceneName = scene->getSceneName();
+	scene->setGameMaster(gameMaster);				//ゲーム管理情報をシーンへセット
+	scene->initialize();							//シーン初期化処理
+	currentSceneName = scene->getSceneName();		//現在シーン名の取得
 }
 
 //void threadA()

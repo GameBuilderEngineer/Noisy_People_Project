@@ -37,7 +37,7 @@ PointSprite::~PointSprite()
 //===================================================================================================================================
 HRESULT PointSprite::initilaize()
 {
-	setVisualDirectory();
+	setTextureDirectory();
 	//ポイントスプライトに貼るテクスチャオブジェクトを作成
 	if (FAILED(D3DXCreateTextureFromFileEx(getDevice(), "Game_BackGround_Star.jpg", (UINT)WIDTH, (UINT)HEIGHT, 0, 0, D3DFMT_UNKNOWN,
 		D3DPOOL_DEFAULT, D3DX_FILTER_NONE, D3DX_DEFAULT,

@@ -65,7 +65,7 @@ public:
 	TextManager*		textManager;			//テキストデータ読込クラス
 	Fader*				fader;					//フェーダー(イン・アウト)クラス
 	EffekseerManager*	effekseerManager;		//エフェクシアーマネージャー
-	//GameMaster*			gameMaster;			//ゲーム運営クラス
+	GameMaster*			gameMaster;				//ゲーム運営クラス
 	//AnimationLoader*	animationLoader;		//アニメーション読込クラス
 	std::string*		currentSceneName;		//現在のシーンの名前
 	int					fpsMode;				//フレームレート状態変数

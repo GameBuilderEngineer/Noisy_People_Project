@@ -63,7 +63,13 @@ public:
 	static int wrap(int x, int low, int high);
 	static float wrap(float x, float low, float high);
 	template<typename T>
-	static T clamp(T x, T low, T high);
+	static T clamp(T x, T low, T high)
+	{
+		assert(low <= high);
+		T result = max(x, low);
+		result = min(result, high);
+		return result;
+	}
 
 	//y•ÏŠ·z‹ÉÀ•W->’¼ŒğÀ•W
 	//Polar Coordinates Transformation

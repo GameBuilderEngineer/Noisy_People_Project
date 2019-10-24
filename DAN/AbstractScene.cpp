@@ -19,17 +19,16 @@ using namespace SceneList;
 //【コンストラクタ】
 //===================================================================================================================================
 AbstractScene::AbstractScene() {
-	nextScene = NONE_SCENE;
-	sceneName = "none";
-	sceneTimer = 0.0f;
-	stopTimer = 0.0f;
-	onChange = false;
-	device = getDevice();
-	direct3D9 = getDirect3D9();
-	input = getInput();
-	camera = NULL;
-	light = NULL;
-//	gameMaster = new GameMaster;
+	nextScene	= NONE_SCENE;
+	sceneName	= "none";
+	sceneTimer	= 0.0f;
+	stopTimer	= 0.0f;
+	onChange	= false;
+	device		= getDevice();
+	direct3D9	= getDirect3D9();
+	input		= getInput();
+	camera		= NULL;
+	light		= NULL;
 #ifdef _DEBUG
 	showGUI = true;
 #endif // _DEBUG
@@ -39,7 +38,6 @@ AbstractScene::AbstractScene() {
 //【デストラクタ】
 //===================================================================================================================================
 AbstractScene::~AbstractScene() {
-//	SAFE_DELETE(gameMaster);
 }
 
 //===================================================================================================================================
@@ -50,28 +48,20 @@ AbstractScene::~AbstractScene() {
 //[戻値]
 //なし
 //===================================================================================================================================
-//void AbstractScene::copyGameMaster(GameMaster* destination)
-//{
-//	*destination = *gameMaster;
-//}
+void AbstractScene::copyGameMaster(GameMaster* destination)
+{
+
+}
 
 //===================================================================================================================================
 //【ゲーム管理情報の受け取り(setter)】
 //[用途] 外部からゲーム管理情報を取得する
 //[引数] 
-//GameMaster* destination：コピー先
+//GameMaster* resorce：コピー元
 //[戻値]
 //なし
 //===================================================================================================================================
-//void AbstractScene::setGameMaster(GameMaster* resorce)
-//{
-//	*gameMaster = *resorce;
-//}
-
-//===================================================================================================================================
-//【アニメーションローダーのセット】
-//===================================================================================================================================
-//void AbstractScene::setAnimationLoader(AnimationLoader* animationLoader)
-//{
-//	this->animationLoader = animationLoader;
-//}
+void AbstractScene::setGameMaster(GameMaster* resorce)
+{
+	gameMaster = resorce;
+}

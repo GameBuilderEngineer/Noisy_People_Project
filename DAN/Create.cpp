@@ -88,7 +88,10 @@ void Create::initialize() {
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//プレイヤーの初期化
-	player->initialize(inputNS::DINPUT_1P, 0);
+	PlayerTable infomation;
+	infomation.playerType = gameMasterNS::PLAYER_1P;
+	infomation.modelType = gameMasterNS::MODEL_MALE;
+	player->initialize(infomation);
 	player->setCamera(camera);	//カメラポインタのセット
 	playerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
 	playerRenderer->registerObject(player);
