@@ -12,10 +12,12 @@
 #include "Splash.h"
 #include "Title.h"
 #include "Tutorial.h"
-#include "Credit.h"
+#if _DEBUG
+#include "Create.h"
+#endif
 #include "Game.h"
 #include "Result.h"
-#include "Create.h"
+#include "Credit.h"
 #include "SE.h"
 #include "LinearTreeCell.h"
 
@@ -502,7 +504,9 @@ void Director::changeNextScene() {
 	case SceneList::CREDIT:					scene = new Credit();	break;
 	case SceneList::GAME:					scene = new Game();		break;
 	case SceneList::RESULT:					scene = new Result();	break;
-	case SceneList::CREATE:					scene = new Create();	break;
+#if _DEBUG 
+	case SceneList::CREATE:					scene = new Create();	break; 
+#endif
 	case SceneList::NONE_SCENE:				break;
 	}
 	scene->setGameMaster(gameMaster);				//ゲーム管理情報をシーンへセット
