@@ -2,7 +2,7 @@
 //【StaticMeshLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/16
+// [更新日]2019/10/25
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -34,16 +34,8 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
 	fileName[STAR_REGULAR_POLYHEDRON_X100]			= { "x100starRegularPolyhedron.x" };		//05
 
-	fileName[SAMPLE_BUNNY]							= { "toybunny.x" };							//01
-	fileName[SAMPLE_PAPER]							= { "paper.x" };							//02
-	fileName[SAMPLE_REDBULL]						= { "redbull.x" };							//03
-	fileName[SAMPLE_SHOES]							= { "shoes.x" };							//04
-	fileName[SAMPLE_TEAPOT]							= { "teapot.x" };							//05
-	fileName[SAMPLE_LIGHT]							= { "light.x" };							//06
-	fileName[SAMPLE_BALL]							= { "soccerball.x" };						//07
+	fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
 	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
-	fileName[SAMPLE_PLAYSTATION]					= { "playstation.x" };						//09
-	fileName[SAMPLE_HAT]							= { "hat.x" };								//10
 
 	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
 	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
@@ -51,7 +43,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[GRASS]									= { "grass001.x" };							//04
 	fileName[STONE_001]								= { "stone001.x" };							//05
 	fileName[STONE_002]								= { "stone002.x" };							//06
-	fileName[STONE_003]								= { "stone003.x" };							//07
+	fileName[STONE_003]								= { "Rocks.x" };							//07
 
 	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
 	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
@@ -77,10 +69,10 @@ StaticMeshLoader::~StaticMeshLoader()
 //===================================================================================================================================
 HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 {
-	setVisualDirectory();
 	// Xファイルからメッシュをロードする
 	for (int i = 0; i < MESH_NUM; i++)
 	{
+		setModelDirectory();
 		staticMesh[i].bufferMaterial = NULL;
 		D3DXLoadMeshFromX(
 			(LPCSTR)fileName[i],
@@ -95,7 +87,7 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		D3DXMATERIAL* materials = (D3DXMATERIAL*)staticMesh[i].bufferMaterial->GetBufferPointer();
 		staticMesh[i].materials = new D3DMATERIAL9[staticMesh[i].numMaterial];
 		staticMesh[i].textures = new LPDIRECT3DTEXTURE9[staticMesh[i].numMaterial];
-
+		setTextureDirectory();
 		for (DWORD num = 0; num < staticMesh[i].numMaterial; num++)
 		{
 			staticMesh[i].materials[num] = materials[num].MatD3D;

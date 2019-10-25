@@ -23,25 +23,24 @@ using namespace playerNS;
 //===================================================================================================================================
 Player::Player() 
 {
-	Object::initialize(&(D3DXVECTOR3)playerNS::START_POSITION);
+	Object::initialize(&D3DXVECTOR3(0,0,0));
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
 
-	onGravity = true;
-	activation();
-	state = NORMAL;
-	invincibleTimer = 0.0f;					//無敵時間
-	onGround = false;						//接地判定
-	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
-	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
-	onJump = false;										//ジャンプフラグ
-	difference = DIFFERENCE_FIELD;			//フィールド補正差分
-	onSound = false;						//サウンドのGUIフラグ
+	onGravity			= true;
+	state				= NORMAL;
+	invincibleTimer		= 0.0f;					//無敵時間
+	onGround			= false;				//接地判定
+	reverseValueXAxis	= CAMERA_SPEED;			//操作Ｘ軸
+	reverseValueYAxis	= CAMERA_SPEED;			//操作Ｙ軸
+	onJump				= false;				//ジャンプフラグ
+	difference			= DIFFERENCE_FIELD;		//フィールド補正差分
+	onSound				= false;				//サウンドのGUIフラグ
 
-	isShotAble = true;
-	isJumpAble = true;
-	isVisionAble = true;
-	isSkyVisionAble = true;;
-	isShiftAble = true;
+	isShotAble			= true;
+	isJumpAble			= true;
+	isVisionAble		= true;
+	isSkyVisionAble		= true;
+	isShiftAble			= true;
 }
 
 
@@ -58,20 +57,20 @@ Player::~Player()
 //【初期化】
 //===================================================================================================================================
 //プレイヤータイプごとに初期化内容を変更
-void Player::initialize(int playerType, int modelType)
+void Player::initialize(PlayerTable info)
 {
-	device = getDevice();
-	input = getInput();
-	type = playerType;
-	keyTable = KEY_TABLE_1P;
-	Object::initialize(&(D3DXVECTOR3)START_POSITION);
+	device				= getDevice();
+	input				= getInput();
+	infomation			= info;
+	keyTable			= KEY_TABLE[infomation.playerType];
+	Object::initialize(&(D3DXVECTOR3)START_POSITION[infomation.playerType]);
 
-	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);	// コライダの初期化
-	radius = bodyCollide.getRadius();						// メッシュ半径を取得
-	centralPosition = position + bodyCollide.getCenter();	// 中心座標を設定
-	D3DXMatrixIdentity(&centralMatrixWorld);				// 中心座標ワールドマトリクスを初期化
-
-	power = 300;				//キャラクター電力確認用
+	// コライダの初期化
+	bodyCollide.initialize(	&position, staticMeshNS::reference(infomation.modelType)->mesh);
+	radius				= bodyCollide.getRadius();				// メッシュ半径を取得
+	centralPosition		= position + bodyCollide.getCenter();	// 中心座標を設定
+	D3DXMatrixIdentity(&centralMatrixWorld);					// 中心座標ワールドマトリクスを初期化
+	power				= MAX_POWER;							//キャラクター電力確認用
 }
 
 
@@ -87,7 +86,6 @@ void Player::update(float frameTime)
 	centralPosition = position + bodyCollide.getCenter();
 	acceleration *= 0.0f;
 
-	power = power - 1;
 
 	switch (state)
 	{
@@ -144,15 +142,6 @@ void Player::update(float frameTime)
 	reverseAxisY.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
 	reverseAxisZ.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
 }
-
-
-//===================================================================================================================================
-//【描画】
-//===================================================================================================================================
-//void Player::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-//{
-//	Object::render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH),view,projection, cameraPosition);
-//}
 
 
 //===================================================================================================================================
@@ -403,8 +392,8 @@ void Player::moveOperation()
 	}
 
 	//コントローラスティックによる移動
-	if (input->getController()[type]->checkConnect()) {
-		move(input->getController()[type]->getLeftStick()*0.001f, camera->getDirectionX(), camera->getDirectionZ());
+	if (input->getController()[infomation.playerType]->checkConnect()) {
+		move(input->getController()[infomation.playerType]->getLeftStick()*0.001f, camera->getDirectionX(), camera->getDirectionZ());
 	}
 }
 
@@ -415,11 +404,11 @@ void Player::moveOperation()
 //===================================================================================================================================
 void Player::jumpOperation()
 {
-	if (input->wasKeyPressed(keyTable.jump) || input->getController()[type]->wasButton(BUTTON_JUMP))
+	if (input->wasKeyPressed(keyTable.jump) || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP))
 	{
 		if (jumping == false) onJump = true;	// ジャンプ踏切フラグをオンにする
 	}
-	if (input->isKeyDown(keyTable.jump) || input->getController()[type]->isButton(BUTTON_JUMP))
+	if (input->isKeyDown(keyTable.jump) || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))
 	{
 		jump();
 	}
@@ -438,9 +427,9 @@ void Player::controlCamera(float frameTime)
 	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
 	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
 	//コントローラ操作
-	if (input->getController()[type]->checkConnect()) {
-		camera->rotation(D3DXVECTOR3(0, 1, 0), input->getController()[type]->getRightStick().x*0.1f*frameTime*reverseValueXAxis);
-		camera->rotation(camera->getHorizontalAxis(), input->getController()[type]->getRightStick().y*0.1f*frameTime*reverseValueYAxis);
+	if (input->getController()[infomation.playerType]->checkConnect()) {
+		camera->rotation(D3DXVECTOR3(0, 1, 0), input->getController()[infomation.playerType]->getRightStick().x*0.1f*frameTime*reverseValueXAxis);
+		camera->rotation(camera->getHorizontalAxis(), input->getController()[infomation.playerType]->getRightStick().y*0.1f*frameTime*reverseValueYAxis);
 	}
 
 	camera->setUpVector(axisY.direction);
@@ -556,6 +545,7 @@ void Player::outputGUI()
 //===================================================================================================================================
 void Player::outputSoundGUI()
 {
+#ifdef _DEBUG
 	if (!onSound)return;
 	ImGui::Begin("PlayerInformation(Sound)");
 	if (ImGui::CollapsingHeader("PlayerInformation(Sound)"))
@@ -564,6 +554,7 @@ void Player::outputSoundGUI()
 
 	}
 	ImGui::End();
+#endif
 }
 
 
@@ -572,7 +563,7 @@ void Player::outputSoundGUI()
 //===================================================================================================================================
 void Player::reset()
 {
-	position = START_POSITION;
+	position = START_POSITION[infomation.playerType];
 	speed = acceleration = D3DXVECTOR3(0, 0, 0);
 	quaternion = D3DXQUATERNION(0, 0, 0, 1);
 	axisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(1, 0, 0));
@@ -589,6 +580,8 @@ void Player::reset()
 //【setter】
 //===================================================================================================================================
 void Player::setCamera(Camera* _camera) { camera = _camera; }
+void Player::setInfomation(PlayerTable info) { infomation = info; };
+
 void Player::addpower(int add)
 {
 	power = UtilityFunction::clamp( power + add, MIN_POWER, MAX_POWER);		//電力回復
@@ -603,9 +596,10 @@ void Player::pullpower(int pull)
 int Player::getState() { return state; }
 int Player::getHp() { return hp; }
 int Player::getPower() { return power; }
-bool  Player::canShot() { return isShotAble; }
-bool  Player::canJump() { return isJumpAble; }
-bool  Player::canDoVision(){ return isVisionAble; }
-bool  Player::canDoSkyVision() { return isSkyVisionAble; }
-bool  Player::canShift() { return isShiftAble; }
+bool Player::canShot() { return isShotAble; }
+bool Player::canJump() { return isJumpAble; }
+bool Player::canDoVision(){ return isVisionAble; }
+bool Player::canDoSkyVision() { return isSkyVisionAble; }
+bool Player::canShift() { return isShiftAble; }
 BoundingSphere* Player::getBodyCollide() { return &bodyCollide; }
+PlayerTable* Player::getInfomation() { return &infomation; }

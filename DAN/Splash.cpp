@@ -37,7 +37,6 @@ Splash::Splash()
 	//エフェクシアーテスト
 	effekseerNS::setProjectionMatrix(90.0f / 180.0f * 3.14f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 10000.0f);
 
-	enemyTools = new ENEMY_TOOLS;
 }
 
 //===================================================================================================================================

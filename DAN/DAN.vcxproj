@@ -175,6 +175,7 @@
     <ClInclude Include="ItemTools.h" />
     <ClInclude Include="MapObjectTool.h" />
     <ClInclude Include="MemoryDebug.h" />
+    <ClInclude Include="LinearTreeCell.h" />
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="OperationGenerator.h" />
@@ -220,6 +221,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Tiger.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="TmpObject.h" />
     <ClInclude Include="TreeToools.h" />
     <ClInclude Include="TreeTypeA.h" />
     <ClInclude Include="TreeTypeB.h" />
@@ -275,6 +277,7 @@
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="ItemTools.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LinearTreeCell.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="MapObjectTool.cpp" />
     <ClCompile Include="MemoryDebug.cpp" />
@@ -311,6 +314,7 @@
     <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
+    <ClCompile Include="TmpObject.cpp" />
     <ClCompile Include="TreeToools.cpp" />
     <ClCompile Include="TreeTypeA.cpp" />
     <ClCompile Include="TreeTypeB.cpp" />
@@ -341,9 +345,6 @@
   <ItemGroup>
     <Font Include="01 Data File\FOT-NewRodinPro-UB.otf" />
     <Font Include="01 Data File\unicode.futurabb.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="02 Visual File\testField.x" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -27,6 +27,7 @@
 #include "Sky.h"
 
 #include "SpriteGauge.h"
+#include "Battery.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
@@ -49,8 +50,6 @@ namespace gameNS
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,5.0f,0);
 
-	//const int NUM_SAMPLE = 1000;
-
 }
 
 //===================================================================================================================================
@@ -60,80 +59,29 @@ class Game : public AbstractScene
 {
 private:
 
-	//Text text;							//Sample
-	//Text text2;							//Sample
-	//PointSprite pointSprite;		//Sample
-	//InstancingBillboard plane;	//Sample
-	//Object testObject;				//Sample
-	//Object testCube;					//Sample
+	Player*					player;				//プレイヤー
+	StaticMeshRenderer*		maleRenderer;		//男プレイヤーレンダラー
+	StaticMeshRenderer*		femaleRenderer;		//女プレイヤーレンダラー
+	Object*					testField;			//フィールド
+	StaticMeshRenderer*		testFieldRenderer;	//フィールドレンダラー
 
-	//プレイヤー
-	Player *player;
-	StaticMeshRenderer* playerRenderer;
+	DeadTree*				deadTree;			//枯木
+	TreeTypeA*				treeA;				//木Ａ
+	TreeTypeB*				treeB;				//木B
+	Stone*					stone;				//石
+	Sky*					sky;				//スカイドーム
 
-	//フィールド
-	Object* testField;
-	StaticMeshRenderer* testFieldRenderer;
-	//インスタンシングビルボードテスト
-	//InstancingBillboard instancingBillboardTest;
-	TestEffect* testEffect;
+	TestEffect*				testEffect;			//インスタンシングビルボードテスト
 
-	//枯木
-	DeadTree* deadTree;
-	//木Ａ
-	TreeTypeA* treeA;
-	//木B
-	TreeTypeB* treeB;
-	//石
-	Stone* stone;
-	//スカイドーム
-	Sky* sky;
+	EnemyManager*			enemyManager;		// エネミーマネージャー
+	Enemy*					enemy;				// エネミー
+	TreeManager*			treeManager;		// ツリーマネージャー
+	ItemManager*			itemManager;		// アイテムマネージャー
 
-	//色々なオブジェクトの描画サンプルテスト
+	Telop*					telop;				// テロップ
 
-	//スタティックメッシュで、１個のオブジェクトのみを描画するとき【静的】
-	//StaticSingleStaticMeshRendererTest ssSMO
-
-	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiStaticMeshRendererTest smSMO
-
-	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiStaticMeshRendererTest dmSMO
-
-	//ビルボードで、1個のオブジェクトを描画するとき【静的】
-	//StaticSingleInstancingBillboardTest ssIB
-
-	//ビルボードで、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiInstancingBillboardTest smIB
-
-	//ビルボードで、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiInstancingBillboardTest dmIB
-
-	//板で、１個のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticSingleInstancingPlaneTest ssIP
-
-	//板で、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiInstancingPlaneTest smIP
-
-	//板で、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiInstancingPlaneTest dmIP
-
-	// エネミー
-	EnemyManager* enemyManager;
-	Enemy* enemy;
-
-	// ツリー
-	TreeManager* treeManager;
-
-	// アイテム
-	ItemManager* itemManager;
-
-	// テロップ
-	Telop* telop;
-
-	// AI
-	AIDirector* aiDirector;
-	NavigationMesh* naviAI;
+	AIDirector*				aiDirector;			// AI
+	NavigationMesh*			naviAI;				// naviAI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];

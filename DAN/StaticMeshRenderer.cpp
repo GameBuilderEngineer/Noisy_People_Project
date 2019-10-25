@@ -331,10 +331,7 @@ void StaticMeshRenderer::enableLight()	{ onLight = true; }
 void StaticMeshRenderer::disableLight()	{ onLight = false; }
 
 //===================================================================================================================================
-//【スタティックメッシュの取得】
+//【getter】
 //===================================================================================================================================
-StaticMesh* StaticMeshRenderer::getStaticMesh()
-{
-
-	return staticMesh;
-}
+StaticMesh* StaticMeshRenderer::getStaticMesh(){return staticMesh;}
+int			StaticMeshRenderer::getObjectNum() { return objectNum; }
