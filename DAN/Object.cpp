@@ -143,7 +143,7 @@ void Object::outputGUI()
 		float limitTop		= 1000;
 		float limitBottom	= -1000;
 
-		ImGui::SliderFloat3("position", position, limitBottom, limitTop);					//位置
+		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
 		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);							//スケール
 		ImGui::SliderFloat("radius", &radius, 0, limitTop);										//半径

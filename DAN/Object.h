@@ -80,7 +80,7 @@ public:
 
 	//Method
 	Object();
-	~Object();
+	virtual ~Object();
 	
 	//äÓñ{ä÷êî
 	HRESULT initialize(D3DXVECTOR3* _position);

@@ -29,6 +29,9 @@ Create::Create()
 
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;
+	//アイテムツール
+	itemTools = new ITEM_TOOLS;
+
 }
 
 //===================================================================================================================================
@@ -38,6 +41,8 @@ Create::~Create()
 {
 	//エネミーツール
 	SAFE_DELETE(enemyTools);
+	//アイテムツール
+	SAFE_DELETE(itemTools);
 }
 
 //===================================================================================================================================
@@ -47,22 +52,6 @@ void Create::initialize() {
 
 	//player
 	player = new Player;
-
-	//-----中込テストゾーンその１---------------
-	//enemy = new Enemy;
-	//camera = new Camera;
-
-	//camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//camera->setTarget(enemy->getPosition());
-	//camera->setTargetX(&enemy->getAxisX()->direction);
-	//camera->setTargetY(&enemy->getAxisY()->direction);
-	//camera->setTargetZ(&enemy->getAxisZ()->direction);
-	//camera->setRelative(CAMERA_RELATIVE_QUATERNION);
-	//camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	//camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
-	//camera->setUpVector(D3DXVECTOR3(0, 1, 0));
-	//camera->setFieldOfView((D3DX_PI / 18) * 10);
-	//-------------------------------------------
 
 	//camera
 	camera = new Camera;
@@ -116,29 +105,18 @@ void Create::initialize() {
 	//エフェクト（インスタンシング）テスト
 	testEffect = new TestEffect();
 
-	//-----中込テストゾーンその2---------------
-	//enemy->setDebugEnvironment();
-	//enemy->setCamera(camera);	//カメラのセット
-	//enemy->configurationGravityWithRay(testField->getPosition(), testField->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
-	//-----------------------------------------
+	// エネミー
+	enemyManager = new EnemyManager;
+	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// ツリー
 	treeManager = new TreeManager;
-	treeManager->initialize();
+	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// アイテム
 	itemManager = new ItemManager;
-	itemManager->initialize();
+	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
-	// テロップ
-	telop = new Telop;
-	telop->initialize();
-
-	// AI
-	aiDirector = new AIDirector;
-	aiDirector->initialize();
-	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
-	naviAI->initialize();
 }
 
 //===================================================================================================================================
@@ -147,19 +125,18 @@ void Create::initialize() {
 void Create::uninitialize() {
 	SAFE_DELETE(camera);
 	SAFE_DELETE(light);
-	SAFE_DELETE(testField);
+	//SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
-	SAFE_DELETE(player);
+	//SAFE_DELETE(player);
 	SAFE_DELETE(playerRenderer);
 	SAFE_DELETE(deadTree);
 	SAFE_DELETE(treeA);
 	SAFE_DELETE(treeB);
 	SAFE_DELETE(stone);
 	SAFE_DELETE(testEffect);
+	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
-	SAFE_DELETE(telop);
-	SAFE_DELETE(aiDirector);
 }
 
 //===================================================================================================================================
@@ -182,11 +159,23 @@ void Create::update(float _frameTime) {
 	testField->update();
 	testFieldRenderer->update();
 
+	//エネミーツールの更新
+	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+	if (enemyTools->resetEnemy)
+	{
+		//最新のenemy.enemyの読み込み
+		enemyManager->relocateEnemyAccordingToFile();
+		enemyTools->resetEnemy = false;
+	}
+
+	//アイテムツールの更新
+	itemTools->outputItemToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
+
 	//プレイヤーの更新
 	player->update(frameTime);
 
 	// エネミーの更新
-	//enemy->update(frameTime);
+	enemyManager->update(frameTime);
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -195,16 +184,13 @@ void Create::update(float _frameTime) {
 	if (input->wasKeyPressed('0'))
 	{
 		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player->getPosition() };
-		itemManager->createItem(&unko);
+		itemManager->createItem(unko);
 	}
 	if (input->wasKeyPressed('9'))
 	{
 		itemManager->uninitialize();
 	}
 	itemManager->update(frameTime);
-
-	// テロップの更新
-	telop->update(frameTime);
 
 	////カメラの更新
 	//camera->update();
@@ -218,10 +204,6 @@ void Create::update(float _frameTime) {
 	treeB->update();
 	//石の更新
 	stone->update();
-
-	//エネミーツールの更新
-	enemyTools->outputEnemyToolsGUI(*player->getPosition(), player->getAxisZ()->direction);
-	enemyTools->update();
 
 	//カメラの更新
 	camera->update();
@@ -289,19 +271,13 @@ void Create::render3D(Camera currentCamera) {
 	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// エネミーの描画
-	//enemy->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	//エネミーツールの描画(test用)
-	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
-#ifdef DEBUG_NAVIMESH
-#endif
 }
 
 //===================================================================================================================================
@@ -319,8 +295,6 @@ void Create::renderUI() {
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
-	telop->render();	// テロップの描画
 }
 
 //===================================================================================================================================
@@ -328,23 +302,12 @@ void Create::renderUI() {
 //===================================================================================================================================
 void Create::collisions()
 {
-	// プレイヤーとアイテム
-	std::vector<Item*> itemList = itemManager->getList();
-	for (size_t i = 0; i < itemList.size(); i++)
-	{
-		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
-			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
-		{
-			player->addSpeed(D3DXVECTOR3(0, 10, 0));
-		}
-	}
 }
 
 //===================================================================================================================================
 //【AI処理】
 //===================================================================================================================================
 void Create::AI() {
-	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -363,7 +326,6 @@ void Create::createGUI()
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
-	naviAI->outputGUI();			//ナビゲーションAI
 
 }
 #endif // _DEBUG

@@ -1,22 +1,20 @@
 //-----------------------------------------------------------------------------
-// アナログツリークラス [Tree.h]
-// Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
-// 作成開始日 : 2019/10/13
+// メモリデバッグ [MemoryDebug.h]
 //-----------------------------------------------------------------------------
 #pragma once
-#include"Tree.h"
+#include"EnemyManager.h"
+#include"TreeManager.h"
+#include"ItemManager.h"
+
 
 //=============================================================================
 //クラス定義
 //=============================================================================
-class AnalogTree: public Tree
+class MemoryDebug
 {
 private:
 
 public:
-	virtual void update(float frameTime);
-
-	// Getter
-
-	// Setter
+	void debugEnemyManager();
+	void debugSpawnManager();
 };

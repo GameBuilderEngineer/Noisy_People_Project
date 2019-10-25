@@ -26,6 +26,8 @@
 #include "Telop.h"
 #include "Sky.h"
 
+#include "SpriteGauge.h"
+
 #include "Sound.h"
 #include "SoundBase.h"
 //#include "GameMaster.h"
@@ -80,7 +82,11 @@ private:
 	AIDirector*				aiDirector;			// AI
 	NavigationMesh*			naviAI;				// naviAI
 
-	PLAY_PARAMETERS			playParameters[3];	//再生パラメータ
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[4];
+
+	//Sprite実験
+	SpriteGauge* spriteGauge;
 
 public:
 	Game();
@@ -94,6 +100,7 @@ public:
 
 	void render3D(Camera currentCamera);
 	void renderUI();
+	void test();
 
 #ifdef _DEBUG
 	virtual void createGUI() override;
@@ -102,12 +109,13 @@ public:
 
 
 //===================================================================================================================================
-//【ビルドスイッチ】
+//【デバッグ】
 //===================================================================================================================================
 #ifdef _DEBUG
 
 #if 1	// ここを1でナビメッシュデバッグモード
 #define DEBUG_NAVIMESH
 #endif
+
 
 #endif// _DEBUG

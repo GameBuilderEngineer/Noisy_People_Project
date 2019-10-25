@@ -43,32 +43,32 @@ void AIDirector::outputGUI()
 {
 #ifdef _DEBUG
 
-	if (ImGui::CollapsingHeader("EnemyInformation"))
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		//float limitTop = 1000;
-		//float limitBottom = -1000;
+	//if (ImGui::CollapsingHeader("EnemyInformation"))
+	//{
+	//	ImGuiIO& io = ImGui::GetIO();
+	//	//float limitTop = 1000;
+	//	//float limitBottom = -1000;
 
-		ImGui::Text("numOfEnemy:%d", Enemy::getNumOfEnemy());
+	//	ImGui::Text("numOfEnemy:%d", Enemy::getNumOfEnemy());
 
-		//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-		//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-		//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-		//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-		//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-		//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-		//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
+	//	//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
+	//	//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
+	//	//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
+	//	//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
+	//	//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
+	//	//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
+	//	//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
+	//	//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
 
-		//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-		//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-		//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-		//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
+	//	//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
+	//	//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
+	//	//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
+	//	//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
+	//	//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
+	//	//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
 
-		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
-	}
+	//	//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
+	//}
 
 #endif
 }

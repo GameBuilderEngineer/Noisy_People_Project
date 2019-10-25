@@ -1,28 +1,24 @@
 //-----------------------------------------------------------------------------
-// バッテリークラス [Battery.h]
-// Author : 
-// 作成開始日 : 2019/  /  
+// クラス [.h]　実験用
+// Author : 新里
+// 作成開始日 : 2019/10/17  
 //-----------------------------------------------------------------------------
 #pragma once
-#include"Item.h"
-
+#include "Item.h"
 
 //=============================================================================
 //クラス定義
 //=============================================================================
-class Battery: public Item
+class exampleItem :public Item
 {
 private:
 	static StaticMesh* staticMesh;
 
 public:
-	Battery(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
+	exampleItem(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
 	static void initialize(StaticMesh* staticMesh);
-	virtual void update(float frameTime);
+	virtual void update(float frametime);
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	//bool sphereCollide(D3DXVECTOR3 targetCenter, float targetRadius, D3DXMATRIX targetMatrix) override;
+ 
+	};
 
-	// Getter
-
-	// Setter
-};

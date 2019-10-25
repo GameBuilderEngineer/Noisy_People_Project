@@ -35,6 +35,7 @@ Game::Game()
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,true, filterParameters };
 	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,true, filterParameters };
+	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };		//アイテム取得音
 
 	//再生
 	SoundInterface::playSound(playParameters[0]);
@@ -52,6 +53,7 @@ Game::~Game()
 	SoundInterface::stopSound(playParameters[0]);
 	SoundInterface::stopSound(playParameters[1]);
 	SoundInterface::stopSound(playParameters[2]);
+	SoundInterface::stopSound(playParameters[3]);
 }
 
 //===================================================================================================================================
@@ -183,11 +185,11 @@ void Game::initialize() {
 
 	// ツリー
 	treeManager = new TreeManager;
-	treeManager->initialize();
+	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// アイテム
 	itemManager = new ItemManager;
-	itemManager->initialize();
+	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// テロップ
 	telop = new Telop;
@@ -198,6 +200,11 @@ void Game::initialize() {
 	aiDirector->initialize();
 	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviAI->initialize();
+
+	//Sprite実験
+	spriteGauge = new SpriteGauge;
+	spriteGauge->initialize();
+
 }
 
 //===================================================================================================================================
@@ -207,6 +214,7 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(light);
+	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(maleRenderer);
 	SAFE_DELETE(femaleRenderer);
@@ -221,6 +229,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(telop);
 	SAFE_DELETE(aiDirector);
+	SAFE_DELETE(spriteGauge);
 }
 
 //===================================================================================================================================
@@ -234,8 +243,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	//if (frameTime > 0.10)return;
-
+	if (frameTime > 0.10)return;
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -249,39 +257,13 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-	//enemy->update(frameTime);
-	if (input->wasKeyPressed('8'))
-	{
-		enemyNS::EnemyData tinko;
-		tinko.zeroClear();
-		tinko.id = enemyManager->issueNewID();
-		tinko.type = enemyNS::WOLF;
-		tinko.defaultPosition = *player[gameMasterNS::PLAYER_1P].getPosition();
-		tinko.setUp();
-		enemyManager->createEnemy(&tinko);
-	}
-	if (input->wasKeyPressed('7'))
-	{
-		enemyManager->destroyAllEnemy();
-	}
-	if (input->wasKeyPressed('6'))
-	{
-		enemyManager->destroyEnemy(3);
-	}
 
 	// ツリーの更新
 	treeManager->update(frameTime);
 
 	// アイテムの更新
-	if (input->wasKeyPressed('0'))
-	{
-		itemNS::ItemData unko = { 0, itemNS::BATTERY, *player[gameMasterNS::PLAYER_1P].getPosition() };
-		itemManager->createItem(&unko);
-	}
-	if (input->wasKeyPressed('9'))
-	{
-		itemManager->destroyAllItem();
-	}
+	itemManager->update(frameTime);
+
 
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
@@ -331,8 +313,6 @@ void Game::update(float _frameTime) {
 #pragma endregion
 
 
-	itemManager->update(frameTime);
-
 	// テロップの更新
 	telop->update(frameTime);
 	
@@ -366,6 +346,10 @@ void Game::update(float _frameTime) {
 		// シーン遷移
 		changeScene(nextScene);
 	}
+
+#ifdef _DEBUG
+	test();
+#endif
 }
 
 //===================================================================================================================================
@@ -449,14 +433,17 @@ void Game::render3D(Camera currentCamera) {
 //===================================================================================================================================
 void Game::renderUI() {
 
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						// αブレンドを行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
-	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);			// αデスティネーションカラーの指定
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
 	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
+	//Sprite実験
+	spriteGauge->render();
+	
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
@@ -469,15 +456,18 @@ void Game::renderUI() {
 void Game::collisions() 
 {
 	// プレイヤーとアイテム
-	std::vector<Item*> itemList = itemManager->getList();
+	std::vector<Item*> itemList = itemManager->getItemList();
 	for (size_t i = 0; i < itemList.size(); i++)
 	{	
-		for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
 		{
-			if (itemList[i]->sphereCollider.collide(player[i].getBodyCollide()->getCenter(),
-				player[i].getRadius(), *itemList[i]->getMatrixWorld(), *player[i].getMatrixWorld()))
+			if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
+				player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
 			{
-				player[i].addSpeed(D3DXVECTOR3(0, 10, 0));
+				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
+				player[j].addpower(playerNS::RECOVERY_POWER);				//電力加算
+				SoundInterface::playSound(playParameters[3]);	//SE再生
+				itemManager->destroyAllItem();					//デリート(今は全消し)
 			}
 		}
 	}
@@ -502,11 +492,106 @@ void Game::createGUI()
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
 	player->outputGUI();			//プレイヤー
-	//enemy->outputGUI();			//エネミー
+	enemyManager->outputGUI();		// エネミーマネージャ
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	naviAI->outputGUI();			//ナビゲーションAI
-
 }
 #endif // _DEBUG
+
+
+//===================================================================================================================================
+//【なんかいろいろテストするところ】
+//===================================================================================================================================
+void Game::test()
+{
+	// アイテムマネージャのテスト
+	if (input->wasKeyPressed('0'))
+	{
+		itemNS::ItemData unko = { itemManager->issueNewItemID(), itemNS::BATTERY, *player->getPosition() };
+		itemManager->createItem(unko);
+	}
+	// 3Dモデル表示確認用（アイテムの更新）
+	if (input->wasKeyPressed('P'))
+	{
+		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
+		itemManager->createItem(abc);
+	}
+
+	if (input->wasKeyPressed('9'))
+	{
+		itemManager->destroyAllItem();
+		//itemManager->destroyItem(3);
+	}
+
+	//エネミーマネージャのテスト
+	if (input->wasKeyPressed('8'))	// 作成
+	{
+		enemyNS::ENEMYSET tinko =
+		{
+			enemyManager->issueNewEnemyID(),
+			enemyNS::WOLF,
+			enemyNS::CHASE,
+			*player->getPosition(),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
+		enemyManager->createEnemy(p);
+	}
+
+	if (input->wasKeyPressed('7'))	// 全破棄
+	{
+		enemyManager->destroyAllEnemy();
+		enemyManager->destroyAllEnemyData();
+	}
+	if (input->wasKeyPressed('6'))	// 0-50（ID）までランダムに破棄
+	{
+		//enemyManager->destroyEnemy(5);
+		//enemyManager->destroyEnemyData(5);
+
+		static bool rec[50] = { false };
+		for (int i = 0; i < 50; i++)
+		{
+			int n = rand() % 50;
+			if (rec[n] == false)
+			{
+				rec[n] = true;
+				enemyManager->destroyEnemy(n);
+				enemyManager->destroyEnemyData(n);
+				break;
+			}
+		}
+	}
+
+	//enemyNS::ENEMYSET temp =
+	//{
+	//	enemyManager->issueNewEnemyID(),
+	//	enemyNS::WOLF,
+	//	enemyNS::CHASE,
+	//	D3DXVECTOR3(),
+	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	//};
+
+
+
+
+	// ツリーマネージャのテスト
+	if (input->wasKeyPressed('5'))	// 作成
+	{
+		treeNS::TreeData treeData;
+		treeData.geenState = treeNS::GREEN;
+		treeData.model = treeNS::A_MODEL;
+		treeData.initialPosition = *player->getPosition();
+		treeManager->createTree(treeData);
+	}
+	if (input->wasKeyPressed('4'))	// リーフ3番のみ描画を切る
+	{
+		treeManager->unRegisterLeafRendering(treeManager->getTreeList()[3]->getLeaf(),
+			treeManager->getTreeList()[3]->getTreeData()->model);
+	}	
+	if (input->wasKeyPressed('3'))	// 全破棄
+	{
+		treeManager->destroyAllTree();
+	}
+}

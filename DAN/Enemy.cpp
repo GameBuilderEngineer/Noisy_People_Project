@@ -5,10 +5,8 @@
 //-----------------------------------------------------------------------------
 #include "Enemy.h"
 #include "ImguiManager.h"
-
 using namespace enemyNS;
 
-int EnemyData::numOfEnemyData = 0;	// エネミーデータの数
 int Enemy::numOfEnemy = 0;			// エネミーの数
 
 
@@ -18,18 +16,17 @@ int Enemy::numOfEnemy = 0;			// エネミーの数
 Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 {
 	numOfEnemy++;							// エネミーの数を加算
-	//enemyData = _enemyData;					// エネミーデータをセット
+	enemyData = _enemyData;					// エネミーデータをセット
 
 	difference = DIFFERENCE_FIELD;			// 必要性要検討
 	onGravity = true;
-	enemyData = new EnemyData;
-	enemyData->id = _enemyData->id;
-	enemyData->type = WOLF;
-	position = _enemyData->position;//enemyData->position;
+	position = enemyData->position;
+	axisZ.direction = enemyData->direction;
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	friction = 1.0f;
 	Object::initialize(&position);
+	Object::axisZ.direction = axisZ.direction;
 }
 
 
@@ -59,6 +56,8 @@ void Enemy::update(float frameTime)
 	physicalBehavior();			// 物理挙動
 	updatePhysics(frameTime);	// 物理の更新
 	Object::update();			// オブジェクトの更新
+
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1.0f * frameTime);
 
 	// エネミーデータの更新
 	enemyData->position = position;
@@ -330,6 +329,7 @@ void Enemy::outputGUI()
 //=============================================================================
 // Getter
 //=============================================================================
+int Enemy::getEnemyID() { return enemyData->enemyID; }
 int Enemy::getNumOfEnemy(){ return numOfEnemy; }
 EnemyData* Enemy::getEnemyData() { return enemyData; }
 
@@ -339,3 +339,4 @@ EnemyData* Enemy::getEnemyData() { return enemyData; }
 //=============================================================================
 void Enemy::setDataToEnemy(EnemyData* _enemyData){	enemyData = _enemyData;}
 void Enemy::setCamera(Camera* _camera) { camera = _camera; }
+void Enemy::resetNumOfEnemy() { numOfEnemy = 0; }

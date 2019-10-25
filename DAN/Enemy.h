@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshRenderer.h"
+#include "Object.h"
 #include "BoundingSphere.h"
 #include "Input.h"
 #include "Camera.h"
@@ -15,6 +15,7 @@
 //=============================================================================
 namespace enemyNS
 {
+#if _DEBUG
 	struct OperationKeyTable
 	{
 		BYTE front;
@@ -36,7 +37,7 @@ namespace enemyNS
 		VK_F11,		// ReverseCameraAxisX
 		VK_F12,		// ReverseCameraAxisY
 	};
-
+#endif //_DEBUG
 
 	// エネミーの種類
 	enum ENEMY_TYPE
@@ -80,10 +81,10 @@ namespace enemyNS
 
 
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
-	// エネミー配置ツールとのデータ交換に使用する
+	// 新規エネミー作成やエネミー配置ツールとのデータ交換に使用する
 	typedef struct EnemyInitialSettingData
 	{
-		int id;							// 識別番号(0..*)
+		int enemyID;					// 識別番号(0..*)
 		int type;						// エネミー種別
 		int defaultState;				// 初期ステート	
 		D3DXVECTOR3 defaultPosition;	// 初期座標
@@ -95,7 +96,7 @@ namespace enemyNS
 	// EnemyクラスオブジェクトはEnemyDataのポインタを介してステータスを参照する
 	struct EnemyData
 	{
-		int id;							// 識別番号(0..*)
+		int enemyID;					// 識別番号(0..*)
 		int type;						// エネミー種別
 		int state;						// ステート
 		int defaultState;				// 初期ステート	
@@ -105,10 +106,7 @@ namespace enemyNS
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 		int hp;							// HP
 		bool isAlive;					// 生存フラグ
-		static int numOfEnemyData;		// エネミーデータの数
 
-		EnemyData() { numOfEnemyData++; }
-		~EnemyData() { numOfEnemyData--; }
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
 		void setUp()
 		{
@@ -118,7 +116,6 @@ namespace enemyNS
 			hp = type >= 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
 			isAlive = true;
 		}
-		static int getNumOfEnemyData() { return numOfEnemyData; }
 	};
 }
 
@@ -141,7 +138,6 @@ private:
 	float friction;
 
 #ifdef _DEBUG
-#endif
 	// デバッグ用
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
 	Camera*	camera;						// 操作するカメラへのポインタ
@@ -149,6 +145,7 @@ private:
 	enemyNS::OperationKeyTable keyTable;// 操作キーテーブル
 	float reverseValueXAxis;			// 操作X軸
 	float reverseValueYAxis;			// 操作Y軸
+#endif	//_DEBUG
 
 	void previousWork();				// 事前処理
 	virtual void chase() = 0;			//「追跡」ステート
@@ -158,11 +155,11 @@ private:
 
 
 public:
+	BoundingSphere sphereCollider;		// バウンディングスフィア
+
 	Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
 	~Enemy();
 	virtual void update(float frameTime);
-	BoundingSphere sphereCollider;		// バウンディングスフィア
-
 	void grounding();
 	void physicalBehavior();
 	void updatePhysics(float frameTime);
@@ -177,11 +174,12 @@ public:
 	bool isGoingMoveOperation;
 
 	// Getter
+	int getEnemyID();										// IDを取得
 	static int getNumOfEnemy();								// エネミーの数を取得
 	enemyNS::EnemyData* getEnemyData();						// エネミーデータを取得
 
 	//setter
 	void setDataToEnemy(enemyNS::EnemyData* _enemyData);	// エネミーデータをエネミーに設定
 	void setCamera(Camera* _camera);						// 操作対象カメラのセット
-
+	static void resetNumOfEnemy();							// エネミーの数をリセットする
 };

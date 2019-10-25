@@ -103,6 +103,7 @@ namespace playerNS{
 	const int	MAX_HP						= 100;									// ＨＰ最大値
 	const int	FULL_POWER					= 100;									// 電力ゲージ一本
 	const int	MAX_POWER					= FULL_POWER * 3;						// 電力ゲージ最大値
+	const int	MIN_POWER					= 0;									// 電力ゲージ最低値
 	const float INVINCIBLE_TIME				= 3.0f;									// 無敵時間
 
 	// Physics
@@ -120,6 +121,7 @@ namespace playerNS{
 	// Another
 	const float DIFFERENCE_FIELD			= 0.05f;								// フィールド補正差分
 	const float CAMERA_SPEED				= 1.0f;									// カメラの速さ
+	const int	RECOVERY_POWER				= 85;									// 電力回復量
 }
 
 
@@ -214,6 +216,8 @@ public:
 
 	//setter
 	void setCamera(Camera* _camera);							//操作対象カメラのセット
+	void addpower(int add);
+	void pullpower(int pull);
 	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
 
 	//getter

@@ -16,9 +16,6 @@
     <Filter Include="Constant Layer\Director">
       <UniqueIdentifier>{ac8ea6bd-cd66-4c0d-b6a9-b751668a208f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Window">
-      <UniqueIdentifier>{4935992b-a248-43f0-bda5-cd86a6f20f76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Readme">
       <UniqueIdentifier>{5cf713e1-532d-469a-921f-eb2022ae8805}</UniqueIdentifier>
     </Filter>
@@ -223,6 +220,18 @@
     <Filter Include="Resorce Layer\05 Tools File">
       <UniqueIdentifier>{63e3b90d-bc33-44c1-8533-0e03e751fc34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools Layer\Item">
+      <UniqueIdentifier>{56ac98f0-8c78-4db4-a080-f4a064c6558b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Tree">
+      <UniqueIdentifier>{08416a62-4fc1-438d-9a11-b54dc416b8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\MapObject">
+      <UniqueIdentifier>{78c1c572-0420-4a00-8a77-72463758a48a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Window">
+      <UniqueIdentifier>{4935992b-a248-43f0-bda5-cd86a6f20f76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -235,7 +244,7 @@
       <Filter>Constant Layer\Director</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Constant Layer\Window</Filter>
+      <Filter>Game Layer\Window</Filter>
     </ClCompile>
     <ClCompile Include="Direct3D9.cpp">
       <Filter>Constant Layer\Direct3D9</Filter>
@@ -433,6 +442,13 @@
     <ClCompile Include="ResultUIcpp.cpp">
       <Filter>Game Layer\Scene\Result</Filter>
     </ClCompile>
+    <ClCompile Include="exampleItem.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGauge.cpp">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffectOccurrence.cpp" />
     <ClCompile Include="EffekseerManager.cpp">
       <Filter>Constant Layer\Effekseer</Filter>
     </ClCompile>
@@ -457,11 +473,29 @@
     <ClCompile Include="Wolf.cpp">
       <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Tiger.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Bear.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemTools.cpp">
+      <Filter>Tools Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeToools.cpp">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectTool.cpp">
+      <Filter>Tools Layer\MapObject</Filter>
+    </ClCompile>
     <ClCompile Include="StaticMeshRenderer.cpp">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="LinearTreeCell.cpp">
       <Filter>Constant Layer\LinearTreeCell</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryDebug.cpp">
+      <Filter>Game Layer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -472,7 +506,7 @@
       <Filter>Constant Layer\Director</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Constant Layer\Window</Filter>
+      <Filter>Game Layer\Window</Filter>
     </ClInclude>
     <ClInclude Include="Direct3D9.h">
       <Filter>Constant Layer\Direct3D9</Filter>
@@ -717,8 +751,33 @@
     <ClInclude Include="Wolf.h">
       <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Tiger.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
     <ClInclude Include="StaticMeshRenderer.h">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemTools.h">
+      <Filter>Tools Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeToools.h">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectTool.h">
+      <Filter>Tools Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="exampleItem.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGauge.h">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffectOccurrence.h" />
+    <ClInclude Include="MemoryDebug.h">
+      <Filter>Game Layer</Filter>
     </ClInclude>
     <ClInclude Include="LinearTreeCell.h">
       <Filter>Constant Layer\LinearTreeCell</Filter>

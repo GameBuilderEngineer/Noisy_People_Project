@@ -13,13 +13,13 @@ int Item::numOfItem = 0;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Item::Item(StaticMesh* _staticMesh, ItemData* _itemData)
+Item::Item(StaticMesh* _staticMesh, ItemData _itemData)
 {
 	numOfItem++;
 
 	onGravity = true;
 	itemData = _itemData;
-	position = itemData->initialPosition;
+	position = itemData.defaultPosition;
 	Object::initialize(&position);
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 }
@@ -44,13 +44,23 @@ void Item::update(float frameTime)
 
 
 //=============================================================================
+// 重力発生メッシュ（接地メッシュ）の設定
+//=============================================================================
+void Item::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
+{
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
+}
+
+
+//=============================================================================
 // Getter
 //=============================================================================
 int Item::getNumOfItem(){ return numOfItem; }
-ItemData* Item::getItemData() { return itemData; }
+ItemData* Item::getItemData() { return &itemData; }
 
 
 //=============================================================================
 // Setter
 //=============================================================================
-void Item::setDataToItem(ItemData* _itemData) { itemData = _itemData; }
+void Item::setDataToItem(ItemData _itemData) { itemData = _itemData; }
