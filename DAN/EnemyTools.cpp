@@ -103,7 +103,7 @@ int ENEMY_TOOLS::GetEnemyMax(void)
 enemyNS::ENEMYSET ENEMY_TOOLS::GetEnemySet(short enemyId)
 {
 	enemyNS::ENEMYSET tmpEnemySet = { 0 };
-	tmpEnemySet.id = enemyFile.efmt[enemyId].enemyId;
+	tmpEnemySet.enemyID = enemyFile.efmt[enemyId].enemyId;
 	tmpEnemySet.type = enemyFile.efmt[enemyId].enemyType;
 	tmpEnemySet.defaultState = enemyFile.efmt[enemyId].enemyState;
 	tmpEnemySet.defaultPosition = D3DXVECTOR3(enemyFile.efmt[enemyId].posX, enemyFile.efmt[enemyId].posY, enemyFile.efmt[enemyId].posZ);
@@ -354,10 +354,10 @@ int ENEMY_TOOLS::GetStaticMeshID(short enemyType)
 		staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
 		break;
 	case enemyNS::ENEMY_TYPE::TIGER:
-		staticMeshNo = staticMeshNS::SAMPLE_BUNNY;
+		staticMeshNo = staticMeshNS::STONE_001;
 		break;
 	case enemyNS::ENEMY_TYPE::BEAR:
-		staticMeshNo = staticMeshNS::SAMPLE_HAT;
+		staticMeshNo = staticMeshNS::STONE_002;
 		break;
 	default:
 		break;

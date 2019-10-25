@@ -101,7 +101,7 @@ int ITEM_TOOLS::GetItemMax(void)
 itemNS::ITEMSET ITEM_TOOLS::GetItemSet(short itemId)
 {
 	itemNS::ITEMSET tmpItemSet = { 0 };
-	tmpItemSet.id = itemFile.ifmt[itemId].itemId;
+	tmpItemSet.itemID = itemFile.ifmt[itemId].itemId;
 	tmpItemSet.type = itemFile.ifmt[itemId].itemType;
 	tmpItemSet.defaultPosition = D3DXVECTOR3(itemFile.ifmt[itemId].posX, itemFile.ifmt[itemId].posY, itemFile.ifmt[itemId].posZ);
 	tmpItemSet.defaultDirection = D3DXVECTOR3(itemFile.ifmt[itemId].dirX, itemFile.ifmt[itemId].dirY, itemFile.ifmt[itemId].dirZ);

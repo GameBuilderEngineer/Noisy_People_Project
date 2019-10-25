@@ -94,10 +94,10 @@ void Create::initialize() {
 			staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
 			break;
 		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_TIGER:
-			staticMeshNo = staticMeshNS::SAMPLE_BUNNY;
+			staticMeshNo = staticMeshNS::STAR_REGULAR_POLYHEDRON;
 			break;
 		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_BEAR:
-			staticMeshNo = staticMeshNS::SAMPLE_HAT;
+			staticMeshNo = staticMeshNS::DICE;
 			break;
 		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_BATTERY:
 			staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
@@ -388,10 +388,10 @@ int Create::getBufferID(int meshID)
 	case staticMeshNS::SAMPLE_REDBULL:
 		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_WOLF;
 		break;
-	case staticMeshNS::SAMPLE_BUNNY:
+	case staticMeshNS::STAR_REGULAR_POLYHEDRON:
 		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_TIGER;
 		break;
-	case staticMeshNS::SAMPLE_HAT:
+	case staticMeshNS::DICE:
 		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_BEAR;
 		break;
 	case staticMeshNS::SAMPLE_SCISSORS:
