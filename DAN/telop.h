@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Telop.h"
-
+#include "Sprite.h"
 
 //=============================================================================
 // 名前空間
@@ -15,7 +15,14 @@ namespace telopNS
 	// テロップタイプ
 	enum TYPE
 	{
-
+		TELOP_TYPE0,
+		TELOP_TYPE1,
+		TELOP_TYPE2,
+		TELOP_TYPE3,
+		TELOP_TYPE4,
+		TELOP_TYPE5,
+		TELOP_TYPE6,
+		MAX_TELOP
 	};
 }
 
@@ -26,6 +33,7 @@ namespace telopNS
 class Telop
 {
 private:
+	Sprite *telop = new Sprite;
 
 public:
 	void initialize();

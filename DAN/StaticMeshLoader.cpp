@@ -36,7 +36,7 @@ StaticMeshLoader::StaticMeshLoader()
 
 	fileName[SAMPLE_BUNNY]							= { "toybunny.x" };							//01
 	fileName[SAMPLE_PAPER]							= { "paper.x" };							//02
-	fileName[SAMPLE_REDBULL]						= { "redbull.x" };							//03
+	fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
 	fileName[SAMPLE_SHOES]							= { "shoes.x" };							//04
 	fileName[SAMPLE_TEAPOT]							= { "teapot.x" };							//05
 	fileName[SAMPLE_LIGHT]							= { "light.x" };							//06
@@ -51,7 +51,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[GRASS]									= { "grass001.x" };							//04
 	fileName[STONE_001]								= { "stone001.x" };							//05
 	fileName[STONE_002]								= { "stone002.x" };							//06
-	fileName[STONE_003]								= { "stone003.x" };							//07
+	fileName[STONE_003]								= { "Rocks.x" };							//07
 
 	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
 	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02

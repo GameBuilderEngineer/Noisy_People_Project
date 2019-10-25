@@ -293,6 +293,9 @@ void Game::update(float _frameTime) {
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
 
+	//電力減少（電力回復確認用）
+	player->pullpower(1);
+
 	//カメラの更新
 	camera->update();
 
@@ -418,7 +421,7 @@ void Game::collisions()
 		{
 			//itemManager->destroyItem();
 			player->addSpeed(D3DXVECTOR3(0, 10, 0));
-			player->addpower(playerNS::RECOVERY_POWER);				//電力加算
+			player->addpower(batteryNS::RECOVERY_POWER);				//電力加算
 			SoundInterface::playSound(playParameters[3]);	//SE再生
 			itemManager->destroyAllItem();					//デリート(今は全消し)
 		}
