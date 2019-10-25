@@ -68,7 +68,8 @@ public:
 	itemNS::ITEMSET GetItemSet(short itemId);				//アイテムセット構造体を取得
 
 #ifdef _DEBUG
-	//変数	
+	//変数
+	int ItemListboxType;									//アイテムの種類(リストボックス)
 	BoundingSphere *bodyCollide;							//当たり判定
 	Object** object;										//オブジェクト
 
@@ -77,13 +78,14 @@ public:
 		const D3DXVECTOR3 pos,const D3DXVECTOR3 dir);
 
 	//レンダラー
+	int  GetStaticMeshID(short itemType);					//メッシュIDを取得
 	void initRender();										//レンダラーの初期化
 	void initObject();										//オブジェクトの初期化
 	void update();											//更新
 	void render(D3DXMATRIX view,							//描画
 		D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void generate(Object *object, short enemyType,			//作成
-		D3DXVECTOR3 position);
+		D3DXVECTOR3 position, D3DXVECTOR3 dir);
 #endif
 
 private:
@@ -100,11 +102,9 @@ private:
 	StaticMeshRenderer** renderer;							//レンダラー
 	bool needUpdate;										//更新フラグ
 	int ItemListboxCurrent;									//アイテム選択用(リストボックス)
-	int ItemListboxType;									//アイテムの種類(リストボックス)
 
 	//レンダラー
 	void ResetRenderer(void);								//レンダラーをリセット
-	int  GetStaticMeshNo(short itemType);					//メッシュIDを取得
 
 	//アイテムフォーマット構造体
 	void UpdateIfmt(int oldItemMax);						//アイテムのフォーマット構造体を整理

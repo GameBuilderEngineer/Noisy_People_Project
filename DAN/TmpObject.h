@@ -36,10 +36,9 @@ namespace tmpObjNS {
 		BYTE right;
 		BYTE left;
 		BYTE reset;
+		BYTE spin;
 		BYTE down;
 		BYTE fly;
-		BYTE reverseCameraX;
-		BYTE reverseCameraY;
 	};
 
 	const OperationKeyTable KEY_TABLE_1P = {
@@ -48,10 +47,9 @@ namespace tmpObjNS {
 		'D',					//RIGHT
 		'A',					//LEFT
 		'R',					//RESET
+		'E',					//SPIN
 		VK_LSHIFT,				//DASH
 		VK_SPACE,				//JUMP
-		VK_F11,					//ReverseCameraAxisX
-		VK_F12,					//ReverseCameraAxisY
 	};
 
 	const OperationKeyTable NON_CONTOROL = {
@@ -62,8 +60,6 @@ namespace tmpObjNS {
 		VK_ESCAPE,		//RESET
 		VK_ESCAPE,		//DASH
 		VK_ESCAPE,		//JUMP
-		VK_ESCAPE,		//ReverseCameraAxisX
-		VK_ESCAPE,		//ReverseCameraAxisY
 	};
 
 	const BYTE BUTTON_JUMP = virtualControllerNS::B;
@@ -151,6 +147,5 @@ public:
 
 	//getter
 	int getState();
-	int getItemListboxMesh() { return ItemListboxMesh; }
 	BoundingSphere* getBodyCollide();							//‹…ƒRƒŠƒWƒ‡ƒ“‚ÌŽæ“¾
 };

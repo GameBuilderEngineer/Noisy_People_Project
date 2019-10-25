@@ -96,6 +96,11 @@ void TmpObject::update(float frameTime)
 		speed.y -= 10.0f;
 	}
 
+	if (input->isKeyDown(keyTable.spin))
+	{//回転
+		Object::anyAxisRotation(axisY.direction, 1);
+	}
+
 	if (input->wasKeyPressed(keyTable.reset))
 	{// リセット
 		reset();
@@ -194,9 +199,9 @@ void TmpObject::moveOperation()
 //===================================================================================================================================
 void TmpObject::controlCamera(float frameTime)
 {
-	//操作軸反転操作
-	if (input->wasKeyPressed(keyTable.reverseCameraX))reverseValueXAxis *= -1;
-	if (input->wasKeyPressed(keyTable.reverseCameraY))reverseValueYAxis *= -1;
+	////操作軸反転操作
+	//if (input->wasKeyPressed(keyTable.reverseCameraX))reverseValueXAxis *= -1;
+	//if (input->wasKeyPressed(keyTable.reverseCameraY))reverseValueYAxis *= -1;
 	//マウス操作
 	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
 	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
@@ -259,7 +264,6 @@ void TmpObject::outputGUI()
 
 		ImGui::Text("speedVectorLength %f", D3DXVec3Length(&speed));
 
-
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
 		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);						//スケール
@@ -272,34 +276,33 @@ void TmpObject::outputGUI()
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
 
-			//エネミーの状態
-		const char* listboxMesh[] = { "PLAYER", "WOLF", "TIGER","BEAR" ,"BATTERY" };
-		ImGui::ListBox("Mesh", &ItemListboxMesh, listboxMesh, TMPOBJ_LIST::TMPOBJ_MAX);
-		switch (ItemListboxMesh)
-		{
-		case TMPOBJ_LIST::TMPOBJ_PLAYER:
-			staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
-			break;
-		case TMPOBJ_LIST::TMPOBJ_WOLF:
-			staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
-			break;
-		case TMPOBJ_LIST::TMPOBJ_TIGER:
-			staticMeshNo = staticMeshNS::SAMPLE_BUNNY;
-			break;
-		case TMPOBJ_LIST::TMPOBJ_BEAR:
-			staticMeshNo = staticMeshNS::SAMPLE_HAT;
-			break;
-		case TMPOBJ_LIST::TMPOBJ_BATTERY:
-			staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
-			break;
-		default:
-			break;
-		}
-		if (oldMeshId != staticMeshNo)
-		{
-			resetMesh(staticMeshNo);
-			oldMeshId = staticMeshNo;
-		}
+		////エネミーの状態
+		//const char* listboxMesh[] = { "PLAYER", "WOLF", "TIGER","BEAR" ,"BATTERY" };
+		//ImGui::ListBox("Mesh", &ItemListboxMesh, listboxMesh, TMPOBJ_LIST::TMPOBJ_MAX);
+		//switch (ItemListboxMesh)
+		//{
+		//case TMPOBJ_LIST::TMPOBJ_PLAYER:
+		//	staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
+		//	break;
+		//case TMPOBJ_LIST::TMPOBJ_WOLF:
+		//	staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
+		//	break;
+		//case TMPOBJ_LIST::TMPOBJ_TIGER:
+		//	staticMeshNo = staticMeshNS::SAMPLE_BUNNY;
+		//	break;
+		//case TMPOBJ_LIST::TMPOBJ_BEAR:
+		//	staticMeshNo = staticMeshNS::SAMPLE_HAT;
+		//	break;
+		//case TMPOBJ_LIST::TMPOBJ_BATTERY:
+		//	staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
+		//	break;
+		//default:
+		//	break;
+		//}
+		//if (oldMeshId != staticMeshNo)
+		//{
+		//	resetMesh(staticMeshNo);
+		//}
 	}
 #endif // _DEBUG
 }

@@ -174,7 +174,6 @@ void Create::update(float _frameTime) {
 	//プレイヤーの更新
 	tmpObject->update(frameTime);
 
-
 	// アイテムの更新
 	if (input->wasKeyPressed('0'))
 	{
@@ -245,7 +244,7 @@ void Create::render3D(Camera currentCamera) {
 	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
-	tmpObjRenderer[tmpObject->getItemListboxMesh()]->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	tmpObjRenderer[getBufferID(meshId)]->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
 	tmpObject->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -303,9 +302,9 @@ void Create::createGUI()
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
-	tmpObject->outputGUI();			//プレイヤー
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
+	tmpObject->outputGUI();			//プレイヤー
 	toolsGUI();						//ツール
 }
 
@@ -324,6 +323,29 @@ void Create::toolsGUI()
 
 		enemyTools->outputEnemyToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 		itemTools->outputItemToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
+		
+		int backupMeshId = meshId;
+		switch (ToolsListboxType)
+		{
+		case TOOLS_TYPE::TOOLS_NONE:
+			break;
+		case TOOLS_TYPE::TOOLS_ENEMY:
+			meshId = enemyTools->GetStaticMeshID(enemyTools->EnemyListboxType);
+			break;
+		case TOOLS_TYPE::TOOLS_ITEM:
+			meshId = itemTools->GetStaticMeshID(itemTools->ItemListboxType);
+			break;
+		case TOOLS_TYPE::TOOLS_TREE:
+			break;
+		case TOOLS_TYPE::TOOLS_MAP_OBJECT:
+			break;
+		default:
+			break;
+		}
+		if (backupMeshId != meshId)
+		{
+			tmpObject->resetMesh(meshId);
+		}
 	}
 }
 
@@ -351,6 +373,36 @@ void Create::collideGUI()
 			ImGui::Text("%d", i);
 		}
 	}
+}
+
+//===================================================================================================================================
+//【バッファIDを取得 meshID->bufferID】
+//===================================================================================================================================
+int Create::getBufferID(int meshID)
+{
+	switch (meshID)
+	{
+	case staticMeshNS::YAMADA_ROBOT2:
+		return  tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER;
+		break;
+	case staticMeshNS::SAMPLE_REDBULL:
+		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_WOLF;
+		break;
+	case staticMeshNS::SAMPLE_BUNNY:
+		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_TIGER;
+		break;
+	case staticMeshNS::SAMPLE_HAT:
+		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_BEAR;
+		break;
+	case staticMeshNS::SAMPLE_SCISSORS:
+		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_BATTERY;
+		break;
+	default:
+		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER;
+		break;
+	}
+
+	return tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER;
 }
 
 #endif // _DEBUG

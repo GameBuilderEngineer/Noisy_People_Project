@@ -90,9 +90,11 @@ public:
 
 #ifdef _DEBUG
 	int ToolsListboxType;
+	int meshId;
 
 	virtual void createGUI() override;
 	void toolsGUI();
 	void collideGUI();
+	int  getBufferID(int meshID);
 #endif
 };

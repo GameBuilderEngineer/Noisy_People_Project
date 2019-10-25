@@ -193,7 +193,7 @@ void ENEMY_TOOLS::initRender()
 	renderer = new StaticMeshRenderer*[enemyNS::ENEMY_TYPE::TYPE_MAX];
 	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
 	{
-		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(GetStaticMeshNo(i)));
+		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(GetStaticMeshID(i)));
 	}
 
 	//更新フラグ
@@ -212,12 +212,13 @@ void ENEMY_TOOLS::initObject()
 	{
 		//オブジェクトの生成
 		object[i] = new Object();
-		generate(object[i], enemyFile.efmt[i].enemyType, D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ));
+		generate(object[i], enemyFile.efmt[i].enemyType, D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ),
+			D3DXVECTOR3(enemyFile.efmt[i].dirX, enemyFile.efmt[i].dirY, enemyFile.efmt[i].dirZ));
 		renderer[enemyFile.efmt[i].enemyType]->updateAccessList();
 
 		// コライダの初期化
 		bodyCollide->initialize(&D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ),
-			staticMeshNS::reference(GetStaticMeshNo(enemyFile.efmt[i].enemyType))->mesh);	
+			staticMeshNS::reference(GetStaticMeshID(enemyFile.efmt[i].enemyType))->mesh);	
 	}
 }
 
@@ -253,9 +254,10 @@ void ENEMY_TOOLS::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 //===================================================================================================================================
 //【生成】描画用
 //===================================================================================================================================
-void ENEMY_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position)
+void ENEMY_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position, D3DXVECTOR3 dir)
 {
 	object->initialize(&position);
+	object->postureControl(object->axisZ.direction, dir, 1.0f);
 	object->existenceTimer = 1.0f;		// < 0 なら消える
 	renderer[enemyType]->registerObject(object);
 }
@@ -343,7 +345,7 @@ void ENEMY_TOOLS::ResetRenderer(void)
 //===================================================================================================================================
 //【スタティックメッシュのIDを取得】描画用
 //===================================================================================================================================
-int ENEMY_TOOLS::GetStaticMeshNo(short enemyType)
+int ENEMY_TOOLS::GetStaticMeshID(short enemyType)
 {
 	int staticMeshNo = 0;
 	switch (enemyType)
