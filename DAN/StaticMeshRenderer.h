@@ -99,5 +99,6 @@ public:
 
 	//getter
 	StaticMesh* getStaticMesh();
+	int			getObjectNum();
 
 };
