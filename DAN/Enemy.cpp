@@ -329,6 +329,7 @@ void Enemy::outputGUI()
 //=============================================================================
 // Getter
 //=============================================================================
+int Enemy::getEnemyID() { return enemyData->enemyID; }
 int Enemy::getNumOfEnemy(){ return numOfEnemy; }
 EnemyData* Enemy::getEnemyData() { return enemyData; }
 

@@ -338,3 +338,5 @@ void EnemyManager::relocateEnemyAccordingToFile()
 //=============================================================================
 LinkedList<enemyNS::EnemyData>* EnemyManager::getEnemyDataList() { return &enemyDataList; }
 std::vector<Enemy*>& EnemyManager::getEnemyList() { return enemyList; }
+int EnemyManager::getNextID() { return nextID; }
+

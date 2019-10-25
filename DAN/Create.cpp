@@ -108,11 +108,11 @@ void Create::initialize() {
 
 	// ツリー
 	treeManager = new TreeManager;
-	treeManager->initialize();
+	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// アイテム
 	itemManager = new ItemManager;
-	itemManager->initialize();
+	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 }
 
@@ -299,16 +299,6 @@ void Create::renderUI() {
 //===================================================================================================================================
 void Create::collisions()
 {
-	// プレイヤーとアイテム
-	std::vector<Item*> itemList = itemManager->getList();
-	for (size_t i = 0; i < itemList.size(); i++)
-	{
-		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),
-			player->getRadius(), *itemList[i]->getMatrixWorld(), *player->getMatrixWorld()))
-		{
-			player->addSpeed(D3DXVECTOR3(0, 10, 0));
-		}
-	}
 }
 
 //===================================================================================================================================

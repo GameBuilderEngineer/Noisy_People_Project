@@ -17,6 +17,7 @@
 #include "Result.h"
 #include "Create.h"
 #include "SE.h"
+#include "MemoryDebug.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -156,6 +157,9 @@ HRESULT Director::initialize() {
 	//
 	//scene = new Splash();
 	//scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+
+	//MemoryDebug debug;
+	//debug.debugSpawnManager();
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)

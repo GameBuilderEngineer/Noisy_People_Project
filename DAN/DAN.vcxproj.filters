@@ -482,6 +482,9 @@
     <ClCompile Include="StaticMeshRenderer.cpp">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryDebug.cpp">
+      <Filter>Game Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -761,6 +764,9 @@
       <Filter>Constant Layer\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="TestEffectOccurrence.h" />
+    <ClInclude Include="MemoryDebug.h">
+      <Filter>Game Layer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/  /
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshRenderer.h"
+#include "Object.h"
 #include "BoundingSphere.h"
 
 
@@ -38,6 +38,8 @@ class Item: public Object
 {
 private:
 	itemNS::ItemData itemData;
+	LPD3DXMESH	attractorMesh;				// 重力（引力）発生メッシュ
+	D3DXMATRIX*	attractorMatrix;			// 重力（引力）発生オブジェクトマトリックス
 
 	// Static
 	static int numOfItem;					// アイテムオブジェクトの総数
@@ -47,6 +49,7 @@ public:
 	Item(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
 	~Item();
 	virtual void update(float frameTime);
+	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 
 	// Getter
 	static int getNumOfItem();				// アイテムの数を取得

@@ -6,6 +6,7 @@
 #pragma once
 #include "Base.h"
 #include <vector>
+#include "StaticMeshRenderer.h"
 #include "LinkedList.h"
 #include "EnemyTools.h"
 #include "Enemy.h"
@@ -58,4 +59,5 @@ public:
 	// Getter
 	LinkedList<enemyNS::EnemyData>* getEnemyDataList();
 	std::vector<Enemy*>& getEnemyList();
+	int getNextID();
 };

@@ -151,11 +151,11 @@ void Game::initialize() {
 
 	// ツリー
 	treeManager = new TreeManager;
-	treeManager->initialize();
+	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// アイテム
 	itemManager = new ItemManager;
-	itemManager->initialize();
+	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// テロップ
 	telop = new Telop;
@@ -410,7 +410,7 @@ void Game::renderUI() {
 void Game::collisions() 
 {
 	// プレイヤーとアイテム
-	std::vector<Item*> itemList = itemManager->getList();
+	std::vector<Item*> itemList = itemManager->getItemList();
 	for (size_t i = 0; i < itemList.size(); i++)
 	{	
 		if (itemList[i]->sphereCollider.collide(player->getBodyCollide()->getCenter(),

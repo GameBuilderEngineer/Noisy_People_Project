@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshRenderer.h"
+#include "Object.h"
 #include "BoundingSphere.h"
 #include "Input.h"
 #include "Camera.h"
@@ -174,6 +174,7 @@ public:
 	bool isGoingMoveOperation;
 
 	// Getter
+	int getEnemyID();										// IDを取得
 	static int getNumOfEnemy();								// エネミーの数を取得
 	enemyNS::EnemyData* getEnemyData();						// エネミーデータを取得
 
@@ -181,5 +182,4 @@ public:
 	void setDataToEnemy(enemyNS::EnemyData* _enemyData);	// エネミーデータをエネミーに設定
 	void setCamera(Camera* _camera);						// 操作対象カメラのセット
 	static void resetNumOfEnemy();							// エネミーの数をリセットする
-
 };

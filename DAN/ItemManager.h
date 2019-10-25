@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include <vector>
+#include "StaticMeshRenderer.h"
 #include "Item.h"
 #include "Battery.h"
 #include "exampleItem.h"
@@ -29,9 +30,11 @@ private:
 	StaticMeshRenderer* batteryRenderer;		// 描画オブジェクト
 	StaticMeshRenderer* exampleItemRender;		// テスト用アイテム
 	int nextID;									// 次回ツリー発行ID
+	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
+	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
 
 public:
-	void initialize();
+	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
@@ -42,5 +45,5 @@ public:
 	void outputGUI();
 
 	// Getter
-	std::vector<Item*>& getList();
+	std::vector<Item*>& getItemList();
 };

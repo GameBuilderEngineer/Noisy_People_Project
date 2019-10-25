@@ -44,6 +44,16 @@ void Item::update(float frameTime)
 
 
 //=============================================================================
+// 重力発生メッシュ（接地メッシュ）の設定
+//=============================================================================
+void Item::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
+{
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
+}
+
+
+//=============================================================================
 // Getter
 //=============================================================================
 int Item::getNumOfItem(){ return numOfItem; }
