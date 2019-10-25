@@ -214,6 +214,15 @@
     <Filter Include="Constant Layer\SkinMeshRenderer">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools Layer\Item">
+      <UniqueIdentifier>{b6a14b1a-1630-4fb9-8d38-6e7f7b1e5f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Tree">
+      <UniqueIdentifier>{0279b7aa-7a14-4fde-beeb-93ab3792871d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\MapObject">
+      <UniqueIdentifier>{5733f8e1-0aa0-4be5-aaa0-f8ee1372dca0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -451,19 +460,23 @@
     <ClCompile Include="StaticMeshRenderer.cpp">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="Bear.cpp" />
-    <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="TmpObject.cpp">
       <Filter>Game Layer\Scene\Create</Filter>
     </ClCompile>
-    <ClCompile Include="MapObjectTool.cpp">
-      <Filter>Tools Layer</Filter>
-    </ClCompile>
     <ClCompile Include="ItemTools.cpp">
-      <Filter>Tools Layer</Filter>
+      <Filter>Tools Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectTool.cpp">
+      <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
     <ClCompile Include="TreeToools.cpp">
-      <Filter>Tools Layer</Filter>
+      <Filter>Tools Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="Bear.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiger.cpp">
+      <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -722,19 +735,23 @@
     <ClInclude Include="StaticMeshRenderer.h">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="Bear.h" />
-    <ClInclude Include="Tiger.h" />
     <ClInclude Include="TmpObject.h">
       <Filter>Game Layer\Scene\Create</Filter>
     </ClInclude>
-    <ClInclude Include="MapObjectTool.h">
-      <Filter>Tools Layer</Filter>
-    </ClInclude>
     <ClInclude Include="ItemTools.h">
-      <Filter>Tools Layer</Filter>
+      <Filter>Tools Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectTool.h">
+      <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
     <ClInclude Include="TreeToools.h">
-      <Filter>Tools Layer</Filter>
+      <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiger.h">
+      <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
