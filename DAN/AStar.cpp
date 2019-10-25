@@ -94,8 +94,11 @@ void AStar::initialize(MeshData* _meshData, VertexAccessor* _vtxAccessor)
 		for (int k = 0; k < 3; k++)
 		{
 			D3DXVECTOR3* position = (D3DXVECTOR3*)vtxAccessor->getPointer(
-				vtxAccess::POSITION, &meshData->getVtxArray()[faceNode[i].vtx[k].index * meshData->getStride()]);
+				vtxAccess::POSITION,
+				meshData->getVertexPointerFromVertexIndex(meshData->getVtxArray(), faceNode[i].vtx[k].index)
+				/*&meshData->getVtxArray()[faceNode[i].vtx[k].index * meshData->getStride()]*/);
 
+			//meshData->
 			//(D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, &vtxArray[i * stride])
 			fprintf(fp, "’¸“_IndF%d@Pos(%f, %f, %f)\n", 
 				faceNode[i].vtx[k].index, position->x, position->y, position->z);
