@@ -8,6 +8,18 @@
 
 
 //=============================================================================
+//名前空間
+//=============================================================================
+namespace meshDataNS
+{
+	struct VertexIndex
+	{
+		WORD v[3];
+	};
+}
+
+
+//=============================================================================
 //クラス定義
 //=============================================================================
 class MeshData
@@ -29,7 +41,7 @@ public:
 	// 頂点インデックスから頂点を取得
 	BYTE* getVertexPointerFromVertexIndex(BYTE* vtx, WORD number);
 	// 面インデックスから頂点インデックスを取得
-	WORD* getVertexIndexPointerFromFaceIndex(WORD* vertexIndex, DWORD number);
+	meshDataNS::VertexIndex getVertexIndexFromFaceIndex(WORD* vertexIndex, DWORD number);
 	// 面インデックスから頂点を取得
 	BYTE* getVertexPointerFromFaceIndex(BYTE* vtx, WORD* vertexIndex, DWORD number);
 	// 面インデックスから隣接面インデックスを取得

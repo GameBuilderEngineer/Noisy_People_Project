@@ -1,20 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Constant Layer">
-      <UniqueIdentifier>{d06e7814-3312-485e-a549-154968781f0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer">
       <UniqueIdentifier>{6ea48a6a-2db4-426d-920c-46004fad2066}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Base">
-      <UniqueIdentifier>{78719cad-d79b-4198-b7f4-7136cc21021f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Entry">
-      <UniqueIdentifier>{302c4bc2-7d3a-4590-849b-dc997d519043}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Director">
-      <UniqueIdentifier>{ac8ea6bd-cd66-4c0d-b6a9-b751668a208f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Readme">
       <UniqueIdentifier>{5cf713e1-532d-469a-921f-eb2022ae8805}</UniqueIdentifier>
@@ -31,29 +19,8 @@
     <Filter Include="Resorce Layer\04 Sound File">
       <UniqueIdentifier>{0812ec83-eadc-44f2-b337-ecb078e41f3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Direct3D9">
-      <UniqueIdentifier>{943d0fe6-0741-479f-adb9-6927ed030ab8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Icon">
-      <UniqueIdentifier>{c82cc8bd-bbde-49fe-a87c-14c35e9acf6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Imgui">
-      <UniqueIdentifier>{e424cf6a-e3a2-4222-b0ff-491778f88740}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Imgui\imguiLib">
-      <UniqueIdentifier>{c7d60ed6-ce1f-4269-87ab-549521c4255e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Input">
-      <UniqueIdentifier>{93eb08ab-e317-43d0-8739-cd495f492290}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\AbstractScene">
-      <UniqueIdentifier>{fd05661e-10e2-441f-8d21-6e1eb4a8e104}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Scene">
       <UniqueIdentifier>{cd8e8a79-c498-4eb4-abdb-8f2692ceec36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\MemoryViewer">
-      <UniqueIdentifier>{3b26cda4-5a87-4203-8a61-d7d497b4335f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Layer\Scene\Splash">
       <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
@@ -66,42 +33,6 @@
     </Filter>
     <Filter Include="Game Layer\Scene\Game">
       <UniqueIdentifier>{0d7ffe8c-9ab6-484a-af3f-b6631db469ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\GameMaster">
-      <UniqueIdentifier>{bbdbb2d7-1fec-484a-8148-f8d253d7bd5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Camera">
-      <UniqueIdentifier>{8bf42127-736c-4c29-a482-43edd18212b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Light">
-      <UniqueIdentifier>{c4858452-ff41-4da1-a0b0-173a944b8cf2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\UtilityFunction">
-      <UniqueIdentifier>{67a99837-b6b6-453d-93d2-139efecd001b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Fader">
-      <UniqueIdentifier>{e78bd21f-864f-49e7-8659-84f4545b250c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Collision">
-      <UniqueIdentifier>{a9883b2d-bc39-4ae3-bb06-06638e6d8752}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Collision\BoundingSphere">
-      <UniqueIdentifier>{bc2e7cff-5c02-4d41-8417-0ab44ab971fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Collision\Ray">
-      <UniqueIdentifier>{824199bf-383a-44ba-956c-f042628ca2d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\PointSprite">
-      <UniqueIdentifier>{ace4a432-4445-46c2-b06f-dfec172f5b05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sprite">
-      <UniqueIdentifier>{f6f2ee87-035e-412d-aba0-74d7cc67e621}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Object">
-      <UniqueIdentifier>{b3d85d5a-80d7-414f-ad7d-efb141d2e5f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\InstancingBillboad">
-      <UniqueIdentifier>{c7fc4d22-60cc-438c-9022-a2683d4c6534}</UniqueIdentifier>
     </Filter>
     <Filter Include="Loader Layer">
       <UniqueIdentifier>{23d9b99c-945e-4d5a-96ff-bf38fd6c7119}</UniqueIdentifier>
@@ -130,35 +61,14 @@
     <Filter Include="Game Layer\Scene\Splash\SplashSprite">
       <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\SelectItem">
-      <UniqueIdentifier>{6ebe25ac-c757-49a9-8891-66d344020c7a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Player">
       <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\LinkedList">
-      <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound">
-      <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tools Layer">
       <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tools Layer\Enemy">
       <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\BGM">
-      <UniqueIdentifier>{cf8887db-979b-457b-812f-0a56ca931807}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\SE">
-      <UniqueIdentifier>{b901a311-0b7c-47c0-9aec-df053154a9ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\SoundBase">
-      <UniqueIdentifier>{22e4816c-9d4e-4bea-8666-160b78119822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Sound\3D">
-      <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resorce Layer\02 Visual File">
       <UniqueIdentifier>{fdbdd74a-8587-4f03-baa5-a0b48e615d48}</UniqueIdentifier>
@@ -187,12 +97,6 @@
     <Filter Include="Game Layer\TestEffect">
       <UniqueIdentifier>{5a3fa736-39c2-416f-a2b9-563a619ee044}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Text">
-      <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Effekseer">
-      <UniqueIdentifier>{e49c7731-b0af-4124-b614-501370a0edcc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Sky">
       <UniqueIdentifier>{37485a13-b7c2-4de1-b39d-b550dff2fc37}</UniqueIdentifier>
     </Filter>
@@ -204,12 +108,6 @@
     </Filter>
     <Filter Include="Game Layer\Scene\Create">
       <UniqueIdentifier>{38969594-a3b8-4c26-be69-77225b90e266}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\StaticMeshRenderer">
-      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\SkinMeshRenderer">
-      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tools Layer\Item">
       <UniqueIdentifier>{56ac98f0-8c78-4db4-a080-f4a064c6558b}</UniqueIdentifier>
@@ -223,55 +121,157 @@
     <Filter Include="Game Layer\Window">
       <UniqueIdentifier>{4935992b-a248-43f0-bda5-cd86a6f20f76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Constant Layer">
+      <UniqueIdentifier>{d06e7814-3312-485e-a549-154968781f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Base">
+      <UniqueIdentifier>{78719cad-d79b-4198-b7f4-7136cc21021f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Entry">
+      <UniqueIdentifier>{302c4bc2-7d3a-4590-849b-dc997d519043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Director">
+      <UniqueIdentifier>{ac8ea6bd-cd66-4c0d-b6a9-b751668a208f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Direct3D9">
+      <UniqueIdentifier>{943d0fe6-0741-479f-adb9-6927ed030ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Icon">
+      <UniqueIdentifier>{c82cc8bd-bbde-49fe-a87c-14c35e9acf6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Imgui">
+      <UniqueIdentifier>{e424cf6a-e3a2-4222-b0ff-491778f88740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Imgui\imguiLib">
+      <UniqueIdentifier>{c7d60ed6-ce1f-4269-87ab-549521c4255e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Input">
+      <UniqueIdentifier>{93eb08ab-e317-43d0-8739-cd495f492290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\AbstractScene">
+      <UniqueIdentifier>{fd05661e-10e2-441f-8d21-6e1eb4a8e104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\MemoryViewer">
+      <UniqueIdentifier>{3b26cda4-5a87-4203-8a61-d7d497b4335f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\GameMaster">
+      <UniqueIdentifier>{bbdbb2d7-1fec-484a-8148-f8d253d7bd5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Camera">
+      <UniqueIdentifier>{8bf42127-736c-4c29-a482-43edd18212b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Light">
+      <UniqueIdentifier>{c4858452-ff41-4da1-a0b0-173a944b8cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\UtilityFunction">
+      <UniqueIdentifier>{67a99837-b6b6-453d-93d2-139efecd001b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Fader">
+      <UniqueIdentifier>{e78bd21f-864f-49e7-8659-84f4545b250c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Collision">
+      <UniqueIdentifier>{a9883b2d-bc39-4ae3-bb06-06638e6d8752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Collision\BoundingSphere">
+      <UniqueIdentifier>{bc2e7cff-5c02-4d41-8417-0ab44ab971fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Collision\Ray">
+      <UniqueIdentifier>{824199bf-383a-44ba-956c-f042628ca2d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\PointSprite">
+      <UniqueIdentifier>{ace4a432-4445-46c2-b06f-dfec172f5b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Sprite">
+      <UniqueIdentifier>{f6f2ee87-035e-412d-aba0-74d7cc67e621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Object">
+      <UniqueIdentifier>{b3d85d5a-80d7-414f-ad7d-efb141d2e5f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\InstancingBillboad">
+      <UniqueIdentifier>{c7fc4d22-60cc-438c-9022-a2683d4c6534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\SelectItem">
+      <UniqueIdentifier>{6ebe25ac-c757-49a9-8891-66d344020c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\LinkedList">
+      <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Sound">
+      <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Sound\BGM">
+      <UniqueIdentifier>{cf8887db-979b-457b-812f-0a56ca931807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Sound\SE">
+      <UniqueIdentifier>{b901a311-0b7c-47c0-9aec-df053154a9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Sound\SoundBase">
+      <UniqueIdentifier>{22e4816c-9d4e-4bea-8666-160b78119822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Sound\3D">
+      <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Text">
+      <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\Effekseer">
+      <UniqueIdentifier>{e49c7731-b0af-4124-b614-501370a0edcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\StaticMeshRenderer">
+      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Constant Layer\SkinMeshRenderer">
+      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
-      <Filter>Constant Layer\Base</Filter>
+      <Filter>Game Layer\Constant Layer\Base</Filter>
     </ClCompile>
     <ClCompile Include="Entry.cpp">
-      <Filter>Constant Layer\Entry</Filter>
+      <Filter>Game Layer\Constant Layer\Entry</Filter>
     </ClCompile>
     <ClCompile Include="Director.cpp">
-      <Filter>Constant Layer\Director</Filter>
+      <Filter>Game Layer\Constant Layer\Director</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Game Layer\Window</Filter>
     </ClCompile>
     <ClCompile Include="Direct3D9.cpp">
-      <Filter>Constant Layer\Direct3D9</Filter>
+      <Filter>Game Layer\Constant Layer\Direct3D9</Filter>
     </ClCompile>
     <ClCompile Include="ImguiManager.cpp">
-      <Filter>Constant Layer\Imgui</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\imgui.cpp">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\imgui_demo.cpp">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\imgui_draw.cpp">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\imgui_impl_dx9.cpp">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\imgui_impl_win32.cpp">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\imgui_widgets.cpp">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClCompile>
     <ClCompile Include="DirectInputController.cpp">
-      <Filter>Constant Layer\Input</Filter>
+      <Filter>Game Layer\Constant Layer\Input</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>Constant Layer\Input</Filter>
+      <Filter>Game Layer\Constant Layer\Input</Filter>
     </ClCompile>
     <ClCompile Include="AbstractScene.cpp">
-      <Filter>Constant Layer\AbstractScene</Filter>
+      <Filter>Game Layer\Constant Layer\AbstractScene</Filter>
     </ClCompile>
     <ClCompile Include="MemoryViewer.cpp">
-      <Filter>Constant Layer\MemoryViewer</Filter>
+      <Filter>Game Layer\Constant Layer\MemoryViewer</Filter>
     </ClCompile>
     <ClCompile Include="Splash.cpp">
       <Filter>Game Layer\Scene\Splash</Filter>
@@ -289,34 +289,34 @@
       <Filter>Game Layer\Scene\Game</Filter>
     </ClCompile>
     <ClCompile Include="GameMaster.cpp">
-      <Filter>Constant Layer\GameMaster</Filter>
+      <Filter>Game Layer\Constant Layer\GameMaster</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Constant Layer\Camera</Filter>
+      <Filter>Game Layer\Constant Layer\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Constant Layer\Light</Filter>
+      <Filter>Game Layer\Constant Layer\Light</Filter>
     </ClCompile>
     <ClCompile Include="UtilityFunction.cpp">
-      <Filter>Constant Layer\UtilityFunction</Filter>
+      <Filter>Game Layer\Constant Layer\UtilityFunction</Filter>
     </ClCompile>
     <ClCompile Include="Fader.cpp">
-      <Filter>Constant Layer\Fader</Filter>
+      <Filter>Game Layer\Constant Layer\Fader</Filter>
     </ClCompile>
     <ClCompile Include="PointSprite.cpp">
-      <Filter>Constant Layer\PointSprite</Filter>
+      <Filter>Game Layer\Constant Layer\PointSprite</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
-      <Filter>Constant Layer\Sprite</Filter>
+      <Filter>Game Layer\Constant Layer\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="Credit.cpp">
       <Filter>Game Layer\Scene\Credit</Filter>
     </ClCompile>
     <ClCompile Include="BoundingSphere.cpp">
-      <Filter>Constant Layer\Collision\BoundingSphere</Filter>
+      <Filter>Game Layer\Constant Layer\Collision\BoundingSphere</Filter>
     </ClCompile>
     <ClCompile Include="Ray.cpp">
-      <Filter>Constant Layer\Collision\Ray</Filter>
+      <Filter>Game Layer\Constant Layer\Collision\Ray</Filter>
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
       <Filter>Loader Layer\TextureLoader</Filter>
@@ -331,31 +331,31 @@
       <Filter>Game Layer\Player</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Constant Layer\Object</Filter>
+      <Filter>Game Layer\Constant Layer\Object</Filter>
     </ClCompile>
     <ClCompile Include="InstancingBillboard.cpp">
-      <Filter>Constant Layer\InstancingBillboad</Filter>
+      <Filter>Game Layer\Constant Layer\InstancingBillboad</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClCompile>
     <ClCompile Include="LinkedList.cpp">
-      <Filter>Constant Layer\LinkedList</Filter>
+      <Filter>Game Layer\Constant Layer\LinkedList</Filter>
     </ClCompile>
     <ClCompile Include="Sound.cpp">
-      <Filter>Constant Layer\Sound</Filter>
+      <Filter>Game Layer\Constant Layer\Sound</Filter>
     </ClCompile>
     <ClCompile Include="EnemyTools.cpp">
       <Filter>Tools Layer\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="BGM.cpp">
-      <Filter>Constant Layer\Sound\BGM</Filter>
+      <Filter>Game Layer\Constant Layer\Sound\BGM</Filter>
     </ClCompile>
     <ClCompile Include="SE.cpp">
-      <Filter>Constant Layer\Sound\SE</Filter>
+      <Filter>Game Layer\Constant Layer\Sound\SE</Filter>
     </ClCompile>
     <ClCompile Include="SoundBase.cpp">
-      <Filter>Constant Layer\Sound\SoundBase</Filter>
+      <Filter>Game Layer\Constant Layer\Sound\SoundBase</Filter>
     </ClCompile>
     <ClCompile Include="EnemyManager.cpp">
       <Filter>Game Layer\Enemy</Filter>
@@ -419,7 +419,7 @@
       <Filter>Loader Layer\TextLoader</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
-      <Filter>Constant Layer\Text</Filter>
+      <Filter>Game Layer\Constant Layer\Text</Filter>
     </ClCompile>
     <ClCompile Include="CreditTex.cpp">
       <Filter>Game Layer\Scene\Credit</Filter>
@@ -437,11 +437,11 @@
       <Filter>Game Layer\Item</Filter>
     </ClCompile>
     <ClCompile Include="SpriteGauge.cpp">
-      <Filter>Constant Layer\Sprite</Filter>
+      <Filter>Game Layer\Constant Layer\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="TestEffectOccurrence.cpp" />
     <ClCompile Include="EffekseerManager.cpp">
-      <Filter>Constant Layer\Effekseer</Filter>
+      <Filter>Game Layer\Constant Layer\Effekseer</Filter>
     </ClCompile>
     <ClCompile Include="Sky.cpp">
       <Filter>Game Layer\Sky</Filter>
@@ -480,7 +480,7 @@
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
     <ClCompile Include="StaticMeshRenderer.cpp">
-      <Filter>Constant Layer\StaticMeshRenderer</Filter>
+      <Filter>Game Layer\Constant Layer\StaticMeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="MemoryDebug.cpp">
       <Filter>Game Layer</Filter>
@@ -488,61 +488,61 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
-      <Filter>Constant Layer\Base</Filter>
+      <Filter>Game Layer\Constant Layer\Base</Filter>
     </ClInclude>
     <ClInclude Include="Director.h">
-      <Filter>Constant Layer\Director</Filter>
+      <Filter>Game Layer\Constant Layer\Director</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Game Layer\Window</Filter>
     </ClInclude>
     <ClInclude Include="Direct3D9.h">
-      <Filter>Constant Layer\Direct3D9</Filter>
+      <Filter>Game Layer\Constant Layer\Direct3D9</Filter>
     </ClInclude>
     <ClInclude Include="Icon.h">
-      <Filter>Constant Layer\Icon</Filter>
+      <Filter>Game Layer\Constant Layer\Icon</Filter>
     </ClInclude>
     <ClInclude Include="ImguiManager.h">
-      <Filter>Constant Layer\Imgui</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imconfig.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imgui.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imgui_impl_dx9.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imgui_impl_win32.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imgui_internal.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imstb_rectpack.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imstb_textedit.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imstb_truetype.h">
-      <Filter>Constant Layer\Imgui\imguiLib</Filter>
+      <Filter>Game Layer\Constant Layer\Imgui\imguiLib</Filter>
     </ClInclude>
     <ClInclude Include="DirectInputController.h">
-      <Filter>Constant Layer\Input</Filter>
+      <Filter>Game Layer\Constant Layer\Input</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
-      <Filter>Constant Layer\Input</Filter>
+      <Filter>Game Layer\Constant Layer\Input</Filter>
     </ClInclude>
     <ClInclude Include="VirtualController.h">
-      <Filter>Constant Layer\Input</Filter>
+      <Filter>Game Layer\Constant Layer\Input</Filter>
     </ClInclude>
     <ClInclude Include="AbstractScene.h">
-      <Filter>Constant Layer\AbstractScene</Filter>
+      <Filter>Game Layer\Constant Layer\AbstractScene</Filter>
     </ClInclude>
     <ClInclude Include="MemoryViewer.h">
-      <Filter>Constant Layer\MemoryViewer</Filter>
+      <Filter>Game Layer\Constant Layer\MemoryViewer</Filter>
     </ClInclude>
     <ClInclude Include="Splash.h">
       <Filter>Game Layer\Scene\Splash</Filter>
@@ -560,34 +560,34 @@
       <Filter>Game Layer\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="GameMaster.h">
-      <Filter>Constant Layer\GameMaster</Filter>
+      <Filter>Game Layer\Constant Layer\GameMaster</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Constant Layer\Camera</Filter>
+      <Filter>Game Layer\Constant Layer\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Constant Layer\Light</Filter>
+      <Filter>Game Layer\Constant Layer\Light</Filter>
     </ClInclude>
     <ClInclude Include="UtilityFunction.h">
-      <Filter>Constant Layer\UtilityFunction</Filter>
+      <Filter>Game Layer\Constant Layer\UtilityFunction</Filter>
     </ClInclude>
     <ClInclude Include="Fader.h">
-      <Filter>Constant Layer\Fader</Filter>
+      <Filter>Game Layer\Constant Layer\Fader</Filter>
     </ClInclude>
     <ClInclude Include="PointSprite.h">
-      <Filter>Constant Layer\PointSprite</Filter>
+      <Filter>Game Layer\Constant Layer\PointSprite</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
-      <Filter>Constant Layer\Sprite</Filter>
+      <Filter>Game Layer\Constant Layer\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="Credit.h">
       <Filter>Game Layer\Scene\Credit</Filter>
     </ClInclude>
     <ClInclude Include="BoundingSphere.h">
-      <Filter>Constant Layer\Collision\BoundingSphere</Filter>
+      <Filter>Game Layer\Constant Layer\Collision\BoundingSphere</Filter>
     </ClInclude>
     <ClInclude Include="Ray.h">
-      <Filter>Constant Layer\Collision\Ray</Filter>
+      <Filter>Game Layer\Constant Layer\Collision\Ray</Filter>
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
       <Filter>Loader Layer\TextureLoader</Filter>
@@ -602,31 +602,31 @@
       <Filter>Game Layer\Player</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Constant Layer\Object</Filter>
+      <Filter>Game Layer\Constant Layer\Object</Filter>
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
-      <Filter>Constant Layer\InstancingBillboad</Filter>
+      <Filter>Game Layer\Constant Layer\InstancingBillboad</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClInclude>
     <ClInclude Include="LinkedList.h">
-      <Filter>Constant Layer\LinkedList</Filter>
+      <Filter>Game Layer\Constant Layer\LinkedList</Filter>
     </ClInclude>
     <ClInclude Include="Sound.h">
-      <Filter>Constant Layer\Sound</Filter>
+      <Filter>Game Layer\Constant Layer\Sound</Filter>
     </ClInclude>
     <ClInclude Include="EnemyTools.h">
       <Filter>Tools Layer\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="BGM.h">
-      <Filter>Constant Layer\Sound\BGM</Filter>
+      <Filter>Game Layer\Constant Layer\Sound\BGM</Filter>
     </ClInclude>
     <ClInclude Include="SE.h">
-      <Filter>Constant Layer\Sound\SE</Filter>
+      <Filter>Game Layer\Constant Layer\Sound\SE</Filter>
     </ClInclude>
     <ClInclude Include="SoundBase.h">
-      <Filter>Constant Layer\Sound\SoundBase</Filter>
+      <Filter>Game Layer\Constant Layer\Sound\SoundBase</Filter>
     </ClInclude>
     <ClInclude Include="EnemyManager.h">
       <Filter>Game Layer\Enemy</Filter>
@@ -683,7 +683,7 @@
       <Filter>Loader Layer\TextLoader</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
-      <Filter>Constant Layer\Text</Filter>
+      <Filter>Game Layer\Constant Layer\Text</Filter>
     </ClInclude>
     <ClInclude Include="Stone.h">
       <Filter>Game Layer\Stone</Filter>
@@ -707,16 +707,16 @@
       <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
     <ClInclude Include="EffekseerManager.h">
-      <Filter>Constant Layer\Effekseer</Filter>
+      <Filter>Game Layer\Constant Layer\Effekseer</Filter>
     </ClInclude>
     <ClInclude Include="Effekseer\Compiled\include\Effekseer.h">
-      <Filter>Constant Layer\Effekseer</Filter>
+      <Filter>Game Layer\Constant Layer\Effekseer</Filter>
     </ClInclude>
     <ClInclude Include="Effekseer\Compiled\include\EffekseerRendererDX9.h">
-      <Filter>Constant Layer\Effekseer</Filter>
+      <Filter>Game Layer\Constant Layer\Effekseer</Filter>
     </ClInclude>
     <ClInclude Include="Effekseer\Compiled\include\EffekseerSoundXAudio2.h">
-      <Filter>Constant Layer\Effekseer</Filter>
+      <Filter>Game Layer\Constant Layer\Effekseer</Filter>
     </ClInclude>
     <ClInclude Include="Sky.h">
       <Filter>Game Layer\Sky</Filter>
@@ -743,7 +743,7 @@
       <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="StaticMeshRenderer.h">
-      <Filter>Constant Layer\StaticMeshRenderer</Filter>
+      <Filter>Game Layer\Constant Layer\StaticMeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Bear.h">
       <Filter>Game Layer\Enemy</Filter>
@@ -761,7 +761,7 @@
       <Filter>Game Layer\Item</Filter>
     </ClInclude>
     <ClInclude Include="SpriteGauge.h">
-      <Filter>Constant Layer\Sprite</Filter>
+      <Filter>Game Layer\Constant Layer\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="TestEffectOccurrence.h" />
     <ClInclude Include="MemoryDebug.h">
@@ -770,12 +770,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
-      <Filter>Constant Layer\Icon</Filter>
+      <Filter>Game Layer\Constant Layer\Icon</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Icon.rc">
-      <Filter>Constant Layer\Icon</Filter>
+      <Filter>Game Layer\Constant Layer\Icon</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>

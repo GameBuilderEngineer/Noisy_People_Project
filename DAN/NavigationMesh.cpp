@@ -33,6 +33,7 @@ void NavigationMesh::initialize()
 //=============================================================================
 void NavigationMesh::uninitialize()
 {
+
 }
 
 
@@ -41,7 +42,6 @@ void NavigationMesh::uninitialize()
 //=============================================================================
 void NavigationMesh::update()
 {
-
 
 }
 
@@ -149,7 +149,6 @@ void NavigationMesh::outputGUI()
 	}
 }
 #endif // _DEBUG
-
 
 
 // Astarではエッジの情報を検索して、そのエッジのどこを目的地とするか、は別処理（AI資料に書いてある）

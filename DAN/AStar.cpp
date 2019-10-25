@@ -4,6 +4,7 @@
 // 作成開始日 : 2019/10/20
 //-----------------------------------------------------------------------------
 #include "Astar.h"
+using namespace meshDataNS;
 using namespace aStarNS;
 
 
@@ -61,18 +62,23 @@ void AStar::initialize(MeshData* _meshData, VertexAccessor* _vtxAccessor)
 	faceNode = new FaceNode[meshData->getNumFaces()];
 	for (int i = 0; i < meshData->getNumFaces(); i++)
 	{
+		VertexIndex tempIndex = meshData->getVertexIndexFromFaceIndex(meshData->getIndexArray(), i);
 		for (int k = 0; k < 3; k++)
 		{
-			faceNode->vtx[k].index = meshData->getVertexIndexPointerFromFaceIndex(
-				meshData->getIndexArray(), i)[k];
-			faceNode->vtx[k].ptr = meshData->getVertexPointerFromVertexIndex(
-				meshData->getVtxArray(), faceNode->vtx[k].index);
+			// 頂点インデックスをセット
+			faceNode[i].vtx[k].index = tempIndex.v[k];
+
+			// 頂点データをセット
+			faceNode[i].vtx[k].ptr = meshData->getVertexPointerFromVertexIndex(
+				meshData->getVtxArray(), faceNode[i].vtx[k].index);
 		}
-		for (int k = 0; k < 3; k++)
-		{
-			faceNode->adjacency[k] = *meshData->getAdjacentFaceIndexPointerFromFaceIndex(
-				meshData->getAdjacencyArray(), i + k);
-		}
+
+		//for (int k = 0; k < 3; k++)
+		//{
+		//	faceNode[i].adjacency[k] = *meshData->getAdjacentFaceIndexPointerFromFaceIndex(
+		//		meshData->getAdjacencyArray(), i + k);
+		//}
+
 		faceNode[i].resetStatus();
 	}
 
@@ -87,15 +93,17 @@ void AStar::initialize(MeshData* _meshData, VertexAccessor* _vtxAccessor)
 		fprintf(fp, "【ポリゴンIndex%d】\n" ,i);
 		for (int k = 0; k < 3; k++)
 		{
-			D3DXVECTOR3 position = D3DXVECTOR3(0, 0, 0);
-			//D3DXVECTOR3* position = (D3DXVECTOR3*)vtxAccessor->getPointer(
-			//	vtxAccess::POSITION, &meshData->getVtxArray()[i * 3 * meshData->getStride() + k * meshData->getStride()]);
-			fprintf(fp, "頂点%d Ind：%d　Pos(%f, %f, %f)\n", k, faceNode[i].vtx[k].index, position.x, position.y, position.z);
+			D3DXVECTOR3* position = (D3DXVECTOR3*)vtxAccessor->getPointer(
+				vtxAccess::POSITION, &meshData->getVtxArray()[faceNode[i].vtx[k].index * meshData->getStride()]);
+
+			//(D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, &vtxArray[i * stride])
+			fprintf(fp, "頂点Ind：%d　Pos(%f, %f, %f)\n", 
+				faceNode[i].vtx[k].index, position->x, position->y, position->z);
 		}
 	}
-
 	fclose(fp);
 #endif
+	int unko = 1;
 
 #if 0
 	int enemyMax = GetNumberEnemy();

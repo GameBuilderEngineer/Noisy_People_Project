@@ -17,16 +17,18 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 {
 	numOfEnemy++;							// エネミーの数を加算
 	enemyData = _enemyData;					// エネミーデータをセット
-
 	difference = DIFFERENCE_FIELD;			// 必要性要検討
+
 	onGravity = true;
 	position = enemyData->position;
 	axisZ.direction = enemyData->direction;
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	friction = 1.0f;
+
 	Object::initialize(&position);
 	Object::axisZ.direction = axisZ.direction;
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 }
 
 
