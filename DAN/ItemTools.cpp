@@ -19,8 +19,10 @@ ITEM_TOOLS::ITEM_TOOLS()
 	//パス
 	setToolsDirectory();
 
+#ifdef _DEBUG
 	//レンダラーの初期化
 	initRender();
+#endif
 
 	//ファイル
 	FILE	*fp = NULL;
@@ -51,13 +53,17 @@ ITEM_TOOLS::ITEM_TOOLS()
 		//ファイル
 		fclose(fp);
 
+#ifdef _DEBUG
 		//オブジェクトの初期化
 		initObject();
+#endif
 	}
 
+#ifdef _DEBUG
 	//アイテム情報
 	ItemListboxCurrent = 0;
 	ItemListboxType = itemNS::ITEM_TYPE::BATTERY;
+#endif
 }
 
 //===================================================================================================================================
@@ -71,20 +77,24 @@ ITEM_TOOLS::~ITEM_TOOLS()
 	if (itemFile.item.itemMax != NULL)
 	{
 		SAFE_DELETE_ARRAY(itemFile.ifmt);
+#ifdef _DEBUG
 		for (int i = 0; i < itemFile.item.itemMax; i++)
 		{
 			SAFE_DELETE(object[i]);
 		}
 		SAFE_DELETE_ARRAY(object);
 		SAFE_DELETE_ARRAY(bodyCollide);
+#endif
 	}
 
+#ifdef _DEBUG
 	//レンダラー
 	for (int i = 0; i < itemNS::ITEM_TYPE::ITEM_TYPE_MAX; i++)
 	{
 		SAFE_DELETE(renderer[i]);
 	}
 	SAFE_DELETE_ARRAY(renderer);
+#endif
 }
 
 //===================================================================================================================================
@@ -109,6 +119,7 @@ itemNS::ITEMSET ITEM_TOOLS::GetItemSet(short itemId)
 	return tmpItemSet;
 }
 
+#ifdef _DEBUG
 //===================================================================================================================================
 //【ImGUIへの出力】
 //===================================================================================================================================
@@ -253,6 +264,7 @@ void ITEM_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position,
 	object->existenceTimer = 1.0f;		// < 0 なら消える
 	renderer[enemyType]->registerObject(object);
 }
+#endif
 
 //===================================================================================================================================
 //【アイテムファイルの書き出し処理】
@@ -306,6 +318,7 @@ void ITEM_TOOLS::CreatNewItemFile(void)
 	fclose(fp);
 }
 
+#ifdef _DEBUG
 //===================================================================================================================================
 //【レンダラーのリセット処理】描画用
 //===================================================================================================================================
@@ -510,3 +523,4 @@ void ITEM_TOOLS::AddItemFormat(short itemType, const D3DXVECTOR3 pos, const D3DX
 	//レンダラーのリセット処理
 	ResetRenderer();
 }
+#endif

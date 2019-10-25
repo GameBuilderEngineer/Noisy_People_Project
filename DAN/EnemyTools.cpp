@@ -19,8 +19,10 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 	//パス
 	setToolsDirectory();
 
+#ifdef _DEBUG
 	//レンダラーの初期化
 	initRender();
+#endif
 
 	//ファイル
 	FILE	*fp = NULL;
@@ -50,15 +52,18 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 
 		//ファイル
 		fclose(fp);
-
+#ifdef _DEBUG
 		//オブジェクトの初期化
 		initObject();
+#endif
 	}
 
+#ifdef _DEBUG
 	//エネミー情報
 	EnemyListboxCurrent = 0;
 	EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
 	EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
+#endif
 }
 
 //===================================================================================================================================
@@ -73,20 +78,24 @@ ENEMY_TOOLS::~ENEMY_TOOLS()
 	if (enemyFile.enmy.enemyMax != NULL)
 	{
 		SAFE_DELETE_ARRAY(enemyFile.efmt);
+#ifdef _DEBUG
 		for (int i = 0; i < enemyFile.enmy.enemyMax; i++)
 		{
 			SAFE_DELETE(object[i]);
 		}
 		SAFE_DELETE_ARRAY(object);
 		SAFE_DELETE_ARRAY(bodyCollide);
+#endif
 	}
 
+#ifdef _DEBUG
 	//レンダラー
 	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
 	{
 		SAFE_DELETE(renderer[i]);
 	}
 	SAFE_DELETE_ARRAY(renderer);
+#endif
 }
 
 //===================================================================================================================================
@@ -112,12 +121,12 @@ enemyNS::ENEMYSET ENEMY_TOOLS::GetEnemySet(short enemyId)
 	return tmpEnemySet;
 }
 
+#ifdef _DEBUG
 //===================================================================================================================================
 //【ImGUIへの出力】
 //===================================================================================================================================
 void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
 {
-#ifdef _DEBUG
 	if (GUIid == ENEMY_GUI_ID)
 	{
 		//フラグ
@@ -181,7 +190,6 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 			AddEnemyFormat(EnemyListboxType, EnemyListboxState, pos, dir);
 		}
 	}
-#endif
 }
 
 //===================================================================================================================================
@@ -261,6 +269,7 @@ void ENEMY_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position
 	object->existenceTimer = 1.0f;		// < 0 なら消える
 	renderer[enemyType]->registerObject(object);
 }
+#endif
 
 //===================================================================================================================================
 //【エネミーファイルの書き出し処理】
@@ -314,6 +323,7 @@ void ENEMY_TOOLS::CreatNewEnemyFile(void)
 	fclose(fp);
 }
 
+#ifdef _DEBUG
 //===================================================================================================================================
 //【レンダラーのリセット処理】描画用
 //===================================================================================================================================
@@ -531,3 +541,4 @@ void ENEMY_TOOLS::AddEnemyFormat(short enemyType, short enemyState, const D3DXVE
 	//レンダラーのリセット処理
 	ResetRenderer();
 }
+#endif		
