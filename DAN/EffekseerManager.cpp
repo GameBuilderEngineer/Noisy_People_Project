@@ -29,9 +29,11 @@ EffekseerManager::EffekseerManager()
 	pointerEffekseerManager = this;
 	manager		= NULL;
 	renderer	= NULL;
+#if(_MSC_VER >= GAME_MSC_VER)
 	sound		= NULL;	
 	xa2			= NULL;
 	xa2Master	= NULL;
+#endif
 
 	fileName[TEST0] = { L"test.efk" };
 	fileName[TEST1] = { L"r_square.efk" };
@@ -52,9 +54,11 @@ EffekseerManager::~EffekseerManager()
 //===================================================================================================================================
 void EffekseerManager::initialize()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	// XAudio2の初期化を行う
 	XAudio2Create(&xa2);
 	xa2->CreateMasteringVoice(&xa2Master);
+#endif
 
 	// 描画用インスタンスの生成
 	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 2000);
@@ -74,15 +78,16 @@ void EffekseerManager::initialize()
 	manager->SetTextureLoader(renderer->CreateTextureLoader());
 	manager->SetModelLoader(renderer->CreateModelLoader());
 
+#if(_MSC_VER >= GAME_MSC_VER)
 	// 音再生用インスタンスの生成
 	sound = ::EffekseerSound::Sound::Create(xa2, 16, 16);
-
 	// 音再生用インスタンスから再生機能を指定
 	manager->SetSoundPlayer(sound->CreateSoundPlayer());
-
 	// 音再生用インスタンスからサウンドデータの読込機能を設定
 	// 独自拡張可能、現在はファイルから読み込んでいる。
 	manager->SetSoundLoader(sound->CreateSoundLoader());
+#endif
+
 
 	//座標系の指定(LH：左手系）
 	manager->SetCoordinateSystem(Effekseer::CoordinateSystem::LH);
@@ -187,12 +192,13 @@ void EffekseerManager::uninitialize()
 	// 先にエフェクト管理用インスタンスを破棄
 	manager->Destroy();
 
-	// 次に音再生用インスタンスを破棄
-	sound->Destroy();
 
 	// 次に描画用インスタンスを破棄
 	renderer->Destroy();
 
+#if(_MSC_VER >= GAME_MSC_VER)
+	// 次に音再生用インスタンスを破棄
+	sound->Destroy();
 	// XAudio2の解放
 	if (xa2Master != NULL)
 	{
@@ -200,6 +206,7 @@ void EffekseerManager::uninitialize()
 		xa2Master = NULL;
 	}
 	ES_SAFE_RELEASE(xa2);
+#endif
 
 	for (int i = 0;i <instanceList->nodeNum; i++)
 	{

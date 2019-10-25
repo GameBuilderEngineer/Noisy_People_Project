@@ -12,17 +12,20 @@
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
+#if(_MSC_VER >= GAME_MSC_VER)
 const char * const SEManager::splashSEPathList[] = { "SE_Attack.wav"};
 const char * const SEManager::titleSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
 const char * const SEManager::gameSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
 int SEManager::SEScene = SceneList::SPLASH;
-
+#endif
 //===================================================================================================================================
 //【デストラクタ】
 //===================================================================================================================================
 SEManager::~SEManager()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	SAFE_DELETE_ARRAY(SEBufferList);
+#endif
 }
 
 //===================================================================================================================================
@@ -31,6 +34,7 @@ SEManager::~SEManager()
 void SEManager::outputSEGUI(void)
 {
 #ifdef _DEBUG
+#if(_MSC_VER >= GAME_MSC_VER)
 	if (!ImGui::CollapsingHeader("SEInformation"))
 	{
 		//使用中のバッファ数
@@ -121,15 +125,19 @@ void SEManager::outputSEGUI(void)
 		}
 	}
 #endif
+#endif
 }
 
 //===================================================================================================================================
 //【ステージ遷移に合わせて必要なサウンドバッファを用意する】
 //===================================================================================================================================
-void	 SEManager::SwitchAudioBuffer(int scene)
+void SEManager::SwitchAudioBuffer(int scene)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//サウンドディレクトリに設定する
-	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_SE);
+	setSoundDirectory(
+		
+		::ENDPOINT_SE);
 
 	//シーンの更新
 	SEManager::SEScene = scene;
@@ -211,4 +219,5 @@ void	 SEManager::SwitchAudioBuffer(int scene)
 	default:
 		break;
 	}
+#endif
 }

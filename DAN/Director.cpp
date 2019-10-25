@@ -101,6 +101,7 @@ HRESULT Director::initialize() {
 	//sound
 	soundInterface = new SoundInterface();
 
+
 	//input
 	input = new Input();
 	input->initialize(instance, window->wnd, true);

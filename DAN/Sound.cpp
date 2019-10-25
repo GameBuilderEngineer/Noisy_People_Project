@@ -10,10 +10,12 @@
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
+#if(_MSC_VER >= GAME_MSC_VER)
 IXAudio2 *SoundInterface::XAudio2Interface = nullptr;
 XAUDIO2_VOICE_SENDS SoundInterface::SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX] = { NULL };
 SEManager *SoundInterface::SE = new SEManager();
 BGMManager *SoundInterface::BGM = new BGMManager();
+#endif
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -24,6 +26,7 @@ BGMManager *SoundInterface::BGM = new BGMManager();
 //===================================================================================================================================
 SoundInterface::SoundInterface()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//COMライブラリの初期化
 	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
 	{
@@ -79,6 +82,7 @@ SoundInterface::SoundInterface()
 	SendList[ENDPOINT_VOICE_LIST::ENDPOINT_BGM] = { 1,&SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_BGM] };
 	SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_SE] = { XAUDIO2_SEND_USEFILTER,EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_SE] };
 	SendList[ENDPOINT_VOICE_LIST::ENDPOINT_SE] = { 1,&SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_SE] };
+#endif
 }
 
 //===================================================================================================================================
@@ -86,6 +90,7 @@ SoundInterface::SoundInterface()
 //===================================================================================================================================
 SoundInterface::~SoundInterface()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//SE
 	SAFE_DELETE(SE);
 	
@@ -104,33 +109,40 @@ SoundInterface::~SoundInterface()
 
 	//COMライブラリ
 	CoUninitialize();
+#endif
 }
 
 //===================================================================================================================================
 //【送信リストを取得する】
 //引数:エンドポイントボイスのID
 //===================================================================================================================================
+#if(_MSC_VER >= GAME_MSC_VER)
 XAUDIO2_VOICE_SENDS SoundInterface::GetSendList(int endpointVoiceId)
 {
 	return SendList[endpointVoiceId];
 }
+#endif
 
 //===================================================================================================================================
 //【XAudio2のインタフェースを取得する】
 //===================================================================================================================================
+#if(_MSC_VER >= GAME_MSC_VER)
 IXAudio2 *SoundInterface::GetXAudio2Interface(void)
 {
 	return XAudio2Interface;
 }
+#endif
 
 //===================================================================================================================================
 //【シーンの更新】
 //===================================================================================================================================
 void SoundInterface::SwitchAudioBuffer(int scene)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//シーンの更新
 	BGMManager::SwitchAudioBuffer(scene);
-	SEManager::SwitchAudioBuffer(scene);	
+	SEManager::SwitchAudioBuffer(scene);
+#endif
 }
 
 //===================================================================================================================================
@@ -138,6 +150,7 @@ void SoundInterface::SwitchAudioBuffer(int scene)
 //===================================================================================================================================
 void SoundInterface::UpdateSound(void)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//SEの更新処理
 	SE->updateSound();
 
@@ -149,6 +162,7 @@ void SoundInterface::UpdateSound(void)
 #ifdef _DEBUG
 	outputSoundGUI();
 #endif
+#endif
 }
 
 //===================================================================================================================================
@@ -157,6 +171,7 @@ void SoundInterface::UpdateSound(void)
 void SoundInterface::outputSoundGUI(void)
 {
 #ifdef _DEBUG
+#if(_MSC_VER >= GAME_MSC_VER)
 	ImGui::Begin("SoundInformation");
 	
 	//SE
@@ -165,6 +180,7 @@ void SoundInterface::outputSoundGUI(void)
 
 	ImGui::End();
 #endif
+#endif
 }
 
 //===================================================================================================================================
@@ -172,6 +188,7 @@ void SoundInterface::outputSoundGUI(void)
 //===================================================================================================================================
 void SoundInterface::playSound(const PLAY_PARAMETERS playParameters)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
 		BGM->playSound(playParameters);
@@ -181,6 +198,7 @@ void SoundInterface::playSound(const PLAY_PARAMETERS playParameters)
 		//SE
 		SE->playSound(playParameters);
 	}
+#endif
 }
 
 //===================================================================================================================================
@@ -188,6 +206,7 @@ void SoundInterface::playSound(const PLAY_PARAMETERS playParameters)
 //===================================================================================================================================
 void SoundInterface::stopSound(const PLAY_PARAMETERS playParameters)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
 	{
 		BGM->stopSound(playParameters);
@@ -197,4 +216,5 @@ void SoundInterface::stopSound(const PLAY_PARAMETERS playParameters)
 		//SE
 		SE->stopSound(playParameters);
 	}
+#endif
 }

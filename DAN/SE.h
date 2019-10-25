@@ -52,10 +52,12 @@ public:
 	~SEManager();
 
 	//変数
+#if(_MSC_VER >= GAME_MSC_VER)
 	static const char * const splashSEPathList[];
 	static const char * const titleSEPathList[];
 	static const char * const gameSEPathList[];
 	static int	SEScene;
+#endif
 
 	//関数
 	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する

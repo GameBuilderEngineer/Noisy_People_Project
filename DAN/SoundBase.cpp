@@ -10,21 +10,24 @@
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
+#if(_MSC_VER >= GAME_MSC_VER)
 LIST_BUFFER *SoundBase::SEBufferList = nullptr;
 LIST_BUFFER *SoundBase::BGMBufferList = nullptr;
 int	SoundBase::SEBufferMax = 0;
 int	SoundBase::BGMBufferMax = 0;
-
+#endif
 //===================================================================================================================================
 //【コンストラクタ】
 //・ノードの準備
 //===================================================================================================================================
 SoundBase::SoundBase()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//リストの作成
 	soundParametersList = new LinkedList <SOUND_PARAMETERS>;
 	soundParametersList->insertFront();
 	soundParametersList->listUpdate();
+#endif
 }
 
 //===================================================================================================================================
@@ -32,15 +35,18 @@ SoundBase::SoundBase()
 //===================================================================================================================================
 SoundBase::~SoundBase()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	uninitSoundStop();
 	soundParametersList->terminate();
 	SAFE_DELETE(soundParametersList);
+#endif
 }
 //===================================================================================================================================
 //【停止(全部のサウンド)】
 //===================================================================================================================================
-void	 SoundBase::uninitSoundStop(void)
+void SoundBase::uninitSoundStop(void)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
@@ -52,6 +58,7 @@ void	 SoundBase::uninitSoundStop(void)
 			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
 		}
 	}
+#endif
 }
 
 //===================================================================================================================================
@@ -59,6 +66,7 @@ void	 SoundBase::uninitSoundStop(void)
 //===================================================================================================================================
 void SoundBase::playSound(const PLAY_PARAMETERS playParameters)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
@@ -70,7 +78,7 @@ void SoundBase::playSound(const PLAY_PARAMETERS playParameters)
 			tmpSoundParameters->SourceVoice->Start();
 			if (tmpSoundParameters->playParameters.filterFlag)
 			{
-				tmpSoundParameters->SourceVoice->SetFilterParameters(&tmpSoundParameters->playParameters.filterParameters);
+				tmpSoundParameters->SourceVoice->SetFilterParameters(&tmpSoundParameters->playParameters.filterParameters.Parameters);
 			}
 			tmpSoundParameters->isPlaying = true;
 			return;
@@ -80,13 +88,15 @@ void SoundBase::playSound(const PLAY_PARAMETERS playParameters)
 	//リスト中に存在しない、再生していないボイスがない時は新しく追加する
 	MakeSourceVoice(playParameters,
 		GetBuffer(playParameters.endpointVoiceId, playParameters.soundId, playParameters.loop));
+#endif
 }
 
 //===================================================================================================================================
 //【停止】
 //===================================================================================================================================
-void	 SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
+void SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
@@ -103,13 +113,15 @@ void	 SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 			return;
 		}
 	}
+#endif
 }
 
 //===================================================================================================================================
 //【更新処理】
 //===================================================================================================================================
-void	 SoundBase::updateSound(void)
+void SoundBase::updateSound(void)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//再生状態をチェック
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
@@ -129,8 +141,10 @@ void	 SoundBase::updateSound(void)
 			}
 		}
 	}
+#endif
 }
 
+#if(_MSC_VER >= GAME_MSC_VER)
 //===================================================================================================================================
 //【サウンドバッファを取得】
 //===================================================================================================================================
@@ -152,7 +166,6 @@ LIST_BUFFER *SoundBase::GetBuffer(int endpointVoiceId, int soundId, bool loop)
 		}
 		return &SEBufferList[soundId];
 	}
-	
 	return nullptr;
 }
 
@@ -221,6 +234,7 @@ void SoundBase::MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFE
 	//再生
 	playSound(playParameters);
 }
+#endif
 
 //===================================================================================================================================
 //【WAVファイルの読み込み処理】

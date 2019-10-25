@@ -12,19 +12,22 @@
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
+#if(_MSC_VER >= GAME_MSC_VER)
 const char * const BGMManager::splashBGMPathList[] = { "BGM_Splash.wav" };
 const char * const BGMManager::titleBGMPathList[] = { "BGM_Title.wav" };
 const char * const BGMManager::gameBGMPathList[] = { "BGM_Game.wav" };
 int BGMManager::BGMScene = SceneList::SPLASH;
 float BGMManager::startTime = 0;
 float BGMManager::currentTime = 0;
-
+#endif
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 BGMManager::BGMManager()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 
+#endif
 }
 
 //===================================================================================================================================
@@ -32,7 +35,10 @@ BGMManager::BGMManager()
 //===================================================================================================================================
 BGMManager::~BGMManager()
 {
+#if(_MSC_VER >= GAME_MSC_VER)
+
 	SAFE_DELETE_ARRAY(BGMBufferList);
+#endif
 }
 
 //===================================================================================================================================
@@ -40,9 +46,12 @@ BGMManager::~BGMManager()
 //===================================================================================================================================
 void	 BGMManager::SetSpeed(void)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	////ターゲット情報
 	//SOUND_PARAMETERS targetSoundParameters;
-	//targetSoundParameters.playParameters.endpointVoiceId = ENDPOINT_VOICE_LIST::ENDPOINT_BGM;
+	//targetSoundParameters.playParameters.endpointVoiceId = 
+	
+	::ENDPOINT_BGM;
 	//targetSoundParameters.playParameters.soundId = GAME_BGM_LIST::GAME_BGM_01;
 	//targetSoundParameters.playParameters.loop = true;
 
@@ -89,6 +98,7 @@ void	 BGMManager::SetSpeed(void)
 			}
 		}
 	}
+#endif
 }
 
 //===================================================================================================================================
@@ -96,7 +106,8 @@ void	 BGMManager::SetSpeed(void)
 //===================================================================================================================================
 void BGMManager::SetSpeedOn(void)
 {
-
+#if(_MSC_VER >= GAME_MSC_VER)
+#endif
 }
 
 //===================================================================================================================================
@@ -105,6 +116,7 @@ void BGMManager::SetSpeedOn(void)
 #ifdef _DEBUG
 void BGMManager::outputBGMGUI(void)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	if (!ImGui::CollapsingHeader("BGMInformation"))
 	{
 		//使用中のバッファ数
@@ -255,14 +267,16 @@ void BGMManager::outputBGMGUI(void)
 
 		}
 	}
+#endif
 }
 #endif
 
 //===================================================================================================================================
 //【ステージ遷移に合わせて必要なサウンドバッファを用意する】
 //===================================================================================================================================
-void	 BGMManager::SwitchAudioBuffer(int scene)
+void BGMManager::SwitchAudioBuffer(int scene)
 {
+#if(_MSC_VER >= GAME_MSC_VER)
 	//サウンドディレクトリに設定する
 	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_BGM);
 
@@ -346,4 +360,5 @@ void	 BGMManager::SwitchAudioBuffer(int scene)
 	default:
 		break;
 	}
+#endif
 }

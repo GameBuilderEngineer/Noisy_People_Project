@@ -28,7 +28,9 @@
 #include <windows.h>
 #include <string>
 #include <d3d9.h>
+#if(_MSC_VER >= GAME_MSC_VER)
 #include <XAudio2.h>
+#endif
 #include <Effekseer.h>
 #include <EffekseerRendererDX9.h>
 #include <EffekseerSoundXAudio2.h>
@@ -38,15 +40,21 @@
 //【ライブラリの読み込み】
 //===================================================================================================================================
 #pragma comment(lib, "d3d9.lib" )
+#if(_MSC_VER >= GAME_MSC_VER)
 #pragma comment(lib, "xaudio2.lib" )
+#endif
 #if _DEBUG
 #pragma comment(lib, "VS2017/Debug/Effekseer.lib" )
 #pragma comment(lib, "VS2017/Debug/EffekseerRendererDX9.lib" )
+#if(_MSC_VER >= GAME_MSC_VER)
 #pragma comment(lib, "VS2017/Debug/EffekseerSoundXAudio2.lib" )
+#endif
 #else
 #pragma comment(lib, "VS2017/Release/Effekseer.lib" )
 #pragma comment(lib, "VS2017/Release/EffekseerRendererDX9.lib" )
+#if(_MSC_VER >= GAME_MSC_VER)
 #pragma comment(lib, "VS2017/Release/EffekseerSoundXAudio2.lib" )
+#endif
 #endif
 
 //===================================================================================================================================
@@ -111,15 +119,16 @@ public:
 
 	::Effekseer::Manager*				manager;
 	::EffekseerRendererDX9::Renderer*	renderer;
+#if(_MSC_VER >= GAME_MSC_VER)
 	::EffekseerSound::Sound*			sound;
+	IXAudio2*							xa2;
+	IXAudio2MasteringVoice*				xa2Master;
+#endif
 
 	//カメラ情報
 	::Effekseer::Vector3D				position;
 	::Effekseer::Vector3D				eye;
 	::Effekseer::Vector3D				up;
-
-	IXAudio2*							xa2;
-	IXAudio2MasteringVoice*				xa2Master;
 
 	//ファイル名
 	const wchar_t*						fileName[effekseerNS::MAX_EFFEKSEER];

@@ -30,11 +30,11 @@ Title::Title(void)
 	nextScene = SceneList::TUTORIAL;
 
 	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);	
+	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);
 
 	//再生パラメータ
 	memset(playParameters, 0, sizeof(playParameters));
-	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false,NULL,true, filterParameters };
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false,NULL,true, filterParameters };
 	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, true,1.0f,true, filterParameters };
