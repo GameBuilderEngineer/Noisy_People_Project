@@ -330,6 +330,9 @@ void Game::update(float _frameTime) {
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
 
+	//電力減少（電力回復確認用）
+	player->pullpower(1);
+
 	//カメラの更新
 	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
 		camera[i].update();
@@ -465,7 +468,7 @@ void Game::collisions()
 				player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
 			{
 				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
-				player[j].addpower(playerNS::RECOVERY_POWER);				//電力加算
+				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
 				SoundInterface::playSound(playParameters[3]);	//SE再生
 				itemManager->destroyAllItem();					//デリート(今は全消し)
 			}

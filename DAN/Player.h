@@ -121,7 +121,7 @@ namespace playerNS{
 	// Another
 	const float DIFFERENCE_FIELD			= 0.05f;								// フィールド補正差分
 	const float CAMERA_SPEED				= 1.0f;									// カメラの速さ
-	const int	RECOVERY_POWER				= 85;									// 電力回復量
+	
 }
 
 
@@ -216,8 +216,8 @@ public:
 
 	//setter
 	void setCamera(Camera* _camera);							//操作対象カメラのセット
-	void addpower(int add);
-	void pullpower(int pull);
+	void addpower(int add);										//電力加算
+	void pullpower(int pull);									//電力減算
 	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
 
 	//getter

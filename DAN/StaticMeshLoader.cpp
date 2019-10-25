@@ -2,7 +2,7 @@
 //【StaticMeshLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/24
+// [更新日]2019/10/25
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -34,7 +34,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
 	fileName[STAR_REGULAR_POLYHEDRON_X100]			= { "x100starRegularPolyhedron.x" };		//05
 
-	fileName[SAMPLE_REDBULL]						= { "redbull.x" };							//03
+	fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
 	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
 
 	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
@@ -43,7 +43,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[GRASS]									= { "grass001.x" };							//04
 	fileName[STONE_001]								= { "stone001.x" };							//05
 	fileName[STONE_002]								= { "stone002.x" };							//06
-	fileName[STONE_003]								= { "stone003.x" };							//07
+	fileName[STONE_003]								= { "Rocks.x" };							//07
 
 	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
 	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02

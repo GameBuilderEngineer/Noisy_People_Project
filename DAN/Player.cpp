@@ -70,7 +70,7 @@ void Player::initialize(PlayerTable info)
 	radius				= bodyCollide.getRadius();				// メッシュ半径を取得
 	centralPosition		= position + bodyCollide.getCenter();	// 中心座標を設定
 	D3DXMatrixIdentity(&centralMatrixWorld);					// 中心座標ワールドマトリクスを初期化
-	power				= 300;									//キャラクター電力確認用
+	power				= MAX_POWER;							//キャラクター電力確認用
 }
 
 
@@ -86,7 +86,6 @@ void Player::update(float frameTime)
 	centralPosition = position + bodyCollide.getCenter();
 	acceleration *= 0.0f;
 
-	power = power - 1;
 
 	switch (state)
 	{

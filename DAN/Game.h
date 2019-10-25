@@ -27,6 +27,7 @@
 #include "Sky.h"
 
 #include "SpriteGauge.h"
+#include "Battery.h"
 
 #include "Sound.h"
 #include "SoundBase.h"

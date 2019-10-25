@@ -39,5 +39,5 @@ void Telop::update(float frameTime)
 //=============================================================================
 void Telop::render()
 {
-
+	telop->render();
 }
