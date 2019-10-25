@@ -193,7 +193,7 @@ void Enemy::grounding()
 	}
 }
 
-
+#ifdef _DEBUG
 //=============================================================================
 // à⁄ìÆëÄçÏ
 //=============================================================================
@@ -217,6 +217,7 @@ void Enemy::moveOperation()
 		move(D3DXVECTOR2(1, 0), camera->getDirectionX(), camera->getDirectionZ());
 	}
 }
+#endif
 
 
 //=============================================================================
@@ -258,7 +259,7 @@ void Enemy::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix
 	attractorMatrix = _attractorMatrix;
 }
 
-
+#ifdef _DEBUG
 //=============================================================================
 // ÉJÉÅÉâÇÃëÄçÏÇ∆çXêV
 //=============================================================================
@@ -293,6 +294,7 @@ void Enemy::setDebugEnvironment()
 
 	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 }
+#endif
 
 
 //===================================================================================================================================
@@ -340,5 +342,7 @@ EnemyData* Enemy::getEnemyData() { return enemyData; }
 // Setter
 //=============================================================================
 void Enemy::setDataToEnemy(EnemyData* _enemyData){	enemyData = _enemyData;}
+#ifdef _DEBUG
 void Enemy::setCamera(Camera* _camera) { camera = _camera; }
+#endif
 void Enemy::resetNumOfEnemy() { numOfEnemy = 0; }

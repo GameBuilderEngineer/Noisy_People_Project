@@ -180,6 +180,8 @@ public:
 
 	//setter
 	void setDataToEnemy(enemyNS::EnemyData* _enemyData);	// エネミーデータをエネミーに設定
+#ifdef _DEBUG
 	void setCamera(Camera* _camera);						// 操作対象カメラのセット
+#endif
 	static void resetNumOfEnemy();							// エネミーの数をリセットする
 };
