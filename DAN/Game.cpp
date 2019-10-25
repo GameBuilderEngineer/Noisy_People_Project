@@ -399,7 +399,8 @@ void Game::renderUI() {
 	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	//SpriteŽÀŒ±
-	spriteGauge->render();
+	//spriteGauge->render();
+	//telop->render();
 	
 	// ƒ¿ƒeƒXƒg‚ð–³Œø‚É
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

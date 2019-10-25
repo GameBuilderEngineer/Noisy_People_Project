@@ -28,6 +28,7 @@
 
 #include "SpriteGauge.h"
 #include "Battery.h"
+#include "telop.h"
 
 #include "Sound.h"
 #include "SoundBase.h"

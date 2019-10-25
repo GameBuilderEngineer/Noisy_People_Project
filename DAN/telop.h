@@ -6,6 +6,7 @@
 #pragma once
 #include "Telop.h"
 #include "Sprite.h"
+#include "TextureLoader.h"
 
 //=============================================================================
 // –¼‘O‹óŠÔ
@@ -24,6 +25,12 @@ namespace telopNS
 		TELOP_TYPE6,
 		MAX_TELOP
 	};
+
+	const int WIDTH = 800;
+	const int HEIGHT = 568;
+	const D3DXVECTOR3 POSITION = D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 2, 0.0f);
+	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);
 }
 
 
@@ -33,7 +40,7 @@ namespace telopNS
 class Telop
 {
 private:
-	Sprite *telop = new Sprite;
+	Sprite *telop[telopNS::MAX_TELOP];
 
 public:
 	void initialize();

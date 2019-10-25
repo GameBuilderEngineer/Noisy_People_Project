@@ -12,6 +12,25 @@ using namespace telopNS;
 //=============================================================================
 void Telop::initialize()
 {
+	for (int i = 0; i < MAX_TELOP; i++)
+	{
+		telop[i] = new Sprite;
+	}
+
+	telop[TELOP_TYPE0]->initialize(
+		*textureNS::reference(textureNS::TITLE_LOGO),
+		SpriteNS::CENTER,
+		WIDTH,
+		HEIGHT,
+		POSITION,
+		ROTATION,
+		COLOR
+	);
+	//telop[TELOP_TYPE1]->initialize
+	/*telop[TELOP_TYPE2]->initialize
+	telop[TELOP_TYPE3]->initialize
+	telop[TELOP_TYPE4]->initialize
+	telop[TELOP_TYPE5]->initialize*/
 
 }
 
@@ -21,7 +40,10 @@ void Telop::initialize()
 //=============================================================================
 void Telop::uninitialize()
 {
-
+	for (int i = 0; i < MAX_TELOP; i++)
+	{
+		SAFE_DELETE(telop[i]);
+	}
 }
 
 
@@ -39,5 +61,5 @@ void Telop::update(float frameTime)
 //=============================================================================
 void Telop::render()
 {
-	telop->render();
+	telop[TELOP_TYPE0]->render();
 }
