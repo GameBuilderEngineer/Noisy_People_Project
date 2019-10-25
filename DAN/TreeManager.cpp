@@ -11,19 +11,20 @@ using namespace treeNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void TreeManager::initialize()
+void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
 	nextID = 0;								// 次回発行IDを0に初期化
 
 	// 描画オブジェクトの作成
-	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_PLAYSTATION));
+	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
 	aLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
 	bTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 
-#if 0
+#if 0	// ツリーツールのデータを読み込む
+
 #endif
 }
 
@@ -89,6 +90,8 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 void TreeManager::createTree(TreeData treeData)
 {
 	Tree* tree = new Tree(treeData);	// ツリー作成
+
+	tree->setAttractor(attractorMesh, attractorMatrix);
 
 	// 幹の描画をセット
 	switch (treeData.model)

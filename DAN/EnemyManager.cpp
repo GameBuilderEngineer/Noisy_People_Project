@@ -136,21 +136,21 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	switch (enemyData->type)
 	{
 	case WOLF:
-		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL), enemyData);
+		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::DICE), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
 		wolfRenderer->registerObject(enemy);
 		break;
 
 	case TIGER:
-		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::SAMPLE_BUNNY), enemyData);
+		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
 		tigerRenderer->registerObject(enemy);
 		break;
 
 	case BEAR:
-		enemy = new Bear(staticMeshNS::reference(staticMeshNS::SAMPLE_HAT), enemyData);
+		enemy = new Bear(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
 		bearRenderer->registerObject(enemy);
@@ -220,10 +220,10 @@ void EnemyManager::destroyEnemy(int _enemyID)
 				bearRenderer->unRegisterObjectByID(enemyList[i]->id);
 				break;
 			}
+			SAFE_DELETE(enemyList[i]);				// インスタンス破棄
+			enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
+			break;
 		}
-		SAFE_DELETE(enemyList[i]);				// インスタンス破棄
-		enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
-		break;
 	}
 }
 
@@ -338,3 +338,5 @@ void EnemyManager::relocateEnemyAccordingToFile()
 //=============================================================================
 LinkedList<enemyNS::EnemyData>* EnemyManager::getEnemyDataList() { return &enemyDataList; }
 std::vector<Enemy*>& EnemyManager::getEnemyList() { return enemyList; }
+int EnemyManager::getNextID() { return nextID; }
+

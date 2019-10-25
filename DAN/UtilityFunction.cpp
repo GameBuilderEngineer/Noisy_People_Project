@@ -112,4 +112,3 @@ float UtilityFunction::wrap(float x, float low, float high)
 	const float n = std::fmod(x - low,high - low);
 	return (n >= 0) ? (n + low) : (n + high);
 }
-

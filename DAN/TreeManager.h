@@ -7,6 +7,8 @@
 #include <vector>
 #include "StaticMeshRenderer.h"
 #include "Tree.h"
+#include "AnalogTree.h"
+#include "DigitalTree.h"
 
 
 //=============================================================================
@@ -31,9 +33,11 @@ private:
 	StaticMeshRenderer* cTrunkRenderer;			// Cモデル幹描画オブジェクト
 	StaticMeshRenderer* cLeafRenderer;			// Cモデル葉描画オブジェクト
 	int nextID;									// 次回ツリー発行ID
+	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
+	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
 
 public:
-	void initialize();
+	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);

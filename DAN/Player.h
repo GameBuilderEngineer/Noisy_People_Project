@@ -2,7 +2,7 @@
 //【Player.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/10/18
+// [更新日]2019/10/24
 //===================================================================================================================================
 #pragma once
 
@@ -13,6 +13,7 @@
 #include "BoundingSphere.h"
 #include "Input.h"
 #include "Camera.h"
+#include "GameMaster.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -39,16 +40,31 @@ namespace playerNS{
 		BYTE reverseCameraY;
 	};
 
-	const OperationKeyTable KEY_TABLE_1P = {
-		'W',					//FRONT
-		'S',					//BACK
-		'D',					//RIGHT
-		'A',					//LEFT
-		'R',					//RESET
-		VK_LSHIFT,				//DASH
-		VK_SPACE,				//JUMP
-		VK_F11,					//ReverseCameraAxisX
-		VK_F12,					//ReverseCameraAxisY
+	const OperationKeyTable KEY_TABLE[gameMasterNS::PLAYER_NUM] = {
+		//1P
+		{
+			'W',					//FRONT
+			'S',					//BACK
+			'D',					//RIGHT
+			'A',					//LEFT
+			'R',					//RESET
+			VK_LSHIFT,				//DASH
+			VK_SPACE,				//JUMP
+			VK_F11,					//ReverseCameraAxisX
+			VK_F12,					//ReverseCameraAxisY
+		},
+		//2P
+		{
+			'W',					//FRONT
+			'S',					//BACK
+			'D',					//RIGHT
+			'A',					//LEFT
+			'R',					//RESET
+			VK_LSHIFT,				//DASH
+			VK_SPACE,				//JUMP
+			VK_F11,					//ReverseCameraAxisX
+			VK_F12,					//ReverseCameraAxisY
+		}
 	};
 
 	const OperationKeyTable NON_CONTOROL = {
@@ -77,8 +93,11 @@ namespace playerNS{
 		STATE_NUM
 	};
 
-	const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(-35, 10, 0);
-	//const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(0, 0, 0);
+	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
+	{
+		D3DXVECTOR3(-35, 10, 0),		//1P
+		D3DXVECTOR3(35, 10, 0)			//2P
+	};
 
 	// StatusParameter
 	const int	MAX_HP						= 100;									// ＨＰ最大値
@@ -112,8 +131,10 @@ namespace playerNS{
 class Player : public Object
 {
 private:
+	//プレイヤテーブル
+	PlayerTable					infomation;						//プレイヤー情報
+
 	//ステータス
-	int							type;							//プレイヤータイプ
 	playerNS::OperationKeyTable	keyTable;						//操作Keyテーブル
 	int							state;							//状態変数
 	int							hp;								// HP
@@ -153,20 +174,19 @@ private:
 	int							volume;							//ボリューム
 
 	// 汎用
-	LPDIRECT3DDEVICE9			device;						// Direct3Dデバイス
-	Input*						input;						// 入力系
-	Camera*						camera;						// 操作するカメラへのポインタ
-	D3DXVECTOR3					centralPosition;			// 中心座標
-	D3DXMATRIX					centralMatrixWorld;			// 中心座標ワールドマトリクス
+	LPDIRECT3DDEVICE9			device;							// Direct3Dデバイス
+	Input*						input;							// 入力系
+	Camera*						camera;							// 操作するカメラへのポインタ
+	D3DXVECTOR3					centralPosition;				// 中心座標
+	D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
 
 public:
 	Player();
 	~Player();
 
 	// 基本処理
-	virtual void initialize(int playerType, int modelType);
+	virtual void initialize(PlayerTable info);
 	virtual void update(float frameTime);
-	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	// 衝突
@@ -198,6 +218,7 @@ public:
 	void setCamera(Camera* _camera);							//操作対象カメラのセット
 	void addpower(int add);										//電力加算
 	void pullpower(int pull);									//電力減算
+	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
 
 	//getter
 	int getState();
@@ -209,4 +230,5 @@ public:
 	bool canDoSkyVision();
 	bool canShift();
 	BoundingSphere* getBodyCollide();							//球コリジョンの取得
+	PlayerTable*	getInfomation();							//プレイヤー情報取得
 };

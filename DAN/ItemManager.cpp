@@ -4,20 +4,29 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #include "ItemManager.h"
-#include "StaticMeshRenderer.h"
 #include "ImguiManager.h"
+#include "ItemTools.h"
 using namespace itemNS;
 
 //=============================================================================
 // 初期化
 //=============================================================================
-void ItemManager::initialize()
+void ItemManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
 	nextID = 0;		// 次回発行IDを0に初期化
 
 	// 描画オブジェクトを作成
 	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 	exampleItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+
+#if 0	// アイテムツールのデータを読み込む
+	ITEM_TOOLS* itemTools = new ITEM_TOOLS;
+	for (int i = 0; i < itemTools->GetItemMax(); i++)
+	{
+		createItem(itemTools->GetItemSet(i));
+	}
+	SAFE_DELETE(itemTools);
+#endif
 }
 
 
@@ -70,17 +79,18 @@ void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 void ItemManager::createItem(ItemData itemData)
 {
 	Item* item = NULL;
-	//Item* item2 = NULL;
 
 	switch (itemData.type)
 	{
 	case BATTERY:
 		item = new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData);
+		item->setAttractor(attractorMesh, attractorMatrix);
 		itemList.emplace_back(item);
 		batteryRenderer->registerObject(item);
 		break;
 	case EXAMPLE:
 		item = new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData);
+		item->setAttractor(attractorMesh, attractorMatrix);
 		itemList.emplace_back(item);
 		exampleItemRender->registerObject(item);
 		//itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
@@ -151,8 +161,6 @@ void ItemManager::outputGUI()
 	if (ImGui::CollapsingHeader("ItemInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		//float limitTop = 1000;
-		//float limitBottom = -1000;
 
 		ImGui::Text("numOfItem:%d", Item::getNumOfItem());
 	}
@@ -163,4 +171,4 @@ void ItemManager::outputGUI()
 //=============================================================================
 // Getter
 //=============================================================================
-std::vector<Item*>& ItemManager::getList() { return itemList; }
+std::vector<Item*>& ItemManager::getItemList() { return itemList; }

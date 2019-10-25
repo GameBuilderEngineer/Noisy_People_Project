@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Object.h"
-#include "StaticMeshRenderer.h"
 #include "BoundingSphere.h"
 
 
@@ -70,12 +69,15 @@ private:
 	Object leaf;						// 葉オブジェクト
 	Object trunk;						// 幹オブジェクト
 	BoundingSphere greeningArea;		// 緑化範囲
+	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
+	D3DXMATRIX*	attractorMatrix;		// 重力（引力）発生オブジェクトマトリックス
 	static int numOfTree;				// ツリーオブジェクトの総数
 
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();
 	void update(float frameTime);
+	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 
 	// Getter
 	Object* getLeaf();

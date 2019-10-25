@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/19
+// [更新日]2019/10/25
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -17,6 +17,7 @@
 #include "Result.h"
 #include "Create.h"
 #include "SE.h"
+#include "LinearTreeCell.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -56,7 +57,7 @@ Director::~Director() {
 	SAFE_DELETE(textManager);
 	SAFE_DELETE(fader);
 	SAFE_DELETE(effekseerManager);
-	//SAFE_DELETE(gameMaster);
+	SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
@@ -128,7 +129,7 @@ HRESULT Director::initialize() {
 	textManager->initialize();
 
 	//ゲーム管理クラス
-	//gameMaster = new GameMaster();
+	gameMaster = new GameMaster();
 
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
@@ -136,11 +137,75 @@ HRESULT Director::initialize() {
 
 	//scene
 	scene = new Splash();
+	scene->setGameMaster(gameMaster);
 	scene->initialize();
 
 	//fader
 	fader = new Fader();
 
+#pragma region LinearTreeCellTest
+#if 0
+
+	//オブジェクトの初期化
+	const int testNum = 10;
+	Object object[testNum];
+	ObjectTree<Object>* objectTreeArray[testNum];//Objectを包むObjectTreeポインタ配列
+	//オブジェクトの登録
+	for (int i = 0; i < testNum; i++)
+	{
+		//オブジェクトツリーに登録
+		ObjectTree<Object>* objectTree = new ObjectTree<Object>;
+		objectTree->object = &object[i]; //登録
+		objectTreeArray[i] = objectTree;
+	}
+	int partitionLevel = 4;
+	//線形4分木マネージャー
+	//空間範囲をX=-60～720; Y=-60～1200; Z=-60～720に設定
+	Linear4TreeManager<Object> l4Tree;
+	if (!l4Tree.initialize(
+		partitionLevel,
+		-60, -60,
+		720, 720))
+	{
+		MSG("線形４分木空間の初期化に失敗しました。");
+	}
+	//ループ内一時変数
+	DWORD collisionNum;
+	vector<Object*> collisionVector;	//衝突対象リスト
+	//仮ループ
+	do {
+		for (int i = 0; i < testNum; i++)
+		{
+			Object* tmp = objectTreeArray[i]->object;
+			objectTreeArray[i]->remove();//一度リストから外れる
+			//再登録
+			float top		= tmp->position.y + tmp->radius;
+			float bottom	= tmp->position.y - tmp->radius;
+			float right		= tmp->position.x + tmp->radius;
+			float left		= tmp->position.x - tmp->radius;
+			l4Tree.registObject(left, top, right, bottom, objectTreeArray[i]);
+		}
+		//衝突対応リストを取得
+		collisionNum = l4Tree.getAllCollisionList(collisionVector);
+
+		//衝突判定
+		DWORD c;
+		collisionNum /= 2;//2で割るのはペアになっているので
+		for (c = 0; c < collisionNum; c++)
+		{
+			//衝突判定処理
+			//collision(collisionVector[c*2],collisionVector[c*2+1]);
+		}
+
+
+
+	} while (true);
+
+#endif // TRUE
+#pragma endregion
+
+
+#pragma region MemoryTest
 	//メモリ解放テスト
 	//scene->uninitialize();
 	//SAFE_DELETE(scene);
@@ -156,6 +221,7 @@ HRESULT Director::initialize() {
 	//
 	//scene = new Splash();
 	//scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+#pragma endregion
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
@@ -239,15 +305,14 @@ void Director::mainLoop() {
 // [用途]アプリ全体の更新処理
 //===================================================================================================================================
 void Director::update() {
+	input->update(window->windowActivate);
 #ifdef _DEBUG
 	memory->update();
 	imgui->beginFrame();
-	imgui->update();//デフォルトウィンドウ
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
 #else
-	input->update(window->windowActivate);
 	if (input->wasKeyPressed(VK_F1))
 	{
 		hiddenCursor = !hiddenCursor;
@@ -281,6 +346,12 @@ void Director::update() {
 		scene->createGUI();
 		imgui->endImGui();
 	}
+	if (*gameMaster->getShowGUI())
+	{
+		imgui->beginImGui("GameMasterGUI");
+		gameMaster->createGUI();
+		imgui->endImGui();
+	}
 #endif // _DEBUG
 }
 
@@ -295,6 +366,7 @@ void Director::createGUI()
 	ImGui::SliderInt("fpsMode", &fpsMode, VARIABLE_FPS, FIXED_FPS);
 	ImGui::SliderInt("fixedFPS", &fixedFps, MIN_FRAME_RATE, MAX_FRAME_RATE);
 	ImGui::Checkbox("SceneGUI", scene->getShowGUI());	
+	ImGui::Checkbox("gameMasterGUI", gameMaster->getShowGUI());	
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("CPU %.2f ％", memory->getCpuUsege());
 	ImGui::Text("MEMORY %d kb", memory->getMemoryUsege());
@@ -419,25 +491,23 @@ void Director::displayFPS() {
 //===================================================================================================================================
 void Director::changeNextScene() {
 	int nextScene = scene->checkNextScene();		//次のシーンIDを取得	
-	//scene->copyGameMaster(gameMaster);			//ゲーム管理情報をDirectorへ保存
 	effekseerNS::stop();							//全エフェクト停止
-	scene->uninitialize();
+	scene->uninitialize();							//シーン終了処理
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{
-	case SceneList::SPLASH:					scene = new Splash(); break;
-	case SceneList::TITLE:					scene = new Title(); break;
+	case SceneList::SPLASH:					scene = new Splash();	break;
+	case SceneList::TITLE:					scene = new Title();	break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
-	case SceneList::CREDIT:					scene = new Credit(); break;
-	case SceneList::GAME:					scene = new Game(); break;
-	case SceneList::RESULT:					scene = new Result(); break;
-	case SceneList::CREATE:					scene = new Create(); break;
+	case SceneList::CREDIT:					scene = new Credit();	break;
+	case SceneList::GAME:					scene = new Game();		break;
+	case SceneList::RESULT:					scene = new Result();	break;
+	case SceneList::CREATE:					scene = new Create();	break;
 	case SceneList::NONE_SCENE:				break;
 	}
-	//scene->setGameMaster(gameMaster);//ゲーム管理情報をシーンへセット
-	//scene->setAnimationLoader(animationLoader);
-	scene->initialize();
-	currentSceneName = scene->getSceneName();
+	scene->setGameMaster(gameMaster);				//ゲーム管理情報をシーンへセット
+	scene->initialize();							//シーン初期化処理
+	currentSceneName = scene->getSceneName();		//現在シーン名の取得
 }
 
 //void threadA()

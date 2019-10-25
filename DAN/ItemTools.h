@@ -21,6 +21,7 @@
 #define ITEM_CHUNK			("ITEM")
 #define IFMT_CHUNK			("IFMT")
 #define ITEM_FILE_PATH		("item.item")
+#define ITEM_GUI_ID			(2)
 
 //===================================================================================================================================
 //【構造体】
@@ -28,22 +29,22 @@
 typedef struct	//ITEMチャンク
 {
 	char chunkId[ITEM_CHUNK_ID];	//チャンクID
-	short size;						//以後のサイズ(ファイルのサイズ - 8byte)
-	short itemMax;					//敵の数
+	short size;				//サイズ
+	short itemMax;			//アイテムの数
 }ITEM_ITEM;
 
 typedef struct	//IFMTチャンク
 {
 	char chunkId[ITEM_CHUNK_ID];	//チャンクID
-	short size;						//このチャンクのサイズ
-	short itemId;					//アイテムのID
-	short itemType;					//アイテムの種類
-	float posX;						//アイテムの生成位置(X)
-	float posY;						//アイテムの生成位置(Y)
-	float posZ;						//アイテムの生成位置(Z)
-	float dirX;						//アイテムの向き(X)
-	float dirY;						//アイテムの向き(Y)
-	float dirZ;						//アイテムの向き(Z)
+	short size;				//このチャンクのサイズ
+	short itemId;			//アイテムのID
+	short itemType;			//アイテムの種類
+	float posX;				//アイテムの生成位置(X)
+	float posY;				//アイテムの生成位置(Y)
+	float posZ;				//アイテムの生成位置(Z)
+	float dirX;				//アイテムの向き(X)
+	float dirY;				//アイテムの向き(Y)
+	float dirZ;				//アイテムの向き(Z)
 }ITEM_IFMT;
 
 typedef struct	//ITEMファイル構造体
@@ -62,43 +63,61 @@ public:
 	ITEM_TOOLS();
 	~ITEM_TOOLS();
 
-	//関数
-	itemNS::ITEMSET GetItemSet(short itemId);
-	int GetItemMax(void);
-	void SetItem(short itemId, short itemType, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
+	//ファイル
+	int GetItemMax(void);									//アイテムの数を取得
+	itemNS::ITEMSET GetItemSet(short itemId);				//アイテムセット構造体を取得
 
 #ifdef _DEBUG
-	//関数
-	void outputItemToolsGUI(const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
+	//変数
+	int ItemListboxType;									//アイテムの種類(リストボックス)
+	BoundingSphere *bodyCollide;							//当たり判定
+	Object** object;										//オブジェクト
 
-	////描画用
-	//void initialize();
-	//void update();
-	//void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	//void generate(D3DXVECTOR3 position);
+	//GUI
+	void outputItemToolsGUI(int GUIid,						//GUI
+		const D3DXVECTOR3 pos,const D3DXVECTOR3 dir);
+
+	//レンダラー
+	int  GetStaticMeshID(short itemType);					//メッシュIDを取得
+	void initRender();										//レンダラーの初期化
+	void initObject();										//オブジェクトの初期化
+	void update();											//更新
+	void render(D3DXMATRIX view,							//描画
+		D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	void generate(Object *object, short enemyType,			//作成
+		D3DXVECTOR3 position, D3DXVECTOR3 dir);
 #endif
 
 private:
 
 	//変数
-	ITEM_FILE itemFile;					//アイテム構造体
-	int ItemListboxCurrent;				//アイテム選択用(リストボックス)
-	int ItemListboxType;				//アイテムの種類(リストボックス)
+	ITEM_FILE itemFile;										//アイテム構造体
+
+	//アイテムファイル
+	void OutputItemFile(void);								//アイテムファイルの書き出し処理
+	void CreatNewItemFile(void);							//アイテムファイルの新規作成
 
 #ifdef _DEBUG
-	////描画用
-	//StaticMeshObject* renderer;
-	//bool needUpdate;
+	//変数	
+	StaticMeshRenderer** renderer;							//レンダラー
+	bool needUpdate;										//更新フラグ
+	int ItemListboxCurrent;									//アイテム選択用(リストボックス)
+
+	//レンダラー
+	void ResetRenderer(void);								//レンダラーをリセット
+
+	//アイテムフォーマット構造体
+	void UpdateIfmt(int oldItemMax);						//アイテムのフォーマット構造体を整理
+	void DeleteItemFormat(short itemId);					//アイテムのフォーマット構造体を消す
+	void AddItemFormat(short itemType,
+		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
+
+	//アイテムの設置
+	void SetItemType(short itemId, short itemType);			//アイテムの種類を設定	
+	void SetItemPos(short itemId, const D3DXVECTOR3 pos);	//アイテムの状態を設定
+	void SetItemDir(short itemId, const D3DXVECTOR3 dir);	//アイテムの位置を設定
+	void SetItem(short itemId, short itemType,				//アイテムの向きを設定
+		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);		//アイテムの設置
+
 #endif
-
-	//関数
-	void SetItemType(short itemId, short itemType);
-	void SetItemPos(short itemId, const D3DXVECTOR3 pos);
-	void SetItemDir(short itemId, const D3DXVECTOR3 dir);
-	void OutputItemFile(void);				//アイテムファイルの書き出し処理
-	void CreatNewItemFile(void);			//アイテムファイルの新規作成
-	void AddItemFormat(short itemType, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
-	void DeleteItemFormat(short itemId);	//アイテムのフォーマット構造体を消す
-	void UpdateIfmt(int oldItemMax);		//アイテムのフォーマット構造体を整理
-
 };

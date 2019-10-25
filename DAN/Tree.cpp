@@ -45,6 +45,16 @@ void Tree::update(float frameTime)
 
 
 //=============================================================================
+// 重力発生メッシュ（接地メッシュ）の設定
+//=============================================================================
+void Tree::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
+{
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
+}
+
+
+//=============================================================================
 // Getter
 //=============================================================================
 Object* Tree::getLeaf() { return &leaf; }
