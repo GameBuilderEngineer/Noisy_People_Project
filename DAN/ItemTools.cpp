@@ -126,7 +126,7 @@ void ITEM_TOOLS::outputItemToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		ImGui::Checkbox("Delete", &deleteFlag);
 
 		//アイテムの種類
-		const char* listboxItemType[] = { "BATTERY" };
+		const char* listboxItemType[] = { "BATTERY" ,"EXAMPLE" };
 		ImGui::ListBox("Item Type", &ItemListboxType, listboxItemType, itemNS::ITEM_TYPE::ITEM_TYPE_MAX);
 
 		//アイテムの情報
@@ -345,6 +345,8 @@ int ITEM_TOOLS::GetStaticMeshID(short enemyType)
 	case itemNS::ITEM_TYPE::BATTERY:
 		staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
 		break;
+	case itemNS::ITEM_TYPE::EXAMPLE:
+		staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
 	default:
 		break;
 	}

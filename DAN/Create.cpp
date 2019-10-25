@@ -102,6 +102,9 @@ void Create::initialize() {
 		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_BATTERY:
 			staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
 			break;
+		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_EXAMPLE:
+			staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
+			break;
 		default:
 			break;
 		}
@@ -383,7 +386,7 @@ int Create::getBufferID(int meshID)
 	switch (meshID)
 	{
 	case staticMeshNS::YAMADA_ROBOT2:
-		return  tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER;
+		return  tmpObjNS::TMPOBJ_LIST::TMPOBJ_EXAMPLE;
 		break;
 	case staticMeshNS::SAMPLE_REDBULL:
 		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_WOLF;
@@ -397,6 +400,9 @@ int Create::getBufferID(int meshID)
 	case staticMeshNS::SAMPLE_SCISSORS:
 		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_BATTERY;
 		break;
+	//case staticMeshNS::YAMADA_ROBOT2:
+	//	return tmpObjNS::TMPOBJ_LIST::TMPOBJ_EXAMPLE;
+	//	break;
 	default:
 		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER;
 		break;

@@ -26,6 +26,7 @@ namespace tmpObjNS {
 		TMPOBJ_TIGER,
 		TMPOBJ_BEAR,
 		TMPOBJ_BATTERY,
+		TMPOBJ_EXAMPLE,
 		TMPOBJ_MAX
 	};
 
