@@ -144,7 +144,7 @@ HRESULT Director::initialize() {
 	fader = new Fader();
 
 #pragma region LinearTreeCellTest
-#ifdef 0
+#if 0
 
 	//オブジェクトの初期化
 	const int testNum = 10;

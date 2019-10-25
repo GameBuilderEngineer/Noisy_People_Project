@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/10/18
+// [更新日]2019/10/25
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -85,8 +85,8 @@ void Game::initialize() {
 
 	//player
 	player			= new Player[gameMasterNS::PLAYER_NUM];
-	maleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT));
-	femaleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+	maleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
+	femaleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
@@ -110,12 +110,12 @@ void Game::initialize() {
 		{
 		case gameMasterNS::PLAYER_1P:
 			infomation.playerType	= gameMasterNS::PLAYER_1P;
-			infomation.modelType	= gameMasterNS::MODEL_MALE;
+			infomation.modelType	= gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			break;
 		case gameMasterNS::PLAYER_2P:
 			infomation.playerType	= gameMasterNS::PLAYER_2P;
-			infomation.modelType	= gameMasterNS::MODEL_FEMALE;
+			infomation.modelType	= gameMasterNS::MODEL_MALE;
 			player[i].initialize(infomation);
 			break;
 		}

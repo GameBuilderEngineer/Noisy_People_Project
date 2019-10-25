@@ -16,7 +16,7 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	nextID = 0;								// 次回発行IDを0に初期化
 
 	// 描画オブジェクトの作成
-	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_PLAYSTATION));
+	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
 	aLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
 	bTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
