@@ -29,6 +29,7 @@
 
 #include "EnemyTools.h"
 #include "ItemTools.h"
+#include "TreeTools.h"
 
 
 //===================================================================================================================================
@@ -66,6 +67,8 @@ private:
 	ENEMY_TOOLS *enemyTools;
 	//アイテムツール
 	ITEM_TOOLS *itemTools;
+	//ツリーツール
+	TREE_TOOLS *treeTools;
 
 	//枯木
 	DeadTree* deadTree;

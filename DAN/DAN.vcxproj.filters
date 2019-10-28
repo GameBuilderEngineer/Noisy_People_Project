@@ -473,9 +473,6 @@
     <ClCompile Include="MapObjectTool.cpp">
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="TreeToools.cpp">
-      <Filter>Tools Layer\Tree</Filter>
-    </ClCompile>
     <ClCompile Include="MapObjectTool.cpp">
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
@@ -493,6 +490,9 @@
     </ClCompile>
     <ClCompile Include="LinearTreeCell.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="TreeTools.cpp">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -762,9 +762,6 @@
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="TreeToools.h">
-      <Filter>Tools Layer\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
@@ -780,6 +777,9 @@
     </ClInclude>
     <ClInclude Include="LinearTreeCell.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="TreeTools.h">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

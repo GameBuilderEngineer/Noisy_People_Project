@@ -32,6 +32,8 @@ Create::Create()
 	enemyTools = new ENEMY_TOOLS;
 	//アイテムツール
 	itemTools = new ITEM_TOOLS;
+	//ツリーツール
+	treeTools = new TREE_TOOLS;
 
 }
 
@@ -44,6 +46,8 @@ Create::~Create()
 	SAFE_DELETE(enemyTools);
 	//アイテムツール
 	SAFE_DELETE(itemTools);
+	//ツリーツール
+	SAFE_DELETE(treeTools);
 }
 
 //===================================================================================================================================
@@ -173,6 +177,7 @@ void Create::update(float _frameTime) {
 	//ツールの更新
 	enemyTools->update();
 	itemTools->update();
+	treeTools->update();
 
 	//プレイヤーの更新
 	tmpObject->update(frameTime);
@@ -262,6 +267,7 @@ void Create::render3D(Camera currentCamera) {
 	//ツールの描画
 	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	itemTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	treeTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 }
 
 //===================================================================================================================================
@@ -325,7 +331,8 @@ void Create::toolsGUI()
 
 		enemyTools->outputEnemyToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 		itemTools->outputItemToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
-		
+		treeTools->outputTreeToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
+
 		int backupMeshId = meshId;
 		switch (ToolsListboxType)
 		{
