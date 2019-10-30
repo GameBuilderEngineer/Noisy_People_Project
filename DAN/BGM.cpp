@@ -17,8 +17,6 @@ const char * const BGMManager::splashBGMPathList[] = { "BGM_Splash.wav" };
 const char * const BGMManager::titleBGMPathList[] = { "BGM_Title.wav" };
 const char * const BGMManager::gameBGMPathList[] = { "BGM_Game.wav" };
 int BGMManager::BGMScene = SceneList::SPLASH;
-float BGMManager::startTime = 0;
-float BGMManager::currentTime = 0;
 #endif
 //===================================================================================================================================
 //【コンストラクタ】
@@ -44,16 +42,9 @@ BGMManager::~BGMManager()
 //===================================================================================================================================
 //【再生速度の設定】
 //===================================================================================================================================
-void	 BGMManager::SetSpeed(void)
+void BGMManager::SetSpeed(void)
 {
 #if(_MSC_VER >= GAME_MSC_VER)
-	////ターゲット情報
-	//SOUND_PARAMETERS targetSoundParameters;
-	//targetSoundParameters.playParameters.endpointVoiceId = 
-	
-	::ENDPOINT_BGM;
-	//targetSoundParameters.playParameters.soundId = GAME_BGM_LIST::GAME_BGM_01;
-	//targetSoundParameters.playParameters.loop = true;
 
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
@@ -208,49 +199,6 @@ void BGMManager::outputBGMGUI(void)
 
 				SAFE_DELETE_ARRAY(fData);
 
-				//for (int j = 11023; j > 0; j--)
-//{
-//	if (playPoint - j < 0)
-//	{
-//		lines[j] = 0.0f;
-//		continue;
-//	}
-//	lines[j] = (float)tmpBuffer->wavFile.data.waveData[playPoint - j];
-//}
-//for (int j = 11024 / tmpBuffer->wavFile.fmt.fmtChannel; j > 0; j--)
-//{
-//	for (int k = 0; k < tmpBuffer->wavFile.fmt.fmtChannel; k++)
-//	{
-//		if (playPoint - j * tmpBuffer->wavFile.fmt.fmtChannel < 0)
-//		{
-//			lines[j * tmpBuffer->wavFile.fmt.fmtChannel - k] = 0.0f;
-//			continue;
-//		}
-//		lines[j * tmpBuffer->wavFile.fmt.fmtChannel - k] = (float)tmpBuffer->wavFile.data.waveData[playPoint - (j * tmpBuffer->wavFile.fmt.fmtChannel - k)] / tmpBuffer->wavFile.fmt.fmtChannel;
-//	}
-//}
-				////test
-				//short data[10] = { 0,1,2,3,4,5,6,7,8,9 }; 
-				//int tmpChannel = 1;
-				//int saveDataMax = 10;
-				//int dataMax = (saveDataMax / tmpChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
-				//float *fData = new (float[dataMax]);
-				//memset(fData, 0, sizeof(float)*dataMax);
-				//fData[0] = (float)SHRT_MIN;
-				//fData[dataMax - 1] = (float)SHRT_MAX;
-				//int wtPos = dataMax - 2;
-				//for (int j = saveDataMax - 1; j > 0; j -= tmpChannel)
-				//{
-				//	for (int k = 0; k < tmpChannel; k++)
-				//	{
-				//		fData[wtPos] += ((float)data[j - k] / (float)tmpChannel);
-				//	}
-				//	wtPos--;
-				//}
-				//ImGui::PlotLines("", fData, dataMax, 0, "tmp wave", FLT_MAX, FLT_MAX, plotextent);
-				//ImGui::Text("0.5f 2.5f 4.5f 6.5f 8.5f");
-				//SAFE_DELETE_ARRAY(fData);
-
 				//再生位置
 				ImGui::ProgressBar(playPoint / (float)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel));
 
@@ -262,9 +210,8 @@ void BGMManager::outputBGMGUI(void)
 				{
 					tmpSoundParameters->isSpeed = true;
 					BGMManager::SetSpeed();
-				};
+				}
 			}
-
 		}
 	}
 #endif

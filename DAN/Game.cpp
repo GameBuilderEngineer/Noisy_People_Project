@@ -32,15 +32,15 @@ Game::Game()
 	//再生パラメータ
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,true, filterParameters };
-	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,true, filterParameters };
-	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,true, filterParameters };		//アイテム取得音
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL, true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,false,NULL,true, filterParameters };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,false,NULL,true, filterParameters };
+	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL,true, filterParameters };		//アイテム取得音
 
 	//再生
-	SoundInterface::playSound(playParameters[0]);
-	SoundInterface::playSound(playParameters[1]);
-	SoundInterface::playSound(playParameters[2]);
+	SoundInterface::SE->playSound(playParameters[0]);
+	SoundInterface::SE->playSound(playParameters[1]);
+	SoundInterface::BGM->playSound(playParameters[2]);
 }
 
 //===================================================================================================================================
@@ -49,10 +49,10 @@ Game::Game()
 Game::~Game()
 {
 	// サウンドの停止
-	SoundInterface::stopSound(playParameters[0]);
-	SoundInterface::stopSound(playParameters[1]);
-	SoundInterface::stopSound(playParameters[2]);
-	SoundInterface::stopSound(playParameters[3]);
+	SoundInterface::SE->stopSound(playParameters[0]);
+	SoundInterface::SE->stopSound(playParameters[1]);
+	SoundInterface::BGM->stopSound(playParameters[2]);
+	SoundInterface::SE->stopSound(playParameters[3]);
 }
 
 //===================================================================================================================================
@@ -264,7 +264,6 @@ void Game::update(float _frameTime) {
 	// アイテムの更新
 	itemManager->update(frameTime);
 
-
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
 	//エフェクトの再生
@@ -336,8 +335,6 @@ void Game::update(float _frameTime) {
 	//カメラの更新
 	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
 		camera[i].update();
-
-	//sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
 
 	// Enterまたは〇ボタンでリザルトへ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -469,7 +466,7 @@ void Game::collisions()
 			{
 				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
 				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
-				SoundInterface::playSound(playParameters[3]);	//SE再生
+				SoundInterface::SE->playSound(playParameters[3]);	//SE再生
 				itemManager->destroyAllItem();					//デリート(今は全消し)
 			}
 		}

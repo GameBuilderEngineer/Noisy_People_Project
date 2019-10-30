@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="3DSound.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="AIDirector.h" />
     <ClInclude Include="AnalogTree.h" />
@@ -237,6 +238,7 @@
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3DSound.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="AIDirector.cpp" />
     <ClCompile Include="AnalogTree.cpp" />

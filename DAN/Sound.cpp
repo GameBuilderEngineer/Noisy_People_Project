@@ -58,7 +58,7 @@ SoundInterface::SoundInterface()
 		&EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_BGM],	//サブミックスボイス
 		ENDPOINT_INPUT_CHANNEL,								//チャンネル数(入力)
 		ENDPOINT_SAMPLE_RATE,								//サンプリングレート(入力)
-		XAUDIO2_VOICE_USEFILTER,								//フィルター機能
+		XAUDIO2_VOICE_USEFILTER,							//フィルター機能
 		NULL,												//意味ないもの
 		NULL)))												//送信リスト(NULL:Mastering Voiceへの単一の出力となる)
 	{														//エフェクトチェーン
@@ -69,7 +69,7 @@ SoundInterface::SoundInterface()
 		&EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_SE],	//サブミックスボイス
 		ENDPOINT_INPUT_CHANNEL,								//チャンネル数(入力)
 		ENDPOINT_SAMPLE_RATE,								//サンプリングレート(入力)
-		XAUDIO2_VOICE_USEFILTER,								//フィルター機能
+		XAUDIO2_VOICE_USEFILTER,							//フィルター機能
 		NULL,												//意味ないもの
 		NULL,												//送信リスト(NULL:Mastering Voiceへの単一の出力となる)
 		NULL)))												//エフェクトチェーン
@@ -82,6 +82,7 @@ SoundInterface::SoundInterface()
 	SendList[ENDPOINT_VOICE_LIST::ENDPOINT_BGM] = { 1,&SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_BGM] };
 	SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_SE] = { XAUDIO2_SEND_USEFILTER,EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_SE] };
 	SendList[ENDPOINT_VOICE_LIST::ENDPOINT_SE] = { 1,&SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_SE] };
+
 #endif
 }
 
@@ -180,41 +181,5 @@ void SoundInterface::outputSoundGUI(void)
 
 	ImGui::End();
 #endif
-#endif
-}
-
-//===================================================================================================================================
-//【再生】
-//===================================================================================================================================
-void SoundInterface::playSound(const PLAY_PARAMETERS playParameters)
-{
-#if(_MSC_VER >= GAME_MSC_VER)
-	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
-	{
-		BGM->playSound(playParameters);
-	}
-	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
-	{
-		//SE
-		SE->playSound(playParameters);
-	}
-#endif
-}
-
-//===================================================================================================================================
-//【停止】
-//===================================================================================================================================
-void SoundInterface::stopSound(const PLAY_PARAMETERS playParameters)
-{
-#if(_MSC_VER >= GAME_MSC_VER)
-	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
-	{
-		BGM->stopSound(playParameters);
-	}
-	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
-	{
-		//SE
-		SE->stopSound(playParameters);
-	}
 #endif
 }

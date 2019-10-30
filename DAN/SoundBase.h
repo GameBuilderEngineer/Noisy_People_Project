@@ -37,12 +37,12 @@ typedef struct	// fmt チャンク
 {
 	char		fmtChunk[CHUNK_ID_SIZE];
 	long		fmtSize;
-	short	fmtFormatTag;
-	short	fmtChannel;
+	short		fmtFormatTag;
+	short		fmtChannel;
 	long		fmtSampleRate;
 	long		fmtAvgBytesPerSec;
-	short	fmtBlockAlign;
-	short	fmtBitPerSample;
+	short		fmtBlockAlign;
+	short		fmtBitPerSample;
 }FMT_CHUNK;
 
 typedef struct	// dataチャンク 
@@ -100,10 +100,12 @@ typedef enum //フィルターの種類
 
 typedef struct //再生パラメータ
 {
-	int								endpointVoiceId;		//エンドポイントボイスID
-	int								soundId;				//サウンドID
+	int								endpointVoiceId;	//エンドポイントボイスID
+	int								soundId;			//サウンドID
 	bool							loop;				//ループ
 	float							speed;				//再生速度
+	bool							x3d;				//3D?
+	int								emitterID;			//エミッタID
 	bool							filterFlag;			//卍フィルター卍
 	FILTER_PARAMETERS				filterParameters;	//卍フィルター卍
 }PLAY_PARAMETERS;
@@ -111,9 +113,9 @@ typedef struct //再生パラメータ
 #if(_MSC_VER >= GAME_MSC_VER)
 typedef struct //曲のパラメータ
 {
-	IXAudio2SourceVoice *SourceVoice;	//ソースボイス
-	PLAY_PARAMETERS		playParameters;	//再生パラメータ
-	bool					isSpeed;			//再生速度変更した?
+	IXAudio2SourceVoice		*SourceVoice;	//ソースボイス
+	PLAY_PARAMETERS			playParameters;	//再生パラメータ
+	bool					isSpeed;		//再生速度変更した?
 	bool					isPlaying;		//再生中?
 	long					stopPoint;		//停止位置
 }SOUND_PARAMETERS;
@@ -129,18 +131,18 @@ public:
 	SoundBase();
 	~SoundBase();
 
-	void	 playSound(const PLAY_PARAMETERS playParameters);	//再生
-	void	 stopSound(const PLAY_PARAMETERS playParameters);	//停止
-	void	 updateSound(void);										//更新処理
+	void playSound(const PLAY_PARAMETERS playParameters);	//再生
+	void stopSound(const PLAY_PARAMETERS playParameters);	//停止
+	void updateSound(void);									//更新
 
 protected:
-	static WAV_FILE	LoadWavChunk(FILE *fp);								//WAVファイルの読み込み処理
+	static WAV_FILE	LoadWavChunk(FILE *fp);					//WAVファイルの読み込み処理
 #if(_MSC_VER >= GAME_MSC_VER)
-	void				MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer);
+	void MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer);
 #endif
-	void				uninitSoundStop(void);								//停止(全部のサウンド)
+	void uninitSoundStop(void);								//停止(全部のサウンド)
 #if(_MSC_VER >= GAME_MSC_VER)
-	LIST_BUFFER		*GetBuffer(int endpointVoiceId, int soundId, bool loop);
+	LIST_BUFFER	*GetBuffer(int endpointVoiceId, int soundId, bool loop);
 #endif
 
 	//バッファリスト

@@ -41,7 +41,7 @@ class SoundInterface
 private:
 	//変数
 #if(_MSC_VER >= GAME_MSC_VER)
-	IXAudio2MasteringVoice				*MasteringVoice;											//XAudio2 Mastering Voice
+	IXAudio2MasteringVoice				*MasteringVoice;										//XAudio2 Mastering Voice
 	IXAudio2SubmixVoice					*EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];		//XAudio2 Submix Vice(Endpoint Voice)
 	XAUDIO2_SEND_DESCRIPTOR				SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];		//XAudio2 Send Descriptor(BGM/SE Endpoint Voice)
 #endif
@@ -56,8 +56,8 @@ public:
 	
 	//変数
 #if(_MSC_VER >= GAME_MSC_VER)
-	static IXAudio2						*XAudio2Interface;										//XAudio2 COM interface
-	static XAUDIO2_VOICE_SENDS			SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];				//XAudio2 Send List(BGM/SE Endpoint Voice)
+	static IXAudio2						*XAudio2Interface;										//XAudio2 COM Interface
+	static XAUDIO2_VOICE_SENDS			SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];			//XAudio2 Send List(BGM/SE Endpoint Voice)
 #endif
 
 	//関数
@@ -66,8 +66,6 @@ public:
 	static IXAudio2						*GetXAudio2Interface(void);								//XAudio2のインタフェースを取得する
 #endif
 	static void							SwitchAudioBuffer(int scene);							//シーンの更新
-	static void							playSound(const PLAY_PARAMETERS playParameters);			//再生
-	static void							stopSound(const PLAY_PARAMETERS playParameters);			//停止
 	void								UpdateSound(void);										//更新処理
 	void								outputSoundGUI(void);									//ImGUIへの出力
 };

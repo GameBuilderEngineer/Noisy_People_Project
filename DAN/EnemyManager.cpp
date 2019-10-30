@@ -70,7 +70,6 @@ void EnemyManager::uninitialize()
 	SAFE_DELETE(bearRenderer);
 }
 
-
 //=============================================================================
 // XVˆ—
 //=============================================================================
@@ -89,6 +88,7 @@ void EnemyManager::update(float frameTime)
 	wolfRenderer->update();
 	tigerRenderer->update();
 	bearRenderer->update();
+
 }
 
 

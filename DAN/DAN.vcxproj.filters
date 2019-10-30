@@ -493,6 +493,9 @@
     <ClCompile Include="TreeTools.cpp">
       <Filter>Tools Layer\Tree</Filter>
     </ClCompile>
+    <ClCompile Include="3DSound.cpp">
+      <Filter>Constant Layer\Sound\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -779,6 +782,9 @@
     <ClInclude Include="Window.h" />
     <ClInclude Include="TreeTools.h">
       <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSound.h">
+      <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
