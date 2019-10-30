@@ -39,6 +39,13 @@ enum CREATE_BGM_LIST
 };
 
 //===================================================================================================================================
+//【定数定義】
+//===================================================================================================================================
+static const char *splashBGMPathList[] = { "BGM_Splash.wav" };
+static const char *titleBGMPathList[] = { "BGM_Title.wav" };
+static const char *gameBGMPathList[] = { "BGM_Game.wav" };
+
+//===================================================================================================================================
 //【サウンド(XAudio2)】
 //サウンドのBGMクラス
 //===================================================================================================================================
@@ -48,22 +55,12 @@ public:
 	BGMManager();
 	~BGMManager();
 
-	//変数
-#if(_MSC_VER >= GAME_MSC_VER)
-	static const char * const splashBGMPathList[];
-	static const char * const titleBGMPathList[];
-	static const char * const gameBGMPathList[];
-	static int		BGMScene;
-#endif
-
 	//関数
-	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する
-	void			SetSpeed(void);					//再生速度の設定
-	void			SetSpeedOn(void);				//再生速度の設定(On)
+	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	void	 SetSpeed(void);							//再生速度の設定
 	
 	//debug用
-#ifdef _DEBUG
-	void			outputBGMGUI(void);				//ImGUIへの出力
+#if _DEBUG
+	void	 outputGUI(void)override;				//ImGUIへの出力
 #endif
-
 };

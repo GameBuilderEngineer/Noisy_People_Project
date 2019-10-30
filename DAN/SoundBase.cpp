@@ -6,16 +6,8 @@
 //===================================================================================================================================
 #include "SoundBase.h"
 #include "Sound.h"
+#include "AbstractScene.h"
 
-//===================================================================================================================================
-//【グローバル変数】
-//===================================================================================================================================
-#if(_MSC_VER >= GAME_MSC_VER)
-LIST_BUFFER *SoundBase::SEBufferList = nullptr;
-LIST_BUFFER *SoundBase::BGMBufferList = nullptr;
-int	SoundBase::SEBufferMax = 0;
-int	SoundBase::BGMBufferMax = 0;
-#endif
 //===================================================================================================================================
 //【コンストラクタ】
 //・ノードの準備
@@ -27,6 +19,25 @@ SoundBase::SoundBase()
 	soundParametersList = new LinkedList <SOUND_PARAMETERS>;
 	soundParametersList->insertFront();
 	soundParametersList->listUpdate();
+
+	//エンドポイントボイスの作成
+	if (FAILED(SoundInterface::GetXAudio2Interface()->CreateSubmixVoice(
+		&EndpointVoice,	//サブミックスボイス
+		ENDPOINT_INPUT_CHANNEL,								//チャンネル数(入力)
+		ENDPOINT_SAMPLE_RATE,								//サンプリングレート(入力)
+		XAUDIO2_VOICE_USEFILTER,								//フィルター機能
+		NULL,												//意味ないもの
+		NULL)))												//送信リスト(NULL:Mastering Voiceへの単一の出力となる)
+	{														//エフェクトチェーン
+		return;
+	}
+
+	//エンドポイントボイスへの送信リストの作成
+	SendDescriptor = { XAUDIO2_SEND_USEFILTER,EndpointVoice };
+	SendList = { 1,&SendDescriptor };
+
+	//シーンの初期化
+	scene = SceneList::SPLASH;
 #endif
 }
 
@@ -39,6 +50,8 @@ SoundBase::~SoundBase()
 	uninitSoundStop();
 	soundParametersList->terminate();
 	SAFE_DELETE(soundParametersList);
+
+	SAFE_DESTROY_VOICE(EndpointVoice)
 #endif
 }
 //===================================================================================================================================
@@ -150,23 +163,11 @@ void SoundBase::updateSound(void)
 //===================================================================================================================================
 LIST_BUFFER *SoundBase::GetBuffer(int endpointVoiceId, int soundId, bool loop)
 {
-	if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
+	if (loop)
 	{
-		if (loop)
-		{
-			BGMBufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-		}
-		return &BGMBufferList[soundId];
+		bufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
-	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
-	{
-		if (loop)
-		{
-			SEBufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-		}
-		return &SEBufferList[soundId];
-	}
-	return nullptr;
+	return &bufferList[soundId];
 }
 
 //===================================================================================================================================
@@ -202,28 +203,15 @@ void SoundBase::MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFE
 	pcm.nAvgBytesPerSec = listBuffer->wavFile.fmt.fmtSampleRate*pcm.nBlockAlign;
 
 	//ソースボイスの作成
-	if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_BGM)
-	{
-		SoundInterface::GetXAudio2Interface()->CreateSourceVoice(
-			&tmpSoundParameters->SourceVoice,
-			&pcm,
-			XAUDIO2_VOICE_USEFILTER,
-			XAUDIO2_MAX_FREQ_RATIO,
-			NULL,
-			&SoundInterface::GetSendList(ENDPOINT_VOICE_LIST::ENDPOINT_BGM),
-			NULL);
-	}
-	else if (playParameters.endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_SE)
-	{
-		SoundInterface::GetXAudio2Interface()->CreateSourceVoice(
-			&tmpSoundParameters->SourceVoice,
-			&pcm,
-			XAUDIO2_VOICE_USEFILTER,
-			XAUDIO2_MAX_FREQ_RATIO,
-			NULL,
-			&SoundInterface::GetSendList(ENDPOINT_VOICE_LIST::ENDPOINT_SE),
-			NULL);
-	}
+	SoundInterface::GetXAudio2Interface()->CreateSourceVoice(
+		&tmpSoundParameters->SourceVoice,
+		&pcm,
+		XAUDIO2_VOICE_USEFILTER,
+		XAUDIO2_MAX_FREQ_RATIO,
+		NULL,
+		&SendList,
+		NULL);
+
 	//バッファの提出
 	tmpSoundParameters->SourceVoice->SubmitSourceBuffer(&listBuffer->buffer);
 

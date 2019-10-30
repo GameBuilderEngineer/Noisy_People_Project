@@ -29,6 +29,7 @@ enum ENDPOINT_VOICE_LIST
 {
 	ENDPOINT_BGM,
 	ENDPOINT_SE,
+	ENDPOINT_S3D,
 	ENDPOINT_MAX
 };
 
@@ -39,33 +40,27 @@ enum ENDPOINT_VOICE_LIST
 class SoundInterface
 {
 private:
-	//変数
+	//マスタリングボイス
 #if(_MSC_VER >= GAME_MSC_VER)
-	IXAudio2MasteringVoice				*MasteringVoice;										//XAudio2 Mastering Voice
-	IXAudio2SubmixVoice					*EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];		//XAudio2 Submix Vice(Endpoint Voice)
-	XAUDIO2_SEND_DESCRIPTOR				SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];		//XAudio2 Send Descriptor(BGM/SE Endpoint Voice)
+	IXAudio2MasteringVoice				*MasteringVoice;					//XAudio2 Mastering Voice
 #endif
 
 public:
 	SoundInterface();
 	~SoundInterface();
 
-	//クラス
+	//マネージャー
 	static SEManager *SE;
 	static BGMManager *BGM;
 	
-	//変数
+	//インタフェース
 #if(_MSC_VER >= GAME_MSC_VER)
-	static IXAudio2						*XAudio2Interface;										//XAudio2 COM Interface
-	static XAUDIO2_VOICE_SENDS			SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];			//XAudio2 Send List(BGM/SE Endpoint Voice)
+	static IXAudio2						*XAudio2Interface;				//XAudio2 COM Interface
+	static IXAudio2						*GetXAudio2Interface(void);		//XAudio2のインタフェースを取得する
 #endif
 
-	//関数
-#if(_MSC_VER >= GAME_MSC_VER)
-	static XAUDIO2_VOICE_SENDS			GetSendList(int endpointVoiceId);						//送信リストを取得する
-	static IXAudio2						*GetXAudio2Interface(void);								//XAudio2のインタフェースを取得する
-#endif
-	static void							SwitchAudioBuffer(int scene);							//シーンの更新
-	void								UpdateSound(void);										//更新処理
-	void								outputSoundGUI(void);									//ImGUIへの出力
+	//基本機能
+	static void							SwitchAudioBuffer(int scene);	//シーンの更新
+	void									UpdateSound(void);				//更新処理
+	void									outputSoundGUI(void);			//ImGUIへの出力
 };

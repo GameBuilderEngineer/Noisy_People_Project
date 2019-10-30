@@ -27,8 +27,8 @@ Splash::Splash()
 	//Ä¶ƒpƒ‰ƒ[ƒ^
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false,NULL,false,NULL,true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true ,1.0f,false,NULL,true, filterParameters };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true ,1.0f,true, filterParameters };
 
 	//Ä¶
 	SoundInterface::SE->playSound(playParameters[0]);

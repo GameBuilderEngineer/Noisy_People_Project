@@ -14,10 +14,6 @@
 #include "SoundBase.h"
 
 //===================================================================================================================================
-//【列挙型定数】
-//===================================================================================================================================
-
-//===================================================================================================================================
 //【サウンド(XAudio2)】
 //サウンドの3DSoundクラス
 //===================================================================================================================================
@@ -27,4 +23,8 @@ public:
 	X3DSoundManager();
 	~X3DSoundManager();
 
+private:
+	IXAudio2SubmixVoice		*MidpointVoice[gameMasterNS::PLAYER_NUM];	//XAudio2 Midpoint Voice[2 player]
+	XAUDIO2_VOICE_SENDS		SendList[gameMasterNS::PLAYER_NUM];			//XAudio2 Send List(P1/P2 Midpoint Voice)
+	XAUDIO2_SEND_DESCRIPTOR	SendDescriptor[gameMasterNS::PLAYER_NUM];	//XAudio2 Send Descriptor(BGM/SE Endpoint Voice)
 };
