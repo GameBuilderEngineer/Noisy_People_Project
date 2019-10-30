@@ -21,9 +21,9 @@ SEManager::~SEManager()
 //===================================================================================================================================
 //【ImGUIへの出力】
 //===================================================================================================================================
+#ifdef _DEBUG
 void SEManager::outputGUI(void)
 {
-#ifdef _DEBUG
 #if(_MSC_VER >= GAME_MSC_VER)
 	if (!ImGui::CollapsingHeader("SEInformation"))
 	{
@@ -115,8 +115,8 @@ void SEManager::outputGUI(void)
 		}
 	}
 #endif
-#endif
 }
+#endif
 
 //===================================================================================================================================
 //【ステージ遷移に合わせて必要なサウンドバッファを用意する】
@@ -128,9 +128,10 @@ void SEManager::SwitchAudioBuffer(int scene)
 	setSoundDirectory(
 		
 		::ENDPOINT_SE);
-
+#if _DEBUG
 	//シーンの更新
 	SEManager::scene = scene;
+#endif
 
 	//解放処理
 	for (int i = 0; i < SEManager::bufferMax; i++)
@@ -139,7 +140,7 @@ void SEManager::SwitchAudioBuffer(int scene)
 	}
 	SAFE_DELETE_ARRAY(SEManager::bufferList);
 
-	switch (SEManager::scene)
+	switch (scene)
 	{
 	case SceneList::SPLASH:
 		SEManager::bufferList = new LIST_BUFFER[SPLASH_SE_LIST::SPLASH_SE_MAX];

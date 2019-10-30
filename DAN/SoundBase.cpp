@@ -22,7 +22,7 @@ SoundBase::SoundBase()
 
 	//エンドポイントボイスの作成
 	if (FAILED(SoundInterface::GetXAudio2Interface()->CreateSubmixVoice(
-		&EndpointVoice,	//サブミックスボイス
+		&EndpointVoice,										//サブミックスボイス
 		ENDPOINT_INPUT_CHANNEL,								//チャンネル数(入力)
 		ENDPOINT_SAMPLE_RATE,								//サンプリングレート(入力)
 		XAUDIO2_VOICE_USEFILTER,								//フィルター機能
@@ -36,8 +36,10 @@ SoundBase::SoundBase()
 	SendDescriptor = { XAUDIO2_SEND_USEFILTER,EndpointVoice };
 	SendList = { 1,&SendDescriptor };
 
+#if _DEBUG
 	//シーンの初期化
 	scene = SceneList::SPLASH;
+#endif
 #endif
 }
 

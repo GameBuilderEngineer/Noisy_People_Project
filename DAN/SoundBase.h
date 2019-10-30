@@ -133,6 +133,7 @@ public:
 	void playSound(const PLAY_PARAMETERS playParameters);	//再生
 	void stopSound(const PLAY_PARAMETERS playParameters);	//停止
 	void updateSound(void);									//更新
+	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
 
 protected:
 #if(_MSC_VER >= GAME_MSC_VER)
@@ -144,7 +145,6 @@ protected:
 	//バッファ管理
 	LIST_BUFFER	*GetBuffer(int endpointVoiceId, int soundId, bool loop);
 	void MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer);
-	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
 #endif
 
 	//基本機能(読み込み・停止)

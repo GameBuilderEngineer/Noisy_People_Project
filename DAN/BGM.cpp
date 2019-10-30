@@ -206,8 +206,10 @@ void BGMManager::SwitchAudioBuffer(int scene)
 	//サウンドディレクトリに設定する
 	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_BGM);
 
+#if _DEBUG
 	//シーンの更新
 	BGMManager::scene = scene;
+#endif
 
 	//解放
 	for (int i = 0; i < BGMManager::bufferMax; i++)
@@ -216,7 +218,7 @@ void BGMManager::SwitchAudioBuffer(int scene)
 	}
 	SAFE_DELETE_ARRAY(BGMManager::bufferList);
 
-	switch (BGMManager::scene)
+	switch (scene)
 	{
 	case SceneList::SPLASH:
 		BGMManager::bufferList = new LIST_BUFFER[SPLASH_BGM_LIST::SPLASH_BGM_MAX];
