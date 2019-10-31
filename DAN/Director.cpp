@@ -332,8 +332,8 @@ void Director::render() {
 	d3d->clear(imgui->getClearColor());
 	if (SUCCEEDED(d3d->beginScene()))
 	{
-		fader->render();
 		scene->render();
+		if(fader->playing)	fader->render();
 		imgui->render();
 		d3d->endScene();
 	}
