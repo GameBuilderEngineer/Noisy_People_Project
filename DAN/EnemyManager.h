@@ -43,8 +43,6 @@ private:
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;							// 重力（引力）発生オブジェクトマトリックス
 
-	PLAY_PARAMETERS *playParameters;						//再生パラメータ
-
 public:
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
@@ -62,6 +60,7 @@ public:
 	void relocateEnemyAccordingToFile();
 
 	//サウンド
+	PLAY_PARAMETERS *playParameters;
 	void uninitializeSound();
 	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 

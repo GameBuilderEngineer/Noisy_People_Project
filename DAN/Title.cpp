@@ -33,6 +33,7 @@ Title::Title(void)
 	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);
 
 	//再生パラメータ
+	PLAY_PARAMETERS playParameters[3];
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false,NULL,false,NULL,true, filterParameters };
@@ -51,9 +52,8 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// サウンドの停止
-	SoundInterface::SE->stopSound(playParameters[0]);
-	SoundInterface::SE->stopSound(playParameters[1]);
-	SoundInterface::BGM->stopSound(playParameters[2]);
+	SoundInterface::SE->uninitSoundStop();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================

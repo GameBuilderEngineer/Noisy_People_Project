@@ -24,7 +24,7 @@
 #define CHUNK_DATA				("data")		//dataのチャンク
 
 //3D
-#define DISTANCE_MAX				(10)			//偽サウンドコン
+#define DISTANCE_MAX				(100)		//偽サウンドコン
 
 //===================================================================================================================================
 //【構造体】
@@ -140,6 +140,7 @@ public:
 	void stopSound(const PLAY_PARAMETERS playParameters);	//停止
 	void updateSound(void);									//更新
 	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	void uninitSoundStop(void);								//停止(全部のサウンド)
 
 protected:
 #if(_MSC_VER >= GAME_MSC_VER)
@@ -155,7 +156,6 @@ protected:
 
 	//基本機能(読み込み・停止)
 	static WAV_FILE	LoadWavChunk(FILE *fp);					//WAVファイルの読み込み処理
-	void uninitSoundStop(void);								//停止(全部のサウンド)
 
 	//リスト
 #if(_MSC_VER >= GAME_MSC_VER)

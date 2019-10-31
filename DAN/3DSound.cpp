@@ -105,6 +105,10 @@ void S3DManager::outputGUI(void)
 
 			if (tmpSoundParameters->isPlaying)		//再生している
 			{
+				//ボイスID
+				ImGui::Text("Voice ID:%d", tmpSoundParameters->playParameters.voiceID);
+
+				//サウンド名
 				switch (scene)
 				{
 				case SceneList::SPLASH:
@@ -130,6 +134,32 @@ void S3DManager::outputGUI(void)
 				float volume = 0.0f;
 				tmpSoundParameters->SourceVoice->GetVolume(&volume);
 				ImGui::Text("volume:%f", volume);
+
+				//波形の描画
+				int saveDataMax = 5512;	//取得するデータ数
+				int dataMax = (saveDataMax / tmpBuffer->wavFile.fmt.fmtChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
+				float *fData = new (float[dataMax]);
+				memset(fData, 0, sizeof(float)*dataMax);
+				fData[0] = (float)SHRT_MIN;
+				fData[dataMax - 1] = (float)SHRT_MAX;
+				int wtPos = dataMax - 2;
+				for (int j = saveDataMax - 1; j > 0; j -= tmpBuffer->wavFile.fmt.fmtChannel)
+				{
+					for (int k = 0; k < tmpBuffer->wavFile.fmt.fmtChannel; k++)
+					{
+						if (playPoint - j < 0)
+						{
+							fData[wtPos] = 0.0f;
+							continue;
+						}
+
+						fData[wtPos] += ((float)tmpBuffer->wavFile.data.waveData[((playPoint - j) * tmpBuffer->wavFile.fmt.fmtChannel) - k] / (float)tmpBuffer->wavFile.fmt.fmtChannel);
+					}
+					wtPos--;
+				}
+				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 100);
+				ImGui::PlotLines("", fData, dataMax, 0, "Sound wave", FLT_MAX, FLT_MAX, plotextent);
+				SAFE_DELETE_ARRAY(fData);
 
 				//再生位置
 				ImGui::ProgressBar(playPoint / (float)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel));

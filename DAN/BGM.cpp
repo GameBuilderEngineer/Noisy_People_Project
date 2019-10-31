@@ -118,9 +118,13 @@ void BGMManager::outputGUI(void)
 			//再生している
 			if (tmpSoundParameters->isPlaying)
 			{
+				//ボイスID
+				ImGui::Text("Voice ID:%d", tmpSoundParameters->playParameters.voiceID);
+
 				//速度のバックアップ
 				float backUpSpeed = tmpSoundParameters->playParameters.speed;
 
+				//サウンド名
 				switch (scene)
 				{
 				case SceneList::SPLASH:
@@ -151,11 +155,8 @@ void BGMManager::outputGUI(void)
 					break;
 				}
 
-				//ボイスID
-				ImGui::Text("%d", tmpSoundParameters->playParameters.voiceID);
-
 				//波形の描画
-				int saveDataMax = 11024;	//取得するデータ数
+				int saveDataMax = 2756;	//取得するデータ数
 				int dataMax = (saveDataMax / tmpBuffer->wavFile.fmt.fmtChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
 				float *fData = new (float[dataMax]);
 				memset(fData, 0, sizeof(float)*dataMax);
@@ -172,13 +173,12 @@ void BGMManager::outputGUI(void)
 							continue;
 						}
 
-						fData[wtPos] += ((float)tmpBuffer->wavFile.data.waveData[playPoint - j - k] / (float)tmpBuffer->wavFile.fmt.fmtChannel);
+						fData[wtPos] += ((float)tmpBuffer->wavFile.data.waveData[((playPoint - j) * tmpBuffer->wavFile.fmt.fmtChannel) - k] / (float)tmpBuffer->wavFile.fmt.fmtChannel);
 					}
 					wtPos--;
 				}
 				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 100);
 				ImGui::PlotLines("", fData, dataMax, 0, "Sound wave", FLT_MAX, FLT_MAX, plotextent);
-
 				SAFE_DELETE_ARRAY(fData);
 
 				//再生位置

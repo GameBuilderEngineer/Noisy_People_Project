@@ -46,6 +46,10 @@ void SEManager::outputGUI(void)
 
 			if (tmpSoundParameters->isPlaying)		//再生している
 			{
+				//ボイスID
+				ImGui::Text("Voice ID:%d", tmpSoundParameters->playParameters.voiceID);
+
+				//サウンド名
 				switch (scene)
 				{
 				case SceneList::SPLASH:
@@ -73,11 +77,8 @@ void SEManager::outputGUI(void)
 					break;
 				}
 
-				//ボイスID
-				ImGui::Text("%d", tmpSoundParameters->playParameters.voiceID);
-
 				//波形の描画
-				int saveDataMax = 11024;	//取得するデータ数
+				int saveDataMax = 5512;	//取得するデータ数
 				int dataMax = (saveDataMax / tmpBuffer->wavFile.fmt.fmtChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
 				float *fData = new (float[dataMax]);
 				memset(fData, 0, sizeof(float)*dataMax);
@@ -94,7 +95,7 @@ void SEManager::outputGUI(void)
 							continue;
 						}
 
-						fData[wtPos] += ((float)tmpBuffer->wavFile.data.waveData[playPoint - j - k] / (float)tmpBuffer->wavFile.fmt.fmtChannel);
+						fData[wtPos] += ((float)tmpBuffer->wavFile.data.waveData[((playPoint - j) * tmpBuffer->wavFile.fmt.fmtChannel) - k] / (float)tmpBuffer->wavFile.fmt.fmtChannel);
 					}
 					wtPos--;
 				}

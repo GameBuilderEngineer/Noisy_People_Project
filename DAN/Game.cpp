@@ -30,12 +30,12 @@ Game::Game()
 	SoundInterface::SwitchAudioBuffer(SceneList::GAME);
 
 	//再生パラメータ
+	PLAY_PARAMETERS playParameters[3];
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL, true, filterParameters };
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,false,NULL,true, filterParameters };
 	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,false,NULL,true, filterParameters };
-	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL,true, filterParameters };
 
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
@@ -48,11 +48,8 @@ Game::Game()
 //===================================================================================================================================
 Game::~Game()
 {
-	// サウンドの停止
-	SoundInterface::SE->stopSound(playParameters[0]);
-	SoundInterface::SE->stopSound(playParameters[1]);
-	SoundInterface::BGM->stopSound(playParameters[2]);
-	SoundInterface::SE->stopSound(playParameters[3]);
+	SoundInterface::SE->uninitSoundStop();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================
@@ -84,7 +81,7 @@ void Game::initialize() {
 
 	//player
 	player			= new Player[gameMasterNS::PLAYER_NUM];
-	maleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
+	maleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(/*gameMasterNS::MODEL_MALE*/gameMasterNS::MODEL_FEMALE));
 	femaleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
 	//camera
@@ -114,7 +111,7 @@ void Game::initialize() {
 			break;
 		case gameMasterNS::PLAYER_2P:
 			infomation.playerType	= gameMasterNS::PLAYER_2P;
-			infomation.modelType	= gameMasterNS::MODEL_MALE;
+			infomation.modelType	= /*gameMasterNS::MODEL_MALE*/gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			break;
 		}
@@ -471,7 +468,9 @@ void Game::collisions()
 			{
 				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
 				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
-				SoundInterface::SE->playSound(&playParameters[3]);	//SE再生
+				FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL,true, filterParameters };
+				SoundInterface::SE->playSound(&playParameters);	//SE再生
 				itemManager->destroyAllItem();					//デリート(今は全消し)
 			}
 		}

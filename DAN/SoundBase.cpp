@@ -63,7 +63,8 @@ SoundBase::~SoundBase()
 void SoundBase::uninitSoundStop(void)
 {
 #if(_MSC_VER >= GAME_MSC_VER)
-	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
+	int backup = soundParametersList->nodeNum - 1;
+	for (int i = 0; i < backup; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 		
@@ -72,8 +73,10 @@ void SoundBase::uninitSoundStop(void)
 			tmpSoundParameters->SourceVoice->Stop();
 			tmpSoundParameters->isPlaying = false;
 			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
+			soundParametersList->remove(soundParametersList->getNode(i));
 		}
 	}
+	soundParametersList->listUpdate();
 #endif
 }
 
@@ -275,7 +278,7 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 
 			continue;
 		}
-
+		
 		// dataƒ`ƒƒƒ“ƒN
 		if (memcmp(chunk, CHUNK_DATA, CHUNK_ID_SIZE) == 0)
 		{

@@ -226,6 +226,9 @@
     <Filter Include="Constant Layer\SkinMeshRenderer">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Sound\APO">
+      <UniqueIdentifier>{9d675f58-8269-44bd-bbeb-37ce8eabb979}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">

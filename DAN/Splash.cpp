@@ -25,6 +25,7 @@ Splash::Splash()
 	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);
 
 	//再生パラメータ
+	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false,NULL,false,NULL,true, filterParameters };
@@ -45,8 +46,8 @@ Splash::Splash()
 Splash::~Splash()
 {
 	//サウンドの停止
-	SoundInterface::SE->stopSound(playParameters[0]);
-	SoundInterface::BGM->stopSound(playParameters[1]);
+	SoundInterface::SE->uninitSoundStop();
+	SoundInterface::BGM->uninitSoundStop();
 	effekseerNS::stop(effekseerNS::TEST0);
 }
 

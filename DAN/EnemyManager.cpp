@@ -36,7 +36,7 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
 		{
 			//3Dサウンド
-			playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_01, true ,NULL,true,j };
+			playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, /*GAME_S3D_LIST::GAME_S3D_01*/j, true ,NULL,true,j };
 			SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
 		}
 
@@ -345,17 +345,9 @@ void EnemyManager::relocateEnemyAccordingToFile()
 //=============================================================================
 void EnemyManager::uninitializeSound()
 {
-	//3Dサウンド
-	for (int i = 0; i < enemyList.size(); i++)
-	{
-		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
-		{
-			SoundInterface::S3D->stopSound(playParameters[i + j]);
-		}
-	}
+	SoundInterface::S3D->uninitSoundStop();
+
 	SAFE_DELETE_ARRAY(playParameters);
-
-
 }
 
 //=============================================================================

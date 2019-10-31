@@ -34,7 +34,6 @@ Player::Player()
 	reverseValueYAxis	= CAMERA_SPEED;			//操作Ｙ軸
 	onJump				= false;				//ジャンプフラグ
 	difference			= DIFFERENCE_FIELD;		//フィールド補正差分
-	onSound				= false;				//サウンドのGUIフラグ
 
 	isShotAble			= true;
 	isJumpAble			= true;
@@ -531,32 +530,9 @@ void Player::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-		ImGui::Checkbox("sound", &onSound);												//サウンド
-
-		// サウンドGUI
-		outputSoundGUI();
 	}
 #endif // _DEBUG
 }
-
-
-//===================================================================================================================================
-//【サウンドGUIの出力】
-//===================================================================================================================================
-void Player::outputSoundGUI()
-{
-#ifdef _DEBUG
-	if (!onSound)return;
-	ImGui::Begin("PlayerInformation(Sound)");
-	if (ImGui::CollapsingHeader("PlayerInformation(Sound)"))
-	{
-		ImGui::SliderInt("volume", &volume, 0, 100);									//ボリューム
-
-	}
-	ImGui::End();
-#endif
-}
-
 
 //===================================================================================================================================
 //【リセット】
