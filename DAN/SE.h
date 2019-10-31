@@ -56,7 +56,7 @@ class SEManager : public SoundBase
 {
 public:
 	SEManager() {};
-	~SEManager();
+	~SEManager() {};
 
 	//関数
 	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する

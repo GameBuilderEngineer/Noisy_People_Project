@@ -15,6 +15,7 @@ IXAudio2 *SoundInterface::XAudio2Interface = nullptr;
 #endif
 SEManager *SoundInterface::SE = nullptr;
 BGMManager *SoundInterface::BGM = nullptr;
+S3DManager *SoundInterface::S3D = nullptr;
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -55,7 +56,7 @@ SoundInterface::SoundInterface()
 	//マネージャー
 	SE = new SEManager();
 	BGM = new BGMManager();
-
+	S3D = new S3DManager();
 #endif
 }
 
@@ -70,6 +71,9 @@ SoundInterface::~SoundInterface()
 	
 	//BGM
 	SAFE_DELETE(BGM);
+	
+	//S3D
+	SAFE_DELETE(S3D);
 
 	//マスターボイス
 	SAFE_DESTROY_VOICE(MasteringVoice);
@@ -101,6 +105,7 @@ void SoundInterface::SwitchAudioBuffer(int scene)
 	//シーンの更新
 	BGM->SwitchAudioBuffer(scene);
 	SE->SwitchAudioBuffer(scene);
+	S3D->SwitchAudioBuffer(scene);
 #endif
 }
 
@@ -116,6 +121,9 @@ void SoundInterface::UpdateSound(void)
 	//BGMの更新処理
 	BGM->updateSound();
 	BGM->SetSpeed();
+
+	//S3Dの更新処理
+	S3D->updateSound();
 
 	//ImGUI
 #ifdef _DEBUG
@@ -136,6 +144,7 @@ void SoundInterface::outputSoundGUI(void)
 	//SE
 	SE->outputGUI();
 	BGM->outputGUI();
+	S3D->outputGUI();
 
 	ImGui::End();
 #endif

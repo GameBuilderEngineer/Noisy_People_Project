@@ -23,6 +23,9 @@
 #define CHUNK_FMT				("fmt ")		//fmtのチャンク
 #define CHUNK_DATA				("data")		//dataのチャンク
 
+//3D
+#define DISTANCE_MAX				(10)			//偽サウンドコン
+
 //===================================================================================================================================
 //【構造体】
 //===================================================================================================================================
@@ -104,8 +107,11 @@ typedef struct //再生パラメータ
 	int						soundId;				//サウンドID
 	bool						loop;				//ループ
 	float					speed;				//再生速度
+	bool						S3D;					//3D?
+	int						playerID;			//プレイヤーID
 	bool						filterFlag;			//卍フィルター卍
 	FILTER_PARAMETERS		filterParameters;	//卍フィルター卍
+	long						voiceID;				//ボイスID
 }PLAY_PARAMETERS;
 
 #if(_MSC_VER >= GAME_MSC_VER)
@@ -130,7 +136,7 @@ public:
 	~SoundBase();
 
 	//サウンド機能
-	void playSound(const PLAY_PARAMETERS playParameters);	//再生
+	void playSound(PLAY_PARAMETERS *playParameters);	//再生
 	void stopSound(const PLAY_PARAMETERS playParameters);	//停止
 	void updateSound(void);									//更新
 	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
@@ -144,7 +150,7 @@ protected:
 
 	//バッファ管理
 	LIST_BUFFER	*GetBuffer(int endpointVoiceId, int soundId, bool loop);
-	void MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer);
+	virtual void MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *listBuffer);
 #endif
 
 	//基本機能(読み込み・停止)
@@ -154,6 +160,7 @@ protected:
 	//リスト
 #if(_MSC_VER >= GAME_MSC_VER)
 	LinkedList <SOUND_PARAMETERS>*soundParametersList;		//パラーメータリスト
+	long			voiceIDCnt;									//ボイスIDカウンター
 	LIST_BUFFER *bufferList;									//バッファリスト
 	int			bufferMax;									//バッファの最大数
 #endif

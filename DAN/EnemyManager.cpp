@@ -30,8 +30,16 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 
 #if 1	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+	playParameters = new PLAY_PARAMETERS[enemyTools->GetEnemyMax()*gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 	{
+		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+		{
+			//3Dサウンド
+			playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_01, true ,NULL,true,j };
+			SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
+		}
+
 		createEnemyData(enemyTools->GetEnemySet(i));
 	}
 	SAFE_DELETE(enemyTools);
@@ -315,7 +323,7 @@ void EnemyManager::relocateEnemyAccordingToFile()
 	destroyAllEnemyData();					// 全てのエネミーデータを破棄
 	nextID = 0;								// 次回発行IDを0に初期化
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
-	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
+	enemyList.reserve(ENEMY_OBJECT_MAX);		// update()で動的な確保をせず済むようメモリを増やしておく
 
 	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
@@ -332,6 +340,41 @@ void EnemyManager::relocateEnemyAccordingToFile()
 	}
 }
 
+//=============================================================================
+// 終了処理(サウンド)
+//=============================================================================
+void EnemyManager::uninitializeSound()
+{
+	//3Dサウンド
+	for (int i = 0; i < enemyList.size(); i++)
+	{
+		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+		{
+			SoundInterface::S3D->stopSound(playParameters[i + j]);
+		}
+	}
+	SAFE_DELETE_ARRAY(playParameters);
+
+
+}
+
+//=============================================================================
+// 足音の処理
+//=============================================================================
+void EnemyManager::footsteps(D3DXVECTOR3 playerPos, int playerID)
+{
+	for (int i = 0; i < enemyList.size(); i++)
+	{
+		float distance = D3DXVec3Length(&(enemyDataList.getValue(i)->position - playerPos));
+		float volume = 0.0f;
+		if (distance < DISTANCE_MAX)
+		{
+			volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
+		}
+
+		SoundInterface::S3D->SetVolume(playParameters[(i*gameMasterNS::PLAYER_NUM) + playerID], volume);
+	}
+}
 
 //=============================================================================
 // Getter

@@ -151,6 +151,9 @@ void BGMManager::outputGUI(void)
 					break;
 				}
 
+				//ボイスID
+				ImGui::Text("%d", tmpSoundParameters->playParameters.voiceID);
+
 				//波形の描画
 				int saveDataMax = 11024;	//取得するデータ数
 				int dataMax = (saveDataMax / tmpBuffer->wavFile.fmt.fmtChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2

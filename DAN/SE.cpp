@@ -10,15 +10,6 @@
 #include "AbstractScene.h"
 
 //===================================================================================================================================
-//【デストラクタ】
-//===================================================================================================================================
-SEManager::~SEManager()
-{
-#if(_MSC_VER >= GAME_MSC_VER)
-#endif
-}
-
-//===================================================================================================================================
 //【ImGUIへの出力】
 //===================================================================================================================================
 #ifdef _DEBUG
@@ -82,6 +73,9 @@ void SEManager::outputGUI(void)
 					break;
 				}
 
+				//ボイスID
+				ImGui::Text("%d", tmpSoundParameters->playParameters.voiceID);
+
 				//波形の描画
 				int saveDataMax = 11024;	//取得するデータ数
 				int dataMax = (saveDataMax / tmpBuffer->wavFile.fmt.fmtChannel) + 2;	 //セーブしたいデータの数/チャンネル数 + 2
@@ -125,9 +119,8 @@ void SEManager::SwitchAudioBuffer(int scene)
 {
 #if(_MSC_VER >= GAME_MSC_VER)
 	//サウンドディレクトリに設定する
-	setSoundDirectory(
-		
-		::ENDPOINT_SE);
+	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_SE);
+
 #if _DEBUG
 	//シーンの更新
 	SEManager::scene = scene;

@@ -14,6 +14,9 @@
 #include "Tiger.h"
 #include "Bear.h"
 
+#include "Sound.h"
+#include "SoundBase.h"
+
 
 //=============================================================================
 // 名前空間
@@ -38,7 +41,9 @@ private:
 	StaticMeshRenderer* bearRenderer;					// 描画オブジェクト
 	int nextID;											// 次回エネミー発行ID
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
-	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
+	D3DXMATRIX*	attractorMatrix;							// 重力（引力）発生オブジェクトマトリックス
+
+	PLAY_PARAMETERS *playParameters;						//再生パラメータ
 
 public:
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
@@ -55,6 +60,10 @@ public:
 	int issueNewEnemyID();
 	void outputGUI();
 	void relocateEnemyAccordingToFile();
+
+	//サウンド
+	void uninitializeSound();
+	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 
 	// Getter
 	LinkedList<enemyNS::EnemyData>* getEnemyDataList();

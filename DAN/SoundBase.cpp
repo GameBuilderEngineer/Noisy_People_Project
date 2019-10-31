@@ -19,6 +19,7 @@ SoundBase::SoundBase()
 	soundParametersList = new LinkedList <SOUND_PARAMETERS>;
 	soundParametersList->insertFront();
 	soundParametersList->listUpdate();
+	voiceIDCnt = 0;
 
 	//エンドポイントボイスの作成
 	if (FAILED(SoundInterface::GetXAudio2Interface()->CreateSubmixVoice(
@@ -26,7 +27,7 @@ SoundBase::SoundBase()
 		ENDPOINT_INPUT_CHANNEL,								//チャンネル数(入力)
 		ENDPOINT_SAMPLE_RATE,								//サンプリングレート(入力)
 		XAUDIO2_VOICE_USEFILTER,								//フィルター機能
-		NULL,												//意味ないもの
+		1,													//プロセスステージ
 		NULL)))												//送信リスト(NULL:Mastering Voiceへの単一の出力となる)
 	{														//エフェクトチェーン
 		return;
@@ -79,16 +80,17 @@ void SoundBase::uninitSoundStop(void)
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-void SoundBase::playSound(const PLAY_PARAMETERS playParameters)
+void SoundBase::playSound(PLAY_PARAMETERS *playParameters)
 {
 #if(_MSC_VER >= GAME_MSC_VER)
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((!tmpSoundParameters->isPlaying) &&				//再生していない
-			(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&		//IDが一致する
-			(tmpSoundParameters->playParameters.loop == playParameters.loop))				//ループ情報も一致する
+		if ((!tmpSoundParameters->isPlaying) &&											//再生していない
+			(tmpSoundParameters->playParameters.soundId == playParameters->soundId) &&	//IDが一致する
+			(tmpSoundParameters->playParameters.loop == playParameters->loop)&&			//ループ情報も一致する
+			(tmpSoundParameters->playParameters.playerID == playParameters->playerID))	//プレイヤーID
 		{
 			tmpSoundParameters->SourceVoice->Start();
 			if (tmpSoundParameters->playParameters.filterFlag)
@@ -102,7 +104,7 @@ void SoundBase::playSound(const PLAY_PARAMETERS playParameters)
 
 	//リスト中に存在しない、再生していないボイスがない時は新しく追加する
 	MakeSourceVoice(playParameters,
-		GetBuffer(playParameters.endpointVoiceId, playParameters.soundId, playParameters.loop));
+		GetBuffer(playParameters->endpointVoiceId, playParameters->soundId, playParameters->loop));
 #endif
 }
 
@@ -116,10 +118,10 @@ void SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((tmpSoundParameters->isPlaying) &&							//再生していない
-			(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&					//ID
-			(tmpSoundParameters->playParameters.loop == playParameters.loop)&&							//ループ情報
-			(tmpSoundParameters->playParameters.endpointVoiceId == playParameters.endpointVoiceId))	//エンドポイントボイスID
+		if ((tmpSoundParameters->isPlaying) &&											//再生していない
+			(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&	//ID
+			(tmpSoundParameters->playParameters.loop == playParameters.loop)&&			//ループ情報
+			(tmpSoundParameters->playParameters.playerID == playParameters.playerID))	//プレイヤーID
 		{			
 			tmpSoundParameters->SourceVoice->Stop();
 			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
@@ -175,7 +177,7 @@ LIST_BUFFER *SoundBase::GetBuffer(int endpointVoiceId, int soundId, bool loop)
 //===================================================================================================================================
 //【ソースボイスの作成】
 //===================================================================================================================================
-void SoundBase::MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer)
+void SoundBase::MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *listBuffer)
 {
 	//波形のフォーマット
 	WAVEFORMATEX pcm;
@@ -183,7 +185,8 @@ void SoundBase::MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFE
 
 	//再生のパラメータ
 	SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(soundParametersList->nodeNum - 1);
-	tmpSoundParameters->playParameters = playParameters;
+	playParameters->voiceID = voiceIDCnt;
+	tmpSoundParameters->playParameters = *playParameters;
 	tmpSoundParameters->stopPoint = 0;
 	tmpSoundParameters->isPlaying = false;
 	tmpSoundParameters->isSpeed = false;
@@ -220,6 +223,13 @@ void SoundBase::MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFE
 	//ノードの更新処理
 	soundParametersList->insertAfter(soundParametersList->getNode(soundParametersList->nodeNum - 1));
 	soundParametersList->listUpdate();
+
+	//voiceID
+	voiceIDCnt++;
+	if (voiceIDCnt > LONG_MAX)
+	{
+		voiceIDCnt -= LONG_MAX;
+	}
 
 	//再生
 	playSound(playParameters);
