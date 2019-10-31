@@ -624,7 +624,6 @@ public:
 	//コンストラクタ
 	Linear8TreeManager()
 	{
-		dim			= 0;
 		cellArray	= NULL;
 		width		= D3DXVECTOR3(1, 1, 1);
 		regionMin	= D3DXVECTOR3(0, 0, 0);

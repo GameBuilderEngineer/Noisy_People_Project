@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/25
+// [更新日]2019/10/31
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -144,87 +144,6 @@ HRESULT Director::initialize() {
 
 	//fader
 	fader = new Fader();
-
-#pragma region LinearTreeCellTest
-#if 0
-	float left		= -60;
-	float right		= 720;
-	float top		= -60;
-	float bottom	= 720;
-	float width		= left - right;
-	float height	= bottom - top;
-	width *= (width < 0 ? -1 : 1);
-	height *= (height < 0 ? -1 : 1);
-
-	//オブジェクトの初期化
-	const int testNum = 10;
-	Object object[testNum];
-	ObjectTree<Object>* objectTreeArray[testNum];//Objectを包むObjectTreeポインタ配列
-	//オブジェクトの登録
-	for (int i = 0; i < testNum; i++)
-	{
-		//オブジェクトツリーに登録
-		ObjectTree<Object>* objectTree = new ObjectTree<Object>;
-		object[i].position = D3DXVECTOR3(
-			(float)((rand() % (int)width) + left),
-			(float)((rand() % (int)height) + top),0);
-		object[i].radius = 10;
-		objectTree->object = &object[i]; //登録
-		objectTreeArray[i] = objectTree;
-	}
-	int partitionLevel = 4;//空間分割レベル
-	//線形4分木マネージャー
-	//空間範囲をX=-60～720; Y=-60～1200;に設定
-	Linear4TreeManager<Object> l4Tree;
-	if (!l4Tree.initialize(
-		partitionLevel,
-		-60, -60,
-		720, 720))
-	{
-		MSG("線形４分木空間の初期化に失敗しました。");
-	}
-	//ループ内一時変数
-	DWORD collisionNum;					//衝突判定回数
-	vector<Object*> collisionVector;	//衝突対象リスト
-	int count = 0;
-	//仮ループ
-	do {
-		for (int i = 0; i < testNum; i++)
-		{
-			Object* tmp = objectTreeArray[i]->object;
-			objectTreeArray[i]->remove();//一度リストから外れる
-			//再登録
-			float top		= tmp->position.y + tmp->radius;
-			float bottom	= tmp->position.y - tmp->radius;
-			float right		= tmp->position.x + tmp->radius;
-			float left		= tmp->position.x - tmp->radius;
-			//オブジェクトを登録する
-			l4Tree.registerObject(left, top, right, bottom, objectTreeArray[i]);
-		}
-		//衝突対応リストを取得
-		collisionNum = l4Tree.getAllCollisionList(collisionVector);
-
-		//衝突判定
-		DWORD c;
-		collisionNum /= 2;//2で割るのはペアになっているので
-		for (c = 0; c < collisionNum; c++)
-		{
-			Ray ray;
-			ray.initialize(
-				collisionVector[c * 2]->position,
-				collisionVector[c * 2 + 1]->position);
-			//衝突判定処理
-			//collision(collisionVector[c*2],collisionVector[c*2+1]);
-		}
-
-		count++;
-		
-
-	} while (count < 1000000 );
-
-#endif // TRUE
-#pragma endregion
-
 
 #pragma region MemoryTest
 	//メモリ解放テスト
@@ -413,6 +332,7 @@ void Director::render() {
 	d3d->clear(imgui->getClearColor());
 	if (SUCCEEDED(d3d->beginScene()))
 	{
+		fader->render();
 		scene->render();
 		imgui->render();
 		d3d->endScene();
