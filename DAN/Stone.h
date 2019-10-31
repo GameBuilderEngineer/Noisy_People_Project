@@ -18,15 +18,18 @@
 class Stone : public Base
 {
 private:
-	int num;
-	Object* object;
 	StaticMeshRenderer* renderer;
 	bool needUpdate;
+public:
+	int num;
+	Object* object;
+
 public:
 	Stone();
 	~Stone();
 	void initialize();
 	void update();
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+
 };
 

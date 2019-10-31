@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/10/25
+// [更新日]2019/10/29
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -20,7 +20,15 @@ using namespace gameNS;
 //===================================================================================================================================
 Game::Game()
 {
-	objectNS::resetCounter();		//オブジェクトカウンターのリセット
+	//線形４分木空間分割管理クラス
+	//linear4TreeManager = new Linear4TreeManager<Object>;
+	//linear4TreeManager->initialize(5, -1000, 1000, 1000, -1000);	
+	//線形８分木空間分割管理クラス
+	linear8TreeManager = new Linear8TreeManager<Object>;
+	linear8TreeManager->initialize(4, D3DXVECTOR3(-1000,-500,-1000),D3DXVECTOR3(1000,1000,1000));	
+
+	//オブジェクトカウンターのリセット
+	objectNS::resetCounter();		
 
 	sceneName = "Scene -Game-";
 
@@ -83,9 +91,9 @@ void Game::initialize() {
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
-	player			= new Player[gameMasterNS::PLAYER_NUM];
-	maleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
-	femaleRenderer	= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
+	player				= new Player[gameMasterNS::PLAYER_NUM];
+	maleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
+	femaleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
@@ -114,7 +122,7 @@ void Game::initialize() {
 			break;
 		case gameMasterNS::PLAYER_2P:
 			infomation.playerType	= gameMasterNS::PLAYER_2P;
-			infomation.modelType	= gameMasterNS::MODEL_MALE;
+			infomation.modelType	= gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			break;
 		}
@@ -161,7 +169,7 @@ void Game::initialize() {
 	stone = new Stone();
 	//スカイドームの初期化
 	sky = new Sky();
-
+	
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
@@ -171,6 +179,9 @@ void Game::initialize() {
 
 	//エフェクト（インスタンシング）テスト
 	testEffect = new TestEffect();
+
+	//ディスプレイ用プレーンサンプル
+	samplePlane = new TestPlane();
 
 	//-----中込テストゾーンその2---------------
 	//enemy->setDebugEnvironment();
@@ -210,6 +221,8 @@ void Game::initialize() {
 //【終了処理】
 //===================================================================================================================================
 void Game::uninitialize() {
+	//SAFE_DELETE(linear4TreeManager);
+	SAFE_DELETE(linear8TreeManager);
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(light);
@@ -223,6 +236,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(stone);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(testEffect);
+	SAFE_DELETE(samplePlane);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
@@ -330,6 +344,9 @@ void Game::update(float _frameTime) {
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
 
+	//ディスプレイ用プレーンサンプル
+	samplePlane->update(frameTime);
+
 	//電力減少（電力回復確認用）
 	player->pullpower(1);
 
@@ -391,7 +408,7 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	testField->setAlpha(0.1f); 
+	//testField->setAlpha(0.1f); 
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
@@ -423,9 +440,36 @@ void Game::render3D(Camera currentCamera) {
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//エフェクト（インスタンシング）テスト
-	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//ディスプレイ用プレーンサンプル
+	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+#if _DEBUG
+	//4分木空間分割のライン描画
+	//linear4TreeManager->render();
+	//8分木空間分割のライン描画
+	linear8TreeManager->render();
+	Ray ray;
+	ray.color = D3DXCOLOR(255, 255, 0, 255);
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	float length = 0;
+	for (int i = 0; i < collisionNum; i++)
+	{
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+
+		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+		ray.initialize(tmp1->position, direction);
+		ray.render(length);
+	}
+#endif
 
 #ifdef DEBUG_NAVIMESH
+
 	// ナビゲーションメッシュの描画
 	naviAI->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
@@ -454,10 +498,46 @@ void Game::renderUI() {
 }
 
 //===================================================================================================================================
+//【線形４分木空間分割マネージャー再登録処理】
+//===================================================================================================================================
+//void Game::tree4Reregister(Object* tmp)
+//{
+//	//一度リストから外れる
+//	tmp->treeCell.remove();
+//	//再登録
+//	linear4TreeManager->registerObject(
+//		tmp->getLeft(), tmp->getFront(), tmp->getRight(), tmp->getBack(), &tmp->treeCell);
+//
+//}
+
+//===================================================================================================================================
+//【線形８分木空間分割マネージャー再登録処理】
+//===================================================================================================================================
+void Game::tree8Reregister(Object* tmp)
+{
+	//一度リストから外れる
+	tmp->treeCell.remove();
+	//再登録
+	linear8TreeManager->registerObject( &tmp->getMin(),&tmp->getMax(), &tmp->treeCell);
+}
+
+//===================================================================================================================================
 //【衝突判定処理】
 //===================================================================================================================================
 void Game::collisions() 
 {
+	//再登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);
+	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);
+	for (int i = 0; i < stone->num; i++)
+	{
+		tree8Reregister(&stone->object[i]);
+	}
+
+	//衝突対応リストを取得
+	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
+	collisionNum /= 2;//2で割るのはペアになっているため
+
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
 	for (size_t i = 0; i < itemList.size(); i++)
@@ -489,10 +569,25 @@ void Game::AI() {
 #ifdef _DEBUG
 void Game::createGUI()
 {
+	Object** root = collisionList->getRoot();
+	Object* tmp1;
+	Object* tmp2;
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	if (ImGui::CollapsingHeader("CollisionList"))
+	{
+		ImGui::Text("collisionNum:%d", collisionNum);
+		for (int i = 0; i < collisionNum; i++)
+		{
+			tmp1 = root[i * 2];
+			tmp2 = root[i * 2 +1];
+			ImGui::Text("ID(%d):position(%.02f,%.02f,%.02f)<->ID(%d):position(%.02f,%.02f,%.02f)",
+				tmp1->id, tmp1->position.x,tmp1->position.y,tmp1->position.z,
+				tmp2->id, tmp2->position.x,tmp2->position.y,tmp2->position.z);
+		}
+	}
 
 	player->outputGUI();			//プレイヤー
 	//enemy->outputGUI();			//エネミー

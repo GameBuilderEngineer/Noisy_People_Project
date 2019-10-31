@@ -216,6 +216,7 @@
     <ClInclude Include="telop.h" />
     <ClInclude Include="TestEffect.h" />
     <ClInclude Include="TestEffectOccurrence.h" />
+    <ClInclude Include="TestPlane.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
@@ -308,6 +309,7 @@
     <ClCompile Include="telop.cpp" />
     <ClCompile Include="TestEffect.cpp" />
     <ClCompile Include="TestEffectOccurrence.cpp" />
+    <ClCompile Include="TestPlane.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />

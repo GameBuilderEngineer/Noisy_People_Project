@@ -10,6 +10,7 @@
 //===================================================================================================================================
 #include "InstancingBillboard.h"
 #include "Direct3D9.h"
+#include "ShaderLoader.h"
 #include "Input.h"
 #include <time.h>
 
@@ -69,14 +70,20 @@ InstancingBillboard::~InstancingBillboard()
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
-HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9 _texture)
+HRESULT InstancingBillboard::initialize(LPDIRECT3DTEXTURE9 _texture,int divideU, int divideV)
 {
+	this->divideU = divideU + 1;
+	this->divideV = divideV + 1;
+	unitU = 1.0f/(float)this->divideU;
+	unitV = 1.0f/(float)this->divideV;
+
+
 	//インスタンシングビルボードの頂点定義
 	InstancingBillboardNS::Vertex vertex[4] = {
 		{D3DXVECTOR2(-1.0f,  1.0f),	D3DXVECTOR2(0.0f,0.0f)},
-		{D3DXVECTOR2(1.0f,  1.0f),	D3DXVECTOR2(1.0f,0.0f)},
-		{D3DXVECTOR2(-1.0f, -1.0f),	D3DXVECTOR2(0.0f,1.0f)},
-		{D3DXVECTOR2(1.0f, -1.0f),	D3DXVECTOR2(1.0f,1.0f)},
+		{D3DXVECTOR2(1.0f,  1.0f),	D3DXVECTOR2(unitU,0.0f)},
+		{D3DXVECTOR2(-1.0f, -1.0f),	D3DXVECTOR2(0.0f,unitV)},
+		{D3DXVECTOR2(1.0f, -1.0f),	D3DXVECTOR2(unitU,unitV)},
 	};
 
 	//頂点バッファの作成
@@ -109,7 +116,7 @@ HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9
 	device->CreateVertexDeclaration(vertexElement, &declation);
 
 	//シェーダーを設定
-	effect = _effect;
+	effect = *shaderNS::reference(shaderNS::INSTANCE_BILLBOARD);
 	
 	//テクスチャを設定
 	texture = _texture;

@@ -56,6 +56,7 @@ namespace textureNS
 		SAMPLE_TREE,
 		SAMPLE_GRASS,
 		NEKO,
+		COLOR_SCALE,
 
 		MAX_TEXTURE,
 	};

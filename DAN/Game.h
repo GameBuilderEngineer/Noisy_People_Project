@@ -18,6 +18,7 @@
 #include "TreeTypeA.h"
 #include "TreeTypeB.h"
 #include "TestEffect.h"
+#include "TestPlane.h"
 #include "EnemyManager.h"
 #include "AIDirector.h"
 #include "NavigationMesh.h"
@@ -31,7 +32,9 @@
 
 #include "Sound.h"
 #include "SoundBase.h"
-//#include "GameMaster.h"
+
+#include "LinearTreeCell.h"
+
 //#include "PointSprite.h"
 //#include "Object.h"
 //#include "Text.h"
@@ -59,35 +62,42 @@ class Game : public AbstractScene
 {
 private:
 
-	Player*					player;				//プレイヤー
-	StaticMeshRenderer*		maleRenderer;		//男プレイヤーレンダラー
-	StaticMeshRenderer*		femaleRenderer;		//女プレイヤーレンダラー
-	Object*					testField;			//フィールド
-	StaticMeshRenderer*		testFieldRenderer;	//フィールドレンダラー
+	//Linear4TreeManager<Object>*	linear4TreeManager;	//線形４分木管理クラス
+	Linear8TreeManager<Object>*		linear8TreeManager;	//線形８分木管理クラス
+	ObjectTree<Object>*				objectTreeArray;	//オブジェクトツリー
+	DWORD							collisionNum;		//衝突判定回数
+	CollisionList<Object>*			collisionList;		//衝突判定リスト
 
-	DeadTree*				deadTree;			//枯木
-	TreeTypeA*				treeA;				//木Ａ
-	TreeTypeB*				treeB;				//木B
-	Stone*					stone;				//石
-	Sky*					sky;				//スカイドーム
+	Player*							player;				//プレイヤー
+	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
+	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
+	Object*							testField;			//フィールド
+	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 
-	TestEffect*				testEffect;			//インスタンシングビルボードテスト
+	DeadTree*						deadTree;			//枯木
+	TreeTypeA*						treeA;				//木Ａ
+	TreeTypeB*						treeB;				//木B
+	Stone*							stone;				//石
+	Sky*							sky;				//スカイドーム
 
-	EnemyManager*			enemyManager;		// エネミーマネージャー
-	Enemy*					enemy;				// エネミー
-	TreeManager*			treeManager;		// ツリーマネージャー
-	ItemManager*			itemManager;		// アイテムマネージャー
+	TestEffect*						testEffect;			//インスタンシングビルボードテスト
+	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
 
-	Telop*					telop;				// テロップ
+	EnemyManager*					enemyManager;		// エネミーマネージャー
+	Enemy*							enemy;				// エネミー
+	TreeManager*					treeManager;		// ツリーマネージャー
+	ItemManager*					itemManager;		// アイテムマネージャー
 
-	AIDirector*				aiDirector;			// AI
-	NavigationMesh*			naviAI;				// naviAI
+	Telop*							telop;				// テロップ
+
+	AIDirector*						aiDirector;			// AI
+	NavigationMesh*					naviAI;				// naviAI
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters[4];
+	PLAY_PARAMETERS					playParameters[4];
 
 	//Sprite実験
-	SpriteGauge* spriteGauge;
+	SpriteGauge*					spriteGauge;
 
 public:
 	Game();
@@ -102,6 +112,8 @@ public:
 	void render3D(Camera currentCamera);
 	void renderUI();
 	void test();
+	//void tree4Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
+	void tree8Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
 
 #ifdef _DEBUG
 	virtual void createGUI() override;

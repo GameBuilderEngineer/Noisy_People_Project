@@ -17,6 +17,7 @@
 #include "TextureLoader.h"
 #include "ShaderLoader.h"
 #include "Animation.h"
+#include "LinearTreeCell.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -77,6 +78,8 @@ public:
 	//タイマー
 	float				existenceTimer;			//存在時間
 
+	//オブジェクトツリーへ所属するためのインターフェースクラス
+	ObjectTree<Object>	treeCell;		//木空間
 
 	//Method
 	Object();
@@ -106,6 +109,14 @@ public:
 	Ray*					getReverseAxisZ()								{ return &reverseAxisZ; };
 	Ray*					getGravityRay()									{ return &gravityRay; };
 	bool					getActive()										{ return onActive; }
+	float					getRight()										{ return position.x + radius;}
+	float					getLeft()										{ return position.x - radius;}
+	float					getTop()										{ return position.z + radius;}
+	float					getBottom()										{ return position.z - radius;}
+	float					getFront()										{ return position.z + radius;}
+	float					getBack()										{ return position.z - radius;}
+	D3DXVECTOR3				getMin()										{ return position - D3DXVECTOR3(radius,radius,radius);}
+	D3DXVECTOR3				getMax()										{ return position + D3DXVECTOR3(radius,radius,radius);}
 
 	//setter
 	void					setSpeed(D3DXVECTOR3 _speed)					{ speed = _speed; }

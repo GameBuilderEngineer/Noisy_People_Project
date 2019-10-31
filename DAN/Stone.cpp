@@ -9,13 +9,14 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Stone.h"
+#include "BoundingSphere.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 Stone::Stone() {
 	renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STONE_003));
-	num = 400;
+	num = 10;
 	initialize();
 };
 
@@ -34,12 +35,15 @@ Stone::~Stone() {
 void Stone::initialize() {
 	object = new Object[num];
 	D3DXVECTOR3 position;
+	BoundingSphere sphere;
+	sphere.initialize(&position, (staticMeshNS::reference(staticMeshNS::STONE_003))->mesh);
 	for (int i = 0; i < num; i++)
 	{
 		position.x = (float)((rand() % 2000) - 1000);
 		position.y = 0.0f;
 		position.z = (float)((rand() % 2000) - 1000);
 		object[i].initialize(&position);
+		object[i].radius = sphere.getRadius();//半径の定義
 		renderer->registerObject(&object[i]);//レンダラーへ登録
 	}
 	needUpdate = true;
