@@ -141,7 +141,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
+    <ClInclude Include="ActionEventSeting.h" />
     <ClInclude Include="AIDirector.h" />
+    <ClInclude Include="AllocateHierarchy.h" />
     <ClInclude Include="AnalogTree.h" />
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
@@ -152,6 +154,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Create.h" />
     <ClInclude Include="Credit.h" />
+    <ClInclude Include="D3DXAnimation.h" />
     <ClInclude Include="DigitalTree.h" />
     <ClInclude Include="DeadTree.h" />
     <ClInclude Include="CreditTex.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="MemoryDebug.h" />
     <ClInclude Include="LinearTreeCell.h" />
     <ClInclude Include="MeshData.h" />
+    <ClInclude Include="movep.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="OperationGenerator.h" />
     <ClInclude Include="ResultUI.h" />
@@ -238,7 +242,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
+    <ClCompile Include="ActionEventSeting.cpp" />
     <ClCompile Include="AIDirector.cpp" />
+    <ClCompile Include="AllocateHierarchy.cpp" />
     <ClCompile Include="AnalogTree.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
@@ -250,6 +256,7 @@
     <ClCompile Include="Create.cpp" />
     <ClCompile Include="Credit.cpp" />
     <ClCompile Include="CreditTex.cpp" />
+    <ClCompile Include="D3DXAnimation.cpp" />
     <ClCompile Include="DeadTree.cpp" />
     <ClCompile Include="DigitalTree.cpp" />
     <ClCompile Include="Direct3D9.cpp" />
@@ -283,6 +290,7 @@
     <ClCompile Include="MemoryDebug.cpp" />
     <ClCompile Include="MemoryViewer.cpp" />
     <ClCompile Include="MeshData.cpp" />
+    <ClCompile Include="movep.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OperationGenerator.cpp" />

@@ -25,12 +25,14 @@
 #include "ItemManager.h"
 #include "Telop.h"
 #include "Sky.h"
-
 #include "SpriteGauge.h"
 #include "Battery.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
+
+
+#include "movep.h"
 //#include "GameMaster.h"
 //#include "PointSprite.h"
 //#include "Object.h"
@@ -65,11 +67,15 @@ private:
 	Object*					testField;			//フィールド
 	StaticMeshRenderer*		testFieldRenderer;	//フィールドレンダラー
 
+	StaticMeshRenderer*		MoveP;
+
 	DeadTree*				deadTree;			//枯木
 	TreeTypeA*				treeA;				//木Ａ
 	TreeTypeB*				treeB;				//木B
 	Stone*					stone;				//石
 	Sky*					sky;				//スカイドーム
+
+	MOVEP*					MoveP1;
 
 	TestEffect*				testEffect;			//インスタンシングビルボードテスト
 

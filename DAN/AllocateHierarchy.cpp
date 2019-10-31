@@ -1,393 +1,392 @@
-﻿//============================================================================================================================================
-// Document
-//============================================================================================================================================
-// AllocateHierarchy.cpp
-// HAL東京 GP-12A-332 09 亀岡竣介
-// 2019/09/03
-//============================================================================================================================================
+//=============================================================================
+//
+// �A�j������ [AllocateHierarchy.cpp]
+// Author : HAL���� ���q�
+//
+//=============================================================================
 #include "AllocateHierarchy.h"
-//============================================================================================================================================
-// Constructor
-// コンストラクタ
-//============================================================================================================================================
-AllocateHierarchy::AllocateHierarchy(LPDIRECT3DDEVICE9 _device)
+
+
+UINT				g_NumBoneMatricesMax = 0;
+
+HRESULT AllocateName(LPCSTR Name, LPSTR* pNewName)
 {
-	this->device = _device;
+	UINT cbLength;
 
-	return;
-}
-//============================================================================================================================================
-// Destructor
-// デストラクタ
-//============================================================================================================================================
-AllocateHierarchy::~AllocateHierarchy(void)
-{
-	return;
-}
-//============================================================================================================================================
-// allocateName
-// フレームまたはメッシュの名前を保持する文字列に、メモリを割り当てる
-//============================================================================================================================================
-HRESULT AllocateHierarchy::allocateName(LPCSTR _name, LPSTR* _newName)
-{
-	UINT length = NULL;	//	長さ
-
-	if (_name != NULL)
+	if (Name != NULL)
 	{
-		length = ((UINT)strlen(_name) + 1);
-		*_newName = new CHAR[length];
-
-		if (*_newName == NULL) { return E_OUTOFMEMORY; }
-
-		memcpy(*_newName, _name, (length * sizeof(CHAR)));
+		cbLength = (UINT)strlen(Name) + 1;
+		*pNewName = new CHAR[cbLength];
+		memcpy(*pNewName, Name, cbLength * sizeof(CHAR));
 	}
-	else { *_newName = NULL; }
-
-	return S_OK;
-}
-//============================================================================================================================================
-// createSkinMesh
-// スキンメッシュの作成
-//============================================================================================================================================
-HRESULT AllocateHierarchy::createSkinMesh(D3DXMeshContainerDerived* _meshContainer)
-{
-	D3DCAPS9 caps;	//	キャップ
-
-	device->GetDeviceCaps(&caps);
-
-	if (_meshContainer->pSkinInfo == NULL) { return S_OK; }
-
-	SAFE_RELEASE(_meshContainer->MeshData.pMesh);
-	SAFE_RELEASE(_meshContainer->boneCombinationBuffer);
-
-	_meshContainer->pSkinInfo->ConvertToBlendedMesh		//	ConvertToBlendedMesh関数：メッシュを受け取り、頂点単位のブレンドの重みと、ボーンの組み合わせテーブルを適用した新しいメッシュを返す( このテーブルは、ボーンとメッシュのサブセットの関係を表す )
-	(
-		_meshContainer->originalMesh,					//	入力メッシュ
-		(D3DXMESH_MANAGED | D3DXMESHOPT_VERTEXCACHE),	//	オプション
-		_meshContainer->pAdjacency,						//	メッシュの隣接データ( 入力 )
-		NULL, 											//	メッシュの隣接データ( 出力 )
-		NULL, 											//	ポリゴンの新規インデックスのバッファ
-		NULL,											//	頂点の新規インデックスのバッファ
-		&_meshContainer->boneWeightMax,					//	１つの頂点に影響を及ぼすウェイトの数
-		&_meshContainer->boneMax,						//	ボーンの数
-		&_meshContainer->boneCombinationBuffer,			//	ボーンデータが格納されたバッファ
-		&_meshContainer->MeshData.pMesh					//	変換後のメッシュ
-	);
-
-	return S_OK;
-}
-//============================================================================================================================================
-// CreateFrame
-// フレームワークの作成・メモリの割り当て・初期化
-//============================================================================================================================================
-HRESULT AllocateHierarchy::CreateFrame(LPCSTR _name, LPD3DXFRAME* _newFrame)
-{
-	HRESULT result = S_OK;					//	リザルト
-	D3DXFrameDerived* framePointer = NULL;	//	フレームポインタ
-
-	*_newFrame = NULL;
-
-	framePointer = new D3DXFrameDerived;
-
-	if (framePointer == NULL)
-	{
-		// フレームポインタの解放
-		//framePointer = NULL;		//NULLを代入してからデリートしては意味がないのでは？@tatsuki
-		//SAFE_DELETE(framePointer);	
-
-		result = E_OUTOFMEMORY;
-
-		return result;
-	}
-
-	result = allocateName(_name, &framePointer->Name);
-
-	if (FAILED(result))
-	{
-		// フレームポインタの解放
-		//framePointer = NULL;		//NULLを代入してからデリートしては意味がないのでは？@tatsuki
-		//SAFE_DELETE(framePointer);
-
-		return result;
-	}
-
-	// フレームの、他データメンバを初期化
-	D3DXMatrixIdentity(&framePointer->TransformationMatrix);
-	D3DXMatrixIdentity(&framePointer->combinedTransformationMatrix);
-
-	framePointer->pMeshContainer = NULL;
-	framePointer->pFrameSibling = NULL;
-	framePointer->pFrameFirstChild = NULL;
-
-	*_newFrame = framePointer;
-
-	// フレームポインタの解放
-	//framePointer = NULL;		//NULLを代入してからデリートしては意味がないのでは？@tatsuki
-	//SAFE_DELETE(framePointer);
-
-	return result;
-}
-//============================================================================================================================================
-// CreateMeshContainer
-// メッシュコンテナオブジェクトを作成し、メッシュモデルデータを保存
-//============================================================================================================================================
-HRESULT AllocateHierarchy::CreateMeshContainer(LPCSTR _name, CONST D3DXMESHDATA* _meshData, CONST D3DXMATERIAL* _material, CONST D3DXEFFECTINSTANCE* _effectInstance, DWORD _materialNumber, CONST DWORD* _adjacency, LPD3DXSKININFO _skinInformation, LPD3DXMESHCONTAINER* _newMeshContainer)
-{
-	LPD3DXMESH mesh = NULL;									//	メッシュ
-	HRESULT result = NULL;									//	リザルト
-	UINT face = NULL;										//	フェイス数
-	UINT boneCount = NULL;									//	ボーンカウント
-	D3DXMeshContainerDerived* meshContainer = NULL;			//	メッシュコンテナ
-	D3DXEFFECTINSTANCE errorElimination = *_effectInstance;	//	エラー排除
-
-	*_newMeshContainer = NULL;
-
-	// このサンプルはパッチメッシュを処理しないので、パッチメッシュを発見した場合は失敗
-	if (_meshData->Type != D3DXMESHTYPE_MESH)
-	{
-		result = E_FAIL;
-
-		// 割り当てられたメモリを適切にクリーンアップする
-		if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
-
-		return result;
-	}
-
-	// メッシュデータ構造体から"pMesh"インターフェイスポインタを取得
-	mesh = _meshData->pMesh;
-
-	// このサンプルは"FVF"と互換性のあるメッシュでは無いので、発見した場合は失敗
-	if (mesh->GetFVF() == 0)
-	{
-		result = E_FAIL;
-
-		// 割り当てられたメモリを適切にクリーンアップする
-		if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
-
-		return result;
-	}
-
-	// オーバーロードされた構造体を、"D3DXMESHCONTAINER"として返すように割り当てる
-	meshContainer = new D3DXMeshContainerDerived;
-	if (meshContainer == NULL)
-	{
-		result = E_OUTOFMEMORY;
-
-		// 割り当てられたメモリを適切にクリーンアップする
-		if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
-
-		return result;
-	}
-
-	memset(meshContainer, 0, sizeof(D3DXMeshContainerDerived));
-
-	// 確認して名前をコピー( 入力として、全てのメモリは呼び出し元に属しているが、インターフェースは追加参照することができる )
-	result = allocateName(_name, &meshContainer->Name);
-	if (FAILED(result))
-	{
-		// 割り当てられたメモリを適切にクリーンアップする
-		if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
-
-		return result;
-	}
-
-	mesh->GetDevice(&device);
-
-	face = mesh->GetNumFaces();
-
-	// メッシュに法線ベクトルが無い場合は追加
-	if (!(mesh->GetFVF() & D3DFVF_NORMAL))
-	{
-		meshContainer->MeshData.Type = D3DXMESHTYPE_MESH;
-
-		// 法線ベクトルのスペースを確保するために、メッシュを複製
-		result = mesh->CloneMeshFVF
-		(
-			mesh->GetOptions(),
-			(mesh->GetFVF() | D3DFVF_NORMAL),
-			device,
-			&meshContainer->MeshData.pMesh
-		);
-		if (FAILED(result))
-		{
-			// 割り当てられたメモリを適切にクリーンアップする
-			if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
-
-			return result;
-		}
-
-		// 新しいメッシュポインタを、メッシュコンテナから取り出して使用
-		mesh = meshContainer->MeshData.pMesh;
-
-		// メッシュの法線ベクトルを生成します
-		D3DXComputeNormals(mesh, NULL);
-	}
-	// 法線ベクトルが無い場合は、メッシュコンテナのメッシュへの参照を追加する
 	else
 	{
-		meshContainer->MeshData.pMesh = mesh;
-		meshContainer->MeshData.Type = D3DXMESHTYPE_MESH;
-		mesh->AddRef();
+		*pNewName = NULL;
 	}
 
-	// 材料情報を格納するためのメモリを割り当てる：このサンプルは、"Effect_Instance"スタイルマテリアルの代わりに、マテリアルとテクスチャ名を使用する
-	meshContainer->NumMaterials = max(1, _materialNumber);
-	meshContainer->pMaterials = new D3DXMATERIAL[meshContainer->NumMaterials];
-	meshContainer->texture = new LPDIRECT3DTEXTURE9[meshContainer->NumMaterials];
-	meshContainer->pAdjacency = new DWORD[face * 3];
+	return S_OK;
+}
 
-	if ((meshContainer->pAdjacency == NULL) || (meshContainer->pMaterials == NULL))
+HRESULT GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, D3DXMESHCONTAINER_DERIVED* pMeshContainer)
+{
+	D3DCAPS9 d3dCaps;
+	pd3dDevice->GetDeviceCaps(&d3dCaps);
+	HRESULT hr = S_OK;
+
+	if (pMeshContainer->pSkinInfo == NULL)
+		return S_OK;
+
+	SAFE_RELEASE(pMeshContainer->MeshData.pMesh);
+	SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
+
+	if (FAILED(pMeshContainer->pSkinInfo->ConvertToBlendedMesh(
+		pMeshContainer->pOrigMesh,
+		D3DXMESH_MANAGED | D3DXMESHOPT_VERTEXCACHE,
+		pMeshContainer->pAdjacency,
+		NULL, NULL, NULL,
+		&pMeshContainer->BoneWeightNum,
+		&pMeshContainer->BoneNum,
+		&pMeshContainer->pBoneCombinationBuf,
+		&pMeshContainer->MeshData.pMesh)))
 	{
-		result = E_OUTOFMEMORY;
+		return E_FAIL;
+	}
+	return S_OK;
+}
 
-		// 割り当てられたメモリを適切にクリーンアップする
-		if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
 
-		return result;
+
+HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame)
+{
+	HRESULT hr = S_OK;
+	D3DXFRAME_DERIVED *pFrame;
+
+	*ppNewFrame = NULL;
+
+	pFrame = new D3DXFRAME_DERIVED;
+	if (FAILED(AllocateName(Name, (LPSTR*)&pFrame->Name)))
+	{
+		delete pFrame;
+		return hr;
 	}
 
-	memcpy(meshContainer->pAdjacency, _adjacency, sizeof(DWORD) * face * 3);
-	memset(meshContainer->texture, 0, sizeof(LPDIRECT3DTEXTURE9) * meshContainer->NumMaterials);
+	D3DXMatrixIdentity(&pFrame->TransformationMatrix);
+	D3DXMatrixIdentity(&pFrame->CombinedTransformationMatrix);
 
-	if (_materialNumber > 0)	//	資料が提供されている場合は、それらをコピー
+	pFrame->pMeshContainer = NULL;
+	pFrame->pFrameSibling = NULL;
+	pFrame->pFrameFirstChild = NULL;
+
+	*ppNewFrame = pFrame;
+	pFrame = NULL;
+
+	return hr;
+}
+
+
+HRESULT CAllocateHierarchy::CreateMeshContainer(LPCSTR Name,
+	CONST D3DXMESHDATA *pMeshData,
+	CONST D3DXMATERIAL *pMaterials,
+	CONST D3DXEFFECTINSTANCE *pEffectInstances,
+	DWORD NumMaterials,
+	CONST DWORD *pAdjacency,
+	LPD3DXSKININFO pSkinInfo,
+	LPD3DXMESHCONTAINER *ppNewMeshContainer)
+{
+	HRESULT hr;
+	UINT NumFaces;
+	UINT iMaterial;
+	UINT iBone, cBones;
+	LPDIRECT3DDEVICE9 pd3dDevice = NULL;
+	D3DXMESHCONTAINER_DERIVED *pMeshContainer = NULL;
+
+	LPD3DXMESH pMesh = NULL;
+
+	*ppNewMeshContainer = NULL;
+
+	// this sample does not handle patch meshes, so fail when one is found
+	if (pMeshData->Type != D3DXMESHTYPE_MESH)
 	{
-		memcpy(meshContainer->pMaterials, _material, sizeof(D3DXMATERIAL) * _materialNumber);
+		hr = E_FAIL;
+		goto e_Exit;
+	}
 
-		for (UINT i = 0; i < _materialNumber; i++)
+	// get the pMesh interface pointer out of the mesh data structure
+	pMesh = pMeshData->pMesh;
+
+	// this sample does not FVF compatible meshes, so fail when one is found
+	if (pMesh->GetFVF() == 0)
+	{
+		hr = E_FAIL;
+		goto e_Exit;
+	}
+
+	// allocate the overloaded structure to return as a D3DXMESHCONTAINER
+	pMeshContainer = new D3DXMESHCONTAINER_DERIVED;
+	memset(pMeshContainer, 0, sizeof(D3DXMESHCONTAINER_DERIVED));
+
+	// make sure and copy the name.  All memory as input belongs to caller, interfaces can be addref'd though
+	hr = AllocateName(Name, &pMeshContainer->Name);
+	if (FAILED(hr))
+		goto e_Exit;
+
+	pMesh->GetDevice(&pd3dDevice);
+	NumFaces = pMesh->GetNumFaces();
+
+	// if no normals are in the mesh, add them
+	if (!(pMesh->GetFVF() & D3DFVF_NORMAL))
+	{
+		pMeshContainer->MeshData.Type = D3DXMESHTYPE_MESH;
+
+		// clone the mesh to make room for the normals
+		hr = pMesh->CloneMeshFVF(pMesh->GetOptions(), pMesh->GetFVF() | D3DFVF_NORMAL,
+			pd3dDevice, &pMeshContainer->MeshData.pMesh);
+		if (FAILED(hr))
+			goto e_Exit;
+
+		// get the new pMesh pointer back out of the mesh container to use
+		// NOTE: we do not release pMesh because we do not have a reference to it yet
+		pMesh = pMeshContainer->MeshData.pMesh;
+
+		// now generate the normals for the pmesh
+		D3DXComputeNormals(pMesh, NULL);
+	}
+	else  // if no normals, just add a reference to the mesh for the mesh container
+	{
+		pMeshContainer->MeshData.pMesh = pMesh;
+		pMeshContainer->MeshData.Type = D3DXMESHTYPE_MESH;
+
+		pMesh->AddRef();
+	}
+
+	// allocate memory to contain the material information.  This sample uses
+	//   the D3D9 materials and texture names instead of the EffectInstance style materials
+	pMeshContainer->NumMaterials = max(1, NumMaterials);
+	pMeshContainer->pMaterials = new D3DXMATERIAL[pMeshContainer->NumMaterials];
+	pMeshContainer->ppTextures = new LPDIRECT3DTEXTURE9[pMeshContainer->NumMaterials];
+	pMeshContainer->pAdjacency = new DWORD[NumFaces * 3];
+
+	memcpy(pMeshContainer->pAdjacency, pAdjacency, sizeof(DWORD) * NumFaces * 3);
+	memset(pMeshContainer->ppTextures, 0, sizeof(LPDIRECT3DTEXTURE9) * pMeshContainer->NumMaterials);
+
+	// if materials provided, copy them
+	if (NumMaterials > 0)
+	{
+		memcpy(pMeshContainer->pMaterials, pMaterials, sizeof(D3DXMATERIAL) * NumMaterials);
+
+		for (iMaterial = 0; iMaterial < NumMaterials; iMaterial++)
 		{
-			if (meshContainer->pMaterials[i].pTextureFilename != NULL)
+			if (pMeshContainer->pMaterials[iMaterial].pTextureFilename != NULL)
 			{
-				char textureName[256];
-				ZeroMemory(textureName, sizeof(textureName));
-				sprintf_s(textureName, "%s", meshContainer->pMaterials[i].pTextureFilename);
+				char TextureName[256];
+				ZeroMemory(TextureName, sizeof(TextureName));
 
-				if (FAILED(D3DXCreateTextureFromFile
-				(
-					device,
-					textureName,
-					&meshContainer->texture[i]
-				)))
+				//�������.X����TextureFileName�̍ގ��ݒu�̏ꏊ
+				//��F.X����data/ANIMATION/abc.png�Ȃ�A����%s�@�|��������̓��f�������l�����
+				//�t��.X����abc.png�Ȃ�A����data/ANIMATION/%s �[��������̓v���O���}�[�����i�������߁j
+				//���ӁI������̓���͑S���܂Ƃ߂Ĉ�̃t�@�C���ɓ���Ă��������B
+				sprintf_s(TextureName, "07 Model File/%s", pMeshContainer->pMaterials[iMaterial].pTextureFilename);
+
+
+				if (FAILED(D3DXCreateTextureFromFile(pd3dDevice, TextureName,
+					&pMeshContainer->ppTextures[iMaterial])))
 				{
-					meshContainer->texture[i] = NULL;
+					pMeshContainer->ppTextures[iMaterial] = NULL;
 				}
-				meshContainer->pMaterials[i].pTextureFilename = NULL;
+
+				// don't remember a pointer into the dynamic memory, just forget the name after loading
+				pMeshContainer->pMaterials[iMaterial].pTextureFilename = NULL;
+
 			}
 		}
 	}
-	else	//	資料が提供されていない場合は、デフォルトの資料を使用する
+	else // if no materials provided, use a default one
 	{
-		meshContainer->pMaterials[0].pTextureFilename = NULL;
-
-		memset(&meshContainer->pMaterials[0].MatD3D, 0, sizeof(D3DMATERIAL9));
-
-		meshContainer->pMaterials[0].MatD3D.Diffuse.r = 0.5f;
-		meshContainer->pMaterials[0].MatD3D.Diffuse.g = 0.5f;
-		meshContainer->pMaterials[0].MatD3D.Diffuse.b = 0.5f;
-		meshContainer->pMaterials[0].MatD3D.Specular = meshContainer->pMaterials[0].MatD3D.Diffuse;
+		pMeshContainer->pMaterials[0].pTextureFilename = NULL;
+		memset(&pMeshContainer->pMaterials[0].MatD3D, 0, sizeof(D3DMATERIAL9));
+		pMeshContainer->pMaterials[0].MatD3D.Diffuse.r = 0.5f;
+		pMeshContainer->pMaterials[0].MatD3D.Diffuse.g = 0.5f;
+		pMeshContainer->pMaterials[0].MatD3D.Diffuse.b = 0.5f;
+		pMeshContainer->pMaterials[0].MatD3D.Specular = pMeshContainer->pMaterials[0].MatD3D.Diffuse;
 	}
 
-	// スキニング情報がある場合は、必要なデータを保存してから"HW"スキニングを設定
-	if (_skinInformation != NULL)
+	// if there is skinning information, save off the required data and then setup for HW skinning
+	if (pSkinInfo != NULL)
 	{
-		// 最初にスキン情報と、オリジナルのメッシュデータを保存
-		meshContainer->pSkinInfo = _skinInformation;
-		_skinInformation->AddRef();
+		// first save off the SkinInfo and original mesh data
+		pMeshContainer->pSkinInfo = pSkinInfo;
+		pSkinInfo->AddRef();
 
-		meshContainer->originalMesh = mesh;
-		mesh->AddRef();
+		pMeshContainer->pOrigMesh = pMesh;
+		pMesh->AddRef();
 
-		// 頂点をフィギュア空間からボーンの空間に移動するには、オフセット行列の配列が必要
-		boneCount = _skinInformation->GetNumBones();
-		meshContainer->boneOffsetMatrix = new D3DXMATRIX[boneCount];
+		// Will need an array of offset matrices to move the vertices from the figure space to the bone's space
+		cBones = pSkinInfo->GetNumBones();
+		pMeshContainer->pBoneOffsetMatrices = new D3DXMATRIX[cBones];
 
-		if (meshContainer->boneOffsetMatrix == NULL)
+		// get each of the bone offset matrices so that we don't need to get them later
+		for (iBone = 0; iBone < cBones; iBone++)
 		{
-			result = E_OUTOFMEMORY;
-
-			// 割り当てられたメモリを適切にクリーンアップする
-			if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
-
-			return result;
+			pMeshContainer->pBoneOffsetMatrices[iBone] = *(pMeshContainer->pSkinInfo->GetBoneOffsetMatrix(iBone));
 		}
 
-		// 後で取得する必要がないように、各ボーンオフセット行列を取得
-		for (UINT i = 0; i < boneCount; i++)
-		{
-			meshContainer->boneOffsetMatrix[i] = *(meshContainer->pSkinInfo->GetBoneOffsetMatrix(i));
-		}
-
-		// 一般的なスキニング情報を受け取り、それをハードウェアに適したバージョンに変換
-		result = createSkinMesh(meshContainer);
-
-		if (FAILED(result))
-		{
-			// 割り当てられたメモリを適切にクリーンアップする
-			if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
-
-			return result;
-		}
+		// GenerateSkinnedMesh will take the general skinning information and transform it to a HW friendly version
+		hr = GenerateSkinnedMesh(pd3dDevice, pMeshContainer);
+		if (FAILED(hr))
+			goto e_Exit;
 	}
 
-	*_newMeshContainer = meshContainer;
+	*ppNewMeshContainer = pMeshContainer;
+	pMeshContainer = NULL;
 
-	meshContainer = NULL;
+e_Exit:
+	SAFE_RELEASE(pd3dDevice);
 
-	// 割り当てられたメモリを適切にクリーンアップする
-	if (meshContainer != NULL) { DestroyMeshContainer(meshContainer); }
+	// call Destroy function to properly clean up the memory allocated 
+	if (pMeshContainer != NULL)
+	{
+		DestroyMeshContainer(pMeshContainer);
+	}
 
-	return result;
+	return hr;
 }
-//============================================================================================================================================
-// DestroyFrame
-// フレームの解放
-//============================================================================================================================================
-HRESULT AllocateHierarchy::DestroyFrame(LPD3DXFRAME _frame)
+
+HRESULT CAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 {
-	SAFE_DELETE_ARRAY(_frame->Name);
-
-	//if (_frame->pFrameFirstChild)
-	//{
-	//	DestroyFrame(_frame->pFrameFirstChild);
-	//}
-	//
-	//if (_frame->pFrameSibling)
-	//{
-	//	DestroyFrame(_frame->pFrameSibling);
-	//}
-
-	//SAFE_DELETE(_frame);
-
+	SAFE_DELETE_ARRAY(pFrameToFree->Name);
+	SAFE_DELETE(pFrameToFree);
 	return S_OK;
 }
-//============================================================================================================================================
-// DestroyMeshContainer
-// メッシュコンテナの解放
-//============================================================================================================================================
-HRESULT AllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER _baseMeshContainer)
+
+HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase)
 {
-	D3DXMeshContainerDerived* meshContainer = (D3DXMeshContainerDerived*)_baseMeshContainer;	//	メッシュコンテナ
+	UINT iMaterial;
+	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
 
-	SAFE_DELETE_ARRAY(meshContainer->Name);
-	SAFE_DELETE_ARRAY(meshContainer->pAdjacency);
-	SAFE_DELETE_ARRAY(meshContainer->pMaterials);
+	SAFE_DELETE_ARRAY(pMeshContainer->Name);
+	SAFE_DELETE_ARRAY(pMeshContainer->pAdjacency);
+	SAFE_DELETE_ARRAY(pMeshContainer->pMaterials);
+	SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
 
-	// 割り当てられた全てのテクスチャを解放
-	if (meshContainer->texture != NULL)
+	// release all the allocated textures
+	if (pMeshContainer->ppTextures != NULL)
 	{
-		for (UINT i = 0; i < meshContainer->NumMaterials; i++)
+		for (iMaterial = 0; iMaterial < pMeshContainer->NumMaterials; iMaterial++)
 		{
-			SAFE_RELEASE(meshContainer->texture[i]);
+			SAFE_RELEASE(pMeshContainer->ppTextures[iMaterial]);
 		}
 	}
 
-	SAFE_DELETE_ARRAY(meshContainer->texture);
-	SAFE_RELEASE(meshContainer->pSkinInfo);
-	SAFE_RELEASE(meshContainer->boneCombinationBuffer);
-	SAFE_DELETE_ARRAY(meshContainer->boneMatrix);
-	SAFE_DELETE_ARRAY(meshContainer->boneOffsetMatrix);
-	SAFE_RELEASE(meshContainer->MeshData.pMesh);
-	SAFE_RELEASE(meshContainer->originalMesh);
-	SAFE_DELETE(meshContainer);
-
+	SAFE_DELETE_ARRAY(pMeshContainer->ppTextures);
+	SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
+	SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
+	SAFE_RELEASE(pMeshContainer->MeshData.pMesh);
+	SAFE_RELEASE(pMeshContainer->pSkinInfo);
+	SAFE_RELEASE(pMeshContainer->pOrigMesh);		//ԭʼ����E
+	SAFE_DELETE(pMeshContainer);
 	return S_OK;
+}
+
+
+void DrawMeshContainer(IDirect3DDevice9* pd3dDevice, LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase)
+{
+	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
+	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
+	UINT iMaterial;
+	UINT NumBlend;
+	UINT iAttrib;
+	DWORD AttribIdPrev;
+	LPD3DXBONECOMBINATION pBoneComb;
+
+	UINT iMatrixIndex;
+	D3DXMATRIXA16 matTemp;
+	D3DCAPS9 d3dCaps;
+	pd3dDevice->GetDeviceCaps(&d3dCaps);
+
+	// first check for skinning
+	if (pMeshContainer->pSkinInfo != NULL)
+	{
+		AttribIdPrev = UNUSED32;
+		pBoneComb = reinterpret_cast<LPD3DXBONECOMBINATION>(pMeshContainer->pBoneCombinationBuf->GetBufferPointer());
+
+		// Draw using default vtx processing of the device (typically HW)
+		for (iAttrib = 0; iAttrib < pMeshContainer->BoneNum; iAttrib++)
+		{
+			NumBlend = 0;
+			for (DWORD i = 0; i < pMeshContainer->BoneWeightNum; ++i)
+			{
+				if (pBoneComb[iAttrib].BoneId[i] != UINT_MAX)
+				{
+					NumBlend = i;
+				}
+			}
+
+			if (d3dCaps.MaxVertexBlendMatrices >= NumBlend + 1)
+			{
+				// first calculate the world matrices for the current set of blend weights and get the accurate count of the number of blends
+				for (DWORD i = 0; i < pMeshContainer->BoneWeightNum; ++i)
+				{
+					iMatrixIndex = pBoneComb[iAttrib].BoneId[i];
+					if (iMatrixIndex != UINT_MAX)
+					{
+						D3DXMatrixMultiply(&matTemp, &pMeshContainer->pBoneOffsetMatrices[iMatrixIndex],
+							pMeshContainer->ppBoneMatrixPtrs[iMatrixIndex]);
+						pd3dDevice->SetTransform(D3DTS_WORLDMATRIX(i), &matTemp);
+					}
+				}
+
+				pd3dDevice->SetRenderState(D3DRS_VERTEXBLEND, NumBlend);
+
+				// lookup the material used for this subset of faces
+				if ((AttribIdPrev != pBoneComb[iAttrib].AttribId) || (AttribIdPrev == UNUSED32))
+				{
+					pd3dDevice->SetMaterial(&pMeshContainer->pMaterials[pBoneComb[iAttrib].AttribId].MatD3D);
+					pd3dDevice->SetTexture(0, pMeshContainer->ppTextures[pBoneComb[iAttrib].AttribId]);
+					AttribIdPrev = pBoneComb[iAttrib].AttribId;
+				}
+
+				// draw the subset now that the correct material and matrices are loaded
+				pMeshContainer->MeshData.pMesh->DrawSubset(iAttrib);
+			}
+		}
+		pd3dDevice->SetRenderState(D3DRS_VERTEXBLEND, 0);
+	}
+	else  // standard mesh, just draw it after setting material properties
+	{
+		pd3dDevice->SetTransform(D3DTS_WORLD, &pFrame->CombinedTransformationMatrix);
+
+		for (iMaterial = 0; iMaterial < pMeshContainer->NumMaterials; iMaterial++)
+		{
+			pd3dDevice->SetMaterial(&pMeshContainer->pMaterials[iMaterial].MatD3D);
+			pd3dDevice->SetTexture(0, pMeshContainer->ppTextures[iMaterial]);
+			pMeshContainer->MeshData.pMesh->DrawSubset(iMaterial);
+		}
+	}
+}
+
+
+void DrawFrame(IDirect3DDevice9* pd3dDevice, LPD3DXFRAME pFrame)
+{
+	if (pFrame == NULL) return;
+	LPD3DXMESHCONTAINER pMeshContainer;
+	pMeshContainer = pFrame->pMeshContainer;
+	while (pMeshContainer != NULL)
+	{
+		DrawMeshContainer(pd3dDevice, pMeshContainer, pFrame);
+		pMeshContainer = pMeshContainer->pNextMeshContainer;
+	}
+
+	DrawFrame(pd3dDevice, pFrame->pFrameSibling);
+	DrawFrame(pd3dDevice, pFrame->pFrameFirstChild);
+}
+
+void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, LPD3DXMATRIX pParentMatrix)
+{
+	if (pFrameBase == NULL || pParentMatrix == NULL) return;
+	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
+
+	D3DXMatrixMultiply(&pFrame->CombinedTransformationMatrix, &pFrame->TransformationMatrix, pParentMatrix);
+
+	UpdateFrameMatrices(pFrame->pFrameSibling, pParentMatrix);
+	UpdateFrameMatrices(pFrame->pFrameFirstChild, &pFrame->CombinedTransformationMatrix);
 }

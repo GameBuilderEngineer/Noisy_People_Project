@@ -493,6 +493,18 @@
     </ClCompile>
     <ClCompile Include="LinearTreeCell.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="AllocateHierarchy.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DXAnimation.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="movep.cpp">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionEventSeting.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -780,6 +792,18 @@
     </ClInclude>
     <ClInclude Include="LinearTreeCell.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="AllocateHierarchy.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DXAnimation.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="movep.h">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionEventSeting.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
@@ -792,9 +816,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Readme\Readme.txt">
-      <Filter>Readme</Filter>
-    </Text>
     <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
     </Text>
@@ -812,6 +833,9 @@
     </Text>
     <Text Include="01 Data File\wasuremonoPosCheck.txt">
       <Filter>Resorce Layer\01 Data File</Filter>
+    </Text>
+    <Text Include="Readme\Readme.txt">
+      <Filter>Readme</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

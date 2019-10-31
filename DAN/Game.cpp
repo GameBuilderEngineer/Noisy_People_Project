@@ -151,6 +151,7 @@ void Game::initialize() {
 	light = new Light;
 	light->initialize();
 
+
 	//枯木の初期化
 	deadTree = new DeadTree();
 	//木Aの初期化
@@ -161,6 +162,10 @@ void Game::initialize() {
 	stone = new Stone();
 	//スカイドームの初期化
 	sky = new Sky();
+
+	//アニメションキャラの初期化
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
+
 
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
@@ -229,6 +234,9 @@ void Game::uninitialize() {
 	SAFE_DELETE(telop);
 	SAFE_DELETE(aiDirector);
 	SAFE_DELETE(spriteGauge);
+
+	UninitMoveP();
+
 }
 
 //===================================================================================================================================
@@ -264,6 +272,7 @@ void Game::update(float _frameTime) {
 	// アイテムの更新
 	itemManager->update(frameTime);
 
+	UpdateMoveP(0.01f);
 
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
@@ -411,6 +420,10 @@ void Game::render3D(Camera currentCamera) {
 	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//スカイドームの描画
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+
+	
+	DrawMoveP();
 
 	// エネミーの描画
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);

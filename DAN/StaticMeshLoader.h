@@ -62,6 +62,7 @@ namespace staticMeshNS {
 		YAMADA_TEST_ZONE,						//08
 		SKY_DOME,								//09
 
+
 		MESH_NUM,								//NUM
 	};
 
