@@ -13,6 +13,7 @@ namespace shaderNS
 		TOON,
 		INSTANCE_BILLBOARD,
 		INSTANCE_STATIC_MESH,
+		BLUR,
 		MAX_SHADER,
 	};
 

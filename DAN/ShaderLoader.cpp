@@ -25,10 +25,11 @@ static ShaderLoader* pointerShaderLoader;
 //===================================================================================================================================
 ShaderLoader::ShaderLoader()
 {
-	pointerShaderLoader = this;
-	shaderName[TOON] = { "ToonShader.fx" };
-	shaderName[INSTANCE_BILLBOARD] = { "InstancingBillboard.fx" };
-	shaderName[INSTANCE_STATIC_MESH] = { "InstancingStaticMesh.fx" };
+	pointerShaderLoader					= this;
+	shaderName[TOON]					= { "ToonShader.fx" };
+	shaderName[BLUR]					= { "BlurShader.fx" };
+	shaderName[INSTANCE_BILLBOARD]		= { "InstancingBillboard.fx" };
+	shaderName[INSTANCE_STATIC_MESH]	= { "InstancingStaticMesh.fx" };
 }
 
 //===================================================================================================================================

@@ -144,6 +144,7 @@ HRESULT Director::initialize() {
 
 	//fader
 	fader = new Fader();
+	fader->setShader(faderNS::BLUR);
 
 #pragma region MemoryTest
 	//ƒƒ‚ƒŠ‰ð•úƒeƒXƒg
@@ -329,11 +330,25 @@ void Director::render() {
 
 #ifdef _DEBUG
 	//Debug
-	d3d->clear(imgui->getClearColor());
 	if (SUCCEEDED(d3d->beginScene()))
 	{
-		scene->render();
-		if(fader->playing)	fader->render();
+
+		if (fader->playing)
+		{
+			fader->setRenderTexture();
+			d3d->clear(imgui->getClearColor());
+			scene->render();
+
+			d3d->setRenderBackBuffer(0);
+			d3d->clear(imgui->getClearColor());
+			fader->render();
+		}
+		else
+		{
+			d3d->clear(imgui->getClearColor());
+			d3d->setRenderBackBuffer(0);
+			scene->render();
+		}
 		imgui->render();
 		d3d->endScene();
 	}
