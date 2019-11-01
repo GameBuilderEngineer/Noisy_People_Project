@@ -41,7 +41,7 @@ class SoundInterface
 {
 private:
 	//マスタリングボイス
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	IXAudio2MasteringVoice				*MasteringVoice;					//XAudio2 Mastering Voice
 #endif
 
@@ -55,7 +55,7 @@ public:
 	static S3DManager *S3D;
 	
 	//インタフェース
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	static IXAudio2						*XAudio2Interface;				//XAudio2 COM Interface
 	static IXAudio2						*GetXAudio2Interface(void);		//XAudio2のインタフェースを取得する
 #endif

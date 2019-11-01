@@ -4,12 +4,10 @@
 // [作成日]2019/09/17
 // [更新日]2019/10/27
 //===================================================================================================================================
-
 #define D3D_DEBUG_INFO
-#define WIN_7_MSC_VER	(1913)	//win7
-#define WIN_10_MSC_VER	(1916)	//win10
-#define WIN_20_MSC_VER	(2916)	//サイ--テスト用(マージするとき消さないで)
-#define GAME_MSC_VER	(WIN_10_MSC_VER)
+#define XAUDIO2_ON		(true)
+#define XADUIO2_OFF		(flase)
+#define XADUIO2_STATE	(XAUDIO2_OFF)
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
@@ -19,8 +17,9 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
+#include <VersionHelpers.h>
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #include <xaudio2.h>
 #include <x3daudio.h>
 #endif
@@ -32,7 +31,7 @@
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"dxguid.lib")
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #pragma comment(lib,"xaudio2.lib")
 #pragma comment(lib,"x3daudio.lib")
 #endif
