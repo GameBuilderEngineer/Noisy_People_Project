@@ -21,7 +21,8 @@ Timer::Timer()
 	//Spriteの作成
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
-		timer[i] = new Sprite;
+		minute[i] = new Sprite;
+		second[i] = new Sprite;
 	}
 }
 
@@ -32,7 +33,8 @@ Timer::~Timer()
 {
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
-		delete timer[i];
+		delete minute[i];
+		delete second[i];
 	}
 }
 
@@ -45,22 +47,35 @@ void Timer::initialize()
 	assingUV();
 
 	//タイマーの初期値
-	keepTime = 400;
+	keepTime = 300;
 
-	//タイマーの初期化
+	//分タイマーの初期化
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
-		timer[i]->initialize(
+		minute[i]->initialize(
 			*textureNS::reference(textureNS::NUMBER)//テクスチャ
-			, SpriteNS::CENTER							//中心
-			, WIDTH_TIMER								//横幅
-			, HEIGHT_TIMER								//縦幅
-			, POSITION_TIMER							//表示位置
-			, ROTATION_TIMER							//回転
-			, COLOR_TIMER);								//色
-		pos[i] = POSITION_TIMER;						//表示位置の代入
+			, SpriteNS::CENTER						//中心
+			, WIDTH_TIMER							//横幅
+			, HEIGHT_TIMER							//縦幅
+			, POSITION_MINUTE						//表示位置
+			, ROTATION_TIMER						//回転
+			, COLOR_TIMER);							//色
+		posMinute[i] = POSITION_MINUTE;				//表示位置の代入
 	}
 	
+	//秒タイマーの初期化
+	for (int i = 0; i < DIGIT_TIMER; i++)
+	{
+		second[i]->initialize(
+			*textureNS::reference(textureNS::NUMBER)//テクスチャ
+			, SpriteNS::CENTER						//中心
+			, WIDTH_TIMER							//横幅
+			, HEIGHT_TIMER							//縦幅
+			, POSITION_SECOND						//表示位置
+			, ROTATION_TIMER						//回転
+			, COLOR_TIMER);							//色
+		posSecond[i] = POSITION_SECOND;				//表示位置の代入
+	}
 }
 
 //====================================
@@ -72,10 +87,16 @@ void Timer::render()
 	setUV((int)keepTime);
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
-		pos[i].x = -WIDTH_TIMER * i + POSITION_TIMER.x;
-		timer[i]->setPosition(pos[i]);
-		timer[i]->setVertex();
-		timer[i]->render();
+		//分の描画
+		posMinute[i].x = -WIDTH_TIMER * i + POSITION_MINUTE.x;
+		minute[i]->setPosition(posMinute[i]);
+		minute[i]->setVertex();
+		minute[i]->render();
+		//秒の描画
+		posSecond[i].x = -WIDTH_TIMER * i + POSITION_SECOND.x;
+		second[i]->setPosition(posSecond[i]);
+		second[i]->setVertex();
+		second[i]->render();
 	}
 }
 
@@ -101,16 +122,30 @@ void Timer::uninitialize()
 //====================================
 void Timer::setUV(int time)
 {
-	
+	//分の設定
+	int minuteTime = time / 60;
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
-		float x = (float)(time % 10);
+		float x = (float)(minuteTime % 10);
 		uvCoord01.x = 0.1*x;
 		uvCoord02.x = 0.1 *(x + 1);
 		uvCoord03.x = 0.1 *x;
 		uvCoord04.x = 0.1 *(x + 1);
-		time /= 10;
-		timer[i]->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
+		minuteTime /= 10;
+		minute[i]->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
+	}
+
+	//秒の設定
+	int secondTime = time % 60;
+	for (int i = 0; i < DIGIT_TIMER; i++)
+	{
+		float x = (float)(secondTime % 10);
+		uvCoord01.x = 0.1*x;
+		uvCoord02.x = 0.1 *(x + 1);
+		uvCoord03.x = 0.1 *x;
+		uvCoord04.x = 0.1 *(x + 1);
+		secondTime /= 10;
+		second[i]->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
 	}
 }
 
