@@ -24,9 +24,9 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 	attractorMatrix = _attractorMatrix;
 
 	// 描画オブジェクトの作成
-	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::ENEMY_01));
+	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON));
+	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10));
 
 #if 1	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
@@ -144,7 +144,7 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	switch (enemyData->type)
 	{
 	case WOLF:
-		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::DICE), enemyData);
+		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::ENEMY_01), enemyData);
 		enemy->setAttractor(attractorMesh, attractorMatrix);
 		enemyList.emplace_back(enemy);
 		wolfRenderer->registerObject(enemy);
@@ -298,6 +298,13 @@ int EnemyManager::issueNewEnemyID()
 void EnemyManager::outputGUI()
 {
 #ifdef _DEBUG
+
+	// フラグ
+	bool createFlag = false;
+	bool createDebugEnemy = false;
+	bool returnPlayer = false;
+	bool destroyAllFlag = false;
+
 	if (ImGui::CollapsingHeader("EnemyInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
@@ -305,10 +312,53 @@ void EnemyManager::outputGUI()
 		ImGui::Text("enemyList.size()     :%d\n", enemyList.size());
 		ImGui::Text("numOfEnemy           :%d\n", Enemy::getNumOfEnemy());
 		ImGui::Text("nextID	:%d\n", nextID);
-		//for (int i = 0; i < enemyList.size(); i++)
-		//{
-		//	ImGui::Text("%d", enemyList[i]->getEnemyData()->id);
-		//}
+
+		// ボタン
+		ImGui::Checkbox("Create Enemy", &createFlag);
+		ImGui::Checkbox("Create Debug Enemy", &createDebugEnemy);
+		ImGui::Checkbox("Return Player", &returnPlayer);
+		ImGui::Checkbox("Delete All Enemy", &destroyAllFlag);
+	}
+
+	if (createFlag)
+	{
+		enemyNS::ENEMYSET tmp =
+		{
+			issueNewEnemyID(),
+			enemyNS::WOLF,
+			enemyNS::CHASE,
+			*player->getPosition(),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		EnemyData* p = createEnemyData(tmp);
+		createEnemy(p);
+	}
+
+	if (createDebugEnemy)
+	{
+		Enemy* debugEnemy = getEnemyList().back();
+		debugEnemy->debugEnemyID = debugEnemy->getEnemyID();
+		camera->setTarget(debugEnemy->getPosition());
+		camera->setTargetX(&debugEnemy->getAxisX()->direction);
+		camera->setTargetY(&debugEnemy->getAxisY()->direction);
+		camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
+		debugEnemy->setDebugEnvironment();
+		debugEnemy->setCamera(&camera[0]);
+		debugEnemy->setDebugEnvironment();
+	}
+
+	if (returnPlayer)
+	{
+		camera->setTarget(player->getPosition());
+		camera->setTargetX(&player->getAxisX()->direction);
+		camera->setTargetY(&player->getAxisY()->direction);
+		camera->setTargetZ(&player->getAxisZ()->direction);
+	}
+
+	if (destroyAllFlag)
+	{
+		destroyAllEnemy();
+		destroyAllEnemyData();
 	}
 #endif
 }

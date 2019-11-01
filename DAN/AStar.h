@@ -4,129 +4,73 @@
 // 作成開始日 : 2019/10/20
 //-----------------------------------------------------------------------------
 #pragma once
-
-//*****************************************************************************
-// インクルード
-//*****************************************************************************
 #include "Base.h"
-#include "MeshData.h"
+#include "LinkedList.h"
 #include "VertexAccessor.h"
-
-//*****************************************************************************
-// マクロ・列挙型定義
-//*****************************************************************************
-#define NUM_SURROUND_NODE	(7)					// 周辺ノードの数
-
-// 地形タイプ
-enum TERRAIN_TYPE
-{// ※この順番やナンバリングはDodgeOrbEditerに揃えなければいけない
-	CARDINALE_TERRAIN,			// 赤　　　　※未使用
-	CIEL_TERRAIN,				// 青　　　　※未使用
-	OBSTACLE,					// 障害物
-	NORMAL_TERRAIN = 9			// 何もなし
-};
-
-
-// マップ座標構造体
-typedef struct {
-	int x;						// マップノードのX座標
-	int y;						// マップノードのY座標
-}MAPVECTOR2;
-
-//// マップノード構造体
-//typedef struct {
-//	NODE_STATUS		status;		// ステータス
-//	int				terrain;	// 地形タイプ
-//	MAPVECTOR2		mapPos;		// マップ座標
-//	D3DXVECTOR3		worldPos;	// ワールド座標
-//}MAPNODE, **MAP;
-
-
-//*****************************************************************************
-// 構造体定義
-//*****************************************************************************
-// 経路構造体
-typedef struct
-{
-	// A*アルゴリズムによるパス検索の結果を格納する
-	MAPVECTOR2				*ptr;				// 経路情報へのポインタ
-	int						numRouteStep;		// 経路情報動的配列の要素数（移動座標の数）
-	int						referenceRec;		// 経路情報動的配列の参照している要素番号を保管
-}ROUTE;
-
-
-
-
-//meshAnalyzerNS::Face* face;
-
+#include "MeshData.h"
 
 //=============================================================================
 // 名前空間
 //=============================================================================
 namespace aStarNS
 {
+	// ノードステータス
 	enum NODE_STATUS
 	{
-		NODE_NONE,			// 一度も開いていない
-		NODE_OPEN,			// オープン済
-		NODE_CLOSED,		// 基準ノードとして使用済みでクローズ
-	};
-	struct Vertex
-	{
-		WORD index;
-		BYTE* ptr;
+		INVALID,		// 無効値（リストに未追加)
+		OPEN,			// オープン済
+		CLOSED,			// 基準ノードとして使用済みでクローズ
 	};
 
-	struct FaceNode
+	// Aスターノード構造体
+	struct AStarNode
 	{
-		Vertex vtx[3];					
-		DWORD adjacency[3];
-		int status;
-		void resetStatus() { status = NODE_NONE; }
+		DWORD				faceIndex;			// 面インデックス
+		NODE_STATUS			status;				// ステータス
+		float				cost;				// 移動コスト
+		float				heuristic;			// 推定コスト
+		float				score;				// スコア
+		meshDataNS::Index2	edge;				// オープンするにあたり通過したエッジ
+		D3DXVECTOR3			pos;				// エッジ上の通過座標（コスト計算に使用）
+		AStarNode			*parent;			// 親ノード
+		AStarNode			*next;				// 次の要素へのポインタ
 	};
-
-	// オープンリスト構造体　A*アルゴリズムで使用
-	typedef struct _OPENLIST
-	{
-		int				key;			// 主キー
-		NODE_STATUS		status;			// ステータス
-		int				cost;			// 移動コスト
-		int				heuristic;		// 推定コスト
-		int				score;			// スコア
-		DWORD			faceIndex;		// 面インデックス
-#if 0
-		MAPVECTOR2		mapPos;			// マップ座標
-#endif
-		_OPENLIST		*parent;		// 親ノード
-		_OPENLIST		*next;			// 次の要素へのポインタ
-	}OPENLIST;
-
 }
 
 
 //=============================================================================
 //クラス定義
 //=============================================================================
-class AStar
+class AStar: public Base
 {
 private:
-	MeshData* meshData;
-	VertexAccessor* vtxAccessor;
-	aStarNS::FaceNode *faceNode;
+	MeshData* meshData;							// メッシュデータオブジェクト
+	VertexAccessor*	vtxAccessor;				// 頂点アクセスオブジェクト
+	aStarNS::AStarNode*	head;					// 先頭ノード
+	aStarNS::AStarNode*	work;					// 作業ノード
+	bool isImpasse;								// 袋小路フラグ
+	LinkedList<meshDataNS::Index2>*	edgeList;	// エッジリストのポインタ
 
 public:
+	// 初期化
 	void initialize(MeshData* _meshData, VertexAccessor* _vtxAccessor);
+	// 終了処理
 	void uninitialize();
-	// 経路検索
-	void pathSearch(DWORD start, DWORD dest);
+	// 経路探索
+	LinkedList<meshDataNS::Index2>* pathSearch(DWORD startIndex, DWORD destIndex,
+		D3DXVECTOR3 startPos, D3DXVECTOR3 destPos);
+	// リストにノードを追加
+	HRESULT addAStarNode(aStarNS::AStarNode *parentNode, aStarNS::AStarNode setData);
+	// リストの解放
+	void releaseAStarNode();
+	// リストから最も低スコアなノードを取得
+	aStarNS::AStarNode* getLeastCostNode();
+	// リストから最も推定コストの低いノードを取得
+	aStarNS::AStarNode* getLeastHeuristicNode();
+	// リストから経路を取得
+	LinkedList<meshDataNS::Index2>* createEdgeList(LinkedList<meshDataNS::Index2>* edgeList, aStarNS::AStarNode *work);
+	// リストからノードを探す
+	aStarNS::AStarNode* searchNodeByFaceIndex(DWORD searchIndex);
+	// 座標から2つのポリゴンの境界線までの距離を求める
+	float culcDistanceToEdge(float* outLen, D3DXVECTOR3* outPos, D3DXVECTOR3 inPos, DWORD faceInd1, DWORD faceInd2);
 };
-
-
-//*****************************************************************************
-// プロトタイプ宣言
-//*****************************************************************************
-void InitRouteSearch(int type);					// AI経路探索の初期化処理
-void UninitRouteSearch(void);					// AI経路探索の終了処理
-void RouteSearch(/*int characterNo*/DWORD start, DWORD dest);
-// 周辺ノードのマップ座標を計算
-/*MAPVECTOR2*/DWORD CalcSurroundingNodePos(/*MAPVECTOR2 workPos, int position*/ DWORD faceIndex, int i);

@@ -516,6 +516,9 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
     <ClCompile Include="TelopManager.cpp" />
+	<ClCompile Include="PathFollowing.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -814,6 +817,10 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
     <ClInclude Include="TelopManager.h" />
+	<ClInclude Include="PathFollowing.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

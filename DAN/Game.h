@@ -52,11 +52,7 @@ namespace gameNS
 	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,5.0f,5.0f,0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,5.0f,0);
-
-
-	
-
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0,2.0f,0);
 }
 
 //===================================================================================================================================
@@ -88,14 +84,15 @@ private:
 	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
 
 	EnemyManager*					enemyManager;		// エネミーマネージャー
-	Enemy*							enemy;				// エネミー
 	TreeManager*					treeManager;		// ツリーマネージャー
 	ItemManager*					itemManager;		// アイテムマネージャー
 
+	AIDirector*						aiDirector;			// AI
+	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 	Telop*							telop;				// テロップ
 
-	AIDirector*						aiDirector;			// AI
-	NavigationMesh*					naviAI;				// naviAI
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[4];
 
 	//Sprite実験
 	SpriteGauge*					spriteGauge;
@@ -127,9 +124,6 @@ public:
 //===================================================================================================================================
 #ifdef _DEBUG
 
-#if 1	// ここを1でナビメッシュデバッグモード
-#define DEBUG_NAVIMESH
-#endif
 
 
 #endif// _DEBUG

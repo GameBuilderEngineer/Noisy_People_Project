@@ -28,6 +28,7 @@ Wolf::~Wolf()
 //=============================================================================
 void Wolf::update(float frameTime)
 {
+	Enemy::preprocess();
 	Enemy::update(frameTime);
 }
 

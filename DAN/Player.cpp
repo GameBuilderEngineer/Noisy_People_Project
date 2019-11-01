@@ -85,7 +85,6 @@ void Player::update(float frameTime)
 	centralPosition = position + bodyCollide.getCenter();
 	acceleration *= 0.0f;
 
-
 	switch (state)
 	{
 	case NORMAL:
@@ -118,12 +117,23 @@ void Player::update(float frameTime)
 	}
 #endif // DEBUG
 
+	//D3DXVECTOR3 tmp = speed;
+
 	// 以下の順番入れ替え禁止（衝突より後に物理がくる）
 	grounding();				// 接地処理
 	wallScratch();				// 壁ずり処理
 	physicalBehavior();			// 物理挙動
 	updatePhysics(frameTime);	// 物理の更新
 	controlCamera(frameTime);	// カメラ操作
+
+	//if (onGround)
+	//{
+	//	if (D3DXVec3Length(&speed) > 6.0f)
+	//	{
+	//		D3DXVec3Normalize(&speed, &speed);
+	//		speed *= 6.0f;
+	//	}
+	//}
 
 	//// カメラは回るがキャラクターが連動してくれない
 	//姿勢制御
@@ -431,8 +441,8 @@ void Player::controlCamera(float frameTime)
 		camera->rotation(camera->getHorizontalAxis(), input->getController()[infomation.playerType]->getRightStick().y*0.1f*frameTime*reverseValueYAxis);
 	}
 
-	camera->setUpVector(axisY.direction);
-	camera->update();
+	//camera->setUpVector(axisY.direction);
+	//camera->update();
 }
 #pragma endregion
 

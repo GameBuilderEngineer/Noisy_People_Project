@@ -43,6 +43,7 @@ namespace staticMeshNS {
 
 		SAMPLE_REDBULL,							//03
 		SAMPLE_SCISSORS,						//08
+		ENEMY_01,
 
 		DEAD_TREE,								//01
 		GREEN_TREE_001,							//02
@@ -61,6 +62,7 @@ namespace staticMeshNS {
 		DICE,									//07
 		YAMADA_TEST_ZONE,						//08
 		SKY_DOME,								//09
+		TUTORIAL_FILED,							//10
 
 		MESH_NUM,								//NUM
 	};
