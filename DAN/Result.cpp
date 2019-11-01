@@ -72,6 +72,9 @@ void Result::initialize()
 	// シーンエフェクト初期化
 	//sceneEffect.initialize(_direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
+	//リザルトUIの初期化
+	resultUI.initialize();
+
 }
 
 //===================================================================================================================================
@@ -79,13 +82,7 @@ void Result::initialize()
 //===================================================================================================================================
 void Result::uninitialize(void)
 {
-	//uiResult.release();
-
-	// カメラ
-	//SAFE_DELETE_ARRAY(camera);
-
-	// ライト
-	//SAFE_DELETE(light);
+	resultUI.uninitialize();
 }
 
 //===================================================================================================================================
@@ -96,8 +93,12 @@ void Result::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	// Enterまたは〇ボタンでタイトルへ
-	if (input->wasKeyPressed(VK_RETURN) ||
+	//UIの更新処理
+	resultUI.update(frameTime);
+
+	//リザルトフェイズが5の時のみ Enterまたは〇ボタンでタイトルへ
+	if (resultUI.resultPhase == resultUiNS::PHASE_05&&
+		input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
@@ -143,7 +144,7 @@ void Result::render()
 void Result::renderUI()
 {
 	// リザルトUI
-	//uiResult.render(device);
+	resultUI.render();
 }
 
 //===================================================================================================================================

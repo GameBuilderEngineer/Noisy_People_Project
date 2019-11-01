@@ -24,7 +24,7 @@
 #include "TreeManager.h"
 #include "ItemManager.h"
 #include "Telop.h"
-
+#include "Timer.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
@@ -137,6 +137,9 @@ private:
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[3];
+
+	//タイマー
+	Timer *timer;
 
 public:
 	Game();

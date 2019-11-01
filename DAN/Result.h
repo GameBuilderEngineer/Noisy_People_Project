@@ -29,9 +29,7 @@ namespace resultNS
 class Result :public AbstractScene
 {
 private:
-	//UIResult uiResult;			//	リザルトUI
-	//TextManager* textManager;	//	テキストマネージャ
-	//SceneEffect sceneEffect;//	シーンエフェクト
+	ResultUI resultUI;
 
 public:
 	Result(void);

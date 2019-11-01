@@ -58,9 +58,6 @@
     <Filter Include="Constant Layer\MemoryViewer">
       <UniqueIdentifier>{3b26cda4-5a87-4203-8a61-d7d497b4335f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene\Splash">
-      <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Scene\Title">
       <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
     </Filter>
@@ -130,9 +127,6 @@
     <Filter Include="Game Layer\Scene\Tutorial">
       <UniqueIdentifier>{3caaa803-1a3e-409a-94b2-1181033f6eeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene\Splash\SplashSprite">
-      <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\SelectItem">
       <UniqueIdentifier>{6ebe25ac-c757-49a9-8891-66d344020c7a}</UniqueIdentifier>
     </Filter>
@@ -198,6 +192,18 @@
     </Filter>
     <Filter Include="Constant Layer\Text">
       <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Result\ResultUI">
+      <UniqueIdentifier>{4dc50f57-80c6-4b00-afff-0ede059a0e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash">
+      <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash\SplashSprite">
+      <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI">
+      <UniqueIdentifier>{05377823-85f2-4b8f-a3aa-3c22d42106b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -416,7 +422,22 @@
       <Filter>Game Layer\Scene\Title</Filter>
     </ClCompile>
     <ClCompile Include="ResultUIcpp.cpp">
-      <Filter>Game Layer\Scene\Result</Filter>
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIcharactercpp.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UItexcpp.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIrank.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UInumber.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -642,11 +663,26 @@
     <ClInclude Include="TitleUI.h">
       <Filter>Game Layer\Scene\Title</Filter>
     </ClInclude>
-    <ClInclude Include="ResultUI.h">
-      <Filter>Game Layer\Scene\Result</Filter>
-    </ClInclude>
     <ClInclude Include="TestEffect.h">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultUI.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIcharacter.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UItex.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIrank.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UInumber.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

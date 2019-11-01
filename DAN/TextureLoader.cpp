@@ -59,10 +59,30 @@ TextureLoader::TextureLoader()
 	//effect
 	textureName[EFFECT_DAMAGE] = { "Game_Damage_Effect.png" };
 
-	// Result
-	textureName[RESULT_WINDOW] = { "Result_Window.png" };
+	// ResultUIの文字や記号
+	textureName[RESULT] = { "Result.png" };
+	textureName[RESULT_PLAYER] = { "Player_No.png" };
+	textureName[RESULT_GREENIG] = { "Greening_Rate.png" };
+	textureName[RESULT_RYOKUKA] = { "Ryokuka_Ritsu.png" };
+	textureName[RESULT_PERSENT] = { "Percent.png" };
+	textureName[RESULT_DEFEAT] = { "Defeated_Counts.png" };
+	textureName[RESULT_GEKITAI] = { "Gekitai_Su.png" };
+
+	//ResultUIのテクスチャ
+	textureName[RESULT_LINE] = { "Line.png" };
+	textureName[RESULT_FLAME] = { "Flame.png" };
+	textureName[RESULT_CHARA_A] = { "Chara_A.png" };
+	textureName[RESULT_CHARA_B] = { "Chara_B.png" };
+	textureName[RESULT_NEXT] = { "Next.png" };
+
+	//ResultUIのランク
+	textureName[RESULT_EXCELLENT] = { "Excellent.png" };
+	textureName[RESULT_GREAT] = { "Great.png" };
+	textureName[RESULT_CLEARE] = { "Cleared.png" };
+	textureName[RESULT_FAILED] = { "Failed.png" };
 
 	// etc
+	textureName[NUMBER] = { "num.png" };
 	textureName[TOON_OUT_LINE] = { "Outline.bmp" };
 	textureName[TOON_SHADE] = { "Shade.bmp" };
 	textureName[LIGHT_001] = { "Light_001.png" };

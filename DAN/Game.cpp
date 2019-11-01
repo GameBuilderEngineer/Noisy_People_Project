@@ -149,6 +149,10 @@ void Game::initialize() {
 	aiDirector->initialize();
 	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviAI->initialize();
+
+	//タイマー
+	timer = new Timer;
+	timer->initialize();
 }
 
 //===================================================================================================================================
@@ -170,6 +174,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(telop);
 	SAFE_DELETE(aiDirector);
+	SAFE_DELETE(timer);
 }
 
 //===================================================================================================================================
@@ -233,6 +238,9 @@ void Game::update(float _frameTime) {
 	camera->update();
 
 	//sound->updateSound(*player->getPosition(), player->getAxisZ()->direction);
+
+	//タイマーの更新
+	timer->update();
 
 	// Enterまたは〇ボタンでリザルトへ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -326,6 +334,9 @@ void Game::renderUI() {
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	telop->render();	// テロップの描画
+
+	//タイマーの描画
+	timer->render();
 }
 
 //===================================================================================================================================

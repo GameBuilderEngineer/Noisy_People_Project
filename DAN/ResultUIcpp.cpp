@@ -19,213 +19,146 @@ using namespace resultUiNS;
 
 //============================
 //初期化
+//ゲームシーンのスコアを引数にもらいランクを確定？
 //============================
 void ResultUI::initialize()
 {
-	for (int i = 0; i < RESULTUI_MAX; i++)
-	{
-		resultUI[i] = new Sprite;
-	}
+	//フェイズ移行時間の初期化
+	time = 0;
 
 	//フェイズの初期化(第一フェイズで)
 	resultPhase = PHASE_01;
 
-	//リザルトロゴの初期化
-	resultUI[RESULT]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_RESULT								//横幅
-		, HEIGHT_RESULT								//縦幅
-		, POSITION_RESULT							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
+	//ランクの確定(仮)
+	score01 = 70;//マジックナンバーの部分はゲーム部分のスコアのシステムが出来次第変更
+	score02 = 80;//マジックナンバーの部分はゲーム部分のスコアのシステムが出来次第変更
 
-	//ラインの初期化
-	resultUI[LINE]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_LINE								//横幅
-		, HEIGHT_LINE								//縦幅
-		, POSITION_LINE								//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
+	//プレイヤー１のランクの確定
+	if (score01 < 70)
+	{
+		rank01 = uiRankNS::UIRANK_TYPE::FAILED;
+	}
+	else if (score01 >= 70 && score01 < 80)
+	{
+		rank01 = uiRankNS::UIRANK_TYPE::CLEARE;
+	}
+	else if (score01 >= 70 && score01 < 90)
+	{
+		rank01 = uiRankNS::UIRANK_TYPE::GREAT;
+	}
+	else if(score01 >= 90)
+	{
+		rank01 = uiRankNS::UIRANK_TYPE::EXCELLENT;
+	}
+	
+	//プレイヤー2のランクの確定
+	if (score02 < 70)
+	{
+		rank02 = uiRankNS::UIRANK_TYPE::FAILED;
+	}
+	else if (score02 >= 70 && score02 < 80)
+	{
+		rank02 = uiRankNS::UIRANK_TYPE::CLEARE;
+	}
+	else if (score02 >= 70 && score02 < 90)
+	{
+		rank02 = uiRankNS::UIRANK_TYPE::GREAT;
+	}
+	else if (score02 >= 90)
+	{
+		rank02 = uiRankNS::UIRANK_TYPE::EXCELLENT;
+	}
 
-	//フレームの初期化
-	resultUI[FLAME]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_FLAME								//横幅
-		, HEIGHT_FLAME								//縦幅
-		, POSITION_FLAME							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
+	//文字UIの初期化
+	uiCharacter01.initialize(PLAYER_01);//プレイヤー1
+	uiCharacter02.initialize(PLAYER_02);//プレイヤー2
 
-	//キャラAの初期化
-	resultUI[CHARA_A]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_CHARA_A								//横幅
-		, HEIGHT_CHARA_A							//縦幅
-		, POSITION_CHARA_A							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
+	//テクスチャUIの初期化
+	uiTexture.initialize();
+	
+	//ランクUIの初期化
+	uiRank01.initialize(rank01, PLAYER_01);	//プレイヤー１
+	uiRank02.initialize(rank02, PLAYER_02);	//プレイヤー2
 
-	//キャラBの初期化
-	resultUI[CHARA_B]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_CHARA_B								//横幅
-		, HEIGHT_CHARA_B							//縦幅
-		, POSITION_CHARA_B							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
+	//数字の種類分だけ初期化
+	for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX ; i++)
+	{
+		uiNumber[i].initialize(i);
 
-	//プレイヤーの初期化
-	resultUI[PLAYER]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_PLAYER								//横幅
-		, HEIGHT_PLAYER								//縦幅
-		, POSITION_PLAYER							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//緑化(英語)の初期化
-	resultUI[GREENIG]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_GREENIG								//横幅
-		, HEIGHT_GREENIG							//縦幅
-		, POSITION_GREENIG							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//緑化
-	resultUI[RYOKUKA]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_RYOKUKA								//横幅
-		, HEIGHT_RYOKUKA							//縦幅
-		, POSITION_RYOKUKA							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//パーセントの初期化
-	resultUI[PERSENT]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_PERSENT								//横幅
-		, HEIGHT_PERSENT							//縦幅
-		, POSITION_PERSENT							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//数字の初期化
-	resultUI[NUMBER]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_NUMBER								//横幅
-		, HEIGHT_NUMBER								//縦幅
-		, POSITION_NUMBER							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//撃退(英語)の初期化
-	resultUI[DEFEAT]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_DEFEAT								//横幅
-		, HEIGHT_DEFEAT								//縦幅
-		, POSITION_DEFEAT							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//撃退
-	resultUI[GEKITAI]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_GEKITAI								//横幅
-		, HEIGHT_GEKITAI							//縦幅
-		, POSITION_GEKITAI							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//エクセレントの初期化
-	resultUI[EXCELLENT]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_EXCELLENT							//横幅
-		, HEIGHT_EXCELLENT							//縦幅
-		, POSITION_EXCELLENT						//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//グレイトの初期化
-	resultUI[GREAT]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_GREAT								//横幅
-		, HEIGHT_GREAT								//縦幅
-		, POSITION_GREAT							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//クリアの初期化
-	resultUI[CLEAR]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_CLEAR								//横幅
-		, HEIGHT_CLEAR								//縦幅
-		, POSITION_CLEAR							//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
-
-	//失敗の初期化
-	resultUI[FAIL]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_FAIL								//横幅
-		, HEIGHT_FAIL								//縦幅
-		, POSITION_FAIL								//表示位置
-		, ROTATION									//回転
-		, COLOR);									//色
+	}
 }
 
 //============================
 //描画
+//初期化同様の処理
 //============================
 void ResultUI::render()
 {
-	switch (resultPhase)
+	uiTexture.render(resultPhase);		//テクスチャの描画
+	uiCharacter01.render(resultPhase);	//プレイヤー１の文字描画
+	uiCharacter02.render(resultPhase);	//プレイヤー2の文字描画
+
+	//数字表示はフェイズ４のみ描画
+	if (resultPhase == PHASE_04)
 	{
-		case PHASE_01:
-			resultUI[RESULT]->render();
-			resultUI[LINE]->render();
-			break;
-		case PHASE_02:
-			resultUI[RESULT]->render();
-			resultUI[LINE]->render();
-			break;
-		case PHASE_03:
-			resultUI[RESULT]->render();
-			resultUI[LINE]->render();
-			resultUI[FLAME]->render();
-			resultUI[CHARA_A]->render();
-			resultUI[CHARA_B]->render();
-			break;
-		case PHASE_04:
-			break;
-		default:
-			break;
+		//数字の表示
+		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+		{
+			uiNumber[i].render();
+		}
+	}
+	//ランク表示
+	if (resultPhase == PHASE_05)
+	{
+		uiRank01.render(rank01);		//プレイヤー１のランク描画
+		uiRank02.render(rank02);		//プレイヤー２のランク描画
+										//数字の表示
+		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+		{
+			uiNumber[i].render();
+		}
 	}
 }
 
 //============================
 //更新
+//フレームタイムをもたせて一定時間経過でフェイズを更新
 //============================
-void ResultUI::update(Input *input)
+void ResultUI::update(float flameTime)
 {
-	
+	time += flameTime;
+
+	//フェイズの更新
+	if (time > 2.0f)
+	{
+		resultPhase=PHASE_02;
+	}
+	if (time > 5.0f)
+	{
+		resultPhase= PHASE_03;
+	}
+	if (time > 10.0f)
+	{
+		resultPhase = PHASE_04;
+		//数字
+		const int score[uiNumberNS::NUMBER_TYPE_MAX] = { score01,score02,111,101 };	
+		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+		{
+			uiNumber[i].update(score[i]);
+		}
+		
+	}
+	if (time > 12.0f)
+	{
+		resultPhase = PHASE_05;
+		//ランク
+		uiRank01.update(rank01);
+		uiRank02.update(rank02);
+	}
+
+	uiCharacter01.update(resultPhase);	//プレイヤー１の文字更新
+	uiCharacter02.update(resultPhase);	//プレイヤー１の文字更新
+	uiTexture.update(resultPhase);		//テクスチャの更新
 }
 
 //============================
@@ -233,10 +166,15 @@ void ResultUI::update(Input *input)
 //============================
 void ResultUI::uninitialize()
 {
-	for (int i = 0; i < RESULTUI_MAX; i++)
+	uiCharacter01.uninitialize();
+	uiCharacter02.uninitialize();
+	uiTexture.uninitialize();
+	uiRank01.uninitialize(rank01);
+	uiRank02.uninitialize(rank02);
+
+	//数字の種類分だけ終了処理
+	for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
 	{
-		delete resultUI[i];
+		uiNumber[i].uninitialize();
 	}
-
 }
-
