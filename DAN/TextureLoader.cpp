@@ -50,6 +50,15 @@ TextureLoader::TextureLoader()
 
 	// Game
 	textureName[UI_COUNT_DOWN_ONE]	= { "Game_CountDown_One.png" };
+	textureName[UI_INFO_10] = { "Info_10.png" };
+	textureName[UI_INFO_30] = { "Info_30.png" };
+	textureName[UI_INFO_50] = { "Info_50.png" };
+	textureName[UI_INFO_ASSULT] = { "Info_Assult.png" };
+	textureName[UI_INFO_LIMIT1] = { "Info_Limit1.png" };
+	textureName[UI_INFO_LIMIT2] = { "Info_Limit2.png" };
+	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
+	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
+
 
 	// Result
 	textureName[RESULT_WINDOW]		= { "Result_Window.png" };

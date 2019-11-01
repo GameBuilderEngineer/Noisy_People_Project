@@ -503,6 +503,7 @@
     <ClCompile Include="MemoryDebug.cpp">
       <Filter>Game Layer</Filter>
     </ClCompile>
+    <ClCompile Include="TelopManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -794,6 +795,7 @@
     <ClInclude Include="LinearTreeCell.h">
       <Filter>Constant Layer\LinearTreeCell</Filter>
     </ClInclude>
+    <ClInclude Include="TelopManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

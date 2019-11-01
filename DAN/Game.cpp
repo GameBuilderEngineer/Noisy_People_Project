@@ -315,6 +315,7 @@ void Game::update(float _frameTime) {
 
 
 	// テロップの更新
+	//float rate = frameTime / SCENE_TIME;
 	telop->update(frameTime);
 	
 	//枯木の更新
@@ -452,7 +453,11 @@ void Game::renderUI() {
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-	telop->render();	// テロップの描画
+	// テロップの描画
+	if (input->isKeyDown('L'))
+	{
+	}
+		telop->render();	
 }
 
 //===================================================================================================================================

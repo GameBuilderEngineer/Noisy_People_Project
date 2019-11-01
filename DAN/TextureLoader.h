@@ -44,6 +44,14 @@ namespace textureNS
 
 		// Game
 		UI_COUNT_DOWN_ONE,
+		UI_INFO_10,
+		UI_INFO_30,
+		UI_INFO_50,
+		UI_INFO_ASSULT,
+		UI_INFO_LIMIT1,
+		UI_INFO_LIMIT2,
+		UI_INFO_MISSION,
+		UI_INFO_BAR,
 
 		// Result
 		RESULT_WINDOW,
