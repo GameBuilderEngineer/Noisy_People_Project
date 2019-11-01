@@ -131,6 +131,7 @@ void Ray::render(float length)
 	mtrl.Ambient =
 	mtrl.Diffuse = color;
 	device->SetMaterial(&mtrl);
+	device->SetTexture(0, NULL);
 	device->SetRenderState(D3DRS_LIGHTING, true);
 
 	//ƒŒƒC‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO
