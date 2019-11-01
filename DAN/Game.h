@@ -29,6 +29,8 @@
 #include "SpriteGauge.h"
 #include "Battery.h"
 #include "telop.h"
+#include "Timer.h"
+
 #include "Sound.h"
 #include "SoundBase.h"
 #include "LinearTreeCell.h"
@@ -96,7 +98,8 @@ private:
 
 	//Sprite実験
 	SpriteGauge*					spriteGauge;
-
+	//タイマー
+	Timer *timer;
 public:
 	Game();
 	~Game();

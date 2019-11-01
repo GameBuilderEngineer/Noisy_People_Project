@@ -228,6 +228,7 @@
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Tiger.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TmpObject.h" />
     <ClInclude Include="TreeTools.h" />
@@ -238,6 +239,10 @@
     <ClInclude Include="TitleUI.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="TutorialTex.h" />
+    <ClInclude Include="UIcharacter.h" />
+    <ClInclude Include="UInumber.h" />
+    <ClInclude Include="UIrank.h" />
+    <ClInclude Include="UItex.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
@@ -328,6 +333,7 @@
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Tiger.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TmpObject.cpp" />
@@ -338,6 +344,10 @@
     <ClCompile Include="TreeManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="TutorialTex.cpp" />
+    <ClCompile Include="UIcharactercpp.cpp" />
+    <ClCompile Include="UInumber.cpp" />
+    <ClCompile Include="UIrank.cpp" />
+    <ClCompile Include="UItexcpp.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="Window.cpp" />
