@@ -4,17 +4,29 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #include "ItemManager.h"
-#include "StaticMeshObject.h"
 #include "ImguiManager.h"
+#include "ItemTools.h"
 using namespace itemNS;
 
 //=============================================================================
 // 初期化
 //=============================================================================
-void ItemManager::initialize()
+void ItemManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-	itemList.reserve(INITIAL_RESERVE);
-	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	nextID = 0;		// 次回発行IDを0に初期化
+
+	// 描画オブジェクトを作成
+	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	exampleItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+
+#if 0	// アイテムツールのデータを読み込む
+	ITEM_TOOLS* itemTools = new ITEM_TOOLS;
+	for (int i = 0; i < itemTools->GetItemMax(); i++)
+	{
+		createItem(itemTools->GetItemSet(i));
+	}
+	SAFE_DELETE(itemTools);
+#endif
 }
 
 
@@ -23,16 +35,16 @@ void ItemManager::initialize()
 //=============================================================================
 void ItemManager::uninitialize()
 {
-	for (size_t i = 0; i < itemList.size(); i++)
-	{
-		SAFE_DELETE(itemList[i]);
-	}
+	// 全アイテムオブジェクトを破棄
+	destroyAllItem();
 
+	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Item*> temp;
 	itemList.swap(temp);
 
+	// 描画オブジェクトの破棄
 	SAFE_DELETE(batteryRenderer);
-	batteryRenderer = new StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	SAFE_DELETE(exampleItemRender);
 }
 
 
@@ -45,7 +57,9 @@ void ItemManager::update(float frameTime)
 	{
 		itemList[i]->update(frameTime);
 	}
+
 	batteryRenderer->update();
+	exampleItemRender->update();
 }
 
 
@@ -54,24 +68,33 @@ void ItemManager::update(float frameTime)
 //=============================================================================
 void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	//for (size_t i = 0; i < itemList.size(); i++)
-	//{
-		//itemList[i]->render(view, projection, cameraPosition);
-	//}
 	batteryRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	exampleItemRender->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
 //=============================================================================
 // アイテムオブジェクトの作成
 //=============================================================================
-void ItemManager::createItem(ItemData* itemData)
+void ItemManager::createItem(ItemData itemData)
 {
-	switch (itemData->itemType)
+	Item* item = NULL;
+
+	switch (itemData.type)
 	{
 	case BATTERY:
-		itemList.emplace_back(new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData));
-		batteryRenderer->generateObject(new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData));
+		item = new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData);
+		item->setAttractor(attractorMesh, attractorMatrix);
+		itemList.emplace_back(item);
+		batteryRenderer->registerObject(item);
+		break;
+	case EXAMPLE:
+		item = new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData);
+		item->setAttractor(attractorMesh, attractorMatrix);
+		itemList.emplace_back(item);
+		exampleItemRender->registerObject(item);
+		//itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
+
 		break;
 	}
 }
@@ -80,16 +103,52 @@ void ItemManager::createItem(ItemData* itemData)
 //=============================================================================
 // アイテムオブジェクトの破棄
 //=============================================================================
-void ItemManager::destroyItem(int _id)
+void ItemManager::destroyItem(int _itemID)
 {
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
-		if (itemList[i]->getItemData()->id == _id)
+		if (itemList[i]->getItemData()->itemID == _itemID)
 		{
-			delete itemList[i];
-			itemList.erase(itemList.begin() + i);
+			// 描画の解除
+			switch (itemList[i]->getItemData()->type)
+			{
+			case BATTERY:
+				batteryRenderer->unRegisterObjectByID(itemList[i]->id);
+				break;
+			}
+			SAFE_DELETE(itemList[i]);				// インスタンス破棄
+			itemList.erase(itemList.begin() + i);	// ベクター要素を消去
+			break;
 		}
 	}
+}
+
+
+//=============================================================================
+// 全アイテムオブジェクトの破棄
+//=============================================================================
+void ItemManager::destroyAllItem()
+{
+	// 描画を全解除
+	batteryRenderer->allUnRegister();
+	exampleItemRender->allUnRegister();
+
+	for (size_t i = 0; i < itemList.size(); i++)
+	{
+		SAFE_DELETE(itemList[i]);
+	}
+	itemList.clear();
+}
+
+
+//=============================================================================
+// アイテムIDを発行する
+//=============================================================================
+int ItemManager::issueNewItemID()
+{
+	int ans = nextID;
+	nextID++;
+	return ans;
 }
 
 
@@ -102,30 +161,9 @@ void ItemManager::outputGUI()
 	if (ImGui::CollapsingHeader("ItemInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		//float limitTop = 1000;
-		//float limitBottom = -1000;
 
 		ImGui::Text("numOfItem:%d", Item::getNumOfItem());
-
-		//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-		//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-		//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-		//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-		//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-		//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-		//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
-
-		//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-		//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-		//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-		//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
-
-		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
-
 #endif
 }
 
@@ -133,4 +171,4 @@ void ItemManager::outputGUI()
 //=============================================================================
 // Getter
 //=============================================================================
-std::vector<Item*>& ItemManager::getList() { return itemList; }
+std::vector<Item*>& ItemManager::getItemList() { return itemList; }

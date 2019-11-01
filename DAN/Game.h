@@ -12,26 +12,30 @@
 #include <vector>
 #include "AbstractScene.h"
 #include "Player.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 #include "Stone.h"
 #include "DeadTree.h"
 #include "TreeTypeA.h"
 #include "TreeTypeB.h"
 #include "TestEffect.h"
+#include "TestPlane.h"
 #include "EnemyManager.h"
 #include "AIDirector.h"
 #include "NavigationMesh.h"
 #include "TreeManager.h"
 #include "ItemManager.h"
 #include "Telop.h"
+#include "Sky.h"
+#include "SpriteGauge.h"
+#include "Battery.h"
+#include "telop.h"
 #include "Timer.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
-//#include "InstancingBillboard.h"
-//#include "GameMaster.h"
+#include "LinearTreeCell.h"
+#include "movep.h"
 //#include "PointSprite.h"
-
 //#include "Object.h"
 //#include "Text.h"
 
@@ -40,18 +44,14 @@
 //===================================================================================================================================
 namespace gameNS
 {
-
 	//プレイヤー初期位置
 	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,15.0f,-15.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,5.0f,5.0f,0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10.0f,0);
-
-	//const int NUM_SAMPLE = 1000;
-
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0,2.0f,0);
 }
 
 //===================================================================================================================================
@@ -61,86 +61,45 @@ class Game : public AbstractScene
 {
 private:
 
-	//Text text;							//Sample
-	//Text text2;							//Sample
-	//PointSprite pointSprite;		//Sample
-	//InstancingBillboard plane;	//Sample
-	//Object testObject;				//Sample
-	//Object testCube;					//Sample
+	//Linear4TreeManager<Object>*	linear4TreeManager;	//線形４分木管理クラス
+	Linear8TreeManager<Object>*		linear8TreeManager;	//線形８分木管理クラス
+	ObjectTree<Object>*				objectTreeArray;	//オブジェクトツリー
+	DWORD							collisionNum;		//衝突判定回数
+	CollisionList<Object>*			collisionList;		//衝突判定リスト
 
-	//プレイヤー
-	Player *player;
-	StaticMeshObject* playerRenderer;
+	Player*							player;				//プレイヤー
+	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
+	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
+	Object*							testField;			//フィールド
+	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 
-	//フィールド
-	Object* testField;
-	StaticMeshObject* testFieldRenderer;
+	DeadTree*						deadTree;			//枯木
+	TreeTypeA*						treeA;				//木Ａ
+	TreeTypeB*						treeB;				//木B
+	Stone*							stone;				//石
+	Sky*							sky;				//スカイドーム
 
-	//インスタンシングビルボードテスト
-	//InstancingBillboard instancingBillboardTest;
-	TestEffect* testEffect;
+	StaticMeshRenderer*		MoveP;
+	MOVEP*					MoveP1;
 
-	//枯木
-	DeadTree* deadTree;
-	//木Ａ
-	TreeTypeA* treeA;
-	//木B
-	TreeTypeB* treeB;
-	//石
-	Stone* stone;
+	TestEffect*						testEffect;			//インスタンシングビルボードテスト
+	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
 
-	//色々なオブジェクトの描画サンプルテスト
+	EnemyManager*					enemyManager;		// エネミーマネージャー
+	TreeManager*					treeManager;		// ツリーマネージャー
+	ItemManager*					itemManager;		// アイテムマネージャー
 
-	//スタティックメッシュで、１個のオブジェクトのみを描画するとき【静的】
-	//StaticSingleStaticMeshObjectTest ssSMO
-
-	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiStaticMeshObjectTest smSMO
-
-	//スタティックメッシュで、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiStaticMeshObjectTest dmSMO
-
-	//ビルボードで、1個のオブジェクトを描画するとき【静的】
-	//StaticSingleInstancingBillboardTest ssIB
-
-	//ビルボードで、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiInstancingBillboardTest smIB
-
-	//ビルボードで、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiInstancingBillboardTest dmIB
-
-	//板で、１個のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticSingleInstancingPlaneTest ssIP
-
-	//板で、複数のオブジェクトをインスタンシング描画するとき【静的】
-	//StaticMultiInstancingPlaneTest smIP
-
-	//板で、複数のオブジェクトをインスタンシング描画するとき【動的】
-	//DynamicMultiInstancingPlaneTest dmIP
-
-	// エネミー
-	EnemyManager enemyManager;
-	Enemy* enemy;
-
-	// ツリー
-	TreeManager* treeManager;
-
-	// アイテム
-	ItemManager* itemManager;
-
-	// テロップ
-	Telop* telop;
-
-	// AI
-	AIDirector* aiDirector;
-	NavigationMesh* naviAI;
+	AIDirector*						aiDirector;			// AI
+	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
+	Telop*							telop;				// テロップ
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters[3];
+	PLAY_PARAMETERS playParameters[4];
 
+	//Sprite実験
+	SpriteGauge*					spriteGauge;
 	//タイマー
 	Timer *timer;
-
 public:
 	Game();
 	~Game();
@@ -153,6 +112,9 @@ public:
 
 	void render3D(Camera currentCamera);
 	void renderUI();
+	void test();
+	//void tree4Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
+	void tree8Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
 
 #ifdef _DEBUG
 	virtual void createGUI() override;
@@ -161,12 +123,10 @@ public:
 
 
 //===================================================================================================================================
-//【ビルドスイッチ】
+//【デバッグ】
 //===================================================================================================================================
 #ifdef _DEBUG
 
-#if 1	// ここを1でナビメッシュデバッグモード
-#define DEBUG_NAVIMESH
-#endif
+
 
 #endif// _DEBUG

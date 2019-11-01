@@ -2,7 +2,7 @@
 //【GameMaster.h】
 // [作成者] HAL東京GP12A332 11 菅野 樹
 // [作成日] 2019/09/20
-// [更新日] 2019/09/20
+// [更新日] 2019/10/24
 //===================================================================================================================================
 #pragma once
 
@@ -10,55 +10,59 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
-//#include "StaticMeshLoader.h"
-//#include "Player.h"
+#include "StaticMeshLoader.h"
 
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
 namespace gameMasterNS {
-	const float GAME_TIME = 60.0f * 4.0f;	//4分
-	const float COUNT_DOWN_TIME = 3.0f;		//3秒
 
 	enum PLAYER_TYPE
 	{
-		PLAYER_CHARACTER,
-		NON_PLAYER_CHARACTER,
+		PLAYER_1P,
+		PLAYER_2P,
 		TYPE_NUM
 	};
 
+	const int MODEL_MALE		= staticMeshNS::YAMADA_ROBOT;
+	const int MODEL_FEMALE		= staticMeshNS::YAMADA_ROBOT2;
+	const int MODEL_TYPE_MAX = 2;
+
 	enum RESULT_LIST
 	{
-		WIN_1P,
-		WIN_2P,
-		DRAW,
+		CLEAR,
+		FAILED,
+		RESULT_NUM,
 	};
 
-	enum MODEL_TYPE
+	enum PLAYER_RANK
 	{
-		ADAM,
-		EVE,
-		MODEL_TYPE_MAX
+		RANK_S,
+		RANK_A,
+		RANK_B,
+		RANK_C,
+		RANK_NUM
 	};
 
-	const int MODEL_ADAM = MODEL_TYPE::ADAM;
-	const int MODEL_EVE = MODEL_TYPE::EVE;
 
-	const int COUNT_DOWN = 3;
-	const float COUNT_INTERVAL = 1.0f;
-	const float START_INTERVAL = 0.5f;
-	const float DISPLAY_START_TIME = 1.0f;
-	const float DISPLAY_FINISH_TIME = 1.0f;
+
+	const float GAME_TIME				= 60.0f * 4.0f;			//4分
+	const float COUNT_DOWN_TIME			= 3.0f;					//3秒
+
+	const int	PLAYER_NUM				= 2;
+
 }
+
 //===================================================================================================================================
 //【構造体定義】
 //===================================================================================================================================
 //プレイヤー情報
-struct playerTable
+struct PlayerTable
 {
-	int playerType;		//PC|NPC
-	int modelType;		//プレイヤーのモデルタイプ
-	int wage;			//チンギン
+	int	playerType;		//1P|2P
+	int	modelType;		//プレイヤーのモデルタイプ
+	int greeningTree;	//緑化した本数
+	int sedationEnemy;	//鎮静化したエネミー
 };
 
 //===================================================================================================================================
@@ -70,43 +74,35 @@ class GameMaster :public Base
 {
 private:
 	//Data
-	float gameTimer;										//ゲーム時間
-	float countDownTimer;									//カウントダウン時間
-	float startInterval;									//開始カウントダウンインターバル
-	float displayStartTimer;								//スタートアナウンス表示時間
-	float displayFinishTimer;								//フィニッシュアナウンス表示時間
-	bool alreadyStart;										//スタート済
-	bool alreadyFinish;										//フィニッシュ済
-	int count;												//ゲームカウント
-	//playerTable playerInformation[playerNS::NUM_PLAYER];	//プレイヤー情報
-	//int chingin[playerNS::NUM_PLAYER];						//	チンギン
-	bool countFlag;
-	bool startFinishFlag;
+	float			gameTimer;										//ゲーム時間
+	float			countDownTimer;									//カウントダウン時間
+	int				treeNum;										//枯木・緑化木の総計
+	int*			conversionOrder;								//変換順番：緑化された順番
+	PlayerTable		playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
 public:
-	//Method
+	//基本処理
 	GameMaster();
 	~GameMaster();
 	void initialize();
 	void update(float frameTime);
-	void updateGameTime(float frameTime);					//ゲーム時間の更新
-	void gameStartCount(float frameTime);					//ゲーム開始時のカウントダウン
-	void gameFinishCount(float frameTime);					//ゲーム終了時のカウントダウン
-	void setCountDown();									//カウントダウンのセット
-	void gameStart();										//ゲーム開始処理
+
+	void updateGameTime(float frameTime);							//ゲーム時間の更新
+	
+	//木の設定関数
+	void readyConversionOrder(int treeNum);							//変換順番変数を準備する
+	void discardConversionOrder();									//変換順番変数を破棄する
+	void recordGreeningTree(int treeNo,int orderNo);				//緑化した木の本数を記録
 
 	//setter
-	//void setPlayerCharacter(int playerNo, int playerType, int modelType);	//キャラクター情報をセット
+	void setConversionOrder(int* newValue);
 
 	//getter
-	//playerTable* getPlayerInfomation();
-	float getGameTime();
-	int getCount();
-	bool getCountFlag();
-	bool whetherGameOver();
-	bool whetherAlreadyStart();
-	bool whetherAlreadyFinish();
-	bool whetherCountFinish();
-	bool displayStart();		//スタート表記表示時間
-	bool displayFinish();		//フィニッシュ表記表示時間
+	PlayerTable*	getPlayerInfomation();
+	float			getGameTime();
 
+#ifdef _DEBUG
+	bool			showGUI;										//GUIの可視フラグ
+	void			createGUI();									//GUIの作成
+	bool*			getShowGUI() { return &showGUI; };				//GUIの可視フラグgetter
+#endif
 };

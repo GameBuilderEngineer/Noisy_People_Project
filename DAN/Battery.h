@@ -6,6 +6,13 @@
 #pragma once
 #include"Item.h"
 
+//=============================================================================
+// 名前空間
+//=============================================================================
+namespace batteryNS
+{
+	const int RECOVERY_POWER = 85;			//電力回復量
+}
 
 //=============================================================================
 //クラス定義
@@ -16,7 +23,7 @@ private:
 	static StaticMesh* staticMesh;
 
 public:
-	Battery(StaticMesh* _staticMesh, itemNS::ItemData* _itemData);
+	Battery(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
 	static void initialize(StaticMesh* staticMesh);
 	virtual void update(float frameTime);
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);

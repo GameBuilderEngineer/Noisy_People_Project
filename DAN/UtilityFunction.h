@@ -2,7 +2,7 @@
 //【UtiltyFunction.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/22
+// [更新日]2019/10/25
 //===================================================================================================================================
 #pragma once
 //===================================================================================================================================
@@ -63,7 +63,13 @@ public:
 	static int wrap(int x, int low, int high);
 	static float wrap(float x, float low, float high);
 	template<typename T>
-	static T clamp(T x, T low, T high);
+	static T clamp(T x, T low, T high)
+	{
+		assert(low <= high);
+		T result = max(x, low);
+		result = min(result, high);
+		return result;
+	}
 
 	//【変換】極座標->直交座標
 	//Polar Coordinates Transformation

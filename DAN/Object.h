@@ -2,7 +2,7 @@
 //【Object.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/17
+// [更新日]2019/10/23
 //===================================================================================================================================
 #pragma once
 
@@ -16,7 +16,7 @@
 #include "StaticMeshLoader.h"
 #include "TextureLoader.h"
 #include "ShaderLoader.h"
-#include "Animation.h"
+#include "LinearTreeCell.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -28,6 +28,8 @@ namespace objectNS {
 		WIREFRAME	= (int)D3DFILL_WIREFRAME,
 		POINT		= (int)D3DFILL_POINT,
 	};
+
+	void resetCounter();
 }
 
 //===================================================================================================================================
@@ -38,6 +40,8 @@ class Object:public Base
 public:
 	//Data
 	//ステータス変数
+	static int			objectCounter;			//オブジェクトカウンター：IDの割当に使用
+	int					id;						//ID
 	D3DXVECTOR3			position;				//位置
 	D3DXQUATERNION		quaternion;				//回転
 	D3DXVECTOR3			scale;					//スケール
@@ -73,10 +77,12 @@ public:
 	//タイマー
 	float				existenceTimer;			//存在時間
 
+	//オブジェクトツリーへ所属するためのインターフェースクラス
+	ObjectTree<Object>	treeCell;		//木空間
 
 	//Method
 	Object();
-	~Object();
+	virtual ~Object();
 	
 	//基本関数
 	HRESULT initialize(D3DXVECTOR3* _position);
@@ -102,6 +108,14 @@ public:
 	Ray*					getReverseAxisZ()								{ return &reverseAxisZ; };
 	Ray*					getGravityRay()									{ return &gravityRay; };
 	bool					getActive()										{ return onActive; }
+	float					getRight()										{ return position.x + radius;}
+	float					getLeft()										{ return position.x - radius;}
+	float					getTop()										{ return position.z + radius;}
+	float					getBottom()										{ return position.z - radius;}
+	float					getFront()										{ return position.z + radius;}
+	float					getBack()										{ return position.z - radius;}
+	D3DXVECTOR3				getMin()										{ return position - D3DXVECTOR3(radius,radius,radius);}
+	D3DXVECTOR3				getMax()										{ return position + D3DXVECTOR3(radius,radius,radius);}
 
 	//setter
 	void					setSpeed(D3DXVECTOR3 _speed)					{ speed = _speed; }

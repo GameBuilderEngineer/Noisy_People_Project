@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/  /
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshObject.h"
+#include "Object.h"
 #include "BoundingSphere.h"
 
 
@@ -16,17 +16,18 @@ namespace itemNS
 	enum ITEM_TYPE
 	{
 		BATTERY,
+		EXAMPLE,
 		ITEM_TYPE_MAX
 	};
 
-
-	struct ItemData
+	typedef struct ItemData
 	{
-		int id;							// 識別番号
-		ITEM_TYPE itemType;				// アイテムタイプ
-		D3DXVECTOR3 initialPosition;	// 初期座標
-		void initialize() { ZeroMemory(this, sizeof(ItemData)); }
-	};
+		int itemID;						// 識別番号(0..*)
+		int type;						// アイテムタイプ
+		D3DXVECTOR3 defaultPosition;	// 初期座標
+		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+		void zeroClear() { ZeroMemory(this, sizeof(ItemData)); }
+	}ITEMSET;
 }
 
 
@@ -36,23 +37,24 @@ namespace itemNS
 class Item: public Object
 {
 private:
-	itemNS::ItemData* itemData;
+	itemNS::ItemData itemData;
+	LPD3DXMESH	attractorMesh;				// 重力（引力）発生メッシュ
+	D3DXMATRIX*	attractorMatrix;			// 重力（引力）発生オブジェクトマトリックス
 
 	// Static
 	static int numOfItem;					// アイテムオブジェクトの総数
 
 public:
-	Item(StaticMesh* _staticMesh, itemNS::ItemData* _itemData);
+	BoundingSphere sphereCollider;			// コライダ
+	Item(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
 	~Item();
 	virtual void update(float frameTime);
-	//virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	BoundingSphere sphereCollider;
-
+	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 
 	// Getter
 	static int getNumOfItem();				// アイテムの数を取得
 	itemNS::ItemData* getItemData();		// アイテムデータを取得
 
 	// Setter
-	void setDataToItem(itemNS::ItemData* _itemData);
+	void setDataToItem(itemNS::ItemData _itemData);
 };

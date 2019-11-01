@@ -41,9 +41,6 @@ class Title : public AbstractScene
 private:
 	TestEffect* testEffect;
 
-	//再生パラメータ
-	PLAY_PARAMETERS playParameters[3];
-
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;
 public:

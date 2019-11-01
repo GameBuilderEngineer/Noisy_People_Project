@@ -13,8 +13,16 @@ int Tree::numOfTree = 0;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Tree::Tree(): StaticMeshObject(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL))
+Tree::Tree(treeNS::TreeData _treeData)
 {
+	treeData = _treeData;
+	trunk.position = treeData.initialPosition;
+	leaf.position = treeData.initialPosition;
+
+	// treeData.initialDirectionを基にした向き転換
+
+	// treeData.sizeを基にした拡大縮小
+
 	numOfTree++;
 }
 
@@ -37,23 +45,25 @@ void Tree::update(float frameTime)
 
 
 //=============================================================================
-// 描画処理
+// 重力発生メッシュ（接地メッシュ）の設定
 //=============================================================================
-void Tree::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+void Tree::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-	StaticMeshObject::render(
-		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
 }
 
 
 //=============================================================================
 // Getter
 //=============================================================================
+Object* Tree::getLeaf() { return &leaf; }
+Object* Tree::getTrunk() { return &trunk; }
 int Tree::getNumOfTree(){ return numOfTree; }
-TreeData* Tree::getTreeData() { return treeData; }
+TreeData* Tree::getTreeData() { return &treeData; }
 
 
 //=============================================================================
 // Setter
 //=============================================================================
-void Tree::setDataToTree(TreeData* _treeData) { treeData = _treeData; }
+void Tree::setDataToTree(TreeData _treeData) { treeData = _treeData; }

@@ -2,7 +2,7 @@
 //【TextureLoader.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/17
+// [更新日]2019/10/24
 //===================================================================================================================================
 //===================================================================================================================================
 //課題
@@ -39,18 +39,19 @@ namespace textureNS
 		TITLE_COPYRIGHT,			
 		TITLE_BAR,				
 
-		// Operation
-		OPERATION_GAMEPAD,
-		OPERATION_KEYBOARD,
-
 		// Credit
 		CREDIT,
 
 		// Game
 		UI_COUNT_DOWN_ONE,
-
-		//effect
-		EFFECT_DAMAGE,
+		UI_INFO_10,
+		UI_INFO_30,
+		UI_INFO_50,
+		UI_INFO_ASSULT,
+		UI_INFO_LIMIT1,
+		UI_INFO_LIMIT2,
+		UI_INFO_MISSION,
+		UI_INFO_BAR,
 
 		// Result
 		RESULT,
@@ -80,6 +81,7 @@ namespace textureNS
 		SAMPLE_TREE,
 		SAMPLE_GRASS,
 		NEKO,
+		COLOR_SCALE,
 
 		MAX_TEXTURE,
 	};

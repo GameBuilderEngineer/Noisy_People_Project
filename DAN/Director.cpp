@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/16
+// [更新日]2019/10/31
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -12,26 +12,30 @@
 #include "Splash.h"
 #include "Title.h"
 #include "Tutorial.h"
-#include "Credit.h"
+#if _DEBUG
+#include "Create.h"
+#endif
 #include "Game.h"
 #include "Result.h"
+#include "Credit.h"
 #include "SE.h"
+#include "LinearTreeCell.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 Director::Director() {
 	ZeroMemory(this, sizeof(Director));
-	//hiddenCursor = true;
-	//lockCursor = true;
 	fpsMode = FIXED_FPS;
 	fixedFps = FRAME_RATE;
-
 #ifdef _DEBUG
 	onGUI = true;
 	memory = new MemoryViewer;
+#else
+	hiddenCursor = true;
+	lockCursor = true;
+	ShowCursor(FALSE);
 #endif // _DEBUG
-	//ShowCursor(FALSE);
 }
 
 //===================================================================================================================================
@@ -43,6 +47,8 @@ Director::~Director() {
 #ifdef _DEBUG
 	SAFE_DELETE(imgui);
 	SAFE_DELETE(memory);
+#else
+	ShowCursor(TRUE);
 #endif // _DEBUG
 	SAFE_DELETE(input);
 	SAFE_DELETE(scene);
@@ -50,12 +56,17 @@ Director::~Director() {
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
 	SAFE_DELETE(soundInterface);
-	//SAFE_DELETE(textManager);
-	//SAFE_DELETE(gameMaster);
+	SAFE_DELETE(textManager);
+	SAFE_DELETE(fader);
+	SAFE_DELETE(effekseerManager);
+	SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
-	//ShowCursor(TRUE);
+
+	// COMの終了処理
+	CoUninitialize();
+
 }
 
 //===================================================================================================================================
@@ -83,6 +94,10 @@ HRESULT Director::initialize() {
 	imgui = new ImguiManager(wnd);
 #endif // _DEBUG
 
+	//エフェクシアー
+	effekseerManager = new EffekseerManager();
+	effekseerManager->initialize();
+
 	//sound
 	soundInterface = new SoundInterface();
 
@@ -109,14 +124,14 @@ HRESULT Director::initialize() {
 	//シェーダー読込
 	//Shader
 	shaderLoader = new ShaderLoader;
-	shaderLoader->load(d3d->device);
+	shaderLoader->load(getDevice());
 
 	//テキストデータ読込
-	//textManager = new TextManager();
-	//textManager->initialize(d3d->device);
+	textManager = new TextManager();
+	textManager->initialize();
 
 	//ゲーム管理クラス
-	//gameMaster = new GameMaster();
+	gameMaster = new GameMaster();
 
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
@@ -124,8 +139,14 @@ HRESULT Director::initialize() {
 
 	//scene
 	scene = new Splash();
+	scene->setGameMaster(gameMaster);
 	scene->initialize();
 
+	//fader
+	fader = new Fader();
+	fader->setShader(faderNS::BLUR);
+
+#pragma region MemoryTest
 	//メモリ解放テスト
 	//scene->uninitialize();
 	//SAFE_DELETE(scene);
@@ -141,6 +162,7 @@ HRESULT Director::initialize() {
 	//
 	//scene = new Splash();
 	//scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+#pragma endregion
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
@@ -149,6 +171,9 @@ HRESULT Director::initialize() {
 	}
 	// 開始時間を取得
 	QueryPerformanceCounter(&timeStart);	
+
+	// COMの初期化
+	CoInitializeEx(NULL, NULL);
 
 	return S_OK;
 }
@@ -171,6 +196,7 @@ void Director::run(HINSTANCE _instance) {
 	ShowWindow(wnd, SW_SHOW);
 	UpdateWindow(wnd);
 
+
 	// メッセージループ
 	MSG msg = { 0 };
 	ZeroMemory(&msg, sizeof(msg));
@@ -186,6 +212,7 @@ void Director::run(HINSTANCE _instance) {
 			mainLoop();
 		}
 	}
+
 }
 
 //===================================================================================================================================
@@ -199,10 +226,12 @@ void Director::mainLoop() {
 		scene->changeScene(SceneList::SPLASH);
 		changeNextScene();
 	}
-	if (scene->checkChangeOrder())//シーン切替フラグの確認
+
+	//シーン切替フラグの確認
+	if (scene->checkChangeOrder())
 		changeNextScene();
 
-	setFrameTime();		//フレーム時間の初期化処理
+	setFrameTime();				//フレーム時間の初期化処理
 	update();					//メイン更新処理
 	render();					//メイン描画処理
 	fixFPS();					//固定FPS処理
@@ -217,31 +246,40 @@ void Director::mainLoop() {
 // [用途]アプリ全体の更新処理
 //===================================================================================================================================
 void Director::update() {
+	input->update(window->windowActivate);
 #ifdef _DEBUG
 	memory->update();
 	imgui->beginFrame();
-	imgui->update();//デフォルトウィンドウ
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
+#else
+	if (input->wasKeyPressed(VK_F1))
+	{
+		hiddenCursor = !hiddenCursor;
+		if (hiddenCursor) {
+			ShowCursor(FALSE);
+		}
+		else {
+			ShowCursor(TRUE);
+		}
+	}
+	if (input->wasKeyPressed(VK_F2))
+		lockCursor = !lockCursor;
+	if (lockCursor)
+	{
+		if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
+		{
+			SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		}
+	}
 #endif // _DEBUG
-	input->update(window->windowActivate);
-	//if (input->wasKeyPressed(VK_F1))
-	//{
-	//	hiddenCursor = !hiddenCursor;
-	//	if (hiddenCursor) {
-	//		ShowCursor(FALSE);
-	//	}
-	//	else {
-	//		ShowCursor(TRUE);
-	//	}
-	//}
-	//if (input->wasKeyPressed(VK_F2))
-	//	lockCursor = !lockCursor;
+	effekseerManager->update();
 	scene->update(frameTime);
 	scene->collisions();
 	scene->AI();
 	soundInterface->UpdateSound();
+
 #ifdef _DEBUG
 	if (*scene->getShowGUI())
 	{
@@ -249,14 +287,13 @@ void Director::update() {
 		scene->createGUI();
 		imgui->endImGui();
 	}
+	if (*gameMaster->getShowGUI())
+	{
+		imgui->beginImGui("GameMasterGUI");
+		gameMaster->createGUI();
+		imgui->endImGui();
+	}
 #endif // _DEBUG
-	//if (lockCursor)
-	//{
-	//	if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
-	//	{
-	//		SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
-	//	}
-	//}
 }
 
 //===================================================================================================================================
@@ -270,6 +307,7 @@ void Director::createGUI()
 	ImGui::SliderInt("fpsMode", &fpsMode, VARIABLE_FPS, FIXED_FPS);
 	ImGui::SliderInt("fixedFPS", &fixedFps, MIN_FRAME_RATE, MAX_FRAME_RATE);
 	ImGui::Checkbox("SceneGUI", scene->getShowGUI());	
+	ImGui::Checkbox("gameMasterGUI", gameMaster->getShowGUI());	
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("CPU %.2f ％", memory->getCpuUsege());
 	ImGui::Text("MEMORY %d kb", memory->getMemoryUsege());
@@ -284,17 +322,33 @@ void Director::createGUI()
 void Director::render() {
 
 #ifndef _DEBUG
+	//描画スキップ
 	//sleepRenderTime += frameTime;
-	//if (sleepRenderTime < 1.000f / ((float)fixedFps * 3 / 4))return;
+	//if (sleepRenderTime < 1.000f / ((float)fixedFps * 5 / 6))return;
 	//sleepRenderTime = 0.0f;
 #endif // !_DEBUG
 
 #ifdef _DEBUG
 	//Debug
-	d3d->clear(imgui->getClearColor());
 	if (SUCCEEDED(d3d->beginScene()))
 	{
-		scene->render();
+
+		if (fader->playing)
+		{
+			fader->setRenderTexture();
+			d3d->clear(imgui->getClearColor());
+			scene->render();
+
+			d3d->setRenderBackBuffer(0);
+			d3d->clear(imgui->getClearColor());
+			fader->render();
+		}
+		else
+		{
+			d3d->clear(imgui->getClearColor());
+			d3d->setRenderBackBuffer(0);
+			scene->render();
+		}
 		imgui->render();
 		d3d->endScene();
 	}
@@ -305,6 +359,7 @@ void Director::render() {
 	if (SUCCEEDED(d3d->beginScene()))
 	{
 		scene->render();
+		effekseerManager->render();
 		d3d->endScene();
 	}
 	d3d->present(); 
@@ -345,11 +400,11 @@ void Director::fixFPS() {
 		Time *= (DOUBLE)1000.0 / (DOUBLE)Frq.QuadPart;
 
 		//ここに次フレームまでの待機中にさせたい処理を記述
-		//if (lockCursor)
-		//{
-		//	if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
-		//		SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
-		//}
+		if (lockCursor)
+		{
+			if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
+				SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		}
 	}
 	PreviousTime = CurrentTime;
 }
@@ -391,24 +446,26 @@ void Director::displayFPS() {
 // [用途]シーンクラスが遷移状態になった場合にシーンを遷移させる処理
 //===================================================================================================================================
 void Director::changeNextScene() {
-	int nextScene = scene->checkNextScene();			//次のシーンIDを取得	
-	//scene->copyGameMaster(gameMaster);				//ゲーム管理情報をDirectorへ保存
-	scene->uninitialize();
+	int nextScene = scene->checkNextScene();		//次のシーンIDを取得	
+	effekseerNS::stop();							//全エフェクト停止
+	scene->uninitialize();							//シーン終了処理
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{
-	case SceneList::SPLASH:					scene = new Splash(); break;
-	case SceneList::TITLE:					scene = new Title(); break;
+	case SceneList::SPLASH:					scene = new Splash();	break;
+	case SceneList::TITLE:					scene = new Title();	break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
-	case SceneList::CREDIT:					scene = new Credit(); break;
-	case SceneList::GAME:					scene = new Game(); break;
-	case SceneList::RESULT:					scene = new Result(); break;
+	case SceneList::CREDIT:					scene = new Credit();	break;
+	case SceneList::GAME:					scene = new Game();		break;
+	case SceneList::RESULT:					scene = new Result();	break;
+#if _DEBUG 
+	case SceneList::CREATE:					scene = new Create();	break; 
+#endif
 	case SceneList::NONE_SCENE:				break;
 	}
-	//scene->setGameMaster(gameMaster);//ゲーム管理情報をシーンへセット
-	//scene->setAnimationLoader(animationLoader);
-	scene->initialize();
-	currentSceneName = scene->getSceneName();
+	scene->setGameMaster(gameMaster);				//ゲーム管理情報をシーンへセット
+	scene->initialize();							//シーン初期化処理
+	currentSceneName = scene->getSceneName();		//現在シーン名の取得
 }
 
 //void threadA()

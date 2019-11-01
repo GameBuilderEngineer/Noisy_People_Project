@@ -4,7 +4,7 @@
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StaticMeshObject.h"
+#include "Object.h"
 #include "BoundingSphere.h"
 
 
@@ -13,62 +13,81 @@
 //=============================================================================
 namespace treeNS
 {
+	// ツリー種別
 	enum TREE_TYPE
 	{
 		ANALOG_TREE,
-		DIGITAL_TREE
+		DIGITAL_TREE,
+		TREE_TYPE_MAX
 	};
 
+	// 緑化状態
 	enum GREEN_STATE
 	{
 		GREEN,
-		DEAD
+		DEAD,
+		GREEN_STATE_MAX
 	};
 
+	// サイズ
 	enum TREE_SIZE
 	{
 		STANDARD,
 		LARGE,
-		VERY_LARGE
+		VERY_LARGE,
+		TREE_SIZE_MAX
 	};
 
-	struct TreeData
+	// モデル
+	enum TREE_MODEL
 	{
-		int id;							// 識別番号
-		TREE_TYPE treeType;				// ツリータイプ
-		GREEN_STATE geenState;			// 緑化状態
-		TREE_SIZE treeSize;				// 木のサイズ
-		int hp;							// HP
-		int initialPosition;			// 初期座標
-		void initialize() { ZeroMemory(this, sizeof(TreeData)); }
+		A_MODEL,
+		B_MODEL,
+		C_MODEL,
+		TREE_MAX
 	};
-}
 
+
+	typedef struct TreeData
+	{
+		int treeID;						// 識別番号
+		int model	;					// モデルID
+		TREE_TYPE type;					// ツリータイプ
+		GREEN_STATE geenState;			// 緑化状態
+		TREE_SIZE size;					// 木のサイズ
+		int hp;							// HP
+		D3DXVECTOR3 initialPosition;	// 初期座標
+		D3DXVECTOR3 initialDirection;	// 初期方角
+		void zeroClear() { ZeroMemory(this, sizeof(TreeData)); }
+	} TREESET;
+}
 
 //=============================================================================
 //クラス定義
 //=======================================================================T======
-class Tree: public StaticMeshObject
+class Tree
 {
 private:
-	treeNS::TreeData* treeData;
-
-
-	// Static
-	// ↓サイズの数静的メンバでもって自分のサイズのものを参照すればいい
+	treeNS::TreeData treeData;			// ツリーデータ
+	Object leaf;						// 葉オブジェクト
+	Object trunk;						// 幹オブジェクト
 	BoundingSphere greeningArea;		// 緑化範囲
+	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
+	D3DXMATRIX*	attractorMatrix;		// 重力（引力）発生オブジェクトマトリックス
 	static int numOfTree;				// ツリーオブジェクトの総数
 
 public:
-	Tree();
+	Tree(treeNS::TreeData _treeData);
 	~Tree();
-	virtual void update(float frameTime);
-	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	void update(float frameTime);
+	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 
 	// Getter
+	Object* getLeaf();
+	Object* getTrunk();
 	static int getNumOfTree();			// ツリーの数を取得
 	treeNS::TreeData* getTreeData();	// ツリーデータを取得
 
 	// Setter
-	void setDataToTree(treeNS::TreeData* _treeData);
+	void setDataToTree(treeNS::TreeData _treeData);
 };

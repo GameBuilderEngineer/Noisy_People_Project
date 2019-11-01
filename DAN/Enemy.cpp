@@ -5,24 +5,51 @@
 //-----------------------------------------------------------------------------
 #include "Enemy.h"
 #include "ImguiManager.h"
-
 using namespace enemyNS;
 
-int Enemy::numOfEnemy = 0;
+
+int Enemy::numOfEnemy = 0;			// エネミーの総数
+#ifdef _DEBUG
+int Enemy::debugEnemyID = -1;		// デバッグするエネミーのID
+#endif//_DEBUG
 
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Enemy::Enemy()
+Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 {
-	numOfEnemy++;
+	numOfEnemy++;								// エネミーの数を加算
+	enemyData = _enemyData;						// エネミーデータをセット
 
-	difference = DIFFERENCE_FIELD;			//フィールド補正差分
-	onGravity = true;
-	sphereCollider.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);
+	// ナビゲーションメッシュ
+	naviMesh = NavigationMesh::getNaviMesh();
+	edgeList = NULL;
+	naviFaceIndex = -1;
+	shouldSearchPath = false;
+
+	// 移動
+	onMove = false;
+	movingTarget = NULL;
+	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	// 初期設定
+	onGravity = true;							// 重力有効化
+	difference = DIFFERENCE_FIELD;				// フィールド補正差分を設定
+
+	// フラグ初期化
+	onGround = true;
+	onGroundBefore = true;
+	onJump = false;
+	jumping = false;
+
+	// オブジェクト初期化
+	position = enemyData->position;
+	axisZ.direction = enemyData->direction;
+	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
-	friction = 1.0f;
+	Object::initialize(&position);
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 }
 
 
@@ -31,6 +58,12 @@ Enemy::Enemy()
 //=============================================================================
 Enemy::~Enemy()
 {
+	if (edgeList != NULL)
+	{
+		edgeList->terminate();
+		SAFE_DELETE(edgeList);
+	}
+
 	numOfEnemy--;
 }
 
@@ -40,59 +73,151 @@ Enemy::~Enemy()
 //=============================================================================
 void Enemy::update(float frameTime)
 {
-	// 事前処理
-	previousWork();
-
-	Object::update();
-
-
-
 #ifdef _DEBUG
-	moveOperation();
-	controlCamera(frameTime);
+	if (enemyData->enemyID == debugEnemyID)
+	{
+		moveOperation();			// 移動操作
+		controlCamera(frameTime);	// カメラ操作
+
+		if (input->wasKeyPressed('7'))
+		{
+			destination = position;
+		}
+		if (input->wasKeyPressed('8'))
+		{
+			naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, destination);
+			naviMesh->dumpEdgeList();
+			naviMesh->affectToEdgeVertex();
+			naviMesh->debugRenderEdge(edgeList);
+			setMovingTarget(&destination);
+			setMove(true);
+		}
+	}
 #endif
 
-	groundingWork();			// 接地処理
-	updatePhysicalBehavior();	// 物理挙動
-	updatePhysics(frameTime);	// 物理の更新
-	Object::update();			// オブジェクトの更新
-
+	// 経路探索
+	if (shouldSearchPath)
+	{
+		naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, *movingTarget);
+		shouldSearchPath = false;
+	}
+	// 移動
+	if (onMove)
+	{
+		steering();
+	}
+	// 接地処理
+	grounding();
+	// 物理挙動
+	physicalBehavior();
+	// 物理の更新
+	updatePhysics(frameTime);
+	// オブジェクトの更新
+	Object::update();
+	// 中心座標の更新
+	updateCentralCood();
 	// エネミーデータの更新
 	enemyData->position = position;
 	enemyData->direction = axisZ.direction;
 	if (enemyData->state == DEAD)
-	{
+	{	
+		// falseでマネージャよりエネミーオブジェクトが破棄される
 		enemyData->isAlive = false;
 	}
 }
 
 
 //=============================================================================
-// 描画処理
+// 事前処理
 //=============================================================================
-//void Enemy::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
-//{
-//	render(
-//		*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-//}
-
-
-void Enemy::previousWork()
+void Enemy::preprocess()
 {
-	friction = 1.0f;
-	isGoingMoveOperation = false;
+	onJump = false;			
+	friction = 1.0f;		// 摩擦係数初期化
+	acceleration *= 0.0f;	// 加速度を初期化
 }
 
 
 //=============================================================================
-// 物理挙動の更新
+// ステアリング
 //=============================================================================
-void Enemy::updatePhysicalBehavior()
+void Enemy::steering()
 {
-	//------------
-	// 加速度処理
-	//------------
-	// 重力処理
+	D3DXVECTOR3 moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	if (edgeList != NULL && edgeList->isEnpty())
+	{
+		// エッジリストの破棄
+		edgeList->terminate();
+		SAFE_DELETE(edgeList);
+	}
+
+	if(edgeList == NULL)
+	{
+		// 目的地に直線移動
+		moveDirection = destination - position;
+		D3DXVec3Normalize(&moveDirection, &moveDirection);
+	}
+	else
+	{	
+		// ナビメッシュによる移動ベクトル生成
+		naviMesh->steering(&moveDirection, &naviFaceIndex, centralPosition, edgeList);
+	}
+
+	acceleration += moveDirection * MOVE_ACC[enemyData->type];
+}
+
+
+//=============================================================================
+// 接地処理
+//=============================================================================
+void Enemy::grounding()
+{
+	onGroundBefore = onGround;
+	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	gravityRay.update(centralPosition, gravityDirection);
+	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
+
+	if (hit == false)
+	{// エネミーは地面の無い空中にいる
+		onGround = false;
+		return;
+	}
+
+	if (radius + difference >= gravityRay.distance)
+	{// エネミーは地上に接地している
+		onGround = true;
+
+		if (onJump)
+		{
+			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
+			setPosition(centralPosition + gravityRay.direction * (gravityRay.distance - radius));
+			// 重力方向に落ちるときだけ移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+			if (speed.y < 0) setSpeed(slip(speed, gravityRay.normal));
+		}
+		else
+		{
+			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
+			setPosition(position + gravityRay.direction * (gravityRay.distance - radius));
+			// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+			setSpeed(slip(speed, gravityRay.normal));
+			// 直前フレームで空中にいたならジャンプ終了とする
+			if (onGroundBefore == false) jumping = false;
+		}
+	}
+	else
+	{// エネミーは地面のある空中にいる
+		onGround = false;
+	}
+}
+
+
+//=============================================================================
+// 物理挙動
+//=============================================================================
+void Enemy::physicalBehavior()
+{
+	// 接地していないときのみ重力加速度をかける
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
 	gravityRay.update(position, gravityDirection);
 	if (onGround == false)
@@ -100,26 +225,23 @@ void Enemy::updatePhysicalBehavior()
 		setGravity(gravityDirection, GRAVITY_FORCE);
 	}
 
-	//// 移動入力がないとき重力以外の加速度を切る
-	//if (isGoingMoveOperation == false)
+	//if (onGround)
 	//{
-	//	acceleration.x = 0.0f;
-	//	acceleration.z = 0.0f;
+	//	// 地上にいる場合は重力方向も切る
+	//	// ↓これを外すと最後に加速度.yに入っていた重力加速度がスリップして坂道滑り続ける
+	//	acceleration.y = 0.0f;
 	//}
 
-	// 空中に浮くタイミングで加速度はリセットされる
+	// 空中に浮くタイミングで加速度切る
 	if (onGround == false && onGroundBefore)
 	{
 		acceleration *= 0.0f;
 	}
 
-	//----------
-	// 速度処理
-	//----------
 	// 着地するタイミングで速度が低下する
 	if (onGround && onGroundBefore == false)
 	{
-		friction *= 0.1f;
+		friction *= GROUND_FRICTION;
 	}
 
 	// 地上摩擦係数
@@ -129,18 +251,18 @@ void Enemy::updatePhysicalBehavior()
 	}
 
 	//// 停止
-	//if (speed.x < 0.1f && speed.x > -0.1f &&
-	//	speed.y < 0.1f && speed.y > -0.1f &&
-	//	speed.z < 0.1f && speed.z > -0.1f)
+	//float speedPerSecond = D3DXVec3Length(&speed);
+	//if (isExecutingMoveOperation == false &&
+	//	speedPerSecond < STOP_SPEED)
 	//{
 	//	speed *= 0.0f;
 	//}
 
-	//// 落下速度限界の設定
-	//if (speed.y > -54.0f)
-	//{
-	//	speed.y = -54.0f;
-	//}
+	// 落下速度限界の設定
+	if (speed.y < -FALL_SPEED_MAX)
+	{
+		speed.y = -FALL_SPEED_MAX;
+	}
 }
 
 
@@ -159,46 +281,88 @@ void Enemy::updatePhysics(float frameTime)
 
 
 //=============================================================================
-// 接地処理
+// 中心座標系の更新
 //=============================================================================
-void Enemy::groundingWork()
+void Enemy::updateCentralCood()
 {
-	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	gravityRay.update(position, gravityDirection);
-
-	//if (oldFrameGroundPosition.y > position.y)
-	//{
-	//	//gravityRay.update(position, -gravityDirection);
-	//	//if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
-	//	//{
-	//	//	setPosition(position + gravityRay.direction * (gravityRay.distance + radius));
-	//	//}
-
-	//	setSpeed(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
-	//}
-
-	onGroundBefore = onGround;
-	if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
-	{
-		if (radius + difference >= gravityRay.distance)
-		{// 地上
-			onGround = true;
-			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
-			setPosition(position + gravityRay.direction * (gravityRay.distance - radius));
-			// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			setSpeed(slip(speed, gravityRay.normal));			
-		}
-		else
-		{// 空中（地面がある場所で空中）
-			onGround = false;
-		}
-	}
-	else
-	{// 空中（地面がない）
-		onGround = false;
-	}
+	centralPosition = position + sphereCollider.getCenter();
+	D3DXMatrixTranslation(&centralMatrixWorld, centralPosition.x, centralPosition.y, centralPosition.z);
+	axisX.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
+	axisY.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
+	axisZ.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
+	reverseAxisX.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
+	reverseAxisY.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
+	reverseAxisZ.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
 }
 
+
+//=============================================================================
+// 重力発生メッシュ（接地メッシュ）の設定
+//=============================================================================
+void Enemy::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
+{
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
+}
+
+
+//=============================================================================
+// エネミーのオブジェクトの数を初期化
+//=============================================================================
+void Enemy::resetNumOfEnemy()
+{
+	numOfEnemy = 0;
+}
+
+
+//=============================================================================
+// Getter
+//=============================================================================
+int Enemy::getEnemyID() { return enemyData->enemyID; }
+int Enemy::getNumOfEnemy() { return numOfEnemy; }
+EnemyData* Enemy::getEnemyData() { return enemyData; }
+
+
+//=============================================================================
+// Setter
+//=============================================================================
+void Enemy::setMove(bool setting) { onMove = setting; }
+void Enemy::setMovingTarget(D3DXVECTOR3* _target) { movingTarget = _target; }
+
+
+// [デバッグ]
+#pragma region Debug
+#ifdef _DEBUG
+//=============================================================================
+// デバッグ環境を設定
+//=============================================================================
+void Enemy::setDebugEnvironment()
+{
+	device = getDevice();
+	input = getInput();
+	keyTable = KEY_TABLE_1P;
+	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
+	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
+}
+
+
+//=============================================================================
+// カメラの操作と更新
+//=============================================================================
+void Enemy::controlCamera(float frameTime)
+{
+	// 操作軸反転操作
+	if (input->wasKeyPressed(keyTable.reverseCameraX))reverseValueXAxis *= -1;
+	if (input->wasKeyPressed(keyTable.reverseCameraY))reverseValueYAxis *= -1;
+	// マウス操作
+	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
+	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
+	// コントローラ操作
+	if (input->getController()[0]->checkConnect()) {
+		camera->rotation(D3DXVECTOR3(0, 1, 0), input->getController()[0]->getRightStick().x*0.1f*frameTime*reverseValueXAxis);
+		camera->rotation(camera->getHorizontalAxis(), input->getController()[0]->getRightStick().y*0.1f*frameTime*reverseValueYAxis);
+	}
+}
 
 
 //=============================================================================
@@ -231,8 +395,6 @@ void Enemy::moveOperation()
 //=============================================================================
 void Enemy::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ)
 {
-	isGoingMoveOperation = true;
-
 	if (operationDirection.x == 0 && operationDirection.y == 0)return;//入力値が0以下ならば移動しない
 	//Y軸方向への成分を削除する
 	D3DXVECTOR3 front = slip(cameraAxisZ, axisY.direction);
@@ -244,11 +406,11 @@ void Enemy::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVE
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	if (onGround)
 	{
-		acceleration = moveDirection * MOVE_ACC;
+		acceleration += moveDirection * MOVE_ACC[enemyData->type];
 	}
 	else
 	{
-		acceleration = moveDirection * MOVE_ACC / 10.0f;
+		acceleration += moveDirection * MOVE_ACC[enemyData->type] * AIR_MOVE_ACC_MAGNIFICATION;
 	}
 
 	//姿勢制御
@@ -256,81 +418,11 @@ void Enemy::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVE
 }
 
 
-//=============================================================================
-//重力設定(レイ)
-//[内容]レイを使用して重力源のメッシュの法線を取りだしその法線を重力方向とする
-//[引数]
-// D3DXVECTOR3* attractorPosition	：引力発生地点
-// LPD3DXMESH _attractorMesh		：（レイ処理用）引力発生メッシュ
-// D3DXMATRIX _attractorMatrix		：（レイ処理用）引力発生行列
-//[戻値]なし
-//=============================================================================
-void Enemy::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
-{
-	// レイ判定を行うために必要な要素をセット
-	attractorMesh = _attractorMesh;
-	attractorMatrix = _attractorMatrix;
-
-	//// 重力線を作成
-	//D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	//gravityRay.initialize(position, gravityDirection);		//重力レイの初期化
-
-	//// レイ判定
-	//if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
-	//{// 重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
-	//	setGravity(-gravityRay.normal, GRAVITY_FORCE);
-	//}
-	//else
-	//{// 衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
-	//	setGravity(gravityDirection, GRAVITY_FORCE);
-	//}
-}
-
-
-//=============================================================================
-// カメラの操作と更新
-//=============================================================================
-void Enemy::controlCamera(float frameTime)
-{
-	// 操作軸反転操作
-	if (input->wasKeyPressed(keyTable.reverseCameraX))reverseValueXAxis *= -1;
-	if (input->wasKeyPressed(keyTable.reverseCameraY))reverseValueYAxis *= -1;
-	// マウス操作
-	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
-	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
-	// コントローラ操作
-	if (input->getController()[0]->checkConnect()) {
-		camera->rotation(D3DXVECTOR3(0, 1, 0), input->getController()[0]->getRightStick().x*0.1f*frameTime*reverseValueXAxis);
-		camera->rotation(camera->getHorizontalAxis(), input->getController()[0]->getRightStick().y*0.1f*frameTime*reverseValueYAxis);
-	}
-	camera->setUpVector(axisY.direction);
-	camera->update();
-}
-
-
-//=============================================================================
-// デバッグ環境を設定
-//=============================================================================
-void Enemy::setDebugEnvironment()
-{
-	device = getDevice();
-	input = getInput();
-	keyTable = KEY_TABLE_1P;
-	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
-	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
-
-	Object::initialize(&(D3DXVECTOR3)START_POSITION);
-}
-
-
 //===================================================================================================================================
-//【ImGUIへの出力】
+// ImGUIへの出力
 //===================================================================================================================================
 void Enemy::outputGUI()
 {
-#ifdef _DEBUG
-
-	//ImGui::Text(sceneName.c_str());
 
 	if (ImGui::CollapsingHeader("EnemyInformation"))
 	{
@@ -347,24 +439,9 @@ void Enemy::outputGUI()
 		ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
 		ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);					//重力
 		ImGui::Text("speedVectorLength %f", D3DXVec3Length(&speed));
-
-
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
 	}
-#endif // _DEBUG
 }
-
-
-//=============================================================================
-// Getter
-//=============================================================================
-int Enemy::getNumOfEnemy(){ return numOfEnemy; }
-EnemyData* Enemy::getEnemyData() { return enemyData; }
-
-
-//=============================================================================
-// Setter
-//=============================================================================
-void Enemy::setDataToEnemy(EnemyData* _enemyData){	enemyData = _enemyData;}
-void Enemy::setCamera(Camera* _camera) { camera = _camera; }
+#endif
+#pragma endregion

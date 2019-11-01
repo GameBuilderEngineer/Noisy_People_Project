@@ -1,23 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Constant Layer">
-      <UniqueIdentifier>{d06e7814-3312-485e-a549-154968781f0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer">
       <UniqueIdentifier>{6ea48a6a-2db4-426d-920c-46004fad2066}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Base">
-      <UniqueIdentifier>{78719cad-d79b-4198-b7f4-7136cc21021f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Entry">
-      <UniqueIdentifier>{302c4bc2-7d3a-4590-849b-dc997d519043}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Director">
-      <UniqueIdentifier>{ac8ea6bd-cd66-4c0d-b6a9-b751668a208f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Window">
-      <UniqueIdentifier>{4935992b-a248-43f0-bda5-cd86a6f20f76}</UniqueIdentifier>
     </Filter>
     <Filter Include="Readme">
       <UniqueIdentifier>{5cf713e1-532d-469a-921f-eb2022ae8805}</UniqueIdentifier>
@@ -33,6 +18,123 @@
     </Filter>
     <Filter Include="Resorce Layer\04 Sound File">
       <UniqueIdentifier>{0812ec83-eadc-44f2-b337-ecb078e41f3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene">
+      <UniqueIdentifier>{cd8e8a79-c498-4eb4-abdb-8f2692ceec36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash">
+      <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Title">
+      <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Result">
+      <UniqueIdentifier>{2c09a369-b6e9-48fe-9f8c-07e62bbd5daa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Game">
+      <UniqueIdentifier>{0d7ffe8c-9ab6-484a-af3f-b6631db469ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer">
+      <UniqueIdentifier>{23d9b99c-945e-4d5a-96ff-bf38fd6c7119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\ShaderLoader">
+      <UniqueIdentifier>{61bee9a8-0209-44e6-b9b9-7a6ac5f388b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\SkinMeshLoader">
+      <UniqueIdentifier>{85092c95-064d-4f23-865b-ccd6629f076a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\StaticMeshLoader">
+      <UniqueIdentifier>{bcd5ab4a-5f6e-4227-a090-1168f54d2fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\TextLoader">
+      <UniqueIdentifier>{bc7abbe0-f26f-45ff-a60d-a8eb8b79ddb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader Layer\TextureLoader">
+      <UniqueIdentifier>{484d792e-e9dd-4432-bde3-fb8d167f0958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Credit">
+      <UniqueIdentifier>{7b2807bf-899c-4bd1-9960-4f1688e88dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial">
+      <UniqueIdentifier>{3caaa803-1a3e-409a-94b2-1181033f6eeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash\SplashSprite">
+      <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player">
+      <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer">
+      <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Enemy">
+      <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy">
+      <UniqueIdentifier>{7a098705-447e-48a5-b312-660761073be3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MetaAI">
+      <UniqueIdentifier>{61acdd25-3097-4d98-b7f5-7b868895cb2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Tree">
+      <UniqueIdentifier>{ffb95cd0-ab47-490b-a1ac-bea73ce39236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Item">
+      <UniqueIdentifier>{0025d4b5-8404-4e24-95de-cdbafbb5d176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Tlop">
+      <UniqueIdentifier>{06216772-8b7e-4fe7-8c4b-58c99e54a67c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Stone">
+      <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Tree">
+      <UniqueIdentifier>{7f5b9b64-5296-48ad-96c6-8061de1bebb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\TestEffect">
+      <UniqueIdentifier>{5a3fa736-39c2-416f-a2b9-563a619ee044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Sky">
+      <UniqueIdentifier>{37485a13-b7c2-4de1-b39d-b550dff2fc37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\NaviAI">
+      <UniqueIdentifier>{accd5b1a-788b-44e1-b16a-3215bd8aed77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Create">
+      <UniqueIdentifier>{38969594-a3b8-4c26-be69-77225b90e266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\02 Texture File">
+      <UniqueIdentifier>{fdbdd74a-8587-4f03-baa5-a0b48e615d48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\07 Model File">
+      <UniqueIdentifier>{4c44e2aa-a80c-4518-982c-a9b6976bbc2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\06 Effekseer File">
+      <UniqueIdentifier>{9e393723-fc8e-47da-809d-422b95ec02be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\05 Tools File">
+      <UniqueIdentifier>{63e3b90d-bc33-44c1-8533-0e03e751fc34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Item">
+      <UniqueIdentifier>{b6a14b1a-1630-4fb9-8d38-6e7f7b1e5f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\Tree">
+      <UniqueIdentifier>{0279b7aa-7a14-4fde-beeb-93ab3792871d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools Layer\MapObject">
+      <UniqueIdentifier>{5733f8e1-0aa0-4be5-aaa0-f8ee1372dca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer">
+      <UniqueIdentifier>{d06e7814-3312-485e-a549-154968781f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Base">
+      <UniqueIdentifier>{78719cad-d79b-4198-b7f4-7136cc21021f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Entry">
+      <UniqueIdentifier>{302c4bc2-7d3a-4590-849b-dc997d519043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Director">
+      <UniqueIdentifier>{ac8ea6bd-cd66-4c0d-b6a9-b751668a208f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\Direct3D9">
       <UniqueIdentifier>{943d0fe6-0741-479f-adb9-6927ed030ab8}</UniqueIdentifier>
@@ -52,11 +154,11 @@
     <Filter Include="Constant Layer\AbstractScene">
       <UniqueIdentifier>{fd05661e-10e2-441f-8d21-6e1eb4a8e104}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene">
-      <UniqueIdentifier>{cd8e8a79-c498-4eb4-abdb-8f2692ceec36}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\MemoryViewer">
       <UniqueIdentifier>{3b26cda4-5a87-4203-8a61-d7d497b4335f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash">
+      <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Layer\Scene\Title">
       <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
@@ -103,53 +205,14 @@
     <Filter Include="Constant Layer\InstancingBillboad">
       <UniqueIdentifier>{c7fc4d22-60cc-438c-9022-a2683d4c6534}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader Layer">
-      <UniqueIdentifier>{23d9b99c-945e-4d5a-96ff-bf38fd6c7119}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Loader Layer\ShaderLoader">
-      <UniqueIdentifier>{61bee9a8-0209-44e6-b9b9-7a6ac5f388b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Loader Layer\SkinMeshLoader">
-      <UniqueIdentifier>{85092c95-064d-4f23-865b-ccd6629f076a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Loader Layer\StaticMeshLoader">
-      <UniqueIdentifier>{bcd5ab4a-5f6e-4227-a090-1168f54d2fc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Loader Layer\TextLoader">
-      <UniqueIdentifier>{bc7abbe0-f26f-45ff-a60d-a8eb8b79ddb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Loader Layer\TextureLoader">
-      <UniqueIdentifier>{484d792e-e9dd-4432-bde3-fb8d167f0958}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Scene\Credit">
-      <UniqueIdentifier>{7b2807bf-899c-4bd1-9960-4f1688e88dea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Scene\Tutorial">
-      <UniqueIdentifier>{3caaa803-1a3e-409a-94b2-1181033f6eeb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\SelectItem">
       <UniqueIdentifier>{6ebe25ac-c757-49a9-8891-66d344020c7a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player">
-      <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Object\StaticMeshObject">
-      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Object\SkinMeshObject">
-      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\LinkedList">
       <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\Sound">
       <UniqueIdentifier>{9745f206-a046-4b8b-9b78-c87b22650d05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tools Layer">
-      <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tools Layer\Enemy">
-      <UniqueIdentifier>{c32ed02e-90c2-4da8-827f-a73c2f0b2284}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\Sound\BGM">
       <UniqueIdentifier>{cf8887db-979b-457b-812f-0a56ca931807}</UniqueIdentifier>
@@ -163,32 +226,29 @@
     <Filter Include="Constant Layer\Sound\3D">
       <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resorce Layer\02 Visual File">
-      <UniqueIdentifier>{fdbdd74a-8587-4f03-baa5-a0b48e615d48}</UniqueIdentifier>
+    <Filter Include="Constant Layer\Text">
+      <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Enemy">
-      <UniqueIdentifier>{7a098705-447e-48a5-b312-660761073be3}</UniqueIdentifier>
+    <Filter Include="Constant Layer\Effekseer">
+      <UniqueIdentifier>{e49c7731-b0af-4124-b614-501370a0edcc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\MetaAI">
-      <UniqueIdentifier>{61acdd25-3097-4d98-b7f5-7b868895cb2b}</UniqueIdentifier>
+    <Filter Include="Constant Layer\StaticMeshRenderer">
+      <UniqueIdentifier>{5a5151ca-d768-4fc4-a5b2-57f575e22a3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Tree">
-      <UniqueIdentifier>{ffb95cd0-ab47-490b-a1ac-bea73ce39236}</UniqueIdentifier>
+    <Filter Include="Constant Layer\SkinMeshRenderer">
+      <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Item">
-      <UniqueIdentifier>{0025d4b5-8404-4e24-95de-cdbafbb5d176}</UniqueIdentifier>
+    <Filter Include="Constant Layer\Window">
+      <UniqueIdentifier>{ecc2556b-7a62-4a1e-9d86-d0af6de44857}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Tlop">
-      <UniqueIdentifier>{06216772-8b7e-4fe7-8c4b-58c99e54a67c}</UniqueIdentifier>
+    <Filter Include="Game Layer\TestPlane">
+      <UniqueIdentifier>{894de7c2-d832-4250-9290-aa96ae0df910}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Stone">
-      <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
+    <Filter Include="Constant Layer\LinearTreeCell">
+      <UniqueIdentifier>{c0a6d1a3-e57e-41d9-a77e-de4fdf678641}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Tree">
-      <UniqueIdentifier>{7f5b9b64-5296-48ad-96c6-8061de1bebb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\TestEffect">
-      <UniqueIdentifier>{5a3fa736-39c2-416f-a2b9-563a619ee044}</UniqueIdentifier>
+    <Filter Include="Constant Layer\Sound\APO">
+      <UniqueIdentifier>{9d675f58-8269-44bd-bbeb-37ce8eabb979}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\Text">
       <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
@@ -215,9 +275,6 @@
     </ClCompile>
     <ClCompile Include="Director.cpp">
       <Filter>Constant Layer\Director</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Constant Layer\Window</Filter>
     </ClCompile>
     <ClCompile Include="Direct3D9.cpp">
       <Filter>Constant Layer\Direct3D9</Filter>
@@ -318,9 +375,6 @@
     <ClCompile Include="InstancingBillboard.cpp">
       <Filter>Constant Layer\InstancingBillboad</Filter>
     </ClCompile>
-    <ClCompile Include="StaticMeshObject.cpp">
-      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClCompile>
@@ -343,9 +397,6 @@
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClCompile>
     <ClCompile Include="EnemyManager.cpp">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="NavigationMesh.cpp">
       <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
@@ -383,9 +434,6 @@
     </ClCompile>
     <ClCompile Include="ItemManager.cpp">
       <Filter>Game Layer\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexAccessor.cpp">
-      <Filter>Constant Layer\UtilityFunction</Filter>
     </ClCompile>
     <ClCompile Include="telop.cpp">
       <Filter>Game Layer\Tlop</Filter>
@@ -439,6 +487,93 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
+    <ClCompile Include="exampleItem.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteGauge.cpp">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffectOccurrence.cpp" />
+    <ClCompile Include="EffekseerManager.cpp">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky.cpp">
+      <Filter>Game Layer\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="Create.cpp">
+      <Filter>Game Layer\Scene\Create</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationMesh.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexAccessor.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="AStar.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshData.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="TmpObject.cpp">
+      <Filter>Game Layer\Scene\Create</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemTools.cpp">
+      <Filter>Tools Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectTool.cpp">
+      <Filter>Tools Layer\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectTool.cpp">
+      <Filter>Tools Layer\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshRenderer.cpp">
+      <Filter>Constant Layer\StaticMeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Bear.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiger.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryDebug.cpp">
+      <Filter>Game Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Constant Layer\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlane.cpp">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearTreeCell.cpp">
+      <Filter>Constant Layer\LinearTreeCell</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTools.cpp">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSound.cpp">
+      <Filter>Constant Layer\Sound\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="TelopManager.cpp" />
+	<ClCompile Include="PathFollowing.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
+	    <ClCompile Include="AllocateHierarchy.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DXAnimation.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="movep.cpp">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionEventSeting.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -446,9 +581,6 @@
     </ClInclude>
     <ClInclude Include="Director.h">
       <Filter>Constant Layer\Director</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Constant Layer\Window</Filter>
     </ClInclude>
     <ClInclude Include="Direct3D9.h">
       <Filter>Constant Layer\Direct3D9</Filter>
@@ -561,9 +693,6 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Constant Layer\InstancingBillboad</Filter>
     </ClInclude>
-    <ClInclude Include="StaticMeshObject.h">
-      <Filter>Constant Layer\Object\StaticMeshObject</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader Layer\ShaderLoader</Filter>
     </ClInclude>
@@ -586,9 +715,6 @@
       <Filter>Constant Layer\Sound\SoundBase</Filter>
     </ClInclude>
     <ClInclude Include="EnemyManager.h">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="NavigationMesh.h">
       <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
@@ -626,9 +752,6 @@
     </ClInclude>
     <ClInclude Include="ItemManager.h">
       <Filter>Game Layer\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexAccessor.h">
-      <Filter>Constant Layer\UtilityFunction</Filter>
     </ClInclude>
     <ClInclude Include="telop.h">
       <Filter>Game Layer\Tlop</Filter>
@@ -684,6 +807,101 @@
     <ClInclude Include="Timer.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
+    <ClInclude Include="EffekseerManager.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\Effekseer.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerRendererDX9.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Effekseer\Compiled\include\EffekseerSoundXAudio2.h">
+      <Filter>Constant Layer\Effekseer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky.h">
+      <Filter>Game Layer\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationMesh.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexAccessor.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+    <ClInclude Include="Create.h">
+      <Filter>Game Layer\Scene\Create</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiger.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshRenderer.h">
+      <Filter>Constant Layer\StaticMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="TmpObject.h">
+      <Filter>Game Layer\Scene\Create</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemTools.h">
+      <Filter>Tools Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectTool.h">
+      <Filter>Tools Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectTool.h">
+      <Filter>Tools Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="exampleItem.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteGauge.h">
+      <Filter>Constant Layer\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffectOccurrence.h" />
+    <ClInclude Include="MemoryDebug.h">
+      <Filter>Game Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Constant Layer\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPlane.h">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearTreeCell.h">
+      <Filter>Constant Layer\LinearTreeCell</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTools.h">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSound.h">
+      <Filter>Constant Layer\Sound\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="TelopManager.h" />
+	<ClInclude Include="PathFollowing.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
+	    <ClInclude Include="AllocateHierarchy.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DXAnimation.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="movep.h">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionEventSeting.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
@@ -697,9 +915,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Readme\Readme.txt">
-      <Filter>Readme</Filter>
-    </Text>
-    <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
     </Text>
     <Text Include="01 Data File\DumpFuzzyRecognition.txt">
@@ -717,6 +932,9 @@
     <Text Include="01 Data File\wasuremonoPosCheck.txt">
       <Filter>Resorce Layer\01 Data File</Filter>
     </Text>
+    <Text Include="Readme\コーディング規約.txt">
+      <Filter>Readme</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Font Include="01 Data File\FOT-NewRodinPro-UB.otf">
@@ -725,10 +943,5 @@
     <Font Include="01 Data File\unicode.futurabb.ttf">
       <Filter>Resorce Layer\01 Data File</Filter>
     </Font>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="02 Visual File\testField.x">
-      <Filter>Resorce Layer\02 Visual File</Filter>
-    </None>
   </ItemGroup>
 </Project>

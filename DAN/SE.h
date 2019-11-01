@@ -36,6 +36,17 @@ enum GAME_SE_LIST
 	GAME_SE_MAX
 };
 
+enum CREATE_SE_LIST
+{
+	CREATE_SE_MAX
+};
+
+//===================================================================================================================================
+//【定数定義】
+//===================================================================================================================================
+static const char *splashSEPathList[] = { "SE_Attack.wav" };
+static const char *titleSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
+static const char *gameSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
 
 //===================================================================================================================================
 //【サウンド(XAudio2)】
@@ -45,15 +56,13 @@ class SEManager : public SoundBase
 {
 public:
 	SEManager() {};
-	~SEManager();
-
-	//変数
-	static const char * const splashSEPathList[];
-	static const char * const titleSEPathList[];
-	static const char * const gameSEPathList[];
-	static int	SEScene;
+	~SEManager() {};
 
 	//関数
-	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する
-	void				outputSEGUI(void);				//ImGUIへの出力
+	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
+
+		//debug用
+#if _DEBUG
+	void	 outputGUI(void)override;				//ImGUIへの出力
+#endif
 };

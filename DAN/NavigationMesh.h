@@ -4,9 +4,14 @@
 // 作成開始日 : 2019/10/5
 //-----------------------------------------------------------------------------
 #pragma once
+#include "Base.h"
 #include <vector>
+#include "Object.h"
+#include "StaticMeshRenderer.h"
 #include "VertexAccessor.h"
-#include "StaticMeshObject.h"
+#include "MeshData.h"
+#include "AStar.h"
+#include "PathFollowing.h"
 
 
 //=============================================================================
@@ -14,17 +19,20 @@
 //=============================================================================
 namespace navigationMeshNS
 {
-	struct VertexNaviMesh
+	enum NAVIRESULT
 	{
+		NAVI_OK						= 0,		
+		CURRENT_NOT_ON_MESH			= -1,
+		DESTINATION_NOT_ON_MESH		= -2,
+		IMPASSE						= -3,
+		UNKNOWN_ERROR				= -99
 	};
 
+
+#ifdef _DEBUG
+	const float FLOATING_HEIGHT = 0.0f;
+#endif
 }
-
-struct Index3
-{
-	DWORD index[3];
-};
-
 
 //=============================================================================
 //クラス定義
@@ -32,44 +40,43 @@ struct Index3
 class NavigationMesh: public Object
 {
 private:
-	LPDIRECT3DVERTEXBUFFER9	vertexBuffer;		// 頂点バッファ
-
-	LPD3DXMESH mesh;							// メッシュ
-	BYTE* vtx;									// 頂点情報
-	WORD* index;								// (頂点)インデックス情報
-	DWORD *adjacency;							// 隣接性情報
+	StaticMesh* staticMesh;						// メッシュ情報
+	VertexAccessor vtxAccessor;					// 頂点アクセスオブジェクト
+	MeshData meshData;							// メッシュデータオブジェクト
+	AStar aStar;								// パス検索オブジェクト
+	PathFollowing pathFollowing;				// パスフォローイングオブジェクト
+	StaticMeshRenderer* renderer;				// 描画オブジェクト
+	D3DXVECTOR3 gravityDirection;				// 重力方向
+	static NavigationMesh* pointer;				// 取得用ポインタ
 	
-	StaticMesh* staticMesh;						//※仮に入れました。菅野
-
-	VertexAccessor vtxAccessor;					// 頂点アクセス
-	DWORD numVertices;
-	DWORD stride;
-	DWORD numFaces;
+	// pathSearch()実行毎に更新される情報
+	D3DXVECTOR3 from;							// 開始座標
+	D3DXVECTOR3 dest;							// 目的地座標
+	DWORD startIndex;							// 開始ポリゴン面インデックス
+	DWORD destIndex;							// 目的地面ポリゴンインデックス
+	LinkedList<meshDataNS::Index2>* edgeList;	// エッジリスト
 
 public:
 	NavigationMesh(StaticMesh* staticMesh);
 	void initialize();
 	void uninitialize();
 	void update();
-
-	// 探索実行前に現在地ポリゴンと目的地ポリゴンを調整するフラグ
-	enum SEARCH_FLAG
-	{
-		STANDARD,	// 指定座標に最も近いポリゴン
-		GRAVITY		// 指定座標から重力方向にレイキャストして衝突したポリゴン
-	};
-
 	// 経路探索
-	void searchRoute(D3DXVECTOR3 from, D3DXVECTOR3 dest, SEARCH_FLAG flag);
-
-	//BYTE* getVertexFromIndex(BYTE* pVtx, WORD index);
-
-	//WORD getIndexFromPolygon();
-	//BYTE* getVertexFromPolygon(DWORD polyIndex);
-	//Index3 getAdjacencyFromPolygon(DWORD polyIndex);
+	navigationMeshNS::NAVIRESULT pathSearch(LinkedList<meshDataNS::Index2>** pOut,
+		DWORD* faceIndex, D3DXVECTOR3 _from, D3DXVECTOR3 _dest);
+	// ステアリング（移動ベクトルの作成）
+	navigationMeshNS::NAVIRESULT steering(D3DXVECTOR3* out, DWORD* faceIndex,
+		D3DXVECTOR3 _position, LinkedList<meshDataNS::Index2>* _edgeList);
+	// Getter
+	static NavigationMesh* getNaviMesh() { return pointer; }
 
 #ifdef _DEBUG
-	void debugRender();
+	void dumpEdgeList();
+	void debugRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	void debugRenderMesh(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	void debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList);
+	void changeColor();
+	void affectToEdgeVertex();
 	void outputGUI();
 #endif // _DEBUG
 };

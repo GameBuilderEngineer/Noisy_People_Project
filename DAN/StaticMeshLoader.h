@@ -2,7 +2,7 @@
 //【StaticMeshLoader.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/16
+// [更新日]2019/10/24
 //===================================================================================================================================
 #pragma once
 
@@ -41,16 +41,9 @@ namespace staticMeshNS {
 		STAR_REGULAR_POLYHEDRON_X10,			//04
 		STAR_REGULAR_POLYHEDRON_X100,			//05
 
-		SAMPLE_BUNNY,							//01
-		SAMPLE_PAPER,							//02
 		SAMPLE_REDBULL,							//03
-		SAMPLE_SHOES,							//04
-		SAMPLE_TEAPOT,							//05
-		SAMPLE_LIGHT,							//06
-		SAMPLE_BALL,							//07
 		SAMPLE_SCISSORS,						//08
-		SAMPLE_PLAYSTATION,						//09
-		SAMPLE_HAT,								//10
+		ENEMY_01,
 
 		DEAD_TREE,								//01
 		GREEN_TREE_001,							//02
@@ -68,6 +61,9 @@ namespace staticMeshNS {
 		YAMADA_PLANE,							//06
 		DICE,									//07
 		YAMADA_TEST_ZONE,						//08
+		SKY_DOME,								//09
+		TUTORIAL_FILED,							//10
+
 
 		MESH_NUM,								//NUM
 	};

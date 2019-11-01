@@ -30,19 +30,20 @@ Title::Title(void)
 	nextScene = SceneList::TUTORIAL;
 
 	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);	
+	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);
 
 	//再生パラメータ
+	PLAY_PARAMETERS playParameters[3];
 	memset(playParameters, 0, sizeof(playParameters));
-	XAUDIO2_FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false,NULL,true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false,NULL,true, filterParameters };
-	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, true,1.0f,true, filterParameters };
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false,NULL,false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false,NULL,false,NULL,true, filterParameters };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, true,1.0f,false,NULL,true, filterParameters };
 
 	//再生
-	SoundInterface::playSound(playParameters[0]);
-	SoundInterface::playSound(playParameters[1]);
-	SoundInterface::playSound(playParameters[2]);
+	SoundInterface::SE->playSound(&playParameters[0]);
+	SoundInterface::SE->playSound(&playParameters[1]);
+	SoundInterface::BGM->playSound(&playParameters[2]);
 }
 
 //============================================================================================================================================
@@ -51,9 +52,8 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// サウンドの停止
-	SoundInterface::stopSound(playParameters[0]);
-	SoundInterface::stopSound(playParameters[1]);
-	SoundInterface::stopSound(playParameters[2]);
+	SoundInterface::SE->uninitSoundStop();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================
@@ -72,6 +72,15 @@ void Title::initialize()
 	camera->setRelativeGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 10);
+
+	//エフェクシアーの設定
+	effekseerNS::setProjectionMatrix(
+		camera->fieldOfView,
+		camera->windowWidth,
+		camera->windowHeight,
+		camera->nearZ,
+		camera->farZ);
+
 
 	// Light
 	light = new Light;
@@ -122,6 +131,12 @@ void Title::update(float _frameTime)
 
 	//バーの移動
 	//if(input->wasKeyPressed()
+
+	//エフェクトの再生
+	if (input->wasKeyPressed('1'))
+	{
+		effekseerNS::play(new effekseerNS::Instance);
+	}
 
 	// タイトルUI
 	titleUI.update(input);
@@ -177,6 +192,10 @@ void Title::render()
 	// カメラ・ウィンドウ
 	camera->renderReady();
 	direct3D9->changeViewportFullWindow();
+
+	//エフェクシアーテスト描画
+	effekseerNS::setCameraMatrix(camera->position, camera->gazePosition, camera->upVector);
+	effekseerNS::render();
 
 	// 3D
 	render3D(*camera);
@@ -249,10 +268,20 @@ void Title::AI(void)
 #ifdef _DEBUG
 void Title::createGUI()
 {
+	bool createScene = false;
+
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	ImGui::Checkbox("Create Scene", &createScene);
 
+	//ツール用シーン
+	if (createScene)
+	{
+		selectStateMemory = titleUiNS::CREATE;
+		nextScene = (SceneList::CREATE);
+		changeScene(nextScene);
+	}
 }
 #endif // _DEBUG

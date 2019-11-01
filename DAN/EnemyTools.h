@@ -10,68 +10,119 @@
 //【ライブラリのロード】
 //===================================================================================================================================
 #include "Base.h"
+#include "StaticMeshRenderer.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "EnemyManager.h"
 
 //===================================================================================================================================
 //【マクロ】
 //===================================================================================================================================
-#define CHUNK_ID	(4)
-
-//===================================================================================================================================
-//【定数定義】
-//===================================================================================================================================
-enum ENEMY_TYPE
-{
-	ENEMY_TYPE_SAI,
-	ENEMY_TYPE_DATE,
-	ENEMY_TYPE_MAX
-};
+#define ENEMY_CHUNK_ID		(4)
+#define ENMY_CHUNK			("ENMY")
+#define EFMT_CHUNK			("EFMT")
+#define ENEMY_FILE_PATH		("enemy.enemy")
+#define ENEMY_GUI_ID		(1)
 
 //===================================================================================================================================
 //【構造体】
 //===================================================================================================================================
 typedef struct	//ENMYチャンク
 {
-	char chunkId[CHUNK_ID];	//チャンクID
-	long size;				//以後のサイズ(ファイルのサイズ - 8byte)
-	long enemyMax;			//敵の数
+	char chunkId[ENEMY_CHUNK_ID];	//チャンクID
+	short size;				//サイズ
+	short enemyMax;			//敵の数
 }ENEMY_ENMY;
 
 typedef struct	//EFMTチャンク
 {
-	char chunkId[CHUNK_ID];	//チャンクID
-	long size;				//このチャンクのサイズ
-	long type;				//敵の種類
+	char chunkId[ENEMY_CHUNK_ID];	//チャンクID
+	short size;				//このチャンクのサイズ
+	short enemyId;			//敵のID
+	short enemyType;		//敵の種類
+	short enemyState;		//敵の状態
 	float posX;				//敵の生成位置(X)
 	float posY;				//敵の生成位置(Y)
 	float posZ;				//敵の生成位置(Z)
-	float rotY;				//敵の回転Y軸
+	float dirX;				//敵の向き(X)
+	float dirY;				//敵の向き(Y)
+	float dirZ;				//敵の向き(Z)
 }ENEMY_EFMT;
 
 typedef struct	//ENEMYファイル構造体
 {
-	ENEMY_ENMY enmy;	//ENMYチャンク	
-	ENEMY_EFMT *efmt;	//EFMTチャンク
+	ENEMY_ENMY enmy;		//ENMYチャンク	
+	ENEMY_EFMT *efmt;		//EFMTチャンク
 }ENEMY_FILE;
 
 //===================================================================================================================================
 //【エネミーツール】
 //エネミーツール用クラス
 //===================================================================================================================================
-class ENEMY_TOOLS
+class ENEMY_TOOLS : public Base
 {
 public:
-	ENEMY_TOOLS() {};
-	~ENEMY_TOOLS() ;
+	ENEMY_TOOLS();
+	~ENEMY_TOOLS();
 
-	void SetEnemyType(int enemyId,int enemyType);
-	void SetEnemyPos(int enemyId,const D3DXVECTOR3 pos);
-	void SetEnemyRotY(int enemyId,float rotY);
-	void AddEnemyFormat(void);
+	//ファイル
+	int GetEnemyMax(void);									//エネミーの数を取得
+	enemyNS::ENEMYSET GetEnemySet(short enemyId);			//エネミーセット構造体を取得
+
+#ifdef _DEBUG
+	//変数	
+	int EnemyListboxType;									//エネミーの種類(リストボックス)
+	BoundingSphere *bodyCollide;							//当たり判定
+	Object** object;										//オブジェクト
+
+	//GUI
+	void outputEnemyToolsGUI(int GUIid,						//GUI
+		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);		
+
+	//レンダラー
+	int  GetStaticMeshID(short enemyType);					//メッシュIDを取得
+	void initRender();										//レンダラーの初期化
+	void initObject();										//オブジェクトの初期化
+	void update();											//更新
+	void render(D3DXMATRIX view,							//描画
+		D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);			
+	void generate(Object *object, short enemyType,			//作成
+		D3DXVECTOR3 position, D3DXVECTOR3 dir);
+#endif
 
 private:
-	ENEMY_FILE		enemyFile;				//エネミー構造体 
 
-	void OutputEnemyFile(void);				//エネミーファイルの書き出し処理
-	ENEMY_FILE InputEnemyFile(void);		//エネミーファイルの読み込み処理
+	//変数	
+	ENEMY_FILE enemyFile;									//エネミー構造体
 
+	//エネミーファイル
+	void OutputEnemyFile(void);								//エネミーファイルの書き出し処理
+	void CreatNewEnemyFile(void);							//エネミーファイルの新規作成
+
+#ifdef _DEBUG
+	//変数	
+	StaticMeshRenderer** renderer;							//レンダラー
+	bool needUpdate;										//更新フラグ
+	int EnemyListboxCurrent;								//エネミー選択用(リストボックス)
+	int EnemyListboxState;									//エネミーの状態(リストボックス)
+
+	//レンダラー
+	void ResetRenderer(void);								//レンダラーをリセット
+
+	//エネミーの設置
+	void SetEnemyType(short enemyId, short enemyType);		//エネミーの種類を設定	
+	void SetEnemyState(short enemyId, short enemyState);	//エネミーの状態を設定
+	void SetEnemyPos(short enemyId, const D3DXVECTOR3 pos);	//エネミーの位置を設定
+	void SetEnemyDir(short enemyId, const D3DXVECTOR3 dir);	//エネミーの向きを設定
+	void SetEnemy(short enemyId, short enemyType,			//エネミーの設置
+		short enemyState, const D3DXVECTOR3 pos,
+		const D3DXVECTOR3 dir);
+
+	//エネミーフォーマット構造体
+	void UpdateEfmt(int oldEnemyMax);						//エネミーフォーマットの整理
+	void DeleteEnemyFormat(short enemyId);					//エネミーフォーマットの削除
+	void AddEnemyFormat(short enemyType,					//エネミーフォーマットの追加
+		short enemyState, const D3DXVECTOR3 pos,
+		const D3DXVECTOR3 dir);
+#endif		
 };

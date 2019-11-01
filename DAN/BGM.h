@@ -5,7 +5,6 @@
 // [更新日]2019/10/14
 //===================================================================================================================================
 #pragma once
-
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
@@ -34,6 +33,18 @@ enum GAME_BGM_LIST
 	GAME_BGM_MAX
 };
 
+enum CREATE_BGM_LIST
+{
+	CREATE_BGM_MAX
+};
+
+//===================================================================================================================================
+//【定数定義】
+//===================================================================================================================================
+static const char *splashBGMPathList[] = { "BGM_Splash.wav" };
+static const char *titleBGMPathList[] = { "BGM_Title.wav" };
+static const char *gameBGMPathList[] = { "BGM_Game.wav" };
+
 //===================================================================================================================================
 //【サウンド(XAudio2)】
 //サウンドのBGMクラス
@@ -44,22 +55,12 @@ public:
 	BGMManager();
 	~BGMManager();
 
-	//変数
-	static const char * const splashBGMPathList[];
-	static const char * const titleBGMPathList[];
-	static const char * const gameBGMPathList[];
-	static int		BGMScene;
-	static float		startTime;
-	static float		currentTime;
-
 	//関数
-	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する
-	void				SetSpeed(void);					//再生速度の設定
-	void				SetSpeedOn(void);				//再生速度の設定(On)
+	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	void	 SetSpeed(void);							//再生速度の設定
 	
 	//debug用
-#ifdef _DEBUG
-	void				outputBGMGUI(void);				//ImGUIへの出力
+#if _DEBUG
+	void	 outputGUI(void)override;				//ImGUIへの出力
 #endif
-
 };

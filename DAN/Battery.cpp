@@ -12,7 +12,7 @@ using namespace itemNS;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Battery::Battery(StaticMesh* _staticMesh, ItemData* _itemData): Item(_staticMesh, _itemData)
+Battery::Battery(StaticMesh* _staticMesh, ItemData _itemData): Item(_staticMesh, _itemData)
 {
 
 }

@@ -1,51 +1,63 @@
-﻿//============================================================================================================================================
-// Document
-//============================================================================================================================================
-// AllocateHierarchy.h
-// HAL東京 GP-12A-332 09 亀岡竣介
-// 2019/09/03
-//============================================================================================================================================
+//=============================================================================
+//
+// �A�j������ [AllocateHierarchy.cpp]
+// Author : HAL���� ���q�
+//
+//=============================================================================
 #pragma once
-#include "Base.h"
-//============================================================================================================================================
-// Class
-// クラス
-//============================================================================================================================================
-// D3DXFrameDerived
-class D3DXFrameDerived : public D3DXFRAME	// "D3DXFRAME"から派生した構造体：各フレームに保存されるアプリ固有の情報を追加できる
-{
-public:
-	D3DXMATRIXA16 combinedTransformationMatrix;
 
-#ifndef _DEBUG
-	void *operator new(size_t index) { return _aligned_malloc(index, 16); }
-#endif
+#include <d3dx9.h>
+#include <stdio.h>
+#include "Base.h"
+
+
+struct D3DXFRAME_DERIVED: public D3DXFRAME
+{
+	D3DXMATRIXA16 CombinedTransformationMatrix;
 };
-// D3DXMeshContainerDerived
-class D3DXMeshContainerDerived : public D3DXMESHCONTAINER	// "D3DXMESHCONTAINER"から派生した構造体：各メッシュと共に、保存されるアプリ固有の情報を追加できる
+
+
+struct D3DXMESHCONTAINER_DERIVED: public D3DXMESHCONTAINER
+{
+	LPDIRECT3DTEXTURE9*  ppTextures;            // �e�N�X�`�����
+
+	// SkinMesh info
+	LPD3DXMESH           pOrigMesh;             // �I���W�i�����b�V��
+
+	LPD3DXATTRIBUTERANGE pAttributeTable;
+	DWORD                BoneNum;					 // �{�[���̐�
+	DWORD                BoneWeightNum;               // �P�̒��_�ɉe�����y�ڂ��d�݂̐�
+	LPD3DXBUFFER         pBoneCombinationBuf;	 // �{�[�����̃o�b�t�@
+	D3DXMATRIX**         ppBoneMatrixPtrs;      // �S�{�[���̃}�g���b�N�X�̃|�C���^�̔z��
+	D3DXMATRIX*          pBoneOffsetMatrices;   // �{�[���̃I�t�Z�b�g�s��
+	DWORD                NumPaletteEntries;     // �p���b�g�T�C�Y
+	bool                 UseSoftwareVP;        
+
+	D3DXMATRIXA16*			g_pBoneMatrices;
+
+};
+
+
+class CAllocateHierarchy: public ID3DXAllocateHierarchy
 {
 public:
-	LPDIRECT3DTEXTURE9* texture;		//	テクスチャ
-	LPD3DXMESH originalMesh;			//	オリジナルメッシュ
-	LPD3DXBUFFER boneCombinationBuffer;	//	ボーン情報のバッファ
-	D3DXMATRIX** boneMatrix;			//	全てのボーンのマトリックスポインタの配列
-	D3DXMATRIX* boneOffsetMatrix;		//	ボーンのオフセットマトリクス
-	DWORD boneMax;						//	ボーンの最大数
-	DWORD boneWeightMax;				//	１つの頂点に影響を及ぼすウェイトの最大数
-	DWORD paletteEntryMax;				//	パレットサイズ
+	STDMETHOD(CreateFrame)(THIS_ LPCSTR Name, LPD3DXFRAME *ppNewFrame);
+	STDMETHOD(CreateMeshContainer)( THIS_ LPCSTR              Name, 
+		CONST D3DXMESHDATA*       pMeshData,
+		CONST D3DXMATERIAL*       pMaterials, 
+		CONST D3DXEFFECTINSTANCE* pEffectInstances, 
+		DWORD                     NumMaterials, 
+		CONST DWORD *             pAdjacency, 
+		LPD3DXSKININFO pSkinInfo, 
+		LPD3DXMESHCONTAINER *ppNewMeshContainer);    
+	STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree);
+	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerBase);
 };
-// AllocateHierarchy
-class AllocateHierarchy : public ID3DXAllocateHierarchy	// フレームとメッシュコンテナを作成するためのカスタムメソッドを持つ"ID3DXAllocateHierarchy"のカスタムバージョン：DirectX SDKサンプルに含まれるボーンの動的カテゴリ( カテゴリの中から使用される )
-{
-private:
-	LPDIRECT3DDEVICE9 device;
-	HRESULT allocateName(LPCSTR _name, LPSTR* _newName);
-	HRESULT createSkinMesh(D3DXMeshContainerDerived* _meshContainer);
-public:
-	AllocateHierarchy(LPDIRECT3DDEVICE9 _device);
-	~AllocateHierarchy(void);
-	STDMETHOD(CreateFrame)(THIS_ LPCSTR _name, LPD3DXFRAME* _newFrame);
-	STDMETHOD(CreateMeshContainer)(THIS_ LPCSTR _name, CONST D3DXMESHDATA* _meshData, CONST D3DXMATERIAL* _material, CONST D3DXEFFECTINSTANCE* _effectInstance, DWORD _materialNumber, CONST DWORD* _adjacency, LPD3DXSKININFO _skinInformation, LPD3DXMESHCONTAINER* _newMeshContainer);
-	STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME _frame);
-	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER _baseMeshContainer);
-};
+
+
+
+
+void DrawFrame( IDirect3DDevice9* pd3dDevice, LPD3DXFRAME pFrame );
+void DrawMeshContainer( IDirect3DDevice9* pd3dDevice, LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase );
+//HRESULT SetupBoneMatrixPointers( LPD3DXFRAME pFrameBase, LPD3DXFRAME pFrameRoot );
+void UpdateFrameMatrices( LPD3DXFRAME pFrameBase, LPD3DXMATRIX pParentMatrix );

@@ -1,5 +1,5 @@
 頂点宣言構造体の中身
-出力元：NavigationMesh.cpp
+出力元：MeshData.cpp
 
 [0]Type : 2
 Usage : 0

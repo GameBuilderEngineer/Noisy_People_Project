@@ -2,7 +2,7 @@
 //【InstancingBillboard.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/27
-// [更新日]2019/10/17
+// [更新日]2019/10/23
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -10,6 +10,7 @@
 //===================================================================================================================================
 #include "InstancingBillboard.h"
 #include "Direct3D9.h"
+#include "ShaderLoader.h"
 #include "Input.h"
 #include <time.h>
 
@@ -19,18 +20,18 @@
 InstancingBillboard::InstancingBillboard()
 {
 	onRender			= false;
-	didGenerate		= false;
+	didGenerate			= false;
 	didDelete			= false;
 	vertexBuffer		= NULL;
-	indexBuffer		= NULL;
+	indexBuffer			= NULL;
 	positionBuffer		= NULL;
 	colorBuffer			= NULL;
 	uvBuffer			= NULL;
 	declation			= NULL;
-	effect					= NULL;
-	position				= NULL;
-	color					= NULL;
-	uv						= NULL;
+	effect				= NULL;
+	position			= NULL;
+	color				= NULL;
+	uv					= NULL;
 	texture				= NULL;
 	device				= getDevice();
 	srand((unsigned int)time(NULL));
@@ -58,6 +59,10 @@ InstancingBillboard::~InstancingBillboard()
 	SAFE_DELETE_ARRAY(color);
 	SAFE_DELETE_ARRAY(uv);
 
+	for (int i = 0; i < instanceNum; i++)
+	{
+		SAFE_DELETE(*instanceList->getValue(i));			//リスト内の実体を削除	
+	}
 	instanceList->terminate();
 	SAFE_DELETE(instanceList);
 }
@@ -65,14 +70,20 @@ InstancingBillboard::~InstancingBillboard()
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
-HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9 _texture)
+HRESULT InstancingBillboard::initialize(LPDIRECT3DTEXTURE9 _texture,int divideU, int divideV)
 {
+	this->divideU = divideU + 1;
+	this->divideV = divideV + 1;
+	unitU = 1.0f/(float)this->divideU;
+	unitV = 1.0f/(float)this->divideV;
+
+
 	//インスタンシングビルボードの頂点定義
 	InstancingBillboardNS::Vertex vertex[4] = {
 		{D3DXVECTOR2(-1.0f,  1.0f),	D3DXVECTOR2(0.0f,0.0f)},
-		{D3DXVECTOR2(1.0f,  1.0f),	D3DXVECTOR2(1.0f,0.0f)},
-		{D3DXVECTOR2(-1.0f, -1.0f),	D3DXVECTOR2(0.0f,1.0f)},
-		{D3DXVECTOR2(1.0f, -1.0f),	D3DXVECTOR2(1.0f,1.0f)},
+		{D3DXVECTOR2(1.0f,  1.0f),	D3DXVECTOR2(unitU,0.0f)},
+		{D3DXVECTOR2(-1.0f, -1.0f),	D3DXVECTOR2(0.0f,unitV)},
+		{D3DXVECTOR2(1.0f, -1.0f),	D3DXVECTOR2(unitU,unitV)},
 	};
 
 	//頂点バッファの作成
@@ -94,7 +105,7 @@ HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[] = {
 		{ 0, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,	0 },	//頂点座標
-		{ 0, sizeof(D3DXVECTOR2),	D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },	//UV
+		{ 0, sizeof(D3DXVECTOR2),				D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },	//UV
 		{ 1, 0,									D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	1 },	//位置
 		{ 2, 0,									D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,			0 },	//カラー
 		{ 3, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	2 },	//相対UV
@@ -105,7 +116,7 @@ HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9
 	device->CreateVertexDeclaration(vertexElement, &declation);
 
 	//シェーダーを設定
-	effect = _effect;
+	effect = *shaderNS::reference(shaderNS::INSTANCE_BILLBOARD);
 	
 	//テクスチャを設定
 	texture = _texture;
@@ -128,13 +139,13 @@ void InstancingBillboard::update(float frameTime)
 	for (int i = 0; i < instanceNum; i++)
 	{
 		(*instanceList->getValue(i))->update(frameTime);		//更新処理
-		deleteInstance(i);														//削除処理
+		deleteInstance(i);										//削除処理
 	}
 
 	//削除もしくは作成を行った場合のメモリ整理
 	if (didDelete || didGenerate)
 	{
-		updateAccessList();	//リストの更新
+		updateAccessList();		//リストの更新
 		updateBuffer();			//バッファの更新
 		updateArray();			//コピー配列の更新
 		didGenerate = false;
@@ -161,17 +172,18 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 
 	//Z深度バッファ
 	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
 
 	//αテスト
 	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	//device->SetRenderState(D3DRS_ALPHAREF, 0x00);
-	//加算合成を行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	// αソースカラーの指定
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//加算合成を行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
@@ -319,6 +331,7 @@ void InstancingBillboard::generateInstance(InstancingBillboardNS::Instance* inst
 void InstancingBillboard::deleteInstance(int i)
 {
 	if ((*instanceList->getValue(i))->lifeTimer <= (*instanceList->getValue(i))->limitTime)return;
+	SAFE_DELETE(*instanceList->getValue(i));			//リスト内の実体を削除
 	instanceList->remove(instanceList->getNode(i));		//リスト内のインスタンスを削除
 	didDelete = true;
 }

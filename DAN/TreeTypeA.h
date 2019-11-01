@@ -2,7 +2,7 @@
 //yTreeTypeA.hz
 // [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
 // [ì¬“ú]2019/10/16
-// [XV“ú]2019/10/16
+// [XV“ú]2019/10/23
 //===================================================================================================================================
 #pragma once
 
@@ -10,15 +10,17 @@
 //yƒCƒ“ƒNƒ‹[ƒhz
 //===================================================================================================================================
 #include "Base.h"
-#include "StaticMeshObject.h"
+#include "StaticMeshRenderer.h"
 
 //===================================================================================================================================
-//yÎƒNƒ‰ƒXz
+//y–Ø‚`ƒNƒ‰ƒXz
 //===================================================================================================================================
 class TreeTypeA :	public Base
 {
 private:
-	StaticMeshObject* renderer;
+	int num;
+	Object* object;
+	StaticMeshRenderer* renderer;
 	bool needUpdate;
 public:
 	TreeTypeA();
@@ -26,6 +28,5 @@ public:
 	void initialize();
 	void update();
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void generate(D3DXVECTOR3 position);
 };
 

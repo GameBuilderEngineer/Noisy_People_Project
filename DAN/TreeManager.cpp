@@ -11,9 +11,21 @@ using namespace treeNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void TreeManager::initialize()
+void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-	treeList.reserve(INITIAL_RESERVE);
+	nextID = 0;								// 次回発行IDを0に初期化
+
+	// 描画オブジェクトの作成
+	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
+	aLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
+	bTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+
+#if 0	// ツリーツールのデータを読み込む
+
+#endif
 }
 
 
@@ -22,13 +34,20 @@ void TreeManager::initialize()
 //=============================================================================
 void TreeManager::uninitialize()
 {
-	for (size_t i = 0; i < treeList.size(); i++)
-	{
-		SAFE_DELETE(treeList[i]);
-	}
+	// 全ツリーオブジェクトを破棄
+	destroyAllTree();
 
+	// ベクターの確保メモリを初期化（メモリアロケータだけに戻す）
 	std::vector<Tree*> temp;
 	treeList.swap(temp);
+
+	// 描画オブジェクトの破棄
+	SAFE_DELETE(aTrunkRenderer);
+	SAFE_DELETE(aLeafRenderer);
+	SAFE_DELETE(bTrunkRenderer);
+	SAFE_DELETE(bLeafRenderer);
+	SAFE_DELETE(cTrunkRenderer);
+	SAFE_DELETE(cLeafRenderer);
 }
 
 
@@ -41,6 +60,13 @@ void TreeManager::update(float frameTime)
 	{
 		treeList[i]->update(frameTime);
 	}
+
+	aTrunkRenderer->update();
+	aLeafRenderer->update();
+	bTrunkRenderer->update();
+	bLeafRenderer->update();
+	cTrunkRenderer->update();
+	cLeafRenderer->update();
 }
 
 
@@ -49,48 +75,134 @@ void TreeManager::update(float frameTime)
 //=============================================================================
 void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	for (size_t i = 0; i < treeList.size(); i++)
-	{
-		treeList[i]->render(view, projection, cameraPosition);
-	}
+	aTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	aLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	cTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	cLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
 //=============================================================================
 // ツリーオブジェクトの作成
 //=============================================================================
-void TreeManager::createTree(TreeData* treeData)
+void TreeManager::createTree(TreeData treeData)
 {
-	switch (treeData->treeType)
+	Tree* tree = new Tree(treeData);	// ツリー作成
+
+	tree->setAttractor(attractorMesh, attractorMatrix);
+
+	// 幹の描画をセット
+	switch (treeData.model)
 	{
-	case ANALOG_TREE:
+	case A_MODEL:
+		aTrunkRenderer->registerObject(tree->getTrunk());
 		break;
 
-	case DIGITAL_TREE:
+	case B_MODEL:
+		bTrunkRenderer->registerObject(tree->getTrunk());
 		break;
 
-	default:
-		treeList.emplace_back(new Tree);
+	case C_MODEL:
+		cTrunkRenderer->registerObject(tree->getTrunk());
 		break;
 	}
 
-	treeList.back()->setDataToTree(treeData);
+	// 葉の描画をセット
+	if (treeData.geenState != GREEN) return;
+	switch (treeData.model)
+	{
+	case A_MODEL:
+		aLeafRenderer->registerObject(tree->getLeaf());
+		break;
+
+	case B_MODEL:
+		bLeafRenderer->registerObject(tree->getLeaf());
+		break;
+
+	case C_MODEL:
+		cLeafRenderer->registerObject(tree->getLeaf());
+		break;
+	}
+
+	treeList.push_back(tree);
 }
 
 
 //=============================================================================
-// ツリーオブジェクトの破棄
+// リーフ描画登録
 //=============================================================================
-void TreeManager::destroyTree(int _id)
+void TreeManager::registerLeafRendering(Object* leaf, int _model)
 {
-	for (size_t i = 0; i < treeList.size(); i++)
+	switch (_model)
 	{
-		if (treeList[i]->getTreeData()->id == _id)
-		{
-			delete treeList[i];
-			treeList.erase(treeList.begin() + i);
-		}
+	case A_MODEL:
+		aLeafRenderer->registerObject(leaf);
+		break;
+
+	case B_MODEL:
+		bLeafRenderer->registerObject(leaf);
+		break;
+
+	case C_MODEL:
+		cLeafRenderer->registerObject(leaf);
+		break;
 	}
+}
+
+
+//=============================================================================
+// リーフ描画解除
+//=============================================================================
+void TreeManager::unRegisterLeafRendering(Object* leaf, int _model)
+{
+	switch (_model)
+	{
+	case A_MODEL:
+		aLeafRenderer->unRegisterObjectByID(leaf->id);
+		break;
+
+	case B_MODEL:
+		aLeafRenderer->unRegisterObjectByID(leaf->id);
+		break;
+
+	case C_MODEL:
+		aLeafRenderer->unRegisterObjectByID(leaf->id);
+		break;
+	}
+}
+
+
+//=============================================================================
+// 全ツリーオブジェクトの破棄
+//=============================================================================
+void TreeManager::destroyAllTree()
+{
+	// 描画全解除
+	aLeafRenderer->allUnRegister();
+	aTrunkRenderer->allUnRegister();
+	bLeafRenderer->allUnRegister();
+	bTrunkRenderer->allUnRegister();
+	cLeafRenderer->allUnRegister();
+	cTrunkRenderer->allUnRegister();
+
+	for (int i = 0; i < treeList.size(); i++)
+	{
+		SAFE_DELETE(treeList[i]);
+	}
+	treeList.clear();
+}
+
+
+//=============================================================================
+// ツリーIDを発行する
+//=============================================================================
+int TreeManager::issueNewTreeID()
+{
+	int ans = nextID;
+	nextID++;
+	return ans;
 }
 
 
@@ -109,24 +221,12 @@ void TreeManager::outputGUI()
 
 		ImGui::Text("numOfTree:%d", Tree::getNumOfTree());
 
-		//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-		//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-		//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-		//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-		//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-		//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-		//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-		//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
-
-		//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-		//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-		//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-		//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-		//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-		//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
-
-		//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
 	}
-
 #endif
 }
+
+
+//=============================================================================
+// Getter
+//=============================================================================
+std::vector<Tree*>& TreeManager::getTreeList(){ return treeList; }
