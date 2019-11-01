@@ -257,12 +257,12 @@ void ITEM_TOOLS::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 came
 //===================================================================================================================================
 //【生成】描画用
 //===================================================================================================================================
-void ITEM_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position, D3DXVECTOR3 dir)
+void ITEM_TOOLS::generate(Object *object, short itemType, D3DXVECTOR3 position, D3DXVECTOR3 dir)
 {
 	object->initialize(&position);
 	object->postureControl(object->axisZ.direction, dir, 1.0f);
 	object->existenceTimer = 1.0f;		// < 0 なら消える
-	renderer[enemyType]->registerObject(object);
+	renderer[itemType]->registerObject(object);
 }
 #endif
 
@@ -350,16 +350,17 @@ void ITEM_TOOLS::ResetRenderer(void)
 //===================================================================================================================================
 //【スタティックメッシュのIDを取得】描画用
 //===================================================================================================================================
-int ITEM_TOOLS::GetStaticMeshID(short enemyType)
+int ITEM_TOOLS::GetStaticMeshID(short itemType)
 {
 	int staticMeshNo = 0;
-	switch (enemyType)
+	switch (itemType)
 	{
 	case itemNS::ITEM_TYPE::BATTERY:
 		staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
 		break;
 	case itemNS::ITEM_TYPE::EXAMPLE:
 		staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
+		break;
 	default:
 		break;
 	}

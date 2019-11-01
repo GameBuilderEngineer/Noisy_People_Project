@@ -90,6 +90,10 @@ void setSoundDirectory(int endpointVoiceId)
 	{
 		strcat(tmporary, "\\04 Sound File\\BGM");
 	}
+	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_S3D)
+	{
+		strcat(tmporary, "\\04 Sound File\\3D");
+	}
 	else
 	{
 		strcat(tmporary, "\\04 Sound File");

@@ -84,7 +84,7 @@ public:
 	void update();											//XV
 	void render(D3DXMATRIX view,							//•`‰æ
 		D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void generate(Object *object, short enemyType,			//ì¬
+	void generate(Object *object, short itemType,			//ì¬
 		D3DXVECTOR3 position, D3DXVECTOR3 dir);
 #endif
 

@@ -41,9 +41,6 @@ private:
 	// スプラッシュSprite
 	SplashSprite* splashSprite;
 
-	//再生パラメータ
-	PLAY_PARAMETERS playParameters[2];
-
 	//エネミーツール
 	ENEMY_TOOLS *enemyTools;
 

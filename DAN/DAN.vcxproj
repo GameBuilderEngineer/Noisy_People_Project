@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="3DSound.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="AIDirector.h" />
     <ClInclude Include="AnalogTree.h" />
@@ -223,7 +224,7 @@
     <ClInclude Include="Tiger.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TmpObject.h" />
-    <ClInclude Include="TreeToools.h" />
+    <ClInclude Include="TreeTools.h" />
     <ClInclude Include="TreeTypeA.h" />
     <ClInclude Include="TreeTypeB.h" />
     <ClInclude Include="Tree.h" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3DSound.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="AIDirector.cpp" />
     <ClCompile Include="AnalogTree.cpp" />
@@ -317,7 +319,7 @@
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TmpObject.cpp" />
-    <ClCompile Include="TreeToools.cpp" />
+    <ClCompile Include="TreeTools.cpp" />
     <ClCompile Include="TreeTypeA.cpp" />
     <ClCompile Include="TreeTypeB.cpp" />
     <ClCompile Include="Tree.cpp" />

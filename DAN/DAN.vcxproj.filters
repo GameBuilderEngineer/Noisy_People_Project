@@ -235,6 +235,9 @@
     <Filter Include="Constant Layer\LinearTreeCell">
       <UniqueIdentifier>{c0a6d1a3-e57e-41d9-a77e-de4fdf678641}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Sound\APO">
+      <UniqueIdentifier>{9d675f58-8269-44bd-bbeb-37ce8eabb979}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -482,9 +485,6 @@
     <ClCompile Include="MapObjectTool.cpp">
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="TreeToools.cpp">
-      <Filter>Tools Layer\Tree</Filter>
-    </ClCompile>
     <ClCompile Include="MapObjectTool.cpp">
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
@@ -508,6 +508,12 @@
     </ClCompile>
     <ClCompile Include="LinearTreeCell.cpp">
       <Filter>Constant Layer\LinearTreeCell</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTools.cpp">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSound.cpp">
+      <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -778,9 +784,6 @@
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="TreeToools.h">
-      <Filter>Tools Layer\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
@@ -802,6 +805,12 @@
     </ClInclude>
     <ClInclude Include="LinearTreeCell.h">
       <Filter>Constant Layer\LinearTreeCell</Filter>
+    </ClInclude>
+	<ClInclude Include="TreeTools.h">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSound.h">
+      <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

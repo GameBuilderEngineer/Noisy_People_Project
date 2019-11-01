@@ -1,68 +1,76 @@
 //===================================================================================================================================
-//【SE.h】
+//【3DSound.h】
 // [作成者]HAL東京GP12A332 16 蔡 友剛
-// [作成日]2019/10/04
-// [更新日]2019/10/04
+// [作成日]2019/10/29
+// [更新日]2019/10/29
 //===================================================================================================================================
 #pragma once
-
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
+#include "GameMaster.h"
 #include "LinkedList.h"
 #include "SoundBase.h"
 
 //===================================================================================================================================
 //【列挙型定数】
 //===================================================================================================================================
-enum SPLASH_SE_LIST
+enum SPLASH_S3D_LIST
 {
-	SPLASH_SE_01,
-	SPLASH_SE_MAX
+	SPLASH_S3D_MAX
 };
 
-enum TITLE_SE_LIST
+enum TITLE_S3D_LIST
 {
-	TITLE_SE_01,
-	TITLE_SE_02,
-	TITLE_SE_MAX
+	TITLE_S3D_MAX
 };
 
-enum GAME_SE_LIST
+enum GAME_S3D_LIST
 {
-	GAME_SE_01,
-	GAME_SE_02,
-	GAME_SE_MAX
+	GAME_S3D_01,
+	GAME_S3D_02,
+	GAME_S3D_03,
+	GAME_S3D_MAX
 };
 
-enum CREATE_SE_LIST
+enum CREATE_S3D_LIST
 {
-	CREATE_SE_MAX
+	CREATE_S3D_MAX
 };
 
 //===================================================================================================================================
 //【定数定義】
 //===================================================================================================================================
-static const char *splashSEPathList[] = { "SE_Attack.wav" };
-static const char *titleSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
-static const char *gameSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
+static const char *gameS3DPathList[] = { "3D_ADD_TREE01.wav","3D_Enemy_Walk00.wav","3D_Enemy_Walk01.wav" };
 
 //===================================================================================================================================
 //【サウンド(XAudio2)】
-//サウンドのSEクラス
+//サウンドの3DSoundクラス
 //===================================================================================================================================
-class SEManager : public SoundBase
+class S3DManager:public SoundBase
 {
 public:
-	SEManager() {};
-	~SEManager() {};
+	S3DManager();
+	~S3DManager();
 
-	//関数
-	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	//基本機能
+	void	 SwitchAudioBuffer(int scene)override;							//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	void SetVolume(const PLAY_PARAMETERS playParameters, float volume);	//ボリューム
 
-		//debug用
+	//debug用
 #if _DEBUG
 	void	 outputGUI(void)override;				//ImGUIへの出力
+#endif
+
+private:
+#if(_MSC_VER >= GAME_MSC_VER)
+	//ミッドポイントボイス
+	IXAudio2SubmixVoice		*MidpointVoice[gameMasterNS::PLAYER_NUM];	//XAudio2 Midpoint Voice[2 player]
+	XAUDIO2_VOICE_SENDS		MidSendList[gameMasterNS::PLAYER_NUM];		//XAudio2 Send List(P1/P2 Midpoint Voice)
+	XAUDIO2_SEND_DESCRIPTOR	SendDescriptor[gameMasterNS::PLAYER_NUM];	//XAudio2 Send Descriptor(BGM/SE Endpoint Voice)
+
+	//ソースボイスの作成
+	void MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *listBuffer)override;
 #endif
 };

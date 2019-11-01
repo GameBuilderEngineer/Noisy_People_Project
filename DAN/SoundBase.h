@@ -23,6 +23,9 @@
 #define CHUNK_FMT				("fmt ")		//fmtのチャンク
 #define CHUNK_DATA				("data")		//dataのチャンク
 
+//3D
+#define DISTANCE_MAX				(100)		//偽サウンドコン
+
 //===================================================================================================================================
 //【構造体】
 //===================================================================================================================================
@@ -65,7 +68,7 @@ typedef struct	// バッファ構造体
 {
 	int				soundId;
 	XAUDIO2_BUFFER	buffer;
-	WAV_FILE		wavFile;
+	WAV_FILE			wavFile;
 }LIST_BUFFER;
 #endif
 
@@ -100,22 +103,25 @@ typedef enum //フィルターの種類
 
 typedef struct //再生パラメータ
 {
-	int								endpointVoiceId;		//エンドポイントボイスID
-	int								soundId;				//サウンドID
-	bool							loop;				//ループ
-	float							speed;				//再生速度
-	bool							filterFlag;			//卍フィルター卍
-	FILTER_PARAMETERS				filterParameters;	//卍フィルター卍
+	int						endpointVoiceId;		//エンドポイントボイスID
+	int						soundId;				//サウンドID
+	bool						loop;				//ループ
+	float					speed;				//再生速度
+	bool						S3D;					//3D?
+	int						playerID;			//プレイヤーID
+	bool						filterFlag;			//卍フィルター卍
+	FILTER_PARAMETERS		filterParameters;	//卍フィルター卍
+	long						voiceID;				//ボイスID
 }PLAY_PARAMETERS;
 
 #if(_MSC_VER >= GAME_MSC_VER)
 typedef struct //曲のパラメータ
 {
-	IXAudio2SourceVoice *SourceVoice;	//ソースボイス
-	PLAY_PARAMETERS		playParameters;	//再生パラメータ
-	bool					isSpeed;			//再生速度変更した?
-	bool					isPlaying;		//再生中?
-	long					stopPoint;		//停止位置
+	IXAudio2SourceVoice		*SourceVoice;	//ソースボイス
+	PLAY_PARAMETERS			playParameters;	//再生パラメータ
+	bool						isSpeed;			//再生速度変更した?
+	bool						isPlaying;		//再生中?
+	long						stopPoint;		//停止位置
 }SOUND_PARAMETERS;
 #endif
 
@@ -129,30 +135,40 @@ public:
 	SoundBase();
 	~SoundBase();
 
-	void	 playSound(const PLAY_PARAMETERS playParameters);	//再生
-	void	 stopSound(const PLAY_PARAMETERS playParameters);	//停止
-	void	 updateSound(void);										//更新処理
+	//サウンド機能
+	void playSound(PLAY_PARAMETERS *playParameters);	//再生
+	void stopSound(const PLAY_PARAMETERS playParameters);	//停止
+	void updateSound(void);									//更新
+	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	void uninitSoundStop(void);								//停止(全部のサウンド)
 
 protected:
-	static WAV_FILE	LoadWavChunk(FILE *fp);								//WAVファイルの読み込み処理
 #if(_MSC_VER >= GAME_MSC_VER)
-	void				MakeSourceVoice(const PLAY_PARAMETERS playParameters, LIST_BUFFER *listBuffer);
-#endif
-	void				uninitSoundStop(void);								//停止(全部のサウンド)
-#if(_MSC_VER >= GAME_MSC_VER)
-	LIST_BUFFER		*GetBuffer(int endpointVoiceId, int soundId, bool loop);
+	//エンドポイントボイス
+	IXAudio2SubmixVoice			*EndpointVoice;				//XAudio2 Submix Vice(Endpoint Voice)
+	XAUDIO2_SEND_DESCRIPTOR		SendDescriptor;				//XAudio2 Send Descriptor(BGM/SE Endpoint Voice)
+	XAUDIO2_VOICE_SENDS			SendList;					//XAudio2 Send List(BGM/SE Endpoint Voice)
+
+	//バッファ管理
+	LIST_BUFFER	*GetBuffer(int endpointVoiceId, int soundId, bool loop);
+	virtual void MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *listBuffer);
 #endif
 
-	//バッファリスト
+	//基本機能(読み込み・停止)
+	static WAV_FILE	LoadWavChunk(FILE *fp);					//WAVファイルの読み込み処理
+
+	//リスト
 #if(_MSC_VER >= GAME_MSC_VER)
-	static LIST_BUFFER *SEBufferList;
-	static int			SEBufferMax;
-	static LIST_BUFFER *BGMBufferList;
-	static int			BGMBufferMax;
+	LinkedList <SOUND_PARAMETERS>*soundParametersList;		//パラーメータリスト
+	long			voiceIDCnt;									//ボイスIDカウンター
+	LIST_BUFFER *bufferList;									//バッファリスト
+	int			bufferMax;									//バッファの最大数
 #endif
 
-	//ボイスリスト
-#if(_MSC_VER >= GAME_MSC_VER)
-	LinkedList <SOUND_PARAMETERS>*soundParametersList;
+	//debug
+#if _DEBUG
+	virtual	void	 outputGUI(void) {};							//ImGUIへの出力
+	int	scene;												//シーン
 #endif
+
 };

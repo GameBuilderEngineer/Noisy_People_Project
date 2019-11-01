@@ -17,14 +17,16 @@ namespace treeNS
 	enum TREE_TYPE
 	{
 		ANALOG_TREE,
-		DIGITAL_TREE
+		DIGITAL_TREE,
+		TREE_TYPE_MAX
 	};
 
 	// 緑化状態
 	enum GREEN_STATE
 	{
 		GREEN,
-		DEAD
+		DEAD,
+		GREEN_STATE_MAX
 	};
 
 	// サイズ
@@ -32,7 +34,8 @@ namespace treeNS
 	{
 		STANDARD,
 		LARGE,
-		VERY_LARGE
+		VERY_LARGE,
+		TREE_SIZE_MAX
 	};
 
 	// モデル

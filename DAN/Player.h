@@ -96,7 +96,8 @@ namespace playerNS{
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		D3DXVECTOR3(-35, 10, 0),		//1P
-		D3DXVECTOR3(35, 10, 0)			//2P
+		//D3DXVECTOR3(35, 10, 0)			//2P
+		D3DXVECTOR3(-35, 10, 0)			//2P
 	};
 
 	// StatusParameter
@@ -169,10 +170,6 @@ private:
 	LPD3DXMESH					attractorMesh;					//重力（引力）発生メッシュ
 	D3DXMATRIX*					attractorMatrix;				//重力（引力）発生オブジェクトマトリックス
 
-	//サウンドGUI
-	bool						onSound;						//サウンドGUIのフラグ
-	int							volume;							//ボリューム
-
 	// 汎用
 	LPDIRECT3DDEVICE9			device;							// Direct3Dデバイス
 	Input*						input;							// 入力系
@@ -211,7 +208,6 @@ public:
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI
-	void outputSoundGUI();										// サウンドGUIの中身
 	void reset();												// リセット
 
 	//setter
