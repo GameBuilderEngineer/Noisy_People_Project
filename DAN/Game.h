@@ -29,6 +29,7 @@
 
 #include "SpriteGauge.h"
 #include "Battery.h"
+#include "telop.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
@@ -52,6 +53,9 @@ namespace gameNS
 
 	//ƒJƒƒ‰‘Š‘Î’‹ˆÊ’u
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,5.0f,0);
+
+
+	
 
 }
 
