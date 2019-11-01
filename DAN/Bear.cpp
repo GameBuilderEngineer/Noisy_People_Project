@@ -28,6 +28,7 @@ Bear::~Bear()
 //=============================================================================
 void Bear::update(float frameTime)
 {
+	Enemy::preprocess();
 	Enemy::update(frameTime);
 }
 

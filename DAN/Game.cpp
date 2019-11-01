@@ -61,25 +61,9 @@ Game::~Game()
 //===================================================================================================================================
 void Game::initialize() {
 
-	//-----中込テストゾーンその１---------------
-	//enemy = new Enemy;
-	//camera = new Camera;
-
-	//camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//camera->setTarget(enemy->getPosition());
-	//camera->setTargetX(&enemy->getAxisX()->direction);
-	//camera->setTargetY(&enemy->getAxisY()->direction);
-	//camera->setTargetZ(&enemy->getAxisZ()->direction);
-	//camera->setRelative(CAMERA_RELATIVE_QUATERNION);
-	//camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	//camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
-	//camera->setUpVector(D3DXVECTOR3(0, 1, 0));
-	//camera->setFieldOfView((D3DX_PI / 18) * 10);
-	//-------------------------------------------
-
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -143,8 +127,8 @@ void Game::initialize() {
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(
 		camera[0].fieldOfView, 
-		camera[0].windowWidth, 
-		camera[0].windowHeight, 
+		(float)camera[0].windowWidth, 
+		(float)camera[0].windowHeight, 
 		camera[0].nearZ, 
 		camera[0].farZ);
 
@@ -173,12 +157,6 @@ void Game::initialize() {
 	//エフェクト（インスタンシング）テスト
 	testEffect = new TestEffect();
 
-	//-----中込テストゾーンその2---------------
-	//enemy->setDebugEnvironment();
-	//enemy->setCamera(camera);	//カメラのセット
-	//enemy->configurationGravityWithRay(testField->getPosition(), testField->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
-	//-----------------------------------------
-
 	// エネミー
 	enemyManager = new EnemyManager;
 	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
@@ -198,13 +176,16 @@ void Game::initialize() {
 	// AI
 	aiDirector = new AIDirector;
 	aiDirector->initialize();
-	naviAI = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
-	naviAI->initialize();
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	naviMesh->initialize();
 
 	//Sprite実験
 	spriteGauge = new SpriteGauge;
 	spriteGauge->initialize();
 
+#ifdef _DEBUG
+	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+#endif
 }
 
 //===================================================================================================================================
@@ -264,7 +245,6 @@ void Game::update(float _frameTime) {
 
 	// アイテムの更新
 	itemManager->update(frameTime);
-
 
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
@@ -415,7 +395,6 @@ void Game::render3D(Camera currentCamera) {
 
 	// エネミーの描画
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//enemy->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -426,10 +405,11 @@ void Game::render3D(Camera currentCamera) {
 	//エフェクト（インスタンシング）テスト
 	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-#ifdef DEBUG_NAVIMESH
-	// ナビゲーションメッシュの描画
-	naviAI->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+#ifdef _DEBUG
+#if 1	// ナビゲーションメッシュのデバッグ描画
+	naviMesh->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
+#endif //_DEBUG
 }
 
 //===================================================================================================================================
@@ -496,12 +476,11 @@ void Game::createGUI()
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 
 	player->outputGUI();			//プレイヤー
-	//enemy->outputGUI();			//エネミー
+	enemyManager->outputGUI();		//エネミー
 	itemManager->outputGUI();		// アイテムマネージャ
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
-	naviAI->outputGUI();			//ナビゲーションAI
-
+	naviMesh->outputGUI();			//ナビゲーションAI
 }
 #endif // _DEBUG
 
@@ -509,6 +488,7 @@ void Game::createGUI()
 //===================================================================================================================================
 //【なんかいろいろテストするところ】
 //===================================================================================================================================
+#ifdef _DEBUG
 void Game::test()
 {
 	// アイテムマネージャのテスト
@@ -530,56 +510,7 @@ void Game::test()
 		//itemManager->destroyItem(3);
 	}
 
-	//エネミーマネージャのテスト
-	if (input->wasKeyPressed('8'))	// 作成
-	{
-		enemyNS::ENEMYSET tinko =
-		{
-			enemyManager->issueNewEnemyID(),
-			enemyNS::WOLF,
-			enemyNS::CHASE,
-			*player->getPosition(),
-			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-		};
-		enemyNS::EnemyData* p = enemyManager->createEnemyData(tinko);
-		enemyManager->createEnemy(p);
-	}
-
-	if (input->wasKeyPressed('7'))	// 全破棄
-	{
-		enemyManager->destroyAllEnemy();
-		enemyManager->destroyAllEnemyData();
-	}
-	if (input->wasKeyPressed('6'))	// 0-50（ID）までランダムに破棄
-	{
-		//enemyManager->destroyEnemy(5);
-		//enemyManager->destroyEnemyData(5);
-
-		static bool rec[50] = { false };
-		for (int i = 0; i < 50; i++)
-		{
-			int n = rand() % 50;
-			if (rec[n] == false)
-			{
-				rec[n] = true;
-				enemyManager->destroyEnemy(n);
-				enemyManager->destroyEnemyData(n);
-				break;
-			}
-		}
-	}
-
-	//enemyNS::ENEMYSET temp =
-	//{
-	//	enemyManager->issueNewEnemyID(),
-	//	enemyNS::WOLF,
-	//	enemyNS::CHASE,
-	//	D3DXVECTOR3(),
-	//	D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-	//};
-
-
-
+	// デバッグエネミーで'7','8'使用中
 
 	// ツリーマネージャのテスト
 	if (input->wasKeyPressed('5'))	// 作成
@@ -600,3 +531,4 @@ void Game::test()
 		treeManager->destroyAllTree();
 	}
 }
+#endif // _DEBUG

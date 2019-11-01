@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Base.h"
+#include "Camera.h"
+#include "Player.h"
 #include <vector>
 #include "StaticMeshRenderer.h"
 #include "LinkedList.h"
@@ -60,4 +62,14 @@ public:
 	LinkedList<enemyNS::EnemyData>* getEnemyDataList();
 	std::vector<Enemy*>& getEnemyList();
 	int getNextID();
+
+#ifdef _DEBUG
+	Camera* camera;
+	Player* player;
+	void setDebugEnvironment(Camera* _camera, Player* _player)
+	{
+		camera = _camera;
+		player = _player;
+	}
+#endif
 };

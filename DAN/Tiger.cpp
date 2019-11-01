@@ -28,6 +28,7 @@ Tiger::~Tiger()
 //=============================================================================
 void Tiger::update(float frameTime)
 {
+	Enemy::preprocess();
 	Enemy::update(frameTime);
 }
 

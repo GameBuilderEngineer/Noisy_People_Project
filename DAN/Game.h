@@ -31,6 +31,7 @@
 
 #include "Sound.h"
 #include "SoundBase.h"
+
 //#include "GameMaster.h"
 //#include "PointSprite.h"
 //#include "Object.h"
@@ -48,8 +49,7 @@ namespace gameNS
 	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,5.0f,5.0f,0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,5.0f,0);
-
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0,2.0f,0);
 }
 
 //===================================================================================================================================
@@ -74,14 +74,13 @@ private:
 	TestEffect*				testEffect;			//インスタンシングビルボードテスト
 
 	EnemyManager*			enemyManager;		// エネミーマネージャー
-	Enemy*					enemy;				// エネミー
 	TreeManager*			treeManager;		// ツリーマネージャー
 	ItemManager*			itemManager;		// アイテムマネージャー
 
 	Telop*					telop;				// テロップ
 
 	AIDirector*				aiDirector;			// AI
-	NavigationMesh*			naviAI;				// naviAI
+	NavigationMesh*			naviMesh;			// ナビゲーションメッシュ
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
@@ -114,9 +113,6 @@ public:
 //===================================================================================================================================
 #ifdef _DEBUG
 
-#if 1	// ここを1でナビメッシュデバッグモード
-#define DEBUG_NAVIMESH
-#endif
 
 
 #endif// _DEBUG

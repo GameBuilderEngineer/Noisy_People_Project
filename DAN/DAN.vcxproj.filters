@@ -493,6 +493,9 @@
     </ClCompile>
     <ClCompile Include="LinearTreeCell.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="PathFollowing.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -780,6 +783,9 @@
     </ClInclude>
     <ClInclude Include="LinearTreeCell.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="PathFollowing.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

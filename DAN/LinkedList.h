@@ -52,7 +52,7 @@ public:
 		head = new Node<T>;
 		head->next = head;			//先頭ダミーノードの次ノードは自身
 		head->prev = head;			//先頭ダミーノードの前ノードは自身
-		current = head;					//初期着目ノードは先頭ダミーノード
+		current = head;				//初期着目ノードは先頭ダミーノード
 		nodeNum = 0;
 	}
 

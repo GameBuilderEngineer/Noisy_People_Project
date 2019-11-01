@@ -179,6 +179,7 @@
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="OperationGenerator.h" />
+    <ClInclude Include="PathFollowing.h" />
     <ClInclude Include="ResultUI.h" />
     <ClInclude Include="SE.h" />
     <ClInclude Include="Sensor.h" />
@@ -286,6 +287,7 @@
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OperationGenerator.cpp" />
+    <ClCompile Include="PathFollowing.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
