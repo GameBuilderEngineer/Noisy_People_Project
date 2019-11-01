@@ -26,16 +26,13 @@
 #include "ItemManager.h"
 #include "Telop.h"
 #include "Sky.h"
-
 #include "SpriteGauge.h"
 #include "Battery.h"
 #include "telop.h"
-
 #include "Sound.h"
 #include "SoundBase.h"
-
 #include "LinearTreeCell.h"
-
+#include "movep.h"
 //#include "PointSprite.h"
 //#include "Object.h"
 //#include "Text.h"
@@ -79,6 +76,9 @@ private:
 	TreeTypeB*						treeB;				//木B
 	Stone*							stone;				//石
 	Sky*							sky;				//スカイドーム
+
+	StaticMeshRenderer*		MoveP;
+	MOVEP*					MoveP1;
 
 	TestEffect*						testEffect;			//インスタンシングビルボードテスト
 	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル

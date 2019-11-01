@@ -519,6 +519,19 @@
 	<ClCompile Include="PathFollowing.cpp">
       <Filter>Game Layer\NaviAI</Filter>
     </ClCompile>
+	    <ClCompile Include="AllocateHierarchy.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DXAnimation.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="movep.cpp">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionEventSeting.cpp">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClCompile>
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -820,7 +833,18 @@
 	<ClInclude Include="PathFollowing.h">
       <Filter>Game Layer\NaviAI</Filter>
     </ClInclude>
-
+	    <ClInclude Include="AllocateHierarchy.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DXAnimation.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="movep.h">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionEventSeting.h">
+      <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

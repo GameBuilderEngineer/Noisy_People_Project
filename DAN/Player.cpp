@@ -23,7 +23,7 @@ using namespace playerNS;
 //===================================================================================================================================
 Player::Player() 
 {
-	Object::initialize(&D3DXVECTOR3(0,0,0));
+	Object::initialize(&D3DXVECTOR3(0,10.0f,0));
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
 
 	onGravity			= true;
