@@ -3,7 +3,7 @@
 //// Author : 新里　将士
 //// 作成開始日 : 2019/10/31
 ////-----------------------------------------------------------------------------
-//#pragma once
+#pragma once
 //#include "Telop.h"
 //
 ////=============================================================================
@@ -26,8 +26,8 @@
 //	};
 //}
 //
-//class TelopManager
-//{
+class TelopManager
+{
 //private:
 //	Telop* telop[telopManagerNS::MAX_TELOP];
 //public:
@@ -38,5 +38,5 @@
 //	void update();
 //	void render();
 //	void play(int type);
-//};
+};
 //

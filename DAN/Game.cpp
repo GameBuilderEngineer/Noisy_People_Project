@@ -67,7 +67,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -171,7 +171,7 @@ void Game::initialize() {
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), player);
 
 	// ツリー
 	treeManager = new TreeManager;
@@ -187,7 +187,7 @@ void Game::initialize() {
 
 	// AI
 	aiDirector = new AIDirector;
-	aiDirector->initialize();
+	aiDirector->initialize(gameMaster, player, enemyManager, treeManager, itemManager, NULL);
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviMesh->initialize();
 
@@ -266,7 +266,7 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-		enemyManager->footsteps(*player[i].getPosition(), i);		//足音
+		//enemyManager->footsteps(*player[i].getPosition(), i);		//足音
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -417,14 +417,14 @@ void Game::render3D(Camera currentCamera) {
 	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
 		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//木の描画
-	deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//木Aの描画
-	treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//木Bの描画
-	treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//石の描画
-	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////木の描画
+	//deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////木Aの描画
+	//treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////木Bの描画
+	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////石の描画
+	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//スカイドームの描画
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -451,23 +451,23 @@ void Game::render3D(Camera currentCamera) {
 	//4分木空間分割のライン描画
 	//linear4TreeManager->render();
 	//8分木空間分割のライン描画
-	linear8TreeManager->render();
-	Ray ray;
-	ray.color = D3DXCOLOR(255, 255, 0, 255);
-	Object** root = collisionList->getRoot();
-	Object* tmp1 = NULL;
-	Object* tmp2 = NULL;
-	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
-	float length = 0;
-	for (int i = 0; i < collisionNum; i++)
-	{
-		tmp1 = root[i * 2];
-		tmp2 = root[i * 2 + 1];
+	//linear8TreeManager->render();
+	//Ray ray;
+	//ray.color = D3DXCOLOR(255, 255, 0, 255);
+	//Object** root = collisionList->getRoot();
+	//Object* tmp1 = NULL;
+	//Object* tmp2 = NULL;
+	//D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	//float length = 0;
+	//for (int i = 0; i < collisionNum; i++)
+	//{
+	//	tmp1 = root[i * 2];
+	//	tmp2 = root[i * 2 + 1];
 
-		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
-		ray.initialize(tmp1->position, direction);
-		ray.render(length);
-	}
+	//	length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+	//	ray.initialize(tmp1->position, direction);
+	//	ray.render(length);
+	//}
 #endif
 
 #ifdef _DEBUG

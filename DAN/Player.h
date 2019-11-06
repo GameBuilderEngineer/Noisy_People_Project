@@ -105,8 +105,9 @@ namespace playerNS{
 
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
-		D3DXVECTOR3(-35, 10, 0),		//1P
-		D3DXVECTOR3(35, 10, 0)			//2P
+		D3DXVECTOR3(-115, 40, 0),		//1P
+		//D3DXVECTOR3(35, 10, 0)			//2P
+		D3DXVECTOR3(-35, 10, 0)			//2P
 	};
 
 	// StatusParameter
@@ -259,4 +260,7 @@ public:
 	PlayerTable*	getInfomation();							//プレイヤー情報取得
 	D3DXVECTOR3* getCameraGaze();							//カメラ注視ポジション
 
+	D3DXVECTOR3* getCentralPosition();							//中心座標の取得
+	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
+	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
 };

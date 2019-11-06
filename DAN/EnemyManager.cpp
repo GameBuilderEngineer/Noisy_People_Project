@@ -13,47 +13,59 @@ using namespace enemyNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
+void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
+	D3DXMATRIX* _attractorMatrix, Player* _player)
 {
 	nextID = 0;								// 次回発行IDを0に初期化
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
 	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 
-	// 接地フィールド情報をセット
+	// 接地フィールドとプレイヤーをセット
 	attractorMesh = _attractorMesh;
 	attractorMatrix = _attractorMatrix;
+	player = _player;
 
 	// 描画オブジェクトの作成
 	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::ENEMY_01));
 	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON));
 	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10));
 
+	// チュートリアルシーンでの初期化処理
+	if (_sceneName == "Scene -Tutorial-")
+	{
+
+	}
+
+	// ゲームシーンでの初期化処理
+	if (_sceneName == "Scene -Game-")
+	{
 #if 1	// エネミーツールのデータを読み込む
-	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-	playParameters = new PLAY_PARAMETERS[enemyTools->GetEnemyMax()*gameMasterNS::PLAYER_NUM];
-	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-	{
-		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+		ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+		playParameters = new PLAY_PARAMETERS[enemyTools->GetEnemyMax()*gameMasterNS::PLAYER_NUM];
+		for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 		{
-			//3Dサウンド
-			playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, /*GAME_S3D_LIST::GAME_S3D_01*/j, true ,NULL,true,j };
-			SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
-		}
+			for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+			{
+				//3Dサウンド
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, /*GAME_S3D_LIST::GAME_S3D_01*/j, true ,NULL,true,j };
+				SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
+			}
 
-		createEnemyData(enemyTools->GetEnemySet(i));
-	}
-	SAFE_DELETE(enemyTools);
+			createEnemyData(enemyTools->GetEnemySet(i));
+		}
+		SAFE_DELETE(enemyTools);
 #endif
 
-#if 1	// エネミーオブジェクトをツールデータを元に作成する
-	for (size_t i = 0; i < enemyDataList.nodeNum; i++)
-	{
-		if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
+#if 0	// エネミーオブジェクトをツールデータを元に作成する
+		for (size_t i = 0; i < enemyDataList.nodeNum; i++)
 		{
-			createEnemy(enemyDataList.getValue(i));
+			if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
+			{
+				createEnemy(enemyDataList.getValue(i));
+			}
 		}
-	}
 #endif
+	}
 }
 
 
@@ -78,6 +90,7 @@ void EnemyManager::uninitialize()
 	SAFE_DELETE(bearRenderer);
 }
 
+
 //=============================================================================
 // 更新処理
 //=============================================================================
@@ -87,16 +100,16 @@ void EnemyManager::update(float frameTime)
 	{
 		enemyList[i]->update(frameTime);
 
-		// 撃退したエネミーオブジェクトを破棄する
+		// 撃退したエネミーオブジェクトを破棄する●これダメ
 		if (enemyList[i]->getEnemyData()->isAlive == false)
 		{
 			destroyEnemy(enemyList[i]->getEnemyData()->enemyID);
 		}
 	}
+
 	wolfRenderer->update();
 	tigerRenderer->update();
 	bearRenderer->update();
-
 }
 
 
@@ -108,6 +121,31 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	wolfRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	tigerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	bearRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+
+#ifdef _DEBUG
+	for (size_t i = 0; i < enemyList.size(); i++)
+	{
+		// バウンディングスフィアを描画
+#ifdef RENDER_SPHERE_COLLIDER
+		enemyList[i]->getSphereCollider()->render(*enemyList[i]->getCentralMatrixWorld());
+#endif
+		// 6軸を描画
+#ifdef RENDER_SIX_AXIS
+		enemyList[i]->debugRender();
+#endif
+		// デバッグセンサーを描画
+#ifdef RENDER_SENSOR
+		for (int k = 0; k < 4; k++)
+		{
+			enemyList[i]->eyeAngleRay[k].render(VISIBLE_DISTANCE[enemyList[i]->getEnemyData()->type]);
+		}
+		float len = D3DXVec3Length(&(*player[0].getCentralPosition() - *enemyList[i]->getCentralPosition()));
+		enemyList[i]->gazePlayer.render(len);
+		enemyList[i]->hearingSphere[0].render(*enemyList[i]->getCentralMatrixWorld());
+		enemyList[i]->hearingSphere[1].render(*enemyList[i]->getCentralMatrixWorld());
+#endif
+	}
+#endif// _DEBUG
 }
 
 
@@ -145,25 +183,23 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	{
 	case WOLF:
 		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::ENEMY_01), enemyData);
-		enemy->setAttractor(attractorMesh, attractorMatrix);
-		enemyList.emplace_back(enemy);
 		wolfRenderer->registerObject(enemy);
 		break;
 
 	case TIGER:
 		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON), enemyData);
-		enemy->setAttractor(attractorMesh, attractorMatrix);
-		enemyList.emplace_back(enemy);
 		tigerRenderer->registerObject(enemy);
 		break;
 
 	case BEAR:
 		enemy = new Bear(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10), enemyData);
-		enemy->setAttractor(attractorMesh, attractorMatrix);
-		enemyList.emplace_back(enemy);
 		bearRenderer->registerObject(enemy);
 		break;
 	}
+
+	enemy->setAttractor(attractorMesh, attractorMatrix);
+	enemy->setPlayer(player);
+	enemyList.emplace_back(enemy);
 }
 
 
@@ -282,6 +318,20 @@ void EnemyManager::assertDestructionOrder()
 
 
 //=============================================================================
+// エネミーデータを探す
+//=============================================================================
+enemyNS::EnemyData* EnemyManager::findEnemyData(int _enemyID)
+{
+	for (int i = 0; i < enemyDataList.nodeNum; i++)
+	{
+		if (enemyDataList.getValue(i)->enemyID == _enemyID)
+		{
+			return enemyDataList.getValue(i);
+		}
+	}
+}
+
+//=============================================================================
 // エネミーIDを発行する
 //=============================================================================
 int EnemyManager::issueNewEnemyID()
@@ -318,6 +368,16 @@ void EnemyManager::outputGUI()
 		ImGui::Checkbox("Create Debug Enemy", &createDebugEnemy);
 		ImGui::Checkbox("Return Player", &returnPlayer);
 		ImGui::Checkbox("Delete All Enemy", &destroyAllFlag);
+
+		// デバッグエネミー
+		for (size_t i = 0; i < enemyList.size(); i++)
+		{
+			if (enemyList[i]->getEnemyID() == Enemy::debugEnemyID)
+			{
+				//ImGui::Text("horizontalAngle:%f\n", enemyList[i]->horizontalAngle);
+				//ImGui::Text("verticalAngle:%f\n", enemyList[i]->verticalAngle);
+			}
+		}
 	}
 
 	if (createFlag)
@@ -326,7 +386,7 @@ void EnemyManager::outputGUI()
 		{
 			issueNewEnemyID(),
 			enemyNS::WOLF,
-			enemyNS::CHASE,
+			stateMachineNS::CHASE,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 		};
@@ -336,15 +396,18 @@ void EnemyManager::outputGUI()
 
 	if (createDebugEnemy)
 	{
-		Enemy* debugEnemy = getEnemyList().back();
-		debugEnemy->debugEnemyID = debugEnemy->getEnemyID();
-		camera->setTarget(debugEnemy->getPosition());
-		camera->setTargetX(&debugEnemy->getAxisX()->direction);
-		camera->setTargetY(&debugEnemy->getAxisY()->direction);
-		camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
-		debugEnemy->setDebugEnvironment();
-		debugEnemy->setCamera(&camera[0]);
-		debugEnemy->setDebugEnvironment();
+		if (getEnemyList().empty() == false)
+		{
+			Enemy* debugEnemy = getEnemyList().back();
+			debugEnemy->debugEnemyID = debugEnemy->getEnemyID();
+			camera->setTarget(debugEnemy->getPosition());
+			camera->setTargetX(&debugEnemy->getAxisX()->direction);
+			camera->setTargetY(&debugEnemy->getAxisY()->direction);
+			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
+			debugEnemy->setDebugEnvironment();
+			debugEnemy->setCamera(&camera[0]);
+			debugEnemy->setDebugEnvironment();
+		}
 	}
 
 	if (returnPlayer)
@@ -390,6 +453,7 @@ void EnemyManager::relocateEnemyAccordingToFile()
 	}
 }
 
+
 //=============================================================================
 // 終了処理(サウンド)
 //=============================================================================
@@ -399,6 +463,7 @@ void EnemyManager::uninitializeSound()
 
 	SAFE_DELETE_ARRAY(playParameters);
 }
+
 
 //=============================================================================
 // 足音の処理
@@ -417,6 +482,7 @@ void EnemyManager::footsteps(D3DXVECTOR3 playerPos, int playerID)
 		SoundInterface::S3D->SetVolume(playParameters[(i*gameMasterNS::PLAYER_NUM) + playerID], volume);
 	}
 }
+
 
 //=============================================================================
 // Getter

@@ -7,6 +7,7 @@
 #include "EnemyTools.h"
 #include "ImguiManager.h"
 
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -62,7 +63,7 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 	//エネミー情報
 	EnemyListboxCurrent = 0;
 	EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
-	EnemyListboxState = enemyNS::ENEMY_STATE::CHASE;
+	EnemyListboxState = stateMachineNS::ENEMY_STATE::CHASE;
 #endif
 }
 
@@ -143,7 +144,7 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 
 		//エネミーの状態
 		const char* listboxEnemyState[] = { "CHASE", "PATROL", "REST","DIE","DEAD" };
-		ImGui::ListBox("Enemy State", &EnemyListboxState, listboxEnemyState, enemyNS::ENEMY_STATE::STATE_MAX);
+		ImGui::ListBox("Enemy State", &EnemyListboxState, listboxEnemyState, stateMachineNS::ENEMY_STATE::STATE_MAX);
 
 		//エネミーの情報
 		if (enemyFile.enmy.enemyMax != NULL)

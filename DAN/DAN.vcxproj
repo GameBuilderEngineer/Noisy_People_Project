@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7A53624F-B978-43BC-BDE6-B56B5AA52812}</ProjectGuid>
     <RootNamespace>DAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -169,12 +169,13 @@
     <ClInclude Include="Effekseer\Compiled\include\EffekseerSoundXAudio2.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyTools.h" />
     <ClInclude Include="EventMaker.h" />
     <ClInclude Include="exampleItem.h" />
     <ClInclude Include="Fader.h" />
+    <ClInclude Include="Fuzzy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
-    <ClInclude Include="EnemyTools.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="ItemTools.h" />
@@ -217,6 +218,9 @@
     <ClInclude Include="SplashSprite.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteGauge.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="StateType.h" />
     <ClInclude Include="StaticMeshLoader.h" />
     <ClInclude Include="StaticMeshRenderer.h" />
     <ClInclude Include="Stone.h" />
@@ -277,10 +281,12 @@
     <ClCompile Include="EffekseerManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="EnemyTools.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EventMaker.cpp" />
     <ClCompile Include="exampleItem.cpp" />
     <ClCompile Include="Fader.cpp" />
+    <ClCompile Include="Fuzzy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
@@ -317,12 +323,14 @@
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="Sound.cpp" />
-    <ClCompile Include="EnemyTools.cpp" />
     <ClCompile Include="SoundBase.cpp" />
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="SplashSprite.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteGauge.cpp" />
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
+    <ClCompile Include="StateType.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
     <ClCompile Include="StaticMeshRenderer.cpp" />
     <ClCompile Include="Stone.cpp" />

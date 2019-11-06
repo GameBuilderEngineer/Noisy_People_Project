@@ -8,12 +8,33 @@
 #include "BoundingSphere.h"
 #include "Input.h"
 #include "Camera.h"
+#include "Player.h"
 #include "NavigationMesh.h"
+#include "StateMachine.h"
+#include "Sound.h"
+#include "SoundBase.h"
+
+
+//=============================================================================
+// ビルドスイッチ
+//=============================================================================
+#if 0	// バウンディングスフィアを描画
+#define RENDER_SPHERE_COLLIDER
+#endif
+#if 0	// 6軸を描画
+#define RENDER_SIX_AXIS
+#endif
+#if 1	// センサーを描画
+#define RENDER_SENSOR
+#endif
+
+
 
 
 //=============================================================================
 // 名前空間
 //=============================================================================
+#pragma region namespace
 namespace enemyNS
 {
 	// エネミーの種類
@@ -25,17 +46,6 @@ namespace enemyNS
 		TYPE_MAX,
 	};
 
-	// ステートの種類
-	enum ENEMY_STATE
-	{
-		CHASE,		// 追跡ステート
-		PATROL,		// 警戒ステート
-		REST,		// 休憩ステート
-		DIE,		// 死亡ステート
-		DEAD,		// 撃退済み判定
-		STATE_MAX
-	};
-
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
@@ -43,6 +53,47 @@ namespace enemyNS
 		150,		// TIGER
 		200,		// BEAR
 	};
+
+	// エネミーのセンサー更新頻度テーブル（x秒に1度更新）
+	const float SENSOR_UPDATE_INTERVAL[TYPE_MAX] =
+	{
+		0.3f,		// WOLF
+		0.2f,		// TIGER
+		0.1f,		// BEAR
+	};
+
+	// エネミーの視力距離テーブル
+	const float VISIBLE_DISTANCE[TYPE_MAX] =
+	{
+		40.0f,		// WOLF
+		40.0f,		// TIGER
+		40.0f,		// BEAR
+	};
+
+	// エネミーの水平視野角テーブル（Z軸 - 水平片側）
+	const float HORIZONTAL_HALF_VIEWING_ANGLE[TYPE_MAX] =
+	{
+		0.55f,		// WOLF
+		0.55f,		// TIGER
+		0.55f,		// BEAR
+	};
+
+	// エネミーの垂直視野角テーブル（Z軸 - 垂直片側）
+	const float VERTICAL_HALF_VIEWING_ANGLE[TYPE_MAX] =
+	{
+		0.5f,		// WOLF
+		0.5f,		// TIGER
+		0.5f,		// BEAR
+	};
+
+	// エネミーの聴覚距離テーブル
+	const float NOTICEABLE_DISTANCE_PLAYER[TYPE_MAX] =
+	{
+		3.5f,		// WOLF
+		3.5f,		// TIGER
+		3.5f,		// BEAR
+	};
+	const float SHOT_SOUND_SCALE = 4.5f;// ショット音距離倍率
 
 	// エネミーの移動加速度テーブル
 	const float MOVE_ACC[TYPE_MAX] =
@@ -66,6 +117,7 @@ namespace enemyNS
 	const float DIFFERENCE_FIELD = 0.05f;						// フィールド補正差分
 	const float CAMERA_SPEED = 1.0f;							// カメラの速さ
 
+
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
 	// 新規エネミー作成やエネミー配置ツールとのデータ交換に使用する
@@ -79,6 +131,7 @@ namespace enemyNS
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 	} ENEMYSET;
  
+
 	//--------------------------------------------------------------------------
 	// EnemyDataクラスはエネミー固有のステータスを保持する
 	// EnemyクラスオブジェクトはEnemyDataのポインタを介してステータスを参照する
@@ -94,6 +147,7 @@ namespace enemyNS
 		D3DXVECTOR3 direction;			// 正面方向
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 		int hp;							// HP
+		float deadTime;					// 撃退時刻
 		bool isAlive;					// 生存フラグ
 
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
@@ -103,6 +157,7 @@ namespace enemyNS
 			position = defaultPosition;
 			direction = defaultDirection;
 			hp = type >= 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
+			deadTime = 10000.0;
 			isAlive = true;
 		}
 	};
@@ -131,17 +186,29 @@ namespace enemyNS
 	};
 #endif //_DEBUG
 }
+#pragma endregion
 
 
 //=============================================================================
-//クラス定義
+// クラス定義
 //=============================================================================
+#pragma region class
 // エネミー基底クラス
 class Enemy: public Object
 {
 protected:
 	enemyNS::EnemyData* enemyData;		// エネミーデータ
 	static int numOfEnemy;				// エネミーの総数
+	StateMachine stateMachine;			// ステートマシン
+	Player* player;						// プレイヤー
+
+	// センサー
+	float sensorTime;					// センサー更新時間カウンタ
+	bool canUseSensor;					// センサー実行フラグ
+	bool isNoticedPlayer1;				// プレイヤー1に気付いた
+	bool isNoticedPlayer2;				// プレイヤー2に気づいた
+
+	// 記憶
 
 	// ナビゲーションメッシュ
 	NavigationMesh* naviMesh;			// ナビメッシュ
@@ -159,7 +226,6 @@ protected:
 	D3DXVECTOR3	centralPosition;		// 中心座標
 	D3DXMATRIX	centralMatrixWorld;		// 中心座標ワールドマトリクス
 
-
 	// コリジョン
 	BoundingSphere sphereCollider;		// バウンディングスフィア
 	float difference;					// フィールド補正差分
@@ -170,6 +236,10 @@ protected:
 	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;		// 重力（引力）発生オブジェクトマトリックス
 	float friction;						// 摩擦係数
+
+	// サウンド
+	PLAY_PARAMETERS *playParameters;
+	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 
 	// 純粋仮想関数
 	virtual void chase() = 0;			//「追跡」ステート
@@ -183,7 +253,11 @@ public:
 	// 更新処理
 	virtual void update(float frameTime);
 	// 事前処理
-	virtual void preprocess();
+	virtual void preprocess(float frameTime);
+	// 視覚センサー
+	bool eyeSensor(int playerType);
+	// 聴覚センサー
+	bool earSensor(int playerType);
 	// ステアリング
 	void steering();
 	// 接地処理
@@ -196,6 +270,7 @@ public:
 	void updateCentralCood();
 	// 重力発生メッシュ（接地メッシュ）の設定
 	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
+	void setPlayer(Player* _player);
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();
 
@@ -203,6 +278,9 @@ public:
 	int getEnemyID();
 	static int getNumOfEnemy();
 	enemyNS::EnemyData* getEnemyData();
+	BoundingSphere* getSphereCollider();
+	D3DXVECTOR3* getCentralPosition();
+	D3DXMATRIX* getCentralMatrixWorld();
 
 	// Setter
 	void setMove(bool setting);
@@ -217,6 +295,12 @@ public:
 	float reverseValueYAxis;			// 操作Y軸
 	static int debugEnemyID;			// デバッグするエネミーのID
 
+
+	//float distanceBetweenPlayerAndEnemy;// プレイヤーとの距離
+	//float horizontalAngle;			// 正面方向とプレイヤーの水平角度
+	//float verticalAngle;				// 正面方向とプレイヤーの垂直角度
+
+
 	// デバッグ環境を設定
 	void setDebugEnvironment();
 	// 操作対象カメラのセット
@@ -227,7 +311,13 @@ public:
 	void moveOperation();
 	// 移動
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
+	// デバッグセンサー
+	Ray eyeAngleRay[4];					// 視覚レイ表示用
+	Ray gazePlayer;						// 
+	BoundingSphere hearingSphere[2];	// 聴覚距離表示用
+	void debugSensor();					// デバッグ関数
 	// ImGUIへの出力
 	void outputGUI();
 #endif//_DEBUG
 };
+#pragma endregion

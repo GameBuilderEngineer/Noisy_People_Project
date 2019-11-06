@@ -12,11 +12,19 @@ using namespace aiNS;
 //=============================================================================
 // ‰Šú‰»
 //=============================================================================
-void AIDirector::initialize()
+void AIDirector::initialize(GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager,
+	TreeManager* _treeManager, ItemManager* _itemManager, TelopManager* _telopManager)
 {
-	sensor.initialize(&playerAD, &enemyAD, &treeAD, &itemAD);
+	gameMaster = _gameMaster;
+	player = _player;
+	enemyManager = _enemyManager;
+	treeManager = _treeManager;
+	itemManager = _itemManager;
+	telopManager = _telopManager;
+
+	sensor.initialize(&playerAD, &enemyAD, &treeAD, &itemAD, gameMaster, player, enemyManager, treeManager, itemManager);
 	eventMaker.initialize(&playerAD, &enemyAD, &treeAD, &itemAD);
-	opeGenerator.initialize(&playerAD, &enemyAD, &treeAD, &itemAD);
+	opeGenerator.initialize(&playerAD, &enemyAD, &treeAD, &itemAD, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
 	frameCnt = 0;
 }
 
@@ -26,11 +34,10 @@ void AIDirector::initialize()
 //=============================================================================
 void AIDirector::run()
 {
-	switch (frameCnt %= 3)
+	switch (frameCnt %= 2)
 	{
 	case 0:	sensor.update();		break;
 	case 1:	eventMaker.update();	break;
-	case 2:	opeGenerator.update();	break;
 	}
 	frameCnt++;
 }

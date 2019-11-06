@@ -7,6 +7,13 @@
 #include "Sensor.h"
 #include "EventMaker.h"
 #include "OperationGenerator.h"
+#include "GameMaster.h"
+#include "Player.h"
+#include "EnemyManager.h"
+#include "TreeManager.h"
+#include "ItemManager.h"
+#include "TelopManager.h"
+#include "LinkedList.h"
 
 
 //=============================================================================
@@ -15,41 +22,50 @@
 namespace aiNS
 {
 	// プレイヤー解析データ
-	struct PlayerAnalyticalData
+	typedef struct PlayerAnalyticalData
 	{
+		float lengthBetweenTwoPlayers;		// プレイヤー同士の距離	
+		int	numOfDead;						// 何回死んでいるか
 
-	};
-	typedef PlayerAnalyticalData PLAYERAD;
+	} PLAYERAD;
 
 	// エネミー解析データ
-	struct EnemyAnalyticalData
+	typedef struct EnemyAnalyticalData
 	{
-
-	};
-	typedef EnemyAnalyticalData ENEMYAD;
+		int numChase;						// 追跡ステートに入っているエネミーの数
+		int numKilled;						// 倒されたエネミーの数
+		int numKilledRecently;				// 最近倒されたエネミーの数
+		float lastSpawnTime;				// 最後にスポーンした時刻
+		float shouldSpawnFuzzily;			// スポーンすべきか重みづけ
+	} ENEMYAD;
 
 	// ツリー解析データ
-	struct TreeAnalyticalData
+	typedef struct TreeAnalyticalData
 	{
+		int numDigital;						// デジタルツリーの数
+		int numGreen;	
 		int numBeingAttackedTree;			// 襲撃されている木の数
 
-	};
-	typedef TreeAnalyticalData TREEAD;
+	} TREEAD;
 
 	// アイテム解析データ
-	struct ItemAnalyticalData
+	typedef struct ItemAnalyticalData
 	{
 
-	};
-	typedef ItemAnalyticalData ITEMAD;
+	} ITEMAD;
 
 	// イベントリスト
 	enum EVENT_LIST
 	{
-		RESPAWN_ENEMY_AROUND_PLAYER,
-		RESPAWN_ITEM,
+		SPAWN_ENEMY_AROUND_PLAYER,
+		RESPAWN_ENEMY,
 		ENEMY_ATTACKS_TREE,
+		NUM_EVENT_LIST
 	};
+
+	// エネミ―イベント関係定数
+	const float RECENT_SECOND = 30.0f;				// 最近と見なす秒数（直近○秒）
+	const float MANDATORY_SPAWN_INTERVAL = 20.0f;	// スポーンのための最低経過間隔秒
 }
 
 
@@ -73,8 +89,19 @@ private:
 	OperationGenerator opeGenerator;	// イベント実行モジュール
 	int frameCnt;						// フレームカウンタ
 
+	GameMaster* gameMaster;				// ゲーム管理オブジェクト
+	Player* player;						// プレイヤー
+	EnemyManager* enemyManager;			// エネミー管理オブジェクト
+	TreeManager* treeManager;			// ツリー管理オブジェクト
+	ItemManager* itemManager;			// アイテム管理オブジェクト
+	TelopManager* telopManager;			// テロップ管理オブジェクト
+
 public:
-	void run();							// 実行
-	void initialize();					// 初期化
-	void outputGUI();					// ImGuiに表示
+	// 実行
+	void run();
+	// 初期化
+	void initialize(GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager,
+	TreeManager* _treeManager, ItemManager* _itemManager, TelopManager* _telopManager);
+	// ImGuiに表示
+	void outputGUI();
 };
