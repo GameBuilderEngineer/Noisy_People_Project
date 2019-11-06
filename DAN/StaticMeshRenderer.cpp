@@ -78,17 +78,16 @@ void StaticMeshRenderer::update()
 {
 	for (int i = 0; i < objectNum; i++)
 	{
-		(*objectList->getValue(i))->update();			//更新処理
+		//(*objectList->getValue(i))->update();			//更新処理
 		unRegisterObject(i);							//解除処理
 	}
 
 	if (didRegister|| didUnRegister)
 	{
-
 		objectList->listUpdate();
 		for (int i = 0; i < objectList->nodeNum; i++)
 		{
-			(*objectList->getValue(i))->update();			//更新処理
+			//(*objectList->getValue(i))->update();			//更新処理
 		}
 		updateBuffer();
 		updateArray();

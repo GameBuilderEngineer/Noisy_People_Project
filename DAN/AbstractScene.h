@@ -2,7 +2,7 @@
 //yAbstractScene.hz
 // [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
 // [ì¬“ú]2019/09/19
-// [XV“ú]2019/10/24
+// [XV“ú]2019/11/01
 //===================================================================================================================================
 #pragma once
 
@@ -19,9 +19,9 @@
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "EffekseerManager.h"
+#include "Fader.h"
 #include "GameMaster.h"
 //#include "TextManager.h"
-//#include "AnimationLoader.h"
 
 //===================================================================================================================================
 //y–¼‘O‹óŠÔz

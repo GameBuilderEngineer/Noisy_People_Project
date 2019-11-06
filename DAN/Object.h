@@ -53,6 +53,7 @@ public:
 	D3DXVECTOR3			acceleration;			//加速度
 	D3DXVECTOR3			gravity;				//重力
 
+
 	//各種フラグ
 	bool				onGravity;				//重力有効化フラグ
 	bool				onActive;				//アクティブ化フラグ

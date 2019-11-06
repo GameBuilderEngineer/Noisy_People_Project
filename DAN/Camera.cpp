@@ -74,7 +74,6 @@ void Camera::update()
 		relativeGaze.x*D3DXVECTOR3(world._11,world._12,world._13)+
 		relativeGaze.y*D3DXVECTOR3(world._21,world._22,world._23)+
 		relativeGaze.z*D3DXVECTOR3(world._31,world._32,world._33);
-
 	setViewProjection();
 }
 

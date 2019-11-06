@@ -2,7 +2,7 @@
 //【TextureLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/22
-// [更新日]2019/10/24
+// [更新日]2019/11/02
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -58,6 +58,8 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_LIMIT2] = { "Info_Limit2.png" };
 	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
+	textureName[UI_RETICLE] = { "Info_Bar.png" };
+	textureName[UI_DIGITAL_RETICLE] = { "Digi_Reticle.png" };
 
 
 	// ResultUIの文字や記号

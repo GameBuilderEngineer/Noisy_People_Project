@@ -67,7 +67,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -82,7 +82,7 @@ void Game::initialize() {
 	{
 		//カメラの設定
 		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
-		camera[i].setTarget(player[i].getPosition());
+		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
 		camera[i].setTargetZ(&player[i].getAxisZ()->direction);
@@ -90,7 +90,7 @@ void Game::initialize() {
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-		camera[i].setFieldOfView( (D3DX_PI/180) * 90 );
+		camera[i].setFieldOfView( (D3DX_PI/180) * 80 );
 		
 		//プレイヤーの設定
 		PlayerTable infomation;

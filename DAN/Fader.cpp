@@ -11,6 +11,7 @@
 #include "Fader.h"
 #include "ShaderLoader.h"
 #include "Direct3D9.h"
+#include "ImguiManager.h"
 
 //===================================================================================================================================
 //yƒOƒ[ƒoƒ‹•Ï”z
@@ -31,15 +32,17 @@ Fader::Fader()
 {
 	pointerFader = this;
 
-	device = getDevice();
-	inTimer = 0.0f;
-	outTimer = 0.0f;
-	stopTimer = 0.0f;
+	device			= getDevice();
+	inTimer			= 0.0f;
+	outTimer		= 0.0f;
+	waitTimer		= 0.0f;
+	playTimer		= 0.0f;
 
-	shaderState = NULL;
 
-	targetTexture = NULL;
-	textureZBuffer = NULL;
+	shaderState		= NULL;
+	targetTexture	= NULL;
+	textureZBuffer	= NULL;
+
 	//ƒeƒNƒXƒ`ƒƒƒIƒuƒWƒFƒNƒg‚Ìì¬
 	D3DXCreateTexture(getDevice(), WINDOW_WIDTH, WINDOW_HEIGHT, 0,
 		D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &targetTexture);
@@ -55,7 +58,7 @@ Fader::Fader()
 	point[2] = {-1,-1,1,0,1 };
 	point[3] = {1,-1,1,1,1 };
 
-	playing = false;
+	processing = false;
 }
 
 //===================================================================================================================================
@@ -67,11 +70,85 @@ Fader::~Fader()
 }
 
 //===================================================================================================================================
+//yXVz
+//===================================================================================================================================
+void Fader::update(float frameTime)
+{
+	this->frameTime = frameTime;
+	switch (state)
+	{
+	case faderNS::FADE_IN:
+		fadeIn();
+		break;
+	case faderNS::FADE_OUT:
+		fadeOut();
+		break;
+	case faderNS::FADE_PLAY:
+		play();
+		break;
+	case faderNS::FADE_WAIT:
+		wait();
+		break;
+	}
+}
+
+//===================================================================================================================================
+//yƒtƒF[ƒhƒCƒ“ˆ—z
+//===================================================================================================================================
+void Fader::fadeIn()
+{
+	inTimer += frameTime;
+	//ƒtƒF[ƒhƒCƒ“I—¹
+	if (inTimer > limitInTime)
+	{
+		state		= faderNS::FADE_WAIT;//‘Ò‹@ó‘Ô‚Ö
+		waitTimer	= 0.0f;
+	}
+}
+
+//===================================================================================================================================
+//yƒtƒF[ƒhƒAƒEƒgˆ—z
+//===================================================================================================================================
+void Fader::fadeOut()
+{
+	outTimer += frameTime;
+	//ƒtƒF[ƒhƒAƒEƒgI—¹
+	if (outTimer > limitOutTime)
+	{
+		state		= faderNS::FADE_PLAY;//Ä¶ó‘Ô‚Ö
+		playTimer	= 0.0f;
+	}
+}
+
+//===================================================================================================================================
+//yÄ¶ˆ—z
+//===================================================================================================================================
+void Fader::play()
+{
+	playTimer += frameTime;
+	if (playTimer > limitPlayTime)
+	{
+		state = faderNS::FADE_IN;//ƒtƒF[ƒhƒCƒ“ó‘Ô‚Ö
+		inTimer = 0.0f;
+	}
+}
+
+//===================================================================================================================================
+//y‘Ò‹@ˆ—z
+//===================================================================================================================================
+void Fader::wait()
+{
+	waitTimer	+= frameTime;
+	processing	= false;
+}
+
+//===================================================================================================================================
 //y•`‰æz
 //===================================================================================================================================
 void Fader::render()
 {
 	if (shaderState == NULL)return;
+	if (!processing)return;
 
 	getDirect3D9()->setRenderBackBuffer(0);
 	device->SetRenderState(D3DRS_LIGHTING, false);
@@ -108,26 +185,65 @@ void Fader::setShader(int shaderType)
 	switch (shaderType)
 	{
 	case faderNS::SHADER_TYPE::BLUR:
-		shaderState = new faderNS::BlurShader(2, targetTexture);
+		shaderState = new faderNS::BlurShader(4, targetTexture);
 		break;
 	}
 }
 
 //===================================================================================================================================
-//yÄ¶z
+//yŠJŽnz
 //===================================================================================================================================
-void Fader::play()
+void Fader::start()
 {
-	playing = true;
-	outTimer = shaderState->outTime;
+	if (processing)return;//ˆ—’†‚È‚çˆ—‚µ‚È‚¢
+	processing		= true;
+	state			= faderNS::FADE_OUT;
+	outTimer		= 0.0f;
+	limitOutTime	= shaderState->outTime;
+	limitInTime		= shaderState->inTime;
+	limitPlayTime	= shaderState->playTime;
+	limitWaitTime	= shaderState->waitTime;
 }
 
 //===================================================================================================================================
-//y’âŽ~z
+//yÄ¶’†z
 //===================================================================================================================================
-void Fader::stop()
+bool Fader::nowPlaying()
 {
-	playing = false;
+	return (outTimer > limitOutTime) && (playTimer < limitPlayTime);
+}
+
+//===================================================================================================================================
+//yˆ—’†z
+//===================================================================================================================================
+bool Fader::nowProcessing()
+{
+	return processing;
 }
 
 
+//===================================================================================================================================
+//yImGUI‚Ö‚Ìo—Íz
+//===================================================================================================================================
+#ifdef _DEBUG
+void Fader::outputGUI()
+{
+	switch (state)
+	{
+	case faderNS::FADE_IN:	ImGui::Text("state:FADE_IN");	break;
+	case faderNS::FADE_OUT:	ImGui::Text("state:FADE_OUT");	break;
+	case faderNS::FADE_PLAY:ImGui::Text("state:FADE_PLAY");	break;
+	case faderNS::FADE_WAIT:ImGui::Text("state:FADE_WAIT");	break;
+	}
+	ImGui::Text("inTimer = %.02f/%.02f", inTimer,limitInTime);
+	ImGui::Text("outTimer = %.02f/%.02f", outTimer,limitOutTime);
+	ImGui::Text("playTimer = %.02f/%.02f", playTimer,limitPlayTime);
+	ImGui::Text("waitTimer = %.02f/%.02f", waitTimer,limitWaitTime);
+
+	//ImGui::SliderFloat("alpha", &alpha, 0, 255);												//“§‰ß’l
+	//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//‰ñ“]
+	//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);						//‘¬“x
+	//ImGui::Checkbox("onGravity", &onGravity);												//d—Í—LŒø‰»ƒtƒ‰ƒO
+
+}
+#endif // _DEBUG

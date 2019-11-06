@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/31
+// [更新日]2019/11/01
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -116,11 +116,6 @@ HRESULT Director::initialize() {
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(getDevice());
 
-	//HierarchyMesh
-	//setVisualDirectory();
-	//SKINMESH
-	//setVisualDirectory();
-
 	//シェーダー読込
 	//Shader
 	shaderLoader = new ShaderLoader;
@@ -229,8 +224,11 @@ void Director::mainLoop() {
 
 	//シーン切替フラグの確認
 	if (scene->checkChangeOrder())
-		changeNextScene();
-
+	{
+		fader->start();
+		if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
+			changeNextScene();
+	}
 	setFrameTime();				//フレーム時間の初期化処理
 	update();					//メイン更新処理
 	render();					//メイン描画処理
@@ -275,11 +273,11 @@ void Director::update() {
 	}
 #endif // _DEBUG
 	effekseerManager->update();
+	fader->update(frameTime);
 	scene->update(frameTime);
 	scene->collisions();
 	scene->AI();
 	soundInterface->UpdateSound();
-
 #ifdef _DEBUG
 	if (*scene->getShowGUI())
 	{
@@ -293,6 +291,13 @@ void Director::update() {
 		gameMaster->createGUI();
 		imgui->endImGui();
 	}
+	if (*fader->getShowGUI())
+	{
+		imgui->beginImGui("FaderGUI");
+		fader->outputGUI();
+		imgui->endImGui();
+	}
+
 #endif // _DEBUG
 }
 
@@ -308,6 +313,7 @@ void Director::createGUI()
 	ImGui::SliderInt("fixedFPS", &fixedFps, MIN_FRAME_RATE, MAX_FRAME_RATE);
 	ImGui::Checkbox("SceneGUI", scene->getShowGUI());	
 	ImGui::Checkbox("gameMasterGUI", gameMaster->getShowGUI());	
+	ImGui::Checkbox("faderGUI", fader->getShowGUI());	
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("CPU %.2f ％", memory->getCpuUsege());
 	ImGui::Text("MEMORY %d kb", memory->getMemoryUsege());
@@ -332,8 +338,7 @@ void Director::render() {
 	//Debug
 	if (SUCCEEDED(d3d->beginScene()))
 	{
-
-		if (fader->playing)
+		if (fader->nowProcessing())
 		{
 			fader->setRenderTexture();
 			d3d->clear(imgui->getClearColor());
@@ -355,11 +360,24 @@ void Director::render() {
 	d3d->present(); 
 #else
 	//Release
-	d3d->clear();
 	if (SUCCEEDED(d3d->beginScene()))
 	{
-		scene->render();
-		effekseerManager->render();
+		if (fader->nowProcessing())
+		{
+			fader->setRenderTexture();
+			d3d->clear();
+			scene->render();
+
+			d3d->setRenderBackBuffer(0);
+			d3d->clear();
+			fader->render();
+		}
+		else
+		{
+			d3d->clear();
+			d3d->setRenderBackBuffer(0);
+			scene->render();
+		}
 		d3d->endScene();
 	}
 	d3d->present(); 

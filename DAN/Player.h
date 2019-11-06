@@ -2,7 +2,7 @@
 //【Player.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/10/24
+// [更新日]2019/11/05
 //===================================================================================================================================
 #pragma once
 
@@ -64,10 +64,10 @@ namespace playerNS{
 		},
 		//2P
 		{
-			'W',					//FRONT
-			'S',					//BACK
-			'D',					//RIGHT
-			'A',					//LEFT
+			VK_UP,					//FRONT
+			VK_DOWN,				//BACK
+			VK_RIGHT,				//RIGHT
+			VK_LEFT,				//LEFT
 			'R',					//RESET
 			VK_LSHIFT,				//DASH
 			VK_SPACE,				//JUMP
@@ -88,11 +88,12 @@ namespace playerNS{
 		VK_ESCAPE,		//ReverseCameraAxisY
 	};
 
-	const BYTE BUTTON_JUMP			= virtualControllerNS::B;
+	const BYTE BUTTON_VISION		= virtualControllerNS::B;
+	const BYTE BUTTON_SKY_VISION	= virtualControllerNS::X;
+	const BYTE BUTTON_JUMP			= virtualControllerNS::L1;
 	const BYTE BUTTON_BULLET		= virtualControllerNS::R1;
-	const BYTE BUTTON_CUT			= virtualControllerNS::X;
-	const BYTE BUTTON_REVIVAL		= virtualControllerNS::A;
-	const BYTE BUTTON_PILE			= virtualControllerNS::L1;
+	const BYTE BUTTON_PASUE			= virtualControllerNS::SPECIAL_MAIN;
+
 
 	enum STATE {
 		NORMAL,
@@ -105,8 +106,7 @@ namespace playerNS{
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		D3DXVECTOR3(-35, 10, 0),		//1P
-		//D3DXVECTOR3(35, 10, 0)			//2P
-		D3DXVECTOR3(-35, 10, 0)			//2P
+		D3DXVECTOR3(35, 10, 0)			//2P
 	};
 
 	// StatusParameter
@@ -116,15 +116,20 @@ namespace playerNS{
 	const int	MIN_POWER					= 0;									// 電力ゲージ最低値
 	const float INVINCIBLE_TIME				= 3.0f;									// 無敵時間
 
+
+	//CameraParameter
+	const D3DXVECTOR3 CAMERA_GAZE			= D3DXVECTOR3(1.0f,2.0f,0.0f);
+
 	// Physics
 	const float MOVE_ACC					= 27.0f;								// 移動加速度
 	const float MOVE_ACC_WHEN_NOT_GROUND	= MOVE_ACC / 8.5f;						// 空中移動加速度
 	const float STOP_SPEED					= 0.5f;									// 移動停止速度
+	const float MAX_SPEED					= 6.0f;									// 移動停止速度
 	const float FALL_SPEED_MAX				= 60.0f;								// 落下最高速度
 	const float MOVE_FRICTION				= 0.93f;								// 地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									// 壁ずり摩擦係数
 	const float GROUND_FRICTION				= 0.25;									// 着地摩擦係数
-	const float GRAVITY_FORCE				= 9.8f * 2;								// 重力
+	const float GRAVITY_FORCE				= 9.8f;								// 重力
 	const float JUMP_SPEED					= 6.0f;									// ジャンプ初速
 	const float JUMP_CONTROL_SPEED			= 1.0f;									// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION			= 2.0f;									// ダッシュ倍率
@@ -183,8 +188,24 @@ private:
 	LPDIRECT3DDEVICE9			device;							// Direct3Dデバイス
 	Input*						input;							// 入力系
 	Camera*						camera;							// 操作するカメラへのポインタ
+	D3DXVECTOR3					cameraGaze;						//カメラ注視位置
 	D3DXVECTOR3					centralPosition;				// 中心座標
 	D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
+
+	//摩擦力
+	//静止摩擦力…動き出す前の摩擦力
+	//動摩擦力…動き出してからの摩擦力
+	//静止摩擦力＞動摩擦力
+
+	//最大静止摩擦力…外力を徐々に大きくしていって、動き出した時の静止摩擦力
+
+	//垂直抗力(N)
+	//静止摩擦係数(μ)
+	//最大静止摩擦力(F0)
+	//F0 = μN
+
+	//動摩擦力
+	//
 
 public:
 	Player();
@@ -236,4 +257,6 @@ public:
 	bool canShift();
 	BoundingSphere* getBodyCollide();							//球コリジョンの取得
 	PlayerTable*	getInfomation();							//プレイヤー情報取得
+	D3DXVECTOR3* getCameraGaze();							//カメラ注視ポジション
+
 };
