@@ -195,6 +195,10 @@ void Game::initialize() {
 	timer = new Timer;
 	timer->initialize();
 
+	//ŒÅ’è‚³‚ê‚½UI
+	fixedUI = new FixedUI;
+	fixedUI->initialize();
+
 	//SpriteÀŒ±
 	spriteGauge = new SpriteGauge;
 	spriteGauge->initialize();
@@ -234,6 +238,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(aiDirector);
 	SAFE_DELETE(timer);
 	SAFE_DELETE(spriteGauge);
+	SAFE_DELETE(fixedUI);
 
 	UninitMoveP();
 
@@ -498,6 +503,9 @@ void Game::renderUI() {
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	telop->render();	// ƒeƒƒbƒv‚Ì•`‰æ
+
+	//ŒÅ’èUI‚Ì•`‰æ
+	fixedUI->render();
 
 	//ƒ^ƒCƒ}[‚Ì•`‰æ
 	timer->render();

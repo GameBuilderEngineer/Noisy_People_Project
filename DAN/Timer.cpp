@@ -89,11 +89,13 @@ void Timer::render()
 	{
 		//•ª‚Ì•`‰æ
 		posMinute[i].x = -WIDTH_TIMER * i + POSITION_MINUTE.x;
+		//minute[i]->setColorAllVertex(color);
 		minute[i]->setPosition(posMinute[i]);
 		minute[i]->setVertex();
 		minute[i]->render();
 		//•b‚Ì•`‰æ
 		posSecond[i].x = -WIDTH_TIMER * i + POSITION_SECOND.x;
+		//second[i]->setColorAllVertex(color);
 		second[i]->setPosition(posSecond[i]);
 		second[i]->setVertex();
 		second[i]->render();
@@ -127,10 +129,10 @@ void Timer::setUV(int time)
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
 		float x = (float)(minuteTime % 10);
-		uvCoord01.x = 0.1*x;
-		uvCoord02.x = 0.1 *(x + 1);
-		uvCoord03.x = 0.1 *x;
-		uvCoord04.x = 0.1 *(x + 1);
+		uvCoord01.x = 0.1f*x;
+		uvCoord02.x = 0.1f*(x + 1);
+		uvCoord03.x = 0.1f*x;
+		uvCoord04.x = 0.1f*(x + 1);
 		minuteTime /= 10;
 		minute[i]->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
 	}
@@ -140,10 +142,10 @@ void Timer::setUV(int time)
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
 		float x = (float)(secondTime % 10);
-		uvCoord01.x = 0.1*x;
-		uvCoord02.x = 0.1 *(x + 1);
-		uvCoord03.x = 0.1 *x;
-		uvCoord04.x = 0.1 *(x + 1);
+		uvCoord01.x = 0.1f*x;
+		uvCoord02.x = 0.1f*(x + 1);
+		uvCoord03.x = 0.1f*x;
+		uvCoord04.x = 0.1f*(x + 1);
 		secondTime /= 10;
 		second[i]->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
 	}

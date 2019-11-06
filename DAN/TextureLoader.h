@@ -52,6 +52,7 @@ namespace textureNS
 		UI_INFO_LIMIT2,
 		UI_INFO_MISSION,
 		UI_INFO_BAR,
+		UI_TIMERFLAME,
 
 		// Result
 		RESULT,

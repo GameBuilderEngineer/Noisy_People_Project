@@ -171,6 +171,7 @@
     <ClInclude Include="EventMaker.h" />
     <ClInclude Include="exampleItem.h" />
     <ClInclude Include="Fader.h" />
+    <ClInclude Include="FixedUI.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
     <ClInclude Include="EnemyTools.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="TutorialTex.h" />
     <ClInclude Include="UIcharacter.h" />
+    <ClInclude Include="UImanager.h" />
     <ClInclude Include="UInumber.h" />
     <ClInclude Include="UIrank.h" />
     <ClInclude Include="UItex.h" />
@@ -279,6 +281,7 @@
     <ClCompile Include="EventMaker.cpp" />
     <ClCompile Include="exampleItem.cpp" />
     <ClCompile Include="Fader.cpp" />
+    <ClCompile Include="FixedUI.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
@@ -309,7 +312,7 @@
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
-    <ClCompile Include="ResultUIcpp.cpp" />
+    <ClCompile Include="ResultUI.cpp" />
     <ClCompile Include="SE.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
@@ -344,10 +347,11 @@
     <ClCompile Include="TreeManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="TutorialTex.cpp" />
-    <ClCompile Include="UIcharactercpp.cpp" />
+    <ClCompile Include="UIcharacter.cpp" />
+    <ClCompile Include="UImanager.cpp" />
     <ClCompile Include="UInumber.cpp" />
     <ClCompile Include="UIrank.cpp" />
-    <ClCompile Include="UItexcpp.cpp" />
+    <ClCompile Include="UItex.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="Window.cpp" />

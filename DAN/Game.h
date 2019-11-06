@@ -30,6 +30,7 @@
 #include "Battery.h"
 #include "telop.h"
 #include "Timer.h"
+#include "FixedUI.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
@@ -92,6 +93,8 @@ private:
 	AIDirector*						aiDirector;			// AI
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 	Telop*							telop;				// テロップ
+
+	FixedUI*						fixedUI;			//固定されたUI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];

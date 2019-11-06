@@ -2,6 +2,7 @@
 //タイマー処理[Timer.h]
 //染矢　晃介
 //====================================
+#pragma once
 
 //====================================
 //インクルード
@@ -15,11 +16,11 @@
 namespace timerNS
 {
 	//タイマー
-	const int WIDTH_TIMER = (100);		//各数字の横幅
-	const int HEIGHT_TIMER = (100);		//各数字の縦幅
+	const int WIDTH_TIMER = (50);		//各数字の横幅
+	const int HEIGHT_TIMER = (50);		//各数字の縦幅
 	const int DIGIT_TIMER = (2);		//タイマーの桁数
-	const D3DXVECTOR3 POSITION_MINUTE = D3DXVECTOR3(600, 100, 0);	//分タイマーの表示位置(仮)
-	const D3DXVECTOR3 POSITION_SECOND = D3DXVECTOR3(1000, 100, 0);	//秒タイマーの表示位置(仮)
+	const D3DXVECTOR3 POSITION_MINUTE = D3DXVECTOR3(915, 100, 0);	//分タイマーの表示位置(仮)
+	const D3DXVECTOR3 POSITION_SECOND = D3DXVECTOR3(1035, 100, 0);	//秒タイマーの表示位置(仮)
 	const D3DXVECTOR3 ROTATION_TIMER = D3DXVECTOR3(0, 0, 0);		//回転
 	const D3DCOLOR COLOR_TIMER = D3DCOLOR_RGBA(255, 255, 255, 255);	//色
 }
@@ -35,6 +36,7 @@ private://メンバー変数
 	D3DXVECTOR3 posMinute[timerNS::DIGIT_TIMER];	//分タイマー表示位置管理用
 	D3DXVECTOR3 posSecond[timerNS::DIGIT_TIMER];	//秒タイマー表示位置管理用
 	float		 keepTime;							//時間管理用
+	D3DCOLOR	 color;								//頂点色管理用
 	//uv座標用の変数
 	D3DXVECTOR2 uvCoord01;
 	D3DXVECTOR2 uvCoord02;
