@@ -265,6 +265,9 @@
     <Filter Include="Game Layer\GameUI">
       <UniqueIdentifier>{05377823-85f2-4b8f-a3aa-3c22d42106b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Enemy\StateMachine">
+      <UniqueIdentifier>{6b3788e2-4ae9-4b81-887d-d5b39aaf52e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -383,9 +386,6 @@
     </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Constant Layer\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyTools.cpp">
-      <Filter>Tools Layer\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="BGM.cpp">
       <Filter>Constant Layer\Sound\BGM</Filter>
@@ -558,10 +558,10 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
     <ClCompile Include="TelopManager.cpp" />
-	<ClCompile Include="PathFollowing.cpp">
+    <ClCompile Include="PathFollowing.cpp">
       <Filter>Game Layer\NaviAI</Filter>
     </ClCompile>
-	    <ClCompile Include="AllocateHierarchy.cpp">
+    <ClCompile Include="AllocateHierarchy.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="D3DXAnimation.cpp">
@@ -573,7 +573,21 @@
     <ClCompile Include="ActionEventSeting.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
-
+    <ClCompile Include="State.cpp">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="StateType.cpp">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyTools.cpp">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Fuzzy.cpp">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -701,9 +715,6 @@
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Constant Layer\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyTools.h">
-      <Filter>Tools Layer\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="BGM.h">
       <Filter>Constant Layer\Sound\BGM</Filter>
@@ -887,10 +898,10 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
     <ClInclude Include="TelopManager.h" />
-	<ClInclude Include="PathFollowing.h">
+    <ClInclude Include="PathFollowing.h">
       <Filter>Game Layer\NaviAI</Filter>
     </ClInclude>
-	    <ClInclude Include="AllocateHierarchy.h">
+    <ClInclude Include="AllocateHierarchy.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="D3DXAnimation.h">
@@ -901,6 +912,21 @@
     </ClInclude>
     <ClInclude Include="ActionEventSeting.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="StateType.h">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyTools.h">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Fuzzy.h">
+      <Filter>Game Layer\MetaAI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

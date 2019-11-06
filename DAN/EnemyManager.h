@@ -4,10 +4,11 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #pragma once
+#include <string>
+#include <vector>
 #include "Base.h"
 #include "Camera.h"
 #include "Player.h"
-#include <vector>
 #include "StaticMeshRenderer.h"
 #include "LinkedList.h"
 #include "EnemyTools.h"
@@ -43,10 +44,11 @@ private:
 	StaticMeshRenderer* bearRenderer;					// 描画オブジェクト
 	int nextID;											// 次回エネミー発行ID
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
-	D3DXMATRIX*	attractorMatrix;							// 重力（引力）発生オブジェクトマトリックス
+	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
+	Player* player;										// プレイヤー
 
 public:
-	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
+	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, Player* _player);
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
@@ -57,6 +59,7 @@ public:
 	void destroyEnemy(int _enemyID);
 	void destroyAllEnemy();
 	void assertDestructionOrder();
+	enemyNS::EnemyData* findEnemyData(int enemyID);
 	int issueNewEnemyID();
 	void outputGUI();
 	void relocateEnemyAccordingToFile();
@@ -73,7 +76,6 @@ public:
 
 #ifdef _DEBUG
 	Camera* camera;
-	Player* player;
 	void setDebugEnvironment(Camera* _camera, Player* _player)
 	{
 		camera = _camera;

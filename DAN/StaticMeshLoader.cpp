@@ -37,6 +37,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
 	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
 	fileName[ENEMY_01]								= { "Enemy01.x" };
+	fileName[ENEMY_02]								= { "Enemy02.x" };
 
 	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
 	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
@@ -56,6 +57,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
 	fileName[SKY_DOME]								= { "domebase.x" };							//09
 	fileName[TUTORIAL_FILED]						= { "Tutorial_Stage.x" };					//10
+	fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
 }
 
 //===================================================================================================================================

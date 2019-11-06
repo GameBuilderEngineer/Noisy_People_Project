@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------------
 #include "Bear.h"
 using namespace enemyNS;
+using namespace stateMachineNS;
+
 
 //=============================================================================
 // コンストラクタ
@@ -28,7 +30,14 @@ Bear::~Bear()
 //=============================================================================
 void Bear::update(float frameTime)
 {
-	Enemy::preprocess();
+	Enemy::preprocess(frameTime);
+	switch (enemyData->state)
+	{
+	case CHASE:  chase();  break;
+	case PATROL: patrol(); break;
+	case REST:   rest();   break;
+	case DIE:    die();    break;
+	}
 	Enemy::update(frameTime);
 }
 

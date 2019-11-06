@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------------
 #include "Enemy.h"
 #include "ImguiManager.h"
+#include "Sound.h"
 using namespace enemyNS;
+using namespace stateMachineNS;
 
 
 int Enemy::numOfEnemy = 0;			// エネミーの総数
@@ -21,6 +23,9 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 {
 	numOfEnemy++;								// エネミーの数を加算
 	enemyData = _enemyData;						// エネミーデータをセット
+
+	// ステートマシンの初期化
+	stateMachine.initialize(enemyData->defaultState);
 
 	// ナビゲーションメッシュ
 	naviMesh = NavigationMesh::getNaviMesh();
@@ -50,6 +55,11 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	radius = sphereCollider.getRadius();
 	Object::initialize(&position);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
+
+#ifdef RENDER_SENSOR
+	hearingSphere[0].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type]);
+	hearingSphere[1].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type] * SHOT_SOUND_SCALE);
+#endif
 }
 
 
@@ -78,7 +88,6 @@ void Enemy::update(float frameTime)
 	{
 		moveOperation();			// 移動操作
 		controlCamera(frameTime);	// カメラ操作
-
 		if (input->wasKeyPressed('7'))
 		{
 			destination = position;
@@ -93,7 +102,27 @@ void Enemy::update(float frameTime)
 			setMove(true);
 		}
 	}
-#endif
+#ifdef RENDER_SENSOR
+	debugSensor();				// 視界
+	// プレイヤーへの注視レイを描画する
+	gazePlayer.initialize(centralPosition, *player->getCentralPosition() - centralPosition);
+	gazePlayer.color = D3DXCOLOR(255, 0, 0, 255);
+#endif// RENDER_SENSOR
+#endif// _DEBUG
+
+	// センサー
+	if (canUseSensor)
+	{
+		if (eyeSensor(gameMasterNS::PLAYER_1P) || earSensor(gameMasterNS::PLAYER_1P))
+		{
+			isNoticedPlayer1 = true;
+		}
+		if (eyeSensor(gameMasterNS::PLAYER_2P) || earSensor(gameMasterNS::PLAYER_2P))
+		{
+			isNoticedPlayer2 = true;
+		}
+		canUseSensor = false;
+	}
 
 	// 経路探索
 	if (shouldSearchPath)
@@ -101,6 +130,7 @@ void Enemy::update(float frameTime)
 		naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, *movingTarget);
 		shouldSearchPath = false;
 	}
+
 	// 移動
 	if (onMove)
 	{
@@ -116,25 +146,106 @@ void Enemy::update(float frameTime)
 	Object::update();
 	// 中心座標の更新
 	updateCentralCood();
+	// ステートの更新
+	int stateNumber = stateMachine.run(frameTime, enemyData->type);
 	// エネミーデータの更新
+	enemyData->state = stateNumber;
 	enemyData->position = position;
 	enemyData->direction = axisZ.direction;
-	if (enemyData->state == DEAD)
-	{	
-		// falseでマネージャよりエネミーオブジェクトが破棄される
-		enemyData->isAlive = false;
-	}
 }
 
 
 //=============================================================================
 // 事前処理
 //=============================================================================
-void Enemy::preprocess()
+void Enemy::preprocess(float frameTime)
 {
-	onJump = false;			
+	// センサー更新計算処理
+	sensorTime += frameTime;
+	if (sensorTime > SENSOR_UPDATE_INTERVAL[enemyData->type])
+	{
+		sensorTime = 0.0f;
+		canUseSensor = true;
+	}
+
+	onJump = false;
 	friction = 1.0f;		// 摩擦係数初期化
 	acceleration *= 0.0f;	// 加速度を初期化
+}
+
+
+//=============================================================================
+// 視覚センサー
+//=============================================================================
+bool Enemy::eyeSensor(int playerType)
+{
+	float distanceBetweenPlayerAndEnemy;	// プレイヤーとの距離
+	float horizontalAngle;					// 正面方向とプレイヤーの水平角度
+	float verticalAngle;					// 正面方向とプレイヤーの垂直角度
+
+	// プレイヤーが視認可能な距離にいるか調べる
+	distanceBetweenPlayerAndEnemy = D3DXVec3Length(&(*player[playerType].getCentralPosition() - centralPosition));
+	if (distanceBetweenPlayerAndEnemy > VISIBLE_DISTANCE[enemyData->type])
+	{// 視認可能距離ではなかった
+		return false;
+	}	
+
+	// プレイヤーが水平視野角内に入ったか調べる
+	D3DXVECTOR3 horizontalVecToPlayer = *player[playerType].getCentralPosition() - centralPosition;
+	slip(horizontalVecToPlayer, axisY.direction);
+	slip(horizontalVecToPlayer, reverseAxisY.direction);
+	formedRadianAngle(&horizontalAngle, axisZ.direction, horizontalVecToPlayer);
+	if (horizontalAngle > HORIZONTAL_HALF_VIEWING_ANGLE[enemyData->type])
+	{// 視野角外だった
+		return false;
+	}
+
+	// プレイヤーが垂直視野角内に入ったか調べる
+	D3DXVECTOR3 verticalVecToPlayer = *player[playerType].getCentralPosition() - centralPosition;
+	slip(verticalVecToPlayer, axisX.direction);
+	slip(verticalVecToPlayer, reverseAxisX.direction);
+	formedRadianAngle(&verticalAngle, axisZ.direction, verticalVecToPlayer);
+	if (verticalAngle > VERTICAL_HALF_VIEWING_ANGLE[enemyData->type])
+	{// 視野角外だった
+		return false;
+	}
+
+	// プレイヤーとの間に障害物がないか調べる
+	Ray ray;
+	ray.initialize(centralPosition, *player[playerType].getCentralPosition() - centralPosition);
+	if (ray.rayIntersect(attractorMesh, *attractorMatrix))
+	{
+		if (ray.distance < distanceBetweenPlayerAndEnemy)
+		{// 接地メッシュがあった
+			return false;
+		}
+	}
+
+	return true;	// プレイヤーが視野に入っている
+}
+
+
+//=============================================================================
+// 聴覚センサー
+//=============================================================================
+bool Enemy::earSensor(int playerType)
+{
+	float distanceBetweenPlayerAndEnemy = D3DXVec3Length(&(*player[playerType].getPosition() - position));
+
+	// プレイヤーの物音を聞き取れる距離（聴覚距離）範囲内か調べる
+	if (distanceBetweenPlayerAndEnemy < NOTICEABLE_DISTANCE_PLAYER[enemyData->type])
+	{// 聴覚距離範囲内である
+		return true;
+	}
+
+	// プレイヤーの銃声を聞き取れる距離か調べる
+	if (distanceBetweenPlayerAndEnemy < NOTICEABLE_DISTANCE_PLAYER[enemyData->type] * SHOT_SOUND_SCALE &&
+		player[playerType].getWhetherShot())
+	{// 銃声を聞き取れた
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -307,6 +418,15 @@ void Enemy::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix
 
 
 //=============================================================================
+// 重力発生メッシュ（接地メッシュ）の設定
+//=============================================================================
+void Enemy::setPlayer(Player* _player)
+{
+	player = _player;
+}
+
+
+//=============================================================================
 // エネミーのオブジェクトの数を初期化
 //=============================================================================
 void Enemy::resetNumOfEnemy()
@@ -316,11 +436,30 @@ void Enemy::resetNumOfEnemy()
 
 
 //=============================================================================
+// 足音の処理
+//=============================================================================
+void Enemy::footsteps(D3DXVECTOR3 playerPos, int playerID)
+{
+	float distance = D3DXVec3Length(&(position - playerPos));
+	float volume = 0.0f;
+	if (distance < DISTANCE_MAX)
+	{
+		volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
+	}
+
+	SoundInterface::S3D->SetVolume(playParameters[playerID], volume);
+}
+
+
+//=============================================================================
 // Getter
 //=============================================================================
 int Enemy::getEnemyID() { return enemyData->enemyID; }
 int Enemy::getNumOfEnemy() { return numOfEnemy; }
 EnemyData* Enemy::getEnemyData() { return enemyData; }
+BoundingSphere*  Enemy::getSphereCollider() { return &sphereCollider; }
+D3DXVECTOR3*  Enemy::getCentralPosition() { return &centralPosition; }
+D3DXMATRIX* Enemy::getCentralMatrixWorld() { return &centralMatrixWorld; }
 
 
 //=============================================================================
@@ -417,6 +556,81 @@ void Enemy::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVE
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 
+
+//=============================================================================
+// デバッグセンサー
+//=============================================================================
+void Enemy::debugSensor()
+{
+	D3DXQUATERNION	rayQuaternion1, rayQuaternion2;
+	D3DXMATRIX		rayMatrix;
+	D3DXVECTOR3		direction;
+
+	// 視界のレイを作る
+	for (int height = -1; height < 2; height += 2)
+	{
+
+		for (int width = -1; width < 2; width += 2)
+		{
+			D3DXQuaternionIdentity(&rayQuaternion1);
+			D3DXQuaternionIdentity(&rayQuaternion2);
+			D3DXMatrixIdentity(&rayMatrix);
+			direction = axisZ.direction;
+
+			D3DXQuaternionRotationAxis(&rayQuaternion1,
+				&axisX.direction, height * VERTICAL_HALF_VIEWING_ANGLE[enemyData->type]);
+
+			D3DXQuaternionRotationAxis(&rayQuaternion2,
+				&axisY.direction, width * HORIZONTAL_HALF_VIEWING_ANGLE[enemyData->type]);
+
+			rayQuaternion2 *= rayQuaternion1;
+			D3DXMatrixRotationQuaternion(&rayMatrix, &rayQuaternion2);
+			D3DXVec3TransformCoord(&direction, &direction, &rayMatrix);
+
+			if (height == -1 && width == -1) { eyeAngleRay[0].initialize(centralPosition, direction); }
+			if (height == -1 && width == 1) { eyeAngleRay[1].initialize(centralPosition, direction); }
+			if (height == 1 && width == -1) { eyeAngleRay[2].initialize(centralPosition, direction); }
+			if (height == 1 && width == 1) { eyeAngleRay[3].initialize(centralPosition, direction); }
+		}
+	}
+
+	// 視界レイを白で描画
+	for (int i = 0; i < 4; i++)
+	{
+		eyeAngleRay[i].color = D3DXCOLOR(255, 255, 255, 155);
+	}
+
+	// 聴覚距離を描画
+	// バウンディングスフィアで描画する
+
+	bool sound = false;
+	if (canUseSensor)
+	{
+		if (eyeSensor(gameMasterNS::PLAYER_1P) || eyeSensor(gameMasterNS::PLAYER_2P))
+		{
+			// 視界に入ったら赤点滅
+			for (int i = 0; i < 4; i++)
+			{
+				eyeAngleRay[i].color = D3DXCOLOR(255, 0, 0, 255);
+				sound = true;
+			}
+		}
+
+		if (earSensor(gameMasterNS::PLAYER_1P) || earSensor(gameMasterNS::PLAYER_2P))
+		{
+
+			sound = true;
+		}
+	}
+
+	if (sound)
+	{
+		// 音を鳴らす
+		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+		PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL,true, filterParameters };
+		SoundInterface::SE->playSound(&playParameters);	//SE再生
+	}
+}
 
 //===================================================================================================================================
 // ImGUIへの出力

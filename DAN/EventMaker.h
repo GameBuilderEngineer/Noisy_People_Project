@@ -36,6 +36,8 @@ private:
 public:
 	void initialize(aiNS::PLAYERAD* _playerAD, aiNS::ENEMYAD* _enemyAD,
 		aiNS::TREEAD* _treeAD, aiNS::ITEMAD* _itemAD);
+
 	void uninitialize();
 	void update();
+	void makeEventSpawningEnemyAroundPlayer();
 };

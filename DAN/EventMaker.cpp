@@ -33,5 +33,15 @@ void EventMaker::uninitialize()
 //=============================================================================
 void EventMaker::update()
 {
-	treeAD->numBeingAttackedTree = 5;
+
+
+}
+
+
+//=============================================================================
+// エネミー動的作成イベントの作成（SPAWN_ENEMY_AROUND_PLAYER)
+//=============================================================================
+void EventMaker::makeEventSpawningEnemyAroundPlayer()
+{
+
 }

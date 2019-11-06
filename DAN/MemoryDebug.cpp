@@ -15,7 +15,7 @@ void MemoryDebug::debugEnemyManager()
 	int numAfterCreate, numAfterDestroy;
 	int numDataAfterCreate, numDataAfterDestroy;
 	EnemyManager* enemyManager = new EnemyManager;
-	enemyManager->initialize(NULL, NULL);
+	enemyManager->initialize(NULL, NULL, NULL, NULL);
 
 	// enemyID
 	for(int i = 0; i < LOOPTIME; i++)
@@ -24,7 +24,7 @@ void MemoryDebug::debugEnemyManager()
 		{
 			enemyManager->issueNewEnemyID(),
 			enemyNS::WOLF,
-			enemyNS::CHASE,
+			stateMachineNS::CHASE,
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 		};

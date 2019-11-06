@@ -589,3 +589,5 @@ bool Player::canDoSkyVision() { return isSkyVisionAble; }
 bool Player::canShift() { return isShiftAble; }
 BoundingSphere* Player::getBodyCollide() { return &bodyCollide; }
 PlayerTable* Player::getInfomation() { return &infomation; }
+D3DXVECTOR3* Player::getCentralPosition() { return &centralPosition; }
+bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
