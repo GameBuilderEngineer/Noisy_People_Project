@@ -101,8 +101,7 @@ private:
 
 	//Sprite実験
 	SpriteGauge*					spriteGauge;
-	//タイマー
-	Timer *timer;
+	
 public:
 	Game();
 	~Game();

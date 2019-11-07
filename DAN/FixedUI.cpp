@@ -18,7 +18,8 @@ using namespace fixedUiNS;
 //================================
 FixedUI::FixedUI()
 {
-	fixedUI = new Sprite;
+	timer = new Timer;
+	timerFlame = new TimerFlame;
 }
 
 //================================
@@ -26,7 +27,8 @@ FixedUI::FixedUI()
 //================================
 FixedUI::~FixedUI()
 {
-	delete fixedUI;
+	delete timer;
+	delete timerFlame;
 }
 
 //================================
@@ -34,14 +36,8 @@ FixedUI::~FixedUI()
 //================================
 void FixedUI::initialize()
 {
-	fixedUI->initialize(
-		*textureNS::reference(textureNS::UI_TIMERFLAME)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_TIMERFLAME							//横幅
-		, HEIGHT_TIMERFLAME							//縦幅
-		, POSITION_TIMERFLAME						//表示位置
-		, ROTATION_TIMERFLAME						//回転
-		, COLOR_TIMERFLAME);						//色
+	timer->initialize();
+	timerFlame->initialize();
 }
 
 //================================
@@ -49,7 +45,8 @@ void FixedUI::initialize()
 //================================
 void FixedUI::render()
 {
-	fixedUI->render();
+	timerFlame->render();
+	timer->render();
 }
 
 //================================
@@ -57,7 +54,7 @@ void FixedUI::render()
 //================================
 void FixedUI::update()
 {
-
+	timer->update();
 }
 
 //================================

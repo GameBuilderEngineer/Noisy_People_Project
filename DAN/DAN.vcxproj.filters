@@ -564,9 +564,6 @@
     <ClCompile Include="ActionEventSeting.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="UImanager.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="FixedUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
@@ -578,6 +575,12 @@
     </ClCompile>
     <ClCompile Include="UItex.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerFlame.cpp">
+      <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -907,10 +910,13 @@
     <ClInclude Include="ActionEventSeting.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="UImanager.h">
+    <ClInclude Include="FixedUI.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="FixedUI.h">
+    <ClInclude Include="BasicUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerFlame.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
