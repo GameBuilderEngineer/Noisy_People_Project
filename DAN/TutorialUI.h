@@ -43,7 +43,7 @@ namespace tutorialUINS
 		TUTORIAL_STEP_3,
 		TUTORIAL_STEP_4,
 		TUTORIAL_STEP_5,
-		TUTORIAL_STEP_MAX
+		TUTORIAL_STEP_END
 	};
 }
 
@@ -63,8 +63,11 @@ public:
 private:
 	int step[gameMasterNS::PLAYER_NUM];
 
-	Sprite **tutorialSpriteBG;
-	Sprite **tutorialSpriteArray;
 
-	D3DXVECTOR3 arrayPos[gameMasterNS::PLAYER_NUM][tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_MAX];
+	Sprite **tutorialSpriteBG;
+	Sprite ***tutorialSpriteArray;
+
+	int cnt;
+
+	D3DXVECTOR3 arrayPos[gameMasterNS::PLAYER_NUM][tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_END];
 };
