@@ -35,6 +35,8 @@
 #include "SoundBase.h"
 #include "LinearTreeCell.h"
 #include "movep.h"
+
+#include "TelopManager.h"
 //#include "PointSprite.h"
 //#include "Object.h"
 //#include "Text.h"
@@ -100,6 +102,10 @@ private:
 	SpriteGauge*					spriteGauge;
 	//タイマー
 	Timer *timer;
+
+	//テロップマネジャー
+	TelopManager* telopManager;
+
 public:
 	Game();
 	~Game();
