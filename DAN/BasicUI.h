@@ -36,6 +36,7 @@ class BasicUI
 {
 public://メンバー変数
 	D3DXVECTOR3 position;	//表示位置
+	D3DXVECTOR3 rotation;	//回転
 	D3DCOLOR	color;		//色
 	int widthSize;			//幅のサイズ
 	int heightSize;			//高さサイズ
@@ -50,6 +51,11 @@ private:
 public://メンバー関数
 	BasicUI();				//コンストラクタ
 	~BasicUI();				//デストラクタ
+	void    initialize(Sprite *sprite, LPDIRECT3DTEXTURE9 *fileName);//初期化
+	void	assingPosition(D3DXVECTOR3 pos);						//表示位置の代入
+	void	assingRotation(D3DXVECTOR3 rot);						//回転の代入
+	void	assingColor(D3DCOLOR col);								//色の代入
+	void	assingSize(int widh, int height);						//サイズの代入
 	void	changePostion(int movetype);//位置変更	
 	void	increaseAlpha();//透明度増加
 	void	decreaseAlpha();//透明度減少

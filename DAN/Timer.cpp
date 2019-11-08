@@ -41,22 +41,19 @@ Timer::~Timer()
 //====================================
 void Timer::initialize()
 {
-	//表示位置の代入
-	position = POSITION_TIMER;
+	//初期表示位置の代入
+	BasicUI::assingPosition(POSITION_TIMER);
+
+	//初期サイズの代入
+	BasicUI::assingSize(WIDTH_TIMER, HEIGHT_TIMER);
 
 	//タイマーの初期値
 	keepTime = GAME_TIME;
+
+	//テクスチャの初期化
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
-		timer[i]->initialize(
-			*textureNS::reference(textureNS::NUMBER)//テクスチャ
-			, SpriteNS::CENTER						//中心
-			, WIDTH_TIMER							//横幅
-			, HEIGHT_TIMER							//縦幅
-			, POSITION_TIMER						//表示位置
-			, ROTATION_TIMER						//回転
-			, COLOR_TIMER);							//色
-
+		BasicUI::initialize(timer[i], textureNS::reference(textureNS::NUMBER));
 	}
 }
 
@@ -99,16 +96,13 @@ void Timer::uninitialize()
 //====================================
 void Timer::setUV(int time)
 {
-	//分の設定
-	int minuteTime = time / 60;
-
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
 		float x = (float)(time % 10);
-		uvCoord01.x = 0.1*x;
-		uvCoord02.x = 0.1 *(x + 1);
-		uvCoord03.x = 0.1 *x;
-		uvCoord04.x = 0.1 *(x + 1);
+		uvCoord01.x = 0.1f *x;
+		uvCoord02.x = 0.1f *(x + 1);
+		uvCoord03.x = 0.1f *x;
+		uvCoord04.x = 0.1f *(x + 1);
 		time /= 10;
 		timer[i]->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
 	}

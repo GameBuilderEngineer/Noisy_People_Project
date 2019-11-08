@@ -582,6 +582,9 @@
     <ClCompile Include="TimerFlame.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
+    <ClCompile Include="UIButton.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -917,6 +920,9 @@
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
     <ClInclude Include="TimerFlame.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButton.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>

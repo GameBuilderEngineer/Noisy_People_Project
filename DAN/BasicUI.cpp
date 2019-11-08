@@ -20,6 +20,7 @@ BasicUI::BasicUI()
 {
 	//各数値の初期化
 	position = D3DXVECTOR3(0, 0, 0);			//表示位置
+	rotation = D3DXVECTOR3(0, 0, 0);			//回転
 	color = D3DCOLOR_RGBA(255,255, 255, 255);	//色
 	widthSize = 0;								//横幅
 	heightSize = 0;								//高さ
@@ -36,6 +37,54 @@ BasicUI::BasicUI()
 BasicUI::~BasicUI()
 {
 
+}
+
+//==================================
+//初期化
+//==================================
+void BasicUI::initialize(Sprite *sprite, LPDIRECT3DTEXTURE9 *fileName)
+{
+	sprite->initialize(
+		*fileName					//テクスチャ
+		, SpriteNS::CENTER			//中心
+		, widthSize					//横幅
+		, heightSize				//縦幅
+		, position					//表示位置
+		, rotation 					//回転
+		, color);					//色
+}
+
+//==================================
+//表示位置の代入
+//==================================
+void BasicUI::assingPosition(D3DXVECTOR3 pos)
+{
+	position = pos;
+}
+
+//==================================
+//回転の代入
+//==================================
+void BasicUI::assingRotation(D3DXVECTOR3 rot)
+{
+	rotation = rot;
+}
+
+//==================================
+//色の代入
+//==================================
+void BasicUI::assingColor(D3DCOLOR col)
+{
+	color = col;
+}
+
+//==================================
+//サイズの代入
+//==================================
+void BasicUI::assingSize(int widh, int height)
+{
+	widthSize = widh;
+	heightSize = height;
 }
 
 //==================================
@@ -72,8 +121,11 @@ void BasicUI::changePostion(int movetype)
 //=================================
 void BasicUI::increaseAlpha()
 {
-	alphaValue += CHANGE_ALPHA_SPEED;
-	color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
+	if (alphaValue >= 255)
+	{
+		alphaValue += CHANGE_ALPHA_SPEED;
+		color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
+	}
 }
 
 //=================================
@@ -81,8 +133,11 @@ void BasicUI::increaseAlpha()
 //=================================
 void BasicUI::decreaseAlpha()
 {
-	alphaValue -= CHANGE_ALPHA_SPEED;
-	color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
+	if (alphaValue >= 0)
+	{
+		alphaValue -= CHANGE_ALPHA_SPEED;
+		color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
+	}
 }
 
 //=================================

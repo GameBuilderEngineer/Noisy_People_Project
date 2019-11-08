@@ -59,6 +59,10 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
 	textureName[UI_TIMERFLAME] = { "Time_Frame.png" };
+	textureName[UI_BUTTON1] = { "SV.png" };
+	textureName[UI_BUTTON2] = { "shot.png" };
+	textureName[UI_BUTTON3] = { "shift.png" };
+	textureName[UI_BUTTON4] = { "vision.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

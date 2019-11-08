@@ -53,6 +53,10 @@ namespace textureNS
 		UI_INFO_MISSION,
 		UI_INFO_BAR,
 		UI_TIMERFLAME,
+		UI_BUTTON1,
+		UI_BUTTON2,
+		UI_BUTTON3,
+		UI_BUTTON4,
 
 		// Result
 		RESULT,

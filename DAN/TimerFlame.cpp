@@ -35,14 +35,12 @@ TimerFlame::~TimerFlame()
 //==================================
 void TimerFlame::initialize()
 {
-	timerFlame->initialize(
-		*textureNS::reference(textureNS::UI_TIMERFLAME)//テクスチャ
-		, SpriteNS::CENTER							//中心
-		, WIDTH_TIMERFLAME							//横幅
-		, HEIGHT_TIMERFLAME							//縦幅
-		, POSITION_TIMERFLAME						//表示位置
-		, ROTATION_TIMERFLAME						//回転
-		, COLOR_TIMERFLAME);						//色
+	//初期表示位置の代入
+	BasicUI::assingPosition(POSITION_TIMERFLAME);
+	//初期サイズの代入
+	BasicUI::assingSize(WIDTH_TIMERFLAME, HEIGHT_TIMERFLAME);
+	//テクスチャの初期化
+	BasicUI::initialize(timerFlame, textureNS::reference(textureNS::UI_TIMERFLAME));
 }
 
 //=================================

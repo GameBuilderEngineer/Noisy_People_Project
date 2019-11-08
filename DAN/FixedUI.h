@@ -24,7 +24,7 @@ class FixedUI
 {
 public://メンバー変数
 private:
-	Timer * timer;
+	Timer * timer;				//タイマー
 	TimerFlame * timerFlame;	//タイマーフレーム
 
 public://メンバー関数
