@@ -11,7 +11,7 @@ float4x4	matrixProjection;
 float4x4	matrixView;
 texture		textureDecal;
 float4		diffuse;
-float4		lightDirection		= float4(1.0f, 1.0f, 1.0f, 0.2f);
+float4		lightDirection		= float4(-1.0f, 1.0f, -1.0f, 0.2f);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
