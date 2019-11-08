@@ -499,7 +499,6 @@
     <ClCompile Include="SpriteGauge.cpp">
       <Filter>Constant Layer\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="TestEffectOccurrence.cpp" />
     <ClCompile Include="EffekseerManager.cpp">
       <Filter>Constant Layer\Effekseer</Filter>
     </ClCompile>
@@ -563,7 +562,6 @@
     <ClCompile Include="3DSound.cpp">
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
-    <ClCompile Include="TelopManager.cpp" />
     <ClCompile Include="PathFollowing.cpp">
       <Filter>Game Layer\NaviAI</Filter>
     </ClCompile>
@@ -629,6 +627,12 @@
     </ClCompile>
     <ClCompile Include="TutorialUI.cpp">
       <Filter>Game Layer\Scene\Tutorial\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TelopManager.cpp">
+      <Filter>Game Layer\Tlop</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffectOccurrence.cpp">
+      <Filter>Game Layer\TestEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -920,7 +924,6 @@
     <ClInclude Include="SpriteGauge.h">
       <Filter>Constant Layer\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="TestEffectOccurrence.h" />
     <ClInclude Include="MemoryDebug.h">
       <Filter>Game Layer</Filter>
     </ClInclude>
@@ -939,7 +942,6 @@
     <ClInclude Include="3DSound.h">
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
-    <ClInclude Include="TelopManager.h" />
     <ClInclude Include="PathFollowing.h">
       <Filter>Game Layer\NaviAI</Filter>
     </ClInclude>
@@ -996,6 +998,12 @@
     </ClInclude>
     <ClInclude Include="TutorialUI.h">
       <Filter>Game Layer\Scene\Tutorial\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TelopManager.h">
+      <Filter>Game Layer\Tlop</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffectOccurrence.h">
+      <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -38,6 +38,8 @@
 #include "SoundBase.h"
 #include "LinearTreeCell.h"
 #include "movep.h"
+
+#include "TelopManager.h"
 //#include "Text.h"
 
 //===================================================================================================================================
@@ -104,7 +106,7 @@ private:
 	Telop*							telop;				// テロップ
 	SpriteGauge*					spriteGauge;		//Sprite実験
 	Reticle*						reticle;			//レティクル
-
+	TelopManager*					telopManager;		//テロップマネジャー
 	FixedUI*						fixedUI;			//固定されたUI
 
 	//再生パラメータ

@@ -184,8 +184,12 @@ void Game::initialize() {
 	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// テロップ
-	telop = new Telop;
-	telop->initialize();
+	/*telop = new Telop;
+	telop->initialize();*/
+
+	//テロップマネージャー
+	telopManager = new TelopManager;
+	telopManager->initialize();
 
 	// AI
 	aiDirector = new AIDirector;
@@ -256,7 +260,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
-	SAFE_DELETE(telop);
+	/*SAFE_DELETE(telop);*/
+	SAFE_DELETE(telopManager);
 	SAFE_DELETE(aiDirector);
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
@@ -350,10 +355,21 @@ void Game::update(float _frameTime) {
 #pragma endregion
 
 
-	// テロップの更新
-	//float rate = frameTime / SCENE_TIME;
-	telop->update(frameTime);
+	//テロップマネージャーの更新
+	telopManager->update(frameTime);
+	//テロップ発生フラグ
+	if (input->wasKeyPressed('L'))
+	{
+		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
+		telopManager->play(telopManagerNS::TELOP_TYPE0);
+	}
+	if (input->wasKeyPressed('K'))
+	{
+		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
+		telopManager->play(telopManagerNS::TELOP_TYPE1);
+	}
 	
+
 	//枯木の更新
 	deadTree->update();
 	//木Aの更新
@@ -528,10 +544,12 @@ void Game::renderUI() {
 	//spriteGauge->render();
 	//telop->render();
 	
+	// テロップマネージャーの描画
+	telopManager->render();	
+
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-	telop->render();	// テロップの描画
 
 	//固定UIの描画
 	fixedUI->render();

@@ -11,63 +11,22 @@ using namespace telopNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void Telop::initialize()
+void Telop::initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
+	int _width, int _height, D3DXVECTOR3 _position, D3DXVECTOR3 _rotation, D3DCOLOR color)
 {
-	int sinValue = 0;
+
 	input = getInput();
 	telopFlag = false;
 	state = CLOSE;
 	telopTimer = 0.0f;
 	displayTimer = 0.0f;
-	for (int i = 0; i < MAX_TELOP; i++)
-	{
-		telop[i] = new Sprite;
-	}
 	
-	//テロップ0の初期化
-	telop[TELOP_TYPE0]->initialize(
-		*textureNS::reference(textureNS::UI_INFO_10),
-		SpriteNS::CENTER,
-		WIDTH,
-		MIN_HEIGHT,
-		POSITION,
-		ROTATION,
-		COLOR
-	);
 
-	//テロップ1の初期化
-	telop[TELOP_TYPE1]->initialize(
-		*textureNS::reference(textureNS::TITLE_LOGO),
-		SpriteNS::TOP_LEFT,
-		WIDTH,
-		MIN_HEIGHT,
-		POSITION,
-		ROTATION,
-		COLOR
-	);
-
-	//テロップ2の初期化
-	/*telop[TELOP_TYPE2]->initialize
-
-	//テロップ3の初期化
-	telop[TELOP_TYPE3]->initialize
+	sprite = new Sprite;
+	sprite->initialize(_texture, _pivot,
+		_width,  _height, _position, _rotation, color);
 	
-	//テロップ4の初期化
-	telop[TELOP_TYPE4]->initialize
 	
-	//テロップ5の初期化
-	telop[TELOP_TYPE5]->initialize*/
-
-	telop[TELOP_INFO_BAR]->initialize(
-		*textureNS::reference(textureNS::UI_INFO_BAR),
-		SpriteNS::CENTER,
-		WIDTH_BAR,
-		HEIGHT_BAR,
-		POSITION,
-		ROTATION,
-		COLOR
-	);
-
 }
 
 
@@ -76,10 +35,7 @@ void Telop::initialize()
 //=============================================================================
 void Telop::uninitialize()
 {
-	for (int i = 0; i < MAX_TELOP; i++)
-	{
-		SAFE_DELETE(telop[i]);
-	}
+	SAFE_DELETE(sprite);
 }
 
 
@@ -88,64 +44,46 @@ void Telop::uninitialize()
 //=============================================================================
 void Telop::update(float _frameTime)
 {
-	//frameTime = _frameTime;							//フレームタイムの保存
-	//float rate = sceneTimer / SCENE_TIME;
+	frameTime = _frameTime;				//フレームタイムの保存
 	
-	float rate = 0.0f;
+	rate = 0.0f;
 	switch (state)
 	{
 	case OPEN://オープン
-		telopTimer += _frameTime;						//シーンタイムの更新
+		
+		telopTimer += _frameTime;		//シーンタイムの更新
+
 		//高さの更新
-		 rate = telopTimer / OPEN_TIME;
-		heightValue = (int)((float)MAX_HEIGHT * rate);
-		if (telopTimer > OPEN_TIME)
-		{
-			state = DISPLAY;
-			displayTimer = DISPLAY_TIME;
-			telopTimer = CLOSE_TIME;
-		}
+		Telop::open();
+
 		break;
 	case DISPLAY:	
-		//表示待機
+
+		//表示待機　
 		displayTimer -= _frameTime;
-		if (displayTimer < 0)
-		{
-			state = CLOSE;
-			displayTimer = 0.0f;
-		}
+		Telop::display();
+		
 		break;
 	case CLOSE:		
+
 		//クローズ
-		if (telopTimer > 0)
-		{
-			telopTimer -= _frameTime;
-			//高さの更新
-			rate = telopTimer / CLOSE_TIME;
-			heightValue = (int)((float)MAX_HEIGHT * rate);
-		}
+		Telop::close();
+		
 		//オープンへ遷移
-		if (input->wasKeyPressed('L'))
+		if (telopFlag)
 		{
+			telopFlag = false;
 			state = OPEN;
 			telopTimer = 0.0f;
 		}
-		break;
 		
+		break;
 	}
-
-	/*if (telopFlag)
-	{
-		telopFlag = false;
-		state = OPEN;
-		telopTimer = 0.0f;
-	}*/
-
 
 
 	//サイズの更新
-	telop[TELOP_TYPE0]->setSize(WIDTH, heightValue);
-	telop[TELOP_TYPE0]->setVertex();
+	sprite->setSize(WIDTH, heightValue);
+	sprite->setVertex();
 }
 
 
@@ -154,11 +92,70 @@ void Telop::update(float _frameTime)
 //=============================================================================
 void Telop::render()
 {
-	if (telopTimer>0)
+	if (telopTimer > 0)
 	{
-		telop[TELOP_INFO_BAR]->render();
-		telop[TELOP_TYPE0]->render();
+		sprite->render();
 	}
-	//telop[TELOP_TYPE1]->render();
+	
+}
 
+//=============================================================================
+// オープン処理
+//=============================================================================
+void Telop::open()
+{
+	//高さの更新
+	rate = telopTimer / telopNS::OPEN_TIME;
+	heightValue = (int)((float)telopNS::MAX_HEIGHT * rate);
+	if (telopTimer > telopNS::OPEN_TIME)
+	{
+		state = telopNS::DISPLAY;
+		displayTimer = telopNS::DISPLAY_TIME;
+		telopTimer = telopNS::CLOSE_TIME;
+	}
+}
+
+//=============================================================================
+// 待機処理
+//=============================================================================
+void Telop::display()
+{
+	if (displayTimer < 0)
+	{
+		state = CLOSE;
+		displayTimer = 0.0f;
+		closeTimer = 0.0f;
+	}
+}
+//=============================================================================
+// クローズ処理
+//=============================================================================
+void Telop::close()
+{
+	if (telopTimer > 0)
+	{
+		telopTimer -= frameTime;
+		closeTimer += frameTime;
+		//高さの更新
+		rate = telopTimer / CLOSE_TIME;
+		heightValue = (int)((float)MAX_HEIGHT * rate);
+		if (closeTimer >= CLOSE_TIME)
+		{
+			*playFlag = false;
+		}
+	}
+}
+
+
+//=============================================================================
+// テロップ再生処理
+//=============================================================================
+void Telop::playTelop()
+{
+	telopFlag = true;
+}
+
+void Telop::setManagerFlag(bool* managerFlag)
+{
+	playFlag = managerFlag;
 }
