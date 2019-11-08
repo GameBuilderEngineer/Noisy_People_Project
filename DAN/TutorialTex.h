@@ -27,7 +27,6 @@ namespace tutorialTex
 	const D3DXVECTOR3 POSITION = D3DXVECTOR3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0);//位置
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0, 0, 0);			//回転
 	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);	//色
-	
 }
 //============================
 //クラス定義

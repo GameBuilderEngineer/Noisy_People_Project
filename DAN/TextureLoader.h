@@ -30,6 +30,7 @@ namespace textureNS
 		TUTORIAL2,
 		TUTORIAL_UI_0,
 		TUTORIAL_UI_1,
+		TUTORIAL_UI_PLANE,
 
 		// Title
 		TITLE_LOGO,

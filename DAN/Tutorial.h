@@ -77,7 +77,7 @@ private:
 	TutorialUI *tutorialUI;
 
 	//ディスプレイプレーン
-	TutorialPlane *plane;
+	TutorialPlane **plane;
 
 	//タイマー
 	Timer *timer;
@@ -86,6 +86,7 @@ private:
 	enemyNS::EnemyData* enemyData;
 
 	//進捗
+	int planeStep[gameMasterNS::PLAYER_NUM];
 	int step[gameMasterNS::PLAYER_NUM];
 
 public:
@@ -97,12 +98,13 @@ public:
 	virtual void collisions() override;
 	virtual void AI() override;
 	virtual void uninitialize() override;
-	void render3D(Camera currentCamera);
+	void render3D(Camera currentCamera, int playerID);
 	void renderUI();
 
 	void tree8Reregister(Object* tmp);
 
 #ifdef _DEBUG
+	int playerSelect;
 	virtual void createGUI() override;
 #endif
 };

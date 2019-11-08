@@ -36,6 +36,7 @@ TextureLoader::TextureLoader()
 	textureName[TUTORIAL2] = { "Slide_02.png" };
 	textureName[TUTORIAL_UI_0] = { "steplist.png" };
 	textureName[TUTORIAL_UI_1] = { "check.png" };
+	textureName[TUTORIAL_UI_PLANE] = { "comment.png" };
 
 	// Title
 	textureName[TITLE_LOGO] = { "DAN_Logo.png" };

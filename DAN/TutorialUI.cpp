@@ -50,7 +50,7 @@ TutorialUI::TutorialUI()
 			SpriteNS::TOP_LEFT,		//中心
 			BG_WIDTH,				//横幅
 			BG_HEIGHT,				//縦幅
-			D3DXVECTOR3(BG_WIDTH / 2 + ((recDisplay.right / 2)*i), 0, 0), 	//表示位置
+			D3DXVECTOR3((recDisplay.right / 2)*i, 0, 0), 	//表示位置
 			rot,						//回転
 			col);					//色
 

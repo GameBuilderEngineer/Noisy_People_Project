@@ -111,6 +111,7 @@ void Tutorial::initialize()
 
 		//進捗
 		step[i] = tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1;
+		planeStep[i] = tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_ENEMY;
 	}
 
 	//エフェクシアーの設定
@@ -128,9 +129,6 @@ void Tutorial::initialize()
 	//スカイドームの初期化
 	sky = new Sky();
 
-	//ディスプレイプレーン
-	plane = new TutorialPlane;
-
 	//アニメションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
 
@@ -147,11 +145,14 @@ void Tutorial::initialize()
 	enemyData = enemyManager->createEnemyData(enemySet);
 	enemyManager->createEnemy(enemyData);
 
-	//プレーンの作成
+	//ディスプレイプレーン
 	D3DXVECTOR3 enemyPlanePos = enemySet.defaultPosition;
 	enemyPlanePos.y += 5;
-	plane->init(tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_ENEMY, enemyPlanePos);
-	plane->init(tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_IDK, playerNS::START_POSITION[gameMasterNS::PLAYER_1P]);
+	plane = new TutorialPlane*[gameMasterNS::PLAYER_NUM];
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		plane[i] = new TutorialPlane(enemyPlanePos);
+	}
 
 	//UI
 	tutorialUI = new TutorialUI;
@@ -172,6 +173,7 @@ void Tutorial::initialize()
 
 #ifdef _DEBUG
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+	playerSelect = gameMasterNS::PLAYER_1P;
 #endif
 }
 
@@ -193,6 +195,12 @@ void Tutorial::uninitialize()
 	SAFE_DELETE(timer);
 	SAFE_DELETE(tutorialUI);
 
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		SAFE_DELETE(plane[i]);
+	}
+	SAFE_DELETE_ARRAY(plane);
+
 	UninitMoveP();
 
 	tutorialTex.uninitialize();
@@ -206,20 +214,24 @@ void Tutorial::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	//ディスプレイプレーン
-	plane->update(frameTime);
-
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
 
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-		player[i].update(frameTime);		//オブジェクト
+	{		
+		//オブジェクト
+		player[i].update(frameTime);	
+
+		//ディスプレイプレーン
+		plane[i]->update(frameTime, planeStep[i]);
+	}
+
 	maleRenderer->update();				//レンダラー
 	femaleRenderer->update();			//レンダラー
 
-		// エネミーの更新
+	// エネミーの更新
 	enemyManager->update(frameTime);
 	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	//	enemyManager->footsteps(*player[i].getPosition(), i);		//足音
@@ -297,7 +309,7 @@ void Tutorial::render()
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	camera[gameMasterNS::PLAYER_1P].renderReady();
 	direct3D9->changeViewport1PWindow();
-	render3D(camera[gameMasterNS::PLAYER_1P]);
+	render3D(camera[gameMasterNS::PLAYER_1P], gameMasterNS::PLAYER_1P);
 	effekseerNS::setCameraMatrix(
 		camera[gameMasterNS::PLAYER_1P].position,
 		camera[gameMasterNS::PLAYER_1P].gazePosition,
@@ -307,7 +319,7 @@ void Tutorial::render()
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	camera[gameMasterNS::PLAYER_2P].renderReady();
 	direct3D9->changeViewport2PWindow();
-	render3D(camera[gameMasterNS::PLAYER_2P]);
+	render3D(camera[gameMasterNS::PLAYER_2P], gameMasterNS::PLAYER_2P);
 	effekseerNS::setCameraMatrix(
 		camera[gameMasterNS::PLAYER_2P].position,
 		camera[gameMasterNS::PLAYER_2P].gazePosition,
@@ -322,7 +334,7 @@ void Tutorial::render()
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Tutorial::render3D(Camera currentCamera)
+void Tutorial::render3D(Camera currentCamera, int playerID)
 {
 	//テストフィールドの描画
 //testField->setAlpha(0.1f); 
@@ -344,7 +356,7 @@ void Tutorial::render3D(Camera currentCamera)
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//ディスプレイ用プレーンサンプル
-	plane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	plane[playerID]->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #if _DEBUG
 	//4分木空間分割のライン描画
@@ -435,13 +447,19 @@ void Tutorial::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+
+	ImGui::SliderInt("PLAYER", &playerSelect, gameMasterNS::PLAYER_1P, gameMasterNS::PLAYER_2P, "");
+
+	ImGui::SliderInt("STEP", &step[playerSelect], tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1, tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_5, "");
+	if (tutorialUI->getStep(playerSelect) != step[playerSelect])
 	{
-		ImGui::SliderInt("", &step[i], tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1, tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_5, "STEP");
-		if (tutorialUI->getStep(i) != step[i])
-		{
-			tutorialUI->setStep(i, step[i]);
-		}
+		tutorialUI->setStep(playerSelect, step[playerSelect]);
+	}
+
+	ImGui::SliderInt("PLANE STEP", &planeStep[playerSelect], tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_ENEMY, tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_CLEAR, "");
+	if (plane[playerSelect]->getPlaneStep() != planeStep[playerSelect])
+	{
+		plane[playerSelect]->update(frameTime, planeStep[playerSelect]);
 	}
 }
 #endif // _DEBUG
