@@ -46,17 +46,6 @@ namespace enemyNS
 		TYPE_MAX,
 	};
 
-	// ステートの種類
-	enum ENEMY_STATE
-	{
-		CHASE,		// 追跡ステート
-		PATROL,		// 警戒ステート
-		REST,		// 休憩ステート
-		DIE,		// 死亡ステート
-		DEAD,		// 撃退済み判定
-		STATE_MAX
-	};
-
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{

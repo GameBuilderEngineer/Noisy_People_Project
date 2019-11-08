@@ -134,12 +134,12 @@ void Tutorial::initialize()
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),player);
 	//test(sai[マージする時に消して])
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	enemySet.defaultPosition = D3DXVECTOR3(-3.0f, 1.5f, 24.5f);
-	enemySet.defaultState = enemyNS::ENEMY_STATE::CHASE;
+	enemySet.defaultState = stateMachineNS::ENEMY_STATE::CHASE;
 	enemySet.type = enemyNS::ENEMY_TYPE::WOLF;
 	enemySet.enemyID = 0;
 	enemyData = enemyManager->createEnemyData(enemySet);
