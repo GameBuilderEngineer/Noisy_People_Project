@@ -109,9 +109,6 @@ private:
 
 	//Ä¶ƒpƒ‰ƒ[ƒ^
 	PLAY_PARAMETERS playParameters[4];
-
-	//SpriteÀŒ±
-	SpriteGauge*					spriteGauge;
 	
 public:
 	Game();
