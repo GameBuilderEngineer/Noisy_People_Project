@@ -23,6 +23,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "GameMaster.h"
+#include "Bullet.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -197,13 +198,13 @@ private:
 	D3DXVECTOR3					centralPosition;				// 中心座標
 	D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
 
-	//照準位置
+	//シューティングアクション
 	Ray							aimingRay;						//照準レイ（カメラからのレイ）
 	Ray							shootingRay;					//狙撃レイ（プレイヤーからのレイ）
 	D3DXVECTOR3					launchPosition;					//発射位置
 	D3DXVECTOR3					aimingPosition;					//照準位置(カメラレイ準拠）
 	float						collideDistance;				//照射距離
-
+	BulletManager*				bulletManager;					//バレットマネージャー
 
 
 
@@ -236,7 +237,7 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 	void jump();												//ジャンプ
 	float dash();
-	void aiming();												//狙いを定める
+	void shot();												//狙いを定める
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI

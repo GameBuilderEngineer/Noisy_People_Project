@@ -51,10 +51,16 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	//「DIRECT3Dデバイス」オブジェクトの作成
 	D3DPRESENT_PARAMETERS d3dpp;
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
-	d3dpp.BackBufferFormat			= D3DFMT_UNKNOWN;
+	//d3dpp.BackBufferFormat			= D3DFMT_UNKNOWN;
+	D3DDISPLAYMODE dMode;
+	d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dMode);
+	d3dpp.BackBufferFormat			= dMode.Format;
 	d3dpp.BackBufferCount			= 1;
 	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
+	d3dpp.Windowed					= false;
 	d3dpp.Windowed					= true;
+	d3dpp.BackBufferWidth			= WINDOW_WIDTH;
+	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
 	d3dpp.EnableAutoDepthStencil	= true;
 	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
 	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;
