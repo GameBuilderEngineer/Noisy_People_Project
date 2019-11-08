@@ -30,13 +30,12 @@
 #include "Battery.h"
 #include "telop.h"
 #include "Timer.h"
-
+#include "Reticle.h"
+#include "Ocean.h"
 #include "Sound.h"
 #include "SoundBase.h"
 #include "LinearTreeCell.h"
 #include "movep.h"
-//#include "PointSprite.h"
-//#include "Object.h"
 //#include "Text.h"
 
 //===================================================================================================================================
@@ -61,15 +60,20 @@ class Game : public AbstractScene
 {
 private:
 
+	int								nowRenderingWindow;	//現在の描画ウィンドウ識別子
+
+	//衝突判定
 	//Linear4TreeManager<Object>*	linear4TreeManager;	//線形４分木管理クラス
 	Linear8TreeManager<Object>*		linear8TreeManager;	//線形８分木管理クラス
 	ObjectTree<Object>*				objectTreeArray;	//オブジェクトツリー
 	DWORD							collisionNum;		//衝突判定回数
 	CollisionList<Object>*			collisionList;		//衝突判定リスト
 
+	//3Dオブジェクト
 	Player*							player;				//プレイヤー
 	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
 	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
+
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 
@@ -78,10 +82,12 @@ private:
 	TreeTypeB*						treeB;				//木B
 	Stone*							stone;				//石
 	Sky*							sky;				//スカイドーム
+	Ocean*							ocean;				//海面
 
 	StaticMeshRenderer*		MoveP;
 	MOVEP*					MoveP1;
 
+	//ビルボード
 	TestEffect*						testEffect;			//インスタンシングビルボードテスト
 	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
 
@@ -91,15 +97,16 @@ private:
 
 	AIDirector*						aiDirector;			// AI
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
+
+	//UI
 	Telop*							telop;				// テロップ
+	Timer*							timer;				//タイマー
+	SpriteGauge*					spriteGauge;		//Sprite実験
+	Reticle*						reticle;			//レティクル
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
 
-	//Sprite実験
-	SpriteGauge*					spriteGauge;
-	//タイマー
-	Timer *timer;
 public:
 	Game();
 	~Game();

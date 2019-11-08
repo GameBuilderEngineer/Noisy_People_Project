@@ -59,8 +59,8 @@ namespace playerNS{
 			'R',					//RESET
 			VK_LSHIFT,				//DASH
 			VK_SPACE,				//JUMP
-			VK_F11,					//ReverseCameraAxisX
-			VK_F12,					//ReverseCameraAxisY
+			VK_F7,					//ReverseCameraAxisX
+			VK_F8,					//ReverseCameraAxisY
 		},
 		//2P
 		{
@@ -69,10 +69,10 @@ namespace playerNS{
 			VK_RIGHT,				//RIGHT
 			VK_LEFT,				//LEFT
 			'R',					//RESET
-			VK_LSHIFT,				//DASH
-			VK_SPACE,				//JUMP
-			VK_F11,					//ReverseCameraAxisX
-			VK_F12,					//ReverseCameraAxisY
+			VK_BACK,				//DASH
+			VK_TAB,					//JUMP
+			VK_F9,					//ReverseCameraAxisX
+			VK_F10,					//ReverseCameraAxisY
 		}
 	};
 
@@ -106,8 +106,7 @@ namespace playerNS{
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		D3DXVECTOR3(-115, 40, 0),		//1P
-		//D3DXVECTOR3(35, 10, 0)			//2P
-		D3DXVECTOR3(-35, 10, 0)			//2P
+		D3DXVECTOR3(-115, 30, 30)			//2P
 	};
 
 	// StatusParameter
@@ -138,6 +137,10 @@ namespace playerNS{
 	const float DIFFERENCE_FIELD			= 0.05f;								// フィールド補正差分
 	const float CAMERA_SPEED				= 1.0f;									// カメラの速さ
 	
+	//Shooting
+	const float MAX_DISTANCE				= 100.0f;								//最大照準距離
+
+
 }
 
 
@@ -190,23 +193,19 @@ private:
 	Input*						input;							// 入力系
 	Camera*						camera;							// 操作するカメラへのポインタ
 	D3DXVECTOR3					cameraGaze;						//カメラ注視位置
+	D3DXVECTOR3					cameraGazeRelative;				//カメラ注視相対位置
 	D3DXVECTOR3					centralPosition;				// 中心座標
 	D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
 
-	//摩擦力
-	//静止摩擦力…動き出す前の摩擦力
-	//動摩擦力…動き出してからの摩擦力
-	//静止摩擦力＞動摩擦力
+	//照準位置
+	Ray							aimingRay;						//照準レイ（カメラからのレイ）
+	Ray							shootingRay;					//狙撃レイ（プレイヤーからのレイ）
+	D3DXVECTOR3					launchPosition;					//発射位置
+	D3DXVECTOR3					aimingPosition;					//照準位置(カメラレイ準拠）
+	float						collideDistance;				//照射距離
 
-	//最大静止摩擦力…外力を徐々に大きくしていって、動き出した時の静止摩擦力
 
-	//垂直抗力(N)
-	//静止摩擦係数(μ)
-	//最大静止摩擦力(F0)
-	//F0 = μN
 
-	//動摩擦力
-	//
 
 public:
 	Player();
@@ -226,6 +225,7 @@ public:
 		LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
 	void physicalBehavior();									// 物理挙動
 	void updatePhysics(float frameTime);						// 物理の更新
+	void insetCorrection();										//めり込み補正
 
 	//操作
 	void moveOperation();										// 移動操作
@@ -236,6 +236,7 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 	void jump();												//ジャンプ
 	float dash();
+	void aiming();												//狙いを定める
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI
@@ -258,9 +259,12 @@ public:
 	bool canShift();
 	BoundingSphere* getBodyCollide();							//球コリジョンの取得
 	PlayerTable*	getInfomation();							//プレイヤー情報取得
-	D3DXVECTOR3* getCameraGaze();							//カメラ注視ポジション
+	D3DXVECTOR3*	getCameraGaze();							//カメラ注視ポジション
+	D3DXVECTOR3*	getAiming();								//照準ポイントの取得
 
 	D3DXVECTOR3* getCentralPosition();							//中心座標の取得
 	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
 	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
+	
+
 };

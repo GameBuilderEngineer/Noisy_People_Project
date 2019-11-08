@@ -44,6 +44,7 @@ void Sky::initialize() {
 void Sky::update()
 {
 	if (!needUpdate)return;
+	object->update();
 	renderer->update();
 	needUpdate = false;
 }

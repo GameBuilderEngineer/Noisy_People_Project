@@ -58,7 +58,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_LIMIT2] = { "Info_Limit2.png" };
 	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
-	textureName[UI_RETICLE] = { "Info_Bar.png" };
+	textureName[UI_RETICLE] = { "Reticle.png" };
 	textureName[UI_DIGITAL_RETICLE] = { "Digi_Reticle.png" };
 
 
