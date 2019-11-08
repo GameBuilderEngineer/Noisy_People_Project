@@ -144,13 +144,19 @@ void Camera::outputGUI()
 		float limitTop = 1000;
 		float limitBottom = -1000;
 
-		ImGui::SliderFloat("fieldOfView", &fieldOfView, 0, limitTop);							//視野角
+		float minFOV = (D3DX_PI / 180) * 1;
+		float maxFOV = (D3DX_PI / 180) * 180;
+
+		float minRelative = 0;
+		float maxRelative = 5;
+
+		ImGui::SliderFloat("fieldOfView", &fieldOfView, minFOV, maxFOV);						//視野角
 		ImGui::SliderFloat("nearZ", &nearZ, INIT_NEAR_Z, INIT_FAR_Z);							//視認近距離
 		ImGui::SliderFloat("farZ", &farZ, INIT_FAR_Z, INIT_FAR_Z*10);							//視認遠距離
 
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);						//位置
 		ImGui::SliderFloat3("gazePosition", gazePosition, limitBottom, limitTop);				//注視位置
-		ImGui::SliderFloat4("relativeQuaternion", relativeQuaternion, limitBottom, limitTop);	//相対位置
+		ImGui::SliderFloat4("relativeQuaternion", relativeQuaternion, minRelative, maxRelative);//相対位置
 		ImGui::SliderFloat3("upVector", upVector, -1, 1);										//上方ベクトル
 		ImGui::SliderFloat4("posture", posture, limitBottom, limitTop);							//姿勢クォータニオン
 

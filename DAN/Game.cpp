@@ -200,7 +200,25 @@ void Game::initialize() {
 	spriteGauge->initialize();
 
 #ifdef _DEBUG
+	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+
+	// ツリーをランダムに設置する
+	treeNS::TreeData treeData;
+	treeData.treeID = treeManager->issueNewTreeID();
+	treeData.hp = 100;
+	treeData.type = treeNS::ANALOG_TREE;
+	treeData.size = treeNS::STANDARD;
+	treeData.geenState = treeNS::DEAD;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 1000; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		
+		treeManager->createTree(treeData);
+	}
 #endif
 }
 
@@ -463,7 +481,6 @@ void Game::render3D(Camera currentCamera) {
 	//{
 	//	tmp1 = root[i * 2];
 	//	tmp2 = root[i * 2 + 1];
-
 	//	length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
 	//	ray.initialize(tmp1->position, direction);
 	//	ray.render(length);
@@ -569,7 +586,8 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	aiDirector->run();		// メタAI実行
+	//エネミー増殖し続けるのでコメントアウト
+	//aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -639,8 +657,12 @@ void Game::test()
 	if (input->wasKeyPressed('5'))	// 作成
 	{
 		treeNS::TreeData treeData;
-		treeData.geenState = treeNS::GREEN;
-		treeData.model = treeNS::A_MODEL;
+		treeData.treeID = treeManager->issueNewTreeID();
+		treeData.hp = 100;
+		treeData.type = treeNS::ANALOG_TREE;
+		treeData.size = treeNS::STANDARD;
+		treeData.geenState = treeNS::DEAD;
+		treeData.model = treeNS::B_MODEL;
 		treeData.initialPosition = *player->getPosition();
 		treeManager->createTree(treeData);
 	}

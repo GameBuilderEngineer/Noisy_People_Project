@@ -63,9 +63,11 @@ namespace aiNS
 		NUM_EVENT_LIST
 	};
 
+
 	// エネミ―イベント関係定数
 	const float RECENT_SECOND = 30.0f;				// 最近と見なす秒数（直近○秒）
 	const float MANDATORY_SPAWN_INTERVAL = 20.0f;	// スポーンのための最低経過間隔秒
+
 }
 
 
