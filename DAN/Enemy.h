@@ -31,7 +31,7 @@ namespace enemyNS
 		CHASE,		// 追跡ステート
 		PATROL,		// 警戒ステート
 		REST,		// 休憩ステート
-		DIE,		// 死亡ステート
+		DIE,			// 死亡ステート
 		DEAD,		// 撃退済み判定
 		STATE_MAX
 	};

@@ -77,7 +77,7 @@ private:
 	TreeTypeA*						treeA;				//木Ａ
 	TreeTypeB*						treeB;				//木B
 	Stone*							stone;				//石
-	Sky*							sky;				//スカイドーム
+	Sky*								sky;				//スカイドーム
 
 	StaticMeshRenderer*		MoveP;
 	MOVEP*					MoveP1;

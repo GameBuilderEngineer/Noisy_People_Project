@@ -20,6 +20,13 @@ using namespace tutorialNS;
 //===================================================================================================================================
 Tutorial::Tutorial()
 {
+	//線形８分木空間分割管理クラス
+	linear8TreeManager = new Linear8TreeManager<Object>;
+	linear8TreeManager->initialize(4, D3DXVECTOR3(-1000, -500, -1000), D3DXVECTOR3(1000, 1000, 1000));
+
+	//オブジェクトカウンターのリセット
+	objectNS::resetCounter();
+
 	// 現在のシーン(チュートリアル)
 	sceneName = "Scene -Tutorial-";
 	// 次のシーン(タイトル)
@@ -40,19 +47,132 @@ Tutorial::~Tutorial()
 //===================================================================================================================================
 void Tutorial::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_TUTORIAL, soundNS::METHOD::LOOP);
+	//テストフィールド
+	testField = new Object();
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	testFieldRenderer->registerObject(testField);
+	testField->initialize(&D3DXVECTOR3(0, 0, 0));
+
+	//player
+	player = new Player[gameMasterNS::PLAYER_NUM];
+	maleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
+	femaleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
 	//camera
-	//camera = new Camera;
-	//camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
-	//camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	//camera->setPosition(D3DXVECTOR3(0, 0, -1));
-	//camera->setUpVector(D3DXVECTOR3(0, 1, 0));
+	camera = new Camera[gameMasterNS::PLAYER_NUM];
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		//カメラの設定
+		camera[i].initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+		camera[i].setTarget(player[i].getPosition());
+		camera[i].setTargetX(&player[i].getAxisX()->direction);
+		camera[i].setTargetY(&player[i].getAxisY()->direction);
+		camera[i].setTargetZ(&player[i].getAxisZ()->direction);
+		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION);
+		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
+		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
+		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
+		camera[i].setFieldOfView((D3DX_PI / 180) * 90);
 
+		//プレイヤーの設定
+		PlayerTable infomation;
+		switch (i)
+		{
+		case gameMasterNS::PLAYER_1P:
+			infomation.playerType = gameMasterNS::PLAYER_1P;
+			infomation.modelType = gameMasterNS::MODEL_FEMALE;
+			player[i].initialize(infomation);
+			break;
+		case gameMasterNS::PLAYER_2P:
+			infomation.playerType = gameMasterNS::PLAYER_2P;
+			infomation.modelType = gameMasterNS::MODEL_FEMALE;
+			player[i].initialize(infomation);
+			break;
+		}
+		//カメラポインタのセット
+		player[i].setCamera(&camera[i]);
+
+		//モデルの設定
+		switch (player[i].getInfomation()->modelType)
+		{
+		case gameMasterNS::MODEL_MALE:
+			maleRenderer->registerObject(&player[i]);
+			break;
+		case gameMasterNS::MODEL_FEMALE:
+			femaleRenderer->registerObject(&player[i]);
+			break;
+		}
+
+		//重力を設定
+		player[i].configurationGravityWithRay(
+			testField->getPosition(),
+			testFieldRenderer->getStaticMesh()->mesh,
+			testField->getMatrixWorld());
+
+		//進捗
+		step[i] = tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1;
+	}
+
+	//エフェクシアーの設定
+	effekseerNS::setProjectionMatrix(
+		camera[0].fieldOfView,
+		(float)camera[0].windowWidth,
+		(float)camera[0].windowHeight,
+		camera[0].nearZ,
+		camera[0].farZ);
+
+	//light
+	light = new Light;
+	light->initialize();
+
+	//スカイドームの初期化
+	sky = new Sky();
+
+	//ディスプレイプレーン
+	plane = new TutorialPlane;
+
+	//アニメションキャラの初期化
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
+
+	// エネミー
+	enemyManager = new EnemyManager;
+	enemyManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	//test(sai[マージする時に消して])
+	enemyNS::ENEMYSET enemySet = { 0 };
+	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	enemySet.defaultPosition = D3DXVECTOR3(-3.0f, 1.5f, 24.5f);
+	enemySet.defaultState = enemyNS::ENEMY_STATE::CHASE;
+	enemySet.type = enemyNS::ENEMY_TYPE::WOLF;
+	enemySet.enemyID = 0;
+	enemyData = enemyManager->createEnemyData(enemySet);
+	enemyManager->createEnemy(enemyData);
+
+	//プレーンの作成
+	D3DXVECTOR3 enemyPlanePos = enemySet.defaultPosition;
+	enemyPlanePos.y += 5;
+	plane->init(tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_ENEMY, enemyPlanePos);
+	plane->init(tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_IDK, playerNS::START_POSITION[gameMasterNS::PLAYER_1P]);
+
+	//UI
+	tutorialUI = new TutorialUI;
+
+	// サウンドの再生
+	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
+
+	//テキストの初期化
+	//text.initialize(direct3D9->device,10,10, 0xff00ff00);
+	//text2.initialize(direct3D9->device,11,11, 0xff0000ff);
+
+	//タイマー
+	timer = new Timer;
+	timer->initialize();
 
 	// チュートリアル2D初期化
 	tutorialTex.initialize();
+
+#ifdef _DEBUG
+	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+#endif
 }
 
 //===================================================================================================================================
@@ -60,6 +180,21 @@ void Tutorial::initialize()
 //===================================================================================================================================
 void Tutorial::uninitialize()
 {
+	SAFE_DELETE(linear8TreeManager);
+	SAFE_DELETE_ARRAY(player);
+	SAFE_DELETE_ARRAY(camera);
+	SAFE_DELETE(light);
+	SAFE_DELETE(testField);
+	SAFE_DELETE(testFieldRenderer);
+	SAFE_DELETE(maleRenderer);
+	SAFE_DELETE(enemyManager);
+	SAFE_DELETE(femaleRenderer);
+	SAFE_DELETE(sky);
+	SAFE_DELETE(timer);
+	SAFE_DELETE(tutorialUI);
+
+	UninitMoveP();
+
 	tutorialTex.uninitialize();
 }
 
@@ -71,8 +206,38 @@ void Tutorial::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	// カメラ更新
-	//camera->update();
+	//ディスプレイプレーン
+	plane->update(frameTime);
+
+	//テストフィールドの更新
+	testField->update();			//オブジェクト
+	testFieldRenderer->update();	//レンダラー
+
+	//プレイヤーの更新
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		player[i].update(frameTime);		//オブジェクト
+	maleRenderer->update();				//レンダラー
+	femaleRenderer->update();			//レンダラー
+
+		// エネミーの更新
+	enemyManager->update(frameTime);
+	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	//	enemyManager->footsteps(*player[i].getPosition(), i);		//足音
+
+	UpdateMoveP(0.01f);
+
+	//スカイドームの更新
+	sky->update();
+
+	//電力減少（電力回復確認用）
+	player->pullpower(1);
+
+	//カメラの更新
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		camera[i].update();
+
+	//タイマーの更新
+	timer->update();
 
 
 	//Enterまたは〇ボタンで次へ
@@ -116,7 +281,7 @@ void Tutorial::update(float _frameTime)
 	// チュートリアルが最後まで行ったらタイトルへ
 	if (tutorialTex.nextPage >= tutorialTex::TUTORIAL_2D_SCENE_MAX)
 	{
-		changeScene(nextScene);
+		//changeScene(nextScene);
 	}
 
 	// チュートリアル2D更新
@@ -129,21 +294,81 @@ void Tutorial::update(float _frameTime)
 //===================================================================================================================================
 void Tutorial::render()
 {
-	//1Pカメラ・ウィンドウ
-	//device->SetTransform(D3DTS_VIEW, &camera->view);
-	//device->SetTransform(D3DTS_PROJECTION, &camera->projection);
-	direct3D9->changeViewportFullWindow();
-	render3D();
+	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
+	camera[gameMasterNS::PLAYER_1P].renderReady();
+	direct3D9->changeViewport1PWindow();
+	render3D(camera[gameMasterNS::PLAYER_1P]);
+	effekseerNS::setCameraMatrix(
+		camera[gameMasterNS::PLAYER_1P].position,
+		camera[gameMasterNS::PLAYER_1P].gazePosition,
+		camera[gameMasterNS::PLAYER_1P].upVector);
+	effekseerNS::render();
+
+	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
+	camera[gameMasterNS::PLAYER_2P].renderReady();
+	direct3D9->changeViewport2PWindow();
+	render3D(camera[gameMasterNS::PLAYER_2P]);
+	effekseerNS::setCameraMatrix(
+		camera[gameMasterNS::PLAYER_2P].position,
+		camera[gameMasterNS::PLAYER_2P].gazePosition,
+		camera[gameMasterNS::PLAYER_2P].upVector);
+	effekseerNS::render();
 
 	//UI
+	direct3D9->changeViewportFullWindow();
 	renderUI();
 }
 
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Tutorial::render3D()
+void Tutorial::render3D(Camera currentCamera)
 {
+	//テストフィールドの描画
+//testField->setAlpha(0.1f); 
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	// プレイヤーの描画
+	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	// プレイヤーの他のオブジェクトの描画
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//スカイドームの描画
+	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	DrawMoveP();
+
+	// エネミーの描画
+	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//ディスプレイ用プレーンサンプル
+	plane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+#if _DEBUG
+	//4分木空間分割のライン描画
+	//linear4TreeManager->render();
+	//8分木空間分割のライン描画
+	linear8TreeManager->render();
+	Ray ray;
+	ray.color = D3DXCOLOR(255, 255, 0, 255);
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	float length = 0;
+	for (int i = 0; i < collisionNum; i++)
+	{
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+
+		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+		ray.initialize(tmp1->position, direction);
+		ray.render(length);
+	}
+#endif
+
 }
 
 //===================================================================================================================================
@@ -151,8 +376,32 @@ void Tutorial::render3D()
 //===================================================================================================================================
 void Tutorial::renderUI()
 {
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+
+	// αテストを無効に
+	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	//UI
+	tutorialUI->render();
+
+	//タイマーの描画
+	timer->render();
+
 	//チュートリアル2D描画
 	tutorialTex.render();
+}
+
+//===================================================================================================================================
+//【線形８分木空間分割マネージャー再登録処理】
+//===================================================================================================================================
+void Tutorial::tree8Reregister(Object* tmp)
+{
+	//一度リストから外れる
+	tmp->treeCell.remove();
+	//再登録
+	linear8TreeManager->registerObject(&tmp->getMin(), &tmp->getMax(), &tmp->treeCell);
 }
 
 //===================================================================================================================================
@@ -160,7 +409,13 @@ void Tutorial::renderUI()
 //===================================================================================================================================
 void Tutorial::collisions()
 {
-	//none
+	//再登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);
+	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);
+
+	//衝突対応リストを取得
+	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
+	collisionNum /= 2;//2で割るのはペアになっているため
 }
 
 //===================================================================================================================================
@@ -180,5 +435,13 @@ void Tutorial::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		ImGui::SliderInt("", &step[i], tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1, tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_5, "STEP");
+		if (tutorialUI->getStep(i) != step[i])
+		{
+			tutorialUI->setStep(i, step[i]);
+		}
+	}
 }
 #endif // _DEBUG

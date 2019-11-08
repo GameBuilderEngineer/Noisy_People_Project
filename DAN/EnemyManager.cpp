@@ -28,7 +28,7 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON));
 	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10));
 
-#if 1	// エネミーツールのデータを読み込む
+#if 0	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
 	playParameters = new PLAY_PARAMETERS[enemyTools->GetEnemyMax()*gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
@@ -36,7 +36,21 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
 		{
 			//3Dサウンド
-			playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, /*GAME_S3D_LIST::GAME_S3D_01*/j, true ,NULL,true,j };
+			switch (enemyTools->GetEnemySet(i).type)
+			{
+			case ENEMY_TYPE::WOLF:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_01, true ,NULL,true,j };
+				break;
+			case ENEMY_TYPE::TIGER:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_02, true ,NULL,true,j };
+				break;
+			case ENEMY_TYPE::BEAR:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_03, true ,NULL,true,j };
+				break;
+			default:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_03, true ,NULL,true,j };
+				break;
+			}
 			SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
 		}
 
@@ -45,7 +59,7 @@ void EnemyManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorM
 	SAFE_DELETE(enemyTools);
 #endif
 
-#if 1	// エネミーオブジェクトをツールデータを元に作成する
+#if 0	// エネミーオブジェクトをツールデータを元に作成する
 	for (size_t i = 0; i < enemyDataList.nodeNum; i++)
 	{
 		if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)

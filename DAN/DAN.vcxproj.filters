@@ -265,6 +265,12 @@
     <Filter Include="Game Layer\GameUI">
       <UniqueIdentifier>{05377823-85f2-4b8f-a3aa-3c22d42106b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\Plane">
+      <UniqueIdentifier>{648a5834-23ef-46f1-ace4-2bc7184665b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\UI">
+      <UniqueIdentifier>{4898cc1a-35f9-4d06-b769-a8498a62798b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -558,10 +564,10 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
     <ClCompile Include="TelopManager.cpp" />
-	<ClCompile Include="PathFollowing.cpp">
+    <ClCompile Include="PathFollowing.cpp">
       <Filter>Game Layer\NaviAI</Filter>
     </ClCompile>
-	    <ClCompile Include="AllocateHierarchy.cpp">
+    <ClCompile Include="AllocateHierarchy.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="D3DXAnimation.cpp">
@@ -573,7 +579,12 @@
     <ClCompile Include="ActionEventSeting.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
-
+    <ClCompile Include="tutorialPlane.cpp">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialUI.cpp">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -887,10 +898,10 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
     <ClInclude Include="TelopManager.h" />
-	<ClInclude Include="PathFollowing.h">
+    <ClInclude Include="PathFollowing.h">
       <Filter>Game Layer\NaviAI</Filter>
     </ClInclude>
-	    <ClInclude Include="AllocateHierarchy.h">
+    <ClInclude Include="AllocateHierarchy.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="D3DXAnimation.h">
@@ -901,6 +912,12 @@
     </ClInclude>
     <ClInclude Include="ActionEventSeting.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorialPlane.h">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialUI.h">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

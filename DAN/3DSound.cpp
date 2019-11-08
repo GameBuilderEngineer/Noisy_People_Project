@@ -106,7 +106,7 @@ void S3DManager::outputGUI(void)
 			float volume = 0.0f;
 			tmpSoundParameters->SourceVoice->GetVolume(&volume);
 			if ((tmpSoundParameters->isPlaying) &&		//Ä¶‚µ‚Ä‚¢‚é
-				(volume > 0));							//•·‚±‚¦‚é
+				(volume > 0))							//•·‚±‚¦‚é
 			{
 				//ƒ{ƒCƒXID
 				ImGui::Text("Voice ID:%d", tmpSoundParameters->playParameters.voiceID);
