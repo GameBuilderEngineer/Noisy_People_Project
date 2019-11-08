@@ -153,6 +153,7 @@
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="UIButton.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Create.h" />
     <ClInclude Include="Credit.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="exampleItem.h" />
     <ClInclude Include="Fader.h" />
     <ClInclude Include="Fuzzy.h" />
+    <ClInclude Include="FixedUI.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
     <ClInclude Include="Item.h" />
@@ -236,6 +238,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Tiger.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TimerFlame.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TmpObject.h" />
     <ClInclude Include="TreeTools.h" />
@@ -247,6 +250,7 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="TutorialTex.h" />
     <ClInclude Include="UIcharacter.h" />
+    <ClInclude Include="BasicUI.h" />
     <ClInclude Include="UInumber.h" />
     <ClInclude Include="UIrank.h" />
     <ClInclude Include="UItex.h" />
@@ -270,6 +274,7 @@
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Create.cpp" />
     <ClCompile Include="Credit.cpp" />
@@ -289,6 +294,7 @@
     <ClCompile Include="exampleItem.cpp" />
     <ClCompile Include="Fader.cpp" />
     <ClCompile Include="Fuzzy.cpp" />
+    <ClCompile Include="FixedUI.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
@@ -320,8 +326,8 @@
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
-    <ClCompile Include="ResultUIcpp.cpp" />
     <ClCompile Include="Reticle.cpp" />
+    <ClCompile Include="ResultUI.cpp" />
     <ClCompile Include="SE.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
@@ -348,6 +354,7 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TimerFlame.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TmpObject.cpp" />
@@ -358,10 +365,11 @@
     <ClCompile Include="TreeManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="TutorialTex.cpp" />
-    <ClCompile Include="UIcharactercpp.cpp" />
+    <ClCompile Include="UIcharacter.cpp" />
+    <ClCompile Include="BasicUI.cpp" />
     <ClCompile Include="UInumber.cpp" />
     <ClCompile Include="UIrank.cpp" />
-    <ClCompile Include="UItexcpp.cpp" />
+    <ClCompile Include="UItex.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="Window.cpp" />

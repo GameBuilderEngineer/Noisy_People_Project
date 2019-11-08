@@ -193,9 +193,9 @@ void Game::initialize() {
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviMesh->initialize();
 
-	//タイマー
-	timer = new Timer;
-	timer->initialize();
+	//固定されたUI
+	fixedUI = new FixedUI;
+	fixedUI->initialize();
 
 	//レティクル
 	reticle = new Reticle();
@@ -258,9 +258,9 @@ void Game::uninitialize() {
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(telop);
 	SAFE_DELETE(aiDirector);
-	SAFE_DELETE(timer);
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
+	SAFE_DELETE(fixedUI);
 
 	UninitMoveP();
 
@@ -380,11 +380,11 @@ void Game::update(float _frameTime) {
 	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
 		camera[i].update();
 
+	//固定UIの更新
+	fixedUI->update();
 	//レティクルの更新
 	reticle->update(frameTime);
 
-	//タイマーの更新
-	timer->update();
 
 	// Enterまたは〇ボタンでリザルトへ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -533,8 +533,8 @@ void Game::renderUI() {
 
 	telop->render();	// テロップの描画
 
-	//タイマーの描画
-	timer->render();
+	//固定UIの描画
+	fixedUI->render();
 
 	//レティクルの描画
 	reticle->render2D();

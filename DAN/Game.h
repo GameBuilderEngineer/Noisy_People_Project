@@ -32,6 +32,8 @@
 #include "Timer.h"
 #include "Reticle.h"
 #include "Ocean.h"
+#include "FixedUI.h"
+
 #include "Sound.h"
 #include "SoundBase.h"
 #include "LinearTreeCell.h"
@@ -100,13 +102,17 @@ private:
 
 	//UI
 	Telop*							telop;				// テロップ
-	Timer*							timer;				//タイマー
 	SpriteGauge*					spriteGauge;		//Sprite実験
 	Reticle*						reticle;			//レティクル
+
+	FixedUI*						fixedUI;			//固定されたUI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
 
+	//Sprite実験
+	SpriteGauge*					spriteGauge;
+	
 public:
 	Game();
 	~Game();
