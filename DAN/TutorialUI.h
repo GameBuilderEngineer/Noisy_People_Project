@@ -1,8 +1,8 @@
 //===================================================================================================================================
-//【Sound.h】
+//【TutorialUI.h】
 // [作成者]HAL東京GP12A332 16 蔡 友剛
-// [作成日]2019/09/26
-// [更新日]2019/10/04
+// [作成日]2019/11/08
+// [更新日]2019/11/08
 //===================================================================================================================================
 #pragma once
 
@@ -10,58 +10,61 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
-#include "SE.h"
-#include "BGM.h"
-#include "3DSound.h"
+#include "Sprite.h"
+#include "GameMaster.h"
+#include "TextureLoader.h"
+
 //===================================================================================================================================
 //【マクロ定義】
 //===================================================================================================================================
-//サウンド情報
-#define ENDPOINT_INPUT_CHANNEL	(2)			//エンドポイントボイスのチャンネル数(入力)
-#define ENDPOINT_SAMPLE_RATE		(44100)		//エンドポイントボイスのサンプリング周波数(入力)
+#define ARRAY_TEX_DIVIDE_X	(4.0f)
+#define ARRAY_TEX_DIVIDE_Y	(2.0f)
 
-//ボイス解放処理
-#define SAFE_DESTROY_VOICE(p)	if(p){ p->DestroyVoice(); p=NULL; }
 //===================================================================================================================================
-//【列挙型定数】
+//【名前空間】
 //===================================================================================================================================
-enum ENDPOINT_VOICE_LIST
+namespace tutorialUINS
 {
-	ENDPOINT_BGM,
-	ENDPOINT_SE,
-	ENDPOINT_S3D,
-	ENDPOINT_MAX
-};
+	//定数
+	const int BG_WIDTH = 415;									//横幅
+	const int BG_HEIGHT = 81;									//縦幅
+	const int ARRAY_WIDTH = 42;									//横幅
+	const int ARRAY_HIGHT = 62;									//縦幅
+
+	const D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//回転
+	const D3DCOLOR col = D3DCOLOR_RGBA(255, 255, 255, 255);		//色
+	const D3DXVECTOR3 arrayStPos = D3DXVECTOR3(140.0f, 30.0f, 0.0f);
+	const D3DXVECTOR3 arrayInterval = D3DXVECTOR3(51.0f, 0.0f, 0.0f);
+
+	enum TUTORIAL_STEP
+	{
+		TUTORIAL_STEP_1,
+		TUTORIAL_STEP_2,
+		TUTORIAL_STEP_3,
+		TUTORIAL_STEP_4,
+		TUTORIAL_STEP_5,
+		TUTORIAL_STEP_MAX
+	};
+}
 
 //===================================================================================================================================
-//【サウンド(XAudio2)】
-//サウンドインタフェースクラス
+//【チュートリアルUIクラス】
 //===================================================================================================================================
-class SoundInterface
+class TutorialUI
 {
-private:
-	//マスタリングボイス
-#if(XADUIO2_STATE)
-	IXAudio2MasteringVoice				*MasteringVoice;					//XAudio2 Mastering Voice
-#endif
-
 public:
-	SoundInterface();
-	~SoundInterface();
+	TutorialUI();
+	~TutorialUI();
 
-	//マネージャー
-	static SEManager *SE;
-	static BGMManager *BGM;
-	static S3DManager *S3D;
-	
-	//インタフェース
-#if(XADUIO2_STATE)
-	static IXAudio2						*XAudio2Interface;				//XAudio2 COM Interface
-	static IXAudio2						*GetXAudio2Interface(void);		//XAudio2のインタフェースを取得する
-#endif
+	void setStep(int playerID, int inStep);
+	int  getStep(int playerID) { return step[playerID]; }
+	void render(void);
 
-	//基本機能
-	static void							SwitchAudioBuffer(int scene);	//シーンの更新
-	void									UpdateSound(void);				//更新処理
-	void									outputSoundGUI(void);			//ImGUIへの出力
+private:
+	int step[gameMasterNS::PLAYER_NUM];
+
+	Sprite **tutorialSpriteBG;
+	Sprite **tutorialSpriteArray;
+
+	D3DXVECTOR3 arrayPos[gameMasterNS::PLAYER_NUM][tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_MAX];
 };

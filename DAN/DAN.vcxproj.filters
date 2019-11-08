@@ -277,6 +277,12 @@
     <Filter Include="Game Layer\Ocean">
       <UniqueIdentifier>{e83e2464-3a91-4e6f-8cdb-74e19f96def1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\Plane">
+      <UniqueIdentifier>{648a5834-23ef-46f1-ace4-2bc7184665b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\UI">
+      <UniqueIdentifier>{4898cc1a-35f9-4d06-b769-a8498a62798b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -617,6 +623,12 @@
     </ClCompile>
     <ClCompile Include="UIButton.cpp">
       <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="tutorialPlane.cpp">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialUI.cpp">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -978,6 +990,12 @@
     </ClInclude>
     <ClInclude Include="UIButton.h">
       <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorialPlane.h">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialUI.h">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

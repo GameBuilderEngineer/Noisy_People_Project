@@ -24,7 +24,7 @@
 #define CHUNK_DATA				("data")		//dataのチャンク
 
 //3D
-#define DISTANCE_MAX				(100)		//偽サウンドコン
+#define DISTANCE_MAX				(25)		//偽サウンドコン
 
 //===================================================================================================================================
 //【構造体】
@@ -63,7 +63,7 @@ typedef struct	// WAVファイル
 }WAV_FILE;
 
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 typedef struct	// バッファ構造体
 {
 	int				soundId;
@@ -72,7 +72,7 @@ typedef struct	// バッファ構造体
 }LIST_BUFFER;
 #endif
 
-#if(_MSC_VER < GAME_MSC_VER)
+#if(!XADUIO2_STATE)
 typedef struct //フィルター(殻構造体)
 {
 	int Type;
@@ -84,7 +84,7 @@ FAKE_FILTER_PARAMETERS;
 
 typedef struct
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	XAUDIO2_FILTER_PARAMETERS Parameters;
 #else
 	FAKE_FILTER_PARAMETERS Parameters;
@@ -114,7 +114,7 @@ typedef struct //再生パラメータ
 	long						voiceID;				//ボイスID
 }PLAY_PARAMETERS;
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 typedef struct //曲のパラメータ
 {
 	IXAudio2SourceVoice		*SourceVoice;	//ソースボイス
@@ -143,7 +143,7 @@ public:
 	void uninitSoundStop(void);								//停止(全部のサウンド)
 
 protected:
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//エンドポイントボイス
 	IXAudio2SubmixVoice			*EndpointVoice;				//XAudio2 Submix Vice(Endpoint Voice)
 	XAUDIO2_SEND_DESCRIPTOR		SendDescriptor;				//XAudio2 Send Descriptor(BGM/SE Endpoint Voice)
@@ -158,7 +158,7 @@ protected:
 	static WAV_FILE	LoadWavChunk(FILE *fp);					//WAVファイルの読み込み処理
 
 	//リスト
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	LinkedList <SOUND_PARAMETERS>*soundParametersList;		//パラーメータリスト
 	long			voiceIDCnt;									//ボイスIDカウンター
 	LIST_BUFFER *bufferList;									//バッファリスト

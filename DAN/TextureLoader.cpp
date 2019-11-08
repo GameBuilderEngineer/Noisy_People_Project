@@ -26,30 +26,33 @@ TextureLoader* pointerTextureLoader = NULL;	//外部参照用
 TextureLoader::TextureLoader()
 {
 	//グローバルポインタへ自身のポインタを代入
-	if(pointerTextureLoader==NULL)pointerTextureLoader = this;
+	if (pointerTextureLoader == NULL)pointerTextureLoader = this;
 
 	// Splash
 	textureName[SPLASH] = { "Splash.png" };
 
 	// Tutorial
-	textureName[TUTORIAL1]			= { "tutorial01.png" };
-	textureName[TUTORIAL2]			= { "tutorial02.png" };
+	textureName[TUTORIAL1] = { "Slide_01.png" };
+	textureName[TUTORIAL2] = { "Slide_02.png" };
+	textureName[TUTORIAL_UI_0] = { "steplist.png" };
+	textureName[TUTORIAL_UI_1] = { "check.png" };
+	textureName[TUTORIAL_UI_PLANE] = { "comment.png" };
 
 	// Title
-	textureName[TITLE_LOGO]			= { "DAN_Logo.png" };
-	textureName[TITLE_MENU]			= { "Title_Menu.png" };
-	textureName[TITLE_INFO_TUTO]	= { "Tutorial_info.png" };
-	textureName[TITLE_INFO_GAME]	= { "GameStart_info.png" };
-	textureName[TITLE_INFO_CREDIT]	= { "Credits_info.png" };
-	textureName[TITLE_INFO_EXIT]	= { "Exit_info.png" };
-	textureName[TITLE_COPYRIGHT]	= { "Copyrights.png" };
-	textureName[TITLE_BAR]			= { "Select_Bar.png"};
+	textureName[TITLE_LOGO] = { "DAN_Logo.png" };
+	textureName[TITLE_MENU] = { "Title_Menu.png" };
+	textureName[TITLE_INFO_TUTO] = { "Tutorial_info.png" };
+	textureName[TITLE_INFO_GAME] = { "GameStart_info.png" };
+	textureName[TITLE_INFO_CREDIT] = { "Credits_info.png" };
+	textureName[TITLE_INFO_EXIT] = { "Exit_info.png" };
+	textureName[TITLE_COPYRIGHT] = { "Copyrights.png" };
+	textureName[TITLE_BAR] = { "Select_Bar.png" };
 
 	// Credit
-	textureName[CREDIT]				= { "Credit_01.png" };
+	textureName[CREDIT] = { "Credit_01.png" };
 
 	// Game
-	textureName[UI_COUNT_DOWN_ONE]	= { "Game_CountDown_One.png" };
+	textureName[UI_COUNT_DOWN_ONE] = { "Game_CountDown_One.png" };
 	textureName[UI_INFO_10] = { "Info_10.png" };
 	textureName[UI_INFO_30] = { "Info_30.png" };
 	textureName[UI_INFO_50] = { "Info_50.png" };
@@ -90,15 +93,15 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_FAILED] = { "Failed.png" };
 
 	// etc
-	textureName[NUMBER]				= { "num.png" };
-	textureName[TOON_OUT_LINE]		= { "Outline.bmp" };
-	textureName[TOON_SHADE]			= { "Shade.bmp" };
-	textureName[LIGHT_001]			= { "Light_001.png" };
-	textureName[TARGET]				= { "stencil.png" };
-	textureName[SAMPLE_TREE]		= { "tree.png" };
-	textureName[SAMPLE_GRASS]		= { "middleGrass.png" };
-	textureName[NEKO]				= { "Chara_B.png" };
-	textureName[COLOR_SCALE]		= { "colorScale.png" };
+	textureName[NUMBER] = { "num.png" };
+	textureName[TOON_OUT_LINE] = { "Outline.bmp" };
+	textureName[TOON_SHADE] = { "Shade.bmp" };
+	textureName[LIGHT_001] = { "Light_001.png" };
+	textureName[TARGET] = { "stencil.png" };
+	textureName[SAMPLE_TREE] = { "tree.png" };
+	textureName[SAMPLE_GRASS] = { "middleGrass.png" };
+	textureName[NEKO] = { "Chara_B.png" };
+	textureName[COLOR_SCALE] = { "colorScale.png" };
 
 }
 

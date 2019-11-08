@@ -15,7 +15,7 @@
 #ifdef _DEBUG
 void SEManager::outputGUI(void)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	if (!ImGui::CollapsingHeader("SEInformation"))
 	{
 		//使用中のバッファ数
@@ -118,7 +118,7 @@ void SEManager::outputGUI(void)
 //===================================================================================================================================
 void SEManager::SwitchAudioBuffer(int scene)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//サウンドディレクトリに設定する
 	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_SE);
 

@@ -28,9 +28,9 @@ enum TITLE_S3D_LIST
 
 enum GAME_S3D_LIST
 {
-	GAME_S3D_01,
-	GAME_S3D_02,
-	GAME_S3D_03,
+	GAME_S3D_FOOTSTEP_01,
+	GAME_S3D_FOOTSTEP_02,
+	GAME_S3D_FOOTSTEP_03,
 	GAME_S3D_MAX
 };
 
@@ -64,7 +64,7 @@ public:
 #endif
 
 private:
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//ミッドポイントボイス
 	IXAudio2SubmixVoice		*MidpointVoice[gameMasterNS::PLAYER_NUM];	//XAudio2 Midpoint Voice[2 player]
 	XAUDIO2_VOICE_SENDS		MidSendList[gameMasterNS::PLAYER_NUM];		//XAudio2 Send List(P1/P2 Midpoint Voice)

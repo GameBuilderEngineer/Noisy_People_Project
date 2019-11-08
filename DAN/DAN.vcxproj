@@ -248,7 +248,9 @@
     <ClInclude Include="TreeManager.h" />
     <ClInclude Include="TitleUI.h" />
     <ClInclude Include="Tutorial.h" />
+    <ClInclude Include="tutorialPlane.h" />
     <ClInclude Include="TutorialTex.h" />
+    <ClInclude Include="TutorialUI.h" />
     <ClInclude Include="UIcharacter.h" />
     <ClInclude Include="BasicUI.h" />
     <ClInclude Include="UInumber.h" />
@@ -364,9 +366,11 @@
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="TreeManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
+    <ClCompile Include="tutorialPlane.cpp" />
     <ClCompile Include="TutorialTex.cpp" />
     <ClCompile Include="UIcharacter.cpp" />
     <ClCompile Include="BasicUI.cpp" />
+    <ClCompile Include="TutorialUI.cpp" />
     <ClCompile Include="UInumber.cpp" />
     <ClCompile Include="UIrank.cpp" />
     <ClCompile Include="UItex.cpp" />
