@@ -41,12 +41,26 @@ UiButton::~UiButton()
 void UiButton::initialize()
 {
 
+
+	//テクスチャの初期化
+	BasicUI::initialize(button[SV], textureNS::reference(textureNS::UI_BUTTON1));
+	BasicUI::initialize(button[SHOT], textureNS::reference(textureNS::UI_BUTTON2));
+	BasicUI::initialize(button[JUMP], textureNS::reference(textureNS::UI_BUTTON3));
+	BasicUI::initialize(button[VISION], textureNS::reference(textureNS::UI_BUTTON4));
 }
 
 //==================================
 //描画
 //==================================
 void UiButton::render()
+{
+
+}
+
+//==================================
+//更新
+//==================================
+void UiButton::update()
 {
 
 }
