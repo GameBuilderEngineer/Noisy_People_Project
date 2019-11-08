@@ -50,12 +50,12 @@ void Telop::update(float _frameTime)
 	switch (state)
 	{
 	case OPEN://オープン
-
+		
 		telopTimer += _frameTime;		//シーンタイムの更新
 
 		//高さの更新
 		Telop::open();
-		
+
 		break;
 	case DISPLAY:	
 
@@ -78,8 +78,8 @@ void Telop::update(float _frameTime)
 		}
 		
 		break;
-		
 	}
+
 
 	//サイズの更新
 	sprite->setSize(WIDTH, heightValue);
@@ -92,7 +92,7 @@ void Telop::update(float _frameTime)
 //=============================================================================
 void Telop::render()
 {
-	if (telopTimer>0)
+	if (telopTimer > 0)
 	{
 		sprite->render();
 	}
@@ -124,6 +124,7 @@ void Telop::display()
 	{
 		state = CLOSE;
 		displayTimer = 0.0f;
+		closeTimer = 0.0f;
 	}
 }
 //=============================================================================
@@ -134,12 +135,17 @@ void Telop::close()
 	if (telopTimer > 0)
 	{
 		telopTimer -= frameTime;
+		closeTimer += frameTime;
 		//高さの更新
 		rate = telopTimer / CLOSE_TIME;
 		heightValue = (int)((float)MAX_HEIGHT * rate);
+		if (closeTimer >= CLOSE_TIME)
+		{
+			*playFlag = false;
+		}
 	}
-	
 }
+
 
 //=============================================================================
 // テロップ再生処理
@@ -147,4 +153,9 @@ void Telop::close()
 void Telop::playTelop()
 {
 	telopFlag = true;
+}
+
+void Telop::setManagerFlag(bool* managerFlag)
+{
+	playFlag = managerFlag;
 }

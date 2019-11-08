@@ -34,6 +34,8 @@ class TelopManager
 private:
 	Telop* telop[telopManagerNS::MAX_TELOP];
 
+	bool playFlag;
+
 public:
 	TelopManager();
 	~TelopManager();

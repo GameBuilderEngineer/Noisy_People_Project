@@ -23,9 +23,12 @@ TelopManager::~TelopManager()
 void TelopManager::initialize()
 {
 
+	playFlag = false;
+
 	for (int i = 0; i < MAX_TELOP; i++)
 	{
 		telop[i] = new Telop;
+		telop[i]->setManagerFlag(&playFlag);
 	}
 
 	//テロップバーの初期化
@@ -159,5 +162,10 @@ void TelopManager::render()
 //=============================================================================
 void TelopManager::play(int type)
 {
-	telop[type]->playTelop();
+	if (playFlag == false)
+	{
+		telop[type]->playTelop();
+		telop[TELOP_INFO_BAR]->playTelop();
+		playFlag = true;
+	}
 }

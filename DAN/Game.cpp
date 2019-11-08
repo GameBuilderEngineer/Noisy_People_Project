@@ -334,12 +334,12 @@ void Game::update(float _frameTime) {
 	//テロップ発生フラグ
 	if (input->wasKeyPressed('L'))
 	{
-		telopManager->play(telopManagerNS::TELOP_INFO_BAR);
+		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 	}
 	if (input->wasKeyPressed('K'))
 	{
-		telopManager->play(telopManagerNS::TELOP_INFO_BAR);
+		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
 		telopManager->play(telopManagerNS::TELOP_TYPE1);
 	}
 	

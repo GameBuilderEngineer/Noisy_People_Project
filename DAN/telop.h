@@ -55,6 +55,10 @@ private:
 	bool telopFlag;
 	int state;
 	float rate;
+	float closeTimer;;
+	bool* playFlag;
+	 
+
 public:
 	void initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
 		int _width, int _height, D3DXVECTOR3 _position, D3DXVECTOR3 _rotation, D3DCOLOR color);
@@ -65,4 +69,5 @@ public:
 	void display();
 	void close();
 	void playTelop();
+	void setManagerFlag(bool* managerFlag);
 };
