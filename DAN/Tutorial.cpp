@@ -298,7 +298,6 @@ void Tutorial::update(float _frameTime)
 
 	// チュートリアル2D更新
 	tutorialTex.update();
-
 }
 
 //===================================================================================================================================
@@ -450,7 +449,7 @@ void Tutorial::createGUI()
 
 	ImGui::SliderInt("PLAYER", &playerSelect, gameMasterNS::PLAYER_1P, gameMasterNS::PLAYER_2P, "");
 
-	ImGui::SliderInt("STEP", &step[playerSelect], tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1, tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_5, "");
+	ImGui::SliderInt("STEP", &step[playerSelect], tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1, tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_END, "");
 	if (tutorialUI->getStep(playerSelect) != step[playerSelect])
 	{
 		tutorialUI->setStep(playerSelect, step[playerSelect]);
