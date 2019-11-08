@@ -40,7 +40,11 @@ UiButton::~UiButton()
 //==================================
 void UiButton::initialize()
 {
+	//初期表示位置の初期化
+	BasicUI::assingPosition(POSITION_BUTTON);
 
+	//初期サイズの初期化
+	BasicUI::assingSize(WIDTH_BUTTON, HEIGHT_BUTTON);
 
 	//テクスチャの初期化
 	BasicUI::initialize(button[SV], textureNS::reference(textureNS::UI_BUTTON1));
@@ -54,7 +58,13 @@ void UiButton::initialize()
 //==================================
 void UiButton::render()
 {
-
+	for (int i = 0; i < TYPE_MAX; i++)
+	{
+		position.x = -HEIGHT_BUTTON * i + POSITION_BUTTON.x;
+		button[i]->setPosition(position);
+		button[i]->setVertex();
+		button[i]->render();
+	}
 }
 
 //==================================

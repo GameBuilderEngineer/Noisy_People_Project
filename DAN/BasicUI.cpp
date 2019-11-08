@@ -142,33 +142,37 @@ void BasicUI::decreaseAlpha()
 
 //=================================
 //横サイズの拡大
+//引数:サイズの変化速度
 //=================================
-void BasicUI::expansionWidthSize()
+void BasicUI::expansionWidthSize(int speed)
 {
-	widthSize += CHANGE_SIZE_SPEED;
+	widthSize += speed;
 }
 
 //=================================
 //縦サイズの変更
+//引数:サイズの変化速度
 //=================================
-void BasicUI::expansionHeightSize()
+void BasicUI::expansionHeightSize(int speed)
 {
-	widthSize -= CHANGE_SIZE_SPEED;
+	widthSize -= speed;
 }
 
 //=================================
 //横サイズの拡大
+//引数:サイズの変化速度
 //=================================
-void BasicUI::reductionWidthSize()
+void BasicUI::reductionWidthSize(int speed)
 {
-	heightSize += CHANGE_SIZE_SPEED;
+	heightSize += speed;
 }
 
 //=================================
 //縦サイズの縮小
+//引数:サイズの変化速度
 //=================================
-void BasicUI::reductionHeightSize()
+void BasicUI::reductionHeightSize(int speed)
 {
-	heightSize -= CHANGE_SIZE_SPEED;
+	heightSize -= speed;
 }
 

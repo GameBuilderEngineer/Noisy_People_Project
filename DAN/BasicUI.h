@@ -59,10 +59,10 @@ public://メンバー関数
 	void	changePostion(int movetype);//位置変更	
 	void	increaseAlpha();//透明度増加
 	void	decreaseAlpha();//透明度減少
-	void	expansionWidthSize();//横サイズの拡大
-	void	expansionHeightSize();//縦サイズの拡大
-	void	reductionWidthSize();//横サイズの縮小
-	void	reductionHeightSize();//縦サイズの縮小
+	void	expansionWidthSize(int speed);//横サイズの拡大
+	void	expansionHeightSize(int speed);//縦サイズの拡大
+	void	reductionWidthSize(int speed);//横サイズの縮小
+	void	reductionHeightSize(int speed);//縦サイズの縮小
 
 private:
 };
