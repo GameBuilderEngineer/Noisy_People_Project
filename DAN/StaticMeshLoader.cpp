@@ -2,7 +2,7 @@
 //【StaticMeshLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/25
+// [更新日]2019/11/07
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -50,6 +50,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[A_LEAF]								= { "tree_01_leaf.x" };						//09
 	fileName[B_TRUNK]								= { "tree_02_blanch.x" };					//10
 	fileName[B_LEAF]								= { "tree_02_leaf.x" };						//11
+	fileName[OCEAN]									= { "Water4.x" };							//12
 
 	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
 	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02

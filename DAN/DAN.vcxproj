@@ -185,9 +185,11 @@
     <ClInclude Include="MeshData.h" />
     <ClInclude Include="movep.h" />
     <ClInclude Include="NavigationMesh.h" />
+    <ClInclude Include="Ocean.h" />
     <ClInclude Include="OperationGenerator.h" />
     <ClInclude Include="PathFollowing.h" />
     <ClInclude Include="ResultUI.h" />
+    <ClInclude Include="Reticle.h" />
     <ClInclude Include="SE.h" />
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="Sky.h" />
@@ -311,6 +313,7 @@
     <ClCompile Include="movep.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Ocean.cpp" />
     <ClCompile Include="OperationGenerator.cpp" />
     <ClCompile Include="PathFollowing.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -318,6 +321,7 @@
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="ResultUIcpp.cpp" />
+    <ClCompile Include="Reticle.cpp" />
     <ClCompile Include="SE.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />

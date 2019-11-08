@@ -151,6 +151,8 @@ void Game::initialize() {
 	stone = new Stone();
 	//スカイドームの初期化
 	sky = new Sky();
+	//海面の初期化
+	ocean = new Ocean();
 
 	//アニメションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
@@ -194,6 +196,11 @@ void Game::initialize() {
 	//タイマー
 	timer = new Timer;
 	timer->initialize();
+
+	//レティクル
+	reticle = new Reticle();
+	reticle->setAimingPosition1(player[gameMasterNS::PLAYER_1P].getAiming());
+	reticle->setAimingPosition2(player[gameMasterNS::PLAYER_2P].getAiming());
 
 	//Sprite実験
 	spriteGauge = new SpriteGauge;
@@ -243,6 +250,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(treeB);
 	SAFE_DELETE(stone);
 	SAFE_DELETE(sky);
+	SAFE_DELETE(ocean);
 	SAFE_DELETE(testEffect);
 	SAFE_DELETE(samplePlane);
 	SAFE_DELETE(enemyManager);
@@ -252,6 +260,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(aiDirector);
 	SAFE_DELETE(timer);
 	SAFE_DELETE(spriteGauge);
+	SAFE_DELETE(reticle);
 
 	UninitMoveP();
 
@@ -268,8 +277,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	//if (frameTime > 0.10)return;
-
+	if (frameTime > 0.10)return;
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -356,6 +364,8 @@ void Game::update(float _frameTime) {
 	stone->update();
 	//スカイドームの更新
 	sky->update();
+	//海面の更新
+	ocean->update();
 
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
@@ -369,6 +379,9 @@ void Game::update(float _frameTime) {
 	//カメラの更新
 	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
 		camera[i].update();
+
+	//レティクルの更新
+	reticle->update(frameTime);
 
 	//タイマーの更新
 	timer->update();
@@ -395,6 +408,7 @@ void Game::update(float _frameTime) {
 void Game::render() {	
 		
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
+	nowRenderingWindow = gameMasterNS::PLAYER_1P;
 	camera[gameMasterNS::PLAYER_1P].renderReady();
 	direct3D9->changeViewport1PWindow();
 	render3D(camera[gameMasterNS::PLAYER_1P]);
@@ -405,6 +419,7 @@ void Game::render() {
 	effekseerNS::render();
 
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
+	nowRenderingWindow = gameMasterNS::PLAYER_2P;
 	camera[gameMasterNS::PLAYER_2P].renderReady();
 	direct3D9->changeViewport2PWindow();
 	render3D(camera[gameMasterNS::PLAYER_2P]);
@@ -425,7 +440,6 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	//testField->setAlpha(0.1f); 
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
@@ -445,9 +459,9 @@ void Game::render3D(Camera currentCamera) {
 	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//スカイドームの描画
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//海面の描画
+	ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-
-	
 	DrawMoveP();
 
 	// エネミーの描画
@@ -464,6 +478,9 @@ void Game::render3D(Camera currentCamera) {
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//レティクル3D描画
+	reticle->render3D(nowRenderingWindow,currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #if _DEBUG
 	//4分木空間分割のライン描画
@@ -519,6 +536,8 @@ void Game::renderUI() {
 	//タイマーの描画
 	timer->render();
 
+	//レティクルの描画
+	reticle->render2D();
 }
 
 //===================================================================================================================================
