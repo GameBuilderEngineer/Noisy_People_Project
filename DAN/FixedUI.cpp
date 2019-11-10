@@ -20,6 +20,8 @@ FixedUI::FixedUI()
 {
 	timer = new Timer;
 	timerFlame = new TimerFlame;
+	buttonP1 = new UiButton;
+	buttonP2 = new UiButton;
 }
 
 //================================
@@ -29,6 +31,8 @@ FixedUI::~FixedUI()
 {
 	delete timer;
 	delete timerFlame;
+	delete buttonP1;
+	delete buttonP2;
 }
 
 //================================
@@ -38,6 +42,8 @@ void FixedUI::initialize()
 {
 	timer->initialize();
 	timerFlame->initialize();
+	buttonP1->initialize();
+	buttonP2->initialize();
 }
 
 //================================
@@ -47,6 +53,9 @@ void FixedUI::render()
 {
 	timerFlame->render();
 	timer->render();
+	buttonP1->renderP1();
+	buttonP2->renderP2();
+	
 }
 
 //================================
@@ -54,7 +63,11 @@ void FixedUI::render()
 //================================
 void FixedUI::update()
 {
+	//buttonFlag = Getflag()//こんな関数が用意される？
 	timer->update();
+	//マジックナンバー部分は変数を用意予定
+	buttonP1->update(0,1);
+	buttonP2->update(1,1);
 }
 
 //================================
@@ -62,5 +75,6 @@ void FixedUI::update()
 //================================
 void FixedUI::uninitialize()
 {
-
+	
 }
+
