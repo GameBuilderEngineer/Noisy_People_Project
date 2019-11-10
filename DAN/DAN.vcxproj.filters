@@ -616,9 +616,6 @@
     <ClCompile Include="BasicUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
-    <ClCompile Include="TimerFlame.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="UIButton.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
@@ -633,6 +630,12 @@
     </ClCompile>
     <ClCompile Include="TestEffectOccurrence.cpp">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerFrame.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonFrame.cpp">
+      <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -987,9 +990,6 @@
     <ClInclude Include="BasicUI.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="TimerFlame.h">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="UIButton.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
@@ -1004,6 +1004,12 @@
     </ClInclude>
     <ClInclude Include="TestEffectOccurrence.h">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerFrame.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonFrame.h">
+      <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

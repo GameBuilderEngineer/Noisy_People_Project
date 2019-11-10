@@ -22,6 +22,8 @@ FixedUI::FixedUI()
 	timerFlame = new TimerFlame;
 	buttonP1 = new UiButton;
 	buttonP2 = new UiButton;
+	buttonFrameP1 = new ButtonFrame;
+	buttonFrameP2 = new ButtonFrame;
 }
 
 //================================
@@ -33,6 +35,8 @@ FixedUI::~FixedUI()
 	delete timerFlame;
 	delete buttonP1;
 	delete buttonP2;
+	delete buttonFrameP1;
+	delete buttonFrameP2;
 }
 
 //================================
@@ -44,6 +48,9 @@ void FixedUI::initialize()
 	timerFlame->initialize();
 	buttonP1->initialize();
 	buttonP2->initialize();
+	buttonFrameP1->initialize(basicUiNS::P1);
+	buttonFrameP2->initialize(basicUiNS::P2);
+
 }
 
 //================================
@@ -53,9 +60,10 @@ void FixedUI::render()
 {
 	timerFlame->render();
 	timer->render();
+	buttonFrameP1->render();
+	buttonFrameP2->render();
 	buttonP1->renderP1();
 	buttonP2->renderP2();
-	
 }
 
 //================================

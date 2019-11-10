@@ -7,8 +7,9 @@
 // インクルード
 //=================================
 #include "Timer.h"
-#include "TimerFlame.h"
+#include "TimerFrame.h"
 #include "UIButton.h"
+#include "ButtonFrame.h"
 
 //=================================
 // 名前空間
@@ -29,7 +30,10 @@ private:
 	TimerFlame * timerFlame;	//タイマーフレーム
 	UiButton   * buttonP1;		//ボタンUI
 	UiButton   * buttonP2;		//ボタンUI
-	bool	     buttonFlag;    //ボタンon off用フラグ
+	ButtonFrame *buttonFrameP1;//ボタンのボックス
+	ButtonFrame *buttonFrameP2;//ボタンのボックス
+	//bool	     buttonFlag;    //ボタンon off用フラグ
+	//int		 buttonType;	//ボタンタイプ管理用
 public://メンバー関数
 	FixedUI();
 	~FixedUI();

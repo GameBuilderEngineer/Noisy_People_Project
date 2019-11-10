@@ -153,6 +153,7 @@
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="ButtonFrame.h" />
     <ClInclude Include="UIButton.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Create.h" />
@@ -238,7 +239,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Tiger.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="TimerFlame.h" />
+    <ClInclude Include="TimerFrame.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TmpObject.h" />
     <ClInclude Include="TreeTools.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="ButtonFrame.cpp" />
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Create.cpp" />
@@ -356,7 +358,7 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="TimerFlame.cpp" />
+    <ClCompile Include="TimerFrame.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TmpObject.cpp" />

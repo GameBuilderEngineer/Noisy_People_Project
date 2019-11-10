@@ -24,6 +24,13 @@ namespace basicUiNS
 		slideDown,
 	};
 
+	enum PLAYER_TYPE
+	{
+		P1,
+		P2,
+		PLAYER_TYPE_MAX,
+	};
+
 	const float SLIDE_SPEED = 20.0f;		//スライドインの速度
 	const int	CHANGE_SIZE_SPEED = 20;		//サイズ変更の速度
 	const float   CHANGE_ALPHA_SPEED = 155.0f;		//α値の変更速度

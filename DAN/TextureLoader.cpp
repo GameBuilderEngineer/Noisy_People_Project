@@ -68,6 +68,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_BUTTON2] = { "shot.png" };
 	textureName[UI_BUTTON3] = { "shift.png" };
 	textureName[UI_BUTTON4] = { "vision.png" };
+	textureName[UI_BUTTON_BOX] = { "CommandBox.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
