@@ -25,6 +25,17 @@ Credit::Credit()
 	sceneName = "Scene -Credit-";
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
+
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::CREDIT);
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters;
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, CREDIT_BGM_LIST::BGM_Credit, true,1.0f,false,NULL,true, filterParameters };
+
+	//再生
+	SoundInterface::BGM->playSound(&playParameters);
 }
 
 //===================================================================================================================================
@@ -32,8 +43,7 @@ Credit::Credit()
 //===================================================================================================================================
 Credit::~Credit()
 {
-	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_CREDIT);
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================

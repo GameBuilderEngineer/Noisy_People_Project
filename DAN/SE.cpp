@@ -173,8 +173,10 @@ void SEManager::SwitchAudioBuffer(int scene)
 		bufferMax = TITLE_SE_LIST::TITLE_SE_MAX;
 		break;
 	case SceneList::TUTORIAL:
+		bufferMax = TUTORIAL_SE_LIST::TUTORIAL_SE_MAX;
 		break;
 	case SceneList::CREDIT:
+		bufferMax = CREDIT_SE_LIST::CREDIT_SE_MAX;
 		break;
 	case SceneList::GAME:
 		SEManager::bufferList = new LIST_BUFFER[GAME_SE_LIST::GAME_SE_MAX];
@@ -195,11 +197,13 @@ void SEManager::SwitchAudioBuffer(int scene)
 		bufferMax = GAME_SE_LIST::GAME_SE_MAX;
 		break;
 	case SceneList::RESULT:	
-		break;
-	case SceneList::NONE_SCENE:
+		bufferMax = RESULT_SE_LIST::RESULT_SE_MAX;
 		break;
 	case SceneList::CREATE:
 		bufferMax = CREATE_SE_LIST::CREATE_SE_MAX;
+		break;
+	case SceneList::NONE_SCENE:
+		bufferMax = 0;
 		break;
 	default:
 		break;

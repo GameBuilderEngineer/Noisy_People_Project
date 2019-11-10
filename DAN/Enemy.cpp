@@ -627,7 +627,7 @@ void Enemy::debugSensor()
 	{
 		// ‰¹‚ğ–Â‚ç‚·
 		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-		PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL,true, filterParameters };
+		PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::SE_GAME_EnemyAttack, false ,NULL,false,NULL,true, filterParameters };
 		SoundInterface::SE->playSound(&playParameters);	//SEÄ¶
 	}
 }

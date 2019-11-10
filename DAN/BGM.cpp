@@ -128,18 +128,18 @@ void BGMManager::outputGUI(void)
 				switch (scene)
 				{
 				case SceneList::SPLASH:
-					//サウンド名
-					ImGui::Text("%s", splashBGMPathList[tmpSoundParameters->playParameters.soundId]);
 					break;
 				case SceneList::TITLE:
 					//サウンド名
 					ImGui::Text("%s", titleBGMPathList[tmpSoundParameters->playParameters.soundId]);
 					break;
 				case SceneList::TUTORIAL:
-
+					//サウンド名
+					ImGui::Text("%s", tutorialBGMPathList[tmpSoundParameters->playParameters.soundId]);
 					break;
 				case SceneList::CREDIT:
-
+					//サウンド名
+					ImGui::Text("%s", creditBGMPathList[tmpSoundParameters->playParameters.soundId]);
 					break;
 				case SceneList::GAME:
 					//サウンド名
@@ -224,21 +224,6 @@ void BGMManager::SwitchAudioBuffer(int scene)
 	switch (scene)
 	{
 	case SceneList::SPLASH:
-		BGMManager::bufferList = new LIST_BUFFER[SPLASH_BGM_LIST::SPLASH_BGM_MAX];
-		for (int i = 0; i < SPLASH_BGM_LIST::SPLASH_BGM_MAX; i++)
-		{
-			BGMManager::bufferList[i].buffer = { 0 };
-
-			FILE *fp = nullptr;
-			fp = fopen(splashBGMPathList[i], "rb");
-			BGMManager::bufferList[i].wavFile = LoadWavChunk(fp);
-			BGMManager::bufferList[i].soundId = i;
-			BGMManager::bufferList[i].buffer.pAudioData = (BYTE*)BGMManager::bufferList[i].wavFile.data.waveData;
-			BGMManager::bufferList[i].buffer.AudioBytes = BGMManager::bufferList[i].wavFile.data.waveSize;
-			BGMManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
-
-			fclose(fp);
-		}
 		bufferMax = SPLASH_BGM_LIST::SPLASH_BGM_MAX;
 		break;
 	case SceneList::TITLE:
@@ -260,8 +245,40 @@ void BGMManager::SwitchAudioBuffer(int scene)
 		bufferMax = TITLE_BGM_LIST::TITLE_BGM_MAX;
 		break;
 	case SceneList::TUTORIAL:
+		BGMManager::bufferList = new LIST_BUFFER[TUTORIAL_BGM_LIST::TUTORIAL_BGM_MAX];
+		for (int i = 0; i < TUTORIAL_BGM_LIST::TUTORIAL_BGM_MAX; i++)
+		{
+			BGMManager::bufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(tutorialBGMPathList[i], "rb");
+			BGMManager::bufferList[i].wavFile = LoadWavChunk(fp);
+			BGMManager::bufferList[i].soundId = i;
+			BGMManager::bufferList[i].buffer.pAudioData = (BYTE*)BGMManager::bufferList[i].wavFile.data.waveData;
+			BGMManager::bufferList[i].buffer.AudioBytes = BGMManager::bufferList[i].wavFile.data.waveSize;
+			BGMManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
+		bufferMax = TUTORIAL_BGM_LIST::TUTORIAL_BGM_MAX;
 		break;
 	case SceneList::CREDIT:
+		BGMManager::bufferList = new LIST_BUFFER[CREDIT_BGM_LIST::CREDIT_BGM_MAX];
+		for (int i = 0; i < CREDIT_BGM_LIST::CREDIT_BGM_MAX; i++)
+		{
+			BGMManager::bufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(creditBGMPathList[i], "rb");
+			BGMManager::bufferList[i].wavFile = LoadWavChunk(fp);
+			BGMManager::bufferList[i].soundId = i;
+			BGMManager::bufferList[i].buffer.pAudioData = (BYTE*)BGMManager::bufferList[i].wavFile.data.waveData;
+			BGMManager::bufferList[i].buffer.AudioBytes = BGMManager::bufferList[i].wavFile.data.waveSize;
+			BGMManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
+		bufferMax = CREDIT_BGM_LIST::CREDIT_BGM_MAX;
 		break;
 	case SceneList::GAME:
 		BGMManager::bufferList = new LIST_BUFFER[GAME_BGM_LIST::GAME_BGM_MAX];

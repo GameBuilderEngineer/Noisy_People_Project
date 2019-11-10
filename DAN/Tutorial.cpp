@@ -31,6 +31,18 @@ Tutorial::Tutorial()
 	sceneName = "Scene -Tutorial-";
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
+
+	//シーンの更新
+	SoundInterface::SwitchAudioBuffer(SceneList::TUTORIAL);
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters;
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TUTORIAL_BGM_LIST::BGM_Tutorial, true,1.0f,false,NULL,true, filterParameters };
+
+	//再生
+	SoundInterface::BGM->playSound(&playParameters);
+
 }
 
 //===================================================================================================================================
@@ -39,7 +51,7 @@ Tutorial::Tutorial()
 Tutorial::~Tutorial()
 {
 	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_TUTORIAL);
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================

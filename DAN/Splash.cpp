@@ -25,15 +25,13 @@ Splash::Splash()
 	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters[2];
-	memset(playParameters, 0, sizeof(playParameters));
+	PLAY_PARAMETERS playParameters;
+	memset(&playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SPLASH_SE_01, false,NULL,false,NULL,true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SPLASH_BGM_LIST::SPLASH_BGM_01, true ,1.0f,false,NULL,true, filterParameters };
+	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SPLASH_SE_LIST::SE_SPLASH_Decision, false,NULL,false,NULL,true, filterParameters };
 
 	//再生
-	SoundInterface::SE->playSound(&playParameters[0]);
-	SoundInterface::BGM->playSound(&playParameters[1]);
+	SoundInterface::SE->playSound(&playParameters);
 
 	//エフェクシアーテスト
 	effekseerNS::setProjectionMatrix(90.0f / 180.0f * 3.14f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 10000.0f);
@@ -47,7 +45,6 @@ Splash::~Splash()
 {
 	//サウンドの停止
 	SoundInterface::SE->uninitSoundStop();
-	SoundInterface::BGM->uninitSoundStop();
 	effekseerNS::stop(effekseerNS::TEST0);
 }
 
