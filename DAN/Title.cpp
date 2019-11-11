@@ -36,9 +36,9 @@ Title::Title(void)
 	PLAY_PARAMETERS playParameters[3];
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_01, false,NULL,false,NULL,true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,TITLE_SE_LIST::TITLE_SE_02, false,NULL,false,NULL,true, filterParameters };
-	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, TITLE_BGM_LIST::TITLE_BGM_01, true,1.0f,false,NULL,true, filterParameters };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Decision, false,NULL,false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Cursor, false,NULL,false,NULL,true, filterParameters };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL,true, filterParameters };
 
 	//Ä¶
 	SoundInterface::SE->playSound(&playParameters[0]);
@@ -52,8 +52,7 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// ƒTƒEƒ“ƒh‚Ì’âŽ~
-	SoundInterface::SE->uninitSoundStop();
-	SoundInterface::BGM->uninitSoundStop();
+	SoundInterface::StopAllSound();
 }
 
 //============================================================================================================================================

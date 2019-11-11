@@ -13,37 +13,46 @@
 #include "SoundBase.h"
 
 //===================================================================================================================================
+//ÅyÉ}ÉNÉçíËã`Åz
+//===================================================================================================================================
+#define BGM_PATH_LIST_TAIL(num)			BGMPathList##[num]
+
+//===================================================================================================================================
 //ÅyóÒãìå^íËêîÅz
 //===================================================================================================================================
-enum SPLASH_BGM_LIST
+enum BGM_LIST
 {
-	SPLASH_BGM_01,
-	SPLASH_BGM_MAX
-};
-
-enum TITLE_BGM_LIST
-{
-	TITLE_BGM_01,
-	TITLE_BGM_MAX
-};
-
-enum GAME_BGM_LIST
-{
-	GAME_BGM_01,
-	GAME_BGM_MAX
-};
-
-enum CREATE_BGM_LIST
-{
-	CREATE_BGM_MAX
+	BGM_Title,
+	BGM_Credit,
+	BGM_Game,
+	BGM_Tutorial,
+	BGM_Clear,
+	BGM_Failed,
+	BGM_MAX
 };
 
 //===================================================================================================================================
 //ÅyíËêîíËã`Åz
 //===================================================================================================================================
-static const char *splashBGMPathList[] = { "BGM_Splash.wav" };
-static const char *titleBGMPathList[] = { "BGM_Title.wav" };
-static const char *gameBGMPathList[] = { "BGM_Game.wav" };
+static const char *BGMPathList[] = {
+	"BGM_Title.wav","BGM_Credit.wav",
+	"BGM_Game.wav","BGM_Tutorial.wav",
+	"BGM_Clear.wav" ,"BGM_Failed.wav" };
+
+static const int titleBGMPathList[] = {
+	BGM_Title};
+
+static const int creditBGMPathList[] = {
+	BGM_Credit };
+
+static const int gameBGMPathList[] = {
+	BGM_Game };
+
+static const int tutorialBGMPathList[] = {
+	BGM_Tutorial };
+
+static const int resultBGMPathList[] = {
+	BGM_Clear,BGM_Failed };
 
 //===================================================================================================================================
 //ÅyÉTÉEÉìÉh(XAudio2)Åz

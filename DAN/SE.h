@@ -14,39 +14,87 @@
 #include "SoundBase.h"
 
 //===================================================================================================================================
+//ÅyÉ}ÉNÉçíËã`Åz
+//===================================================================================================================================
+#define SE_PATH_LIST_TAIL(num)			SEPathList##[num]
+
+//===================================================================================================================================
 //ÅyóÒãìå^íËêîÅz
 //===================================================================================================================================
-enum SPLASH_SE_LIST
+enum SE_LIST
 {
-	SPLASH_SE_01,
-	SPLASH_SE_MAX
-};
-
-enum TITLE_SE_LIST
-{
-	TITLE_SE_01,
-	TITLE_SE_02,
-	TITLE_SE_MAX
-};
-
-enum GAME_SE_LIST
-{
-	GAME_SE_01,
-	GAME_SE_02,
-	GAME_SE_MAX
-};
-
-enum CREATE_SE_LIST
-{
-	CREATE_SE_MAX
+	SE_Cursor,
+	SE_Decision,
+	SE_Cancel,
+	SE_AddTree,
+	SE_Score,
+	SE_Shot,
+	SE_Reload,
+	SE_Getlem,
+	SE_RecoverPower,
+	SE_BanOperation,
+	SE_VisionStart,
+	SE_VisionFinish,
+	SE_Vision,
+	SE_SkyVisionStart,
+	SE_SkyVisionFinish,
+	SE_ShiftStart,
+	SE_ShiftFinish,
+	SE_HitBulletTree,
+	SE_Convert,
+	SE_Greening,
+	SE_EnemyActive,
+	SE_EnemyAttack,
+	SE_EnemyAttackHit,
+	SE_EnemyDefeated,
+	SE_StartGame,
+	SE_AnnounceTelop,
+	SE_Telop,
+	SE_TimeUp,
+	SE_BIRD_0,
+	SE_BIRD_1,
+	SE_WIND,
+	SE_MAX
 };
 
 //===================================================================================================================================
 //ÅyíËêîíËã`Åz
 //===================================================================================================================================
-static const char *splashSEPathList[] = { "SE_Attack.wav" };
-static const char *titleSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
-static const char *gameSEPathList[] = { "SE_Game_Start.wav","SE_Revival_Point.wav" };
+static const char *SEPathList[SE_LIST::SE_MAX] = {
+	"SE_Cursor.wav","SE_Decision.wav" ,"SE_Cancel.wav",
+	"SE_AddTree.wav","SE_Score.wav",
+	"SE_Shot.wav","SE_Reload.wav" ,"SE_Getlem.wav","SE_RecoverPower.wav",
+	"SE_BanOperation.wav","SE_VisionStart.wav" ,"SE_VisionFinish.wav",
+	"SE_Vision.wav","SE_SkyVisionStart.wav","SE_VisionFinish.wav",
+	"SE_ShiftStart.wav", "SE_ShiftFinish.wav","SE_HitBulletTree.wav",
+	"SE_Convert.wav","SE_Greening.wav","SE_EnemyActive.wav",
+	"SE_EnemyAttack.wav","SE_EnemyAttackHit.wav","SE_EnemyDefeated.wav",
+	"SE_StartGame.wav","SE_AnnounceTelop.wav","SE_Telop.wav","SE_TimeUp.wav",
+	"SE_Bird0.wav","SE_Bird1.wav","SE_Wind.wav" };
+
+static const int titleSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel };
+
+static const int creditSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel };
+
+static const int gameSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel ,
+	SE_Shot,SE_Reload,SE_Getlem,SE_RecoverPower,
+	SE_BanOperation,SE_VisionStart,SE_VisionFinish,
+	SE_Vision,SE_SkyVisionStart,SE_VisionFinish,
+	SE_ShiftStart, SE_ShiftFinish,SE_HitBulletTree,
+	SE_Convert,SE_Greening,SE_EnemyActive,
+	SE_EnemyAttack,SE_EnemyAttackHit,SE_EnemyDefeated,
+	SE_StartGame,SE_AnnounceTelop,SE_Telop,SE_TimeUp,
+	SE_BIRD_0,SE_BIRD_1,SE_WIND };
+
+static const int tutorialSEPathList[] = {
+	SE_Cursor,SE_Decision, SE_Cancel };
+
+static const int resultSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel,
+	SE_AddTree,SE_Score};
 
 //===================================================================================================================================
 //ÅyÉTÉEÉìÉh(XAudio2)Åz

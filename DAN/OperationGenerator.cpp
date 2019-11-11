@@ -3,7 +3,8 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/12
 //-----------------------------------------------------------------------------
-#include "AIDirector.h"#include "OperationGenerator.h"
+#include "AIDirector.h"
+#include "OperationGenerator.h"
 
 using namespace aiNS;
 

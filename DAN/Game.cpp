@@ -41,9 +41,9 @@ Game::Game()
 	PLAY_PARAMETERS playParameters[3];
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL, true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_02, false ,NULL,false,NULL,true, filterParameters };
-	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, GAME_BGM_LIST::GAME_BGM_01, true,1.0f,false,NULL,true, filterParameters };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyAttack, false ,NULL,false,NULL, true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyActive, false ,NULL,false,NULL,true, filterParameters };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL,true, filterParameters };
 
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
@@ -56,8 +56,8 @@ Game::Game()
 //===================================================================================================================================
 Game::~Game()
 {
-	SoundInterface::SE->uninitSoundStop();
-	SoundInterface::BGM->uninitSoundStop();
+	// サウンドの停止
+	SoundInterface::StopAllSound();
 }
 
 //===================================================================================================================================
@@ -237,8 +237,6 @@ void Game::initialize() {
 //【終了処理】
 //===================================================================================================================================
 void Game::uninitialize() {
-	//サウンド
-	enemyManager->uninitializeSound();
 
 	//SAFE_DELETE(linear4TreeManager);
 	SAFE_DELETE(linear8TreeManager);
@@ -611,7 +609,7 @@ void Game::collisions()
 				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
 				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
 				FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::GAME_SE_01, false ,NULL,false,NULL,true, filterParameters };
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyAttack, false ,NULL,false,NULL,true, filterParameters };
 				SoundInterface::SE->playSound(&playParameters);	//SE再生
 				itemManager->destroyAllItem();					//デリート(今は全消し)
 			}
