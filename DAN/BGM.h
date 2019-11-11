@@ -15,60 +15,45 @@
 //===================================================================================================================================
 //ÅyÉ}ÉNÉçíËã`Åz
 //===================================================================================================================================
-#define BGM_PATH_LIST_TAIL(scene,num)			scene##BGMPathList##num
+#define BGM_PATH_LIST_TAIL(num)			BGMPathList##[num]
 
 //===================================================================================================================================
 //ÅyóÒãìå^íËêîÅz
 //===================================================================================================================================
-enum SPLASH_BGM_LIST
-{
-	SPLASH_BGM_MAX
-};
-
-enum TITLE_BGM_LIST
+enum BGM_LIST
 {
 	BGM_Title,
-	TITLE_BGM_MAX
-};
-
-enum CREDIT_BGM_LIST
-{
 	BGM_Credit,
-	CREDIT_BGM_MAX
-};
-
-enum GAME_BGM_LIST
-{
 	BGM_Game,
-	GAME_BGM_MAX
-};
-
-enum TUTORIAL_BGM_LIST
-{
 	BGM_Tutorial,
-	TUTORIAL_BGM_MAX
-};
-
-enum CREATE_BGM_LIST
-{
-	CREATE_BGM_MAX
-};
-
-enum RESULT_BGM_LIST
-{
 	BGM_Clear,
 	BGM_Failed,
-	RESULT_BGM_MAX
+	BGM_MAX
 };
 
 //===================================================================================================================================
 //ÅyíËêîíËã`Åz
 //===================================================================================================================================
-static const char *creditBGMPathList[] = { "BGM_Credit.wav" };
-static const char *titleBGMPathList[] = { "BGM_Title.wav" }; 
-static const char *tutorialBGMPathList[] = { "BGM_Tutorial.wav" };
-static const char *gameBGMPathList[] = { "BGM_Game.wav" };
-static const char *resultBGMPathList[] = { "BGM_Clear.wav","BGM_Failed.wav" };
+static const char *BGMPathList[] = {
+	"BGM_Title.wav","BGM_Credit.wav",
+	"BGM_Game.wav","BGM_Tutorial.wav",
+	"BGM_Clear.wav" ,"BGM_Failed.wav" };
+
+static const int titleBGMPathList[] = {
+	BGM_Title};
+
+static const int creditBGMPathList[] = {
+	BGM_Credit };
+
+static const int gameBGMPathList[] = {
+	BGM_Game };
+
+static const int tutorialBGMPathList[] = {
+	BGM_Tutorial };
+
+static const int resultBGMPathList[] = {
+	BGM_Clear,BGM_Failed };
+
 //===================================================================================================================================
 //ÅyÉTÉEÉìÉh(XAudio2)Åz
 //ÉTÉEÉìÉhÇÃBGMÉNÉâÉX

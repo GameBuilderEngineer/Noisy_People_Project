@@ -16,100 +16,53 @@
 //===================================================================================================================================
 //ÅyÉ}ÉNÉçíËã`Åz
 //===================================================================================================================================
-#define SE_PATH_LIST_TAIL(scene,num)			scene##SEPathList##num
+#define SE_PATH_LIST_TAIL(num)			SEPathList##[num]
 
 //===================================================================================================================================
 //ÅyóÒãìå^íËêîÅz
 //===================================================================================================================================
-enum SPLASH_SE_LIST
+enum SE_LIST
 {
-	SPLASH_SE_MAX
-};
-
-enum TITLE_SE_LIST
-{
-	SE_TITLE_Cursor,
-	SE_TITLE_Decision,
-	SE_TITLE_Cancel,
-	TITLE_SE_MAX
-};
-
-enum CREDIT_SE_LIST
-{
-	SE_CREDIT_Cursor,
-	SE_CREDIT_Decision,
-	SE_CREDIT_Cancel,
-	CREDIT_SE_MAX
-};
-
-enum GAME_SE_LIST
-{
-	SE_GAME_Cursor,
-	SE_GAME_Decision,
-	SE_GAME_Cancel,
-	SE_GAME_Shot,
-	SE_GAME_Reload,
-	SE_GAME_Getlem,
-	SE_GAME_RecoverPower,
-	SE_GAME_BanOperation,
-	SE_GAME_VisionStart,
-	SE_GAME_VisionFinish,
-	SE_GAME_Vision,
-	SE_GAME_SkyVisionStart,
-	SE_GAME_SkyVisionFinish,
-	SE_GAME_ShiftStart,
-	SE_GAME_ShiftFinish,
-	SE_GAME_HitBulletTree,
-	SE_GAME_Convert,
-	SE_GAME_Greening,
-	SE_GAME_EnemyActive,
-	SE_GAME_EnemyAttack,
-	SE_GAME_EnemyAttackHit,
-	SE_GAME_EnemyDefeated,
-	SE_GAME_StartGame,
-	SE_GAME_AnnounceTelop,
-	SE_GAME_Telop,
-	SE_GAME_TimeUp,
-	SE_GAME_BIRD_0,
-	SE_GAME_BIRD_1,
-	SE_GAME_WIND,
-	GAME_SE_MAX
-};
-
-enum TUTORIAL_SE_LIST
-{
-	SE_TUTORIAL_Cursor,
-	SE_TUTORIAL_Decision,
-	SE_TUTORIAL_Cancel,
-	TUTORIAL_SE_MAX
-};
-
-enum CREATE_SE_LIST
-{
-	CREATE_SE_MAX
-};
-
-enum RESULT_SE_LIST
-{
-	SE_RESULT_Cursor,
-	SE_RESULT_Decision,
-	SE_RESULT_Cancel,
-	SE_RESULT_AddTree,
-	SE_RESULT_Score,
-	RESULT_SE_MAX
+	SE_Cursor,
+	SE_Decision,
+	SE_Cancel,
+	SE_AddTree,
+	SE_Score,
+	SE_Shot,
+	SE_Reload,
+	SE_Getlem,
+	SE_RecoverPower,
+	SE_BanOperation,
+	SE_VisionStart,
+	SE_VisionFinish,
+	SE_Vision,
+	SE_SkyVisionStart,
+	SE_SkyVisionFinish,
+	SE_ShiftStart,
+	SE_ShiftFinish,
+	SE_HitBulletTree,
+	SE_Convert,
+	SE_Greening,
+	SE_EnemyActive,
+	SE_EnemyAttack,
+	SE_EnemyAttackHit,
+	SE_EnemyDefeated,
+	SE_StartGame,
+	SE_AnnounceTelop,
+	SE_Telop,
+	SE_TimeUp,
+	SE_BIRD_0,
+	SE_BIRD_1,
+	SE_WIND,
+	SE_MAX
 };
 
 //===================================================================================================================================
 //ÅyíËêîíËã`Åz
 //===================================================================================================================================
-static const char *titleSEPathList[TITLE_SE_LIST::TITLE_SE_MAX] = {
-	"SE_Cursor.wav","SE_Decision.wav" ,"SE_Cancel.wav" };
-
-static const char *creditSEPathList[CREDIT_SE_LIST::CREDIT_SE_MAX] = {
-	"SE_Cursor.wav","SE_Decision.wav" ,"SE_Cancel.wav" };
-
-static const char *gameSEPathList[GAME_SE_LIST::GAME_SE_MAX] = {
+static const char *SEPathList[SE_LIST::SE_MAX] = {
 	"SE_Cursor.wav","SE_Decision.wav" ,"SE_Cancel.wav",
+	"SE_AddTree.wav","SE_Score.wav",
 	"SE_Shot.wav","SE_Reload.wav" ,"SE_Getlem.wav","SE_RecoverPower.wav",
 	"SE_BanOperation.wav","SE_VisionStart.wav" ,"SE_VisionFinish.wav",
 	"SE_Vision.wav","SE_SkyVisionStart.wav","SE_VisionFinish.wav",
@@ -119,13 +72,29 @@ static const char *gameSEPathList[GAME_SE_LIST::GAME_SE_MAX] = {
 	"SE_StartGame.wav","SE_AnnounceTelop.wav","SE_Telop.wav","SE_TimeUp.wav",
 	"SE_Bird0.wav","SE_Bird1.wav","SE_Wind.wav" };
 
-static const char *tutorialSEPathList[TUTORIAL_SE_LIST::TUTORIAL_SE_MAX] = {
-	"SE_Cursor.wav","SE_Decision.wav" ,"SE_Cancel.wav" };
+static const int titleSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel };
 
-static const char *resultSEPathList[RESULT_SE_LIST::RESULT_SE_MAX] = {
-	"SE_Cursor.wav","SE_Decision.wav" ,"SE_Cancel.wav",
-	"SE_AddTree.wav","SE_Score.wav" };
+static const int creditSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel };
 
+static const int gameSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel ,
+	SE_Shot,SE_Reload,SE_Getlem,SE_RecoverPower,
+	SE_BanOperation,SE_VisionStart,SE_VisionFinish,
+	SE_Vision,SE_SkyVisionStart,SE_VisionFinish,
+	SE_ShiftStart, SE_ShiftFinish,SE_HitBulletTree,
+	SE_Convert,SE_Greening,SE_EnemyActive,
+	SE_EnemyAttack,SE_EnemyAttackHit,SE_EnemyDefeated,
+	SE_StartGame,SE_AnnounceTelop,SE_Telop,SE_TimeUp,
+	SE_BIRD_0,SE_BIRD_1,SE_WIND };
+
+static const int tutorialSEPathList[] = {
+	SE_Cursor,SE_Decision, SE_Cancel };
+
+static const int resultSEPathList[] = {
+	SE_Cursor,SE_Decision ,SE_Cancel,
+	SE_AddTree,SE_Score};
 
 //===================================================================================================================================
 //ÅyÉTÉEÉìÉh(XAudio2)Åz

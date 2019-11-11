@@ -471,7 +471,7 @@ void Director::changeNextScene() {
 	switch (nextScene)								// éwíËÇ≥ÇÍÇΩÉVÅ[ÉìÇ÷ëJà⁄
 	{
 	case SceneList::SPLASH:					scene = new Splash();	break;
-	case SceneList::TITLE:					scene = new Title();	break;
+	case SceneList::TITLE:					scene = new Title();		break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
 	case SceneList::CREDIT:					scene = new Credit();	break;
 	case SceneList::GAME:					scene = new Game();		break;

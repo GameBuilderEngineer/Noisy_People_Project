@@ -32,7 +32,7 @@ Credit::Credit()
 	//Ä¶ƒpƒ‰ƒ[ƒ^
 	PLAY_PARAMETERS playParameters;
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, CREDIT_BGM_LIST::BGM_Credit, true,1.0f,false,NULL,true, filterParameters };
+	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Credit, true,1.0f,false,NULL,true, filterParameters };
 
 	//Ä¶
 	SoundInterface::BGM->playSound(&playParameters);

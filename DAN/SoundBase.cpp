@@ -172,11 +172,18 @@ void SoundBase::updateSound(void)
 //===================================================================================================================================
 LIST_BUFFER *SoundBase::GetBuffer(int endpointVoiceId, int soundId, bool loop)
 {
-	if (loop)
+	for (int i = 0; i < bufferMax; i++)
 	{
-		bufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+		if (bufferList[i].soundId == soundId)
+		{
+			if (loop)
+			{
+				bufferList[i].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+			}
+			return &bufferList[i];
+		}
 	}
-	return &bufferList[soundId];
+	return nullptr;
 }
 
 //===================================================================================================================================
