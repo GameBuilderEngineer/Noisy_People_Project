@@ -36,12 +36,14 @@ Tutorial::Tutorial()
 	SoundInterface::SwitchAudioBuffer(SceneList::TUTORIAL);
 
 	//Ä¶ƒpƒ‰ƒ[ƒ^
-	PLAY_PARAMETERS playParameters;
+	PLAY_PARAMETERS playParameters[2];
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Tutorial, true,1.0f,false,NULL,true, filterParameters };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false,NULL,false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Tutorial, true,1.0f,false,NULL,true, filterParameters };
 
 	//Ä¶
-	SoundInterface::BGM->playSound(&playParameters);
+	SoundInterface::SE->playSound(&playParameters[0]);
+	SoundInterface::BGM->playSound(&playParameters[1]);
 
 }
 

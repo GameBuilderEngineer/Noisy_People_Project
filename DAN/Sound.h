@@ -50,9 +50,9 @@ public:
 	~SoundInterface();
 
 	//マネージャー
-	static SEManager *SE;
-	static BGMManager *BGM;
-	static S3DManager *S3D;
+	static SEManager		*SE;
+	static BGMManager	*BGM;
+	static S3DManager	*S3D;
 
 	//インタフェース
 #if(XADUIO2_STATE)

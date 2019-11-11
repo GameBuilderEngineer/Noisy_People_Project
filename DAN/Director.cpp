@@ -225,8 +225,9 @@ void Director::mainLoop() {
 	//シーン切替フラグの確認
 	if (scene->checkChangeOrder())
 	{
-		fader->start();
-		if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
+		//saiテスト
+		//fader->start();
+		//if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
 			changeNextScene();
 	}
 	setFrameTime();				//フレーム時間の初期化処理

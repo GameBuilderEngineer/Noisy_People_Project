@@ -90,7 +90,15 @@ static const int gameSEPathList[] = {
 	SE_BIRD_0,SE_BIRD_1,SE_WIND };
 
 static const int tutorialSEPathList[] = {
-	SE_Cursor,SE_Decision, SE_Cancel };
+	SE_Cursor,SE_Decision ,SE_Cancel ,
+	SE_Shot,SE_Reload,SE_Getlem,SE_RecoverPower,
+	SE_BanOperation,SE_VisionStart,SE_VisionFinish,
+	SE_Vision,SE_SkyVisionStart,SE_VisionFinish,
+	SE_ShiftStart, SE_ShiftFinish,SE_HitBulletTree,
+	SE_Convert,SE_Greening,SE_EnemyActive,
+	SE_EnemyAttack,SE_EnemyAttackHit,SE_EnemyDefeated,
+	SE_StartGame,SE_AnnounceTelop,SE_Telop,SE_TimeUp,
+	SE_BIRD_0,SE_BIRD_1,SE_WIND };
 
 static const int resultSEPathList[] = {
 	SE_Cursor,SE_Decision ,SE_Cancel,
