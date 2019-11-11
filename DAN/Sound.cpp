@@ -10,7 +10,7 @@
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 IXAudio2 *SoundInterface::XAudio2Interface = nullptr;
 #endif
 SEManager *SoundInterface::SE = nullptr;
@@ -26,7 +26,7 @@ S3DManager *SoundInterface::S3D = nullptr;
 //===================================================================================================================================
 SoundInterface::SoundInterface()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//COMライブラリの初期化
 	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
 	{
@@ -65,7 +65,7 @@ SoundInterface::SoundInterface()
 //===================================================================================================================================
 SoundInterface::~SoundInterface()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//SE
 	SAFE_DELETE(SE);
 	
@@ -89,7 +89,7 @@ SoundInterface::~SoundInterface()
 //===================================================================================================================================
 //【XAudio2のインタフェースを取得する】
 //===================================================================================================================================
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 IXAudio2 *SoundInterface::GetXAudio2Interface(void)
 {
 	return XAudio2Interface;
@@ -101,7 +101,7 @@ IXAudio2 *SoundInterface::GetXAudio2Interface(void)
 //===================================================================================================================================
 void SoundInterface::SwitchAudioBuffer(int scene)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//シーンの更新
 	BGM->SwitchAudioBuffer(scene);
 	SE->SwitchAudioBuffer(scene);
@@ -114,7 +114,7 @@ void SoundInterface::SwitchAudioBuffer(int scene)
 //===================================================================================================================================
 void SoundInterface::UpdateSound(void)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//SEの更新処理
 	SE->updateSound();
 
@@ -138,7 +138,7 @@ void SoundInterface::UpdateSound(void)
 void SoundInterface::outputSoundGUI(void)
 {
 #ifdef _DEBUG
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	ImGui::Begin("SoundInformation");
 	
 	//SE

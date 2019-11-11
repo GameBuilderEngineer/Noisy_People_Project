@@ -11,12 +11,23 @@ using namespace aiNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void EventMaker::initialize(PLAYERAD* _playerAD, ENEMYAD* _enemyAD, TREEAD* _treeAD, ITEMAD* _itemAD)
+void EventMaker::initialize(PLAYERAD* _playerAD, ENEMYAD* _enemyAD, TREEAD* _treeAD, ITEMAD* _itemAD,
+	OperationGenerator* _opeGenerator, GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager,
+	TreeManager* _treeManager, ItemManager* _itemManager, TelopManager* _telopManager)
 {
 	playerAD = _playerAD;
 	enemyAD = _enemyAD;
 	treeAD = _treeAD;
 	itemAD = _itemAD;
+
+	opeGenerator = _opeGenerator;
+
+	gameMaster = _gameMaster;
+	player = _player;
+	enemyManager = _enemyManager;
+	treeManager = _treeManager;
+	itemManager = _itemManager;
+	telopManager = _telopManager;
 }
 
 
@@ -33,8 +44,11 @@ void EventMaker::uninitialize()
 //=============================================================================
 void EventMaker::update()
 {
-
-
+	// エネミー動的作成イベントの作成
+	if (enemyAD->shouldSpawnFuzzily > FUZZY_VALUE_SHOULD_SPAWN)
+	{
+		makeEventSpawningEnemyAroundPlayer();
+	}
 }
 
 
@@ -43,5 +57,11 @@ void EventMaker::update()
 //=============================================================================
 void EventMaker::makeEventSpawningEnemyAroundPlayer()
 {
-
+	enemyNS::ENEMYSET enemySet;
+	enemySet.enemyID = enemyManager->issueNewEnemyID();
+	enemySet.type = enemyNS::WOLF;
+	enemySet.defaultPosition = *player[0].getPosition() + D3DXVECTOR3(rand() % 5, 0.0f, rand() % 5);
+	enemySet.defaultDirection = *player[0].getPosition() - enemySet.defaultPosition;
+	enemySet.defaultState = stateMachineNS::PATROL;
+	opeGenerator->spawnEnemyAroundPlayer(enemySet);
 }

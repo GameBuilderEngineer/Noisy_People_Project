@@ -53,7 +53,11 @@ namespace staticMeshNS {
 		STONE_001,								//05
 		STONE_002,								//06
 		STONE_003,								//07
-		OCEAN,									//08
+		A_TRUNK,								//08
+		A_LEAF,									//09
+		B_TRUNK,								//10
+		B_LEAF,									//11
+		OCEAN,									//12
 
 		YAMADA_LAND,							//01
 		NAKAGOMI_LAND,							//02

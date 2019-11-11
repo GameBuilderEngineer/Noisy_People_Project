@@ -34,6 +34,7 @@ void Sky::initialize() {
 	object = new Object();
 	object->initialize(&D3DXVECTOR3(0, 0, 0));
 	object->scale = D3DXVECTOR3(15,15,15);
+	object->anyAxisRotation(D3DXVECTOR3(0, 1, 0), 180);
 	renderer->registerObject(object);
 	needUpdate = true;
 };

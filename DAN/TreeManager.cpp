@@ -13,15 +13,21 @@ using namespace treeNS;
 //=============================================================================
 void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-	nextID = 0;								// 次回発行IDを0に初期化
+	nextID = 0;			// 次回発行IDを0に初期化
+
+	// 接地フィールドをセット
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
 
 	// 描画オブジェクトの作成
-	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_REDBULL));
-	aLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_001));
-	bTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_TRUNK));
+	aLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_LEAF));
+	bTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_TRUNK));
+	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_LEAF));
 	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+
+
 
 #if 0	// ツリーツールのデータを読み込む
 
@@ -110,22 +116,24 @@ void TreeManager::createTree(TreeData treeData)
 	}
 
 	// 葉の描画をセット
-	if (treeData.geenState != GREEN) return;
-	switch (treeData.model)
+	if (treeData.geenState == GREEN)
 	{
-	case A_MODEL:
-		aLeafRenderer->registerObject(tree->getLeaf());
-		break;
+		switch (treeData.model)
+		{
+		case A_MODEL:
+			aLeafRenderer->registerObject(tree->getLeaf());
+			break;
 
-	case B_MODEL:
-		bLeafRenderer->registerObject(tree->getLeaf());
-		break;
+		case B_MODEL:
+			bLeafRenderer->registerObject(tree->getLeaf());
+			break;
 
-	case C_MODEL:
-		cLeafRenderer->registerObject(tree->getLeaf());
-		break;
+		case C_MODEL:
+			cLeafRenderer->registerObject(tree->getLeaf());
+			break;
+		}
 	}
-
+	tree->setAttractor(attractorMesh, attractorMatrix);
 	treeList.push_back(tree);
 }
 

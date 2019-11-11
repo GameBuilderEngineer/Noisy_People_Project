@@ -62,6 +62,7 @@ namespace treeNS
 	} TREESET;
 }
 
+
 //=============================================================================
 //クラス定義
 //=======================================================================T======
@@ -75,6 +76,10 @@ private:
 	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;		// 重力（引力）発生オブジェクトマトリックス
 	static int numOfTree;				// ツリーオブジェクトの総数
+
+	float radius;
+	D3DXVECTOR3	centralPosition;		// 中心座標
+
 
 public:
 	Tree(treeNS::TreeData _treeData);
@@ -90,4 +95,8 @@ public:
 
 	// Setter
 	void setDataToTree(treeNS::TreeData _treeData);
+
+#ifdef _DEBUG
+	void grounding();					// 接地処理
+#endif
 };

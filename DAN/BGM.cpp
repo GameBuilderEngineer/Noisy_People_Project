@@ -14,7 +14,7 @@
 //===================================================================================================================================
 BGMManager::BGMManager()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #endif
 }
 
@@ -23,7 +23,7 @@ BGMManager::BGMManager()
 //===================================================================================================================================
 BGMManager::~BGMManager()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #endif
 }
 
@@ -32,7 +32,7 @@ BGMManager::~BGMManager()
 //===================================================================================================================================
 void BGMManager::SetSpeed(void)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
@@ -86,7 +86,7 @@ void BGMManager::SetSpeed(void)
 #ifdef _DEBUG
 void BGMManager::outputGUI(void)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	if (!ImGui::CollapsingHeader("BGMInformation"))
 	{
 		//使用中のバッファ数
@@ -205,7 +205,7 @@ void BGMManager::outputGUI(void)
 //===================================================================================================================================
 void BGMManager::SwitchAudioBuffer(int scene)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//サウンドディレクトリに設定する
 	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_BGM);
 

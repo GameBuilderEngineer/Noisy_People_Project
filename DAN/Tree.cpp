@@ -23,6 +23,18 @@ Tree::Tree(treeNS::TreeData _treeData)
 
 	// treeData.sizeを基にした拡大縮小
 
+	// 半径取得
+	BoundingSphere bs;
+	bs.initialize(trunk.getPosition(), staticMeshNS::reference(staticMeshNS::A_TRUNK)->numBytesPerVertex);
+	radius = bs.getRadius();
+
+	// 重力付与
+	trunk.onGravity = true;
+
+	//// スケール変更
+	//trunk.scale *= 0.4f;
+	//leaf.scale *= 0.4f;
+
 	numOfTree++;
 }
 
@@ -41,6 +53,19 @@ Tree::~Tree()
 //=============================================================================
 void Tree::update(float frameTime)
 {
+	// 重力
+	if (trunk.onGravity)
+	{
+		D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+		trunk.setGravity(gravityDirection, 9.8f);
+		trunk.speed += trunk.acceleration * frameTime;
+		trunk.position += trunk.speed * frameTime;
+	}
+
+	grounding();
+	// オブジェクトのアップデート
+	leaf.update();
+	trunk.update();
 }
 
 
@@ -67,3 +92,27 @@ TreeData* Tree::getTreeData() { return &treeData; }
 // Setter
 //=============================================================================
 void Tree::setDataToTree(TreeData _treeData) { treeData = _treeData; }
+
+
+#ifdef _DEBUG
+//=============================================================================
+// 接地処理
+//=============================================================================
+void Tree::grounding()
+{
+	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	Ray gravityRay;
+	gravityRay.update(trunk.position + D3DXVECTOR3(0,radius,0), gravityDirection);
+
+	if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
+	{
+		if (radius + 0.1f >= gravityRay.distance)
+		{// エネミーは地上に接地している
+
+			// 重力切る
+			trunk.onGravity = false;
+			trunk.setGravity(D3DXVECTOR3(0,0,0), 0);
+		}
+	}
+}
+#endif

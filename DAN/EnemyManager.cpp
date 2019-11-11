@@ -29,7 +29,6 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::ENEMY_01));
 	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON));
 	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10));
-
 	// チュートリアルシーンでの初期化処理
 	if (_sceneName == "Scene -Tutorial-")
 	{
@@ -39,17 +38,31 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	// ゲームシーンでの初期化処理
 	if (_sceneName == "Scene -Game-")
 	{
-#if 1	// エネミーツールのデータを読み込む
-		ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-		playParameters = new PLAY_PARAMETERS[enemyTools->GetEnemyMax()*gameMasterNS::PLAYER_NUM];
-		for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+#if 0	// エネミーツールのデータを読み込む
+	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+	playParameters = new PLAY_PARAMETERS[enemyTools->GetEnemyMax()*gameMasterNS::PLAYER_NUM];
+	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+	{
+		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
 		{
-			for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+			//3Dサウンド
+			switch (enemyTools->GetEnemySet(i).type)
 			{
-				//3Dサウンド
-				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, /*GAME_S3D_LIST::GAME_S3D_01*/j, true ,NULL,true,j };
-				SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
+			case ENEMY_TYPE::WOLF:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_01, true ,NULL,true,j };
+				break;
+			case ENEMY_TYPE::TIGER:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_02, true ,NULL,true,j };
+				break;
+			case ENEMY_TYPE::BEAR:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_03, true ,NULL,true,j };
+				break;
+			default:
+				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_03, true ,NULL,true,j };
+				break;
 			}
+			SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
+		}
 
 			createEnemyData(enemyTools->GetEnemySet(i));
 		}

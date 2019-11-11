@@ -29,7 +29,7 @@ EffekseerManager::EffekseerManager()
 	pointerEffekseerManager = this;
 	manager		= NULL;
 	renderer	= NULL;
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	sound		= NULL;	
 	xa2			= NULL;
 	xa2Master	= NULL;
@@ -54,7 +54,7 @@ EffekseerManager::~EffekseerManager()
 //===================================================================================================================================
 void EffekseerManager::initialize()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	// XAudio2の初期化を行う
 	XAudio2Create(&xa2);
 	xa2->CreateMasteringVoice(&xa2Master);
@@ -78,7 +78,7 @@ void EffekseerManager::initialize()
 	manager->SetTextureLoader(renderer->CreateTextureLoader());
 	manager->SetModelLoader(renderer->CreateModelLoader());
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	// 音再生用インスタンスの生成
 	sound = ::EffekseerSound::Sound::Create(xa2, 16, 16);
 	// 音再生用インスタンスから再生機能を指定
@@ -196,7 +196,7 @@ void EffekseerManager::uninitialize()
 	// 次に描画用インスタンスを破棄
 	renderer->Destroy();
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	// 次に音再生用インスタンスを破棄
 	sound->Destroy();
 	// XAudio2の解放

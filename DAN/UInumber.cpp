@@ -78,30 +78,6 @@ void UInumber::initialize(int numType)
 //============================
 void UInumber::render()
 {
-	//// 最終的に表示したいスコアから表示中のスコアをひいて差分を出す
-	//if (displayScore < score)
-	//{
-	//	displayScore = (score)-(displayScore);
-
-	//	displayScore += displayScore / (COUNT_TIME * 60);
-
-	//	setNumber(displayScore);
-
-	//	////桁数分の描画
-	//	for (int i = 0; i < DIGIT_NUMBER; i++)
-	//	{
-	//		pos[i].x = -WIDTH_NUMBER * i + numberPos.x;
-	//		number[i]->setPosition(pos[i]);
-	//		number[i]->setVertex();
-	//		number[i]->render();
-	//	}
-	//}
-	//else
-	//{
-	//	displayScore = score;
-	//	setNumber(displayScore);
-	//	//桁数分の描画
-	
 	setNumber((int)displayScore);
 
 	for (int i = 0; i < DIGIT_NUMBER; i++)
@@ -111,7 +87,6 @@ void UInumber::render()
 		number[i]->setVertex();
 		number[i]->render();
 	}
-	
 }
 
 //============================

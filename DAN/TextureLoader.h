@@ -28,6 +28,9 @@ namespace textureNS
 		// Tutorial
 		TUTORIAL1,
 		TUTORIAL2,
+		TUTORIAL_UI_0,
+		TUTORIAL_UI_1,
+		TUTORIAL_UI_PLANE,
 
 		// Title
 		TITLE_LOGO,
@@ -54,6 +57,11 @@ namespace textureNS
 		UI_INFO_BAR,
 		UI_RETICLE,
 		UI_DIGITAL_RETICLE,
+		UI_TIMERFLAME,
+		UI_BUTTON1,
+		UI_BUTTON2,
+		UI_BUTTON3,
+		UI_BUTTON4,
 
 		// Result
 		RESULT,

@@ -277,6 +277,18 @@
     <Filter Include="Game Layer\Ocean">
       <UniqueIdentifier>{e83e2464-3a91-4e6f-8cdb-74e19f96def1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\Plane">
+      <UniqueIdentifier>{648a5834-23ef-46f1-ace4-2bc7184665b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\UI">
+      <UniqueIdentifier>{4898cc1a-35f9-4d06-b769-a8498a62798b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\CollisionManager">
+      <UniqueIdentifier>{922a9ed6-b4e2-408e-8858-5e364fee5828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\ObjectTypeList">
+      <UniqueIdentifier>{bbadf48a-b7ee-4467-b11b-92cf1d3f1918}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -478,15 +490,6 @@
     <ClCompile Include="TitleUI.cpp">
       <Filter>Game Layer\Scene\Title</Filter>
     </ClCompile>
-    <ClCompile Include="ResultUIcpp.cpp">
-      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
-    </ClCompile>
-    <ClCompile Include="UIcharactercpp.cpp">
-      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
-    </ClCompile>
-    <ClCompile Include="UItexcpp.cpp">
-      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
-    </ClCompile>
     <ClCompile Include="UIrank.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClCompile>
@@ -502,7 +505,6 @@
     <ClCompile Include="SpriteGauge.cpp">
       <Filter>Constant Layer\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="TestEffectOccurrence.cpp" />
     <ClCompile Include="EffekseerManager.cpp">
       <Filter>Constant Layer\Effekseer</Filter>
     </ClCompile>
@@ -566,7 +568,6 @@
     <ClCompile Include="3DSound.cpp">
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
-    <ClCompile Include="TelopManager.cpp" />
     <ClCompile Include="PathFollowing.cpp">
       <Filter>Game Layer\NaviAI</Filter>
     </ClCompile>
@@ -606,6 +607,40 @@
     <ClCompile Include="Ocean.cpp">
       <Filter>Game Layer\Ocean</Filter>
     </ClCompile>
+    <ClCompile Include="FixedUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIcharacter.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultUI.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UItex.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerFlame.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIButton.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="tutorialPlane.cpp">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialUI.cpp">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TelopManager.cpp">
+      <Filter>Game Layer\Tlop</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffectOccurrence.cpp">
+      <Filter>Game Layer\TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -896,7 +931,6 @@
     <ClInclude Include="SpriteGauge.h">
       <Filter>Constant Layer\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="TestEffectOccurrence.h" />
     <ClInclude Include="MemoryDebug.h">
       <Filter>Game Layer</Filter>
     </ClInclude>
@@ -915,7 +949,6 @@
     <ClInclude Include="3DSound.h">
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
-    <ClInclude Include="TelopManager.h" />
     <ClInclude Include="PathFollowing.h">
       <Filter>Game Layer\NaviAI</Filter>
     </ClInclude>
@@ -954,6 +987,34 @@
     </ClInclude>
     <ClInclude Include="Ocean.h">
       <Filter>Game Layer\Ocean</Filter>
+    </ClInclude>
+    <ClInclude Include="FixedUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerFlame.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButton.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorialPlane.h">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialUI.h">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TelopManager.h">
+      <Filter>Game Layer\Tlop</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffectOccurrence.h">
+      <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="ObjectTypeList.h">
+      <Filter>Game Layer\ObjectTypeList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

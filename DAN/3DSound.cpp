@@ -15,7 +15,7 @@
 //===================================================================================================================================
 S3DManager::S3DManager()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//ミッドポイントボイスの作成(P1)
 	if (FAILED(SoundInterface::GetXAudio2Interface()->CreateSubmixVoice(
 		&MidpointVoice[playerNS::PLAYER1],									//サブミックスボイス
@@ -60,7 +60,7 @@ S3DManager::S3DManager()
 //===================================================================================================================================
 S3DManager::~S3DManager()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//ミッドポイントボイス
 	uninitSoundStop();
 	SAFE_DESTROY_VOICE(MidpointVoice[playerNS::PLAYER1])
@@ -74,7 +74,7 @@ S3DManager::~S3DManager()
 #ifdef _DEBUG
 void S3DManager::outputGUI(void)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	if (!ImGui::CollapsingHeader("S3DInformation"))
 	{
 		//使用中のバッファ数
@@ -102,8 +102,11 @@ void S3DManager::outputGUI(void)
 			{
 				playPoint -= (int)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel);
 			}
-
-			if (tmpSoundParameters->isPlaying)		//再生している
+			
+			float volume = 0.0f;
+			tmpSoundParameters->SourceVoice->GetVolume(&volume);
+			if ((tmpSoundParameters->isPlaying) &&		//再生している
+				(volume > 0))							//聞こえる
 			{
 				//ボイスID
 				ImGui::Text("Voice ID:%d", tmpSoundParameters->playParameters.voiceID);
@@ -131,8 +134,6 @@ void S3DManager::outputGUI(void)
 				}
 
 				//音量
-				float volume = 0.0f;
-				tmpSoundParameters->SourceVoice->GetVolume(&volume);
 				ImGui::Text("volume:%f", volume);
 
 				//波形の描画
@@ -176,7 +177,7 @@ void S3DManager::outputGUI(void)
 //===================================================================================================================================
 void S3DManager::SwitchAudioBuffer(int scene)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//サウンドディレクトリに設定する
 	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_S3D);
 
@@ -237,7 +238,7 @@ void S3DManager::SwitchAudioBuffer(int scene)
 #endif
 }
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 //===================================================================================================================================
 //【ソースボイスの作成】
 //===================================================================================================================================
@@ -303,12 +304,12 @@ void S3DManager::MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *l
 }
 #endif
 
-#if(_MSC_VER >= GAME_MSC_VER)
 //===================================================================================================================================
 //【ソースボイスの作成】
 //===================================================================================================================================
 void S3DManager::SetVolume(const PLAY_PARAMETERS playParameters, float volume)
 {
+#if(XADUIO2_STATE)
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
@@ -319,5 +320,5 @@ void S3DManager::SetVolume(const PLAY_PARAMETERS playParameters, float volume)
 			tmpSoundParameters->SourceVoice->SetVolume(volume);
 		}
 	}
-}
 #endif
+}

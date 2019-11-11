@@ -28,7 +28,7 @@
 #include <windows.h>
 #include <string>
 #include <d3d9.h>
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #include <XAudio2.h>
 #endif
 #include <Effekseer.h>
@@ -40,13 +40,13 @@
 //yƒ‰ƒCƒuƒ‰ƒŠ‚Ì“Ç‚Ýž‚Ýz
 //===================================================================================================================================
 #pragma comment(lib, "d3d9.lib" )
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #pragma comment(lib, "xaudio2.lib" )
 #endif
 #if _DEBUG
 #pragma comment(lib, "VS2017/Debug/Effekseer.lib" )
 #pragma comment(lib, "VS2017/Debug/EffekseerRendererDX9.lib" )
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #pragma comment(lib, "VS2017/Debug/EffekseerSoundXAudio2.lib" )
 #endif
 #else
@@ -119,7 +119,7 @@ public:
 
 	::Effekseer::Manager*				manager;
 	::EffekseerRendererDX9::Renderer*	renderer;
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	::EffekseerSound::Sound*			sound;
 	IXAudio2*							xa2;
 	IXAudio2MasteringVoice*				xa2Master;

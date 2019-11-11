@@ -14,7 +14,7 @@
 //===================================================================================================================================
 SoundBase::SoundBase()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//リストの作成
 	soundParametersList = new LinkedList <SOUND_PARAMETERS>;
 	soundParametersList->insertFront();
@@ -49,7 +49,7 @@ SoundBase::SoundBase()
 //===================================================================================================================================
 SoundBase::~SoundBase()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	uninitSoundStop();
 	soundParametersList->terminate();
 	SAFE_DELETE(soundParametersList);
@@ -62,7 +62,7 @@ SoundBase::~SoundBase()
 //===================================================================================================================================
 void SoundBase::uninitSoundStop(void)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	int backup = soundParametersList->nodeNum - 1;
 	for (int i = 0; i < backup; i++)
 	{
@@ -85,7 +85,7 @@ void SoundBase::uninitSoundStop(void)
 //===================================================================================================================================
 void SoundBase::playSound(PLAY_PARAMETERS *playParameters)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
@@ -116,7 +116,7 @@ void SoundBase::playSound(PLAY_PARAMETERS *playParameters)
 //===================================================================================================================================
 void SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
@@ -141,7 +141,7 @@ void SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 //===================================================================================================================================
 void SoundBase::updateSound(void)
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	//再生状態をチェック
 	for (int i = 0; i < soundParametersList->nodeNum - 1; i++)
 	{
@@ -164,7 +164,7 @@ void SoundBase::updateSound(void)
 #endif
 }
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 //===================================================================================================================================
 //【サウンドバッファを取得】
 //===================================================================================================================================

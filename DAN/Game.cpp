@@ -9,6 +9,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Game.h"
+#include "CollisionManager.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -81,7 +82,7 @@ void Game::initialize() {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
-		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -184,8 +185,12 @@ void Game::initialize() {
 	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
 	// テロップ
-	telop = new Telop;
-	telop->initialize();
+	/*telop = new Telop;
+	telop->initialize();*/
+
+	//テロップマネージャー
+	telopManager = new TelopManager;
+	telopManager->initialize();
 
 	// AI
 	aiDirector = new AIDirector;
@@ -193,9 +198,9 @@ void Game::initialize() {
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviMesh->initialize();
 
-	//タイマー
-	timer = new Timer;
-	timer->initialize();
+	//固定されたUI
+	fixedUI = new FixedUI;
+	fixedUI->initialize();
 
 	//レティクル
 	reticle = new Reticle();
@@ -207,7 +212,25 @@ void Game::initialize() {
 	spriteGauge->initialize();
 
 #ifdef _DEBUG
+	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+
+	// ツリーをランダムに設置する
+	treeNS::TreeData treeData;
+	treeData.treeID = treeManager->issueNewTreeID();
+	treeData.hp = 100;
+	treeData.type = treeNS::ANALOG_TREE;
+	treeData.size = treeNS::STANDARD;
+	treeData.geenState = treeNS::DEAD;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 10; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		
+		treeManager->createTree(treeData);
+	}
 #endif
 }
 
@@ -238,11 +261,12 @@ void Game::uninitialize() {
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
-	SAFE_DELETE(telop);
+	/*SAFE_DELETE(telop);*/
+	SAFE_DELETE(telopManager);
 	SAFE_DELETE(aiDirector);
-	SAFE_DELETE(timer);
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
+	SAFE_DELETE(fixedUI);
 
 	UninitMoveP();
 
@@ -332,10 +356,21 @@ void Game::update(float _frameTime) {
 #pragma endregion
 
 
-	// テロップの更新
-	//float rate = frameTime / SCENE_TIME;
-	telop->update(frameTime);
+	//テロップマネージャーの更新
+	telopManager->update(frameTime);
+	//テロップ発生フラグ
+	if (input->wasKeyPressed('L'))
+	{
+		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
+		telopManager->play(telopManagerNS::TELOP_TYPE0);
+	}
+	if (input->wasKeyPressed('K'))
+	{
+		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
+		telopManager->play(telopManagerNS::TELOP_TYPE1);
+	}
 	
+
 	//枯木の更新
 	deadTree->update();
 	//木Aの更新
@@ -362,11 +397,11 @@ void Game::update(float _frameTime) {
 	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
 		camera[i].update();
 
+	//固定UIの更新
+	fixedUI->update();
 	//レティクルの更新
 	reticle->update(frameTime);
 
-	//タイマーの更新
-	timer->update();
 
 	// Enterまたは〇ボタンでリザルトへ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -392,7 +427,8 @@ void Game::render() {
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
 	camera[gameMasterNS::PLAYER_1P].renderReady();
-	direct3D9->changeViewport1PWindow();
+	direct3D9->changeViewportFullWindow();
+	//direct3D9->changeViewport1PWindow();
 	render3D(camera[gameMasterNS::PLAYER_1P]);
 	effekseerNS::setCameraMatrix(
 		camera[gameMasterNS::PLAYER_1P].position, 
@@ -401,15 +437,15 @@ void Game::render() {
 	effekseerNS::render();
 
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
-	nowRenderingWindow = gameMasterNS::PLAYER_2P;
-	camera[gameMasterNS::PLAYER_2P].renderReady();
-	direct3D9->changeViewport2PWindow();
-	render3D(camera[gameMasterNS::PLAYER_2P]);
-	effekseerNS::setCameraMatrix(
-		camera[gameMasterNS::PLAYER_2P].position,
-		camera[gameMasterNS::PLAYER_2P].gazePosition,
-		camera[gameMasterNS::PLAYER_2P].upVector);
-	effekseerNS::render();
+	//nowRenderingWindow = gameMasterNS::PLAYER_2P;
+	//camera[gameMasterNS::PLAYER_2P].renderReady();
+	//direct3D9->changeViewport2PWindow();
+	//render3D(camera[gameMasterNS::PLAYER_2P]);
+	//effekseerNS::setCameraMatrix(
+	//	camera[gameMasterNS::PLAYER_2P].position,
+	//	camera[gameMasterNS::PLAYER_2P].gazePosition,
+	//	camera[gameMasterNS::PLAYER_2P].upVector);
+	//effekseerNS::render();
 
 	//UI
 	direct3D9->changeViewportFullWindow();
@@ -469,22 +505,21 @@ void Game::render3D(Camera currentCamera) {
 	//linear4TreeManager->render();
 	//8分木空間分割のライン描画
 	//linear8TreeManager->render();
-	//Ray ray;
-	//ray.color = D3DXCOLOR(255, 255, 0, 255);
-	//Object** root = collisionList->getRoot();
-	//Object* tmp1 = NULL;
-	//Object* tmp2 = NULL;
-	//D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
-	//float length = 0;
-	//for (int i = 0; i < collisionNum; i++)
-	//{
-	//	tmp1 = root[i * 2];
-	//	tmp2 = root[i * 2 + 1];
-
-	//	length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
-	//	ray.initialize(tmp1->position, direction);
-	//	ray.render(length);
-	//}
+	Ray ray;
+	ray.color = D3DXCOLOR(255, 255, 0, 255);
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	float length = 0;
+	for (int i = 0; i < collisionNum; i++)
+	{
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+		ray.initialize(tmp1->position, direction);
+		ray.render(length);
+	}
 #endif
 
 #ifdef _DEBUG
@@ -511,13 +546,15 @@ void Game::renderUI() {
 	//spriteGauge->render();
 	//telop->render();
 	
+	// テロップマネージャーの描画
+	telopManager->render();	
+
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-	telop->render();	// テロップの描画
 
-	//タイマーの描画
-	timer->render();
+	//固定UIの描画
+	fixedUI->render();
 
 	//レティクルの描画
 	reticle->render2D();
@@ -552,17 +589,33 @@ void Game::tree8Reregister(Object* tmp)
 //===================================================================================================================================
 void Game::collisions() 
 {
-	//再登録
-	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);
-	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);
-	for (int i = 0; i < stone->num; i++)
+	//8分木への再登録
+	//プレイヤーの登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);//1Pの登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);//2Pの登録
+	//弾の登録
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		tree8Reregister(&stone->object[i]);
+		for(int num = 0;num < player[i].getShootingNum();num++)
+			tree8Reregister(player[i].getBullet(num));
 	}
+	
 
 	//衝突対応リストを取得
 	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
 	collisionNum /= 2;//2で割るのはペアになっているため
+
+	//衝突判定
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	for (int i = 0; i < collisionNum; i++)
+	{
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+		CollisionManager::collision(tmp1, tmp2);//衝突処理
+	}
+
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
@@ -588,7 +641,8 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	aiDirector->run();		// メタAI実行
+	//エネミー増殖し続けるのでコメントアウト
+	//aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -658,8 +712,12 @@ void Game::test()
 	if (input->wasKeyPressed('5'))	// 作成
 	{
 		treeNS::TreeData treeData;
-		treeData.geenState = treeNS::GREEN;
-		treeData.model = treeNS::A_MODEL;
+		treeData.treeID = treeManager->issueNewTreeID();
+		treeData.hp = 100;
+		treeData.type = treeNS::ANALOG_TREE;
+		treeData.size = treeNS::STANDARD;
+		treeData.geenState = treeNS::DEAD;
+		treeData.model = treeNS::B_MODEL;
 		treeData.initialPosition = *player->getPosition();
 		treeManager->createTree(treeData);
 	}
