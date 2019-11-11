@@ -9,6 +9,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Game.h"
+#include "CollisionManager.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -83,7 +84,7 @@ void Game::initialize() {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
-		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -262,7 +263,6 @@ void Game::uninitialize() {
 
 	//SAFE_DELETE(linear4TreeManager);
 	SAFE_DELETE(linear8TreeManager);
-	SAFE_DELETE(collisionContent);
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(light);
@@ -492,8 +492,8 @@ void Game::render3D(Camera currentCamera) {
 	//treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	////木Bの描画
 	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//石の描画
-	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////石の描画
+	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//スカイドームの描画
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//海面の描画
@@ -524,21 +524,21 @@ void Game::render3D(Camera currentCamera) {
 	//linear4TreeManager->render();
 	//8分木空間分割のライン描画
 	//linear8TreeManager->render();
-	//Ray ray;
-	//ray.color = D3DXCOLOR(255, 255, 0, 255);
-	//Object** root = collisionList->getRoot();
-	//Object* tmp1 = NULL;
-	//Object* tmp2 = NULL;
-	//D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
-	//float length = 0;
-	//for (int i = 0; i < collisionNum; i++)
-	//{
-	//	tmp1 = root[i * 2];
-	//	tmp2 = root[i * 2 + 1];
-	//	length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
-	//	ray.initialize(tmp1->position, direction);
-	//	ray.render(length);
-	//}
+	Ray ray;
+	ray.color = D3DXCOLOR(255, 255, 0, 255);
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	float length = 0;
+	for (int i = 0; i < collisionNum; i++)
+	{
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+		ray.initialize(tmp1->position, direction);
+		ray.render(length);
+	}
 #endif
 
 #ifdef _DEBUG
@@ -608,12 +608,15 @@ void Game::tree8Reregister(Object* tmp)
 //===================================================================================================================================
 void Game::collisions() 
 {
-	//再登録
-	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);
-	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);
-	for (int i = 0; i < stone->num; i++)
+	//8分木への再登録
+	//プレイヤーの登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);//1Pの登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);//2Pの登録
+	//弾の登録
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		tree8Reregister(&stone->object[i]);
+		for(int num = 0;num < player[i].getShootingNum();num++)
+			tree8Reregister(player[i].getBullet(num));
 	}
 	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
 	{
@@ -621,29 +624,20 @@ void Game::collisions()
 	}
 
 	//衝突対応リストを取得
-	int numRegiteredObject = linear8TreeManager->getAllCollisionList(&collisionList);
-	collisionNum = numRegiteredObject / 2;	//2で割るのはペアになっているため
+	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
+	collisionNum /= 2;//2で割るのはペアになっているため
 
-	//衝突判定処理
-	Object** list = collisionList->getRoot();
-	Object* obj1 = NULL;
-	Object* obj2 = NULL;
-	for (int i = 0; i < numRegiteredObject - 1; i++)
+	//衝突判定
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	for (int i = 0; i < collisionNum; i++)
 	{
-		for (int k = i + 1; k < numRegiteredObject; k++)
-		{
-			//衝突判定をとるペアでなければループをとばす
-			if ((list[i]->collisionTarget & list[k]->objectType) == 0) continue;
-
-			//衝突処理
-			if ((list[i]->objectType == objectNS::PLAYER && list[k]->objectType == objectNS::ENEMY) ||
-				(list[i]->objectType == objectNS::ENEMY && list[k]->objectType == objectNS::PLAYER))
-			{
-				collisionContent->playerCollideEnemy(list[i], list[k]); // プレイヤーとエネミーと当たり判定
-				//collisionContent->enemyAttacksPlayer(list[i], list[k]); // プレイヤーとエネミーの攻撃の当たり判定
-			}
-		}
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+		CollisionManager::collision(tmp1, tmp2);//衝突処理
 	}
+
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();

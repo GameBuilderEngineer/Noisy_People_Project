@@ -153,7 +153,8 @@
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
-    <ClInclude Include="CollisionContent.h" />
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="ObjectTypeList.h" />
     <ClInclude Include="UIButton.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Create.h" />
@@ -277,7 +278,7 @@
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="CollisionContent.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Create.cpp" />

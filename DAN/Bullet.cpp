@@ -2,22 +2,43 @@
 //【Bullet.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/05
-// [更新日]2019/11/05
+// [更新日]2019/11/11
+//===================================================================================================================================
+
+//===================================================================================================================================
+//【インクルード】
 //===================================================================================================================================
 #include "Bullet.h"
+#include "UtilityFunction.h"
 
+//===================================================================================================================================
+//【using宣言】
+//===================================================================================================================================
+using namespace bulletNS;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// [バレットマネージャ]
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma region Bullet
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Bullet::Bullet(D3DXVECTOR3 start, D3DXVECTOR3 speed)
+Bullet::Bullet(Ray shootingRay)
 {
-	this->launchPosition = start;
-	this->speed = speed;
-	D3DXVECTOR3 direction;
-	Base::between2VectorDirection(&direction, start, start + speed);
-	ballisticRay.initialize(launchPosition, direction);
+	//引数の代入
+	this->launchPosition	= shootingRay.start;												//発射位置
+	this->speed				= shootingRay.direction*SPEED;										//速度
+	this->initialCollide	= launchPosition + shootingRay.direction * shootingRay.distance;	//初期衝突位置
 
+	//弾道の初期化
+	ballisticRay.initialize(launchPosition, shootingRay.direction);
+	ballisticRay.color = D3DXCOLOR(0, 255, 120, 255);
 
+	Object::initialize(&launchPosition);							//バレットモデルの初期化
+	postureControl(axisZ.direction, shootingRay.direction,1.0f);	//モデルを進行方向へ姿勢制御する
+	Object::update();
+	existenceTimer = EXIST_TIME;
+	endPoint = launchPosition + speed * EXIST_TIME;					//何にも衝突しなかaaaaaaaaった場合の終着位置
 }
 
 //===================================================================================================================================
@@ -33,7 +54,20 @@ Bullet::~Bullet()
 //===================================================================================================================================
 void Bullet::update(float frameTime)
 {
+	if (existenceTimer <= 0)return;
+	existenceTimer -= frameTime;
+	//位置更新
+	D3DXVec3Lerp(&position, &ballisticRay.start, &endPoint,1.0f - existenceTimer/EXIST_TIME);
+	Object::update();
+}
 
+//===================================================================================================================================
+//【描画】
+//===================================================================================================================================
+void Bullet::render()
+{
+	float length = Base::between2VectorLength(ballisticRay.start, position);
+	ballisticRay.render(length);
 }
 
 //===================================================================================================================================
@@ -43,3 +77,157 @@ void Bullet::collide()
 {
 
 }
+#pragma endregion
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// [バレットマネージャ]
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma region BulletManager
+//===================================================================================================================================
+//【コンストラクタ：バレットマネージャー】
+//===================================================================================================================================
+BulletManager::BulletManager()
+{
+	bulletList		= new LinkedList<Bullet*>;
+	renderer		= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	remaining		= MAGAZINE_NUM;
+	intervalTimer	= 0.0f;
+	reloadTimer		= 0.0f;
+	reloading		= false;
+}
+
+//===================================================================================================================================
+//【デストラクタ：バレットマネージャー】
+//===================================================================================================================================
+BulletManager::~BulletManager()
+{
+	//レンダラーの解除/終了
+	renderer->allUnRegister();
+	SAFE_DELETE(renderer);
+	//バレットリストの削除
+	bulletList->terminate();
+	SAFE_DELETE(bulletList);
+}
+
+//===================================================================================================================================
+//【更新：バレットマネージャー】
+//===================================================================================================================================
+void BulletManager::update(float frameTime)
+{
+	//インターバル時間
+	if(intervalTimer > 0)intervalTimer -= frameTime;
+
+
+	//各バレットの更新
+	for (int i = 0; i < bulletList->nodeNum; i++)
+	{
+		//バレットのポインタ取得
+		Bullet* bullet = (*bulletList->getValue(i));
+
+		//更新
+		bullet->update(frameTime);
+
+		//生存時間切れ
+		if (bullet->existenceTimer <= 0)
+		{
+			//削除
+			renderer->unRegisterObjectByID(bullet->id);//削除前にレンダラー解除
+			SAFE_DELETE(bullet);
+			bulletList->remove(bulletList->getNode(i));
+		}
+	}
+	//リストの更新[削除による対応]
+	bulletList->listUpdate();
+
+
+	//レンダラーの更新
+	renderer->update();
+
+
+	//リロード処理
+	if (reloadTimer > 0)
+	{
+		reloadTimer -= frameTime;
+	}
+	else {
+		if (reloading)
+		{
+			reloading = false;			//リロード終了
+			remaining = MAGAZINE_NUM;	//装填
+		}
+	}
+
+}
+
+//===================================================================================================================================
+//【描画：バレットマネージャー】
+//===================================================================================================================================
+void BulletManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+{
+	//弾道レイの描画
+	for (int i = 0; i < bulletList->nodeNum; i++)
+	{
+		(*bulletList->getValue(i))->render();
+	}
+	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+}
+
+//===================================================================================================================================
+//【発射：バレットマネージャー】
+//===================================================================================================================================
+void BulletManager::launch(Ray shootingRay)
+{
+	//インターバル中：発射しない
+	if (intervalTimer > 0)return;	
+	
+	//リロード中：発射しない
+	if (reloading)return;	
+	
+	//残段数が0：自動リロード
+	if (remaining <= 0)
+	{
+		reload();
+		return;
+	}
+
+	//バレットリストへ新たに生成
+	Bullet* newBullet = new Bullet(shootingRay);
+
+	//リストへ追加
+	bulletList->insertFront(newBullet);
+	
+	//リストの更新[追加による対応]
+	bulletList->listUpdate();
+
+	//レンダラーへの登録
+	renderer->registerObject(newBullet);
+
+	//残段数の減算
+	remaining--;
+
+	//インターバル時間のセット
+	intervalTimer = INTERVAL_TIME;
+
+}
+
+//===================================================================================================================================
+//【リロード：バレットマネージャー】
+//===================================================================================================================================
+void BulletManager::reload()
+{
+	//残段数が最大：リロードしない
+	if (remaining >= MAGAZINE_NUM)return;
+	//リロード中：リロードしない
+	if (reloading)return;
+	reloading = true;			//リロード開始
+	reloadTimer = RELOAD_TIME;	//リロードタイムの設定
+}
+
+//===================================================================================================================================
+//【getter：バレットマネージャー】
+//===================================================================================================================================
+int BulletManager::getRemaining(){return remaining;}
+float BulletManager::getReloadTime() { return reloadTimer; }
+Bullet* BulletManager::getBullet(int i) { return *bulletList->getValue(i); }
+int BulletManager::getNum() { return bulletList->nodeNum; }
+#pragma endregion

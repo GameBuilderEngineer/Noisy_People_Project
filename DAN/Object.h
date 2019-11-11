@@ -2,7 +2,7 @@
 //【Object.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/23
+// [更新日]2019/11/11
 //===================================================================================================================================
 #pragma once
 
@@ -17,6 +17,7 @@
 #include "TextureLoader.h"
 #include "ShaderLoader.h"
 #include "LinearTreeCell.h"
+#include "ObjectTypeList.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -30,12 +31,6 @@ namespace objectNS {
 	};
 
 	void resetCounter();
-
-	//オブジェクトタイプ
-	const DWORD PLAYER		= 0x00000001;
-	const DWORD ENEMY		= 0x00000002;
-	const DWORD TREE		= 0x00000004;
-	const DWORD ITEM		= 0x00000008;
 }
 
 //===================================================================================================================================
@@ -48,8 +43,7 @@ public:
 	//ステータス変数
 	static int			objectCounter;			//オブジェクトカウンター：IDの割当に使用
 	int					id;						//ID
-	DWORD				objectType;				//オブジェクトタイプ：衝突判定に使用(インスタンス構築時に代入)
-	DWORD				collisionTarget;		//衝突判定対象:判定対象オブジェクトタイプの総和をインスタンス構築時に代入
+	int					type;					//オブジェクトタイプ
 	D3DXVECTOR3			position;				//位置
 	D3DXQUATERNION		quaternion;				//回転
 	D3DXVECTOR3			scale;					//スケール
