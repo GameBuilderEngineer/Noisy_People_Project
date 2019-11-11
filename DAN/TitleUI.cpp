@@ -149,7 +149,7 @@ void TitleUI::update(Input *input)
 		//ボタンが押される度にSEのを鳴らす処理
 		PLAY_PARAMETERS playParameters = { 0 };
 		//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
-		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Cursor, false,NULL,false,NULL };//SEの1曲目の設定
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Decision, false,NULL,false,NULL};//SEの1曲目の設定
 		SoundInterface::SE->playSound(&playParameters);
 		selectState++;
 	}
@@ -158,8 +158,8 @@ void TitleUI::update(Input *input)
 	{
 		//ボタンが押される度にSEのを鳴らす処理
 		PLAY_PARAMETERS playParameters = { 0 };
-		//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
-		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Cursor, false,NULL,false,NULL };//SEの1曲目の設定
+		//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::HighPassFilter, 0.85f, 1.5f };//フィルターの設定
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Decision, false,NULL,false,NULL};//SEの1曲目の設定
 		SoundInterface::SE->playSound(&playParameters);
 		selectState--;
 	}

@@ -131,23 +131,23 @@ void BGMManager::outputGUI(void)
 					break;
 				case SceneList::TITLE:
 					//サウンド名
-					ImGui::Text("%s", BGM_PATH_LIST_TAIL(titleBGMPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", BGM_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::TUTORIAL:
 					//サウンド名
-					ImGui::Text("%s", BGM_PATH_LIST_TAIL(tutorialBGMPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", BGM_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::CREDIT:
 					//サウンド名
-					ImGui::Text("%s", BGM_PATH_LIST_TAIL(creditBGMPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", BGM_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::GAME:
 					//サウンド名
-					ImGui::Text("%s", BGM_PATH_LIST_TAIL(gameBGMPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", BGM_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::RESULT:
 					//サウンド名
-					ImGui::Text("%s", BGM_PATH_LIST_TAIL(resultBGMPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", BGM_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::NONE_SCENE:
 					break;

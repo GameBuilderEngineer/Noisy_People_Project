@@ -53,19 +53,19 @@ void SEManager::outputGUI(void)
 				switch (scene)
 				{
 				case SceneList::TITLE:
-					ImGui::Text("%s", SE_PATH_LIST_TAIL(titleSEPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::TUTORIAL:
-					ImGui::Text("%s", SE_PATH_LIST_TAIL(tutorialSEPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::CREDIT:
-					ImGui::Text("%s", SE_PATH_LIST_TAIL(creditSEPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::GAME:
-					ImGui::Text("%s", SE_PATH_LIST_TAIL(gameSEPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				case SceneList::RESULT:
-					ImGui::Text("%s", SE_PATH_LIST_TAIL(resultSEPathList[tmpSoundParameters->playParameters.soundId]));
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 					break;
 				default:
 					break;

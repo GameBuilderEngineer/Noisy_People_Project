@@ -57,6 +57,7 @@ SoundBase::~SoundBase()
 	SAFE_DESTROY_VOICE(EndpointVoice)
 #endif
 }
+
 //===================================================================================================================================
 //y’â~(‘S•”‚ÌƒTƒEƒ“ƒh)z
 //===================================================================================================================================
@@ -94,7 +95,7 @@ void SoundBase::playSound(PLAY_PARAMETERS *playParameters)
 		//	(tmpSoundParameters->playParameters.soundId == playParameters->soundId) &&	//ID‚ªˆê’v‚·‚é
 		//	(tmpSoundParameters->playParameters.loop == playParameters->loop)&&			//ƒ‹[ƒvî•ñ‚àˆê’v‚·‚é
 		//	(tmpSoundParameters->playParameters.playerID == playParameters->playerID))	//ƒvƒŒƒCƒ„[ID
-		if ((!tmpSoundParameters->isPlaying) &&
+		if ((!tmpSoundParameters->isPlaying)&&
 			(tmpSoundParameters->playParameters.voiceID == playParameters->voiceID))
 		{
 			tmpSoundParameters->SourceVoice->Start();
