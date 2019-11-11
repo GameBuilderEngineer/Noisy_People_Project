@@ -24,9 +24,16 @@ namespace basicUiNS
 		slideDown,
 	};
 
+	enum PLAYER_TYPE
+	{
+		P1,
+		P2,
+		PLAYER_TYPE_MAX,
+	};
+
 	const float SLIDE_SPEED = 20.0f;		//スライドインの速度
 	const int	CHANGE_SIZE_SPEED = 20;		//サイズ変更の速度
-	const int   CHANGE_ALPHA_SPEED = 10;		//α値の変更速度
+	const float   CHANGE_ALPHA_SPEED = 155.0f;		//α値の変更速度
 }
 
 //================================
@@ -57,8 +64,8 @@ public://メンバー関数
 	void	assingColor(D3DCOLOR col);								//色の代入
 	void	assingSize(int widh, int height);						//サイズの代入
 	void	changePostion(int movetype);//位置変更	
-	void	increaseAlpha();//透明度増加
-	void	decreaseAlpha();//透明度減少
+	void	increaseAlpha(float alpha);//透明度増加
+	void	decreaseAlpha(float alpha);//透明度減少
 	void	expansionWidthSize(int speed);//横サイズの拡大
 	void	expansionHeightSize(int speed);//縦サイズの拡大
 	void	reductionWidthSize(int speed);//横サイズの縮小

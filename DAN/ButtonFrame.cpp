@@ -1,52 +1,60 @@
 //==================================
-//タイマーフレーム処理[TimerFlame.cpp]
+//ボタンフレーム処理[ButtonFlame.cpp]
 //染矢　晃介
 //==================================
 
 //==================================
 //インクルード
 //==================================
-#include "TimerFlame.h"
+#include "ButtonFrame.h"
 
 //==================================
 // using宣言
 //==================================
-using namespace timerFlameNS;
+using namespace buttonFrameNS;
 
 //==================================
 //コンストラクタ
 //==================================
-TimerFlame::TimerFlame()
+ButtonFrame::ButtonFrame()
 {
 	//スプライトの作成
-	timerFlame = new Sprite;
+	buttonFrame = new Sprite;
 }
 
 //==================================
 //デストラクタ
 //==================================
-TimerFlame::~TimerFlame()
+ButtonFrame::~ButtonFrame()
 {
-	delete timerFlame;
+	delete buttonFrame;
 }
 
 //==================================
 //初期化
+//引数:プレイヤータイプ
 //==================================
-void TimerFlame::initialize()
+void ButtonFrame::initialize(int type)
 {
 	//初期表示位置の代入
-	BasicUI::assingPosition(POSITION_TIMERFLAME);
+	if (type == basicUiNS::P1)
+	{
+		BasicUI::assingPosition(POSITION_BUTTONFLAME01);
+	}
+	else 
+	{
+		BasicUI::assingPosition(POSITION_BUTTONFLAME02);
+	}
 	//初期サイズの代入
-	BasicUI::assingSize(WIDTH_TIMERFLAME, HEIGHT_TIMERFLAME);
+	BasicUI::assingSize(WIDTH_BUTTONFLAME, HEIGHT_BUTTONFLAME);
 	//テクスチャの初期化
-	BasicUI::initialize(timerFlame, textureNS::reference(textureNS::UI_TIMERFLAME));
+	BasicUI::initialize(buttonFrame, textureNS::reference(textureNS::UI_BUTTON_BOX));
 }
 
 //=================================
 //描画
 //=================================
-void TimerFlame::render()
+void ButtonFrame::render()
 {
-	timerFlame->render();
+	buttonFrame->render();
 }

@@ -46,21 +46,42 @@ void UiButton::initialize()
 	//初期サイズの初期化
 	BasicUI::assingSize(WIDTH_BUTTON, HEIGHT_BUTTON);
 
+	//初期α値の初期化
+	BasicUI::assingColor(COLOR);
+
 	//テクスチャの初期化
 	BasicUI::initialize(button[SV], textureNS::reference(textureNS::UI_BUTTON1));
 	BasicUI::initialize(button[SHOT], textureNS::reference(textureNS::UI_BUTTON2));
 	BasicUI::initialize(button[JUMP], textureNS::reference(textureNS::UI_BUTTON3));
 	BasicUI::initialize(button[VISION], textureNS::reference(textureNS::UI_BUTTON4));
+
 }
 
 //==================================
-//描画
+//P1描画
 //==================================
-void UiButton::render()
+void UiButton::renderP1()
 {
+	//1P用の表示
 	for (int i = 0; i < TYPE_MAX; i++)
 	{
-		position.x = -HEIGHT_BUTTON * i + POSITION_BUTTON.x;
+		position.y = -HEIGHT_BUTTON * i + POSITION_BUTTON.y;
+		button[i]->setPosition(position);
+		button[i]->setVertex();
+		button[i]->render();
+	}
+}
+
+//==================================
+//P2描画
+//==================================
+void UiButton::renderP2()
+{
+	//2P用の表示
+	for (int i = 0; i < TYPE_MAX; i++)
+	{
+		position.x = POSITION_BUTTON2.x;
+		position.y = -HEIGHT_BUTTON * i + POSITION_BUTTON.y;
 		button[i]->setPosition(position);
 		button[i]->setVertex();
 		button[i]->render();
@@ -69,8 +90,28 @@ void UiButton::render()
 
 //==================================
 //更新
+//引数:ボタンが使用可能かどうか
+//	  :どこのボタンかを指定
 //==================================
-void UiButton::update()
+void UiButton::update(bool flag,int buttontype)
 {
+	changeAlpha(flag);
+	button[buttontype]->setAlphaAllVertex(alphaValue);
+	button[buttontype]->render();
+}
 
+//==================================
+//α値の変更
+//引数:ボタンが使用可能かどうか
+//==================================
+void  UiButton::changeAlpha(bool flag)
+{
+	if (flag == true)//使用可能の場合は可視化
+	{
+		BasicUI::increaseAlpha(ALPHA_MAX);
+	}
+	else//使用不可の場合は不可視
+	{
+		BasicUI::increaseAlpha(ALPHA_MINIMAM);
+	}
 }

@@ -119,25 +119,20 @@ void BasicUI::changePostion(int movetype)
 //=================================
 //“§–¾“x‚Ì‘‰Á
 //=================================
-void BasicUI::increaseAlpha()
+void BasicUI::increaseAlpha(float alpha)
 {
-	if (alphaValue >= 255)
-	{
-		alphaValue += CHANGE_ALPHA_SPEED;
-		color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
-	}
+
+	alphaValue = alpha;
+	color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
+	
 }
 
 //=================================
 //“§–¾“x‚ÌŒ¸­
 //=================================
-void BasicUI::decreaseAlpha()
+void BasicUI::decreaseAlpha(float alpha)
 {
-	if (alphaValue >= 0)
-	{
-		alphaValue -= CHANGE_ALPHA_SPEED;
-		color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
-	}
+	
 }
 
 //=================================
