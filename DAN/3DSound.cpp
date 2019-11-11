@@ -119,11 +119,12 @@ void S3DManager::outputGUI(void)
 				case SceneList::TITLE:
 					break;
 				case SceneList::TUTORIAL:
+					ImGui::Text("%s", S3D_PATH_LIST_TAIL(tutorial, [tmpSoundParameters->playParameters.soundId]));
 					break;
 				case SceneList::CREDIT:
 					break;
 				case SceneList::GAME:
-					ImGui::Text("%s", gameS3DPathList[tmpSoundParameters->playParameters.soundId]);
+					ImGui::Text("%s", S3D_PATH_LIST_TAIL(game, [tmpSoundParameters->playParameters.soundId]));
 					break;
 				case SceneList::RESULT:
 					break;
@@ -204,8 +205,25 @@ void S3DManager::SwitchAudioBuffer(int scene)
 		bufferMax = TITLE_S3D_LIST::TITLE_S3D_MAX;
 		break;
 	case SceneList::TUTORIAL:
+		S3DManager::bufferList = new LIST_BUFFER[TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX];
+		for (int i = 0; i < TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX; i++)
+		{
+			S3DManager::bufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(S3D_PATH_LIST_TAIL(tutorial, [i]), "rb");
+			S3DManager::bufferList[i].wavFile = LoadWavChunk(fp);
+
+			S3DManager::bufferList[i].buffer.pAudioData = (BYTE*)S3DManager::bufferList[i].wavFile.data.waveData;
+			S3DManager::bufferList[i].buffer.AudioBytes = S3DManager::bufferList[i].wavFile.data.waveSize;
+			S3DManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
+		bufferMax = TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX;
 		break;
 	case SceneList::CREDIT:
+		bufferMax = CREDIT_S3D_LIST::CREDIT_S3D_MAX;
 		break;
 	case SceneList::GAME:
 		S3DManager::bufferList = new LIST_BUFFER[GAME_S3D_LIST::GAME_S3D_MAX];
@@ -214,7 +232,7 @@ void S3DManager::SwitchAudioBuffer(int scene)
 			S3DManager::bufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
-			fp = fopen(gameS3DPathList[i], "rb");
+			fp = fopen(S3D_PATH_LIST_TAIL(game, [i]), "rb");
 			S3DManager::bufferList[i].wavFile = LoadWavChunk(fp);
 
 			S3DManager::bufferList[i].buffer.pAudioData = (BYTE*)S3DManager::bufferList[i].wavFile.data.waveData;
@@ -226,8 +244,10 @@ void S3DManager::SwitchAudioBuffer(int scene)
 		bufferMax = GAME_S3D_LIST::GAME_S3D_MAX;
 		break;
 	case SceneList::RESULT:
+		bufferMax = RESULT_S3D_LIST::RESULT_S3D_MAX;
 		break;
 	case SceneList::NONE_SCENE:
+		bufferMax = 0;
 		break;
 	case SceneList::CREATE:
 		bufferMax = CREATE_S3D_LIST::CREATE_S3D_MAX;

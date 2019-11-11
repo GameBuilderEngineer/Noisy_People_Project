@@ -252,7 +252,6 @@ void EnemyManager::destroyAllEnemyData()
 #endif//_DEBUG
 }
 
-
 //=============================================================================
 // エネミーオブジェクトを破棄
 //=============================================================================
@@ -465,37 +464,6 @@ void EnemyManager::relocateEnemyAccordingToFile()
 		createEnemy(enemyDataList.getValue(i));
 	}
 }
-
-
-//=============================================================================
-// 終了処理(サウンド)
-//=============================================================================
-void EnemyManager::uninitializeSound()
-{
-	SoundInterface::S3D->uninitSoundStop();
-
-	SAFE_DELETE_ARRAY(playParameters);
-}
-
-
-//=============================================================================
-// 足音の処理
-//=============================================================================
-void EnemyManager::footsteps(D3DXVECTOR3 playerPos, int playerID)
-{
-	for (int i = 0; i < enemyList.size(); i++)
-	{
-		float distance = D3DXVec3Length(&(enemyDataList.getValue(i)->position - playerPos));
-		float volume = 0.0f;
-		if (distance < DISTANCE_MAX)
-		{
-			volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
-		}
-
-		SoundInterface::S3D->SetVolume(playParameters[(i*gameMasterNS::PLAYER_NUM) + playerID], volume);
-	}
-}
-
 
 //=============================================================================
 // Getter

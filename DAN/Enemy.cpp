@@ -447,7 +447,7 @@ void Enemy::footsteps(D3DXVECTOR3 playerPos, int playerID)
 		volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
 	}
 
-	SoundInterface::S3D->SetVolume(playParameters[playerID], volume);
+	SoundInterface::S3D->SetVolume(playParameters, volume);
 }
 
 
@@ -625,10 +625,10 @@ void Enemy::debugSensor()
 
 	if (sound)
 	{
-		// ‰¹‚ğ–Â‚ç‚·
-		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-		PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_SE_LIST::SE_GAME_EnemyAttack, false ,NULL,false,NULL,true, filterParameters };
-		SoundInterface::SE->playSound(&playParameters);	//SEÄ¶
+		//// ‰¹‚ğ–Â‚ç‚·
+		//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+		//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::S3D_GAME_FOOTSTEP_01, false ,NULL,true,playerNS::PLAYER1,true, filterParameters };
+		//SoundInterface::S3D->playSound(&playParameters);	//SEÄ¶
 	}
 }
 

@@ -56,8 +56,8 @@ Game::Game()
 //===================================================================================================================================
 Game::~Game()
 {
-	SoundInterface::SE->uninitSoundStop();
-	SoundInterface::BGM->uninitSoundStop();
+	// サウンドの停止
+	SoundInterface::StopAllSound();
 }
 
 //===================================================================================================================================
@@ -237,8 +237,6 @@ void Game::initialize() {
 //【終了処理】
 //===================================================================================================================================
 void Game::uninitialize() {
-	//サウンド
-	enemyManager->uninitializeSound();
 
 	//SAFE_DELETE(linear4TreeManager);
 	SAFE_DELETE(linear8TreeManager);

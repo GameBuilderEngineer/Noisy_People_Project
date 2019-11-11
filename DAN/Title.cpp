@@ -52,8 +52,7 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// ƒTƒEƒ“ƒh‚Ì’âŽ~
-	SoundInterface::SE->uninitSoundStop();
-	SoundInterface::BGM->uninitSoundStop();
+	SoundInterface::StopAllSound();
 }
 
 //============================================================================================================================================

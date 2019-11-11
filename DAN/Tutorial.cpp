@@ -51,7 +51,7 @@ Tutorial::Tutorial()
 Tutorial::~Tutorial()
 {
 	// ƒTƒEƒ“ƒh‚Ì’âŽ~
-	SoundInterface::BGM->uninitSoundStop();
+	SoundInterface::StopAllSound();
 }
 
 //===================================================================================================================================

@@ -52,26 +52,20 @@ void SEManager::outputGUI(void)
 				//ƒTƒEƒ“ƒh–¼
 				switch (scene)
 				{
-				case SceneList::SPLASH:
-					ImGui::Text("%s", splashSEPathList[tmpSoundParameters->playParameters.soundId]);
-					break;
 				case SceneList::TITLE:
-					ImGui::Text("%s", titleSEPathList[tmpSoundParameters->playParameters.soundId]);
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(title,[tmpSoundParameters->playParameters.soundId]));
 					break;
 				case SceneList::TUTORIAL:
-
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(tutorial, [tmpSoundParameters->playParameters.soundId]));
 					break;
 				case SceneList::CREDIT:
-
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(credit, [tmpSoundParameters->playParameters.soundId]));
 					break;
 				case SceneList::GAME:
-					ImGui::Text("%s", gameSEPathList[tmpSoundParameters->playParameters.soundId]);
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(game,[tmpSoundParameters->playParameters.soundId]));
 					break;
 				case SceneList::RESULT:
-
-					break;
-				case SceneList::NONE_SCENE:
-
+					ImGui::Text("%s", SE_PATH_LIST_TAIL(result, [tmpSoundParameters->playParameters.soundId]));
 					break;
 				default:
 					break;
@@ -137,23 +131,9 @@ void SEManager::SwitchAudioBuffer(int scene)
 	switch (scene)
 	{
 	case SceneList::SPLASH:
-		SEManager::bufferList = new LIST_BUFFER[SPLASH_SE_LIST::SPLASH_SE_MAX];
-		for (int i = 0; i < SPLASH_SE_LIST::SPLASH_SE_MAX; i++)
-		{
-			SEManager::bufferList[i].buffer = { 0 };
-
-			FILE *fp = nullptr;
-			fp = fopen(splashSEPathList[i], "rb");
-			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
-
-			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
-			SEManager::bufferList[i].buffer.AudioBytes = SEManager::bufferList[i].wavFile.data.waveSize;
-			SEManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
-
-			fclose(fp);
-		}
 		bufferMax = SPLASH_SE_LIST::SPLASH_SE_MAX;
 		break;
+
 	case SceneList::TITLE:
 		SEManager::bufferList = new LIST_BUFFER[TITLE_SE_LIST::TITLE_SE_MAX];
 		for (int i = 0; i < TITLE_SE_LIST::TITLE_SE_MAX; i++)
@@ -161,7 +141,7 @@ void SEManager::SwitchAudioBuffer(int scene)
 			SEManager::bufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
-			fp = fopen(titleSEPathList[i], "rb");
+			fp = fopen(SE_PATH_LIST_TAIL(title, [i]), "rb");
 			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
 
 			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
@@ -172,12 +152,45 @@ void SEManager::SwitchAudioBuffer(int scene)
 		}
 		bufferMax = TITLE_SE_LIST::TITLE_SE_MAX;
 		break;
+
 	case SceneList::TUTORIAL:
+		SEManager::bufferList = new LIST_BUFFER[TUTORIAL_SE_LIST::TUTORIAL_SE_MAX];
+		for (int i = 0; i < TUTORIAL_SE_LIST::TUTORIAL_SE_MAX; i++)
+		{
+			SEManager::bufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(SE_PATH_LIST_TAIL(tutorial, [i]), "rb");
+			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
+
+			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
+			SEManager::bufferList[i].buffer.AudioBytes = SEManager::bufferList[i].wavFile.data.waveSize;
+			SEManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
 		bufferMax = TUTORIAL_SE_LIST::TUTORIAL_SE_MAX;
 		break;
+
 	case SceneList::CREDIT:
+		SEManager::bufferList = new LIST_BUFFER[CREDIT_SE_LIST::CREDIT_SE_MAX];
+		for (int i = 0; i < CREDIT_SE_LIST::CREDIT_SE_MAX; i++)
+		{
+			SEManager::bufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(SE_PATH_LIST_TAIL(credit, [i]), "rb");
+			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
+
+			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
+			SEManager::bufferList[i].buffer.AudioBytes = SEManager::bufferList[i].wavFile.data.waveSize;
+			SEManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
 		bufferMax = CREDIT_SE_LIST::CREDIT_SE_MAX;
 		break;
+
 	case SceneList::GAME:
 		SEManager::bufferList = new LIST_BUFFER[GAME_SE_LIST::GAME_SE_MAX];
 		for (int i = 0; i < GAME_SE_LIST::GAME_SE_MAX; i++)
@@ -185,7 +198,7 @@ void SEManager::SwitchAudioBuffer(int scene)
 			SEManager::bufferList[i].buffer = { 0 };
 
 			FILE *fp = nullptr;
-			fp = fopen(gameSEPathList[i], "rb");
+			fp = fopen(SE_PATH_LIST_TAIL(game, [i]), "rb");
 			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
 
 			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
@@ -196,15 +209,34 @@ void SEManager::SwitchAudioBuffer(int scene)
 		}
 		bufferMax = GAME_SE_LIST::GAME_SE_MAX;
 		break;
+
 	case SceneList::RESULT:	
+		SEManager::bufferList = new LIST_BUFFER[RESULT_SE_LIST::RESULT_SE_MAX];
+		for (int i = 0; i < RESULT_SE_LIST::RESULT_SE_MAX; i++)
+		{
+			SEManager::bufferList[i].buffer = { 0 };
+
+			FILE *fp = nullptr;
+			fp = fopen(SE_PATH_LIST_TAIL(result, [i]), "rb");
+			SEManager::bufferList[i].wavFile = LoadWavChunk(fp);
+
+			SEManager::bufferList[i].buffer.pAudioData = (BYTE*)SEManager::bufferList[i].wavFile.data.waveData;
+			SEManager::bufferList[i].buffer.AudioBytes = SEManager::bufferList[i].wavFile.data.waveSize;
+			SEManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+			fclose(fp);
+		}
 		bufferMax = RESULT_SE_LIST::RESULT_SE_MAX;
 		break;
+
 	case SceneList::CREATE:
 		bufferMax = CREATE_SE_LIST::CREATE_SE_MAX;
 		break;
+
 	case SceneList::NONE_SCENE:
 		bufferMax = 0;
 		break;
+
 	default:
 		break;
 	}

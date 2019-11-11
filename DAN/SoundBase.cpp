@@ -90,10 +90,11 @@ void SoundBase::playSound(PLAY_PARAMETERS *playParameters)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((!tmpSoundParameters->isPlaying) &&											//再生していない
-			(tmpSoundParameters->playParameters.soundId == playParameters->soundId) &&	//IDが一致する
-			(tmpSoundParameters->playParameters.loop == playParameters->loop)&&			//ループ情報も一致する
-			(tmpSoundParameters->playParameters.playerID == playParameters->playerID))	//プレイヤーID
+		//if ((!tmpSoundParameters->isPlaying) &&											//再生していない
+		//	(tmpSoundParameters->playParameters.soundId == playParameters->soundId) &&	//IDが一致する
+		//	(tmpSoundParameters->playParameters.loop == playParameters->loop)&&			//ループ情報も一致する
+		//	(tmpSoundParameters->playParameters.playerID == playParameters->playerID))	//プレイヤーID
+		if (tmpSoundParameters->playParameters.voiceID == playParameters->voiceID)
 		{
 			tmpSoundParameters->SourceVoice->Start();
 			if (tmpSoundParameters->playParameters.filterFlag)
@@ -121,10 +122,11 @@ void SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((tmpSoundParameters->isPlaying) &&											//再生していない
-			(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&	//ID
-			(tmpSoundParameters->playParameters.loop == playParameters.loop)&&			//ループ情報
-			(tmpSoundParameters->playParameters.playerID == playParameters.playerID))	//プレイヤーID
+		//if ((tmpSoundParameters->isPlaying) &&											//再生していない
+		//	(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&	//ID
+		//	(tmpSoundParameters->playParameters.loop == playParameters.loop)&&			//ループ情報
+		//	(tmpSoundParameters->playParameters.playerID == playParameters.playerID))	//プレイヤーID
+		if (tmpSoundParameters->playParameters.voiceID == playParameters.voiceID)
 		{			
 			tmpSoundParameters->SourceVoice->Stop();
 			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
