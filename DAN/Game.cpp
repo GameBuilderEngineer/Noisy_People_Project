@@ -224,7 +224,7 @@ void Game::initialize() {
 	treeData.size = treeNS::STANDARD;
 	treeData.geenState = treeNS::DEAD;
 	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
