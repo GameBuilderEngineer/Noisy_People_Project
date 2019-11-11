@@ -26,6 +26,8 @@ Game::Game()
 	//線形８分木空間分割管理クラス
 	linear8TreeManager = new Linear8TreeManager<Object>;
 	linear8TreeManager->initialize(4, D3DXVECTOR3(-1000,-500,-1000),D3DXVECTOR3(1000,1000,1000));	
+	//衝突判定内容
+	collisionContent = new CollisionContent;
 
 	//オブジェクトカウンターのリセット
 	objectNS::resetCounter();		
@@ -67,7 +69,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -90,7 +92,7 @@ void Game::initialize() {
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-		camera[i].setFieldOfView( (D3DX_PI/180) * 80 );
+		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
 		
 		//プレイヤーの設定
 		PlayerTable infomation;
@@ -230,6 +232,24 @@ void Game::initialize() {
 		
 		treeManager->createTree(treeData);
 	}
+
+	// エネミーをランダムに設置する
+	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		pos -= D3DXVECTOR3(200, 0, 240);
+		enemyNS::ENEMYSET tmp =
+		{
+			enemyManager->issueNewEnemyID(),
+			enemyNS::WOLF,
+			stateMachineNS::PATROL,
+			pos,
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+		enemyManager->createEnemy(p);
+	}
+	
 #endif
 }
 
@@ -242,6 +262,7 @@ void Game::uninitialize() {
 
 	//SAFE_DELETE(linear4TreeManager);
 	SAFE_DELETE(linear8TreeManager);
+	SAFE_DELETE(collisionContent);
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(light);
@@ -471,8 +492,8 @@ void Game::render3D(Camera currentCamera) {
 	//treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	////木Bの描画
 	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	////石の描画
-	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//石の描画
+	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//スカイドームの描画
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//海面の描画
@@ -594,10 +615,35 @@ void Game::collisions()
 	{
 		tree8Reregister(&stone->object[i]);
 	}
+	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
+	{
+		tree8Reregister(enemyManager->getEnemyList()[i]);
+	}
 
 	//衝突対応リストを取得
-	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
-	collisionNum /= 2;//2で割るのはペアになっているため
+	int numRegiteredObject = linear8TreeManager->getAllCollisionList(&collisionList);
+	collisionNum = numRegiteredObject / 2;	//2で割るのはペアになっているため
+
+	//衝突判定処理
+	Object** list = collisionList->getRoot();
+	Object* obj1 = NULL;
+	Object* obj2 = NULL;
+	for (int i = 0; i < numRegiteredObject - 1; i++)
+	{
+		for (int k = i + 1; k < numRegiteredObject; k++)
+		{
+			//衝突判定をとるペアでなければループをとばす
+			if ((list[i]->collisionTarget & list[k]->objectType) == 0) continue;
+
+			//衝突処理
+			if ((list[i]->objectType == objectNS::PLAYER && list[k]->objectType == objectNS::ENEMY) ||
+				(list[i]->objectType == objectNS::ENEMY && list[k]->objectType == objectNS::PLAYER))
+			{
+				collisionContent->playerCollideEnemy(list[i], list[k]); // プレイヤーとエネミーと当たり判定
+				//collisionContent->enemyAttacksPlayer(list[i], list[k]); // プレイヤーとエネミーの攻撃の当たり判定
+			}
+		}
+	}
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();

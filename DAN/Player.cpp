@@ -39,6 +39,12 @@ Player::Player()
 	isVisionAble		= true;
 	isSkyVisionAble		= true;
 	isShiftAble			= true;
+
+	{// Õ“Ë”»’èî•ñ‚ğ“o˜^‚·‚é
+		using namespace objectNS;
+		objectType = PLAYER;
+		collisionTarget = ENEMY + TREE + ITEM;
+	}
 }
 
 //===================================================================================================================================
@@ -190,7 +196,7 @@ void Player::grounding()
 	gravityRay.update(centralPosition, gravityDirection);
 	
 	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
-
+	groundNormal = gravityRay.normal;
 
 	if (hit == false)
 	{// ƒvƒŒƒCƒ„[‚Í’n–Ê‚Ì–³‚¢‹ó’†‚É‚¢‚é
@@ -583,6 +589,14 @@ void Player::pullpower(int pull)
 {
 	power = UtilityFunction::clamp( power - pull, MIN_POWER, MAX_POWER);		//“d—ÍÁ”ï
 }
+
+void Player::damage(int _damage)
+{
+	hp -= _damage;
+	if (hp < 0) hp = 0;
+}
+
+
 //===================================================================================================================================
 //ygetterz
 //===================================================================================================================================
@@ -600,3 +614,5 @@ D3DXVECTOR3* Player::getCameraGaze() { return &cameraGaze; }
 D3DXVECTOR3* Player::getAiming() { return &aimingPosition; }
 D3DXVECTOR3* Player::getCentralPosition() { return &centralPosition; }
 bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
+bool Player::getOnGround() { return onGround; }
+D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }

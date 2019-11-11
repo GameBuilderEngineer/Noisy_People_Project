@@ -30,6 +30,12 @@ namespace objectNS {
 	};
 
 	void resetCounter();
+
+	//オブジェクトタイプ
+	const DWORD PLAYER		= 0x00000001;
+	const DWORD ENEMY		= 0x00000002;
+	const DWORD TREE		= 0x00000004;
+	const DWORD ITEM		= 0x00000008;
 }
 
 //===================================================================================================================================
@@ -42,6 +48,8 @@ public:
 	//ステータス変数
 	static int			objectCounter;			//オブジェクトカウンター：IDの割当に使用
 	int					id;						//ID
+	DWORD				objectType;				//オブジェクトタイプ：衝突判定に使用(インスタンス構築時に代入)
+	DWORD				collisionTarget;		//衝突判定対象:判定対象オブジェクトタイプの総和をインスタンス構築時に代入
 	D3DXVECTOR3			position;				//位置
 	D3DXQUATERNION		quaternion;				//回転
 	D3DXVECTOR3			scale;					//スケール
@@ -79,7 +87,7 @@ public:
 	float				existenceTimer;			//存在時間
 
 	//オブジェクトツリーへ所属するためのインターフェースクラス
-	ObjectTree<Object>	treeCell;		//木空間
+	ObjectTree<Object>	treeCell;				//木空間
 
 	//Method
 	Object();

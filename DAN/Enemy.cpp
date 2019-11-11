@@ -56,6 +56,13 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	Object::initialize(&position);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 
+	{// 衝突判定情報を登録する
+		using namespace objectNS;
+		objectType = ENEMY;
+		collisionTarget = PLAYER + TREE;
+	}
+
+
 #ifdef RENDER_SENSOR
 	hearingSphere[0].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type]);
 	hearingSphere[1].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type] * SHOT_SOUND_SCALE);
@@ -101,36 +108,54 @@ void Enemy::update(float frameTime)
 			setMovingTarget(&destination);
 			setMove(true);
 		}
+		if (input->wasKeyPressed('6'))
+		{
+			//onAttack = true;
+			//attackTargetPlayer = gameMasterNS::PLAYER_1P;
+			enemyData->isAlive = false;
+		}
 	}
 #ifdef RENDER_SENSOR
-	debugSensor();				// 視界
+	debugSensor();		// 視界
 	// プレイヤーへの注視レイを描画する
 	gazePlayer.initialize(centralPosition, *player->getCentralPosition() - centralPosition);
 	gazePlayer.color = D3DXCOLOR(255, 0, 0, 255);
 #endif// RENDER_SENSOR
 #endif// _DEBUG
 
+	// 簡易的な思考ルーチン
+	
+
+
+
 	// センサー
 	if (canUseSensor)
 	{
-		if (eyeSensor(gameMasterNS::PLAYER_1P) || earSensor(gameMasterNS::PLAYER_1P))
+		if (eyeSensor(gameMasterNS::PLAYER_1P) ||
+			earSensor(gameMasterNS::PLAYER_1P))
 		{
-			isNoticedPlayer1 = true;
+			isNoticedPlayer[gameMasterNS::PLAYER_1P] = true;
 		}
-		if (eyeSensor(gameMasterNS::PLAYER_2P) || earSensor(gameMasterNS::PLAYER_2P))
+		if (eyeSensor(gameMasterNS::PLAYER_2P) ||
+			earSensor(gameMasterNS::PLAYER_2P))
 		{
-			isNoticedPlayer2 = true;
+			isNoticedPlayer[gameMasterNS::PLAYER_2P] = true;
 		}
 		canUseSensor = false;
 	}
-
+	// 攻撃
+	if (onAttack)
+	{
+		attack(attackTargetPlayer, frameTime);
+	}
+	// 記憶の更新
+	updateMemory(frameTime);
 	// 経路探索
 	if (shouldSearchPath)
 	{
 		naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, *movingTarget);
 		shouldSearchPath = false;
 	}
-
 	// 移動
 	if (onMove)
 	{
@@ -138,6 +163,8 @@ void Enemy::update(float frameTime)
 	}
 	// 接地処理
 	grounding();
+	// 壁ずり処理
+	wallScratch();
 	// 物理挙動
 	physicalBehavior();
 	// 物理の更新
@@ -250,6 +277,61 @@ bool Enemy::earSensor(int playerType)
 
 
 //=============================================================================
+// 攻撃
+//=============================================================================
+void Enemy::attack(int playerType, float frameTime)
+{
+	// 攻撃ベクトル作成
+	if (attackTime == 0.0f)
+	{
+		vecAttack = *player[playerType].getCentralPosition() - centralPosition;
+		slip(vecAttack, groundNormal);
+		D3DXVec3Normalize(&vecAttack, &vecAttack);
+	}
+	// 攻撃時間終了判定
+	attackTime += frameTime;
+	if (attackTime >= ATTACK_TIME[enemyData->type])
+	{
+		onAttack = false;
+		attackTime = 0.0f;
+		friction *= ATTACKED_FRICTION;
+	}
+	// ダメージ処理
+	if (isHitPlayer)
+	{
+		player[playerType].damage(ATTACK_DAMAGE[enemyData->type]);
+		onAttack = false;
+		attackTime = 0.0f;
+	}
+	// 移動処理
+	speed += vecAttack * ATTACK_SPEED[enemyData->type];
+}
+
+
+//=============================================================================
+// 記憶の更新
+//=============================================================================
+void Enemy::updateMemory(float frameTime)
+{
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		if (isNoticedPlayer[i])
+		{
+			noticedTimePlayer[i] += frameTime;
+			if (noticedTimePlayer[i] >= PLAYER_MEMORIZED_TIME[enemyData->type])
+			{
+				noticedTimePlayer[i] = 0.0f;
+			}
+		}
+		else
+		{
+
+		}
+	}
+}
+
+
+//=============================================================================
 // ステアリング
 //=============================================================================
 void Enemy::steering()
@@ -288,6 +370,7 @@ void Enemy::grounding()
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
 	gravityRay.update(centralPosition, gravityDirection);
 	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
+	groundNormal = gravityRay.normal;
 
 	if (hit == false)
 	{// エネミーは地面の無い空中にいる
@@ -319,6 +402,24 @@ void Enemy::grounding()
 	else
 	{// エネミーは地面のある空中にいる
 		onGround = false;
+	}
+}
+
+
+//=============================================================================
+// 壁ずり処理
+//=============================================================================
+void Enemy::wallScratch()
+{
+	ray.update(centralPosition, D3DXVECTOR3(speed.x, 0, speed.z));
+
+	// 壁ずり処理
+	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
+	{
+		// めり込み補正
+		position += ray.normal * (radius / 2 - ray.distance);
+		// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+		speed = slip(speed, ray.normal);
 	}
 }
 
@@ -467,6 +568,7 @@ D3DXMATRIX* Enemy::getCentralMatrixWorld() { return &centralMatrixWorld; }
 //=============================================================================
 void Enemy::setMove(bool setting) { onMove = setting; }
 void Enemy::setMovingTarget(D3DXVECTOR3* _target) { movingTarget = _target; }
+void Enemy::setIsHitPlayer(bool setting) { isHitPlayer = setting; }
 
 
 // [デバッグ]

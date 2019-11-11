@@ -29,6 +29,8 @@ Object::Object()
 {
 	id					= objectCounter;									//IDの割当
 	objectCounter++;														//オブジェクトカウンターの加算：IDの割当に使用
+	objectType			= 0;
+	collisionTarget		= 0;
 
 	ZeroMemory(&position, sizeof(D3DXVECTOR3));								//位置
 	quaternion			= D3DXQUATERNION(0, 0, 0, 1);						//回転

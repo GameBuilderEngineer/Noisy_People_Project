@@ -283,6 +283,9 @@
     <Filter Include="Game Layer\Scene\Tutorial\UI">
       <UniqueIdentifier>{4898cc1a-35f9-4d06-b769-a8498a62798b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\CollisionContent">
+      <UniqueIdentifier>{5a58316c-02cc-4c8b-8e6b-275910374cc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -633,6 +636,9 @@
     </ClCompile>
     <ClCompile Include="TestEffectOccurrence.cpp">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionContent.cpp">
+      <Filter>Game Layer\CollisionContent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1004,6 +1010,9 @@
     </ClInclude>
     <ClInclude Include="TestEffectOccurrence.h">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionContent.h">
+      <Filter>Game Layer\CollisionContent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

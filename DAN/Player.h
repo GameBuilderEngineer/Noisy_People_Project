@@ -181,6 +181,7 @@ private:
 	float						difference;						//フィールド補正差分
 	bool						onGround;						//接地判定
 	bool						onGroundBefore;					// 直前フレームの接地判定
+	D3DXVECTOR3					groundNormal;					// 接地面法線
 
 	// 物理
 	float						friction;						// 摩擦係数
@@ -247,6 +248,7 @@ public:
 	void addpower(int add);										//電力加算
 	void pullpower(int pull);									//電力減算
 	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
+	void damage(int _damage);									//ダメージ処理
 
 	//getter
 	int getState();
@@ -265,6 +267,6 @@ public:
 	D3DXVECTOR3* getCentralPosition();							//中心座標の取得
 	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
 	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
-	
-
+	bool getOnGround();											//接地しているか取得
+	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
 };
