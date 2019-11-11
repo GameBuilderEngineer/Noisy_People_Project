@@ -81,7 +81,7 @@ public:
 	float				existenceTimer;			//存在時間
 
 	//オブジェクトツリーへ所属するためのインターフェースクラス
-	ObjectTree<Object>	treeCell;		//木空間
+	ObjectTree<Object>	treeCell;				//木空間
 
 	//Method
 	Object();

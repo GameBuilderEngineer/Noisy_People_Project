@@ -228,7 +228,7 @@ void Player::grounding()
 	gravityRay.update(centralPosition, gravityDirection);
 	
 	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
-
+	groundNormal = gravityRay.normal;
 
 	if (hit == false)
 	{// プレイヤーは地面の無い空中にいる
@@ -659,6 +659,13 @@ void Player::pullpower(int pull)
 	power = UtilityFunction::clamp( power - pull, MIN_POWER, MAX_POWER);		//電力消費
 }
 
+void Player::damage(int _damage)
+{
+	hp -= _damage;
+	if (hp < 0) hp = 0;
+}
+
+
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
@@ -678,10 +685,13 @@ Bullet* Player::getBullet(int i) { return bulletManager->getBullet(i); }
 int Player::getShootingNum() { return bulletManager->getNum(); }
 D3DXVECTOR3* Player::getCentralPosition() { return &centralPosition; }
 bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
+bool Player::getOnGround() { return onGround; }
+D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
 
 
 
 
+//(仮)通常状態
 
 NormalState::NormalState(Player* player):State() 
 {

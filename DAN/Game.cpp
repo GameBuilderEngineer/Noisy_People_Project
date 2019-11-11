@@ -27,6 +27,8 @@ Game::Game()
 	//線形８分木空間分割管理クラス
 	linear8TreeManager = new Linear8TreeManager<Object>;
 	linear8TreeManager->initialize(4, D3DXVECTOR3(-1000,-500,-1000),D3DXVECTOR3(1000,1000,1000));	
+	//衝突判定内容
+	collisionContent = new CollisionContent;
 
 	//オブジェクトカウンターのリセット
 	objectNS::resetCounter();		
@@ -68,7 +70,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -91,7 +93,7 @@ void Game::initialize() {
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-		camera[i].setFieldOfView( (D3DX_PI/180) * 80 );
+		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
 		
 		//プレイヤーの設定
 		PlayerTable infomation;
@@ -223,7 +225,7 @@ void Game::initialize() {
 	treeData.size = treeNS::STANDARD;
 	treeData.geenState = treeNS::DEAD;
 	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
@@ -231,6 +233,24 @@ void Game::initialize() {
 		
 		treeManager->createTree(treeData);
 	}
+
+	// エネミーをランダムに設置する
+	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		pos -= D3DXVECTOR3(200, 0, 240);
+		enemyNS::ENEMYSET tmp =
+		{
+			enemyManager->issueNewEnemyID(),
+			enemyNS::WOLF,
+			stateMachineNS::PATROL,
+			pos,
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+		enemyManager->createEnemy(p);
+	}
+	
 #endif
 }
 
@@ -427,8 +447,7 @@ void Game::render() {
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
 	camera[gameMasterNS::PLAYER_1P].renderReady();
-	direct3D9->changeViewportFullWindow();
-	//direct3D9->changeViewport1PWindow();
+	direct3D9->changeViewport1PWindow();
 	render3D(camera[gameMasterNS::PLAYER_1P]);
 	effekseerNS::setCameraMatrix(
 		camera[gameMasterNS::PLAYER_1P].position, 
@@ -437,15 +456,15 @@ void Game::render() {
 	effekseerNS::render();
 
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
-	//nowRenderingWindow = gameMasterNS::PLAYER_2P;
-	//camera[gameMasterNS::PLAYER_2P].renderReady();
-	//direct3D9->changeViewport2PWindow();
-	//render3D(camera[gameMasterNS::PLAYER_2P]);
-	//effekseerNS::setCameraMatrix(
-	//	camera[gameMasterNS::PLAYER_2P].position,
-	//	camera[gameMasterNS::PLAYER_2P].gazePosition,
-	//	camera[gameMasterNS::PLAYER_2P].upVector);
-	//effekseerNS::render();
+	nowRenderingWindow = gameMasterNS::PLAYER_2P;
+	camera[gameMasterNS::PLAYER_2P].renderReady();
+	direct3D9->changeViewport2PWindow();
+	render3D(camera[gameMasterNS::PLAYER_2P]);
+	effekseerNS::setCameraMatrix(
+		camera[gameMasterNS::PLAYER_2P].position,
+		camera[gameMasterNS::PLAYER_2P].gazePosition,
+		camera[gameMasterNS::PLAYER_2P].upVector);
+	effekseerNS::render();
 
 	//UI
 	direct3D9->changeViewportFullWindow();
@@ -599,7 +618,10 @@ void Game::collisions()
 		for(int num = 0;num < player[i].getShootingNum();num++)
 			tree8Reregister(player[i].getBullet(num));
 	}
-	
+	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
+	{
+		tree8Reregister(enemyManager->getEnemyList()[i]);
+	}
 
 	//衝突対応リストを取得
 	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);

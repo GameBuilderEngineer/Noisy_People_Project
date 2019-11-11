@@ -62,7 +62,8 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
 	fileName[SKY_DOME]								= { "domebase.x" };							//09
 	fileName[TUTORIAL_FILED]						= { "Tutorial_Stage.x" };					//10
-	fileName[DATE_ISLAND]							= { "DateIsland_v2.x" };					//11
+	fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
+	fileName[DATE_ISLAND_V2]						= { "DateIsland_v2.x" };					//12
 }
 
 //===================================================================================================================================
