@@ -10,6 +10,7 @@
 #include "TimerFrame.h"
 #include "UIButton.h"
 #include "ButtonFrame.h"
+#include "StatusFrame.h"
 
 //=================================
 // 名前空間
@@ -32,6 +33,7 @@ private:
 	UiButton   * buttonP2;		//ボタンUI
 	ButtonFrame *buttonFrameP1;//ボタンのボックス
 	ButtonFrame *buttonFrameP2;//ボタンのボックス
+	StatusFrame *statusFrameP1;//HPとかのフレーム
 	//bool	     buttonFlag;    //ボタンon off用フラグ
 	//int		 buttonType;	//ボタンタイプ管理用
 public://メンバー関数

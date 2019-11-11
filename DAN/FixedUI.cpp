@@ -24,6 +24,7 @@ FixedUI::FixedUI()
 	buttonP2 = new UiButton;
 	buttonFrameP1 = new ButtonFrame;
 	buttonFrameP2 = new ButtonFrame;
+	statusFrameP1 = new StatusFrame;
 }
 
 //================================
@@ -37,6 +38,7 @@ FixedUI::~FixedUI()
 	delete buttonP2;
 	delete buttonFrameP1;
 	delete buttonFrameP2;
+	delete statusFrameP1;
 }
 
 //================================
@@ -50,7 +52,8 @@ void FixedUI::initialize()
 	buttonP2->initialize();
 	buttonFrameP1->initialize(basicUiNS::P1);
 	buttonFrameP2->initialize(basicUiNS::P2);
-
+	statusFrameP1->initialize();
+	
 }
 
 //================================
@@ -64,6 +67,7 @@ void FixedUI::render()
 	buttonFrameP2->render();
 	buttonP1->renderP1();
 	buttonP2->renderP2();
+	statusFrameP1->render();
 }
 
 //================================

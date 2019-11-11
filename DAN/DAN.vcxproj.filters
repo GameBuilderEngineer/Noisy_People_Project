@@ -637,6 +637,9 @@
     <ClCompile Include="ButtonFrame.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
+    <ClCompile Include="StatusFrame.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1009,6 +1012,9 @@
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
     <ClInclude Include="ButtonFrame.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusFrame.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
