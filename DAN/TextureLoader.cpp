@@ -70,6 +70,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_BUTTON4] = { "vision.png" };
 	textureName[UI_BUTTON_BOX] = { "CommandBox.png" };
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
+	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

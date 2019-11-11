@@ -34,6 +34,7 @@ private:
 	ButtonFrame *buttonFrameP1;//ボタンのボックス
 	ButtonFrame *buttonFrameP2;//ボタンのボックス
 	StatusFrame *statusFrameP1;//HPとかのフレーム
+	StatusFrame *statusFrameP2;//HPとかのフレーム
 	//bool	     buttonFlag;    //ボタンon off用フラグ
 	//int		 buttonType;	//ボタンタイプ管理用
 public://メンバー関数
