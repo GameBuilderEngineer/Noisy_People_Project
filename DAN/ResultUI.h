@@ -51,7 +51,7 @@ public: //メンバー変数
 	UItexture	uiTexture;			//テクスチャのUI
 	UIrank      uiRank01;			//プレイヤー１のランクのUI
 	UIrank      uiRank02;			//プレイヤー2のランクのUI
-	UInumber	uiNumber[uiNumberNS::NUMBER_TYPE_MAX];			//数字
+	UInumber	uiNumber[uiNumberNS::NUMBER_TYPE_MAX];//数字
 	int			score01;			//プレイヤー１のスコア保存用
 	int			score02;			//プレイヤー２のスコア保存用
 	int			resultPhase;		//フェイズ管理用
@@ -64,6 +64,7 @@ public: //メンバー関数
 	void render();					//描画
 	void update(float flameTime);	//更新
 	void uninitialize();			//終了
+	void decidionBGM();
 	
 };
 

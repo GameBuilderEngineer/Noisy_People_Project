@@ -7,6 +7,7 @@
 //インクルード
 //============================
 #include "ResultUI.h"
+#include "Sound.h"
 
 //============================
 //【using宣言】
@@ -116,6 +117,8 @@ void ResultUI::render()
 		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
 		{
 			uiNumber[i].render();
+			//BGMの再生
+			//decidionBGM();
 		}
 	}
 }
@@ -154,8 +157,9 @@ void ResultUI::update(float flameTime)
 		//ランク
 		uiRank01.update(rank01);
 		uiRank02.update(rank02);
+		
 	}
-
+	
 	uiCharacter01.update(resultPhase);	//プレイヤー１の文字更新
 	uiCharacter02.update(resultPhase);	//プレイヤー１の文字更新
 	uiTexture.update(resultPhase);		//テクスチャの更新
@@ -176,5 +180,28 @@ void ResultUI::uninitialize()
 	for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
 	{
 		uiNumber[i].uninitialize();
+	}
+}
+
+//=============================
+//鳴らすBGMを決定し鳴らす処理
+//=============================
+void ResultUI::decidionBGM()
+{
+	//どちらかが70を超えていたならクリア
+	if (score01 >=70 || score02 >= 70)
+	{
+		PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
+		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Clear, true,1.0f,false,NULL,true, filterParameters };//BGMの設定
+		SoundInterface::BGM->playSound(&playParameters);//再生
+	}
+	//どちらも70以下なら失敗
+	else if(score01<70 && score02<70)
+	{
+		PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
+		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Failed, true,1.0f,false,NULL,true, filterParameters };//BGMの設定
+		SoundInterface::BGM->playSound(&playParameters);//再生
 	}
 }
