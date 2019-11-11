@@ -28,7 +28,14 @@ Result::Result(void)
 	nextScene = SceneList::TITLE;
 
 	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TUTORIAL);
+	SoundInterface::SwitchAudioBuffer(SceneList::RESULT);
+
+	PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
+	//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
+	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Clear, true,1.0f,false,NULL,true, filterParameters };//BGMの設定
+	 //再生
+	SoundInterface::BGM->playSound(&playParameters);
 }
 
 //===================================================================================================================================

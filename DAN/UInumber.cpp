@@ -7,6 +7,7 @@
 //インクルード
 //============================
 #include "UInumber.h"
+#include "Sound.h"
 
 //============================
 //【using宣言】
@@ -159,6 +160,11 @@ void UInumber::countUp(int score)
 	// 最終的に表示したいスコアから表示中のスコアをひいて差分を出す
 	if (displayScore < score)
 	{
+		PLAY_PARAMETERS playParameters = { 0 };
+		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::HighPassFilter, 0.75f, 1.0f };
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AddTree, false,NULL,false,NULL,true, filterParameters };
+		SoundInterface::SE->playSound(&playParameters);
+
 		//保存用変数に表示しているスコアと最終的に表示したいスコアの差分を入れる
 		keepScore = (score)-(displayScore);
 		//表示しているスコアに差分をカウントアップにかけたいもので割ったものを足す

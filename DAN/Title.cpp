@@ -140,6 +140,7 @@ void Title::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
+
 		updateInput();
 		changeScene(nextScene);
 	}
