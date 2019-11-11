@@ -54,13 +54,8 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	Object::initialize(&position);
+	type = ObjectType::ENEMY;
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
-
-	{// Õ“Ë”»’èî•ñ‚ğ“o˜^‚·‚é
-		using namespace objectNS;
-		objectType = ENEMY;
-		collisionTarget = PLAYER + TREE;
-	}
 
 
 #ifdef RENDER_SENSOR

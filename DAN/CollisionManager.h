@@ -14,7 +14,7 @@
 #include "Object.h"
 #include "Player.h"
 #include "Bullet.h"
-
+#include "Enemy.h"
 
 //===================================================================================================================================
 //ÅyñºëOãÛä‘Åz
@@ -26,16 +26,25 @@ namespace CollisionManagerNS{
 		NONE_NONE,
 		NONE_PLAYER,
 		NONE_BULLET,
+		NONE_ENEMY,
 
 		//PLAYER
 		PLAYER_NONE,
 		PLAYER_PLAYER,
 		PLAYER_BULLET,
+		PLAYER_ENEMY,
 
 		//BULLET
 		BULLET_NONE,
 		BULLET_PLAYER,
 		BULLET_BULLET,
+		BULLET_ENEMY,
+
+		//BULLET
+		ENEMY_NONE,
+		ENEMY_PLAYER,
+		ENEMY_BULLET,
+		ENEMY_ENEMY,
 
 		COMBI_NUM
 	};
@@ -46,21 +55,21 @@ namespace CollisionManagerNS{
 		NONE_NONE,
 		NONE_PLAYER,
 		NONE_BULLET,
+		NONE_ENEMY,
 
 		//PLAYER
 		PLAYER_NONE,
 		PLAYER_PLAYER,
 		PLAYER_BULLET,
+		PLAYER_ENEMY,
 
 		//BULLET
 		BULLET_NONE,
 		BULLET_PLAYER,
 		BULLET_BULLET,
+		BULLET_ENEMY,
 
 	};
-
-
-
 
 }
 
@@ -79,10 +88,12 @@ public:
 	//PLAYER
 	static bool playerAndPlayer(Player* player1, Player* player2);		//PLAYER<->PLAYER
 	static bool playerAndBullet(Player* player, Bullet* bullet);		//PLAYER<->BULLET
+	static bool playerAndEnemy(Player* player, Enemy* enemy);			//PLAYER<->BULLET
 	
 	//BULLET
 	static bool bulletAndPlayer(Player* player, Bullet* bullet);		//PLAYER<->BULLET
 	//static bool bulletAndBullet(Player* player, Bullet* bullet);		//BULLET<->BULLET
 
+	//ENEMY
 
 };

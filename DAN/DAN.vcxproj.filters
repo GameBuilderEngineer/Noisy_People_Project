@@ -289,6 +289,9 @@
     <Filter Include="Game Layer\ObjectTypeList">
       <UniqueIdentifier>{bbadf48a-b7ee-4467-b11b-92cf1d3f1918}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\CollisionManager">
+      <UniqueIdentifier>{5b82a205-c0e2-410a-8356-b67b8bf32594}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -640,7 +643,9 @@
     <ClCompile Include="TestEffectOccurrence.cpp">
       <Filter>Game Layer\TestEffect</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Game Layer\CollisionManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1012,9 +1017,11 @@
     <ClInclude Include="TestEffectOccurrence.h">
       <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="ObjectTypeList.h">
       <Filter>Game Layer\ObjectTypeList</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Game Layer\CollisionManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
