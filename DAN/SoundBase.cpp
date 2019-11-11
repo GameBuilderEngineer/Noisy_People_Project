@@ -90,10 +90,11 @@ void SoundBase::playSound(PLAY_PARAMETERS *playParameters)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((!tmpSoundParameters->isPlaying) &&											//再生していない
-			(tmpSoundParameters->playParameters.soundId == playParameters->soundId) &&	//IDが一致する
-			(tmpSoundParameters->playParameters.loop == playParameters->loop)&&			//ループ情報も一致する
-			(tmpSoundParameters->playParameters.playerID == playParameters->playerID))	//プレイヤーID
+		//if ((!tmpSoundParameters->isPlaying) &&											//再生していない
+		//	(tmpSoundParameters->playParameters.soundId == playParameters->soundId) &&	//IDが一致する
+		//	(tmpSoundParameters->playParameters.loop == playParameters->loop)&&			//ループ情報も一致する
+		//	(tmpSoundParameters->playParameters.playerID == playParameters->playerID))	//プレイヤーID
+		if (tmpSoundParameters->playParameters.voiceID == playParameters->voiceID)
 		{
 			tmpSoundParameters->SourceVoice->Start();
 			if (tmpSoundParameters->playParameters.filterFlag)
@@ -121,10 +122,11 @@ void SoundBase::stopSound(const PLAY_PARAMETERS playParameters)
 	{
 		SOUND_PARAMETERS *tmpSoundParameters = soundParametersList->getValue(i);
 
-		if ((tmpSoundParameters->isPlaying) &&											//再生していない
-			(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&	//ID
-			(tmpSoundParameters->playParameters.loop == playParameters.loop)&&			//ループ情報
-			(tmpSoundParameters->playParameters.playerID == playParameters.playerID))	//プレイヤーID
+		//if ((tmpSoundParameters->isPlaying) &&											//再生していない
+		//	(tmpSoundParameters->playParameters.soundId == playParameters.soundId) &&	//ID
+		//	(tmpSoundParameters->playParameters.loop == playParameters.loop)&&			//ループ情報
+		//	(tmpSoundParameters->playParameters.playerID == playParameters.playerID))	//プレイヤーID
+		if (tmpSoundParameters->playParameters.voiceID == playParameters.voiceID)
 		{			
 			tmpSoundParameters->SourceVoice->Stop();
 			SAFE_DESTROY_VOICE(tmpSoundParameters->SourceVoice);
@@ -170,11 +172,18 @@ void SoundBase::updateSound(void)
 //===================================================================================================================================
 LIST_BUFFER *SoundBase::GetBuffer(int endpointVoiceId, int soundId, bool loop)
 {
-	if (loop)
+	for (int i = 0; i < bufferMax; i++)
 	{
-		bufferList[soundId].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+		if (bufferList[i].soundId == soundId)
+		{
+			if (loop)
+			{
+				bufferList[i].buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+			}
+			return &bufferList[i];
+		}
 	}
-	return &bufferList[soundId];
+	return nullptr;
 }
 
 //===================================================================================================================================

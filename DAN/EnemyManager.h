@@ -64,11 +64,6 @@ public:
 	void outputGUI();
 	void relocateEnemyAccordingToFile();
 
-	//ƒTƒEƒ“ƒh
-	PLAY_PARAMETERS *playParameters;
-	void uninitializeSound();
-	void footsteps(D3DXVECTOR3 playerPos, int playerID);
-
 	// Getter
 	LinkedList<enemyNS::EnemyData>* getEnemyDataList();
 	std::vector<Enemy*>& getEnemyList();

@@ -14,6 +14,11 @@
 #include "SoundBase.h"
 
 //===================================================================================================================================
+//ÅyÉ}ÉNÉçíËã`Åz
+//===================================================================================================================================
+#define S3D_PATH_LIST_TAIL(scene,num)			scene##S3DPathList##num
+
+//===================================================================================================================================
 //ÅyóÒãìå^íËêîÅz
 //===================================================================================================================================
 enum SPLASH_S3D_LIST
@@ -26,12 +31,25 @@ enum TITLE_S3D_LIST
 	TITLE_S3D_MAX
 };
 
+enum CREDIT_S3D_LIST
+{
+	CREDIT_S3D_MAX
+};
+
 enum GAME_S3D_LIST
 {
-	GAME_S3D_FOOTSTEP_01,
-	GAME_S3D_FOOTSTEP_02,
-	GAME_S3D_FOOTSTEP_03,
+	S3D_GAME_FOOTSTEP_01,
+	S3D_GAME_FOOTSTEP_02,
+	S3D_GAME_FOOTSTEP_03,
 	GAME_S3D_MAX
+};
+
+enum TUTORIAL_S3D_LIST
+{
+	S3D_TUTORIAL_FOOTSTEP_01,
+	S3D_TUTORIAL_FOOTSTEP_02,
+	S3D_TUTORIAL_FOOTSTEP_03,
+	TUTORIAL_S3D_MAX
 };
 
 enum CREATE_S3D_LIST
@@ -39,10 +57,16 @@ enum CREATE_S3D_LIST
 	CREATE_S3D_MAX
 };
 
+enum RESULT_S3D_LIST
+{
+	RESULT_S3D_MAX
+};
+
 //===================================================================================================================================
 //ÅyíËêîíËã`Åz
 //===================================================================================================================================
 static const char *gameS3DPathList[] = { "3D_ADD_TREE01.wav","3D_Enemy_Walk00.wav","3D_Enemy_Walk01.wav" };
+static const char *tutorialS3DPathList[] = { "3D_ADD_TREE01.wav","3D_Enemy_Walk00.wav","3D_Enemy_Walk01.wav" };
 
 //===================================================================================================================================
 //ÅyÉTÉEÉìÉh(XAudio2)Åz

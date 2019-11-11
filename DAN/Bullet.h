@@ -9,14 +9,18 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "Base.h"
-#include "Ray.h"
+#include "Object.h"
 #include "LinkedList.h"
+#include "Ray.h"
+
+namespace bulletNS{
+	const float BULLET_SPEED = 1.0f;
+}
 
 //===================================================================================================================================
 //【バレットクラス】
 //===================================================================================================================================
-class Bullet :	public Base
+class Bullet :	public Object
 {
 private:
 	D3DXVECTOR3		launchPosition;			//発射位置
@@ -40,10 +44,12 @@ public:
 class BulletManager :public Base
 {
 private:
-	LinkedList<Bullet*>		bulletList;
+	LinkedList<Bullet*>*	bulletList;
 	float					intervalTime;
 
 public:
-	void launch();
-
+	BulletManager();
+	~BulletManager();
+	void launch(Ray shootingRay);
+	void update(float frameTime);
 };

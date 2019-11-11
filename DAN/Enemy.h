@@ -238,7 +238,7 @@ protected:
 	float friction;						// 摩擦係数
 
 	// サウンド
-	PLAY_PARAMETERS *playParameters;
+	PLAY_PARAMETERS playParameters;
 	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 
 	// 純粋仮想関数
