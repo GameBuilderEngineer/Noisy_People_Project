@@ -94,7 +94,8 @@ void SoundBase::playSound(PLAY_PARAMETERS *playParameters)
 		//	(tmpSoundParameters->playParameters.soundId == playParameters->soundId) &&	//IDが一致する
 		//	(tmpSoundParameters->playParameters.loop == playParameters->loop)&&			//ループ情報も一致する
 		//	(tmpSoundParameters->playParameters.playerID == playParameters->playerID))	//プレイヤーID
-		if (tmpSoundParameters->playParameters.voiceID == playParameters->voiceID)
+		if ((!tmpSoundParameters->isPlaying)&&
+			(tmpSoundParameters->playParameters.voiceID == playParameters->voiceID))
 		{
 			tmpSoundParameters->SourceVoice->Start();
 			if (tmpSoundParameters->playParameters.filterFlag)
