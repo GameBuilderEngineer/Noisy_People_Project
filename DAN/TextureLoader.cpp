@@ -71,6 +71,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_BUTTON_BOX] = { "CommandBox.png" };
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
 	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };
+	textureName[UI_HP_GUAGE_P1] = { "HPGuage1.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

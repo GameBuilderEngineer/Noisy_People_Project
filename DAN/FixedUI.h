@@ -11,6 +11,7 @@
 #include "UIButton.h"
 #include "ButtonFrame.h"
 #include "StatusFrame.h"
+#include "Guage.h"
 
 //=================================
 // 名前空間
@@ -35,7 +36,8 @@ private:
 	ButtonFrame *buttonFrameP2;//ボタンのボックス
 	StatusFrame *statusFrameP1;//HPとかのフレーム
 	StatusFrame *statusFrameP2;//HPとかのフレーム
-	//bool	     buttonFlag;    //ボタンon off用フラグ
+	Guage		*guage;		   //ゲージ
+	//bool	    buttonFlag;    //ボタンon off用フラグ
 	//int		 buttonType;	//ボタンタイプ管理用
 public://メンバー関数
 	FixedUI();
