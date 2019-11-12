@@ -21,6 +21,7 @@ namespace SpriteNS
 	{
 		CENTER,						// 中心
 		TOP_LEFT,					// 左上頂点
+		TOP_CENTER,					// テロップ表示用頂点
 		TOP_RIGHT,					// 右上頂点（未対応）
 		BOTTOM_LEFT,				// 左下頂点（未対応）
 		BOTTOM_RIGHT,				// 右下頂点（未対応）
@@ -47,7 +48,7 @@ private:
 	//------
 	// Data
 	//------
-	SpriteNS::Vertex2D	vertexWk[SpriteNS::NUM_VERTEX];// 頂点情報格納ワーク
+	SpriteNS::Vertex2D	vertexWk[SpriteNS::NUM_VERTEX]; // 頂点情報格納ワーク
 	LPDIRECT3DTEXTURE9	texture;						// テクスチャへのポインタ
 	int					pivot;							// 原点（回転軸）
 	int					width;							// 横幅

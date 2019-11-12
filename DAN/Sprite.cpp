@@ -190,6 +190,8 @@ void Sprite::setVertex()
 		vertexWk[3].vtx.x = position.x + cosf(rotation.z) * width - sin(rotation.z) * height;
 		vertexWk[3].vtx.y = position.y + sinf(rotation.z) * width + cos(rotation.z) * height;
 		break;
+	case TOP_CENTER:
+		break;
 	}
 	vertexWk[0].vtx.z = 0.0f;
 	vertexWk[1].vtx.z = 0.0f;

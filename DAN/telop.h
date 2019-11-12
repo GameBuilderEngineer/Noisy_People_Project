@@ -22,6 +22,7 @@ namespace telopNS
 		OPEN,			//ÉeÉçÉbÉvÇÃèÛë‘
 		DISPLAY,
 		CLOSE,
+		END,
 		STATE_NUM,
 	};
 
@@ -30,7 +31,7 @@ namespace telopNS
 	const int MAX_HEIGHT = 120;
 	const int WIDTH_BAR = 1920;
 	const int HEIGHT_BAR = 62;
-	const D3DXVECTOR3 POSITION = D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 2, 0.0f);
+	const D3DXVECTOR3 POSITION = D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 4, 0.0f);
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);
 	const float OPEN_TIME = 0.5f;
@@ -53,6 +54,7 @@ private:
 	float displayTimer;
 	int heightValue = 0;
 	bool telopFlag;
+	bool barFlag;
 	int state;
 	float rate;
 	float closeTimer;;
@@ -66,8 +68,11 @@ public:
 	void update(float _frameTimer);
 	void render();
 	void open();
+	void openBar();
 	void display();
 	void close();
+	void closeBar();
 	void playTelop();
+	void playTelopBar();
 	void setManagerFlag(bool* managerFlag);
 };
