@@ -84,7 +84,7 @@ void Game::initialize() {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//ƒJƒƒ‰‚ÌÝ’è
-		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -225,7 +225,7 @@ void Game::initialize() {
 	treeData.size = treeNS::STANDARD;
 	treeData.geenState = treeNS::DEAD;
 	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
