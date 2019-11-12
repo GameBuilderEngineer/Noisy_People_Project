@@ -69,7 +69,7 @@ namespace tmpObjNS {
 	const BYTE BUTTON_REVIVAL = virtualControllerNS::A;
 	const BYTE BUTTON_PILE = virtualControllerNS::L1;
 
-	const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(-35, 10, 0);
+	const D3DXVECTOR3 START_POSITION = D3DXVECTOR3(-115, 40, 0);
 
 	// Physics
 	const float MOVE_ACC = 27.0f*1.5f;								// 移動加速度
@@ -98,24 +98,24 @@ private:
 	//操作
 	float						reverseValueXAxis;				//操作X軸
 	float						reverseValueYAxis;				//操作Y軸
-	bool						isExecutingMoveOperation;		// 移動操作中フラグ
-	bool						onJump;							// ジャンプフラグ
-	bool						jumping;						// ジャンプ中フラグ
+	bool							isExecutingMoveOperation;		// 移動操作中フラグ
+	bool							onJump;							// ジャンプフラグ
+	bool							jumping;							// ジャンプ中フラグ
 
 	// 衝突
-	BoundingSphere				bodyCollide;					// 球コリジョン
+	BoundingSphere				bodyCollide;						// 球コリジョン
 	float						difference;						//フィールド補正差分
 
 	// 汎用
 	LPDIRECT3DDEVICE9			device;						// Direct3Dデバイス
 	Input*						input;						// 入力系
 	Camera*						camera;						// 操作するカメラへのポインタ
-	D3DXVECTOR3					centralPosition;			// 中心座標
+	D3DXVECTOR3					centralPosition;				// 中心座標
 	D3DXMATRIX					centralMatrixWorld;			// 中心座標ワールドマトリクス
 
 	// その他
 	int							staticMeshNo;				// メッシュのID
-	int							ItemListboxMesh;			// メッシュの種類(リストボックス)
+	int							ItemListboxMesh;				// メッシュの種類(リストボックス)
 
 public:
 	TmpObject();
@@ -129,11 +129,11 @@ public:
 	// 物理
 	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition,
 		LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
-	void updatePhysics(float frameTime);						// 物理の更新
+	void updatePhysics(float frameTime);							// 物理の更新
 
 	//操作
 	void moveOperation();										// 移動操作
-	void controlCamera(float frameTime);						// カメラ操作
+	void controlCamera(float frameTime);							// カメラ操作
 
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
