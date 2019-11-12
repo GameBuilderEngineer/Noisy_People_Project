@@ -17,7 +17,7 @@ void Telop::initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
 
 	input = getInput();
 	telopFlag = false;
-	state = CLOSE;
+	state = END;
 	telopTimer = 0.0f;
 	displayTimer = 0.0f;
 	
@@ -54,7 +54,15 @@ void Telop::update(float _frameTime)
 		telopTimer += _frameTime;		//シーンタイムの更新
 
 		//高さの更新
-		Telop::open();
+		if (telopFlag)
+		{
+			Telop::open();
+		}
+
+		if (barFlag)
+		{
+			Telop::openBar();
+		}
 
 		break;
 	case DISPLAY:	
@@ -67,22 +75,51 @@ void Telop::update(float _frameTime)
 	case CLOSE:		
 
 		//クローズ
-		Telop::close();
+		if (telopFlag)
+		{
+			Telop::close();
+			//telopFlag = false;
+		}
+		if (barFlag)
+		{
+			Telop::closeBar();
+			//barFlag = false;
+		}
 		
+		////オープンへ遷移
+		//if (telopFlag)
+		//{
+		//	telopFlag = false;
+		//	state = OPEN;
+		//	telopTimer = 0.0f;
+		//}		
+		break;
+	case END:
 		//オープンへ遷移
 		if (telopFlag)
 		{
-			telopFlag = false;
+			//telopFlag = false;
 			state = OPEN;
 			telopTimer = 0.0f;
 		}
-		
-		break;
+		if (barFlag)
+		{
+			//telopFlag = false;
+			state = OPEN;
+			telopTimer = 0.0f;
+		}
 	}
 
 
 	//サイズの更新
-	sprite->setSize(WIDTH, heightValue);
+	if (telopFlag)
+	{
+		sprite->setSize(WIDTH, heightValue);
+	}
+	if (barFlag)
+	{
+		sprite->setSize(WIDTH_BAR, heightValue);
+	}
 	sprite->setVertex();
 }
 
@@ -107,6 +144,19 @@ void Telop::open()
 	//高さの更新
 	rate = telopTimer / telopNS::OPEN_TIME;
 	heightValue = (int)((float)telopNS::MAX_HEIGHT * rate);
+	if (telopTimer > telopNS::OPEN_TIME)
+	{
+		state = telopNS::DISPLAY;
+		displayTimer = telopNS::DISPLAY_TIME;
+		telopTimer = telopNS::CLOSE_TIME;
+	}
+}
+
+void Telop::openBar()
+{
+	//高さの更新
+	rate = telopTimer / telopNS::OPEN_TIME;
+	heightValue = (int)((float)telopNS::HEIGHT_BAR * rate);
 	if (telopTimer > telopNS::OPEN_TIME)
 	{
 		state = telopNS::DISPLAY;
@@ -141,11 +191,30 @@ void Telop::close()
 		heightValue = (int)((float)MAX_HEIGHT * rate);
 		if (closeTimer >= CLOSE_TIME)
 		{
+			state = END;
+			telopFlag = false;
 			*playFlag = false;
 		}
 	}
 }
 
+void Telop::closeBar()
+{
+	if (telopTimer > 0)
+	{
+		telopTimer -= frameTime;
+		closeTimer += frameTime;
+		//高さの更新
+		rate = telopTimer / CLOSE_TIME;
+		heightValue = (int)((float)HEIGHT_BAR * rate);
+		if (closeTimer >= CLOSE_TIME)
+		{
+			state = END;
+			barFlag = false;
+			*playFlag = false;
+		}
+	}
+}
 
 //=============================================================================
 // テロップ再生処理
@@ -153,6 +222,11 @@ void Telop::close()
 void Telop::playTelop()
 {
 	telopFlag = true;
+}
+
+void Telop::playTelopBar()
+{
+	barFlag = true;
 }
 
 void Telop::setManagerFlag(bool* managerFlag)

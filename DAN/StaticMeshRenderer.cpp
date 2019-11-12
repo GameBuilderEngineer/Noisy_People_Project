@@ -2,7 +2,7 @@
 //【StaticMeshRenderer.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/23
+// [更新日]2019/11/11
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -78,17 +78,12 @@ void StaticMeshRenderer::update()
 {
 	for (int i = 0; i < objectNum; i++)
 	{
-		//(*objectList->getValue(i))->update();			//更新処理
 		unRegisterObject(i);							//解除処理
 	}
 
 	if (didRegister|| didUnRegister)
 	{
 		objectList->listUpdate();
-		for (int i = 0; i < objectList->nodeNum; i++)
-		{
-			//(*objectList->getValue(i))->update();			//更新処理
-		}
 		updateBuffer();
 		updateArray();
 		didRegister = false;
@@ -102,7 +97,7 @@ void StaticMeshRenderer::update()
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	//描画が有効でない場合終了
 	if (onRender == false)return;
@@ -139,17 +134,16 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 
 	//ストリームにメッシュの頂点バッファをバインド
 	device->SetStreamSource(0, staticMesh->vertexBuffer,	0, staticMesh->numBytesPerVertex);
-	device->SetStreamSource(1, matrixBuffer,						0, sizeof(D3DXMATRIX));
+	device->SetStreamSource(1, matrixBuffer,				0, sizeof(D3DXMATRIX));
 
 	//インデックスバッファをセット
 	device->SetIndices(staticMesh->indexBuffer);
 
-	effect->SetTechnique("mainTechnique");
 
 	//シェーダへ値をセット
+	effect->SetTechnique("mainTechnique");
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);	
-	//effect->SetValue("positionList", position,objectNum*sizeof(D3DXVECTOR3));
 
 	// レンダリング
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)

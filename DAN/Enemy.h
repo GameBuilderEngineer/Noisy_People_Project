@@ -95,21 +95,54 @@ namespace enemyNS
 	};
 	const float SHOT_SOUND_SCALE = 4.5f;// ショット音距離倍率
 
+	// エネミーの攻撃力テーブル
+	const int ATTACK_DAMAGE[TYPE_MAX] =
+	{
+		5,			// WOLF
+		10,			// TIGER
+		15,			// BEAR
+	};
+
+	// エネミーの攻撃移動速度テーブル
+	const float ATTACK_SPEED[TYPE_MAX] =
+	{
+		10.0f,		// WOLF
+		10.0f,		// TIGER
+		15.0f,		// BEAR
+	};
+
+	// エネミーの攻撃移動時間テーブル
+	const float ATTACK_TIME[TYPE_MAX] =
+	{
+		0.15f,		// WOLF
+		0.15f,		// TIGER
+		0.15f,		// BEAR
+	};
+
+	// エネミーのプレイヤー記憶時間テーブル
+	const float PLAYER_MEMORIZED_TIME[TYPE_MAX] =
+	{
+		8.0f,		// WOLF
+		8.0f,		// TIGER
+		8.0f,		// BEAR
+	};
+
 	// エネミーの移動加速度テーブル
 	const float MOVE_ACC[TYPE_MAX] =
 	{
-		27.0f,		// WOLF
-		27.0f,		// TIGER
-		27.0f,		// BEAR
+		20.0f,		// WOLF
+		20.0f,		// TIGER
+		20.0f,		// BEAR
 	};
 
 	// Physics
 	const float AIR_MOVE_ACC_MAGNIFICATION = 0.12f;				// 空中移動加速度倍率
 	const float STOP_SPEED = 0.5f;								// 移動停止速度
 	const float FALL_SPEED_MAX = 60.0f;							// 落下最高速度
-	const float MOVE_FRICTION = 0.93f;							// 地面摩擦係数
-	const float WALL_FRICTION = 0.98;							// 壁ずり摩擦係数
-	const float GROUND_FRICTION = 0.25;							// 着地摩擦係数
+	const float MOVE_FRICTION = 0.90f;							// 地面摩擦係数
+	const float WALL_FRICTION = 0.98f;							// 壁ずり摩擦係数
+	const float GROUND_FRICTION = 0.25f;						// 着地摩擦係数
+	const float ATTACKED_FRICTION = 0.2f;						// 攻撃後摩擦係数
 	const float GRAVITY_FORCE = 9.8f * 2;						// 重力
 	const float JUMP_SPEED = 6.0f;								// ジャンプ初速
 	const float JUMP_CONTROL_SPEED = 1.0f;						// ジャンプ高さコントール速度
@@ -205,10 +238,18 @@ protected:
 	// センサー
 	float sensorTime;					// センサー更新時間カウンタ
 	bool canUseSensor;					// センサー実行フラグ
-	bool isNoticedPlayer1;				// プレイヤー1に気付いた
-	bool isNoticedPlayer2;				// プレイヤー2に気づいた
+	
+	// 環境認識
+	bool isNoticedPlayer[gameMasterNS::PLAYER_NUM];
 
 	// 記憶
+	float noticedTimePlayer[gameMasterNS::PLAYER_NUM];
+
+	// 攻撃
+	bool onAttack;
+	float attackTime;
+	int attackTargetPlayer;
+	D3DXVECTOR3 vecAttack;
 
 	// ナビゲーションメッシュ
 	NavigationMesh* naviMesh;			// ナビメッシュ
@@ -227,10 +268,14 @@ protected:
 	D3DXMATRIX	centralMatrixWorld;		// 中心座標ワールドマトリクス
 
 	// コリジョン
+	Ray	ray;							// レイ
 	BoundingSphere sphereCollider;		// バウンディングスフィア
 	float difference;					// フィールド補正差分
 	bool onGround;						// 接地判定
 	bool onGroundBefore;				// 直前フレームの接地判定
+	D3DXVECTOR3	groundNormal;			// 接地面法線
+	bool isHitPlayer;					// プレイヤーと接触している
+
 
 	// 物理挙動
 	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
@@ -258,14 +303,22 @@ public:
 	bool eyeSensor(int playerType);
 	// 聴覚センサー
 	bool earSensor(int playerType);
+	// 攻撃
+	void attack(int playerType, float frameTime);
+	// 記憶の更新
+	void updateMemory(float frameTime);
 	// ステアリング
 	void steering();
 	// 接地処理
 	void grounding();
+	// 壁ずり
+	void wallScratch();
 	// 物理挙動
 	void physicalBehavior();
 	// 物理の更新
 	void updatePhysics(float frameTime);
+	// めり込み補正
+	void insetCorrection();
 	// 中心座標系の更新
 	void updateCentralCood();
 	// 重力発生メッシュ（接地メッシュ）の設定
@@ -285,6 +338,7 @@ public:
 	// Setter
 	void setMove(bool setting);
 	void setMovingTarget(D3DXVECTOR3* _target);
+	void setIsHitPlayer(bool setting);
 
 #ifdef _DEBUG
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
@@ -294,12 +348,6 @@ public:
 	float reverseValueXAxis;			// 操作X軸
 	float reverseValueYAxis;			// 操作Y軸
 	static int debugEnemyID;			// デバッグするエネミーのID
-
-
-	//float distanceBetweenPlayerAndEnemy;// プレイヤーとの距離
-	//float horizontalAngle;			// 正面方向とプレイヤーの水平角度
-	//float verticalAngle;				// 正面方向とプレイヤーの垂直角度
-
 
 	// デバッグ環境を設定
 	void setDebugEnvironment();

@@ -46,6 +46,8 @@ namespace playerNS{
 		BYTE reset;
 		BYTE dash;
 		BYTE jump;
+		BYTE vision;
+		BYTE skyVision;
 		BYTE reverseCameraX;
 		BYTE reverseCameraY;
 	};
@@ -58,8 +60,10 @@ namespace playerNS{
 			'D',					//RIGHT
 			'A',					//LEFT
 			'R',					//RESET
-			VK_LSHIFT,				//DASH
-			VK_SPACE,				//JUMP
+			VK_ESCAPE,				//DASH:廃止
+			VK_ESCAPE,				//JUMP:右クリック
+			VK_LSHIFT,				//VISION
+			VK_SPACE,				//SKY_VISION
 			VK_F7,					//ReverseCameraAxisX
 			VK_F8,					//ReverseCameraAxisY
 		},
@@ -70,8 +74,10 @@ namespace playerNS{
 			VK_RIGHT,				//RIGHT
 			VK_LEFT,				//LEFT
 			'R',					//RESET
-			VK_BACK,				//DASH
-			VK_TAB,					//JUMP
+			VK_ESCAPE,				//DASH
+			VK_ESCAPE,				//JUMP
+			VK_RSHIFT,				//VISION
+			VK_BACK,				//SKY_VISION
 			VK_F9,					//ReverseCameraAxisX
 			VK_F10,					//ReverseCameraAxisY
 		}
@@ -107,7 +113,7 @@ namespace playerNS{
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		D3DXVECTOR3(-115, 40, 0),		//1P
-		D3DXVECTOR3(-115, 30, 30)			//2P
+		D3DXVECTOR3(-115, 30, 30)		//2P
 	};
 
 	// StatusParameter
@@ -130,7 +136,7 @@ namespace playerNS{
 	const float MOVE_FRICTION				= 0.93f;								// 地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									// 壁ずり摩擦係数
 	const float GROUND_FRICTION				= 0.25;									// 着地摩擦係数
-	const float GRAVITY_FORCE				= 9.8f;								// 重力
+	const float GRAVITY_FORCE				= 9.8f;									// 重力
 	const float JUMP_SPEED					= 6.0f;									// ジャンプ初速
 	const float JUMP_CONTROL_SPEED			= 1.0f;									// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION			= 2.0f;									// ダッシュ倍率
@@ -141,12 +147,32 @@ namespace playerNS{
 	//Shooting
 	const float MAX_DISTANCE				= 100.0f;								//最大照準距離
 
+	//DigitalShift
+	const float SHIFT_TIME				= 2.0f;									//デジタルシフト時間
 
 }
 
 
+
 //===================================================================================================================================
-//【クラス定義】
+//【仮想ステートクラス】
+//===================================================================================================================================
+class State:public Base
+{
+public:
+	float	frameTime;
+	int		type;
+public:
+	virtual void start()					= 0;
+	virtual void update(float frameTime)	= 0;
+	virtual void operation()				= 0;
+	virtual void physics()					= 0;
+	virtual void end()						= 0;
+	virtual State* transition()				= 0;
+};
+
+//===================================================================================================================================
+//【プレイヤークラス】
 //===================================================================================================================================
 class Player : public Object
 {
@@ -156,11 +182,12 @@ private:
 
 	//ステータス
 	playerNS::OperationKeyTable	keyTable;						//操作Keyテーブル
-	int							state;							//状態変数
+	State*						state;							//状態クラス
 	int							hp;								// HP
 	int							power;							// 電力
 
 	//タイマー
+	float						frameTime;						//フレームタイム
 	float						invincibleTimer;				//無敵時間
 
 	//操作
@@ -182,6 +209,7 @@ private:
 	float						difference;						//フィールド補正差分
 	bool						onGround;						//接地判定
 	bool						onGroundBefore;					// 直前フレームの接地判定
+	D3DXVECTOR3					groundNormal;					// 接地面法線
 
 	// 物理
 	float						friction;						// 摩擦係数
@@ -203,10 +231,15 @@ private:
 	Ray							shootingRay;					//狙撃レイ（プレイヤーからのレイ）
 	D3DXVECTOR3					launchPosition;					//発射位置
 	D3DXVECTOR3					aimingPosition;					//照準位置(カメラレイ準拠）
+	D3DXVECTOR3					shootingPosition;				//衝突位置(プレイヤーレイ準拠）
 	float						collideDistance;				//照射距離
 	BulletManager*				bulletManager;					//バレットマネージャー
 
-
+	//デジタルアクション
+	bool						isShifting;						//デジタルシフト中フラグ
+	float						shiftTimer;						//デジタルシフトタイマー
+	Line						shiftLine;						//デジタルシフトライン
+	Ray							shiftRay;						//デジタルシフトレイ
 
 public:
 	Player();
@@ -237,7 +270,8 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 	void jump();												//ジャンプ
 	float dash();
-	void shot();												//狙いを定める
+	void shot();												//弾を打つ
+	void digitalShift();										//デジタルシフト
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI
@@ -248,11 +282,12 @@ public:
 	void addpower(int add);										//電力加算
 	void pullpower(int pull);									//電力減算
 	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
+	void damage(int _damage);									//ダメージ処理
 
 	//getter
-	int getState();
 	int getHp();												// HPの取得
 	int getPower();												// 電力の取得
+	int getState();
 	bool canShot();
 	bool canJump();
 	bool canDoVision();
@@ -262,10 +297,31 @@ public:
 	PlayerTable*	getInfomation();							//プレイヤー情報取得
 	D3DXVECTOR3*	getCameraGaze();							//カメラ注視ポジション
 	D3DXVECTOR3*	getAiming();								//照準ポイントの取得
+	Bullet*			getBullet(int i);							//発射中の弾へのポインタ
+	int				getShootingNum();							//発射中の弾数
 
 	D3DXVECTOR3* getCentralPosition();							//中心座標の取得
 	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
 	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
-	
+	bool getOnGround();											//接地しているか取得
+	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
+	D3DXMATRIX* getcentralMatrixWorld();
 
 };
+
+
+//通常状態
+class NormalState:public State
+{
+private:
+	Player* player;
+public:
+	NormalState(Player* player);
+	virtual void update(float frameTime);
+	virtual void start();
+	virtual void operation();
+	virtual void physics();
+	virtual State* transition();
+	virtual void end();
+};
+

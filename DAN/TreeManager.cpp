@@ -3,6 +3,8 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
+// 更新日 : 2019/11/12 【菅野 樹】
+//-----------------------------------------------------------------------------
 #include "TreeManager.h"
 #include "ImguiManager.h"
 using namespace treeNS;
@@ -26,8 +28,6 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_LEAF));
 	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
-
-
 
 #if 0	// ツリーツールのデータを読み込む
 
@@ -96,8 +96,6 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 void TreeManager::createTree(TreeData treeData)
 {
 	Tree* tree = new Tree(treeData);	// ツリー作成
-
-	tree->setAttractor(attractorMesh, attractorMatrix);
 
 	// 幹の描画をセット
 	switch (treeData.model)

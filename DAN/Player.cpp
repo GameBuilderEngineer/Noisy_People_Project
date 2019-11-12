@@ -24,9 +24,9 @@ Player::Player()
 {
 	Object::initialize(&D3DXVECTOR3(0,10.0f,0));
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
-
+	type				= ObjectType::PLAYER; 
 	onGravity			= true;
-	state				= NORMAL;
+	//state				= NORMAL;
 	invincibleTimer		= 0.0f;					//無敵時間
 	onGround			= false;				//接地判定
 	reverseValueXAxis	= CAMERA_SPEED;			//操作Ｘ軸
@@ -39,6 +39,7 @@ Player::Player()
 	isVisionAble		= true;
 	isSkyVisionAble		= true;
 	isShiftAble			= true;
+
 }
 
 //===================================================================================================================================
@@ -46,7 +47,8 @@ Player::Player()
 //===================================================================================================================================
 Player::~Player()
 {
-
+	SAFE_DELETE(bulletManager);
+	SAFE_DELETE(state);
 }
 
 //===================================================================================================================================
@@ -67,6 +69,21 @@ void Player::initialize(PlayerTable info)
 	centralPosition		= position + bodyCollide.getCenter();	// 中心座標を設定
 	D3DXMatrixIdentity(&centralMatrixWorld);					// 中心座標ワールドマトリクスを初期化
 	power				= MAX_POWER;							//キャラクター電力確認用
+
+	//通常状態
+	state = new NormalState(this);
+
+	//シューティングアクション
+	bulletManager		= new BulletManager;
+
+	//デジタルアクション
+	//デジタルシフト
+	shiftLine.start = position;
+	shiftLine.end	= position+axisZ.direction;
+	shiftTimer		= 0.0f;
+	isShifting		= false;
+
+
 }
 
 //===================================================================================================================================
@@ -79,27 +96,44 @@ void Player::update(float frameTime)
 	isExecutingMoveOperation = false;
 	onJump = false;
 	acceleration *= 0.0f;
+	state->update(frameTime);
 
-	switch (state)
-	{
-	case NORMAL:
-		break;
-
-	case VISION:
-		break;
-
-	case SKY_VISION:
-		break;
-
-	case SHIFT:
-		break;
+	//デジタルシフト更新
+	if (shiftTimer > 0) {
+		shiftTimer -= frameTime;
+		float rate = 1.0f -(shiftTimer/SHIFT_TIME);
+		D3DXVec3Lerp(&position, &shiftLine.start, &shiftLine.end,rate);
+	}
+	else if(isShifting){
+		isShifting = false;
 	}
 
 
-	// 操作
-	moveOperation();			// 移動操作
-	jumpOperation();			// ジャンプ操作
-	
+	//switch (state)
+	//{
+	//case NORMAL:
+	//	break;
+	//
+	//case VISION:
+	//	break;
+	//
+	//case SKY_VISION:
+	//	break;
+	//
+	//case SHIFT:
+	//	break;
+	//}
+
+	//バレットマネージャーの更新
+	bulletManager->update(frameTime);
+
+	// 操作(状態別)
+	state->operation();
+
+	//shot();						//弾の発射
+	//digitalShift();				//デジタルシフト
+	//moveOperation();			// 移動操作
+	//jumpOperation();			// ジャンプ操作
 
 #ifdef _DEBUG
 	if (input->isKeyDown('H'))
@@ -115,12 +149,14 @@ void Player::update(float frameTime)
 	}
 #endif // DEBUG
 
-	// 以下の順番入れ替え禁止（衝突より後に物理がくる）
-	grounding();				// 接地処理
-	physicalBehavior();			// 物理挙動
-	updatePhysics(frameTime);	// 物理の更新
+	state->physics();
 
-	controlCamera(frameTime);	// カメラ操作
+	// 以下の順番入れ替え禁止（衝突より後に物理がくる）
+	//grounding();				// 接地処理
+	//physicalBehavior();			// 物理挙動
+	//updatePhysics(frameTime);	// 物理の更新
+
+	//controlCamera(frameTime);	// カメラ操作
 
 
 	//照準レイの更新
@@ -162,7 +198,7 @@ void Player::update(float frameTime)
 	//狙撃レイの更新
 	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
 	shootingRay.update(launchPosition, shootingRay.direction);
-
+	shootingRay.rayIntersect(attractorMesh, *attractorMatrix);
 }
 
 //===================================================================================================================================
@@ -174,6 +210,7 @@ void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 	aimingRay.render(collideDistance);
 	shootingRay.render(MAX_DISTANCE);
 	bodyCollide.render(centralMatrixWorld);
+	bulletManager->render(view,projection,cameraPosition);
 	Object::debugRender();
 #endif // _DEBUG
 }
@@ -191,7 +228,7 @@ void Player::grounding()
 	gravityRay.update(centralPosition, gravityDirection);
 	
 	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
-
+	groundNormal = gravityRay.normal;
 
 	if (hit == false)
 	{// プレイヤーは地面の無い空中にいる
@@ -365,7 +402,6 @@ void Player::updatePhysics(float frameTime)
 		position += speed * frameTime;		// 速度の影響を位置に与える
 	}
 	insetCorrection();//移動後のめり込み補正
-
 }
 
 
@@ -408,11 +444,11 @@ void Player::moveOperation()
 //===================================================================================================================================
 void Player::jumpOperation()
 {
-	if (input->wasKeyPressed(keyTable.jump) || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP))
+	if (input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP))
 	{
 		if (jumping == false) onJump = true;	// ジャンプ踏切フラグをオンにする
 	}
-	if (input->isKeyDown(keyTable.jump) || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))
+	if (input->getMouseRButton() || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))
 	{
 		jump();
 	}
@@ -517,8 +553,35 @@ void Player::jump()
 //===================================================================================================================================
 void Player::shot()
 {
+	if (!input->getMouseLButton() && 
+		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return;
+		bulletManager->launch(shootingRay);
+}
+
+//===================================================================================================================================
+//【デジタルシフト】
+//===================================================================================================================================
+void Player::digitalShift()
+{
+	if (!input->wasKeyPressed(keyTable.skyVision) &&
+		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return;
+	if (isShifting)return;//シフト中：デジタルシフトしない
+
+	//シフトレイをカメラからのレイとして更新
+	shiftRay.update(camera->position, camera->getDirectionZ());
+
+	//シフトレイが衝突していたら場合
+	if (shiftRay.rayIntersect(attractorMesh, *attractorMatrix))
+	{
+		//デジタルシフト開始
+		shiftLine.start = position;
+		shiftLine.end = shiftRay.start + shiftRay.direction*shiftRay.distance;
+		isShifting = true;
+		shiftTimer = SHIFT_TIME;
+	}
 
 }
+
 #pragma endregion
 
 // [デバッグ]
@@ -539,6 +602,9 @@ void Player::outputGUI()
 		float limitBottom = -1000;
 		ImGui::Text("speedVectorLength %f", D3DXVec3Length(&speed));
 		ImGui::Text("power %d", power);													//電力
+		ImGui::Text("BulletRmaining [%d/%d]",
+			bulletManager->getRemaining(),bulletNS::MAGAZINE_NUM);						//残弾数
+		ImGui::Text("ReloadTime:%.02f", bulletManager->getReloadTime());				//リロード時間
 
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
@@ -579,8 +645,8 @@ void Player::reset()
 void Player::setCamera(Camera* _camera) { 
 	camera = _camera; 
 	aimingRay.initialize(camera->position, camera->getDirectionZ());
-	aimingRay.color = D3DXCOLOR(253, 90, 0, 255);
-	shootingRay.color = D3DXCOLOR(255, 20, 20, 255);
+	aimingRay.color = D3DCOLOR_ARGB(255,253,193,0);
+	shootingRay.color = D3DCOLOR_ARGB(255,190, 20, 20);
 }
 void Player::setInfomation(PlayerTable info) { infomation = info; };
 
@@ -592,12 +658,20 @@ void Player::pullpower(int pull)
 {
 	power = UtilityFunction::clamp( power - pull, MIN_POWER, MAX_POWER);		//電力消費
 }
+
+void Player::damage(int _damage)
+{
+	hp -= _damage;
+	if (hp < 0) hp = 0;
+}
+
+
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
-int Player::getState() { return state; }
 int Player::getHp() { return hp; }
 int Player::getPower() { return power; }
+int Player::getState() { return state->type; }
 bool Player::canShot() { return isShotAble; }
 bool Player::canJump() { return isJumpAble; }
 bool Player::canDoVision(){ return isVisionAble; }
@@ -607,5 +681,61 @@ BoundingSphere* Player::getBodyCollide() { return &bodyCollide; }
 PlayerTable* Player::getInfomation() { return &infomation; }
 D3DXVECTOR3* Player::getCameraGaze() { return &cameraGaze; }
 D3DXVECTOR3* Player::getAiming() { return &aimingPosition; }
+Bullet* Player::getBullet(int i) { return bulletManager->getBullet(i); }
+int Player::getShootingNum() { return bulletManager->getNum(); }
 D3DXVECTOR3* Player::getCentralPosition() { return &centralPosition; }
 bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
+bool Player::getOnGround() { return onGround; }
+D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
+D3DXMATRIX* Player::getcentralMatrixWorld() { return &centralMatrixWorld; }
+
+
+
+
+//(仮)通常状態
+
+NormalState::NormalState(Player* player):State() 
+{
+	this->player = player;
+	type = NORMAL;
+}
+
+void NormalState::start()
+{
+
+}
+
+void NormalState::update(float frameTime)
+{
+	this->frameTime = frameTime;
+}
+
+
+void NormalState::operation()
+{
+	// 操作
+	player->shot();						//弾の発射
+	player->digitalShift();				//デジタルシフト
+	player->moveOperation();			// 移動操作
+	player->jumpOperation();			// ジャンプ操作
+}
+
+void NormalState::physics()
+{
+	player->grounding();				// 接地処理
+	player->physicalBehavior();			// 物理挙動
+	player->updatePhysics(frameTime);	// 物理の更新
+	player->controlCamera(frameTime);
+}
+
+
+State* NormalState::transition()
+{
+	return new NormalState(player);
+}
+
+void NormalState::end()
+{
+
+}
+

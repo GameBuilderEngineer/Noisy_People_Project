@@ -240,7 +240,7 @@ void TmpObject::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3
 
 	//}
 	//Žp¨§Œä
-	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
+	//postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 #pragma endregion
 
