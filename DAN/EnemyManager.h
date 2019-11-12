@@ -57,6 +57,7 @@ public:
 	void destroyEnemyData(int _enemyID);
 	void destroyAllEnemyData();
 	void destroyEnemy(int _enemyID);
+	void destroyEnemy(Enemy* enemy);
 	void destroyAllEnemy();
 	void assertDestructionOrder();
 	enemyNS::EnemyData* findEnemyData(int enemyID);

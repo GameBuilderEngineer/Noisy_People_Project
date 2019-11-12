@@ -27,8 +27,6 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 
-
-
 #if 0	// ツリーツールのデータを読み込む
 
 #endif
@@ -96,8 +94,6 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 void TreeManager::createTree(TreeData treeData)
 {
 	Tree* tree = new Tree(treeData);	// ツリー作成
-
-	tree->setAttractor(attractorMesh, attractorMatrix);
 
 	// 幹の描画をセット
 	switch (treeData.model)

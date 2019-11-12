@@ -24,6 +24,8 @@
 #include "NavigationMesh.h"
 #include "TreeManager.h"
 #include "ItemManager.h"
+#include "Wind.h"
+#include "MapObjectManager.h"
 #include "Telop.h"
 #include "Sky.h"
 #include "SpriteGauge.h"
@@ -41,6 +43,7 @@
 
 #include "TelopManager.h"
 //#include "Text.h"
+
 
 //===================================================================================================================================
 //【名前空間】
@@ -98,6 +101,8 @@ private:
 	EnemyManager*					enemyManager;		// エネミーマネージャー
 	TreeManager*					treeManager;		// ツリーマネージャー
 	ItemManager*					itemManager;		// アイテムマネージャー
+	WindManager*					windManager;		// 風マネージャー
+	MapObjectManager*				mapObjectManager;	// マップオブジェクトマネージャー
 
 	AIDirector*						aiDirector;			// AI
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ

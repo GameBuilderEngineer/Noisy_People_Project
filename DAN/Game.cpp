@@ -9,6 +9,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Game.h"
+#include "CollisionManager.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -67,7 +68,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -81,7 +82,7 @@ void Game::initialize() {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
-		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH / 2,  WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -90,7 +91,7 @@ void Game::initialize() {
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-		camera[i].setFieldOfView( (D3DX_PI/180) * 80 );
+		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
 		
 		//プレイヤーの設定
 		PlayerTable infomation;
@@ -183,6 +184,14 @@ void Game::initialize() {
 	itemManager = new ItemManager;
 	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
+	// 風
+	windManager = new WindManager;
+	windManager->initialize(*getSceneName(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+
+	//// マップオブジェクト
+	mapObjectManager = new MapObjectManager;
+	mapObjectManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+
 	// テロップ
 	/*telop = new Telop;
 	telop->initialize();*/
@@ -222,7 +231,7 @@ void Game::initialize() {
 	treeData.size = treeNS::STANDARD;
 	treeData.geenState = treeNS::DEAD;
 	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 500; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
@@ -230,6 +239,24 @@ void Game::initialize() {
 		
 		treeManager->createTree(treeData);
 	}
+
+	// エネミーをランダムに設置する
+	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		pos -= D3DXVECTOR3(200, 0, 240);
+		enemyNS::ENEMYSET tmp =
+		{
+			enemyManager->issueNewEnemyID(),
+			enemyNS::WOLF,
+			stateMachineNS::PATROL,
+			pos,
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+		enemyManager->createEnemy(p);
+	}
+	
 #endif
 }
 
@@ -258,6 +285,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
+	SAFE_DELETE(windManager);
+	SAFE_DELETE(mapObjectManager);
 	/*SAFE_DELETE(telop);*/
 	SAFE_DELETE(telopManager);
 	SAFE_DELETE(aiDirector);
@@ -302,6 +331,12 @@ void Game::update(float _frameTime) {
 
 	// アイテムの更新
 	itemManager->update(frameTime);
+
+	// 風の更新
+	windManager->update(frameTime);
+
+	// マップオブジェクトの更新
+	mapObjectManager->update(frameTime);
 
 	UpdateMoveP(0.01f);
 
@@ -487,6 +522,12 @@ void Game::render3D(Camera currentCamera) {
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// 風の描画
+	windManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	// マップオブジェクトの描画
+	mapObjectManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//エフェクト（インスタンシング）テスト
 	//testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -501,21 +542,21 @@ void Game::render3D(Camera currentCamera) {
 	//linear4TreeManager->render();
 	//8分木空間分割のライン描画
 	//linear8TreeManager->render();
-	//Ray ray;
-	//ray.color = D3DXCOLOR(255, 255, 0, 255);
-	//Object** root = collisionList->getRoot();
-	//Object* tmp1 = NULL;
-	//Object* tmp2 = NULL;
-	//D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
-	//float length = 0;
-	//for (int i = 0; i < collisionNum; i++)
-	//{
-	//	tmp1 = root[i * 2];
-	//	tmp2 = root[i * 2 + 1];
-	//	length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
-	//	ray.initialize(tmp1->position, direction);
-	//	ray.render(length);
-	//}
+	Ray ray;
+	ray.color = D3DXCOLOR(255, 255, 0, 255);
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	float length = 0;
+	for (int i = 0; i < collisionNum; i++)
+	{
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+		ray.initialize(tmp1->position, direction);
+		ray.render(length);
+	}
 #endif
 
 #ifdef _DEBUG
@@ -585,17 +626,41 @@ void Game::tree8Reregister(Object* tmp)
 //===================================================================================================================================
 void Game::collisions() 
 {
-	//再登録
-	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);
-	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);
-	for (int i = 0; i < stone->num; i++)
+	//8分木への再登録
+	//プレイヤーの登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_1P]);//1Pの登録
+	tree8Reregister(&player[gameMasterNS::PLAYER_2P]);//2Pの登録
+	//弾の登録
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		tree8Reregister(&stone->object[i]);
+		for(int num = 0;num < player[i].getShootingNum();num++)
+			tree8Reregister(player[i].getBullet(num));
+	}
+	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
+	{
+		tree8Reregister(enemyManager->getEnemyList()[i]);
 	}
 
 	//衝突対応リストを取得
 	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
 	collisionNum /= 2;//2で割るのはペアになっているため
+
+	//衝突判定
+	Object** root = collisionList->getRoot();
+	Object* tmp1 = NULL;
+	Object* tmp2 = NULL;
+	for (int i = 0; i < collisionNum; i++)
+	{
+		tmp1 = root[i * 2];
+		tmp2 = root[i * 2 + 1];
+		CollisionManager::collision(tmp1, tmp2);//衝突処理
+	}
+
+	// 風との当たり判定
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		windManager->windCollision(&player[i]);
+	}
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
@@ -687,6 +752,17 @@ void Game::test()
 	}
 
 	// デバッグエネミーで'7','8'使用中
+	// マップオブジェクトマネージャーのテスト
+	if (input->wasKeyPressed('7'))	// 作成
+	{
+		mapObjectNS::MapObjectData mapObjectData;
+		mapObjectData.zeroClear();
+		mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
+		mapObjectData.type = mapObjectNS::STONE_01;
+		mapObjectData.defaultPosition = *player->getPosition();
+		mapObjectManager->createMapObject(mapObjectData);
+	}
+
 
 	// ツリーマネージャのテスト
 	if (input->wasKeyPressed('5'))	// 作成

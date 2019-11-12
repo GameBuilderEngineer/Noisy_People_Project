@@ -109,14 +109,19 @@ void EnemyManager::uninitialize()
 //=============================================================================
 void EnemyManager::update(float frameTime)
 {
-	for (size_t i = 0; i < enemyList.size(); i++)
+	vector<Enemy*>::iterator itr;
+	for (itr = enemyList.begin(); itr != enemyList.end();)
 	{
-		enemyList[i]->update(frameTime);
+		(*itr)->update(frameTime);
 
-		// 撃退したエネミーオブジェクトを破棄する●これダメ
-		if (enemyList[i]->getEnemyData()->isAlive == false)
-		{
-			destroyEnemy(enemyList[i]->getEnemyData()->enemyID);
+		if ((*itr)->getEnemyData()->isAlive == false)
+		{// 撃退したエネミーオブジェクトを破棄する
+			destroyEnemy((*itr));
+			itr = enemyList.erase(itr);
+		}
+		else
+		{// イテレータを進める
+			itr++;
 		}
 	}
 
@@ -153,7 +158,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 			enemyList[i]->eyeAngleRay[k].render(VISIBLE_DISTANCE[enemyList[i]->getEnemyData()->type]);
 		}
 		float len = D3DXVec3Length(&(*player[0].getCentralPosition() - *enemyList[i]->getCentralPosition()));
-		enemyList[i]->gazePlayer.render(len);
+		//enemyList[i]->gazePlayer.render(len);
 		enemyList[i]->hearingSphere[0].render(*enemyList[i]->getCentralMatrixWorld());
 		enemyList[i]->hearingSphere[1].render(*enemyList[i]->getCentralMatrixWorld());
 #endif
@@ -253,7 +258,7 @@ void EnemyManager::destroyAllEnemyData()
 }
 
 //=============================================================================
-// エネミーオブジェクトを破棄
+// エネミーオブジェクトを破棄その１
 //=============================================================================
 void EnemyManager::destroyEnemy(int _enemyID)
 {
@@ -261,27 +266,37 @@ void EnemyManager::destroyEnemy(int _enemyID)
 	{
 		if (enemyList[i]->getEnemyData()->enemyID == _enemyID)
 		{
-			// 描画の解除
-			switch (enemyList[i]->getEnemyData()->type)
-			{
-			case WOLF:
-				wolfRenderer->unRegisterObjectByID(enemyList[i]->id);
-				break;
-
-			case TIGER:
-				tigerRenderer->unRegisterObjectByID(enemyList[i]->id);
-				break;
-
-			case BEAR:
-				bearRenderer->unRegisterObjectByID(enemyList[i]->id);
-				break;
-			}
-			SAFE_DELETE(enemyList[i]);				// インスタンス破棄
+			destroyEnemy(enemyList[i]);	
 			enemyList.erase(enemyList.begin() + i);	// ベクター要素を消去
 			break;
 		}
 	}
 }
+
+//=============================================================================
+// エネミーオブジェクトを破棄その２（実際の破棄はこちら）
+//=============================================================================
+void EnemyManager::destroyEnemy(Enemy* enemy)
+{
+	// 描画の解除
+	switch (enemy->getEnemyData()->type)
+	{
+	case WOLF:
+		wolfRenderer->unRegisterObjectByID(enemy->id);
+		break;
+
+	case TIGER:
+		tigerRenderer->unRegisterObjectByID(enemy->id);
+		break;
+
+	case BEAR:
+		bearRenderer->unRegisterObjectByID(enemy->id);
+		break;
+	}
+	enemy->treeCell.remove();					// 衝突判定リストから削除
+	SAFE_DELETE(enemy);							// インスタンス破棄
+}
+
 
 
 //=============================================================================
@@ -296,7 +311,8 @@ void EnemyManager::destroyAllEnemy()
 
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
-		SAFE_DELETE(enemyList[i]);
+		enemyList[i]->treeCell.remove();		// 衝突判定リストから削除
+		SAFE_DELETE(enemyList[i]);				// インスタンス破棄
 	}
 	enemyList.clear();
 }
@@ -448,7 +464,7 @@ void EnemyManager::relocateEnemyAccordingToFile()
 	destroyAllEnemyData();					// 全てのエネミーデータを破棄
 	nextID = 0;								// 次回発行IDを0に初期化
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
-	enemyList.reserve(ENEMY_OBJECT_MAX);		// update()で動的な確保をせず済むようメモリを増やしておく
+	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 
 	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;

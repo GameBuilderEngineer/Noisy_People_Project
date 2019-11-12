@@ -283,6 +283,21 @@
     <Filter Include="Game Layer\Scene\Tutorial\UI">
       <UniqueIdentifier>{4898cc1a-35f9-4d06-b769-a8498a62798b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Collision\CollisionManager">
+      <UniqueIdentifier>{922a9ed6-b4e2-408e-8858-5e364fee5828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\ObjectTypeList">
+      <UniqueIdentifier>{bbadf48a-b7ee-4467-b11b-92cf1d3f1918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\CollisionManager">
+      <UniqueIdentifier>{5b82a205-c0e2-410a-8356-b67b8bf32594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Wind">
+      <UniqueIdentifier>{7e5456ec-bcd4-45ac-be25-598b3d9ca5cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MapObject">
+      <UniqueIdentifier>{a583c9e0-b07d-4db7-9164-83c3fb26a395}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -639,6 +654,18 @@
     </ClCompile>
     <ClCompile Include="StatusFrame.cpp">
       <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Game Layer\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Wind.cpp">
+      <Filter>Game Layer\Wind</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectManager.cpp">
+      <Filter>Game Layer\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1016,6 +1043,21 @@
     </ClInclude>
     <ClInclude Include="StatusFrame.h">
       <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTypeList.h">
+      <Filter>Game Layer\ObjectTypeList</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Game Layer\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Wind.h">
+      <Filter>Game Layer\Wind</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectManager.h">
+      <Filter>Game Layer\MapObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

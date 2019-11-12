@@ -70,7 +70,7 @@ namespace staticMeshNS {
 		SKY_DOME,								//09
 		TUTORIAL_FILED,							//10
 		DATE_ISLAND,							//11
-
+		DATE_ISLAND_V2,							//12
 
 		MESH_NUM,								//NUM
 	};

@@ -2,7 +2,7 @@
 //【Object.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/23
+// [更新日]2019/11/11
 //===================================================================================================================================
 #pragma once
 
@@ -17,6 +17,7 @@
 #include "TextureLoader.h"
 #include "ShaderLoader.h"
 #include "LinearTreeCell.h"
+#include "ObjectTypeList.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -42,6 +43,7 @@ public:
 	//ステータス変数
 	static int			objectCounter;			//オブジェクトカウンター：IDの割当に使用
 	int					id;						//ID
+	int					type;					//オブジェクトタイプ
 	D3DXVECTOR3			position;				//位置
 	D3DXQUATERNION		quaternion;				//回転
 	D3DXVECTOR3			scale;					//スケール
@@ -79,7 +81,7 @@ public:
 	float				existenceTimer;			//存在時間
 
 	//オブジェクトツリーへ所属するためのインターフェースクラス
-	ObjectTree<Object>	treeCell;		//木空間
+	ObjectTree<Object>	treeCell;				//木空間
 
 	//Method
 	Object();
