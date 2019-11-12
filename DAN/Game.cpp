@@ -27,8 +27,6 @@ Game::Game()
 	//線形８分木空間分割管理クラス
 	linear8TreeManager = new Linear8TreeManager<Object>;
 	linear8TreeManager->initialize(4, D3DXVECTOR3(-1000,-500,-1000),D3DXVECTOR3(1000,1000,1000));	
-	//衝突判定内容
-	collisionContent = new CollisionContent;
 
 	//オブジェクトカウンターのリセット
 	objectNS::resetCounter();		
@@ -84,7 +82,7 @@ void Game::initialize() {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
-		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH / 2,  WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -186,6 +184,14 @@ void Game::initialize() {
 	itemManager = new ItemManager;
 	itemManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
+	// 風
+	windManager = new WindManager;
+	windManager->initialize(*getSceneName(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+
+	//// マップオブジェクト
+	mapObjectManager = new MapObjectManager;
+	mapObjectManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+
 	// テロップ
 	/*telop = new Telop;
 	telop->initialize();*/
@@ -225,7 +231,7 @@ void Game::initialize() {
 	treeData.size = treeNS::STANDARD;
 	treeData.geenState = treeNS::DEAD;
 	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 200; i++)
+	for (int i = 0; i < 500; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
@@ -281,6 +287,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
+	SAFE_DELETE(windManager);
+	SAFE_DELETE(mapObjectManager);
 	/*SAFE_DELETE(telop);*/
 	SAFE_DELETE(telopManager);
 	SAFE_DELETE(aiDirector);
@@ -325,6 +333,12 @@ void Game::update(float _frameTime) {
 
 	// アイテムの更新
 	itemManager->update(frameTime);
+
+	// 風の更新
+	windManager->update(frameTime);
+
+	// マップオブジェクトの更新
+	mapObjectManager->update(frameTime);
 
 	UpdateMoveP(0.01f);
 
@@ -510,6 +524,12 @@ void Game::render3D(Camera currentCamera) {
 	// アイテムの描画
 	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// 風の描画
+	windManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	// マップオブジェクトの描画
+	mapObjectManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//エフェクト（インスタンシング）テスト
 	//testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -638,6 +658,11 @@ void Game::collisions()
 		CollisionManager::collision(tmp1, tmp2);//衝突処理
 	}
 
+	// 風との当たり判定
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		windManager->windCollision(&player[i]);
+	}
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
@@ -729,6 +754,17 @@ void Game::test()
 	}
 
 	// デバッグエネミーで'7','8'使用中
+	// マップオブジェクトマネージャーのテスト
+	if (input->wasKeyPressed('7'))	// 作成
+	{
+		mapObjectNS::MapObjectData mapObjectData;
+		mapObjectData.zeroClear();
+		mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
+		mapObjectData.type = mapObjectNS::STONE_01;
+		mapObjectData.defaultPosition = *player->getPosition();
+		mapObjectManager->createMapObject(mapObjectData);
+	}
+
 
 	// ツリーマネージャのテスト
 	if (input->wasKeyPressed('5'))	// 作成

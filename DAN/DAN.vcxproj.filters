@@ -292,6 +292,12 @@
     <Filter Include="Game Layer\CollisionManager">
       <UniqueIdentifier>{5b82a205-c0e2-410a-8356-b67b8bf32594}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Wind">
+      <UniqueIdentifier>{7e5456ec-bcd4-45ac-be25-598b3d9ca5cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MapObject">
+      <UniqueIdentifier>{a583c9e0-b07d-4db7-9164-83c3fb26a395}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -645,6 +651,15 @@
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Game Layer\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Wind.cpp">
+      <Filter>Game Layer\Wind</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectManager.cpp">
+      <Filter>Game Layer\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1022,6 +1037,15 @@
     </ClInclude>
     <ClInclude Include="CollisionManager.h">
       <Filter>Game Layer\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Wind.h">
+      <Filter>Game Layer\Wind</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectManager.h">
+      <Filter>Game Layer\MapObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

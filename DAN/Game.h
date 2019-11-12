@@ -24,6 +24,8 @@
 #include "NavigationMesh.h"
 #include "TreeManager.h"
 #include "ItemManager.h"
+#include "Wind.h"
+#include "MapObjectManager.h"
 #include "Telop.h"
 #include "Sky.h"
 #include "SpriteGauge.h"
@@ -41,7 +43,7 @@
 
 #include "TelopManager.h"
 //#include "Text.h"
-#include "CollisionContent.h"
+
 
 //===================================================================================================================================
 //【名前空間】
@@ -73,7 +75,6 @@ private:
 	ObjectTree<Object>*				objectTreeArray;	//オブジェクトツリー
 	DWORD							collisionNum;		//衝突判定回数
 	CollisionList<Object>*			collisionList;		//衝突判定リスト
-	CollisionContent*				collisionContent;	//衝突処理内容
 
 	//3Dオブジェクト
 	Player*							player;				//プレイヤー
@@ -100,6 +101,8 @@ private:
 	EnemyManager*					enemyManager;		// エネミーマネージャー
 	TreeManager*					treeManager;		// ツリーマネージャー
 	ItemManager*					itemManager;		// アイテムマネージャー
+	WindManager*					windManager;		// 風マネージャー
+	MapObjectManager*				mapObjectManager;	// マップオブジェクトマネージャー
 
 	AIDirector*						aiDirector;			// AI
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ

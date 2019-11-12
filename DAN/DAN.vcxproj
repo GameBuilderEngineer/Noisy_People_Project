@@ -154,6 +154,8 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="MapObject.h" />
+    <ClInclude Include="MapObjectManager.h" />
     <ClInclude Include="ObjectTypeList.h" />
     <ClInclude Include="UIButton.h" />
     <ClInclude Include="Camera.h" />
@@ -261,6 +263,7 @@
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
+    <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Wolf.h" />
   </ItemGroup>
@@ -279,6 +282,8 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="MapObject.cpp" />
+    <ClCompile Include="MapObjectManager.cpp" />
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Create.cpp" />
@@ -379,6 +384,7 @@
     <ClCompile Include="UItex.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
+    <ClCompile Include="Wind.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Wolf.cpp" />
   </ItemGroup>

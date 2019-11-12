@@ -60,9 +60,10 @@ void Tree::update(float frameTime)
 		trunk.setGravity(gravityDirection, 9.8f);
 		trunk.speed += trunk.acceleration * frameTime;
 		trunk.position += trunk.speed * frameTime;
+		grounding();
+
 	}
 
-	grounding();
 	// オブジェクトのアップデート
 	leaf.update();
 	trunk.update();
