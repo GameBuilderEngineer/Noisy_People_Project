@@ -63,7 +63,7 @@ void Tutorial::initialize()
 {
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TUTORIAL_FILED));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -96,11 +96,13 @@ void Tutorial::initialize()
 			infomation.playerType = gameMasterNS::PLAYER_1P;
 			infomation.modelType = gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
+			player[i].setPosition(tutorialNS::PLAYER_P1_POSITION);
 			break;
 		case gameMasterNS::PLAYER_2P:
 			infomation.playerType = gameMasterNS::PLAYER_2P;
 			infomation.modelType = gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
+			player[i].setPosition(tutorialNS::PLAYER_P2_POSITION);
 			break;
 		}
 		//カメラポインタのセット
@@ -152,7 +154,7 @@ void Tutorial::initialize()
 	//test(sai[マージする時に消して])
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-	enemySet.defaultPosition = D3DXVECTOR3(-3.0f, 1.5f, 24.5f);
+	enemySet.defaultPosition = ENEMY_POSTITION;
 	enemySet.defaultState = stateMachineNS::ENEMY_STATE::CHASE;
 	enemySet.type = enemyNS::ENEMY_TYPE::WOLF;
 	enemySet.enemyID = 0;
@@ -161,7 +163,7 @@ void Tutorial::initialize()
 
 	//ディスプレイプレーン
 	D3DXVECTOR3 enemyPlanePos = enemySet.defaultPosition;
-	enemyPlanePos.y += 5;
+	enemyPlanePos.y -= 10;
 	plane = new TutorialPlane*[gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
@@ -460,6 +462,8 @@ void Tutorial::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	player->outputGUI();
 
 	ImGui::SliderInt("PLAYER", &playerSelect, gameMasterNS::PLAYER_1P, gameMasterNS::PLAYER_2P, "");
 
