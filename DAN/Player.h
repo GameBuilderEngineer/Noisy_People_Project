@@ -305,6 +305,7 @@ public:
 	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
 	bool getOnGround();											//接地しているか取得
 	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
+	D3DXMATRIX* getcentralMatrixWorld();
 
 };
 

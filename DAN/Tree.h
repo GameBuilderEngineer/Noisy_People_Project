@@ -3,6 +3,8 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
+// 更新日 : 2019/11/12 【菅野 樹】
+//-----------------------------------------------------------------------------
 #pragma once
 #include "Object.h"
 #include "BoundingSphere.h"
@@ -65,19 +67,18 @@ namespace treeNS
 
 //=============================================================================
 //クラス定義
-//=======================================================================T======
-class Tree
+//=============================================================================
+class Tree:public Object
 {
 private:
 	treeNS::TreeData treeData;			// ツリーデータ
 	Object leaf;						// 葉オブジェクト
-	Object trunk;						// 幹オブジェクト
 	BoundingSphere greeningArea;		// 緑化範囲
 	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;		// 重力（引力）発生オブジェクトマトリックス
 	static int numOfTree;				// ツリーオブジェクトの総数
 
-	float radius;
+	float height;
 	D3DXVECTOR3	centralPosition;		// 中心座標
 
 
@@ -92,6 +93,7 @@ public:
 	Object* getTrunk();
 	static int getNumOfTree();			// ツリーの数を取得
 	treeNS::TreeData* getTreeData();	// ツリーデータを取得
+	float getHight();
 
 	// Setter
 	void setDataToTree(treeNS::TreeData _treeData);

@@ -38,7 +38,7 @@ Bullet::Bullet(Ray shootingRay)
 	postureControl(axisZ.direction, shootingRay.direction,1.0f);	//モデルを進行方向へ姿勢制御する
 	Object::update();
 	existenceTimer = EXIST_TIME;
-	endPoint = launchPosition + speed * EXIST_TIME;					//何にも衝突しなかaaaaaaaaった場合の終着位置
+	endPoint = launchPosition + speed * EXIST_TIME;					//何にも衝突しなかった場合の終着位置
 }
 
 //===================================================================================================================================

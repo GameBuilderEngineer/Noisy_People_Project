@@ -687,6 +687,7 @@ D3DXVECTOR3* Player::getCentralPosition() { return &centralPosition; }
 bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
 bool Player::getOnGround() { return onGround; }
 D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
+D3DXMATRIX* Player::getcentralMatrixWorld() { return &centralMatrixWorld; }
 
 
 

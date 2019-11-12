@@ -16,6 +16,7 @@ namespace ObjectType{
 		PLAYER,
 		BULLET,
 		ENEMY,
+		TREE,
 		TYPE_NUM,
 	};
 

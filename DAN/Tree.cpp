@@ -3,6 +3,8 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
+// 更新日 : 2019/11/12 【菅野 樹】
+//-----------------------------------------------------------------------------
 #include "Tree.h"
 #include "ImguiManager.h"
 using namespace treeNS;
@@ -15,8 +17,9 @@ int Tree::numOfTree = 0;
 //=============================================================================
 Tree::Tree(treeNS::TreeData _treeData)
 {
+	type = ObjectType::TREE;
 	treeData = _treeData;
-	trunk.position = treeData.initialPosition;
+	this->position = treeData.initialPosition;
 	leaf.position = treeData.initialPosition;
 
 	// treeData.initialDirectionを基にした向き転換
@@ -25,11 +28,15 @@ Tree::Tree(treeNS::TreeData _treeData)
 
 	// 半径取得
 	BoundingSphere bs;
-	bs.initialize(trunk.getPosition(), staticMeshNS::reference(staticMeshNS::A_TRUNK)->numBytesPerVertex);
-	radius = bs.getRadius();
+	bs.initialize(this->getPosition(), staticMeshNS::reference(staticMeshNS::A_TRUNK)->numBytesPerVertex);
+	//モデル球半径を高さとして設定
+	height = bs.getRadius();
+
+	//半径を設定
+	radius = height / 10;
 
 	// 重力付与
-	trunk.onGravity = true;
+	this->onGravity = true;
 
 	//// スケール変更
 	//trunk.scale *= 0.4f;
@@ -54,19 +61,18 @@ Tree::~Tree()
 void Tree::update(float frameTime)
 {
 	// 重力
-	if (trunk.onGravity)
+	if (this->onGravity)
 	{
 		D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-		trunk.setGravity(gravityDirection, 9.8f);
-		trunk.speed += trunk.acceleration * frameTime;
-		trunk.position += trunk.speed * frameTime;
+		this->setGravity(gravityDirection, 9.8f);
+		this->speed += this->acceleration * frameTime;
+		this->position += this->speed * frameTime;
 		grounding();
-
 	}
 
 	// オブジェクトのアップデート
 	leaf.update();
-	trunk.update();
+	this->Object::update();
 }
 
 
@@ -84,10 +90,10 @@ void Tree::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 // Getter
 //=============================================================================
 Object* Tree::getLeaf() { return &leaf; }
-Object* Tree::getTrunk() { return &trunk; }
+Object* Tree::getTrunk() { return this; }
 int Tree::getNumOfTree(){ return numOfTree; }
 TreeData* Tree::getTreeData() { return &treeData; }
-
+float Tree::getHight() { return height; }
 
 //=============================================================================
 // Setter
@@ -103,16 +109,16 @@ void Tree::grounding()
 {
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
 	Ray gravityRay;
-	gravityRay.update(trunk.position + D3DXVECTOR3(0,radius,0), gravityDirection);
+	gravityRay.update(this->position + D3DXVECTOR3(0,height,0), gravityDirection);
 
 	if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
 	{
-		if (radius + 0.1f >= gravityRay.distance)
+		if (height + 0.1f >= gravityRay.distance)
 		{// エネミーは地上に接地している
 
 			// 重力切る
-			trunk.onGravity = false;
-			trunk.setGravity(D3DXVECTOR3(0,0,0), 0);
+			this->onGravity = false;
+			this->setGravity(D3DXVECTOR3(0,0,0), 0);
 		}
 	}
 }
