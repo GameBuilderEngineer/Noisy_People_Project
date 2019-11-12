@@ -29,8 +29,8 @@ Tutorial::Tutorial()
 
 	// 現在のシーン(チュートリアル)
 	sceneName = "Scene -Tutorial-";
-	// 次のシーン(タイトル)
-	nextScene = SceneList::TITLE;
+	// 次のシーン(ゲーム)
+	nextScene = SceneList::GAME;
 
 	//シーンの更新
 	SoundInterface::SwitchAudioBuffer(SceneList::TUTORIAL);
@@ -304,6 +304,20 @@ void Tutorial::update(float _frameTime)
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN))
 	{
 		changeScene(nextScene);
+	}
+
+	int flag = 0;
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		if (player[i].getPosition()->y <= -10)
+		{
+			flag++;
+		}
+
+		if (flag == gameMasterNS::PLAYER_NUM)
+		{
+			changeScene(nextScene);
+		}
 	}
 
 	// チュートリアルが最後まで行ったらタイトルへ
