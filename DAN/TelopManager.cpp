@@ -67,7 +67,7 @@ void TelopManager::initialize()
 	//テロップ2の初期化
 	telop[TELOP_TYPE2]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_50),
-		SpriteNS::TOP_LEFT,
+		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,
 		telopNS::POSITION,
@@ -78,7 +78,7 @@ void TelopManager::initialize()
 	//テロップ3の初期化
 	telop[TELOP_TYPE3]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_ASSULT),
-		SpriteNS::TOP_LEFT,
+		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,
 		telopNS::POSITION,
@@ -89,7 +89,7 @@ void TelopManager::initialize()
 	//テロップ4の初期化
 	telop[TELOP_TYPE4]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_LIMIT1),
-		SpriteNS::TOP_LEFT,
+		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,
 		telopNS::POSITION,
@@ -100,7 +100,7 @@ void TelopManager::initialize()
 	//テロップ5の初期化
 	telop[TELOP_TYPE5]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_LIMIT2),
-		SpriteNS::TOP_LEFT,
+		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,
 		telopNS::POSITION,
@@ -111,7 +111,7 @@ void TelopManager::initialize()
 	//テロップ6の初期化
 	telop[TELOP_TYPE6]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_MISSION),
-		SpriteNS::TOP_LEFT,
+		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,
 		telopNS::POSITION,
@@ -165,7 +165,7 @@ void TelopManager::play(int type)
 	if (playFlag == false)
 	{
 		telop[type]->playTelop();
-		telop[TELOP_INFO_BAR]->playTelop();
+		telop[TELOP_INFO_BAR]->playTelopBar();
 		playFlag = true;
 	}
 }
