@@ -46,7 +46,6 @@ namespace textureNS
 		CREDIT,
 
 		// Game
-		UI_COUNT_DOWN_ONE,
 		UI_INFO_10,
 		UI_INFO_30,
 		UI_INFO_50,

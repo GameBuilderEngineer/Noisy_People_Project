@@ -226,8 +226,8 @@ void Director::mainLoop() {
 	if (scene->checkChangeOrder())
 	{
 		//saiテスト
-		//fader->start();
-		//if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
+		fader->start();
+		if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
 			changeNextScene();
 	}
 	setFrameTime();				//フレーム時間の初期化処理

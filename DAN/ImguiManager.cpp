@@ -18,12 +18,13 @@
 //===================================================================================================================================
 ImguiManager::ImguiManager(HWND wnd)
 {
+	setRootDirectory();
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	// Enable docking(available in imgui `docking` branch at the moment)
 
 	// Setup Dear ImGui style
@@ -41,6 +42,7 @@ ImguiManager::ImguiManager(HWND wnd)
 //===================================================================================================================================
 ImguiManager::~ImguiManager()
 {
+	setRootDirectory();
 	ImGui_ImplDX9_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

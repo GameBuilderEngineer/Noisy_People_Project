@@ -52,7 +52,6 @@ TextureLoader::TextureLoader()
 	textureName[CREDIT] = { "Credit_01.png" };
 
 	// Game
-	textureName[UI_COUNT_DOWN_ONE] = { "Game_CountDown_One.png" };
 	textureName[UI_INFO_10] = { "Info_10.png" };
 	textureName[UI_INFO_30] = { "Info_30.png" };
 	textureName[UI_INFO_50] = { "Info_50.png" };
