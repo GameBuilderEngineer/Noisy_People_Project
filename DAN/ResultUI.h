@@ -58,7 +58,7 @@ public: //メンバー変数
 	float		time;				//フェイズ移行する時間
 	int			rank01;				//プレイヤー１のランク管理用
 	int         rank02;				//プレイヤー2のランク管理用
-
+	bool		playedBGM;			//BGM再生用フラグ
 public: //メンバー関数
 	void initialize();				//初期化
 	void render();					//描画

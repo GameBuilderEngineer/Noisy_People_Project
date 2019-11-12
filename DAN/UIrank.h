@@ -47,7 +47,7 @@ public: //メンバー変数
 	Sprite * rank[uiRankNS::RANK_MAX];			//スプライトの作成
 	int widthSize;								//幅のサイズ管理用
 	int heightSize;								//高さサイズ管理用
-
+	bool playedSE;								//SE再生フラグ
 public: //メンバー関数
 	void initialize(int rankType, int playerType);
 	void render(int rankType);
