@@ -54,6 +54,8 @@ public:
 	T*					object;	//判定対象オブジェクト
 	ObjectTree<T>*		prev;	//前のObjectTreeクラスポインタ
 	ObjectTree<T>*		next;	//次のObjectTreeクラスポインタ
+	int					type;	//自身のオブジェクトタイプ
+	int					target;	//衝突すべきオブジェクトタイプ
 public:
 	//コンストラクタ
 	ObjectTree()
@@ -62,6 +64,8 @@ public:
 		object	= NULL;
 		prev	= NULL;
 		next	= NULL;
+		type	= 0;
+		target	= 0;
 	}
 	
 	//デストラクタ
@@ -804,13 +808,21 @@ protected:
 			while (objectTree2 != 0)
 			{
 				//衝突リスト作成
-				collisionList.write(objectTree1->object, objectTree2->object);
+				if (objectTree1->type & objectTree2->target ||
+					objectTree2->type & objectTree1->target)
+				{
+					collisionList.write(objectTree1->object, objectTree2->object);
+				}
 				objectTree2 = objectTree2->next;
 			}
 			//②衝突スタックとの衝突リスト作成
 			for (it = collisionStac.begin(); it != collisionStac.end(); it++)
 			{
-				collisionList.write(objectTree1->object, *it);
+				if (objectTree1->type & (*it)->treeCell.target 
+					||	(*it)->treeCell.type & objectTree1->target)
+				{
+					collisionList.write(objectTree1->object, *it);
+				}
 			}
 			objectTree1 = objectTree1->next;
 		}

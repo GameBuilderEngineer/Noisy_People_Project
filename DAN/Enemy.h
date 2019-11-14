@@ -334,6 +334,7 @@ public:
 	BoundingSphere* getSphereCollider();
 	D3DXVECTOR3* getCentralPosition();
 	D3DXMATRIX* getCentralMatrixWorld();
+	LPD3DXMESH getMesh();
 
 	// Setter
 	void setMove(bool setting);

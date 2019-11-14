@@ -125,6 +125,9 @@ void Ray::render(float length)
 	D3DXMatrixIdentity(&mWorld);
 	device->SetTransform(D3DTS_WORLD, &mWorld);
 
+	// アルファ・ブレンディングを行う
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
 	//レイのマテリアル設定
 	D3DMATERIAL9 mtrl;
 	ZeroMemory(&mtrl, sizeof(mtrl));
@@ -136,6 +139,8 @@ void Ray::render(float length)
 
 	//レイのレンダリング
 	device->DrawPrimitiveUP(D3DPT_LINELIST, 1, vPnt, sizeof(D3DXVECTOR3));
+
+
 #endif // _DEBUG
 }
 

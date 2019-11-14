@@ -3,6 +3,8 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
+// 更新日 : 2019/11/14 【菅野 樹】:サイズの設定
+//-----------------------------------------------------------------------------
 #include "Enemy.h"
 #include "ImguiManager.h"
 #include "Sound.h"
@@ -48,19 +50,25 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	onJump = false;
 	jumping = false;
 
+	{//オブジェクトタイプと衝突対象の指定
+		using namespace ObjectType;
+		treeCell.type = ENEMY;
+		treeCell.target = PLAYER | ENEMY | BULLET | TREE;
+	}
+
 	// オブジェクト初期化
 	position = enemyData->position;
 	axisZ.direction = enemyData->direction;
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	Object::initialize(&position);
-	type = ObjectType::ENEMY;
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
-
-
+	setSize(D3DXVECTOR3(1.0f, 2.0f, 1.0f));
+#ifdef _DEBUG
 #ifdef RENDER_SENSOR
 	hearingSphere[0].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type]);
 	hearingSphere[1].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type] * SHOT_SOUND_SCALE);
+#endif
 #endif
 }
 
@@ -113,7 +121,7 @@ void Enemy::update(float frameTime)
 #ifdef RENDER_SENSOR
 	debugSensor();		// 視界
 	// プレイヤーへの注視レイを描画する
-	gazePlayer.initialize(centralPosition, *player->getCentralPosition() - centralPosition);
+	gazePlayer.initialize(centralPosition, player->center - centralPosition);
 	gazePlayer.color = D3DXCOLOR(255, 0, 0, 255);
 #endif// RENDER_SENSOR
 #endif// _DEBUG
@@ -206,14 +214,14 @@ bool Enemy::eyeSensor(int playerType)
 	float verticalAngle;					// 正面方向とプレイヤーの垂直角度
 
 	// プレイヤーが視認可能な距離にいるか調べる
-	distanceBetweenPlayerAndEnemy = D3DXVec3Length(&(*player[playerType].getCentralPosition() - centralPosition));
+	distanceBetweenPlayerAndEnemy = D3DXVec3Length(&(player[playerType].center - centralPosition));
 	if (distanceBetweenPlayerAndEnemy > VISIBLE_DISTANCE[enemyData->type])
 	{// 視認可能距離ではなかった
 		return false;
 	}	
 
 	// プレイヤーが水平視野角内に入ったか調べる
-	D3DXVECTOR3 horizontalVecToPlayer = *player[playerType].getCentralPosition() - centralPosition;
+	D3DXVECTOR3 horizontalVecToPlayer = player[playerType].center - centralPosition;
 	slip(horizontalVecToPlayer, axisY.direction);
 	slip(horizontalVecToPlayer, reverseAxisY.direction);
 	formedRadianAngle(&horizontalAngle, axisZ.direction, horizontalVecToPlayer);
@@ -223,7 +231,7 @@ bool Enemy::eyeSensor(int playerType)
 	}
 
 	// プレイヤーが垂直視野角内に入ったか調べる
-	D3DXVECTOR3 verticalVecToPlayer = *player[playerType].getCentralPosition() - centralPosition;
+	D3DXVECTOR3 verticalVecToPlayer = player[playerType].center - centralPosition;
 	slip(verticalVecToPlayer, axisX.direction);
 	slip(verticalVecToPlayer, reverseAxisX.direction);
 	formedRadianAngle(&verticalAngle, axisZ.direction, verticalVecToPlayer);
@@ -234,7 +242,7 @@ bool Enemy::eyeSensor(int playerType)
 
 	// プレイヤーとの間に障害物がないか調べる
 	Ray ray;
-	ray.initialize(centralPosition, *player[playerType].getCentralPosition() - centralPosition);
+	ray.initialize(centralPosition, player[playerType].center - centralPosition);
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix))
 	{
 		if (ray.distance < distanceBetweenPlayerAndEnemy)
@@ -279,7 +287,7 @@ void Enemy::attack(int playerType, float frameTime)
 	// 攻撃ベクトル作成
 	if (attackTime == 0.0f)
 	{
-		vecAttack = *player[playerType].getCentralPosition() - centralPosition;
+		vecAttack = player[playerType].center - centralPosition;
 		slip(vecAttack, groundNormal);
 		D3DXVec3Normalize(&vecAttack, &vecAttack);
 	}
@@ -556,7 +564,7 @@ EnemyData* Enemy::getEnemyData() { return enemyData; }
 BoundingSphere*  Enemy::getSphereCollider() { return &sphereCollider; }
 D3DXVECTOR3*  Enemy::getCentralPosition() { return &centralPosition; }
 D3DXMATRIX* Enemy::getCentralMatrixWorld() { return &centralMatrixWorld; }
-
+LPD3DXMESH Enemy::getMesh() { return box->mesh; }
 
 //=============================================================================
 // Setter

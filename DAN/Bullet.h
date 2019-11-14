@@ -13,6 +13,7 @@
 #include "StaticMeshRenderer.h"
 #include "LinkedList.h"
 #include "Ray.h"
+#include "Sound.h"
 
 namespace bulletNS{
 	const float		SPEED			= 100.0f;	//弾速
@@ -20,6 +21,7 @@ namespace bulletNS{
 	const float		RELOAD_TIME		= 0.5f;		//リロード時間
 	const int		MAGAZINE_NUM	= 8;		//弾数
 	const float		EXIST_TIME		= 1.0f;		//存在時間
+	const int		DIGITAL_POWER	= 8;		//デジタルパワー
 }
 
 //===================================================================================================================================
@@ -34,15 +36,16 @@ private:
 	D3DXVECTOR3		endPoint;				//終着点
 	D3DXVECTOR3		initialCollide;			//初期衝突地点
 	D3DXVECTOR3		collidePosition;		//衝突位置
-
+	int				digitalPower;			//デジタルパワー
 public:
 //[基本処理]
 	Bullet(Ray shootingRay);
 	~Bullet();
 	void update(float frameTime);
 	void render();
-	void collide();
-
+	bool collide(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix);
+	int	getDigitalPower();
+	void destroy();
 };
 
 //===================================================================================================================================
@@ -57,6 +60,10 @@ private:
 	float					intervalTimer;	//次の発射までのインターバル時間
 	float					reloadTimer;	//リロード時間
 	bool					reloading;		//リロード中
+
+	PLAY_PARAMETERS shotSE;
+	PLAY_PARAMETERS reroadSE;
+
 public:
 
 //[基本処理]
@@ -71,7 +78,7 @@ public:
 
 //[アクション]
 	//発射
-	void launch(Ray shootingRay);
+	bool launch(Ray shootingRay);
 	//リロード
 	void reload();
 	

@@ -22,18 +22,21 @@ using namespace playerNS;
 //===================================================================================================================================
 Player::Player() 
 {
-	Object::initialize(&D3DXVECTOR3(0,10.0f,0));
+	{//オブジェクトタイプと衝突対象の指定
+		using namespace ObjectType;
+		treeCell.type = PLAYER;
+		treeCell.target = PLAYER | ENEMY | TREE;
+	}
+
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
-	type				= ObjectType::PLAYER; 
 	onGravity			= true;
 	//state				= NORMAL;
 	invincibleTimer		= 0.0f;					//無敵時間
 	onGround			= false;				//接地判定
 	reverseValueXAxis	= CAMERA_SPEED;			//操作Ｘ軸
-	reverseValueYAxis	= CAMERA_SPEED;			//操作Ｙ軸
+	reverseValueYAxis	= -CAMERA_SPEED;		//操作Ｙ軸
 	onJump				= false;				//ジャンプフラグ
 	difference			= DIFFERENCE_FIELD;		//フィールド補正差分
-
 	isShotAble			= true;
 	isJumpAble			= true;
 	isVisionAble		= true;
@@ -65,9 +68,12 @@ void Player::initialize(PlayerTable info)
 
 	// コライダの初期化
 	bodyCollide.initialize(	&position, staticMeshNS::reference(infomation.modelType)->mesh);
-	radius				= bodyCollide.getRadius();				// メッシュ半径を取得
-	centralPosition		= position + bodyCollide.getCenter();	// 中心座標を設定
-	D3DXMatrixIdentity(&centralMatrixWorld);					// 中心座標ワールドマトリクスを初期化
+	setRadius(bodyCollide.getRadius());	// メッシュ半径を取得
+
+	//サイズの設定
+	setSize(D3DXVECTOR3(0.5f, 1.7f, 0.5f));
+
+	//電力の設定
 	power				= MAX_POWER;							//キャラクター電力確認用
 
 	//通常状態
@@ -83,6 +89,16 @@ void Player::initialize(PlayerTable info)
 	shiftTimer		= 0.0f;
 	isShifting		= false;
 
+	//再生パラメータの作成
+	//memset(playParameters, 0, sizeof(playParameters));
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	shiftStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftStart, false ,NULL,false,NULL, true, filterParameters };
+	shiftFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftFinish, false ,NULL,false,NULL, true, filterParameters };
+	visionSE			= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Vision, false ,NULL,false,NULL, true, filterParameters };
+	visionStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionStart, false ,NULL,false,NULL, true, filterParameters };
+	visionFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL, true, filterParameters };
+	skyVisionStartSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL, true, filterParameters };
+	skyVisionFinishSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL, true, filterParameters };
 
 }
 
@@ -108,32 +124,11 @@ void Player::update(float frameTime)
 		isShifting = false;
 	}
 
-
-	//switch (state)
-	//{
-	//case NORMAL:
-	//	break;
-	//
-	//case VISION:
-	//	break;
-	//
-	//case SKY_VISION:
-	//	break;
-	//
-	//case SHIFT:
-	//	break;
-	//}
-
 	//バレットマネージャーの更新
 	bulletManager->update(frameTime);
 
 	// 操作(状態別)
 	state->operation();
-
-	//shot();						//弾の発射
-	//digitalShift();				//デジタルシフト
-	//moveOperation();			// 移動操作
-	//jumpOperation();			// ジャンプ操作
 
 #ifdef _DEBUG
 	if (input->isKeyDown('H'))
@@ -149,15 +144,8 @@ void Player::update(float frameTime)
 	}
 #endif // DEBUG
 
+	//物理更新(状態別)
 	state->physics();
-
-	// 以下の順番入れ替え禁止（衝突より後に物理がくる）
-	//grounding();				// 接地処理
-	//physicalBehavior();			// 物理挙動
-	//updatePhysics(frameTime);	// 物理の更新
-
-	//controlCamera(frameTime);	// カメラ操作
-
 
 	//照準レイの更新
 	aimingRay.update(camera->position + camera->getDirectionZ(), camera->getDirectionZ());
@@ -183,18 +171,8 @@ void Player::update(float frameTime)
 	// オブジェクトの更新
 	Object::update();
 
-	//球コリジョンを中心座標へ補正
-	centralPosition = position + bodyCollide.getCenter();
-	D3DXMatrixTranslation(&centralMatrixWorld, centralPosition.x, centralPosition.y, centralPosition.z);
-	axisX.update(centralPosition, axisX.direction);
-	axisY.update(centralPosition, axisY.direction);
-	axisZ.update(centralPosition, axisZ.direction);
-	reverseAxisX.update(centralPosition, -axisX.direction);
-	reverseAxisY.update(centralPosition, -axisY.direction);
-	reverseAxisZ.update(centralPosition, -axisZ.direction);
-
 	//発射位置の更新
-	launchPosition = centralPosition + axisZ.direction*radius;
+	launchPosition = center + axisZ.direction*radius;
 	//狙撃レイの更新
 	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
 	shootingRay.update(launchPosition, shootingRay.direction);
@@ -206,11 +184,10 @@ void Player::update(float frameTime)
 //===================================================================================================================================
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
+	bulletManager->render(view,projection,cameraPosition);
 #ifdef _DEBUG
 	aimingRay.render(collideDistance);
 	shootingRay.render(MAX_DISTANCE);
-	bodyCollide.render(centralMatrixWorld);
-	bulletManager->render(view,projection,cameraPosition);
 	Object::debugRender();
 #endif // _DEBUG
 }
@@ -225,7 +202,7 @@ void Player::grounding()
 
 	onGroundBefore = onGround;
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	gravityRay.update(centralPosition, gravityDirection);
+	gravityRay.update(center, gravityDirection);
 	
 	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
 	groundNormal = gravityRay.normal;
@@ -243,7 +220,7 @@ void Player::grounding()
 		if (onJump)
 		{
 			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
-			setPosition(centralPosition + gravityRay.direction * (gravityRay.distance - radius));
+			setPosition(center + gravityRay.direction * (gravityRay.distance - radius));
 			// 重力方向に落ちるときだけ移動ベクトルのスリップ（面方向へのベクトル成分の削除）
 			if (speed.y < 0) setSpeed(slip(speed, gravityRay.normal));
 		}
@@ -270,7 +247,7 @@ void Player::grounding()
 void Player::wallScratch()
 {
 	//スピード
-	ray.update(centralPosition, D3DXVECTOR3(speed.x,0, speed.z));
+	ray.update(center, D3DXVECTOR3(speed.x,0, speed.z));
 	// 壁ずり処理
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix)&& radius/2 >= ray.distance)
 	{
@@ -285,25 +262,25 @@ void Player::wallScratch()
 void Player::insetCorrection()
 {
 	//Z軸めり込み補正
-	ray.update(centralPosition, axisZ.direction);
+	ray.update(center, axisZ.direction);
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
 	{
 		position += ray.normal*(radius / 2 - ray.distance);
 	}
 	//-Z軸めり込み補正
-	ray.update(centralPosition, reverseAxisZ.direction);
+	ray.update(center, reverseAxisZ.direction);
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
 	{
 		position += ray.normal*(radius / 2 - ray.distance);
 	}
 	//X軸めり込み補正
-	ray.update(centralPosition, axisX.direction);
+	ray.update(center, axisX.direction);
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
 	{
 		position += ray.normal*(radius / 2 - ray.distance);
 	}
 	//-X軸めり込み補正
-	ray.update(centralPosition, reverseAxisX.direction);
+	ray.update(center, reverseAxisX.direction);
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
 	{
 		position += ray.normal*(radius / 2 - ray.distance);
@@ -555,7 +532,7 @@ void Player::shot()
 {
 	if (!input->getMouseLButton() && 
 		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return;
-		bulletManager->launch(shootingRay);
+	bulletManager->launch(shootingRay);
 }
 
 //===================================================================================================================================
@@ -645,8 +622,8 @@ void Player::reset()
 void Player::setCamera(Camera* _camera) { 
 	camera = _camera; 
 	aimingRay.initialize(camera->position, camera->getDirectionZ());
-	aimingRay.color = D3DCOLOR_ARGB(255,253,193,0);
-	shootingRay.color = D3DCOLOR_ARGB(255,190, 20, 20);
+	aimingRay.color = D3DXCOLOR(255,123,193,255);
+	shootingRay.color = D3DXCOLOR(120, 10, 20, 255);
 }
 void Player::setInfomation(PlayerTable info) { infomation = info; };
 
@@ -683,18 +660,16 @@ D3DXVECTOR3* Player::getCameraGaze() { return &cameraGaze; }
 D3DXVECTOR3* Player::getAiming() { return &aimingPosition; }
 Bullet* Player::getBullet(int i) { return bulletManager->getBullet(i); }
 int Player::getShootingNum() { return bulletManager->getNum(); }
-D3DXVECTOR3* Player::getCentralPosition() { return &centralPosition; }
 bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
 bool Player::getOnGround() { return onGround; }
 D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
-D3DXMATRIX* Player::getcentralMatrixWorld() { return &centralMatrixWorld; }
-
+LPD3DXMESH Player::getMesh() { return box->mesh; };
 
 
 
 //(仮)通常状態
 
-NormalState::NormalState(Player* player):State() 
+NormalState::NormalState(Player* player):AbstractState()
 {
 	this->player = player;
 	type = NORMAL;
@@ -729,7 +704,7 @@ void NormalState::physics()
 }
 
 
-State* NormalState::transition()
+AbstractState* NormalState::transition()
 {
 	return new NormalState(player);
 }

@@ -298,6 +298,9 @@
     <Filter Include="Game Layer\MapObject">
       <UniqueIdentifier>{a583c9e0-b07d-4db7-9164-83c3fb26a395}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Collision\AxisAlinedBoundingBox">
+      <UniqueIdentifier>{7987e540-3b47-4ee8-ae2c-ef5d997eb416}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -667,6 +670,10 @@
     <ClCompile Include="MapObjectManager.cpp">
       <Filter>Game Layer\MapObject</Filter>
     </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1059,6 +1066,10 @@
     <ClInclude Include="MapObjectManager.h">
       <Filter>Game Layer\MapObject</Filter>
     </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

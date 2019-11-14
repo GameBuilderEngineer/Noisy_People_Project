@@ -145,7 +145,7 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 	switch (KeyType)
 	{
 	case MovePAttackEnd:
-		MoveP->Pos.x += 1.0f;
+		//MoveP->Pos.x += 1.0f;
 			break;
 	default:
 		break;

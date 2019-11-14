@@ -65,8 +65,36 @@ void TreeManager::update(float frameTime)
 	for (size_t i = 0; i < treeList.size(); i++)
 	{
 		treeList[i]->update(frameTime);
+
+		//葉の描画状態を切り替える
+		if (treeList[i]->getLeaf()->onActive) 
+		{//描画されている場合
+			//枯木状態
+			if (treeList[i]->getTreeData()->greenState == treeNS::DEAD)
+			{
+				treeList[i]->getLeaf()->onActive = false;//アクティブ化
+				//レンダラーへ登録
+				unRegisterLeafRendering(
+					treeList[i]->getLeaf(),				//葉オブジェクト
+					treeList[i]->getTreeData()->model);	//モデル情報
+			}
+		}
+		else 
+		{//描画されていない場合
+			//緑化状態
+			if (treeList[i]->getTreeData()->greenState == treeNS::GREEN)
+			{
+				treeList[i]->getLeaf()->onActive = true;//アクティブ化
+				//レンダラーへ登録
+				registerLeafRendering(
+					treeList[i]->getLeaf(),				//葉オブジェクト
+					treeList[i]->getTreeData()->model);	//モデル情報
+				
+			}
+		}
 	}
 
+	//レンダラーの更新
 	aTrunkRenderer->update();
 	aLeafRenderer->update();
 	bTrunkRenderer->update();
@@ -81,6 +109,13 @@ void TreeManager::update(float frameTime)
 //=============================================================================
 void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
+#ifdef _DEBUG
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		treeList[i]->render();
+	}
+#endif // _DEBUG
+
 	aTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	aLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	bTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
@@ -114,7 +149,7 @@ void TreeManager::createTree(TreeData treeData)
 	}
 
 	// 葉の描画をセット
-	if (treeData.geenState == GREEN)
+	if (treeData.greenState == GREEN)
 	{
 		switch (treeData.model)
 		{

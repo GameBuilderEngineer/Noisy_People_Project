@@ -57,8 +57,12 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	d3dpp.BackBufferFormat			= dMode.Format;
 	d3dpp.BackBufferCount			= 1;
 	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
-	d3dpp.Windowed					= false;
+#ifdef _DEBUG
 	d3dpp.Windowed					= true;
+#else
+	d3dpp.Windowed					= false;
+#endif // _DEBUG
+
 	d3dpp.BackBufferWidth			= WINDOW_WIDTH;
 	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
 	d3dpp.EnableAutoDepthStencil	= true;

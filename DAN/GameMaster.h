@@ -86,6 +86,8 @@ public:
 	void initialize();
 	void update(float frameTime);
 
+	//ゲーム
+	void startGame();
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
 	
 	//木の設定関数
