@@ -5,14 +5,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "State.h"
-#include "StateMachine.h"
-
 
 
 //=============================================================================
 // í«ê’
 //=============================================================================
-class ChaseState: public State
+class ChaseState: public stateMachineNS::State
 {
 private:
 	ChaseState() { number = stateMachineNS::CHASE; }
@@ -23,14 +21,14 @@ public:
 		static ChaseState instance;
 		return &instance;
 	}
-	State* transition(stateMachineNS::TransitionTimeChecker* checker, int enemyType);
+	stateMachineNS::State* transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy);
 };
 
 
 //=============================================================================
 // åxâ˙
 //=============================================================================
-class PatrolState : public State
+class PatrolState : public stateMachineNS::State
 {
 private:
 	PatrolState() { number = stateMachineNS::PATROL; }
@@ -41,14 +39,14 @@ public:
 		static PatrolState instance;
 		return &instance;
 	}
-	State* transition(stateMachineNS::TransitionTimeChecker* checker, int enemyType);
+	stateMachineNS::State* transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy);
 };
 
 
 //=============================================================================
 // ãxåe
 //=============================================================================
-class RestState : public State
+class RestState : public stateMachineNS::State
 {
 private:
 	RestState() { number = stateMachineNS::REST; }
@@ -59,14 +57,32 @@ public:
 		static RestState instance;
 		return &instance;
 	}
-	State* transition(stateMachineNS::TransitionTimeChecker* checker, int enemyType);
+	stateMachineNS::State* transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy);
+};
+
+
+//=============================================================================
+// ÉcÉäÅ[çUåÇ
+//=============================================================================
+class AttackTree : public stateMachineNS::State
+{
+private:
+	AttackTree() { number = stateMachineNS::REST; }
+
+public:
+	static State* getInstance(void)
+	{
+		static AttackTree instance;
+		return &instance;
+	}
+	stateMachineNS::State* transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy);
 };
 
 
 //=============================================================================
 // éÄñS
 //=============================================================================
-class DieState : public State
+class DieState : public stateMachineNS::State
 {
 private:
 	DieState() { number = stateMachineNS::DIE; }
@@ -77,5 +93,5 @@ public:
 		static DieState instance;
 		return &instance;
 	}
-	State* transition(stateMachineNS::TransitionTimeChecker* checker, int enemyType);
+	stateMachineNS::State* transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy);
 };

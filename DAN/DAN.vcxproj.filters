@@ -405,9 +405,6 @@
     <ClCompile Include="SplashSprite.cpp">
       <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Game Layer\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Constant Layer\Object</Filter>
     </ClCompile>
@@ -691,6 +688,12 @@
     </ClCompile>
     <ClCompile Include="ButtonUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Advertisement.cpp">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game Layer\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1102,6 +1105,9 @@
     </ClInclude>
     <ClInclude Include="ButtonUI.h">
       <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Advertisement.h">
+      <Filter>Game Layer\TestPlane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

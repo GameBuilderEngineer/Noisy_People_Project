@@ -97,6 +97,7 @@ namespace textureNS
 		SAMPLE_GRASS,
 		NEKO,
 		COLOR_SCALE,
+		DATE_ALPHA,
 
 		MAX_TEXTURE,
 	};

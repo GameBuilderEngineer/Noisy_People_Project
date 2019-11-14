@@ -11,20 +11,19 @@
 using namespace enemyNS;
 using namespace stateMachineNS;
 
-
+// Static Variable
 int Enemy::numOfEnemy = 0;			// エネミーの総数
 #ifdef _DEBUG
 int Enemy::debugEnemyID = -1;		// デバッグするエネミーのID
 #endif//_DEBUG
-
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 {
-	numOfEnemy++;								// エネミーの数を加算
-	enemyData = _enemyData;						// エネミーデータをセット
+	numOfEnemy++;							// エネミーの数を加算
+	enemyData = _enemyData;					// エネミーデータをセット
 
 	// ステートマシンの初期化
 	stateMachine.initialize(enemyData->defaultState);
@@ -33,20 +32,22 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	naviMesh = NavigationMesh::getNaviMesh();
 	edgeList = NULL;
 	naviFaceIndex = -1;
-	shouldSearchPath = false;
+	shouldSearch = false;
 
 	// 移動
-	onMove = false;
+	shouldMove = false;
 	movingTarget = NULL;
+	isArraved = false;
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	isDestinationLost = true;
 
 	// 初期設定
-	onGravity = true;							// 重力有効化
-	difference = DIFFERENCE_FIELD;				// フィールド補正差分を設定
+	onGravity = true;						// 重力有効化
+	difference = DIFFERENCE_FIELD;			// フィールド補正差分を設定
 
 	// フラグ初期化
-	onGround = true;
-	onGroundBefore = true;
+	onGround = false;
+	onGroundBefore = false;
 	onJump = false;
 	jumping = false;
 
@@ -113,55 +114,48 @@ void Enemy::update(float frameTime)
 		}
 		if (input->wasKeyPressed('6'))
 		{
-			//onAttack = true;
-			//attackTargetPlayer = gameMasterNS::PLAYER_1P;
-			enemyData->isAlive = false;
+			shouldAttack = true;
+			attackTargetPlayer = gameMasterNS::PLAYER_1P;
+			PLAY_PARAMETERS playParameters = { 0 };
+			//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
+			playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_EnemyAttack, false,NULL,false,NULL };//SEの1曲目の設定
+			SoundInterface::SE->playSound(&playParameters);
+
+			//enemyData->isAlive = false;
 		}
 	}
 #ifdef RENDER_SENSOR
 	debugSensor();		// 視界
-	// プレイヤーへの注視レイを描画する
-	gazePlayer.initialize(centralPosition, player->center - centralPosition);
-	gazePlayer.color = D3DXCOLOR(255, 0, 0, 255);
 #endif// RENDER_SENSOR
 #endif// _DEBUG
-
-	// 簡易的な思考ルーチン
 	
-
-
-
-	// センサー
-	if (canUseSensor)
-	{
-		if (eyeSensor(gameMasterNS::PLAYER_1P) ||
-			earSensor(gameMasterNS::PLAYER_1P))
-		{
-			isNoticedPlayer[gameMasterNS::PLAYER_1P] = true;
-		}
-		if (eyeSensor(gameMasterNS::PLAYER_2P) ||
-			earSensor(gameMasterNS::PLAYER_2P))
-		{
-			isNoticedPlayer[gameMasterNS::PLAYER_2P] = true;
-		}
-		canUseSensor = false;
+	if (shouldSense)
+	{// センサー
+		shouldSense = false;
+		using namespace gameMasterNS;
+		isSensingPlayer[PLAYER_1P] = eyeSensor(PLAYER_1P) || eyeSensor(PLAYER_1P);
+		isSensingPlayer[PLAYER_2P] = eyeSensor(PLAYER_2P) || eyeSensor(PLAYER_2P);
 	}
-	// 攻撃
-	if (onAttack)
-	{
-		attack(attackTargetPlayer, frameTime);
-	}
-	// 記憶の更新
-	updateMemory(frameTime);
-	// 経路探索
-	if (shouldSearchPath)
-	{
+	if (shouldSearch)
+	{// 経路探索
+		shouldSearch = false;
+		isArraved = false;
 		naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, *movingTarget);
-		shouldSearchPath = false;
+		destination = *movingTarget;
 	}
-	// 移動
-	if (onMove)
-	{
+	if (shouldAttack)
+	{// 攻撃
+		shouldAttack = false;
+		isAttacking = true;
+	}
+	if (isAttacking)
+	{// 攻撃中
+		attacking(attackTargetPlayer, frameTime);
+		shouldMove = false;
+	}
+	if (shouldMove)
+	{// 移動
+		shouldMove = false;
 		steering();
 	}
 	// 接地処理
@@ -176,8 +170,12 @@ void Enemy::update(float frameTime)
 	Object::update();
 	// 中心座標の更新
 	updateCentralCood();
+	// 到着判定
+	checkArrival();
+	// ブラックボードの更新
+	updataBlackBoard(frameTime);
 	// ステートの更新
-	int stateNumber = stateMachine.run(frameTime, enemyData->type);
+	int stateNumber = stateMachine.run(frameTime, this);
 	// エネミーデータの更新
 	enemyData->state = stateNumber;
 	enemyData->position = position;
@@ -195,7 +193,15 @@ void Enemy::preprocess(float frameTime)
 	if (sensorTime > SENSOR_UPDATE_INTERVAL[enemyData->type])
 	{
 		sensorTime = 0.0f;
-		canUseSensor = true;
+		shouldSense = true;
+	}
+
+	// 移動時間計算処理
+	moveTime += frameTime;
+	if (moveTime > MOVE_LIMIT_TIME)
+	{
+		moveTime = 0.0f;
+		isDestinationLost = true;
 	}
 
 	onJump = false;
@@ -282,8 +288,10 @@ bool Enemy::earSensor(int playerType)
 //=============================================================================
 // 攻撃
 //=============================================================================
-void Enemy::attack(int playerType, float frameTime)
+void Enemy::attacking(int playerType, float frameTime)
 {
+	if (isAttacking == false) { return; }
+
 	// 攻撃ベクトル作成
 	if (attackTime == 0.0f)
 	{
@@ -295,7 +303,7 @@ void Enemy::attack(int playerType, float frameTime)
 	attackTime += frameTime;
 	if (attackTime >= ATTACK_TIME[enemyData->type])
 	{
-		onAttack = false;
+		isAttacking = false;
 		attackTime = 0.0f;
 		friction *= ATTACKED_FRICTION;
 	}
@@ -303,34 +311,11 @@ void Enemy::attack(int playerType, float frameTime)
 	if (isHitPlayer)
 	{
 		player[playerType].damage(ATTACK_DAMAGE[enemyData->type]);
-		onAttack = false;
+		isAttacking = false;
 		attackTime = 0.0f;
 	}
 	// 移動処理
 	speed += vecAttack * ATTACK_SPEED[enemyData->type];
-}
-
-
-//=============================================================================
-// 記憶の更新
-//=============================================================================
-void Enemy::updateMemory(float frameTime)
-{
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		if (isNoticedPlayer[i])
-		{
-			noticedTimePlayer[i] += frameTime;
-			if (noticedTimePlayer[i] >= PLAYER_MEMORIZED_TIME[enemyData->type])
-			{
-				noticedTimePlayer[i] = 0.0f;
-			}
-		}
-		else
-		{
-
-		}
-	}
 }
 
 
@@ -348,14 +333,14 @@ void Enemy::steering()
 		SAFE_DELETE(edgeList);
 	}
 
-	if(edgeList == NULL)
+	if (edgeList == NULL)
 	{
 		// 目的地に直線移動
 		moveDirection = destination - position;
 		D3DXVec3Normalize(&moveDirection, &moveDirection);
 	}
 	else
-	{	
+	{
 		// ナビメッシュによる移動ベクトル生成
 		naviMesh->steering(&moveDirection, &naviFaceIndex, centralPosition, edgeList);
 	}
@@ -512,6 +497,50 @@ void Enemy::updateCentralCood()
 
 
 //=============================================================================
+// 到着判定
+//=============================================================================
+void Enemy::checkArrival()
+{
+	float distance = between2VectorLength(destination, position);
+
+	if (distance <= ARRIVAL_DISTANCE)
+	{
+		isArraved = true;
+	}
+	// ●通り過ぎ対策をしたい
+	//D3DXVECTOR3 point = nearestPointOnLine(enemyData->position/*1フレーム前の座標*/, position, destination);
+}
+
+
+//=============================================================================
+// ブラックボードの更新
+//=============================================================================
+void Enemy::updataBlackBoard(float frameTime)
+{
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		// プレイヤーの認識
+		if (isSensingPlayer[i])
+		{
+			isNoticedPlayer[i] = true;
+			noticedTimePlayer[i] = 0.0f;
+		}
+
+		// プレイヤーの記憶
+		if (isNoticedPlayer[i])
+		{
+			noticedTimePlayer[i] += frameTime;
+			if (noticedTimePlayer[i] >= PLAYER_MEMORIZED_TIME[enemyData->type])
+			{
+				noticedTimePlayer[i] = 0.0f;
+				isNoticedPlayer[i] = false;
+			}
+		}
+	}
+}
+
+
+//=============================================================================
 // 重力発生メッシュ（接地メッシュ）の設定
 //=============================================================================
 void Enemy::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
@@ -565,12 +594,24 @@ BoundingSphere*  Enemy::getSphereCollider() { return &sphereCollider; }
 D3DXVECTOR3*  Enemy::getCentralPosition() { return &centralPosition; }
 D3DXMATRIX* Enemy::getCentralMatrixWorld() { return &centralMatrixWorld; }
 LPD3DXMESH Enemy::getMesh() { return box->mesh; }
+bool Enemy::getNoticedOfPlayer(int playerType) { return isNoticedPlayer[playerType]; }
+
 
 //=============================================================================
 // Setter
 //=============================================================================
-void Enemy::setMove(bool setting) { onMove = setting; }
+void Enemy::setMove(bool setting) { shouldMove = setting; }
 void Enemy::setMovingTarget(D3DXVECTOR3* _target) { movingTarget = _target; }
+void Enemy::setDestinationAndResetArrival(D3DXVECTOR3 _destination)
+{
+	destination = _destination;
+	isArraved = false;
+}
+void Enemy::setAttack(bool _shouldAttack, int _attackTargetPlayer)
+{
+	shouldAttack = _shouldAttack;
+	attackTime = _attackTargetPlayer;
+}
 void Enemy::setIsHitPlayer(bool setting) { isHitPlayer = setting; }
 
 
@@ -709,7 +750,7 @@ void Enemy::debugSensor()
 	// バウンディングスフィアで描画する
 
 	bool sound = false;
-	if (canUseSensor)
+	if (shouldSense)
 	{
 		if (eyeSensor(gameMasterNS::PLAYER_1P) || eyeSensor(gameMasterNS::PLAYER_2P))
 		{
@@ -730,12 +771,35 @@ void Enemy::debugSensor()
 
 	if (sound)
 	{
-		//// 音を鳴らす
+		// 音を鳴らす
 		//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-		//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::S3D_GAME_FOOTSTEP_01, false ,NULL,true,playerNS::PLAYER1,true, filterParameters };
-		//SoundInterface::S3D->playSound(&playParameters);	//SE再生
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };//SEの1曲目の設定
+		//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, GAME_S3D_LIST::S3D_GAME_FOOTSTEP_01, false ,NULL,true,playerNS::PLAYER1,true, filterParameters };
+		SoundInterface::SE->playSound(&playParameters);	//SE再生
 	}
 }
+
+
+//=============================================================================
+// デバッグ用目的地設定
+//=============================================================================
+void Enemy::setDebugDestination()
+{
+	// 目的地のセット
+	static const float TEMP_DISTANCE = 20.0f;
+	D3DXVECTOR3 tempDir;
+	tempDir = D3DXVECTOR3(rand() % 1000, 0, rand() % 1000);
+	tempDir -= D3DXVECTOR3(500, 0, 500);
+	D3DXVec3Normalize(&tempDir, &tempDir);
+	tempDir *= TEMP_DISTANCE;
+	destination = position + tempDir;
+
+#if 0	// 山頂を目的地とする
+	destination = D3DXVECTOR3(-30, 158, 35);
+#endif
+	setMovingTarget(&destination);
+}
+
 
 //===================================================================================================================================
 // ImGUIへの出力

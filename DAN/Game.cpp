@@ -174,6 +174,8 @@ void Game::initialize() {
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane = new TestPlane();
+	//開発中広告
+	ad = new Advertisement();
 
 	// エネミー
 	enemyManager = new EnemyManager;
@@ -206,7 +208,7 @@ void Game::initialize() {
 	// AI
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, player, enemyManager, treeManager, itemManager, NULL);
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	naviMesh->initialize();
 
 	//固定されたUI
@@ -304,6 +306,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(reticle);
 	SAFE_DELETE(fixedUI);
 	SAFE_DELETE(playerUI);
+	SAFE_DELETE(ad);
 
 	UninitMoveP();
 
@@ -443,6 +446,8 @@ void Game::update(float _frameTime) {
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane->update(frameTime);
+	// 開発中広告
+	ad->update(frameTime);
 
 	//電力減少（電力回復確認用）
 	player->pullpower(1);
@@ -563,6 +568,9 @@ void Game::render3D(Camera currentCamera) {
 	//ディスプレイ用プレーンサンプル
 	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// 開発中広告
+	ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//レティクル3D描画
 	reticle->render3D(nowRenderingWindow,currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -590,7 +598,7 @@ void Game::render3D(Camera currentCamera) {
 #endif
 
 #ifdef _DEBUG
-#if 1	// ナビゲーションメッシュのデバッグ描画
+#if 0	// ナビゲーションメッシュのデバッグ描画
 	naviMesh->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
 #endif //_DEBUG
@@ -695,10 +703,10 @@ void Game::collisions()
 	}
 
 	// 風との当たり判定
-	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	//{
-	//	windManager->windCollision(&player[i]);
-	//}
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		windManager->windCollision(&player[i]);
+	}
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
@@ -725,7 +733,7 @@ void Game::collisions()
 //===================================================================================================================================
 void Game::AI() {
 	//エネミー増殖し続けるのでコメントアウト
-	//aiDirector->run();		// メタAI実行
+	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================

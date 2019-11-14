@@ -11,17 +11,12 @@ using namespace aiNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void EventMaker::initialize(PLAYERAD* _playerAD, ENEMYAD* _enemyAD, TREEAD* _treeAD, ITEMAD* _itemAD,
+void EventMaker::initialize(aiNS::AnalyticalData* _data,
 	OperationGenerator* _opeGenerator, GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager,
 	TreeManager* _treeManager, ItemManager* _itemManager, TelopManager* _telopManager)
 {
-	playerAD = _playerAD;
-	enemyAD = _enemyAD;
-	treeAD = _treeAD;
-	itemAD = _itemAD;
-
+	data = _data;
 	opeGenerator = _opeGenerator;
-
 	gameMaster = _gameMaster;
 	player = _player;
 	enemyManager = _enemyManager;
@@ -44,11 +39,11 @@ void EventMaker::uninitialize()
 //=============================================================================
 void EventMaker::update()
 {
-	// エネミー動的作成イベントの作成
-	if (enemyAD->shouldSpawnFuzzily > FUZZY_VALUE_SHOULD_SPAWN)
-	{
-		makeEventSpawningEnemyAroundPlayer();
-	}
+	//// エネミー動的作成イベントの作成
+	//if (enemyAD->shouldSpawnFuzzily > FUZZY_VALUE_SHOULD_SPAWN)
+	//{
+	//	makeEventSpawningEnemyAroundPlayer();
+	//}
 }
 
 
