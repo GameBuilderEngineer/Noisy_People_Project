@@ -47,7 +47,7 @@ public://メンバー関数
 	void renderP1();			//P1描画
 	void renderP2();			//P2描画
 	void update(bool flag, int buttontype);	//更新
-	void  changeAlpha(bool flag);//α値の変更
+	void  changeAlpha(bool flag, int buttontype);//α値の変更
 	
 
 }; 

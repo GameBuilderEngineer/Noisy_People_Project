@@ -72,6 +72,8 @@ TextureLoader::TextureLoader()
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
 	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };
 	textureName[UI_HP_GUAGE_P1] = { "HPGuage1.png" };
+	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
+	textureName[UI_ICON_P1] = { "Chara_1.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

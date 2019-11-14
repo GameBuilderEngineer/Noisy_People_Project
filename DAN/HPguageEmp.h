@@ -1,5 +1,5 @@
 //======================================
-//HPゲージクラス[HPguage.h]
+//HPゲージ(空)クラス[HPguageEmp.h]
 //染矢晃介
 //======================================
 #pragma once
@@ -12,34 +12,25 @@
 //======================================
 //名前空間
 //======================================
-namespace hpGuageNS
+namespace hpGuageEmpNS
 {
-	const int WIDTH_HP_GUAGE = (500);	//タイマーフレームの横幅
-	const int HEIGHT_HP_GUAGE = (30);	//タイマーフレームの縦幅
-	const D3DXVECTOR3 POSITION_HP_GUAGE = D3DXVECTOR3(102, 35, 0);	//タイマーフレームの表示位置(仮)
+	const int WIDTH_HP_GUAGE_EMP = (500);	//タイマーフレームの横幅
+	const int HEIGHT_HP_GUAGE_EMP = (30);	//タイマーフレームの縦幅
+	const D3DXVECTOR3 POSITION_HP_GUAGE_EMP = D3DXVECTOR3(350, 50, 0);	//タイマーフレームの表示位置(仮)
 }
 
 //======================================
 //クラス定義
 //======================================
-class HPguage:public BasicUI
+class HPguageEmp :public BasicUI
 {
 public://メンバー変数
-	Sprite * hpGuage;
-	int      hp;//HP保存用
-	int		 width;
-	//UV座標管理用
-	D3DXVECTOR2 uvCoord1;	
-	D3DXVECTOR2 uvCoord2;
-	D3DXVECTOR2 uvCoord3;
-	D3DXVECTOR2 uvCoord4;
-
+	Sprite * hpGuageEmp;
 private:
 public://メンバー関数
-	HPguage();
-	~HPguage();
+	HPguageEmp();
+	~HPguageEmp();
 	void initialize();
 	void render();
 	void update();
-	void changeGage(int hp);
 };

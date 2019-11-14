@@ -66,6 +66,8 @@ namespace textureNS
 		UI_STATUSFRAME_P1,
 		UI_STATUSFRAME_P2,
 		UI_HP_GUAGE_P1,
+		UI_HP_GUAGE_EMP_P1,
+		UI_ICON_P1,
 
 		// Result
 		RESULT,

@@ -148,6 +148,7 @@
     <ClInclude Include="AnalogTree.h" />
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="Guage.h" />
     <ClInclude Include="Battery.h" />
     <ClInclude Include="Bear.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="ButtonFrame.h" />
     <ClInclude Include="HPguage.h" />
+    <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="StatusFrame.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="MapObject.h" />
@@ -280,6 +282,7 @@
     <ClCompile Include="AnalogTree.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="Guage.cpp" />
     <ClCompile Include="Battery.cpp" />
     <ClCompile Include="Bear.cpp" />
@@ -288,6 +291,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="ButtonFrame.cpp" />
     <ClCompile Include="HPguage.cpp" />
+    <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="MapObject.cpp" />

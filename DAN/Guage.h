@@ -8,6 +8,7 @@
 //インクルード
 //=====================================
 #include "HPguage.h"
+#include "HPguageEmp.h"
 
 //=====================================
 //名前空間
@@ -24,6 +25,7 @@ class Guage
 {
 public://メンバー変数
 	HPguage  *hpGuage;
+	HPguageEmp *hpGuageEmp;
 private:
 public://メンバー関数
 	Guage();

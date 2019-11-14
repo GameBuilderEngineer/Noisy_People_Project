@@ -34,6 +34,7 @@ namespace basicUiNS
 	const float SLIDE_SPEED = 20.0f;		//スライドインの速度
 	const int	CHANGE_SIZE_SPEED = 20;		//サイズ変更の速度
 	const float   CHANGE_ALPHA_SPEED = 155.0f;		//α値の変更速度
+	const float CHANGE_UV_SPEED = 0.1f;	//UV座標の変化速度
 }
 
 //================================
@@ -48,6 +49,7 @@ public://メンバー変数
 	int widthSize;			//幅のサイズ
 	int heightSize;			//高さサイズ
 	float alphaValue;		//α値
+	int	  pivot;			//中心
 	// uv座標用の変数
 	D3DXVECTOR2 uvCoord01;
 	D3DXVECTOR2 uvCoord02;
@@ -63,13 +65,15 @@ public://メンバー関数
 	void	assingRotation(D3DXVECTOR3 rot);						//回転の代入
 	void	assingColor(D3DCOLOR col);								//色の代入
 	void	assingSize(int widh, int height);						//サイズの代入
-	void	changePostion(int movetype);//位置変更	
-	void	increaseAlpha(float alpha);//透明度増加
-	void	decreaseAlpha(float alpha);//透明度減少
-	void	expansionWidthSize(int speed);//横サイズの拡大
-	void	expansionHeightSize(int speed);//縦サイズの拡大
-	void	reductionWidthSize(int speed);//横サイズの縮小
-	void	reductionHeightSize(int speed);//縦サイズの縮小
-
+	void    assingUV(D3DXVECTOR2 uvCoord1, D3DXVECTOR2 uvCoord2, D3DXVECTOR2 uvCoord3, D3DXVECTOR2 uvCoord4);//UV座標の代入
+	void	changePivot();								//中心を左上に変更
+	void	changePostion(Sprite *sprite,int movetype);//位置変更	
+	void	increaseAlpha(Sprite *sprite,float alpha);//透明度増加
+	void	decreaseAlpha(Sprite *sprite,float alpha);//透明度減少
+	void	expansionWidthSize(Sprite *sprite,int speed);//横サイズの拡大
+	void	expansionHeightSize(Sprite *sprite,int speed);//縦サイズの拡大
+	void	reductionWidthSize(Sprite *sprite,int speed);//横サイズの縮小
+	void	reductionHeightSize(Sprite *sprite,int speed);//縦サイズの縮小
+	void    changeUV(Sprite *sprite,D3DXVECTOR2 uv);//UV座標の変化
 private:
 };

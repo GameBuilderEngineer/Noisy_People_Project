@@ -95,23 +95,21 @@ void UiButton::renderP2()
 //==================================
 void UiButton::update(bool flag,int buttontype)
 {
-	changeAlpha(flag);
-	button[buttontype]->setAlphaAllVertex(alphaValue);
-	button[buttontype]->render();
+	changeAlpha(flag,buttontype);
 }
 
 //==================================
 //α値の変更
 //引数:ボタンが使用可能かどうか
 //==================================
-void  UiButton::changeAlpha(bool flag)
+void  UiButton::changeAlpha(bool flag,int buttontype)
 {
 	if (flag == true)//使用可能の場合は可視化
 	{
-		BasicUI::increaseAlpha(ALPHA_MAX);
+		BasicUI::increaseAlpha(button[buttontype],ALPHA_MAX);
 	}
 	else//使用不可の場合は不可視
 	{
-		BasicUI::increaseAlpha(ALPHA_MINIMAM);
+		BasicUI::increaseAlpha(button[buttontype],ALPHA_MINIMAM);
 	}
 }

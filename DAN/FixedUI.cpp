@@ -27,6 +27,7 @@ FixedUI::FixedUI()
 	statusFrameP1 = new StatusFrame;
 	statusFrameP2 = new StatusFrame;
 	guage = new Guage;
+	charaIcon = new CharaIcon;
 }
 
 //================================
@@ -43,6 +44,7 @@ FixedUI::~FixedUI()
 	delete statusFrameP1;
 	delete statusFrameP2;
 	delete guage;
+	delete charaIcon;
 }
 
 //================================
@@ -59,6 +61,7 @@ void FixedUI::initialize()
 	statusFrameP1->initialize(basicUiNS::P1);
 	statusFrameP2->initialize(basicUiNS::P2);
 	guage->initialize();
+	charaIcon->initialize();
 	
 }
 
@@ -76,6 +79,7 @@ void FixedUI::render()
 	statusFrameP1->render();
 	statusFrameP2->render();
 	guage->render();
+	charaIcon->render();
 }
 
 //================================
@@ -88,6 +92,7 @@ void FixedUI::update()
 	//マジックナンバー部分は変数を用意予定
 	buttonP1->update(0,1);
 	buttonP2->update(1,1);
+	guage->update();
 }
 
 //================================

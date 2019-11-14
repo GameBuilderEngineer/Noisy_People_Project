@@ -676,6 +676,12 @@
     <ClCompile Include="Guage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
+    <ClCompile Include="HPguageEmp.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="CharaIcon.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1073,6 +1079,12 @@
     </ClInclude>
     <ClInclude Include="Guage.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguageEmp.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="CharaIcon.h">
+      <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

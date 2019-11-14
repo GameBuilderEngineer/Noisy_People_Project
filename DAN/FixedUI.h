@@ -12,6 +12,7 @@
 #include "ButtonFrame.h"
 #include "StatusFrame.h"
 #include "Guage.h"
+#include "CharaIcon.h"
 
 //=================================
 // 名前空間
@@ -37,6 +38,7 @@ private:
 	StatusFrame *statusFrameP1;//HPとかのフレーム
 	StatusFrame *statusFrameP2;//HPとかのフレーム
 	Guage		*guage;		   //ゲージ
+	CharaIcon	*charaIcon;	   //キャラアイコン
 	//bool	    buttonFlag;    //ボタンon off用フラグ
 	//int		 buttonType;	//ボタンタイプ管理用
 public://メンバー関数
