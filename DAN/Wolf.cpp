@@ -81,7 +81,9 @@ void::Wolf::patrol()
 {
 	if (onGround && isArraved || isDestinationLost)
 	{
+#ifdef _DEBUG
 		setDebugDestination();		// デバッグ用目的地を設定
+#endif // _DEBUG
 		isDestinationLost = false;	// 目的地はロストしていない
 		shouldSearch = true;		// パスサーチ実行
 	}

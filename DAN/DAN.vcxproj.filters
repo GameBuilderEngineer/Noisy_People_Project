@@ -670,7 +670,6 @@
     <ClCompile Include="AABB.cpp">
       <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
     </ClCompile>
-    <ClCompile Include="DebugBox.cpp" />
     <ClCompile Include="HPguage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
@@ -694,6 +693,9 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Game Layer\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugBox.cpp">
+      <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1087,7 +1089,6 @@
     <ClInclude Include="AABB.h">
       <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
     </ClInclude>
-    <ClInclude Include="DebugBox.h" />
     <ClInclude Include="HPguage.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
@@ -1108,6 +1109,9 @@
     </ClInclude>
     <ClInclude Include="Advertisement.h">
       <Filter>Game Layer\TestPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugBox.h">
+      <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

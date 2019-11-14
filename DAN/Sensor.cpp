@@ -143,7 +143,7 @@ void Sensor::treeSensor()
 		{
 			data->numDigital++;
 		}
-		if (treeData->geenState == treeNS::GREEN)
+		if (treeData->greenState == treeNS::GREEN)
 		{
 			data->numGreen++;
 		}
