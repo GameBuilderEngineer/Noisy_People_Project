@@ -210,6 +210,10 @@ void Game::initialize() {
 	fixedUI = new FixedUI;
 	fixedUI->initialize();
 
+	//プレイヤー周りのUI
+	playerUI = new PlayerUI;
+	playerUI->initialize();
+
 	//レティクル
 	reticle = new Reticle();
 	reticle->setAimingPosition1(player[gameMasterNS::PLAYER_1P].getAiming());
@@ -293,6 +297,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
 	SAFE_DELETE(fixedUI);
+	SAFE_DELETE(playerUI);
 
 	UninitMoveP();
 
@@ -431,6 +436,10 @@ void Game::update(float _frameTime) {
 
 	//固定UIの更新
 	fixedUI->update();
+
+	//プレイヤー周りのUIの更新
+	playerUI->update();
+
 	//レティクルの更新
 	reticle->update(frameTime);
 
@@ -592,6 +601,9 @@ void Game::renderUI() {
 
 	//固定UIの描画
 	fixedUI->render();
+
+	//プレイヤー周りのUIの描画
+	playerUI->render();
 
 	//レティクルの描画
 	reticle->render2D();

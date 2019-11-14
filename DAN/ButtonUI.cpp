@@ -6,7 +6,7 @@
 //==================================
 //インクルード
 //==================================
-#include "UIButton.h"
+#include "ButtonUI.h"
 
 //==================================
 // using宣言
@@ -16,7 +16,7 @@ using namespace uiButtonNS;
 //==================================
 //コンストラクタ
 //==================================
-UiButton::UiButton()
+ButtonUI::ButtonUI()
 {
 	for (int i = 0; i < TYPE_MAX; i++)
 	{
@@ -27,7 +27,7 @@ UiButton::UiButton()
 //==================================
 //デストラクタ
 //==================================
-UiButton::~UiButton()
+ButtonUI::~ButtonUI()
 {
 	for (int i = 0; i < TYPE_MAX; i++)
 	{
@@ -38,7 +38,7 @@ UiButton::~UiButton()
 //==================================
 //初期化
 //==================================
-void UiButton::initialize()
+void ButtonUI::initialize()
 {
 	//初期表示位置の初期化
 	BasicUI::assingPosition(POSITION_BUTTON);
@@ -60,7 +60,7 @@ void UiButton::initialize()
 //==================================
 //P1描画
 //==================================
-void UiButton::renderP1()
+void ButtonUI::renderP1()
 {
 	//1P用の表示
 	for (int i = 0; i < TYPE_MAX; i++)
@@ -75,7 +75,7 @@ void UiButton::renderP1()
 //==================================
 //P2描画
 //==================================
-void UiButton::renderP2()
+void ButtonUI::renderP2()
 {
 	//2P用の表示
 	for (int i = 0; i < TYPE_MAX; i++)
@@ -93,7 +93,7 @@ void UiButton::renderP2()
 //引数:ボタンが使用可能かどうか
 //	  :どこのボタンかを指定
 //==================================
-void UiButton::update(bool flag,int buttontype)
+void ButtonUI::update(bool flag,int buttontype)
 {
 	changeAlpha(flag,buttontype);
 }
@@ -102,7 +102,7 @@ void UiButton::update(bool flag,int buttontype)
 //α値の変更
 //引数:ボタンが使用可能かどうか
 //==================================
-void  UiButton::changeAlpha(bool flag,int buttontype)
+void  ButtonUI::changeAlpha(bool flag,int buttontype)
 {
 	if (flag == true)//使用可能の場合は可視化
 	{

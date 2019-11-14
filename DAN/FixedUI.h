@@ -3,12 +3,13 @@
 // 染矢晃介
 //=================================
 #pragma once
+
 //=================================
 // インクルード
 //=================================
 #include "Timer.h"
 #include "TimerFrame.h"
-#include "UIButton.h"
+#include "ButtonUI.h"
 #include "ButtonFrame.h"
 #include "StatusFrame.h"
 #include "Guage.h"
@@ -31,8 +32,8 @@ public://メンバー変数
 private:
 	Timer * timer;				//タイマー
 	TimerFlame * timerFlame;	//タイマーフレーム
-	UiButton   * buttonP1;		//ボタンUI
-	UiButton   * buttonP2;		//ボタンUI
+	ButtonUI   * buttonP1;		//ボタンUI
+	ButtonUI   * buttonP2;		//ボタンUI
 	ButtonFrame *buttonFrameP1;//ボタンのボックス
 	ButtonFrame *buttonFrameP2;//ボタンのボックス
 	StatusFrame *statusFrameP1;//HPとかのフレーム

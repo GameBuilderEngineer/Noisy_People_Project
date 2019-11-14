@@ -9,6 +9,7 @@
 //=====================================
 #include "HPguage.h"
 #include "HPguageEmp.h"
+#include "Player.h"
 
 //=====================================
 //名前空間
@@ -21,11 +22,13 @@ namespace guageNS
 //=====================================
 //クラス定義
 //=====================================
-class Guage
+class Guage:public Player
 {
 public://メンバー変数
 	HPguage  *hpGuage;
 	HPguageEmp *hpGuageEmp;
+	int hp;
+	
 private:
 public://メンバー関数
 	Guage();

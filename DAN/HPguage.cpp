@@ -58,9 +58,8 @@ void HPguage::render()
 //====================================
 //XV
 //====================================
-void HPguage::update()
+void HPguage::update(int hp)
 {
-	hp = 10;
 	changeGage(hp);
 }
 

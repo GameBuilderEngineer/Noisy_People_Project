@@ -40,6 +40,6 @@ public://ƒƒ“ƒo[ŠÖ”
 	~HPguage();
 	void initialize();
 	void render();
-	void update();
+	void update(int hp);
 	void changeGage(int hp);
 };

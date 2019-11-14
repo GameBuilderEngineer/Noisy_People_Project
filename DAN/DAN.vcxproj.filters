@@ -634,9 +634,6 @@
     <ClCompile Include="BasicUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
-    <ClCompile Include="UIButton.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="tutorialPlane.cpp">
       <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
     </ClCompile>
@@ -680,6 +677,12 @@
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
     <ClCompile Include="CharaIcon.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1035,9 +1038,6 @@
     <ClInclude Include="BasicUI.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="UIButton.h">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="tutorialPlane.h">
       <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
     </ClInclude>
@@ -1084,6 +1084,12 @@
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
     <ClInclude Include="CharaIcon.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonUI.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>

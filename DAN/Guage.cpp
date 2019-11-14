@@ -54,5 +54,6 @@ void Guage::render()
 //================================
 void Guage::update()
 {
-	hpGuage->update();
+	hp = Player::getHp();
+	hpGuage->update(hp);
 }
