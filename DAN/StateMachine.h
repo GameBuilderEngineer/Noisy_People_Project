@@ -13,7 +13,8 @@ namespace stateMachineNS
 		CHASE,		// 追跡ステート
 		PATROL,		// 警戒ステート
 		REST,		// 休憩ステート
-		DIE,		// 死亡ステート
+		ATTACK_TREE,// ツリー攻撃ステート
+		DIE,			// 死亡ステート
 		STATE_MAX,	// ステートの数
 	};
 
