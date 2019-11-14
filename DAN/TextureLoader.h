@@ -63,6 +63,10 @@ namespace textureNS
 		UI_BUTTON4,
 		UI_BUTTON_BOX,
 		UI_STATUSFRAME_P1,
+		UI_STATUSFRAME_P2,
+		UI_HP_GUAGE_P1,
+		UI_HP_GUAGE_EMP_P1,
+		UI_ICON_P1,
 
 		// Result
 		RESULT,

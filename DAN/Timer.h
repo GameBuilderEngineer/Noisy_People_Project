@@ -7,6 +7,7 @@
 //インクルード
 //====================================
 #include "BasicUI.h"
+#include "GameMaster.h"
 
 //====================================
 //名前空間
@@ -26,12 +27,11 @@ namespace timerNS
 //====================================
 //クラス定義
 //====================================
-class Timer:public BasicUI
+class Timer:public BasicUI,public GameMaster
 {
 private://メンバー変数
 	Sprite *timer[timerNS::DIGIT_TIMER];
 	float		 keepTime;							//時間管理用
-	
 
 public://メンバー関数
 	Timer();				//コンストラクタ

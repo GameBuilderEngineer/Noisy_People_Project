@@ -301,6 +301,9 @@
     <Filter Include="Constant Layer\Collision\AxisAlinedBoundingBox">
       <UniqueIdentifier>{7987e540-3b47-4ee8-ae2c-ef5d997eb416}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\GameUI\Guage">
+      <UniqueIdentifier>{5bb8b9a2-f308-41f1-a6dd-48e0aee779fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -634,9 +637,6 @@
     <ClCompile Include="BasicUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
-    <ClCompile Include="UIButton.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="tutorialPlane.cpp">
       <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
     </ClCompile>
@@ -674,6 +674,24 @@
       <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
     </ClCompile>
     <ClCompile Include="DebugBox.cpp" />
+    <ClCompile Include="HPguage.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="Guage.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="HPguageEmp.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="CharaIcon.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1027,9 +1045,6 @@
     <ClInclude Include="BasicUI.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="UIButton.h">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="tutorialPlane.h">
       <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
     </ClInclude>
@@ -1070,6 +1085,24 @@
       <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
     </ClInclude>
     <ClInclude Include="DebugBox.h" />
+    <ClInclude Include="HPguage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="Guage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguageEmp.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="CharaIcon.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

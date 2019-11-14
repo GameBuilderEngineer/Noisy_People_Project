@@ -24,6 +24,7 @@ BasicUI::BasicUI()
 	color = D3DCOLOR_RGBA(255,255, 255, 255);	//色
 	widthSize = 0;								//横幅
 	heightSize = 0;								//高さ
+	pivot = SpriteNS::CENTER;
 	//テクスチャ座標
 	uvCoord01 = D3DXVECTOR2(0.0, 0.0);
 	uvCoord02 = D3DXVECTOR2(1.0, 0.0);
@@ -46,7 +47,7 @@ void BasicUI::initialize(Sprite *sprite, LPDIRECT3DTEXTURE9 *fileName)
 {
 	sprite->initialize(
 		*fileName					//テクスチャ
-		, SpriteNS::CENTER			//中心
+		, pivot						//中心
 		, widthSize					//横幅
 		, heightSize				//縦幅
 		, position					//表示位置
@@ -88,27 +89,54 @@ void BasicUI::assingSize(int widh, int height)
 }
 
 //==================================
+//UV座標の代入
+//==================================
+void BasicUI::assingUV(D3DXVECTOR2 uvCoord1, D3DXVECTOR2 uvCoord2, D3DXVECTOR2 uvCoord3, D3DXVECTOR2 uvCoord4)
+{
+	uvCoord01 = uvCoord1;
+	uvCoord02 = uvCoord2;
+	uvCoord03 = uvCoord3;
+	uvCoord04 = uvCoord4;
+}
+
+//==================================
+// 中心位置の代入
+//==================================
+void BasicUI::changePivot()
+{
+	pivot = SpriteNS::TOP_LEFT;
+}
+
+//==================================
 //座標の変更
 //引数：移動の種類
 //==================================
-void BasicUI::changePostion(int movetype)
+void BasicUI::changePostion(Sprite *sprite,int movetype)
 {
 	switch (movetype)
 	{
 	case slideRight:
 		position.x += SLIDE_SPEED;
+		sprite->setVertex();
+		sprite->render();
 		break;
 
 	case slideLeft:
 		position.x -= SLIDE_SPEED;
+		sprite->setVertex();
+		sprite->render();
 		break;
 
 	case slideUp:
 		position.y -= SLIDE_SPEED;
+		sprite->setVertex();
+		sprite->render();
 		break;
 
 	case slideDown:
 		position.y += SLIDE_SPEED;
+		sprite->setVertex();
+		sprite->render();
 		break;
 
 	default:
@@ -119,18 +147,20 @@ void BasicUI::changePostion(int movetype)
 //=================================
 //透明度の増加
 //=================================
-void BasicUI::increaseAlpha(float alpha)
+void BasicUI::increaseAlpha(Sprite *sprite,float alpha)
 {
 
 	alphaValue = alpha;
 	color = D3DCOLOR_RGBA(255, 255, 255, (int)alphaValue);
+	sprite->setAlphaAllVertex(alphaValue);
+	sprite->render();
 	
 }
 
 //=================================
 //透明度の減少
 //=================================
-void BasicUI::decreaseAlpha(float alpha)
+void BasicUI::decreaseAlpha(Sprite *sprite,float alpha)
 {
 	
 }
@@ -139,35 +169,57 @@ void BasicUI::decreaseAlpha(float alpha)
 //横サイズの拡大
 //引数:サイズの変化速度
 //=================================
-void BasicUI::expansionWidthSize(int speed)
+void BasicUI::expansionWidthSize(Sprite *sprite,int speed)
 {
 	widthSize += speed;
+	sprite->setSize(widthSize, heightSize);
+	sprite->setVertex();
+	sprite->render();
 }
 
 //=================================
 //縦サイズの変更
 //引数:サイズの変化速度
 //=================================
-void BasicUI::expansionHeightSize(int speed)
+void BasicUI::expansionHeightSize(Sprite *sprite,int speed)
 {
-	widthSize -= speed;
+	heightSize -= speed;
+	sprite->setSize(widthSize, heightSize);
+	sprite->setVertex();
+	sprite->render();
 }
 
 //=================================
 //横サイズの拡大
 //引数:サイズの変化速度
 //=================================
-void BasicUI::reductionWidthSize(int speed)
+void BasicUI::reductionWidthSize(Sprite *sprite,int speed)
 {
-	heightSize += speed;
+	widthSize -= speed;
+	sprite->setSize(widthSize, heightSize);
+	sprite->setVertex();
+	sprite->render();
 }
 
 //=================================
 //縦サイズの縮小
 //引数:サイズの変化速度
 //=================================
-void BasicUI::reductionHeightSize(int speed)
+void BasicUI::reductionHeightSize(Sprite *sprite,int speed)
 {
 	heightSize -= speed;
+	sprite->setSize(widthSize, heightSize);
+	sprite->setVertex();
+	sprite->render();
 }
 
+//=================================
+//UV座標の変化
+//=================================
+void BasicUI::changeUV(Sprite *sprite,D3DXVECTOR2 uv)
+{
+	uvCoord02.x = CHANGE_UV_SPEED;
+	uvCoord04.x = CHANGE_UV_SPEED;
+	sprite->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
+	sprite->render();
+}

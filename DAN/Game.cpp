@@ -213,6 +213,10 @@ void Game::initialize() {
 	fixedUI = new FixedUI;
 	fixedUI->initialize();
 
+	//プレイヤー周りのUI
+	playerUI = new PlayerUI;
+	playerUI->initialize(&player[gameMasterNS::PLAYER_1P]);
+
 	//レティクル
 	reticle = new Reticle();
 	reticle->setAimingPosition1(player[gameMasterNS::PLAYER_1P].getAiming());
@@ -299,6 +303,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
 	SAFE_DELETE(fixedUI);
+	SAFE_DELETE(playerUI);
 
 	UninitMoveP();
 
@@ -449,6 +454,10 @@ void Game::update(float _frameTime) {
 	//固定UIの更新
 	fixedUI->update();
 	gameMaster->getGameTime();//←ソメヤくんへ：ゲームタイムです。
+
+
+	//プレイヤー周りのUIの更新
+	playerUI->update();
 
 	//レティクルの更新
 	reticle->update(frameTime);
@@ -610,9 +619,11 @@ void Game::renderUI() {
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-
 	//固定UIの描画
 	fixedUI->render();
+
+	//プレイヤー周りのUIの描画
+	playerUI->render();
 
 	//レティクルの描画
 	reticle->render2D();
