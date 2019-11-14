@@ -132,17 +132,17 @@ void Reticle::setAimingPosition2(D3DXVECTOR3* position)
 //===================================================================================================================================
 void Reticle::update(float frameTime)
 {
-	currentU++;
-	if (currentU > NUM_U)
-	{
-		currentU = 0;
-		currentV++;
-		if (currentV > NUM_V)
-		{
-			currentV = 0;
-		}
-	}
-	setAnime();
+	//currentU++;
+	//if (currentU > NUM_U)
+	//{
+	//	currentU = 0;
+	//	currentV++;
+	//	if (currentV > NUM_V)
+	//	{
+	//		currentV = 0;
+	//	}
+	//}
+	//setAnime();
 	billboard->update(frameTime);
 }
 
