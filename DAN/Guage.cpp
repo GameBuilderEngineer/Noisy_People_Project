@@ -19,7 +19,7 @@ using namespace guageNS;
 Guage::Guage()
 {
 	hpGuageEmp = new HPguageEmp;
-	hpGuage = new HPguage;
+	
 }
 
 //================================
@@ -28,7 +28,7 @@ Guage::Guage()
 Guage::~Guage()
 {
 	delete hpGuageEmp;
-	delete hpGuage;
+	
 }
 
 //================================
@@ -37,7 +37,7 @@ Guage::~Guage()
 void Guage::initialize()
 {
 	hpGuageEmp->initialize();
-	hpGuage->initialize();
+	
 }
 
 //================================
@@ -46,7 +46,7 @@ void Guage::initialize()
 void Guage::render()
 {
 	hpGuageEmp->render();
-	hpGuage->render();
+	
 }
 
 //================================
@@ -54,6 +54,5 @@ void Guage::render()
 //================================
 void Guage::update()
 {
-	hp = Player::getHp();
-	hpGuage->update(hp);
+	
 }

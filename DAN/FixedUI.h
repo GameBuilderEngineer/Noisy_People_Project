@@ -39,7 +39,7 @@ private:
 	StatusFrame *statusFrameP1;//HPとかのフレーム
 	StatusFrame *statusFrameP2;//HPとかのフレーム
 	Guage		*guage;		   //ゲージ
-	CharaIcon	*charaIcon;	   //キャラアイコン
+	
 	//bool	    buttonFlag;    //ボタンon off用フラグ
 	//int		 buttonType;	//ボタンタイプ管理用
 public://メンバー関数

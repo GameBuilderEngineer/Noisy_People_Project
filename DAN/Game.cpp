@@ -212,7 +212,7 @@ void Game::initialize() {
 
 	//プレイヤー周りのUI
 	playerUI = new PlayerUI;
-	playerUI->initialize();
+	playerUI->initialize(&player[gameMasterNS::PLAYER_1P]);
 
 	//レティクル
 	reticle = new Reticle();
@@ -597,7 +597,6 @@ void Game::renderUI() {
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
 
 	//固定UIの描画
 	fixedUI->render();
