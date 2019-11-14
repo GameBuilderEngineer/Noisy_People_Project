@@ -694,7 +694,7 @@ D3DXMATRIX* Player::getcentralMatrixWorld() { return &centralMatrixWorld; }
 
 //(‰¼)’Êíó‘Ô
 
-NormalState::NormalState(Player* player):State() 
+NormalState::NormalState(Player* player):AbstractState() 
 {
 	this->player = player;
 	type = NORMAL;
@@ -729,7 +729,7 @@ void NormalState::physics()
 }
 
 
-State* NormalState::transition()
+AbstractState* NormalState::transition()
 {
 	return new NormalState(player);
 }

@@ -143,6 +143,7 @@
     <ClInclude Include="3DSound.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="ActionEventSeting.h" />
+    <ClInclude Include="Advertisement.h" />
     <ClInclude Include="AIDirector.h" />
     <ClInclude Include="AllocateHierarchy.h" />
     <ClInclude Include="AnalogTree.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="3DSound.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="ActionEventSeting.cpp" />
+    <ClCompile Include="Advertisement.cpp" />
     <ClCompile Include="AIDirector.cpp" />
     <ClCompile Include="AllocateHierarchy.cpp" />
     <ClCompile Include="AnalogTree.cpp" />

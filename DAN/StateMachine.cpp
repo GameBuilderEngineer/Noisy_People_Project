@@ -30,10 +30,11 @@ void StateMachine::initialize(int stateNumber)
 {
 	switch (stateNumber)
 	{
-	case CHASE:		current = ChaseState::getInstance();	break;
-	case PATROL:	current = PatrolState::getInstance();	break;
-	case REST:		current = RestState::getInstance();		break;
-	case DIE:		current = DieState::getInstance();		break;
+	case CHASE:			current = ChaseState::getInstance();	break;
+	case PATROL:		current = PatrolState::getInstance();	break;
+	case REST:			current = RestState::getInstance();		break;
+	case ATTACK_TREE:	current = AttackTree::getInstance();	break;
+	case DIE:			current = DieState::getInstance();		break;
 	}
 }
 
@@ -41,10 +42,10 @@ void StateMachine::initialize(int stateNumber)
 //=============================================================================
 // 実行
 //=============================================================================
-int StateMachine::run(float frameTime, int enemyType)
+int StateMachine::run(float frameTime, Enemy* enemy)
 {
 	old = current;
-	current = old->transition(checker, enemyType);
+	current = old->transition(checker, enemy);
 
 	// 遷移前のステートへの再遷移に時間制限を掛ける（遷移時間チェック）
 	// 短時間でステートが循環し続け行動が定まらなくなる現象を避けるため

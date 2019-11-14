@@ -403,7 +403,6 @@ void EnemyManager::outputGUI()
 			if (enemyList[i]->getEnemyID() == Enemy::debugEnemyID)
 			{
 				//ImGui::Text("horizontalAngle:%f\n", enemyList[i]->horizontalAngle);
-				//ImGui::Text("verticalAngle:%f\n", enemyList[i]->verticalAngle);
 			}
 		}
 	}
@@ -414,7 +413,7 @@ void EnemyManager::outputGUI()
 		{
 			issueNewEnemyID(),
 			enemyNS::WOLF,
-			stateMachineNS::CHASE,
+			stateMachineNS::PATROL,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 		};
@@ -480,6 +479,7 @@ void EnemyManager::relocateEnemyAccordingToFile()
 		createEnemy(enemyDataList.getValue(i));
 	}
 }
+
 
 //=============================================================================
 // Getter

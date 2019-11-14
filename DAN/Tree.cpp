@@ -9,7 +9,6 @@
 #include "ImguiManager.h"
 using namespace treeNS;
 
-
 int Tree::numOfTree = 0;
 
 //=============================================================================

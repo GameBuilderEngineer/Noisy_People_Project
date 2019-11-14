@@ -58,6 +58,8 @@ namespace treeNS
 		GREEN_STATE geenState;			// 緑化状態
 		TREE_SIZE size;					// 木のサイズ
 		int hp;							// HP
+		bool isAttaked;					// エネミーが攻撃中
+		int digitalHp;					// A/D変換後エネミーが削るHP
 		D3DXVECTOR3 initialPosition;	// 初期座標
 		D3DXVECTOR3 initialDirection;	// 初期方角
 		void zeroClear() { ZeroMemory(this, sizeof(TreeData)); }

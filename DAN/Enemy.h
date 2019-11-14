@@ -29,8 +29,6 @@
 #endif
 
 
-
-
 //=============================================================================
 // 名前空間
 //=============================================================================
@@ -135,20 +133,26 @@ namespace enemyNS
 		20.0f,		// BEAR
 	};
 
-	// Physics
-	const float AIR_MOVE_ACC_MAGNIFICATION = 0.12f;				// 空中移動加速度倍率
-	const float STOP_SPEED = 0.5f;								// 移動停止速度
-	const float FALL_SPEED_MAX = 60.0f;							// 落下最高速度
-	const float MOVE_FRICTION = 0.90f;							// 地面摩擦係数
-	const float WALL_FRICTION = 0.98f;							// 壁ずり摩擦係数
-	const float GROUND_FRICTION = 0.25f;						// 着地摩擦係数
-	const float ATTACKED_FRICTION = 0.2f;						// 攻撃後摩擦係数
-	const float GRAVITY_FORCE = 9.8f * 2;						// 重力
-	const float JUMP_SPEED = 6.0f;								// ジャンプ初速
-	const float JUMP_CONTROL_SPEED = 1.0f;						// ジャンプ高さコントール速度
-	const float DASH_MAGNIFICATION = 2.0f;						// ダッシュ倍率
-	const float DIFFERENCE_FIELD = 0.05f;						// フィールド補正差分
-	const float CAMERA_SPEED = 1.0f;							// カメラの速さ
+	// Physics Constant
+	const float AIR_MOVE_ACC_MAGNIFICATION = 0.12f;		// 空中移動加速度倍率
+	const float STOP_SPEED = 0.5f;						// 移動停止速度
+	const float FALL_SPEED_MAX = 60.0f;					// 落下最高速度
+	const float MOVE_FRICTION = 0.90f;					// 地面摩擦係数
+	const float WALL_FRICTION = 0.98f;					// 壁ずり摩擦係数
+	const float GROUND_FRICTION = 0.25f;				// 着地摩擦係数
+	const float ATTACKED_FRICTION = 0.2f;				// 攻撃後摩擦係数
+	const float GRAVITY_FORCE = 9.8f * 2;				// 重力
+
+	// AI Constant
+	const float ARRIVAL_DISTANCE = 0.5f;				// 到着距離
+	const float MOVE_LIMIT_TIME = 10.0f;				// 移動リミット時間
+
+	// Another Constant
+	const float DIFFERENCE_FIELD = 0.05f;				// フィールド補正差分
+	const float JUMP_SPEED = 6.0f;						// ジャンプ初速
+	const float JUMP_CONTROL_SPEED = 1.0f;				// ジャンプ高さコントール速度
+	const float DASH_MAGNIFICATION = 2.0f;				// ダッシュ倍率
+	const float CAMERA_SPEED = 1.0f;					// カメラの速さ
 
 
 	//-----------------------------------------------------------------
@@ -237,35 +241,38 @@ protected:
 
 	// センサー
 	float sensorTime;					// センサー更新時間カウンタ
-	bool canUseSensor;					// センサー実行フラグ
+	bool shouldSense;					// センサー実行フラグ
+	bool isSensingPlayer[gameMasterNS::PLAYER_NUM];
+
 	
-	// 環境認識
+	// 環境認識・記憶領域ブラックボード
 	bool isNoticedPlayer[gameMasterNS::PLAYER_NUM];
-
-	// 記憶
 	float noticedTimePlayer[gameMasterNS::PLAYER_NUM];
-
-	// 攻撃
-	bool onAttack;
-	float attackTime;
-	int attackTargetPlayer;
-	D3DXVECTOR3 vecAttack;
 
 	// ナビゲーションメッシュ
 	NavigationMesh* naviMesh;			// ナビメッシュ
 	LinkedList<meshDataNS::Index2>* edgeList;// エッジリスト
-	DWORD naviFaceIndex;				// ●ナビメッシュいんでっくそ
-	bool shouldSearchPath;				// パス検索フラグ	
+	DWORD naviFaceIndex;				// パス検索時のナビメッシュ設置面インデックス
+	bool shouldSearch;					// パス検索フラグ	
 
 	// 移動
-	bool onMove;						// 移動フラグ
+	bool shouldMove;					// 移動フラグ
 	D3DXVECTOR3* movingTarget;			// 移動ターゲット
 	D3DXVECTOR3 destination;			// 目的地
-
+	bool isArraved;						// 到着フラグ
+	float moveTime;						// 計測移動時間
+	bool isDestinationLost;				// 目的地を見失った
 	bool onJump;						// ジャンプフラグ
 	bool jumping;						// ジャンプ中フラグ
 	D3DXVECTOR3	centralPosition;		// 中心座標
 	D3DXMATRIX	centralMatrixWorld;		// 中心座標ワールドマトリクス
+
+	// 攻撃
+	bool shouldAttack;
+	bool isAttacking;
+	float attackTime;
+	int attackTargetPlayer;
+	D3DXVECTOR3 vecAttack;
 
 	// コリジョン
 	Ray	ray;							// レイ
@@ -275,7 +282,6 @@ protected:
 	bool onGroundBefore;				// 直前フレームの接地判定
 	D3DXVECTOR3	groundNormal;			// 接地面法線
 	bool isHitPlayer;					// プレイヤーと接触している
-
 
 	// 物理挙動
 	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
@@ -303,12 +309,12 @@ public:
 	bool eyeSensor(int playerType);
 	// 聴覚センサー
 	bool earSensor(int playerType);
-	// 攻撃
-	void attack(int playerType, float frameTime);
-	// 記憶の更新
-	void updateMemory(float frameTime);
 	// ステアリング
 	void steering();
+	// 攻撃
+	void attacking(int playerType, float frameTime);
+	// 到着判定
+	void checkArrival();
 	// 接地処理
 	void grounding();
 	// 壁ずり
@@ -317,10 +323,10 @@ public:
 	void physicalBehavior();
 	// 物理の更新
 	void updatePhysics(float frameTime);
-	// めり込み補正
-	void insetCorrection();
 	// 中心座標系の更新
 	void updateCentralCood();
+	// 記憶の更新
+	void updataBlackBoard(float frameTime);
 	// 重力発生メッシュ（接地メッシュ）の設定
 	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void setPlayer(Player* _player);
@@ -334,10 +340,13 @@ public:
 	BoundingSphere* getSphereCollider();
 	D3DXVECTOR3* getCentralPosition();
 	D3DXMATRIX* getCentralMatrixWorld();
+	bool getNoticedOfPlayer(int playerType);
 
 	// Setter
 	void setMove(bool setting);
 	void setMovingTarget(D3DXVECTOR3* _target);
+	void setDestinationAndResetArrival(D3DXVECTOR3 _destination);
+	void setAttack(bool shouldAttack, int _attackTargetPlayer);
 	void setIsHitPlayer(bool setting);
 
 #ifdef _DEBUG
@@ -361,9 +370,10 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
 	// デバッグセンサー
 	Ray eyeAngleRay[4];					// 視覚レイ表示用
-	Ray gazePlayer;						// 
 	BoundingSphere hearingSphere[2];	// 聴覚距離表示用
 	void debugSensor();					// デバッグ関数
+	// デバッグ用目的地設定
+	void setDebugDestination();
 	// ImGUIへの出力
 	void outputGUI();
 #endif//_DEBUG

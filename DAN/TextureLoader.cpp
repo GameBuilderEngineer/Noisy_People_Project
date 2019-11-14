@@ -104,7 +104,7 @@ TextureLoader::TextureLoader()
 	textureName[SAMPLE_GRASS] = { "middleGrass.png" };
 	textureName[NEKO] = { "Chara_B.png" };
 	textureName[COLOR_SCALE] = { "colorScale.png" };
-
+	textureName[DATE_ALPHA] = { "DateAlpha.png" };
 }
 
 //===================================================================================================================================

@@ -5,22 +5,17 @@
 //-----------------------------------------------------------------------------
 #include "AIDirector.h"
 #include "OperationGenerator.h"
-
 using namespace aiNS;
 
 
 //=============================================================================
 // èâä˙âª
 //=============================================================================
-void OperationGenerator::initialize(PLAYERAD* _playerAD, ENEMYAD* _enemyAD, TREEAD* _treeAD, ITEMAD* _itemAD,
+void OperationGenerator::initialize(aiNS::AnalyticalData* _data,
 	GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager, TreeManager* _treeManager,
 	ItemManager* _itemManager, TelopManager* _telopManager)
 {
-	playerAD = _playerAD;
-	enemyAD = _enemyAD;
-	treeAD = _treeAD;
-	itemAD = _itemAD;
-
+	data = _data;
 	gameMaster = _gameMaster;
 	player = _player;
 	enemyManager = _enemyManager;

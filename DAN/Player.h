@@ -157,7 +157,7 @@ namespace playerNS{
 //===================================================================================================================================
 //【仮想ステートクラス】
 //===================================================================================================================================
-class State:public Base
+class AbstractState:public Base
 {
 public:
 	float	frameTime;
@@ -168,7 +168,7 @@ public:
 	virtual void operation()				= 0;
 	virtual void physics()					= 0;
 	virtual void end()						= 0;
-	virtual State* transition()				= 0;
+	virtual AbstractState* transition()				= 0;
 };
 
 //===================================================================================================================================
@@ -182,7 +182,7 @@ private:
 
 	//ステータス
 	playerNS::OperationKeyTable	keyTable;						//操作Keyテーブル
-	State*						state;							//状態クラス
+	AbstractState*				state;							//状態クラス
 	int							hp;								// HP
 	int							power;							// 電力
 
@@ -311,7 +311,7 @@ public:
 
 
 //通常状態
-class NormalState:public State
+class NormalState:public AbstractState
 {
 private:
 	Player* player;
@@ -321,7 +321,7 @@ public:
 	virtual void start();
 	virtual void operation();
 	virtual void physics();
-	virtual State* transition();
+	virtual AbstractState* transition();
 	virtual void end();
 };
 
