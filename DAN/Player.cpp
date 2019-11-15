@@ -381,7 +381,6 @@ void Player::updatePhysics(float frameTime)
 	insetCorrection();//ˆÚ“®Œã‚Ì‚ß‚è‚İ•â³
 }
 
-
 #pragma endregion
 
 // [‘€ì]
