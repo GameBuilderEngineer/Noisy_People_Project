@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7A53624F-B978-43BC-BDE6-B56B5AA52812}</ProjectGuid>
     <RootNamespace>DAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -154,6 +154,7 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="ButtonFrame.h" />
+    <ClInclude Include="DebugScene.h" />
     <ClInclude Include="StatusFrame.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="MapObject.h" />
@@ -284,6 +285,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="ButtonFrame.cpp" />
+    <ClCompile Include="DebugScene.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="MapObject.cpp" />

@@ -31,6 +31,7 @@ namespace SceneList
 {
 	enum {
 		NONE_SCENE = -1,
+		DEBUG,			//デバッグシーン
 		SPLASH,			//スプラッシュ
 		TITLE,			//タイトル
 		TUTORIAL,		//チュートリアル

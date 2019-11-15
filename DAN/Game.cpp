@@ -219,6 +219,33 @@ void Game::initialize() {
 	spriteGauge = new SpriteGauge;
 	spriteGauge->initialize();
 
+#pragma region Memory Test
+	////メモリテスト
+
+	//treeManager->uninitialize();
+	//SAFE_DELETE(treeManager);
+
+	//int i = 100000;
+	//while (i >= 0)
+	//{
+	//	/*testFieldRenderer2 = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	//	testFieldRenderer2->registerObject(testField);
+	//	testFieldRenderer2->update();
+	//	SAFE_DELETE(testFieldRenderer2);*/
+	//	treeManager = new TreeManager();
+	//	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	//	//treeManager->update(1.0/60.0);
+	//	treeManager->uninitialize();
+
+	//	SAFE_DELETE(treeManager);
+	//	i--;
+	//}
+	//i++;
+	//treeManager = new TreeManager();
+	//treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+#pragma endregion
+
+
 #ifdef _DEBUG
 	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
@@ -257,6 +284,8 @@ void Game::initialize() {
 		enemyManager->createEnemy(p);
 	}
 	
+	
+
 #endif
 }
 
@@ -305,6 +334,7 @@ void Game::update(float _frameTime) {
 
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
+	
 
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
@@ -323,7 +353,7 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		//enemyManager->footsteps(*player[i].getPosition(), i);		//足音
 
 	// ツリーの更新

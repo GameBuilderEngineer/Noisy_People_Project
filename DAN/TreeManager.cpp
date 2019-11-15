@@ -48,12 +48,12 @@ void TreeManager::uninitialize()
 	treeList.swap(temp);
 
 	// 描画オブジェクトの破棄
-	SAFE_DELETE(aTrunkRenderer);
-	SAFE_DELETE(aLeafRenderer);
-	SAFE_DELETE(bTrunkRenderer);
-	SAFE_DELETE(bLeafRenderer);
-	SAFE_DELETE(cTrunkRenderer);
 	SAFE_DELETE(cLeafRenderer);
+	SAFE_DELETE(cTrunkRenderer);
+	SAFE_DELETE(bLeafRenderer);
+	SAFE_DELETE(bTrunkRenderer);
+	SAFE_DELETE(aLeafRenderer);
+	SAFE_DELETE(aTrunkRenderer);
 }
 
 

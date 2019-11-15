@@ -30,7 +30,6 @@
 #include "Sky.h"
 #include "SpriteGauge.h"
 #include "Battery.h"
-#include "telop.h"
 #include "Timer.h"
 #include "Reticle.h"
 #include "Ocean.h"
