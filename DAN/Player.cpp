@@ -73,6 +73,9 @@ void Player::initialize(PlayerTable info)
 	//サイズの設定
 	setSize(D3DXVECTOR3(0.5f, 1.7f, 0.5f));
 
+	// HPの設定
+	hp = MAX_HP;
+
 	//電力の設定
 	power				= MAX_POWER;							//キャラクター電力確認用
 

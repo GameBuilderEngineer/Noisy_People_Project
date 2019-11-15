@@ -227,6 +227,7 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 	if (collisionCylinder(player, enemy))
 	{
 		horizontalCorrection(player, enemy, 0.5f);
+		enemy->setIsHitPlayer(true);
 		return true;
 	}
 	return false;
@@ -270,7 +271,7 @@ bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 
 	if (hit)
 	{
-		//enemy->damage(bullet->getDigitalPower());
+		enemy->damage(bullet->getDigitalPower());
 		bullet->destroy();
 	}
 

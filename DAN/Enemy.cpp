@@ -63,12 +63,11 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	Object::initialize(&position);
-	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
-	setSize(D3DXVECTOR3(1.0f, 3.0f, 1.0f));
+	//postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 #ifdef _DEBUG
 #ifdef RENDER_SENSOR
-	hearingSphere[0].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type]);
-	hearingSphere[1].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type] * SHOT_SOUND_SCALE);
+	hearingSphere[0].initialize(&center, NOTICEABLE_DISTANCE_PLAYER[enemyData->type]);
+	hearingSphere[1].initialize(&center, NOTICEABLE_DISTANCE_PLAYER[enemyData->type] * SHOT_SOUND_SCALE);
 #endif
 #endif
 }
@@ -105,7 +104,7 @@ void Enemy::update(float frameTime)
 		}
 		if (input->wasKeyPressed('8'))
 		{
-			naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, destination);
+			naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, destination);
 			naviMesh->dumpEdgeList();
 			naviMesh->affectToEdgeVertex();
 			naviMesh->debugRenderEdge(edgeList);
@@ -133,19 +132,21 @@ void Enemy::update(float frameTime)
 	{// センサー
 		shouldSense = false;
 		using namespace gameMasterNS;
-		isSensingPlayer[PLAYER_1P] = eyeSensor(PLAYER_1P) || eyeSensor(PLAYER_1P);
-		isSensingPlayer[PLAYER_2P] = eyeSensor(PLAYER_2P) || eyeSensor(PLAYER_2P);
+		if (eyeSensor(PLAYER_1P) || earSensor(PLAYER_1P)) { isSensingPlayer[PLAYER_1P] = true; }
+		if (eyeSensor(PLAYER_2P) || earSensor(PLAYER_2P)) { isSensingPlayer[PLAYER_2P] = true; }
 	}
 	if (shouldSearch)
 	{// 経路探索
 		shouldSearch = false;
 		isArraved = false;
-		naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, *movingTarget);
+		naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 		destination = *movingTarget;
 	}
 	if (shouldAttack)
 	{// 攻撃
 		shouldAttack = false;
+		canAttack = false;
+		attackInterval = 0.0f;
 		isAttacking = true;
 	}
 	if (isAttacking)
@@ -166,10 +167,10 @@ void Enemy::update(float frameTime)
 	physicalBehavior();
 	// 物理の更新
 	updatePhysics(frameTime);
+	// 姿勢の更新
+	updatePosture(frameTime);
 	// オブジェクトの更新
 	Object::update();
-	// 中心座標の更新
-	updateCentralCood();
 	// 到着判定
 	checkArrival();
 	// ブラックボードの更新
@@ -188,6 +189,10 @@ void Enemy::update(float frameTime)
 //=============================================================================
 void Enemy::preprocess(float frameTime)
 {
+	// センサーのプレイヤー感知フラグを初期化
+	isSensingPlayer[gameMasterNS::PLAYER_1P] = false;
+	isSensingPlayer[gameMasterNS::PLAYER_2P] = false;
+
 	// センサー更新計算処理
 	sensorTime += frameTime;
 	if (sensorTime > SENSOR_UPDATE_INTERVAL[enemyData->type])
@@ -197,10 +202,10 @@ void Enemy::preprocess(float frameTime)
 	}
 
 	// 移動時間計算処理
-	moveTime += frameTime;
-	if (moveTime > MOVE_LIMIT_TIME)
+	movingTime += frameTime;
+	if (movingTime > MOVE_LIMIT_TIME)
 	{
-		moveTime = 0.0f;
+		movingTime = 0.0f;
 		isDestinationLost = true;
 	}
 
@@ -220,14 +225,14 @@ bool Enemy::eyeSensor(int playerType)
 	float verticalAngle;					// 正面方向とプレイヤーの垂直角度
 
 	// プレイヤーが視認可能な距離にいるか調べる
-	distanceBetweenPlayerAndEnemy = D3DXVec3Length(&(player[playerType].center - centralPosition));
+	distanceBetweenPlayerAndEnemy = D3DXVec3Length(&(player[playerType].center - center));
 	if (distanceBetweenPlayerAndEnemy > VISIBLE_DISTANCE[enemyData->type])
 	{// 視認可能距離ではなかった
 		return false;
 	}	
 
 	// プレイヤーが水平視野角内に入ったか調べる
-	D3DXVECTOR3 horizontalVecToPlayer = player[playerType].center - centralPosition;
+	D3DXVECTOR3 horizontalVecToPlayer = player[playerType].center - center;
 	slip(horizontalVecToPlayer, axisY.direction);
 	slip(horizontalVecToPlayer, reverseAxisY.direction);
 	formedRadianAngle(&horizontalAngle, axisZ.direction, horizontalVecToPlayer);
@@ -237,7 +242,7 @@ bool Enemy::eyeSensor(int playerType)
 	}
 
 	// プレイヤーが垂直視野角内に入ったか調べる
-	D3DXVECTOR3 verticalVecToPlayer = player[playerType].center - centralPosition;
+	D3DXVECTOR3 verticalVecToPlayer = player[playerType].center - center;
 	slip(verticalVecToPlayer, axisX.direction);
 	slip(verticalVecToPlayer, reverseAxisX.direction);
 	formedRadianAngle(&verticalAngle, axisZ.direction, verticalVecToPlayer);
@@ -248,7 +253,7 @@ bool Enemy::eyeSensor(int playerType)
 
 	// プレイヤーとの間に障害物がないか調べる
 	Ray ray;
-	ray.initialize(centralPosition, player[playerType].center - centralPosition);
+	ray.initialize(center, player[playerType].center - center);
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix))
 	{
 		if (ray.distance < distanceBetweenPlayerAndEnemy)
@@ -295,7 +300,7 @@ void Enemy::attacking(int playerType, float frameTime)
 	// 攻撃ベクトル作成
 	if (attackTime == 0.0f)
 	{
-		vecAttack = player[playerType].center - centralPosition;
+		vecAttack = player[playerType].center - center;
 		slip(vecAttack, groundNormal);
 		D3DXVec3Normalize(&vecAttack, &vecAttack);
 	}
@@ -311,6 +316,7 @@ void Enemy::attacking(int playerType, float frameTime)
 	if (isHitPlayer)
 	{
 		player[playerType].damage(ATTACK_DAMAGE[enemyData->type]);
+		player[playerType].speed += vecAttack * ATTACK_SPEED[enemyData->type] * 100;
 		isAttacking = false;
 		attackTime = 0.0f;
 	}
@@ -324,7 +330,7 @@ void Enemy::attacking(int playerType, float frameTime)
 //=============================================================================
 void Enemy::steering()
 {
-	D3DXVECTOR3 moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	if (edgeList != NULL && edgeList->isEnpty())
 	{
@@ -342,13 +348,14 @@ void Enemy::steering()
 	else
 	{
 		// ナビメッシュによる移動ベクトル生成
-		naviMesh->steering(&moveDirection, &naviFaceIndex, centralPosition, edgeList);
+		naviMesh->steering(&moveDirection, &naviFaceIndex, center, edgeList);
 	}
 
 	acceleration += moveDirection * MOVE_ACC[enemyData->type];
 }
 
 
+#pragma region [Frame Routine]
 //=============================================================================
 // 接地処理
 //=============================================================================
@@ -356,7 +363,7 @@ void Enemy::grounding()
 {
 	onGroundBefore = onGround;
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	gravityRay.update(centralPosition, gravityDirection);
+	gravityRay.update(center, gravityDirection);
 	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
 	groundNormal = gravityRay.normal;
 
@@ -366,21 +373,22 @@ void Enemy::grounding()
 		return;
 	}
 
-	if (radius + difference >= gravityRay.distance)
+	float halfHeight = size.y / 2;
+	if (halfHeight + difference >= gravityRay.distance)
 	{// エネミーは地上に接地している
 		onGround = true;
 
 		if (onJump)
 		{
 			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
-			setPosition(centralPosition + gravityRay.direction * (gravityRay.distance - radius));
+			setPosition(center + gravityRay.direction * (gravityRay.distance - halfHeight));
 			// 重力方向に落ちるときだけ移動ベクトルのスリップ（面方向へのベクトル成分の削除）
 			if (speed.y < 0) setSpeed(slip(speed, gravityRay.normal));
 		}
 		else
 		{
 			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
-			setPosition(position + gravityRay.direction * (gravityRay.distance - radius));
+			setPosition(position + gravityRay.direction * (gravityRay.distance - halfHeight));
 			// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
 			setSpeed(slip(speed, gravityRay.normal));
 			// 直前フレームで空中にいたならジャンプ終了とする
@@ -399,7 +407,7 @@ void Enemy::grounding()
 //=============================================================================
 void Enemy::wallScratch()
 {
-	ray.update(centralPosition, D3DXVECTOR3(speed.x, 0, speed.z));
+	ray.update(center, D3DXVECTOR3(speed.x, 0, speed.z));
 
 	// 壁ずり処理
 	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
@@ -481,18 +489,13 @@ void Enemy::updatePhysics(float frameTime)
 
 
 //=============================================================================
-// 中心座標系の更新
+// 姿勢の更新
 //=============================================================================
-void Enemy::updateCentralCood()
+void Enemy::updatePosture(float frameTime)
 {
-	centralPosition = position + sphereCollider.getCenter();
-	D3DXMatrixTranslation(&centralMatrixWorld, centralPosition.x, centralPosition.y, centralPosition.z);
-	axisX.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
-	axisY.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
-	axisZ.update(centralPosition, D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
-	reverseAxisX.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
-	reverseAxisY.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
-	reverseAxisZ.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
+	moveDirection = slip(moveDirection, axisY.direction);
+	// moveDirectionは移動関数で更新される
+	postureControl(axisZ.direction, moveDirection, frameTime * 6/*1秒の6倍を指定 = 0.1秒で姿勢変更*/);
 }
 
 
@@ -522,22 +525,23 @@ void Enemy::updataBlackBoard(float frameTime)
 		// プレイヤーの認識
 		if (isSensingPlayer[i])
 		{
-			isNoticedPlayer[i] = true;
+			isNoticingPlayer[i] = true;
 			noticedTimePlayer[i] = 0.0f;
 		}
 
 		// プレイヤーの記憶
-		if (isNoticedPlayer[i])
+		if (isNoticingPlayer[i])
 		{
 			noticedTimePlayer[i] += frameTime;
 			if (noticedTimePlayer[i] >= PLAYER_MEMORIZED_TIME[enemyData->type])
 			{
 				noticedTimePlayer[i] = 0.0f;
-				isNoticedPlayer[i] = false;
+				isNoticingPlayer[i] = false;
 			}
 		}
 	}
 }
+#pragma endregion
 
 
 //=============================================================================
@@ -556,6 +560,29 @@ void Enemy::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix
 void Enemy::setPlayer(Player* _player)
 {
 	player = _player;
+}
+
+
+//=============================================================================
+// 適切なプレイヤーを移動ターゲットに設定する
+//=============================================================================
+void Enemy::setPlayerMovingTarget()
+{
+	if (isNoticingPlayer[gameMasterNS::PLAYER_1P] && isNoticingPlayer[gameMasterNS::PLAYER_2P] == false)
+	{
+		setMovingTarget(&player[gameMasterNS::PLAYER_1P].position);
+	}
+	else if (isNoticingPlayer[gameMasterNS::PLAYER_1P] == false && isNoticingPlayer[gameMasterNS::PLAYER_2P])
+	{
+		setMovingTarget(&player[gameMasterNS::PLAYER_2P].position);
+	}
+	else if (isNoticingPlayer[gameMasterNS::PLAYER_1P] && isNoticingPlayer[gameMasterNS::PLAYER_2P])
+	{
+		float distance1 = between2VectorLength(position, player[gameMasterNS::PLAYER_1P].position);
+		float distance2 = between2VectorLength(position, player[gameMasterNS::PLAYER_2P].position);
+		if (distance1 < distance2) { setMovingTarget(&player[gameMasterNS::PLAYER_1P].position); }
+		else { setMovingTarget(&player[gameMasterNS::PLAYER_1P].position); }
+	}
 }
 
 
@@ -584,6 +611,90 @@ void Enemy::footsteps(D3DXVECTOR3 playerPos, int playerID)
 }
 
 
+#pragma region [State]
+//=============================================================================
+// ステート遷移前の準備
+//=============================================================================
+void Enemy::prepareChase()
+{
+	pathSearchInterval = 0.0f;
+}
+
+void Enemy::preparePatrol()
+{
+	isDestinationLost = true;
+}
+
+void Enemy::prepareRest()
+{
+
+}
+
+void Enemy::prepareAttackTree()
+{
+
+}
+
+void Enemy::prepareDie()
+{
+
+}
+
+
+//=============================================================================
+//「追跡」ステート
+//=============================================================================
+void Enemy::chase(float frameTime)
+{
+	// 経路探索
+	pathSearchInterval += frameTime;
+	if (pathSearchInterval >= PATH_SEARCH_INTERVAL_WHEN_CHASE)
+	{
+		pathSearchInterval = 0.0f;
+		setPlayerMovingTarget();
+		shouldSearch = true;
+	}
+
+	// 攻撃
+	attackInterval += frameTime;
+	if (attackInterval >= ATTACK_INTERVAL[enemyData->type])
+	{
+		attackInterval = 0.0f;
+		canAttack = true;
+	}
+
+	setMove(true);
+}
+
+
+//=============================================================================
+//「警戒」ステート
+//=============================================================================
+void Enemy::patrol(float frameTime)
+{
+	setMove(true);
+}
+
+
+//=============================================================================
+//「休憩」ステート
+//=============================================================================
+void Enemy::rest(float frameTime)
+{
+
+}
+
+
+//=============================================================================
+//「死亡」ステート
+//=============================================================================
+void Enemy::die(float frameTime)
+{
+	enemyData->isAlive = false;
+}
+#pragma endregion
+
+
 //=============================================================================
 // Getter
 //=============================================================================
@@ -591,10 +702,10 @@ int Enemy::getEnemyID() { return enemyData->enemyID; }
 int Enemy::getNumOfEnemy() { return numOfEnemy; }
 EnemyData* Enemy::getEnemyData() { return enemyData; }
 BoundingSphere*  Enemy::getSphereCollider() { return &sphereCollider; }
-D3DXVECTOR3*  Enemy::getCentralPosition() { return &centralPosition; }
-D3DXMATRIX* Enemy::getCentralMatrixWorld() { return &centralMatrixWorld; }
+//D3DXVECTOR3*  Enemy::getCentralPosition() { return &centralPosition; }
+//D3DXMATRIX* Enemy::getCentralMatrixWorld() { return &centralMatrixWorld; }
 LPD3DXMESH Enemy::getMesh() { return box->mesh; }
-bool Enemy::getNoticedOfPlayer(int playerType) { return isNoticedPlayer[playerType]; }
+bool Enemy::getNoticedOfPlayer(int playerType) { return isNoticingPlayer[playerType]; }
 
 
 //=============================================================================
@@ -613,6 +724,14 @@ void Enemy::setAttack(bool _shouldAttack, int _attackTargetPlayer)
 	attackTime = _attackTargetPlayer;
 }
 void Enemy::setIsHitPlayer(bool setting) { isHitPlayer = setting; }
+void Enemy::damage(int _damage)
+{
+	enemyData->hp -= _damage;
+	if (enemyData->hp <= 0)
+	{
+		enemyData->hp = 0;
+	}
+}
 
 
 // [デバッグ]
@@ -733,10 +852,10 @@ void Enemy::debugSensor()
 			D3DXMatrixRotationQuaternion(&rayMatrix, &rayQuaternion2);
 			D3DXVec3TransformCoord(&direction, &direction, &rayMatrix);
 
-			if (height == -1 && width == -1) { eyeAngleRay[0].initialize(centralPosition, direction); }
-			if (height == -1 && width == 1) { eyeAngleRay[1].initialize(centralPosition, direction); }
-			if (height == 1 && width == -1) { eyeAngleRay[2].initialize(centralPosition, direction); }
-			if (height == 1 && width == 1) { eyeAngleRay[3].initialize(centralPosition, direction); }
+			if (height == -1 && width == -1) { eyeAngleRay[0].initialize(center, direction); }
+			if (height == -1 && width == 1) { eyeAngleRay[1].initialize(center, direction); }
+			if (height == 1 && width == -1) { eyeAngleRay[2].initialize(center, direction); }
+			if (height == 1 && width == 1) { eyeAngleRay[3].initialize(center, direction); }
 		}
 	}
 

@@ -28,9 +28,9 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	player = _player;
 
 	// 描画オブジェクトの作成
-	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::ENEMY_01));
-	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON));
-	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10));
+	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
+	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER));
+	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR));
 	// チュートリアルシーンでの初期化処理
 	if (_sceneName == "Scene -Tutorial-")
 	{
@@ -160,10 +160,10 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 		{
 			enemyList[i]->eyeAngleRay[k].render(VISIBLE_DISTANCE[enemyList[i]->getEnemyData()->type]);
 		}
-		float len = D3DXVec3Length(&(player[0].center - *enemyList[i]->getCentralPosition()));
+		float len = D3DXVec3Length(&(player[0].center - enemyList[i]->center));
 		//enemyList[i]->gazePlayer.render(len);
-		enemyList[i]->hearingSphere[0].render(*enemyList[i]->getCentralMatrixWorld());
-		enemyList[i]->hearingSphere[1].render(*enemyList[i]->getCentralMatrixWorld());
+		enemyList[i]->hearingSphere[0].render(enemyList[i]->matrixCenter);
+		enemyList[i]->hearingSphere[1].render(enemyList[i]->matrixCenter);
 #endif
 	}
 #endif// _DEBUG
@@ -203,17 +203,17 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	switch (enemyData->type)
 	{
 	case WOLF:
-		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::ENEMY_01), enemyData);
+		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::WOLF), enemyData);
 		wolfRenderer->registerObject(enemy);
 		break;
 
 	case TIGER:
-		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON), enemyData);
+		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::TIGER), enemyData);
 		tigerRenderer->registerObject(enemy);
 		break;
 
 	case BEAR:
-		enemy = new Bear(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10), enemyData);
+		enemy = new Bear(staticMeshNS::reference(staticMeshNS::BEAR), enemyData);
 		bearRenderer->registerObject(enemy);
 		break;
 	}
@@ -415,7 +415,7 @@ void EnemyManager::outputGUI()
 		enemyNS::ENEMYSET tmp =
 		{
 			issueNewEnemyID(),
-			enemyNS::WOLF,
+			enemyNS::TIGER,
 			stateMachineNS::PATROL,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)

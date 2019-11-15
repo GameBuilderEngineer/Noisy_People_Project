@@ -45,6 +45,9 @@ namespace staticMeshNS {
 		SAMPLE_SCISSORS,						//08
 		ENEMY_01,
 		ENEMY_02,
+		WOLF,
+		TIGER,
+		BEAR,
 
 		DEAD_TREE,								//01
 		GREEN_TREE_001,							//02
