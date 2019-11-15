@@ -239,7 +239,7 @@ void Game::initialize() {
 		enemyNS::ENEMYSET tmp =
 		{
 			enemyManager->issueNewEnemyID(),
-			enemyNS::WOLF,
+			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
 			stateMachineNS::PATROL,
 			pos,
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
@@ -348,7 +348,7 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		//enemyManager->footsteps(*player[i].getPosition(), i);		//足音
 
 	// ツリーの更新

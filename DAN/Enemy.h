@@ -21,7 +21,7 @@
 #if 0	// バウンディングスフィアを描画
 #define RENDER_SPHERE_COLLIDER
 #endif
-#if 0	// 6軸を描画
+#if 1	// 6軸を描画
 #define RENDER_SIX_AXIS
 #endif
 #if 1	// センサーを描画
@@ -47,9 +47,9 @@ namespace enemyNS
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
-		100,		// WOLF
-		150,		// TIGER
-		200,		// BEAR
+		40,		// WOLF
+		40,		// TIGER
+		40,		// BEAR
 	};
 
 	// エネミーのセンサー更新頻度テーブル（x秒に1度更新）
@@ -104,25 +104,33 @@ namespace enemyNS
 	// エネミーの攻撃移動速度テーブル
 	const float ATTACK_SPEED[TYPE_MAX] =
 	{
-		10.0f,		// WOLF
-		10.0f,		// TIGER
+		15.0f,		// WOLF
+		15.0f,		// TIGER
 		15.0f,		// BEAR
 	};
 
 	// エネミーの攻撃移動時間テーブル
 	const float ATTACK_TIME[TYPE_MAX] =
 	{
-		0.15f,		// WOLF
-		0.15f,		// TIGER
-		0.15f,		// BEAR
+		0.3f,		// WOLF
+		0.3f,		// TIGER
+		0.3f,		// BEAR
+	};
+
+	// エネミーの攻撃間隔テーブル
+	const float ATTACK_INTERVAL[TYPE_MAX] =
+	{
+		3.0f,		// WOLF
+		3.0f,		// TIGER
+		3.0f,		// BEAR
 	};
 
 	// エネミーのプレイヤー記憶時間テーブル
 	const float PLAYER_MEMORIZED_TIME[TYPE_MAX] =
 	{
-		8.0f,		// WOLF
-		8.0f,		// TIGER
-		8.0f,		// BEAR
+		4.0f,		// WOLF
+		4.0f,		// TIGER
+		4.0f,		// BEAR
 	};
 
 	// エネミーの移動加速度テーブル
@@ -146,6 +154,7 @@ namespace enemyNS
 	// AI Constant
 	const float ARRIVAL_DISTANCE = 0.5f;				// 到着距離
 	const float MOVE_LIMIT_TIME = 10.0f;				// 移動リミット時間
+	const float PATH_SEARCH_INTERVAL_WHEN_CHASE = 0.3f;	// 追跡ステート時のパス検索間隔
 
 	// Another Constant
 	const float DIFFERENCE_FIELD = 0.05f;				// フィールド補正差分
@@ -242,12 +251,12 @@ protected:
 	// センサー
 	float sensorTime;					// センサー更新時間カウンタ
 	bool shouldSense;					// センサー実行フラグ
-	bool isSensingPlayer[gameMasterNS::PLAYER_NUM];
+	bool isSensingPlayer[gameMasterNS::PLAYER_NUM];// プレイヤー感知フラグ
 
-	
 	// 環境認識・記憶領域ブラックボード
-	bool isNoticedPlayer[gameMasterNS::PLAYER_NUM];
+	bool isNoticingPlayer[gameMasterNS::PLAYER_NUM];
 	float noticedTimePlayer[gameMasterNS::PLAYER_NUM];
+	float pathSearchInterval;			// パス検索インターバル
 
 	// ナビゲーションメッシュ
 	NavigationMesh* naviMesh;			// ナビメッシュ
@@ -259,18 +268,19 @@ protected:
 	bool shouldMove;					// 移動フラグ
 	D3DXVECTOR3* movingTarget;			// 移動ターゲット
 	D3DXVECTOR3 destination;			// 目的地
+	D3DXVECTOR3 moveDirection;			// 移動ベクトル
 	bool isArraved;						// 到着フラグ
-	float moveTime;						// 計測移動時間
+	float movingTime;					// 計測移動時間
 	bool isDestinationLost;				// 目的地を見失った
 	bool onJump;						// ジャンプフラグ
 	bool jumping;						// ジャンプ中フラグ
-	D3DXVECTOR3	centralPosition;		// 中心座標
-	D3DXMATRIX	centralMatrixWorld;		// 中心座標ワールドマトリクス
 
 	// 攻撃
 	bool shouldAttack;
+	bool canAttack;
 	bool isAttacking;
-	float attackTime;
+	float attackTime;					// 攻撃中時間（秒）
+	float attackInterval;				// 攻撃間隔（秒）
 	int attackTargetPlayer;
 	D3DXVECTOR3 vecAttack;
 
@@ -291,12 +301,6 @@ protected:
 	// サウンド
 	PLAY_PARAMETERS playParameters;
 	void footsteps(D3DXVECTOR3 playerPos, int playerID);
-
-	// 純粋仮想関数
-	virtual void chase() = 0;			//「追跡」ステート
-	virtual void patrol() = 0;			//「警戒」ステート
-	virtual void rest() = 0;			//「休憩」ステート
-	virtual void die() = 0;				//「死亡」ステート
 
 public:
 	Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
@@ -323,8 +327,8 @@ public:
 	void physicalBehavior();
 	// 物理の更新
 	void updatePhysics(float frameTime);
-	// 中心座標系の更新
-	void updateCentralCood();
+	// 姿勢の更新
+	void updatePosture(float frameTime);
 	// 記憶の更新
 	void updataBlackBoard(float frameTime);
 	// 重力発生メッシュ（接地メッシュ）の設定
@@ -333,13 +337,30 @@ public:
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();
 
+	// 適切なプレイヤーを移動ターゲットに設定する
+	void setPlayerMovingTarget();
+	//void moveQuery();
+	//void attackQuery();
+	//void sensorQuery();
+
+	// ステート遷移前の準備
+	void prepareChase();
+	void preparePatrol();
+	void prepareRest();
+	void prepareAttackTree();
+	void prepareDie();
+
+	// ステート処理
+	virtual void chase(float frameTime);
+	virtual void patrol(float frameTime);
+	virtual void rest(float frameTime);
+	virtual void die(float frameTime);
+
 	// Getter
 	int getEnemyID();
 	static int getNumOfEnemy();
 	enemyNS::EnemyData* getEnemyData();
 	BoundingSphere* getSphereCollider();
-	D3DXVECTOR3* getCentralPosition();
-	D3DXMATRIX* getCentralMatrixWorld();
 	LPD3DXMESH getMesh();
 	bool getNoticedOfPlayer(int playerType);
 
@@ -349,6 +370,7 @@ public:
 	void setDestinationAndResetArrival(D3DXVECTOR3 _destination);
 	void setAttack(bool shouldAttack, int _attackTargetPlayer);
 	void setIsHitPlayer(bool setting);
+	void damage(int _damage);
 
 #ifdef _DEBUG
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス

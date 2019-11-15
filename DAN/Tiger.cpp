@@ -12,6 +12,7 @@ using namespace stateMachineNS;
 //=============================================================================
 Tiger::Tiger(StaticMesh* _staticMesh, EnemyData* _enemyData): Enemy(_staticMesh, _enemyData)
 {
+	setSize(D3DXVECTOR3(1.0f, 2.9, 1.0f));
 }
 
 
@@ -32,10 +33,10 @@ void Tiger::update(float frameTime)
 	Enemy::preprocess(frameTime);
 	switch (enemyData->state)
 	{
-	case CHASE:  chase();  break;
-	case PATROL: patrol(); break;
-	case REST:   rest();   break;
-	case DIE:    die();    break;
+	case CHASE:  chase(frameTime);  break;
+	case PATROL: patrol(frameTime); break;
+	case REST:   rest(frameTime);   break;
+	case DIE:    die(frameTime);    break;
 	}
 	Enemy::update(frameTime);
 }
@@ -44,25 +45,39 @@ void Tiger::update(float frameTime)
 //=============================================================================
 // 追跡ステート
 //=============================================================================
-void::Tiger::chase()
+void::Tiger::chase(float frameTime)
 {
+	Enemy::chase(frameTime);
 
+	float distance = between2VectorLength(position, *movingTarget);
+
+	if (distance < 7.0f && canAttack)
+	{
+		shouldAttack = true;
+	}
 }
 
 
 //=============================================================================
 // 警戒ステート
 //=============================================================================
-void::Tiger::patrol()
+void::Tiger::patrol(float frameTime)
 {
+	Enemy::patrol(frameTime);
 
+	if (onGround && isArraved || isDestinationLost)
+	{
+		setDebugDestination();		// デバッグ用目的地を設定
+		isDestinationLost = false;	// 目的地はロストしていない
+		shouldSearch = true;		// パスサーチ実行
+	}
 }
 
 
 //=============================================================================
 // 休憩ステート
 //=============================================================================
-void::Tiger::rest()
+void::Tiger::rest(float frameTime)
 {
 
 }
@@ -71,9 +86,9 @@ void::Tiger::rest()
 //=============================================================================
 // 死亡ステート
 //=============================================================================
-void::Tiger::die()
+void::Tiger::die(float frameTime)
 {
-
+	Enemy::die(frameTime);
 }
 
 
