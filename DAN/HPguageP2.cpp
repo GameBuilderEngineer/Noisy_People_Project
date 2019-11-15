@@ -1,35 +1,35 @@
 //====================================
-//HPゲージ処理[HPguage.cpp]
+//P2HPゲージ処理[HPguage.cpp]
 //染矢晃介
 //====================================
 
 //====================================
 //インクルード
 //====================================
-#include "HPguage.h"
+#include "HPguageP2.h"
 
 //====================================
 // using宣言
 //====================================
-using namespace hpGuageNS;
+using namespace hpGuageP2NS;
 
 //====================================
 //コンストラクタ
 //====================================
-HPguage::HPguage()
+HPguageP2::HPguageP2()
 {
 	hpGuage = new Sprite;
 	uvCoord1 = D3DXVECTOR2(0.0, 0.0);
 	uvCoord2 = D3DXVECTOR2(1.0, 0.0);
 	uvCoord3 = D3DXVECTOR2(0.0, 1.0);
 	uvCoord4 = D3DXVECTOR2(1.0, 1.0);
-	width	 = WIDTH_HP_GUAGE;
+	width = WIDTH_HP_GUAGE;
 }
 
 //====================================
 //デストラクタ
 //====================================
-HPguage::~HPguage()
+HPguageP2::~HPguageP2()
 {
 	delete hpGuage;
 }
@@ -37,7 +37,7 @@ HPguage::~HPguage()
 //====================================
 //初期化
 //====================================
-void HPguage::initialize()
+void HPguageP2::initialize()
 {
 	BasicUI::assingPosition(POSITION_HP_GUAGE);
 	BasicUI::assingSize(WIDTH_HP_GUAGE, HEIGHT_HP_GUAGE);
@@ -49,16 +49,16 @@ void HPguage::initialize()
 //====================================
 //描画
 //====================================
-void HPguage::render()
+void HPguageP2::render()
 {
-	
+
 	hpGuage->render();
 }
 
 //====================================
 //更新
 //====================================
-void HPguage::update(int hp)
+void HPguageP2::update(int hp)
 {
 	changeGage(hp);
 }
@@ -66,7 +66,7 @@ void HPguage::update(int hp)
 //====================================
 //HPゲージの伸び縮み処理
 //====================================
-void HPguage::changeGage(int hp)
+void HPguageP2::changeGage(int hp)
 {
 	//HPを参照しサイズを変更
 	float hpPersent = (float)hp / 100;//現在のHPを最大HPで割って割合を出す

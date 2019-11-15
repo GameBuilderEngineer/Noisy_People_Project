@@ -697,6 +697,9 @@
     <ClCompile Include="DebugBox.cpp">
       <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClCompile>
+    <ClCompile Include="HPguageP2.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1112,6 +1115,9 @@
     </ClInclude>
     <ClInclude Include="DebugBox.h">
       <Filter>Constant Layer\Collision\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguageP2.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

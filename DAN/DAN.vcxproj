@@ -161,6 +161,7 @@
     <ClInclude Include="DebugBox.h" />
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
+    <ClInclude Include="HPguageP2.h" />
     <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="StatusFrame.h" />
     <ClInclude Include="CollisionManager.h" />
@@ -299,6 +300,7 @@
     <ClCompile Include="DebugBox.cpp" />
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
+    <ClCompile Include="HPguageP2.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />

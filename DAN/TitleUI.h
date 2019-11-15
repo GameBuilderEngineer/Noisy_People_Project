@@ -9,12 +9,14 @@
 #include "Sprite.h"
 #include "TextureLoader.h"
 #include "Input.h"
+#include "VirtualController.h"
 
 //============================
 //–¼‘O‹óŠÔ ’è”
 //============================
 namespace titleUiNS
 {
+	
 	//ƒƒS
 	const int WIDTH_LOGO = (908);						//•
 	const int HEIGHT_LOGO = (376);						//‚‚³

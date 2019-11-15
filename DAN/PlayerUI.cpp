@@ -60,15 +60,15 @@ void PlayerUI::update()
 {
 	//各フラグの獲得
 	skyVisionFlag = player->canDoSkyVision();
+	shiftFlag = player->canShift();
 	shotFlag = player->canShot();
-	jumpFlag = player->canJump();
 	visionFlag = player->canDoVision();
 	hp = player->getHp();
 
 	//P1用
 	buttonUiP1->update(skyVisionFlag, 3);
-	buttonUiP1->update(shotFlag, 2);
-	buttonUiP1->update(jumpFlag, 1);
+	buttonUiP1->update(shiftFlag, 2);
+	buttonUiP1->update(shotFlag, 1);
 	buttonUiP1->update(visionFlag, 0);
 
 	hpGuage->update(hp);

@@ -32,7 +32,6 @@ public://メンバー変数
 private:
 	Timer * timer;				//タイマー
 	TimerFlame * timerFlame;	//タイマーフレーム
-	ButtonUI   * buttonP1;		//ボタンUI
 	ButtonUI   * buttonP2;		//ボタンUI
 	ButtonFrame *buttonFrameP1;//ボタンのボックス
 	ButtonFrame *buttonFrameP2;//ボタンのボックス
@@ -40,8 +39,6 @@ private:
 	StatusFrame *statusFrameP2;//HPとかのフレーム
 	Guage		*guage;		   //ゲージ
 	
-	//bool	    buttonFlag;    //ボタンon off用フラグ
-	//int		 buttonType;	//ボタンタイプ管理用
 public://メンバー関数
 	FixedUI();
 	~FixedUI();

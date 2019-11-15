@@ -119,9 +119,11 @@ void Player::update(float frameTime)
 		shiftTimer -= frameTime;
 		float rate = 1.0f -(shiftTimer/SHIFT_TIME);
 		D3DXVec3Lerp(&position, &shiftLine.start, &shiftLine.end,rate);
+		isShiftAble = false;//ボタンUIの透明化変化確認のため一時的に
 	}
 	else if(isShifting){
 		isShifting = false;
+		isShiftAble = true;//ボタンUIの透明化変化確認のため一時的に
 	}
 
 	//バレットマネージャーの更新
