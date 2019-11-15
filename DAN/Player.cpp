@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
+#include "MoveP.h"
 
 //===================================================================================================================================
 //yusingéŒ¾z
@@ -396,6 +397,10 @@ void Player::updatePhysics(float frameTime)
 //===================================================================================================================================
 void Player::moveOperation()
 {
+	MOVEP *MoveP = GetMovePAdr();
+	if (!MoveP->IsAttack)
+	{
+	}
 	//‘O‚Öi‚Þ
 	if (input->isKeyDown(keyTable.front)) {
 		move(D3DXVECTOR2(0, -1), camera->getDirectionX(), camera->getDirectionZ());

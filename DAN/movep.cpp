@@ -10,6 +10,9 @@
 #include "camera.h"
 #include "Direct3D9.h"
 #include "ActionEventSeting.h"
+#include "Player.h"
+#include "Input.h"
+
 
 //プレイヤー
 MOVEP MoveP;
@@ -25,9 +28,11 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	MoveP.pAllocateHier = new CAllocateHierarchy();
 	//必要 1
 
+
 	//初期設定
 	MoveP.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	MoveP.Rot = Rot;
+	MoveP.Quaternion = D3DXQUATERNION(0, 0, 0, 1);	
 	MoveP.Scl = Scl;
 	MoveP.ActionSpeed = 1.25f;
 
@@ -60,29 +65,14 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 			case MoveP_Idle:
 				MoveP.Animation->AnimData[Set_No] = { "Idle",			NULL, 0.3f,	0.0f };
 				break;
-			case MoveP_Attack:
-				MoveP.Animation->AnimData[Set_No] = { "Attack",		NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_Defend:
-				MoveP.Animation->AnimData[Set_No] = { "Defend",		NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_Die:
-				MoveP.Animation->AnimData[Set_No] = { "Die",	NULL, 0.1f,	0.0f };
-				break;
 			case MoveP_Run:
 				MoveP.Animation->AnimData[Set_No] = { "Run",		NULL, 0.1f,	0.0f };
 				break;
-			case MoveP_Walk:
-				MoveP.Animation->AnimData[Set_No] = { "walk",		NULL, 0.1f,	0.0f };
+			case MoveP_Jump:
+				MoveP.Animation->AnimData[Set_No] = { "Jump",		NULL, 0.1f,	0.0f };
 				break;
-			case MoveP_NoDefendImpact:
-				MoveP.Animation->AnimData[Set_No] = { "NoDefendImpact",	NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_DefendImpact:
-				MoveP.Animation->AnimData[Set_No] = { "DefendImpact",	NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_Roll:
-				MoveP.Animation->AnimData[Set_No] = { "Roll",	NULL, 0.1f,	0.0f };
+			case MoveP_Shooting:
+				MoveP.Animation->AnimData[Set_No] = { "Shooting",	NULL, 0.1f,	0.0f };
 				break;
 			default:
 				break;
@@ -107,7 +97,7 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 
 		//最初のアニメ設定
 		MoveP.Animation->CurrentAnimID = -1;
-		ChangeAnimation(MoveP.Animation, MoveP_Attack, 1.0f, false);
+		ChangeAnimation(MoveP.Animation, MoveP_Idle, 1.0f, false);
 
 	}
 
@@ -131,6 +121,62 @@ void UninitMoveP(void)
 //=============================================================================
 void UpdateMoveP(float f_TimeDelta)
 {
+	Input *input = getInput();
+
+	//移動制限
+	if (!MoveP.IsAttack)
+	{
+
+		if (input->isKeyDown('W'))
+		{
+			MoveP.IsRun = true;
+		}
+		else if (input->isKeyDown('S'))
+		{
+			MoveP.IsRun = true;
+		}
+		else if (input->isKeyDown('A'))
+		{
+			MoveP.IsRun = true;
+		}
+		else if (input->isKeyDown('D'))
+		{
+			MoveP.IsRun = true;
+		}
+		else
+		{
+			MoveP.IsRun = false;
+		}
+	}
+
+	if (MoveP.IsRun)
+	{
+		MoveP.Animation->NextAnimID = MoveP_Run;
+	}
+
+	//攻撃
+	if (input->getMouseLButtonTrigger() && !MoveP.IsRoll)
+	{
+		MoveP.Animation->NextAnimID = MoveP_Shooting;
+		MoveP.IsAttack = true;
+	}
+
+	if (input->isKeyDown(VK_SPACE) && !MoveP.IsAttack && !MoveP.IsRoll)
+	{
+		MoveP.Animation->NextAnimID = MoveP_Jump;
+	}
+
+
+	MovePAnimeCur();
+	MovePAnimeNext();
+
+	//アニメ終わったなら、アニメはチェンジできます
+	if (MoveP.Animation->MotionEnd)
+	{
+		MoveP.AnimeChange = true;
+	}
+
+
 
 	// アニメーションを更新 
 	//必ず入れてください、さもないと、動画が動けない
@@ -158,8 +204,13 @@ void DrawMoveP()
 	D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxScl);
 
 	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, MoveP.Rot.y, MoveP.Rot.x, MoveP.Rot.z);
+	//D3DXMatrixRotationYawPitchRoll(&mtxRot, MoveP.Rot.y, MoveP.Rot.x, MoveP.Rot.z);
+	//D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxRot);
+
+
+	D3DXMatrixRotationQuaternion(&mtxRot, &MoveP.Quaternion);
 	D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxRot);
+
 
 	// 移動を反映
 	D3DXMatrixTranslation(&mtxTranslate, MoveP.Pos.x, MoveP.Pos.y, MoveP.Pos.z);
@@ -384,58 +435,35 @@ void MovePMove(void)
 //=============================================================================
 void MovePAnimeNext(void)
 {
-	//if (MoveP.AnimeChange)
-	//{
-	//	switch (MoveP.Animation->NextAnimID)
-	//	{
-	//	case MoveP_Idle:
-	//		ChangeAnimation(MoveP.Animation, MoveP_Idle, 1.0f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		MoveP.Animation->MotionEnd = true;	//そう設定しないと、待つの動作完成しないと、別の動作続けない
-	//		break;
-	//	case MoveP_Attack:
-	//		ChangeAnimation(MoveP.Animation, MoveP_Attack, 1.2f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		break;
-	//	case MoveP_Defend:
-	//		ChangeAnimation(MoveP.Animation, MoveP_Defend, 1.0f, true);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		MoveP.Animation->MotionEnd = true;//防御は押ししているだから、移動以外の動作は使えます
-	//		break;
-	//	case MoveP_Die:
-	//		ChangeAnimation(MoveP.Animation, MoveP_Die, 1.0f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		break;
-	//	case MoveP_Run:
-	//		ChangeAnimation(MoveP.Animation, MoveP_Run, 0.8f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
-	//		break;
-	//	case MoveP_Walk:
-	//		ChangeAnimation(MoveP.Animation, MoveP_Walk, 0.8f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		MoveP.Animation->MotionEnd = true;//そう設定しないと、歩くの動作完成しないと、別の動作続けない
-	//		break;
-	//	case MoveP_NoDefendImpact:
-	//		ChangeAnimation(MoveP.Animation, MoveP_NoDefendImpact, 1.0f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		break;
-	//	case MoveP_DefendImpact:
-	//		//現在使っていない
-	//		ChangeAnimation(MoveP.Animation, MoveP_DefendImpact, 1.0f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		break;
-	//	case MoveP_Roll:
-	//		ChangeAnimation(MoveP.Animation, MoveP_Roll, 1.7f, false);
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		break;
-	//	default:
-	//		break;
-	//	}
+	if (MoveP.AnimeChange)
+	{
+		switch (MoveP.Animation->NextAnimID)
+		{
+		case MoveP_Idle:
+			ChangeAnimation(MoveP.Animation, MoveP_Idle, 1.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			MoveP.Animation->MotionEnd = true;	//そう設定しないと、待つの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_Run:
+			ChangeAnimation(MoveP.Animation, MoveP_Run, 0.8f, false);
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_Jump:
+			ChangeAnimation(MoveP.Animation, MoveP_Jump, 1.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			break;
+		case MoveP_Shooting:
+			ChangeAnimation(MoveP.Animation, MoveP_Shooting, 1.2f, false);
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			break;
+		default:
+			break;
+		}
 
-	//	MoveP.AnimeChange = false;
+		MoveP.AnimeChange = false;
 
-	//}
+	}
 }
 
 //=============================================================================
@@ -443,80 +471,28 @@ void MovePAnimeNext(void)
 //=============================================================================
 void MovePAnimeCur(void)
 {
-	//switch (MoveP.Animation->CurrentAnimID)
-	//{
-	//case MoveP_Idle:
-	//	break;
-	//case MoveP_Attack:
-	//	if (MoveP.AttackMove && !MoveP.AttackMove1 && !MoveP.AttackMove2)
-	//	{
-	//		MoveP.Pos.x -= sinf(MoveP.Rot.y);
-	//		MoveP.Pos.z -= cosf(MoveP.Rot.y);
-	//	}
-	//	if (MoveP.AttackMove1 && !MoveP.AttackMove && !MoveP.AttackMove2)
-	//	{
-	//		MoveP.Pos.x -= sinf(MoveP.Rot.y);
-	//		MoveP.Pos.z -= cosf(MoveP.Rot.y);
-	//	}
-	//	if (MoveP.AttackMove2 && !MoveP.AttackMove1 && !MoveP.AttackMove)
-	//	{
-	//		MoveP.Pos.x -= sinf(MoveP.Rot.y) * 0.4f;
-	//		MoveP.Pos.z -= cosf(MoveP.Rot.y) * 0.4f;
-	//	}
+	Input *input = getInput();
 
-	//	if ((IsMouseLeftTriggered() || IsButtonTriggered(0, BUTTON_Z)) && MoveP.IsAttack)
-	//	{
-	//		MoveP.IsAttack1 = true;
-	//		MoveP.IsAttack = false;
-	//	}
-	//	else if ((IsMouseLeftTriggered() || IsButtonTriggered(0, BUTTON_Z)) && MoveP.IsAttack1 && !MoveP.IsAttack)
-	//	{
-	//		MoveP.IsAttack2 = true;
-	//		MoveP.IsAttack1 = false;
-	//	}
-	//	break;
-	//case MoveP_Defend:
-	//	if (IsMouseLeftTriggered() || IsButtonTriggered(0, BUTTON_Z))
-	//	{
-	//		MoveP.Animation->NextAnimID = MoveP_Attack;
-	//	}
-	//	break;
-	//case MoveP_Die:
-	//	//Enemy->FreeMode = true;
-	//	MoveP.Animation->NextAnimID = MoveP_Idle;
-	//	break;
-	//case MoveP_Run:
-	//	if (!MoveP.IsRun)
-	//	{
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		MoveP.AnimeChange = true;
-	//	}
-	//	break;
-	//case MoveP_Walk:
-	//	if (!MoveP.IsWalk)
-	//	{
-	//		MoveP.Animation->NextAnimID = MoveP_Idle;
-	//		MoveP.AnimeChange = true;
-	//	}
-	//	break;
-	//case MoveP_NoDefendImpact:
-	//	break;
-	//case MoveP_DefendImpact:
-	//	break;
-	//case MoveP_Roll:
-	//	if (MoveP.IsRoll)
-	//	{
-	//		MoveP.Pos.x -= sinf(MoveP.Rot.y) * 4.0f;
-	//		MoveP.Pos.z -= cosf(MoveP.Rot.y) * 4.0f;
-
-	//		MoveP.IsDamage1 = false;
-	//		MoveP.IsDamage2 = false;
-	//		MoveP.IsDamage3 = false;
-	//	}
-	//	break;
-	//default:
-	//	break;
-	//}
+	switch (MoveP.Animation->CurrentAnimID)
+	{
+	case MoveP_Idle:
+		break;
+	case MoveP_Run:
+		if (!MoveP.IsRun)
+		{
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			MoveP.AnimeChange = true;
+		}
+		break;
+	case MoveP_Jump:
+		MoveP.Animation->NextAnimID = MoveP_Idle;
+		break;
+	case MoveP_Shooting:
+		MoveP.Animation->NextAnimID = MoveP_Idle;
+		break;
+	default:
+		break;
+	}
 }
 
 //=============================================================================
@@ -546,8 +522,18 @@ HRESULT InitCallbackKeys_MoveP(void)
 
 		switch (Set_No)
 		{
-		case MoveP_Attack:
-			AddKeydata(0.9f, MovePAttackEnd);  //アニメの時間によってイベントを発生します
+		case MoveP_Idle:
+			break;
+		case MoveP_Run:
+			AddKeydata(0.95f, MotionEnd);
+			break;
+		case MoveP_Jump:
+			AddKeydata(0.05f, MovePRollStart);
+			AddKeydata(0.75f, MovePRollEnd);
+			break;
+		case MoveP_Shooting:
+			AddKeydata(0.01f, MovePAttackStart);  //アニメの時間によってイベントを発生します
+			AddKeydata(0.9f, MovePAttackEnd);
 			break;
 		default:
 			continue;

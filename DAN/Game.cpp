@@ -16,6 +16,7 @@
 //===================================================================================================================================
 using namespace gameNS;
 
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -100,8 +101,8 @@ void Game::initialize() {
 		switch (i)
 		{
 		case gameMasterNS::PLAYER_1P:
-			infomation.playerType	= gameMasterNS::PLAYER_1P;
-			infomation.modelType	= gameMasterNS::MODEL_FEMALE;
+			infomation.playerType = gameMasterNS::PLAYER_1P;
+			infomation.modelType = gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			break;
 		case gameMasterNS::PLAYER_2P:
@@ -111,7 +112,7 @@ void Game::initialize() {
 			break;
 		}
 		//カメラポインタのセット
-		player[i].setCamera(&camera[i]);	
+		player[i].setCamera(&camera[i]);
 
 		//モデルの設定
 		switch (player[i].getInfomation()->modelType)
@@ -126,9 +127,9 @@ void Game::initialize() {
 
 		//重力を設定
 		player[i].configurationGravityWithRay(
-			testField->getPosition(), 
-			testFieldRenderer->getStaticMesh()->mesh, 
-			testField->getMatrixWorld());	
+			testField->getPosition(),
+			testFieldRenderer->getStaticMesh()->mesh,
+			testField->getMatrixWorld());
 	}
 
 	//エフェクシアーの設定
@@ -157,9 +158,8 @@ void Game::initialize() {
 	//海面の初期化
 	ocean = new Ocean();
 
-	//アニメーションキャラの初期化
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
-	MoveP1 = GetMovePAdr();
+	//アニメションキャラの初期化
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.006f, 0.006f, 0.006f), true);
 
 
 	// サウンドの再生
@@ -339,11 +339,8 @@ void Game::update(float _frameTime) {
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].update(frameTime);		//オブジェクト
-	//アニメーションモデルの同期
-	MoveP1->Pos = player[gameMasterNS::PLAYER_1P].position;
-	MoveP1->Rot = (D3DXVECTOR3)player[gameMasterNS::PLAYER_1P].quaternion;
-	maleRenderer->update();				//レンダラー
-	femaleRenderer->update();			//レンダラー
+	maleRenderer->update();					//レンダラー
+	femaleRenderer->update();				//レンダラー
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
@@ -364,6 +361,13 @@ void Game::update(float _frameTime) {
 
 	UpdateMoveP(0.01f);
 
+	//キャラクターの場所と回転の連携
+	MOVEP *mp = GetMovePAdr();
+	mp->Pos = player->position;
+	D3DXQUATERNION q = player->quaternion;
+	Base::anyAxisRotation(&q,D3DXVECTOR3(0,1,0),180);
+	mp->Quaternion = q;
+
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
 	//エフェクトの再生
@@ -378,8 +382,8 @@ void Game::update(float _frameTime) {
 		class Fire :public effekseerNS::Instance
 		{
 		public:
-			D3DXVECTOR3* syncPosition;
-			Fire() { 
+			D3DXVECTOR3 * syncPosition;
+			Fire() {
 				effectNo = effekseerNS::TEST0;
 				deltaRadian = D3DXVECTOR3(0, 0.3, 0);
 			}
@@ -452,7 +456,7 @@ void Game::update(float _frameTime) {
 	player->pullpower(1);
 
 	//カメラの更新
-	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		camera[i].update();
 
 	//固定UIの更新
@@ -486,8 +490,8 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Game::render() {	
-		
+void Game::render() {
+
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
 	camera[gameMasterNS::PLAYER_1P].renderReady();
@@ -525,9 +529,9 @@ void Game::render3D(Camera currentCamera) {
 
 	// プレイヤーの描画
 	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
-	femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	//femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
-	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//アニメーションモデルの描画
 	DrawMoveP();
@@ -577,7 +581,7 @@ void Game::render3D(Camera currentCamera) {
 	//4分木空間分割のライン描画
 	//linear4TreeManager->render();
 	//8分木空間分割のライン描画
-	linear8TreeManager->render();
+	//linear8TreeManager->render();
 	Ray ray;
 	ray.color = D3DXCOLOR(150, 150, 0, 255);
 	Object** root = collisionList->getRoot();
@@ -663,7 +667,7 @@ void Game::tree8Reregister(Object* tmp)
 //===================================================================================================================================
 //【衝突判定処理】
 //===================================================================================================================================
-void Game::collisions() 
+void Game::collisions()
 {
 	//8分木への再登録
 	//プレイヤーの登録

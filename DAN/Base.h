@@ -54,8 +54,8 @@
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 675
 #else
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 #endif
 //#define   new                   new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #define   malloc(s)             _malloc_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
