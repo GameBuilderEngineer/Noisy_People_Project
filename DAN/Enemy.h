@@ -372,6 +372,9 @@ public:
 	void setIsHitPlayer(bool setting);
 	void damage(int _damage);
 
+	// デバッグ用目的地設定
+	void setDebugDestination();
+
 #ifdef _DEBUG
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
 	Camera*	camera;						// 操作するカメラへのポインタ
@@ -395,8 +398,6 @@ public:
 	Ray eyeAngleRay[4];					// 視覚レイ表示用
 	BoundingSphere hearingSphere[2];	// 聴覚距離表示用
 	void debugSensor();					// デバッグ関数
-	// デバッグ用目的地設定
-	void setDebugDestination();
 	// ImGUIへの出力
 	void outputGUI();
 #endif//_DEBUG

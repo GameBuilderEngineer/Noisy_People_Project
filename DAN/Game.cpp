@@ -227,10 +227,10 @@ void Game::initialize() {
 	//Sprite実験
 	spriteGauge = new SpriteGauge;
 	spriteGauge->initialize();
-
 #ifdef _DEBUG
 	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+#endif // _DEBUG
 	// エネミーをランダムに設置する
 	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
 	{
@@ -248,7 +248,6 @@ void Game::initialize() {
 		enemyManager->createEnemy(p);
 	}
 
-#endif
 	// ツリーをランダムに設置する
 	treeNS::TreeData treeData;
 	treeData.treeID = treeManager->issueNewTreeID();
