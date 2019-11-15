@@ -21,7 +21,15 @@ enum CallbackKeyType
 	NoEvent = 0,
 	MovePAttackStart,
 	MovePAttackEnd,
-	MotionEnd
+	MovePIsAttackNext,
+	MovePIsAttackNext1,
+	MovePRollStart,
+	MovePRollEnd,
+	MovePDeath,
+	MovePIsDamage,
+	MovePIsDamageEnd,
+	ResetTime,				// アニメーションのローカル時間をリセット 
+	MotionEnd,				// モーション終了
 };
 
 //*****************************************************************************

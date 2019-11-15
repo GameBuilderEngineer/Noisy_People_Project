@@ -32,6 +32,7 @@
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"dxguid.lib")
 
+
 #if(_MSC_VER >= GAME_MSC_VER)
 #pragma comment(lib,"xaudio2.lib")
 #pragma comment(lib,"x3daudio.lib")
@@ -55,8 +56,8 @@
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 960
 #else
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 #endif
 //#define   new                   new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #define   malloc(s)             _malloc_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)

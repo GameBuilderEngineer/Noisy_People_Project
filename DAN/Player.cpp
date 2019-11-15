@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
+#include "MoveP.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -373,22 +374,26 @@ void Player::updatePhysics(float frameTime)
 //===================================================================================================================================
 void Player::moveOperation()
 {
-	//前へ進む
-	if (input->isKeyDown(keyTable.front)) {
-		move(D3DXVECTOR2(0, -1), camera->getDirectionX(), camera->getDirectionZ());
-	}
-	//後ろへ進む
-	if (input->isKeyDown(keyTable.back)) {
-		move(D3DXVECTOR2(0, 1), camera->getDirectionX(), camera->getDirectionZ());
-	}
-	//左へ進む
-	if (input->isKeyDown(keyTable.left)) {
-		move(D3DXVECTOR2(-1, 0), camera->getDirectionX(), camera->getDirectionZ());
-	}
-	//右へ進む
-	if (input->isKeyDown(keyTable.right))
+	MOVEP *MoveP = GetMovePAdr();
+	if (!MoveP->IsAttack)
 	{
-		move(D3DXVECTOR2(1, 0), camera->getDirectionX(), camera->getDirectionZ());
+		//前へ進む
+		if (input->isKeyDown(keyTable.front)) {
+			move(D3DXVECTOR2(0, -5), camera->getDirectionX(), camera->getDirectionZ());
+		}
+		//後ろへ進む
+		if (input->isKeyDown(keyTable.back)) {
+			move(D3DXVECTOR2(0, 5), camera->getDirectionX(), camera->getDirectionZ());
+		}
+		//左へ進む
+		if (input->isKeyDown(keyTable.left)) {
+			move(D3DXVECTOR2(-5, 0), camera->getDirectionX(), camera->getDirectionZ());
+		}
+		//右へ進む
+		if (input->isKeyDown(keyTable.right))
+		{
+			move(D3DXVECTOR2(5, 0), camera->getDirectionX(), camera->getDirectionZ());
+		}
 	}
 
 	//コントローラスティックによる移動
@@ -425,7 +430,7 @@ void Player::controlCamera(float frameTime)
 	if (input->wasKeyPressed(keyTable.reverseCameraY))reverseValueYAxis *= -1;
 	//マウス操作
 	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
-	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
+	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * -reverseValueYAxis));
 	//コントローラ操作
 	if (input->getController()[infomation.playerType]->checkConnect()) {
 		camera->rotation(D3DXVECTOR3(0, 1, 0), input->getController()[infomation.playerType]->getRightStick().x*0.1f*frameTime*reverseValueXAxis);
