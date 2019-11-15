@@ -2,7 +2,7 @@
 //【CollisionManager.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/11
-// [更新日]2019/11/11
+// [更新日]2019/11/14
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -36,85 +36,158 @@ CollisionManager::~CollisionManager()
 //===================================================================================================================================
 bool CollisionManager::collision(Object* obj1, Object* obj2)
 {
-	if (obj1->type == ObjectType::NONE || obj2->type == ObjectType::NONE)return false;
+	using namespace ObjectType;
+	if (obj1->treeCell.type == NONE || obj2->treeCell.type == NONE)return false;
 
-	int type1 = obj1->type;
-	int type2 = obj2->type;
+	int type1	= obj1->treeCell.type;
+	int type2	= obj2->treeCell.type;
 
-	switch (COMBI[type1][type2])
+	switch (type1)
 	{
-	//PLAYER
-	case PLAYER_PLAYER:	return playerAndPlayer((Player*)obj1, (Player*)obj2); break;
-	case PLAYER_BULLET: return playerAndBullet((Player*)obj1, (Bullet*)obj2); break;
-	case PLAYER_ENEMY:	return playerAndEnemy((Player*)obj1, (Enemy*)obj2); break;
-	case PLAYER_TREE:	return playerAndTree((Player*)obj1, (Tree*)obj2); break;
-
-	//BULLET
-	case BULLET_PLAYER: return playerAndBullet((Player*)obj2, (Bullet*)obj1); break;
-	case BULLET_BULLET: return bulletAndBullet((Bullet*)obj1,(Bullet*)obj2); break;
-	case BULLET_ENEMY:	return bulletAndEnemy((Bullet*)obj1,(Enemy*)obj2); break;
-	case BULLET_TREE:	return bulletAndTree((Bullet*)obj1,(Tree*)obj2); break;
-
-	//ENEMY
-	case ENEMY_PLAYER:	return playerAndEnemy((Player*)obj2, (Enemy*)obj1); break;
-	case ENEMY_BULLET:	return bulletAndTree((Bullet*)obj2,(Tree*)obj1); break;
-	case ENEMY_ENEMY:	return enemyAndEnemy((Enemy*)obj1,(Enemy*)obj2); break;
-	case ENEMY_TREE:	return enemyAndTree((Enemy*)obj1,(Tree*)obj2); break;
-
-	//TREE
-	case TREE_PLAYER:	return playerAndTree((Player*)obj2, (Tree*)obj1); break;
-	case TREE_BULLET:	return bulletAndTree((Bullet*)obj2,(Tree*)obj1); break;
-	case TREE_ENEMY:	return enemyAndTree((Enemy*)obj2,(Tree*)obj1); break;
-	case TREE_TREE:		return treeAndTree((Tree*)obj1,(Tree*)obj2); break;
-
-	default:break;
+	case PLAYER:
+		switch (type2){
+		case PLAYER:	return playerAndPlayer((Player*)obj1, (Player*)obj2);	break;
+		case BULLET:	return false;											break;
+		case ENEMY:		return playerAndEnemy((Player*)obj1, (Enemy*)obj2);		break;
+		case TREE:		return playerAndTree((Player*)obj1, (Tree*)obj2);		break;
+		}break;
+	case BULLET:
+		switch (type2) {
+		case PLAYER:	return false; break;
+		case BULLET:	return false; break;
+		case ENEMY:		return bulletAndEnemy((Bullet*)obj1, (Enemy*)obj2);		break;
+		case TREE:		return bulletAndTree((Bullet*)obj1, (Tree*)obj2);		break;
+		}break;
+	case ENEMY:
+		switch (type2) {
+		case PLAYER:	return playerAndEnemy((Player*)obj2, (Enemy*)obj1);		break;
+		case BULLET:	return bulletAndTree((Bullet*)obj2, (Tree*)obj1);		break;
+		case ENEMY:		return enemyAndEnemy((Enemy*)obj1, (Enemy*)obj2);		break;
+		case TREE:		return enemyAndTree((Enemy*)obj1, (Tree*)obj2);			break;
+		}break;
+	case TREE:
+		switch (type2) {
+		case PLAYER:	return playerAndTree((Player*)obj2, (Tree*)obj1);		break;
+		case BULLET:	return bulletAndTree((Bullet*)obj2, (Tree*)obj1);		break;
+		case ENEMY:		return enemyAndTree((Enemy*)obj2, (Tree*)obj1);			break;
+		case TREE:		return false;											break;
+		}break;
+	default:return false; break;
 	}
 
 	return false;
+
 }
 
 
+
+#pragma region CollisionFunction
+//===================================================================================================================================
+//【球による衝突判定】
+//===================================================================================================================================
+bool CollisionManager::collisionSphere(Object* obj1, Object* obj2)
+{
+	return 	obj1->sphere->collide(	
+		obj2->center, 		
+		obj2->radius, 		
+		obj1->matrixCenter, 
+		obj2->matrixCenter);
+}
+
+//===================================================================================================================================
+//【円柱による衝突判定】
+//===================================================================================================================================
+bool CollisionManager::collisionCylinder(Object* obj1, Object* obj2)
+{
+	bool hit = false;
+
+	//中央位置準拠
+	//垂直位置
+	D3DXVECTOR3 vertical1 = D3DXVECTOR3(0.0f, obj1->center.y, 0.0f);
+	D3DXVECTOR3 vertical2 = D3DXVECTOR3(0.0f, obj2->center.y, 0.0f);
+	//垂直距離
+	float verticalDistance = Base::between2VectorLength(vertical1, vertical2);
+	//正垂直距離(非衝突時の距離)
+	float verticalCorrect = obj1->size.y / 2 + obj2->size.y / 2;
+
+	//水平位置
+	D3DXVECTOR3 horizontal1	= D3DXVECTOR3(obj1->center.x, 0.0f, obj1->center.z);
+	D3DXVECTOR3 horizontal2	= D3DXVECTOR3(obj2->center.x, 0.0f, obj2->center.z);
+	//水平距離
+	float horizontalDistance = Base::between2VectorLength(horizontal1, horizontal2);
+	//正水平距離(非衝突時の距離)
+	float horizontalCorrect = obj1->size.x / 2 + obj2->size.x / 2;
+
+	//衝突判定
+	if (verticalCorrect >= verticalDistance &&
+		horizontalCorrect >= horizontalDistance)
+	{
+		hit = true;
+	}
+
+	return hit;
+}
+#pragma endregion
+
+#pragma region ActionFunction
+void CollisionManager::horizontalCorrection(Object* obj1, Object* obj2, float ratio1)
+{
+	//水平位置
+	D3DXVECTOR3 horizontal1 = D3DXVECTOR3(obj1->center.x, 0.0f, obj1->center.z);
+	D3DXVECTOR3 horizontal2 = D3DXVECTOR3(obj2->center.x, 0.0f, obj2->center.z);
+	//水平距離
+	float horizontalDistance = Base::between2VectorLength(horizontal1, horizontal2);
+	//正水平距離(非衝突時の距離)
+	float horizontalCorrect = obj1->size.x / 2 + obj2->size.x / 2;
+
+	D3DXVECTOR3 repulsion;//反発ベクトル
+	Base::between2VectorDirection(&repulsion, horizontal1, horizontal2);
+	float length = (horizontalCorrect - horizontalDistance);
+	if (ratio1 > 0.0f) {
+		obj1->position -= repulsion * (length*ratio1);
+		obj1->Object::update();
+	}
+	if (ratio1 <= 1.0f)
+	{
+		obj2->position += repulsion * (length*(1.0-ratio1));
+		obj2->Object::update();
+	}
+}
+#pragma endregion
+
+#pragma region PLAYER
 //===================================================================================================================================
 //【プレイヤー <-> プレイヤー】
 //===================================================================================================================================
 bool CollisionManager::playerAndPlayer(Player* player1, Player* player2)
 {
-	bool hit = false;
-	hit = player1->getBodyCollide()->collide(
-		player2->getBodyCollide()->getCenter(), player2->radius,
-		player1->matrixWorld, player2->matrixWorld);
-
-	if (hit)
+	if (collisionCylinder(player1, player2))
 	{
-		D3DXVECTOR3 repulsion;//反発ベクトル
-		float length = Base::between2VectorDirection(&repulsion, player1->position, player2->position);
-		length = ((player1->radius+player2->radius)-length)/2.0f;
-		player1->position -= repulsion * length;
-		player2->position += repulsion * length;
-		player1->Object::update();
-		player2->Object::update();
+		horizontalCorrection(player1, player2, 0.5f);
+		return true;
 	}
-
-	return hit;
+	return false;
 }
-
 
 //===================================================================================================================================
 //【プレイヤー <-> バレット】
 //===================================================================================================================================
 bool CollisionManager::playerAndBullet(Player* player, Bullet* bullet)
 {
-	bool hit = false;
+	//bool hit = false;
 
-	float distance = Base::between2VectorLength(player->position, bullet->position);
-	float correct = player->radius + bullet->radius;
+	//float distance = Base::between2VectorLength(player->position, bullet->position);
+	//float correct = player->radius + bullet->radius;
 
-	if( correct > distance)
+	if(collisionSphere(player,bullet))
 	{
-		bullet->existenceTimer = 0.0f;
+		if (bullet->collide(player->getMesh(), player->matrixWorld))
+		{
+			bullet->destroy();
+			return true;
+		}
 	}
-
-	return hit;
+	return false;
 }
 
 //===================================================================================================================================
@@ -122,29 +195,12 @@ bool CollisionManager::playerAndBullet(Player* player, Bullet* bullet)
 //===================================================================================================================================
 bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 {
-	bool hit = false;
-	//hit = enemy->getSphereCollider()->collide(
-		//player->getBodyCollide()->getCenter(), player->radius,
-		//*enemy->getCentralMatrixWorld(), *player->getcentralMatrixWorld());
-
-	float distance = Base::between2VectorLength(player->position, enemy->position);
-	if (enemy->radius + player->radius >= distance)
+	if (collisionCylinder(player, enemy))
 	{
-		hit = true;
+		horizontalCorrection(player, enemy, 0.5f);
+		return true;
 	}
-
-	if (hit)
-	{
-		D3DXVECTOR3 repulsion;//反発ベクトル
-		float length = Base::between2VectorDirection(&repulsion, player->position, enemy->position);
-		length = ((player->radius + enemy->radius) - length) / 2.0f;
-		player->position -= repulsion * length;
-		enemy->position += repulsion * length;
-		player->Object::update();
-		enemy->Object::update();
-	}
-
-	return hit;
+	return false;
 }
 
 //===================================================================================================================================
@@ -152,78 +208,109 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 //===================================================================================================================================
 bool CollisionManager::playerAndTree(Player* player, Tree* tree)
 {
-	bool hit = false;
-	//hit = enemy->getSphereCollider()->collide(
-		//player->getBodyCollide()->getCenter(), player->radius,
-		//*enemy->getCentralMatrixWorld(), *player->getcentralMatrixWorld());
-
-
-
-	//水平距離
-	D3DXVECTOR3 horizontalPlayer	= D3DXVECTOR3(player->position.x, 0.0f, player->position.x);
-	D3DXVECTOR3 horizontalTree		= D3DXVECTOR3(tree->position.x, 0.0f, tree->position.z);
-	float horizontalDistance = Base::between2VectorLength(horizontalPlayer,horizontalTree);
-
-	//垂直距離
-	D3DXVECTOR3 verticalPlayer = D3DXVECTOR3(0.0f, player->position.y, 0.0f);
-	D3DXVECTOR3 verticalTree = D3DXVECTOR3(0.0f, tree->position.y, 0.0f);
-	float verticalDistance = Base::between2VectorLength(verticalPlayer, verticalTree);
-
-	//適正水平距離
-	float horizontalCorrect = tree->getRadius() + player->radius/2;
-	//適正垂直距離
-	float verticalCorrect = tree->getHight() + player->radius;
-
-	//衝突判定
-	if (horizontalCorrect >= horizontalDistance &&
-		verticalCorrect >= verticalDistance)
+	if (collisionCylinder(player, tree))
 	{
-		hit = true;
+		horizontalCorrection(player, tree, 1.0);
+		return true;
+	}
+	return false;
+}
+
+#pragma endregion
+
+#pragma region BULLET
+//===================================================================================================================================
+//【バレット<-> バレット】
+//===================================================================================================================================
+bool CollisionManager::bulletAndBullet(Bullet* bullet1, Bullet* bullet2)
+{
+	return false;
+}
+
+//===================================================================================================================================
+//【バレット<-> エネミー】
+//===================================================================================================================================
+bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
+{
+	bool hit = false;
+
+	if (collisionCylinder(bullet, enemy))
+	{
+		hit = bullet->collide(enemy->getMesh(), enemy->matrixWorld);
 	}
 
 	if (hit)
 	{
-		D3DXVECTOR3 repulsion;//反発ベクトル
-		Base::between2VectorDirection(&repulsion, horizontalPlayer, horizontalTree);
-		float length = (horizontalCorrect - horizontalDistance);
-		player->position -= repulsion * length;
-		player->Object::update();
+		//enemy->damage(bullet->getDigitalPower());
+		bullet->destroy();
+	}
+
+	return hit;
+
+	return false;
+}
+
+//===================================================================================================================================
+//【バレット<-> ツリー】
+//===================================================================================================================================
+bool CollisionManager::bulletAndTree(Bullet* bullet, Tree* tree)
+{
+	bool hit = false;
+
+	if (collisionCylinder(bullet, tree))
+	{
+		hit = bullet->collide(tree->getMesh(), tree->matrixWorld);
+	}
+
+	if (hit)
+	{
+		tree->addHp(bullet->getDigitalPower());
+		bullet->destroy();
 	}
 
 	return hit;
 }
 
-//BULLET<->BULLET
-bool CollisionManager::bulletAndBullet(Bullet* bullet1, Bullet* bullet2) 
-{
-	return false;
-}
+#pragma endregion
 
-//BULLET<->ENEMY
-bool CollisionManager::bulletAndEnemy(Bullet* player, Enemy* enemy)
-{
-	return false;
-}
-//BULLET<->TREE
-bool CollisionManager::bulletAndTree(Bullet* player, Tree* tree)
-{
-	return false;
-}
-
-//ENEMY<->ENEMY
+#pragma region ENEMY
+//===================================================================================================================================
+//【エネミー<->エネミー】
+//===================================================================================================================================
 bool CollisionManager::enemyAndEnemy(Enemy* enemy1, Enemy* enemy2)
 {
-	return false;
-}
-//ENEMY<->TREE
-bool CollisionManager::enemyAndTree(Enemy* player, Tree* tree)
-{
+	if (collisionCylinder(enemy1, enemy2))
+	{
+		horizontalCorrection(enemy1, enemy2, 0.5f);
+		return true;
+	}
 	return false;
 }
 
-//TREE
-//ENEMY<->TREE
+//===================================================================================================================================
+//【エネミー<-> ツリー】
+//===================================================================================================================================
+bool CollisionManager::enemyAndTree(Enemy* enemy, Tree* tree)
+{
+	if (collisionCylinder(enemy, tree))
+	{
+		horizontalCorrection(enemy, tree, 1.0f);
+		return true;
+	}
+
+	return false;
+}
+#pragma endregion
+
+#pragma region Tree
+//===================================================================================================================================
+//【ツリー<-> ツリー】
+//===================================================================================================================================
 bool CollisionManager::treeAndTree(Tree* tree1, Tree* tree2)
 {
 	return false;
 }
+#pragma endregion
+
+#pragma region newRegion
+#pragma endregion

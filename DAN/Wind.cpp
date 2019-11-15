@@ -69,7 +69,7 @@ void  WindManager::windCollision(Player* player)
 
 	for (int i = 0; i < NUM_WIND; i++)
 	{
-		distance = between2VectorLength(wind[i].position, *player->getCentralPosition());
+		distance = between2VectorLength(wind[i].position, player->center);
 		if (distance > DISTANCE[i]) { continue; }
 
 		ray.update(player->position, -wind[i].windDirection);

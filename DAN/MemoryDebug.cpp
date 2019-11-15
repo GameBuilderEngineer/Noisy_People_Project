@@ -70,7 +70,7 @@ void MemoryDebug::debugSpawnManager()
 	{
 		treeNS::TreeData treeData;
 		treeData.treeID = treeManager->issueNewTreeID();
-		treeData.geenState = treeNS::GREEN;
+		treeData.greenState = treeNS::GREEN;
 		treeData.model = treeNS::A_MODEL;
 		treeData.initialPosition = D3DXVECTOR3(0, 0, 0);
 

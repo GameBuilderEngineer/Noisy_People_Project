@@ -306,6 +306,7 @@ void Tutorial::update(float _frameTime)
 		changeScene(nextScene);
 	}
 
+	//ƒV[ƒ“‘JˆÚ
 	int flag = 0;
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{

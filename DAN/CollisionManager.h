@@ -2,7 +2,7 @@
 //【CollisionManager.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/11
-// [更新日]2019/11/11
+// [更新日]2019/11/12
 //===================================================================================================================================
 #pragma once
 
@@ -21,85 +21,6 @@
 //【名前空間】
 //===================================================================================================================================
 namespace CollisionManagerNS{
-	//組合せリスト
-	enum COLLISION_COMBI{
-		//NONE
-		NONE_NONE,
-		NONE_PLAYER,
-		NONE_BULLET,
-		NONE_ENEMY,
-		NONE_TREE,
-
-		//PLAYER
-		PLAYER_NONE,
-		PLAYER_PLAYER,
-		PLAYER_BULLET,
-		PLAYER_ENEMY,
-		PLAYER_TREE,
-
-		//BULLET
-		BULLET_NONE,
-		BULLET_PLAYER,
-		BULLET_BULLET,
-		BULLET_ENEMY,
-		BULLET_TREE,
-
-		//ENEMY
-		ENEMY_NONE,
-		ENEMY_PLAYER,
-		ENEMY_BULLET,
-		ENEMY_ENEMY,
-		ENEMY_TREE,
-
-		//TREE
-		TREE_NONE,
-		TREE_PLAYER,
-		TREE_BULLET,
-		TREE_ENEMY,
-		TREE_TREE,
-
-
-
-		COMBI_NUM
-	};
-
-	const int COMBI[ObjectType::TYPE_NUM][ObjectType::TYPE_NUM]=
-	{
-		//NONE
-		NONE_NONE,
-		NONE_PLAYER,
-		NONE_BULLET,
-		NONE_ENEMY,
-		NONE_TREE,
-
-		//PLAYER
-		PLAYER_NONE,
-		PLAYER_PLAYER,
-		PLAYER_BULLET,
-		PLAYER_ENEMY,
-		PLAYER_TREE,
-
-		//BULLET
-		BULLET_NONE,
-		BULLET_PLAYER,
-		BULLET_BULLET,
-		BULLET_ENEMY,
-		BULLET_TREE,
-
-		//ENEMY
-		ENEMY_NONE,
-		ENEMY_PLAYER,
-		ENEMY_BULLET,
-		ENEMY_ENEMY,
-		ENEMY_TREE,
-
-		//TREE
-		TREE_NONE,
-		TREE_PLAYER,
-		TREE_BULLET,
-		TREE_ENEMY,
-		TREE_TREE,
-	};
 
 }
 
@@ -114,6 +35,14 @@ public:
 
 	//衝突判定関数
 	static bool collision(Object* obj1, Object* obj2);
+
+	//球衝突判定
+	static bool collisionSphere(Object* obj1, Object* obj2);
+	//円柱衝突判定（非回転）
+	static bool collisionCylinder(Object* obj1, Object* obj2);
+	//水平補正(ratio1 = obj1が補正される割合(0.0は動かない/1.0はすべての補正をうける)）
+	static void horizontalCorrection(Object* obj1, Object* obj2,float ratio1);
+
 
 	//PLAYER
 	static bool playerAndPlayer(Player* player1, Player* player2);		//PLAYER<->PLAYER

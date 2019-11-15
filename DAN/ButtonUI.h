@@ -1,5 +1,5 @@
 //==================================
-//ボタンUI処理[TimerFlame.h]
+//ボタンUI処理[ButtonUI.h]
 //染矢　晃介
 //==================================
 #pragma once
@@ -34,20 +34,20 @@ namespace uiButtonNS
 //==================================
 //クラス定義
 //==================================
-class UiButton :public BasicUI
+class ButtonUI :public BasicUI
 {
 public://メンバー変数
 	Sprite * button[uiButtonNS::VISION];	//スプライト
 	float	alpha;							//α値
 
 public://メンバー関数
-	UiButton();					//コンストラクタ
-	~UiButton();				//デストラクタ
+	ButtonUI();					//コンストラクタ
+	~ButtonUI();				//デストラクタ
 	void initialize();			//初期化
 	void renderP1();			//P1描画
 	void renderP2();			//P2描画
 	void update(bool flag, int buttontype);	//更新
-	void  changeAlpha(bool flag);//α値の変更
+	void  changeAlpha(bool flag, int buttontype);//α値の変更
 	
 
 }; 

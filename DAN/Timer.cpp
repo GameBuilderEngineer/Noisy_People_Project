@@ -8,6 +8,7 @@
 //====================================
 #include "Timer.h"
 
+
 //====================================
 //	[using宣言]
 //====================================
@@ -48,7 +49,7 @@ void Timer::initialize()
 	BasicUI::assingSize(WIDTH_TIMER, HEIGHT_TIMER);
 
 	//タイマーの初期値
-	keepTime = GAME_TIME;
+	keepTime = GameMaster::getGameTime();
 
 	//テクスチャの初期化
 	for (int i = 0; i < DIGIT_TIMER; i++)
@@ -79,8 +80,8 @@ void Timer::render()
 //====================================
 void Timer::update()
 {
-	//60フレームで１減少
-	keepTime -= 1.0f / 60.0f;
+	//タイマーの初期値
+	keepTime = GameMaster::getGameTime();
 }
 
 //====================================

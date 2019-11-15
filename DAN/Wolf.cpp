@@ -12,6 +12,7 @@ using namespace stateMachineNS;
 //=============================================================================
 Wolf::Wolf(StaticMesh* _staticMesh, EnemyData* _enemyData): Enemy(_staticMesh, _enemyData)
 {
+
 }
 
 
@@ -46,7 +47,30 @@ void Wolf::update(float frameTime)
 //=============================================================================
 void::Wolf::chase()
 {
+	if (onGround && isArraved || isDestinationLost)
+	{
+		// 適切なプレイヤーを移動ターゲットに設定する
+		if (isNoticedPlayer[gameMasterNS::PLAYER_1P] && isNoticedPlayer[gameMasterNS::PLAYER_2P] == false)
+		{
+			setMovingTarget(&player[gameMasterNS::PLAYER_1P].position);
+		}
+		else if (isNoticedPlayer[gameMasterNS::PLAYER_1P] == false && isNoticedPlayer[gameMasterNS::PLAYER_2P])
+		{
+			setMovingTarget(&player[gameMasterNS::PLAYER_2P].position);
+		}
+		else if (isNoticedPlayer[gameMasterNS::PLAYER_1P] && isNoticedPlayer[gameMasterNS::PLAYER_2P])
+		{
+			float distance1 = between2VectorLength(position, player[gameMasterNS::PLAYER_1P].position);
+			float distance2 = between2VectorLength(position, player[gameMasterNS::PLAYER_2P].position);
+			if (distance1 < distance2) { setMovingTarget(&player[gameMasterNS::PLAYER_1P].position); }
+			else { setMovingTarget(&player[gameMasterNS::PLAYER_1P].position); }
+		}
 
+		isDestinationLost = false;	// 目的地はロストしていない
+		shouldSearch = true;		// パスサーチ実行
+	}
+
+	setMove(true);
 }
 
 
@@ -55,7 +79,16 @@ void::Wolf::chase()
 //=============================================================================
 void::Wolf::patrol()
 {
+	if (onGround && isArraved || isDestinationLost)
+	{
+#ifdef _DEBUG
+		setDebugDestination();		// デバッグ用目的地を設定
+#endif // _DEBUG
+		isDestinationLost = false;	// 目的地はロストしていない
+		shouldSearch = true;		// パスサーチ実行
+	}
 
+	setMove(true);
 }
 
 

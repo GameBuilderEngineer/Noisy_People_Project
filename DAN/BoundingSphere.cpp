@@ -17,6 +17,17 @@
 BoundingSphere::BoundingSphere()
 {
 	ZeroMemory(this, sizeof(BoundingSphere));
+	scale = 1.0f;
+}
+
+//===================================================================================================================================
+//【コンストラクタ】
+//===================================================================================================================================
+BoundingSphere::BoundingSphere(D3DXVECTOR3* _position,float _radius)
+{
+	ZeroMemory(this, sizeof(BoundingSphere));
+	scale = 1.0f;
+	initialize(_position, _radius);
 }
 
 //===================================================================================================================================
@@ -72,15 +83,15 @@ void BoundingSphere::render(D3DXMATRIX owner)
 	LPDIRECT3DDEVICE9 device = getDevice();
 
 	// ライティングモードを設定
-	device->SetRenderState(D3DRS_LIGHTING, false);
+	device->SetRenderState(D3DRS_LIGHTING, true);
 	// レンダリングモードの設定
 	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);//ワイヤーフレーム表示
 	// アルファ・ブレンディングを行う
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	// 透過処理を行う
-	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	// 半透明処理を行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 
 	D3DMATERIAL9 matDef;
 	// 現在のマテリアルを取得
@@ -95,8 +106,8 @@ void BoundingSphere::render(D3DXMATRIX owner)
 	// マテリアル情報に対するポインタを取得
 	D3DMATERIAL9 material;
 
-	// マテリアル情報を緑色にし、少し透過
-	material.Diffuse = D3DCOLORVALUE(D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.7f));
+	// マテリアル情報を緑色
+	material.Diffuse = D3DCOLORVALUE(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 	material.Ambient = D3DCOLORVALUE(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 	material.Specular = D3DCOLORVALUE(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	material.Emissive = D3DCOLORVALUE(D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f));
@@ -110,7 +121,21 @@ void BoundingSphere::render(D3DXMATRIX owner)
 
 	//マテリアルをデフォルトに戻す
 	device->SetMaterial(&matDef);
-	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);//ワイヤーフレーム表示
+	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);//ソリッド表示
+}
+void BoundingSphere::render()
+{
+	D3DXMATRIX worldMatrix;
+	D3DXMATRIX positionMatrix;
+	D3DXMatrixTranslation(&positionMatrix, position->x, position->y, position->z);
+	D3DXMATRIX scaleMatrix;
+	D3DXMatrixScaling(&scaleMatrix, scale, scale, scale);
+
+	D3DXMatrixIdentity(&worldMatrix);									//正規化
+	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &scaleMatrix);		//*スケール行列
+	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &positionMatrix);	//*位置行列
+
+	render(worldMatrix);
 }
 
 //===================================================================================================================================
@@ -136,11 +161,14 @@ bool BoundingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius, D3DXM
 //===================================================================================================================================
 //【setter】
 //===================================================================================================================================
-
+void BoundingSphere::setScale(float value)
+{
+	scale = value;
+}
 
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
-float BoundingSphere::getRadius() { return radius; }
+float BoundingSphere::getRadius() { return radius*scale; }
 D3DXVECTOR3 BoundingSphere::getCenter() { return center; }
 LPD3DXMESH BoundingSphere::getMesh() { return mesh; }

@@ -10,14 +10,29 @@
 //【名前空間】
 //===================================================================================================================================
 namespace ObjectType{
-	enum 
-	{
-		NONE,
-		PLAYER,
-		BULLET,
-		ENEMY,
-		TREE,
-		TYPE_NUM,
+
+	enum {
+		NONE	= 0x0000,
+		PLAYER	= 0x0001,
+		BULLET	= 0x0002,
+		ENEMY	= 0x0004,
+		TREE	= 0x0008,
+		//上記に新たにタイプを追加した場合は、
+		//ALLへor演算[|]で一番左に追加してください
+		ALL = TREE|ENEMY|BULLET|PLAYER,
 	};
 
+	//ビットの数を演算
+	const long BIT		= ALL;
+	const long BIT1		= (BIT & 0x55555555) + (BIT >> 1 & 0x55555555);
+	const long BIT2		= (BIT1 & 0x33333333) + (BIT1 >> 2 & 0x33333333);
+	const long BIT4		= (BIT2 & 0x0f0f0f0f) + (BIT2 >> 4 & 0x0f0f0f0f);
+	const long BIT8		= (BIT4 & 0x00ff00ff) + (BIT4 >> 8 & 0x00ff00ff);
+	const long BIT16	= (BIT8 & 0x0000ffff) + (BIT8 >> 16 & 0x0000ffff);
+
+	//全てのタイプの数
+	const int TYPE_NUM	= BIT16+1;
 }
+
+
+

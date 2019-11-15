@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/11/01
+// [更新日]2019/11/13
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -26,7 +26,7 @@ Game::Game()
 	//linear4TreeManager->initialize(5, -1000, 1000, 1000, -1000);	
 	//線形８分木空間分割管理クラス
 	linear8TreeManager = new Linear8TreeManager<Object>;
-	linear8TreeManager->initialize(4, D3DXVECTOR3(-1000,-500,-1000),D3DXVECTOR3(1000,1000,1000));	
+	linear8TreeManager->initialize(5, D3DXVECTOR3(-3000,-2000,-3000),D3DXVECTOR3(3000,3000,3000));	
 
 	//オブジェクトカウンターのリセット
 	objectNS::resetCounter();		
@@ -92,7 +92,9 @@ void Game::initialize() {
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
 		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
-		
+		camera[i].setLimitRotationTop(0.3f);
+		camera[i].setLimitRotationBottom(0.7f);
+
 		//プレイヤーの設定
 		PlayerTable infomation;
 		switch (i)
@@ -155,8 +157,9 @@ void Game::initialize() {
 	//海面の初期化
 	ocean = new Ocean();
 
-	//アニメションキャラの初期化
+	//アニメーションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
+	MoveP1 = GetMovePAdr();
 
 
 	// サウンドの再生
@@ -171,6 +174,8 @@ void Game::initialize() {
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane = new TestPlane();
+	//開発中広告
+	ad = new Advertisement();
 
 	// エネミー
 	enemyManager = new EnemyManager;
@@ -203,12 +208,16 @@ void Game::initialize() {
 	// AI
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, player, enemyManager, treeManager, itemManager, NULL);
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	naviMesh->initialize();
 
 	//固定されたUI
 	fixedUI = new FixedUI;
 	fixedUI->initialize();
+
+	//プレイヤー周りのUI
+	playerUI = new PlayerUI;
+	playerUI->initialize(&player[gameMasterNS::PLAYER_1P]);
 
 	//レティクル
 	reticle = new Reticle();
@@ -249,24 +258,6 @@ void Game::initialize() {
 #ifdef _DEBUG
 	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
-
-	// ツリーをランダムに設置する
-	treeNS::TreeData treeData;
-	treeData.treeID = treeManager->issueNewTreeID();
-	treeData.hp = 100;
-	treeData.type = treeNS::ANALOG_TREE;
-	treeData.size = treeNS::STANDARD;
-	treeData.geenState = treeNS::DEAD;
-	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 500; i++)
-	{
-		treeData.initialPosition =
-			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		
-		treeManager->createTree(treeData);
-	}
-
 	// エネミーをランダムに設置する
 	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
 	{
@@ -283,10 +274,29 @@ void Game::initialize() {
 		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
 		enemyManager->createEnemy(p);
 	}
-	
-	
 
 #endif
+	// ツリーをランダムに設置する
+	treeNS::TreeData treeData;
+	treeData.treeID = treeManager->issueNewTreeID();
+	treeData.hp = 0;
+	treeData.type = treeNS::ANALOG_TREE;
+	treeData.size = treeNS::STANDARD;
+	treeData.greenState = treeNS::DEAD;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 50; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		
+		treeManager->createTree(treeData);
+	}
+
+
+	
+	//ゲーム開始時処理
+	gameMaster->startGame();
 }
 
 //===================================================================================================================================
@@ -322,6 +332,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
 	SAFE_DELETE(fixedUI);
+	SAFE_DELETE(playerUI);
+	SAFE_DELETE(ad);
 
 	UninitMoveP();
 
@@ -334,12 +346,19 @@ void Game::update(float _frameTime) {
 
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
-	
+
+	//gameMaster処理落ちやポーズに関わらない更新
+	gameMaster->update(frameTime);
+
 
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 0.10)return;
+
+	//ゲームタイムの更新
+	gameMaster->updateGameTime(frameTime);
+
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -348,6 +367,9 @@ void Game::update(float _frameTime) {
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].update(frameTime);		//オブジェクト
+	//アニメーションモデルの同期
+	MoveP1->Pos = player[gameMasterNS::PLAYER_1P].position;
+	MoveP1->Rot = (D3DXVECTOR3)player[gameMasterNS::PLAYER_1P].quaternion;
 	maleRenderer->update();				//レンダラー
 	femaleRenderer->update();			//レンダラー
 
@@ -451,6 +473,8 @@ void Game::update(float _frameTime) {
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane->update(frameTime);
+	// 開発中広告
+	ad->update(frameTime);
 
 	//電力減少（電力回復確認用）
 	player->pullpower(1);
@@ -461,6 +485,12 @@ void Game::update(float _frameTime) {
 
 	//固定UIの更新
 	fixedUI->update();
+	gameMaster->getGameTime();//←ソメヤくんへ：ゲームタイムです。
+
+
+	//プレイヤー周りのUIの更新
+	playerUI->update();
+
 	//レティクルの更新
 	reticle->update(frameTime);
 
@@ -527,6 +557,8 @@ void Game::render3D(Camera currentCamera) {
 	// プレイヤーの他のオブジェクトの描画
 	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
 		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//アニメーションモデルの描画
+	DrawMoveP();
 
 	////木の描画
 	//deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -541,7 +573,6 @@ void Game::render3D(Camera currentCamera) {
 	//海面の描画
 	ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	DrawMoveP();
 
 	// エネミーの描画
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -564,6 +595,9 @@ void Game::render3D(Camera currentCamera) {
 	//ディスプレイ用プレーンサンプル
 	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// 開発中広告
+	ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//レティクル3D描画
 	reticle->render3D(nowRenderingWindow,currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -573,7 +607,7 @@ void Game::render3D(Camera currentCamera) {
 	//8分木空間分割のライン描画
 	//linear8TreeManager->render();
 	Ray ray;
-	ray.color = D3DXCOLOR(255, 255, 0, 255);
+	ray.color = D3DXCOLOR(150, 150, 0, 255);
 	Object** root = collisionList->getRoot();
 	Object* tmp1 = NULL;
 	Object* tmp2 = NULL;
@@ -586,11 +620,12 @@ void Game::render3D(Camera currentCamera) {
 		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
 		ray.initialize(tmp1->position, direction);
 		ray.render(length);
+
 	}
 #endif
 
 #ifdef _DEBUG
-#if 1	// ナビゲーションメッシュのデバッグ描画
+#if 0	// ナビゲーションメッシュのデバッグ描画
 	naviMesh->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
 #endif //_DEBUG
@@ -619,9 +654,11 @@ void Game::renderUI() {
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-
 	//固定UIの描画
 	fixedUI->render();
+
+	//プレイヤー周りのUIの描画
+	playerUI->render();
 
 	//レティクルの描画
 	reticle->render2D();
@@ -663,12 +700,18 @@ void Game::collisions()
 	//弾の登録
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		for(int num = 0;num < player[i].getShootingNum();num++)
+		for (int num = 0; num < player[i].getShootingNum(); num++)
 			tree8Reregister(player[i].getBullet(num));
 	}
+	//敵の登録
 	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
 	{
 		tree8Reregister(enemyManager->getEnemyList()[i]);
+	}
+	//木の登録
+	for (int i = 0; i < treeManager->getTreeList().size(); i++)
+	{
+		tree8Reregister(treeManager->getTreeList()[i]);
 	}
 
 	//衝突対応リストを取得
@@ -717,7 +760,7 @@ void Game::collisions()
 //===================================================================================================================================
 void Game::AI() {
 	//エネミー増殖し続けるのでコメントアウト
-	//aiDirector->run();		// メタAI実行
+	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -733,9 +776,9 @@ void Game::createGUI()
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	ImGui::Text("collisionNum:%d", collisionNum);
 	if (ImGui::CollapsingHeader("CollisionList"))
 	{
-		ImGui::Text("collisionNum:%d", collisionNum);
 		for (int i = 0; i < collisionNum; i++)
 		{
 			tmp1 = root[i * 2];
@@ -802,7 +845,7 @@ void Game::test()
 		treeData.hp = 100;
 		treeData.type = treeNS::ANALOG_TREE;
 		treeData.size = treeNS::STANDARD;
-		treeData.geenState = treeNS::DEAD;
+		treeData.greenState = treeNS::DEAD;
 		treeData.model = treeNS::B_MODEL;
 		treeData.initialPosition = *player->getPosition();
 		treeManager->createTree(treeData);

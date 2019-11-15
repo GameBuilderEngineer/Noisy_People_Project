@@ -143,7 +143,7 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 		ImGui::ListBox("Enemy Type", &EnemyListboxType, listboxEnemyType, enemyNS::ENEMY_TYPE::TYPE_MAX);
 
 		//エネミーの状態
-		const char* listboxEnemyState[] = { "CHASE", "PATROL", "REST","DIE","DEAD" };
+		const char* listboxEnemyState[] = { "CHASE", "PATROL", "REST","ATTACK_TREE","DIE","DEAD" };
 		ImGui::ListBox("Enemy State", &EnemyListboxState, listboxEnemyState, stateMachineNS::ENEMY_STATE::STATE_MAX);
 
 		//エネミーの情報

@@ -16,7 +16,7 @@
 Window* window = NULL; //ウィンドウクラスのポインタ---ウィンドウプロシージャのためスタティック領域へ保存
 
 //===================================================================================================================================
-//外部参照宣言
+//【ImGuiコールバック関数】
 //===================================================================================================================================
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -177,6 +177,11 @@ BOOL Window::setWindowCenter(HWND _windowHandle)
 	GetMonitorRect(&desktopRegion);					//	デスクトップのサイズを取得
 	GetWindowRect(_windowHandle, &windowRegion);	//	ウィンドウのサイズを取得
 
+	// クライアント領域がWINDOW_WIDTH x WINDOW_HEIGHTとなるようにウィンドウサイズを調整
+	RECT clientRect;
+	// ウィンドウのクライアント領域のサイズを取得
+	GetClientRect(_windowHandle, &clientRect);
+
 	// 各座標の割り出し
 	windowSizeX = (windowRegion.right - windowRegion.left);													//	ウインドウの横幅の割り出し
 	windowSizeY = (windowRegion.bottom - windowRegion.top);													//	ウインドウの縦幅の割り出し
@@ -190,10 +195,25 @@ BOOL Window::setWindowCenter(HWND _windowHandle)
 		NULL,											//	配置順序のハンドル：先行するウィンドウのハンドルを指定
 		windowPositionX,								//	ウィンドウ左上隅の"X"座標を指定：横方向の位置 X
 		windowPositionY,								//	ウィンドウ左上隅の"Y"座標を指定：縦方向の位置 Y
-		windowSizeX,									//	ウィンドウの横幅を指定 X
-		windowSizeY,									//	ウィンドウの縦幅を指定 Y
-		(SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER)	//	ウィンドウ位置のオプション：ウィンドウのサイズや、位置の変更に関するフラグを指定
+		windowSizeX + (windowSizeX - clientRect.right),	//	ウィンドウの横幅を指定 X
+		windowSizeY + (windowSizeY - clientRect.bottom),//	ウィンドウの縦幅を指定 Y
+		(SWP_NOZORDER | SWP_NOOWNERZORDER)	//	ウィンドウ位置のオプション：ウィンドウのサイズや、位置の変更に関するフラグを指定
 	);
+
+
+}
+
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void wndresizebyclient(HWND hWnd, int x, int y) {
+	RECT size;
+	RECT wndsize;
+	GetClientRect(hWnd, &size);
+	GetWindowRect(hWnd, &wndsize);
+	wndsize.right = wndsize.right - wndsize.left;
+	wndsize.bottom = wndsize.bottom - wndsize.top;
+	SetWindowPos(hWnd, NULL, 0, 0, x + wndsize.right - size.right, y + wndsize.bottom - size.bottom, SWP_NOMOVE | SWP_NOREPOSITION | SWP_NOZORDER);
 }
 
 //===================================================================================================================================

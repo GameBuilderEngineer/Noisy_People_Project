@@ -121,7 +121,7 @@ treeNS::TREESET TREE_TOOLS::GetTreeSet(short treeId)
 	treeNS::TREESET tmpTreeSet = { 0 };
 	tmpTreeSet.treeID = treeFile.tfmt[treeId].treeId;
 	tmpTreeSet.type = (treeNS::TREE_TYPE)treeFile.tfmt[treeId].treeType;
-	tmpTreeSet.geenState = (treeNS::GREEN_STATE)treeFile.tfmt[treeId].treeState;
+	tmpTreeSet.greenState = (treeNS::GREEN_STATE)treeFile.tfmt[treeId].treeState;
 	tmpTreeSet.size = (treeNS::TREE_SIZE)treeFile.tfmt[treeId].treeSize;
 	tmpTreeSet.model = (treeNS::TREE_MODEL)treeFile.tfmt[treeId].treeModel;
 	tmpTreeSet.initialPosition = D3DXVECTOR3(treeFile.tfmt[treeId].posX, treeFile.tfmt[treeId].posY, treeFile.tfmt[treeId].posZ);

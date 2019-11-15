@@ -20,11 +20,14 @@ FixedUI::FixedUI()
 {
 	timer = new Timer;
 	timerFlame = new TimerFlame;
-	buttonP1 = new UiButton;
-	buttonP2 = new UiButton;
+	buttonP1 = new ButtonUI;
+	buttonP2 = new ButtonUI;
 	buttonFrameP1 = new ButtonFrame;
 	buttonFrameP2 = new ButtonFrame;
 	statusFrameP1 = new StatusFrame;
+	statusFrameP2 = new StatusFrame;
+	guage = new Guage;
+	
 }
 
 //================================
@@ -39,6 +42,9 @@ FixedUI::~FixedUI()
 	delete buttonFrameP1;
 	delete buttonFrameP2;
 	delete statusFrameP1;
+	delete statusFrameP2;
+	delete guage;
+	
 }
 
 //================================
@@ -52,7 +58,10 @@ void FixedUI::initialize()
 	buttonP2->initialize();
 	buttonFrameP1->initialize(basicUiNS::P1);
 	buttonFrameP2->initialize(basicUiNS::P2);
-	statusFrameP1->initialize();
+	statusFrameP1->initialize(basicUiNS::P1);
+	statusFrameP2->initialize(basicUiNS::P2);
+	guage->initialize();
+	
 	
 }
 
@@ -68,6 +77,9 @@ void FixedUI::render()
 	buttonP1->renderP1();
 	buttonP2->renderP2();
 	statusFrameP1->render();
+	statusFrameP2->render();
+	guage->render();
+	
 }
 
 //================================
@@ -75,11 +87,8 @@ void FixedUI::render()
 //================================
 void FixedUI::update()
 {
-	//buttonFlag = Getflag()//こんな関数が用意される？
 	timer->update();
-	//マジックナンバー部分は変数を用意予定
-	buttonP1->update(0,1);
-	buttonP2->update(1,1);
+	guage->update();
 }
 
 //================================

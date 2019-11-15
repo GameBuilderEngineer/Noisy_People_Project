@@ -3,6 +3,8 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
+// 更新日 : 2019/11/14 【菅野 樹】:debugRender実行
+//-----------------------------------------------------------------------------
 #include <cassert>
 #include "EnemyManager.h"
 #include "ImguiManager.h"
@@ -143,6 +145,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 #ifdef _DEBUG
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
+		enemyList[i]->debugRender();
 		// バウンディングスフィアを描画
 #ifdef RENDER_SPHERE_COLLIDER
 		enemyList[i]->getSphereCollider()->render(*enemyList[i]->getCentralMatrixWorld());
@@ -157,7 +160,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 		{
 			enemyList[i]->eyeAngleRay[k].render(VISIBLE_DISTANCE[enemyList[i]->getEnemyData()->type]);
 		}
-		float len = D3DXVec3Length(&(*player[0].getCentralPosition() - *enemyList[i]->getCentralPosition()));
+		float len = D3DXVec3Length(&(player[0].center - *enemyList[i]->getCentralPosition()));
 		//enemyList[i]->gazePlayer.render(len);
 		enemyList[i]->hearingSphere[0].render(*enemyList[i]->getCentralMatrixWorld());
 		enemyList[i]->hearingSphere[1].render(*enemyList[i]->getCentralMatrixWorld());
@@ -403,7 +406,6 @@ void EnemyManager::outputGUI()
 			if (enemyList[i]->getEnemyID() == Enemy::debugEnemyID)
 			{
 				//ImGui::Text("horizontalAngle:%f\n", enemyList[i]->horizontalAngle);
-				//ImGui::Text("verticalAngle:%f\n", enemyList[i]->verticalAngle);
 			}
 		}
 	}
@@ -414,7 +416,7 @@ void EnemyManager::outputGUI()
 		{
 			issueNewEnemyID(),
 			enemyNS::WOLF,
-			stateMachineNS::CHASE,
+			stateMachineNS::PATROL,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
 		};
@@ -480,6 +482,7 @@ void EnemyManager::relocateEnemyAccordingToFile()
 		createEnemy(enemyDataList.getValue(i));
 	}
 }
+
 
 //=============================================================================
 // Getter

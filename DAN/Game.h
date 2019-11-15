@@ -34,6 +34,7 @@
 #include "Reticle.h"
 #include "Ocean.h"
 #include "FixedUI.h"
+#include "Advertisement.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
@@ -41,6 +42,7 @@
 #include "movep.h"
 
 #include "TelopManager.h"
+#include "PlayerUI.h"
 //#include "Text.h"
 
 
@@ -96,6 +98,7 @@ private:
 	//ビルボード
 	TestEffect*						testEffect;			//インスタンシングビルボードテスト
 	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
+	Advertisement*					ad;					//開発中広告
 
 	EnemyManager*					enemyManager;		// エネミーマネージャー
 	TreeManager*					treeManager;		// ツリーマネージャー
@@ -112,6 +115,7 @@ private:
 	Reticle*						reticle;			//レティクル
 	TelopManager*					telopManager;		//テロップマネジャー
 	FixedUI*						fixedUI;			//固定されたUI
+	PlayerUI*						playerUI;			//プレイヤー周りのUI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];

@@ -298,6 +298,12 @@
     <Filter Include="Game Layer\MapObject">
       <UniqueIdentifier>{a583c9e0-b07d-4db7-9164-83c3fb26a395}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constant Layer\Collision\AxisAlinedBoundingBox">
+      <UniqueIdentifier>{7987e540-3b47-4ee8-ae2c-ef5d997eb416}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Guage">
+      <UniqueIdentifier>{5bb8b9a2-f308-41f1-a6dd-48e0aee779fd}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game Layer\Scene\DebugScene">
       <UniqueIdentifier>{09a2ad63-61ff-45ec-b780-9fc1dec511e6}</UniqueIdentifier>
     </Filter>
@@ -401,9 +407,6 @@
     </ClCompile>
     <ClCompile Include="SplashSprite.cpp">
       <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Game Layer\Player</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Constant Layer\Object</Filter>
@@ -634,9 +637,6 @@
     <ClCompile Include="BasicUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
-    <ClCompile Include="UIButton.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="tutorialPlane.cpp">
       <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
     </ClCompile>
@@ -669,6 +669,36 @@
     </ClCompile>
     <ClCompile Include="MapObjectManager.cpp">
       <Filter>Game Layer\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
+    </ClCompile>
+    <ClCompile Include="HPguage.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="Guage.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="HPguageEmp.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="CharaIcon.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Advertisement.cpp">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game Layer\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugBox.cpp">
+      <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClCompile>
     <ClCompile Include="DebugScene.cpp">
       <Filter>Game Layer\Scene\DebugScene</Filter>
@@ -1026,9 +1056,6 @@
     <ClInclude Include="BasicUI.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="UIButton.h">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="tutorialPlane.h">
       <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
     </ClInclude>
@@ -1064,6 +1091,33 @@
     </ClInclude>
     <ClInclude Include="MapObjectManager.h">
       <Filter>Game Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="Guage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguageEmp.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="CharaIcon.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Advertisement.h">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugBox.h">
+      <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClInclude>
     <ClInclude Include="DebugScene.h">
       <Filter>Game Layer\Scene\DebugScene</Filter>

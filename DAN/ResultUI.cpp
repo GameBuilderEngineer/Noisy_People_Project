@@ -24,6 +24,10 @@ using namespace resultUiNS;
 //============================
 void ResultUI::initialize()
 {
+
+	//BGM再生フラグをtrueで初期化
+	playedBGM = true;
+
 	//フェイズ移行時間の初期化
 	time = 0;
 
@@ -87,6 +91,8 @@ void ResultUI::initialize()
 		uiNumber[i].initialize(i);
 
 	}
+
+	
 }
 
 //============================
@@ -117,8 +123,7 @@ void ResultUI::render()
 		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
 		{
 			uiNumber[i].render();
-			//BGMの再生
-			//decidionBGM();
+			
 		}
 	}
 }
@@ -157,7 +162,11 @@ void ResultUI::update(float flameTime)
 		//ランク
 		uiRank01.update(rank01);
 		uiRank02.update(rank02);
-		
+		//再生
+		if (playedBGM)
+		{
+			decidionBGM();
+		}
 	}
 	
 	uiCharacter01.update(resultPhase);	//プレイヤー１の文字更新
@@ -193,8 +202,10 @@ void ResultUI::decidionBGM()
 	{
 		PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
 		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
+		//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
 		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Clear, true,1.0f,false,NULL,true, filterParameters };//BGMの設定
-		SoundInterface::BGM->playSound(&playParameters);//再生
+		 //再生
+		SoundInterface::BGM->playSound(&playParameters);
 	}
 	//どちらも70以下なら失敗
 	else if(score01<70 && score02<70)
@@ -204,4 +215,6 @@ void ResultUI::decidionBGM()
 		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Failed, true,1.0f,false,NULL,true, filterParameters };//BGMの設定
 		SoundInterface::BGM->playSound(&playParameters);//再生
 	}
+	//1度再生したらフラグをフォルス
+	playedBGM = false;
 }

@@ -52,7 +52,6 @@ TextureLoader::TextureLoader()
 	textureName[CREDIT] = { "Credit_01.png" };
 
 	// Game
-	textureName[UI_COUNT_DOWN_ONE] = { "Game_CountDown_One.png" };
 	textureName[UI_INFO_10] = { "Info_10.png" };
 	textureName[UI_INFO_30] = { "Info_30.png" };
 	textureName[UI_INFO_50] = { "Info_50.png" };
@@ -70,6 +69,10 @@ TextureLoader::TextureLoader()
 	textureName[UI_BUTTON4] = { "vision.png" };
 	textureName[UI_BUTTON_BOX] = { "CommandBox.png" };
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
+	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };
+	textureName[UI_HP_GUAGE_P1] = { "HPGuage1.png" };
+	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
+	textureName[UI_ICON_P1] = { "Chara_1.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
@@ -104,7 +107,7 @@ TextureLoader::TextureLoader()
 	textureName[SAMPLE_GRASS] = { "middleGrass.png" };
 	textureName[NEKO] = { "Chara_B.png" };
 	textureName[COLOR_SCALE] = { "colorScale.png" };
-
+	textureName[DATE_ALPHA] = { "DateAlpha.png" };
 }
 
 //===================================================================================================================================

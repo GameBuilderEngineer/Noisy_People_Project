@@ -2,7 +2,7 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/24
+// [更新日]2019/11/13
 //===================================================================================================================================
 #pragma once
 
@@ -21,6 +21,13 @@ namespace cameraNS {
 	const float LIMIT_TOP_Y = 7.0f;
 	const float INIT_NEAR_Z = 0.1f;
 	const float INIT_FAR_Z = 30000.0f;
+
+	enum {
+		ROTATION_TOP_LIMIT		= 0x00000001,
+		ROTATION_BOTTOM_LIMIT	= 0x00000002,
+	};
+
+	const int ALL_LIMIT = ROTATION_TOP_LIMIT | ROTATION_BOTTOM_LIMIT;
 }
 
 //===================================================================================================================================
@@ -33,26 +40,29 @@ public:
 	//Data
 	Direct3D9* d3d;
 
-	float				fieldOfView;		//視野角
-	float				aspect;				//画面縦横比
-	float				nearZ;				//視認近距離
-	float				farZ;				//視認遠距離
+	float				fieldOfView;				//視野角
+	float				aspect;						//画面縦横比
+	float				nearZ;						//視認近距離
+	float				farZ;						//視認遠距離
 	DWORD				windowWidth;
 	DWORD				windowHeight;
-	bool				onGaze;				//=true 注視ありモード
-	D3DXVECTOR3			position;			//カメラ位置
-	D3DXVECTOR3			gazePosition;		//注視
-	D3DXVECTOR3			relativeGaze;		//注視相対値
-	D3DXVECTOR3			upVector;			//上方ベクトル
-	D3DXQUATERNION		posture;			//姿勢クォータニオン
-	D3DXMATRIX			world;				//姿勢制御用行列
-	D3DXQUATERNION		relativeQuaternion;	//ターゲットに対する相対位置ベクトル
-	D3DXVECTOR3*		target;				//注視ターゲット位置ポインタ
-	D3DXVECTOR3*		targetX;			//注視ターゲットX方向ポインタ
-	D3DXVECTOR3*		targetY;			//注視ターゲットY方向ポインタ
-	D3DXVECTOR3*		targetZ;			//注視ターゲットZ方向ポインタ
-	D3DXMATRIX			view;				//ビューマトリックス
-	D3DXMATRIX			projection;			//プロジェクションマトリックス
+	bool				onGaze;						//=true 注視ありモード
+	int					limit;						//制限フラグ
+	float				limitValueRotaionTop;		//高さ制限
+	float				limitValueRotaionBottom;	//高さ制限
+	D3DXVECTOR3			position;					//カメラ位置
+	D3DXVECTOR3			gazePosition;				//注視
+	D3DXVECTOR3			relativeGaze;				//注視相対値
+	D3DXVECTOR3			upVector;					//上方ベクトル
+	D3DXQUATERNION		posture;					//姿勢クォータニオン
+	D3DXMATRIX			world;						//姿勢制御用行列
+	D3DXQUATERNION		relativeQuaternion;			//ターゲットに対する相対位置ベクトル
+	D3DXVECTOR3*		target;						//注視ターゲット位置ポインタ
+	D3DXVECTOR3*		targetX;					//注視ターゲットX方向ポインタ
+	D3DXVECTOR3*		targetY;					//注視ターゲットY方向ポインタ
+	D3DXVECTOR3*		targetZ;					//注視ターゲットZ方向ポインタ
+	D3DXMATRIX			view;						//ビューマトリックス
+	D3DXMATRIX			projection;					//プロジェクションマトリックス
 
 	//Method
 	Camera();
@@ -61,6 +71,11 @@ public:
 	void update();
 	void renderReady();
 	void outputGUI();
+
+	void enableLimit(int limitParameter);
+	void disableLimit(int limitParameter);
+	void setLimitRotationTop(float value);
+	void setLimitRotationBottom(float value);
 
 	void rotation(D3DXVECTOR3 axis, float angle);
 	void lockOn(D3DXVECTOR3 lockOnTarget,float frameTime);

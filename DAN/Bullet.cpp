@@ -25,6 +25,9 @@ using namespace bulletNS;
 //===================================================================================================================================
 Bullet::Bullet(Ray shootingRay)
 {
+	//パラメータの初期化
+	digitalPower = DIGITAL_POWER;
+
 	//引数の代入
 	this->launchPosition	= shootingRay.start;												//発射位置
 	this->speed				= shootingRay.direction*SPEED;										//速度
@@ -33,6 +36,12 @@ Bullet::Bullet(Ray shootingRay)
 	//弾道の初期化
 	ballisticRay.initialize(launchPosition, shootingRay.direction);
 	ballisticRay.color = D3DXCOLOR(0, 255, 120, 255);
+
+	{//オブジェクトタイプと衝突対象の指定
+		using namespace ObjectType;
+		treeCell.type = BULLET;
+		treeCell.target = ENEMY | TREE;
+	}
 
 	Object::initialize(&launchPosition);							//バレットモデルの初期化
 	postureControl(axisZ.direction, shootingRay.direction,1.0f);	//モデルを進行方向へ姿勢制御する
@@ -68,13 +77,42 @@ void Bullet::render()
 {
 	float length = Base::between2VectorLength(ballisticRay.start, position);
 	ballisticRay.render(length);
+	debugRender();
 }
 
 //===================================================================================================================================
 //【衝突判定】
 //===================================================================================================================================
-void Bullet::collide()
+bool Bullet::collide(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix)
 {
+	bool hit = ballisticRay.rayIntersect(targetMesh, targetMatrix);
+	
+	if (hit)
+	{
+		hit = (Base::between2VectorLength(ballisticRay.start, position)
+		> ballisticRay.distance);
+	}
+
+	return hit;
+}
+//===================================================================================================================================
+//【デジタルパワー】
+//===================================================================================================================================
+int Bullet::getDigitalPower()
+{
+	return digitalPower;
+}
+//===================================================================================================================================
+//【削除】
+//===================================================================================================================================
+void Bullet::destroy()
+{
+	existenceTimer = 0.0f;
+	//サウンドの再生
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	PLAY_PARAMETERS hitSE;
+	hitSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_HitBulletTree, false ,NULL,false,NULL, true, filterParameters };
+	SoundInterface::SE->playSound(&hitSE);
 
 }
 #pragma endregion
@@ -94,6 +132,11 @@ BulletManager::BulletManager()
 	intervalTimer	= 0.0f;
 	reloadTimer		= 0.0f;
 	reloading		= false;
+
+	//サウンドの設定
+	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Shot, false ,NULL,false,NULL, true, filterParameters };
+	reroadSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Reload, false ,NULL,false,NULL, true, filterParameters };
 }
 
 //===================================================================================================================================
@@ -175,19 +218,19 @@ void BulletManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 c
 //===================================================================================================================================
 //【発射：バレットマネージャー】
 //===================================================================================================================================
-void BulletManager::launch(Ray shootingRay)
+bool BulletManager::launch(Ray shootingRay)
 {
 	//インターバル中：発射しない
-	if (intervalTimer > 0)return;	
+	if (intervalTimer > 0)return false;	
 	
 	//リロード中：発射しない
-	if (reloading)return;	
+	if (reloading)return false;
 	
 	//残段数が0：自動リロード
 	if (remaining <= 0)
 	{
 		reload();
-		return;
+		return false;
 	}
 
 	//バレットリストへ新たに生成
@@ -208,6 +251,10 @@ void BulletManager::launch(Ray shootingRay)
 	//インターバル時間のセット
 	intervalTimer = INTERVAL_TIME;
 
+	//サウンドの再生
+	SoundInterface::SE->playSound(&shotSE);
+
+	return true;
 }
 
 //===================================================================================================================================
@@ -219,8 +266,10 @@ void BulletManager::reload()
 	if (remaining >= MAGAZINE_NUM)return;
 	//リロード中：リロードしない
 	if (reloading)return;
-	reloading = true;			//リロード開始
-	reloadTimer = RELOAD_TIME;	//リロードタイムの設定
+	reloading = true;							//リロード開始
+	reloadTimer = RELOAD_TIME;					//リロードタイムの設定
+	SoundInterface::SE->playSound(&reroadSE);	//サウンドの再生
+
 }
 
 //===================================================================================================================================

@@ -2,7 +2,7 @@
 //【Player.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/11/05
+// [更新日]2019/11/13
 //===================================================================================================================================
 #pragma once
 
@@ -24,6 +24,7 @@
 #include "Camera.h"
 #include "GameMaster.h"
 #include "Bullet.h"
+#include "Sound.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -101,7 +102,6 @@ namespace playerNS{
 	const BYTE BUTTON_BULLET		= virtualControllerNS::R1;
 	const BYTE BUTTON_PASUE			= virtualControllerNS::SPECIAL_MAIN;
 
-
 	enum STATE {
 		NORMAL,
 		VISION,
@@ -157,7 +157,7 @@ namespace playerNS{
 //===================================================================================================================================
 //【仮想ステートクラス】
 //===================================================================================================================================
-class State:public Base
+class AbstractState:public Base
 {
 public:
 	float	frameTime;
@@ -168,7 +168,7 @@ public:
 	virtual void operation()				= 0;
 	virtual void physics()					= 0;
 	virtual void end()						= 0;
-	virtual State* transition()				= 0;
+	virtual AbstractState* transition()				= 0;
 };
 
 //===================================================================================================================================
@@ -182,7 +182,7 @@ private:
 
 	//ステータス
 	playerNS::OperationKeyTable	keyTable;						//操作Keyテーブル
-	State*						state;							//状態クラス
+	AbstractState*				state;							//状態クラス
 	int							hp;								// HP
 	int							power;							// 電力
 
@@ -223,8 +223,8 @@ private:
 	Camera*						camera;							// 操作するカメラへのポインタ
 	D3DXVECTOR3					cameraGaze;						//カメラ注視位置
 	D3DXVECTOR3					cameraGazeRelative;				//カメラ注視相対位置
-	D3DXVECTOR3					centralPosition;				// 中心座標
-	D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
+	//D3DXVECTOR3					centralPosition;				// 中心座標
+	//D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
 
 	//シューティングアクション
 	Ray							aimingRay;						//照準レイ（カメラからのレイ）
@@ -240,6 +240,15 @@ private:
 	float						shiftTimer;						//デジタルシフトタイマー
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
+
+	//再生パラメータ
+	PLAY_PARAMETERS shiftStartSE;
+	PLAY_PARAMETERS shiftFinishSE;
+	PLAY_PARAMETERS visionSE;
+	PLAY_PARAMETERS visionStartSE;
+	PLAY_PARAMETERS visionFinishSE;
+	PLAY_PARAMETERS skyVisionStartSE;
+	PLAY_PARAMETERS skyVisionFinishSE;
 
 public:
 	Player();
@@ -299,19 +308,17 @@ public:
 	D3DXVECTOR3*	getAiming();								//照準ポイントの取得
 	Bullet*			getBullet(int i);							//発射中の弾へのポインタ
 	int				getShootingNum();							//発射中の弾数
-
-	D3DXVECTOR3* getCentralPosition();							//中心座標の取得
+	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
 	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
 	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
 	bool getOnGround();											//接地しているか取得
 	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
-	D3DXMATRIX* getcentralMatrixWorld();
 
 };
 
 
 //通常状態
-class NormalState:public State
+class NormalState:public AbstractState
 {
 private:
 	Player* player;
@@ -321,7 +328,7 @@ public:
 	virtual void start();
 	virtual void operation();
 	virtual void physics();
-	virtual State* transition();
+	virtual AbstractState* transition();
 	virtual void end();
 };
 

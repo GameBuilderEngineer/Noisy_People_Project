@@ -22,9 +22,9 @@ void AIDirector::initialize(GameMaster* _gameMaster, Player* _player, EnemyManag
 	itemManager = _itemManager;
 	telopManager = _telopManager;
 
-	sensor.initialize(&playerAD, &enemyAD, &treeAD, &itemAD, gameMaster, player, enemyManager, treeManager, itemManager);
-	eventMaker.initialize(&playerAD, &enemyAD, &treeAD, &itemAD, &opeGenerator, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
-	opeGenerator.initialize(&playerAD, &enemyAD, &treeAD, &itemAD, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
+	sensor.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager);
+	eventMaker.initialize(&data, &opeGenerator, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
+	opeGenerator.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
 	frameCnt = 0;
 }
 
@@ -53,7 +53,5 @@ void AIDirector::run()
 void AIDirector::outputGUI()
 {
 #ifdef _DEBUG
-
-
 #endif
 }
