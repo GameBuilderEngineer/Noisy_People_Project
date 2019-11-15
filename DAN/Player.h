@@ -112,8 +112,8 @@ namespace playerNS{
 
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
-		D3DXVECTOR3(-115, 40, 0),		//1P
-		D3DXVECTOR3(-115, 30, 30)		//2P
+		D3DXVECTOR3(-10, 20, -220),			//1P
+		D3DXVECTOR3(10, 20, -220)			//2P
 	};
 
 	// StatusParameter

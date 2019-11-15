@@ -311,6 +311,7 @@ void Director::createGUI()
 	if (!onGUI)return;
 	ImGui::SliderInt("fpsMode", &fpsMode, VARIABLE_FPS, FIXED_FPS);
 	ImGui::SliderInt("fixedFPS", &fixedFps, MIN_FRAME_RATE, MAX_FRAME_RATE);
+	ImGui::ColorEdit3("clear color", (float*)&imgui->clearColor);
 	ImGui::Checkbox("SceneGUI", scene->getShowGUI());	
 	ImGui::Checkbox("gameMasterGUI", gameMaster->getShowGUI());	
 	ImGui::Checkbox("faderGUI", fader->getShowGUI());	

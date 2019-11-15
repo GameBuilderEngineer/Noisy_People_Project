@@ -16,6 +16,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Tree.h"
+#include "GreeningArea.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -36,10 +37,16 @@ public:
 	//衝突判定関数
 	static bool collision(Object* obj1, Object* obj2);
 
+	//衝突判定
 	//球衝突判定
 	static bool collisionSphere(Object* obj1, Object* obj2);
+	//球と点の衝突判定
+	//obj1:球<->obj2:点
+	static bool collisionSphereAndPoint(Object* obj1, Object* obj2);
 	//円柱衝突判定（非回転）
 	static bool collisionCylinder(Object* obj1, Object* obj2);
+
+	//アクション
 	//水平補正(ratio1 = obj1が補正される割合(0.0は動かない/1.0はすべての補正をうける)）
 	static void horizontalCorrection(Object* obj1, Object* obj2,float ratio1);
 
@@ -60,6 +67,8 @@ public:
 	static bool enemyAndTree(Enemy* player, Tree* tree);				//ENEMY<->TREE
 	
 	//TREE
-	static bool treeAndTree(Tree* tree1, Tree* tree2);				//ENEMY<->TREE
+	static bool treeAndTree(Tree* tree1, Tree* tree2);					//ENEMY<->TREE
 
+	//GREENING_AREA
+	static bool greeningAreaAndTree(GreeningArea* area, Tree* tree);			//GREENING_AREA<->TREE
 };

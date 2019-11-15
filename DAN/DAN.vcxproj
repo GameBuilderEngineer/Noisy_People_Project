@@ -151,6 +151,7 @@
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="CharaIcon.h" />
+    <ClInclude Include="GreeningArea.h" />
     <ClInclude Include="Guage.h" />
     <ClInclude Include="Battery.h" />
     <ClInclude Include="Bear.h" />
@@ -290,6 +291,7 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
+    <ClCompile Include="GreeningArea.cpp" />
     <ClCompile Include="Guage.cpp" />
     <ClCompile Include="Battery.cpp" />
     <ClCompile Include="Bear.cpp" />

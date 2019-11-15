@@ -700,6 +700,9 @@
     <ClCompile Include="HPguageP2.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
+    <ClCompile Include="GreeningArea.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1118,6 +1121,9 @@
     </ClInclude>
     <ClInclude Include="HPguageP2.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="GreeningArea.h">
+      <Filter>Game Layer\Tree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

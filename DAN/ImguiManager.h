@@ -21,8 +21,8 @@ class ImguiManager
 private:
 	bool show_demo_window = false;
 	bool show_another_window = false;
-	ImVec4 clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 public:
+	ImVec4 clearColor = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 	ImguiManager(HWND wnd);
 	~ImguiManager();
 	void beginFrame();
