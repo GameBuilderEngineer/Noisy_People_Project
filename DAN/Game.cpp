@@ -170,7 +170,7 @@ void Game::initialize() {
 	//text2.initialize(direct3D9->device,11,11, 0xff0000ff);
 
 	//エフェクト（インスタンシング）テスト
-	testEffect = new TestEffect();
+	//testEffect = new TestEffect();
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane = new TestPlane();
@@ -292,7 +292,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(stone);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
-	SAFE_DELETE(testEffect);
+	//SAFE_DELETE(testEffect);
 	SAFE_DELETE(samplePlane);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
@@ -442,7 +442,7 @@ void Game::update(float _frameTime) {
 	ocean->update();
 
 	//エフェクト（インスタンシング）テスト
-	testEffect->update(frameTime);
+	//testEffect->update(frameTime);
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane->update(frameTime);
@@ -578,7 +578,7 @@ void Game::render3D(Camera currentCamera) {
 	//4分木空間分割のライン描画
 	//linear4TreeManager->render();
 	//8分木空間分割のライン描画
-	//linear8TreeManager->render();
+	linear8TreeManager->render();
 	Ray ray;
 	ray.color = D3DXCOLOR(150, 150, 0, 255);
 	Object** root = collisionList->getRoot();
@@ -685,6 +685,11 @@ void Game::collisions()
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)
 	{
 		tree8Reregister(treeManager->getTreeList()[i]);
+		if (treeManager->getTreeList()[i]->getTreeData()->type == treeNS::DIGITAL_TREE
+			&&treeManager->getTreeList()[i]->isAroundGreening())
+		{
+			tree8Reregister(treeManager->getTreeList()[i]->getGreeningArea());
+		}
 	}
 
 	//衝突対応リストを取得
@@ -748,7 +753,7 @@ void Game::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Text("collisionNum:%d", collisionNum);
 	if (ImGui::CollapsingHeader("CollisionList"))
 	{

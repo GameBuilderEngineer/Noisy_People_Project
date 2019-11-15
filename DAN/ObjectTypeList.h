@@ -2,7 +2,7 @@
 //【ObjectTypeList.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/11
-// [更新日]2019/11/11
+// [更新日]2019/11/15
 //===================================================================================================================================
 #pragma once
 
@@ -12,14 +12,15 @@
 namespace ObjectType{
 
 	enum {
-		NONE	= 0x0000,
-		PLAYER	= 0x0001,
-		BULLET	= 0x0002,
-		ENEMY	= 0x0004,
-		TREE	= 0x0008,
+		NONE			= 0x0000,
+		PLAYER			= 0x0001,
+		BULLET			= 0x0002,
+		ENEMY			= 0x0004,
+		TREE			= 0x0008,
+		GREENING_AREA	= 0x0010,
 		//上記に新たにタイプを追加した場合は、
 		//ALLへor演算[|]で一番左に追加してください
-		ALL = TREE|ENEMY|BULLET|PLAYER,
+		ALL = GREENING_AREA|TREE|ENEMY|BULLET|PLAYER,
 	};
 
 	//ビットの数を演算

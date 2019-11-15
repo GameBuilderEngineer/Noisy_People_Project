@@ -51,8 +51,8 @@ Object::Object()
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));	//-y軸
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));	//-z軸
 	sphere = new BoundingSphere(&center, radius);
+	box					= new DebugBox(size);
 #ifdef _DEBUG
-	box = new DebugBox(size);
 	axisX.color			= D3DXCOLOR(255, 0, 0, 255);						//x軸カラー
 	axisY.color			= D3DXCOLOR(0, 255, 0, 255);						//y軸カラー
 	axisZ.color			= D3DXCOLOR(0, 0, 255, 255);						//z軸カラー
@@ -77,6 +77,8 @@ Object::Object()
 Object::~Object()
 {
 	treeCell.remove();//リストから外れる
+	SAFE_DELETE(box);
+	SAFE_DELETE(sphere);
 }
 
 //===================================================================================================================================
@@ -231,9 +233,9 @@ void Object::setRadius(float value)
 }
 void Object::setSize(D3DXVECTOR3 value) { 
 	size = value; 
-#ifdef _DEBUG
 	SAFE_DELETE(box);
 	box = new DebugBox(size);
+#ifdef _DEBUG
 #endif // _DEBUG
 }
 

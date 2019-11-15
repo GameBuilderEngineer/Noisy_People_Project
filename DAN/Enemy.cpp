@@ -64,7 +64,7 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	radius = sphereCollider.getRadius();
 	Object::initialize(&position);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
-	setSize(D3DXVECTOR3(1.0f, 2.0f, 1.0f));
+	setSize(D3DXVECTOR3(1.0f, 3.0f, 1.0f));
 #ifdef _DEBUG
 #ifdef RENDER_SENSOR
 	hearingSphere[0].initialize(&centralPosition, NOTICEABLE_DISTANCE_PLAYER[enemyData->type]);

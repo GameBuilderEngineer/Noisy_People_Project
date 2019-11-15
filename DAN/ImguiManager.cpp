@@ -156,3 +156,4 @@ D3DCOLOR ImguiManager::getClearColor()
 
 	return color;
 }
+

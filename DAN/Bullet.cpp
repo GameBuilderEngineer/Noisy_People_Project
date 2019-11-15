@@ -10,6 +10,7 @@
 //===================================================================================================================================
 #include "Bullet.h"
 #include "UtilityFunction.h"
+#include "EffekseerManager.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -36,6 +37,8 @@ Bullet::Bullet(Ray shootingRay)
 	//弾道の初期化
 	ballisticRay.initialize(launchPosition, shootingRay.direction);
 	ballisticRay.color = D3DXCOLOR(0, 255, 120, 255);
+
+
 
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
@@ -96,12 +99,15 @@ bool Bullet::collide(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix)
 	return hit;
 }
 //===================================================================================================================================
-//【デジタルパワー】
+//【getter】
 //===================================================================================================================================
-int Bullet::getDigitalPower()
-{
-	return digitalPower;
+int Bullet::getDigitalPower(){return digitalPower;}
+bool Bullet::isCollideInitial() { 
+	float initial = Base::between2VectorLength(ballisticRay.start, initialCollide);
+	float now = Base::between2VectorLength(ballisticRay.start, position);
+	return now >= initial; 
 }
+
 //===================================================================================================================================
 //【削除】
 //===================================================================================================================================
@@ -113,6 +119,10 @@ void Bullet::destroy()
 	PLAY_PARAMETERS hitSE;
 	hitSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_HitBulletTree, false ,NULL,false,NULL, true, filterParameters };
 	SoundInterface::SE->playSound(&hitSE);
+	//エフェクトの再生
+	effekseerNS::Instance* instance = new effekseerNS::Instance();
+	instance->position = position;
+	effekseerNS::play(instance);
 
 }
 #pragma endregion
@@ -173,10 +183,13 @@ void BulletManager::update(float frameTime)
 		//生存時間切れ
 		if (bullet->existenceTimer <= 0)
 		{
-			//削除
-			renderer->unRegisterObjectByID(bullet->id);//削除前にレンダラー解除
-			SAFE_DELETE(bullet);
-			bulletList->remove(bulletList->getNode(i));
+			destroy(bullet, i);
+		}
+		//初期衝突位置
+		else if(bullet->isCollideInitial())
+		{
+			bullet->destroy();
+			destroy(bullet, i);
 		}
 	}
 	//リストの更新[削除による対応]
@@ -254,6 +267,12 @@ bool BulletManager::launch(Ray shootingRay)
 	//サウンドの再生
 	SoundInterface::SE->playSound(&shotSE);
 
+	//エフェクトの再生
+	//effekseerNS::Instance* instance = new effekseerNS::Instance();
+	//instance->position = newBullet->position;
+	//effekseerNS::play(instance);
+
+
 	return true;
 }
 
@@ -270,6 +289,17 @@ void BulletManager::reload()
 	reloadTimer = RELOAD_TIME;					//リロードタイムの設定
 	SoundInterface::SE->playSound(&reroadSE);	//サウンドの再生
 
+}
+
+//===================================================================================================================================
+//【弾削除：バレットマネージャー】
+//===================================================================================================================================
+void BulletManager::destroy(Bullet* bullet,int nodeNumber)
+{
+	//削除
+	renderer->unRegisterObjectByID(bullet->id);//削除前にレンダラー解除
+	SAFE_DELETE(bullet);
+	bulletList->remove(bulletList->getNode(nodeNumber));
 }
 
 //===================================================================================================================================

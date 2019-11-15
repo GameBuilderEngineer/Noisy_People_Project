@@ -58,6 +58,8 @@ Tree::Tree(treeNS::TreeData _treeData)
 	//trunk.scale *= 0.4f;
 	//leaf.scale *= 0.4f;
 
+	//現在は緑化中でない
+	nowAroundGreening = false;
 
 	state = new AnalogState(this);
 	onTransState = false;
@@ -111,10 +113,12 @@ void Tree::update(float frameTime)
 //=============================================================================
 void Tree::render()
 {
+#ifdef _DEBUG
 	if (treeData.type == treeNS::DIGITAL_TREE) {
 		greeningArea.render();
 	}
-	Object::debugRender();
+	box->render(matrixCenter);
+#endif
 }
 
 //=============================================================================
@@ -122,7 +126,9 @@ void Tree::render()
 //=============================================================================
 void Tree::greeningAround()
 {	
-	greeningArea.initialize(&center, 1.0f);
+	greeningArea.initialize(&center);
+	greeningArea.setRadius(1.0f);
+	nowAroundGreening = true;
 }
 
 //=============================================================================
@@ -147,6 +153,7 @@ void Tree::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 //=============================================================================
 Object* Tree::getLeaf() { return &leaf; }
 Object* Tree::getTrunk() { return this; }
+Object* Tree::getGreeningArea() { return &greeningArea; }
 int Tree::getNumOfTree(){ return numOfTree; }
 TreeData* Tree::getTreeData() { return &treeData; }
 LPD3DXMESH Tree::getMesh() {
@@ -162,6 +169,8 @@ LPD3DXMESH Tree::getMesh() {
 	return model.mesh;
 };
 
+bool Tree::isAroundGreening()		{ return nowAroundGreening; }
+
 //=============================================================================
 // Setter
 //=============================================================================
@@ -174,10 +183,13 @@ void Tree::addHp(int value) {
 		transState();//状態遷移
 	}
 }
+//緑化エリアのスケールを設定
 void Tree::setGreeningArea(float value)
 {
-	greeningArea.setScale(value);
+	greeningArea.sphere->setScale(value);
 }
+//周囲への緑化を終了
+void Tree::disableAroundGreening()	{ nowAroundGreening = false; }
 
 
 //=============================================================================
@@ -259,9 +271,11 @@ void DigitalState::update(float frameTime)
 	if (aroundGreenTimer < AROUND_GREEN_TIME)
 	{
 		aroundGreenTimer += frameTime;
+		//緑化時間終了
 		if (aroundGreenTimer > AROUND_GREEN_TIME)
 		{
-			aroundGreenTimer = AROUND_GREEN_TIME;
+			aroundGreenTimer = AROUND_GREEN_TIME;	//タイマー停止
+			tree->disableAroundGreening();			//周囲緑化フラグを切る
 		}
 	}
 	float rate = aroundGreenTimer/AROUND_GREEN_TIME;

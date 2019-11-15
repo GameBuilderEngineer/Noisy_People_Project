@@ -697,6 +697,9 @@
     <ClCompile Include="DebugBox.cpp">
       <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClCompile>
+    <ClCompile Include="GreeningArea.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1112,6 +1115,9 @@
     </ClInclude>
     <ClInclude Include="DebugBox.h">
       <Filter>Constant Layer\Collision\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GreeningArea.h">
+      <Filter>Game Layer\Tree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
