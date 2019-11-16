@@ -316,7 +316,7 @@ void Tutorial::update(float _frameTime)
 
 		if (flag == gameMasterNS::PLAYER_NUM)
 		{
-			//changeScene(nextScene);
+			changeScene(nextScene);
 		}
 	}
 
