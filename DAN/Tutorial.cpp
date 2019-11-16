@@ -154,7 +154,7 @@ void Tutorial::initialize()
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	enemySet.defaultPosition = ENEMY_POSTITION;
-	enemySet.defaultState = stateMachineNS::ENEMY_STATE::PATROL;
+	enemySet.defaultState = stateMachineNS::ENEMY_STATE::REST;
 	enemySet.type = enemyNS::ENEMY_TYPE::WOLF;
 	enemySet.enemyID = 0;
 	enemyData = enemyManager->createEnemyData(enemySet);
@@ -316,14 +316,8 @@ void Tutorial::update(float _frameTime)
 
 		if (flag == gameMasterNS::PLAYER_NUM)
 		{
-			changeScene(nextScene);
+			//changeScene(nextScene);
 		}
-	}
-
-	// チュートリアルが最後まで行ったらタイトルへ
-	if (tutorialTex.nextPage >= tutorialTex::TUTORIAL_2D_SCENE_MAX)
-	{
-		//changeScene(nextScene);
 	}
 
 	// チュートリアル2D更新
