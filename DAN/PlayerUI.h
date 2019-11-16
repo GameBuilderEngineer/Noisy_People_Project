@@ -33,7 +33,7 @@ public://メンバー変数
 	Player *player;			//P1の情報
 	bool	skyVisionFlag;	//スカイビジョンフラグ
 	bool	shotFlag;		//ショットフラグ
-	bool	jumpFlag;		//ジャンプフラグ
+	bool	shiftFlag;		//シフトフラグ
 	bool	visionFlag;		//ビィジョンフラグ
 	int		hp;				//hp保存
 private:

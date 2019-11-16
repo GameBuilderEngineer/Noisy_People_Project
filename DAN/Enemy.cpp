@@ -743,6 +743,27 @@ void Enemy::damage(int _damage)
 }
 
 
+//=============================================================================
+// デバッグ用目的地設定
+//=============================================================================
+void Enemy::setDebugDestination()
+{
+	// 目的地のセット
+	static const float TEMP_DISTANCE = 20.0f;
+	D3DXVECTOR3 tempDir;
+	tempDir = D3DXVECTOR3(rand() % 1000, 0, rand() % 1000);
+	tempDir -= D3DXVECTOR3(500, 0, 500);
+	D3DXVec3Normalize(&tempDir, &tempDir);
+	tempDir *= TEMP_DISTANCE;
+	destination = position + tempDir;
+
+#if 0	// 山頂を目的地とする
+	destination = D3DXVECTOR3(-30, 158, 35);
+#endif
+	setMovingTarget(&destination);
+}
+
+
 // [デバッグ]
 #pragma region Debug
 #ifdef _DEBUG
@@ -907,26 +928,6 @@ void Enemy::debugSensor()
 	}
 }
 
-
-//=============================================================================
-// デバッグ用目的地設定
-//=============================================================================
-void Enemy::setDebugDestination()
-{
-	// 目的地のセット
-	static const float TEMP_DISTANCE = 20.0f;
-	D3DXVECTOR3 tempDir;
-	tempDir = D3DXVECTOR3(rand() % 1000, 0, rand() % 1000);
-	tempDir -= D3DXVECTOR3(500, 0, 500);
-	D3DXVec3Normalize(&tempDir, &tempDir);
-	tempDir *= TEMP_DISTANCE;
-	destination = position + tempDir;
-
-#if 0	// 山頂を目的地とする
-	destination = D3DXVECTOR3(-30, 158, 35);
-#endif
-	setMovingTarget(&destination);
-}
 
 
 //===================================================================================================================================

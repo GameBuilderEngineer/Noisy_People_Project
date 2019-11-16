@@ -8,7 +8,7 @@
 #pragma once
 #include "Object.h"
 #include "BoundingSphere.h"
-
+#include "GreeningArea.h"
 
 //=============================================================================
 // 名前空間
@@ -68,9 +68,9 @@ namespace treeNS
 	//定数
 	const int	MAX_HP					= 100;		//最大HP
 	const float	AROUND_GREEN_TIME		= 5.0f;		//周辺への緑化時間
-	const float	AROUND_GREEN_RANGE_S	= 10.0f;	//周辺への緑化範囲
-	const float	AROUND_GREEN_RANGE_L	= 30.0f;	//周辺への緑化範囲
-	const float	AROUND_GREEN_RANGE_V	= 50.0f;	//周辺への緑化範囲
+	const float	AROUND_GREEN_RANGE_S	= 50.0f;	//周辺への緑化範囲
+	const float	AROUND_GREEN_RANGE_L	= 100.0f;	//周辺への緑化範囲
+	const float	AROUND_GREEN_RANGE_V	= 200.0f;	//周辺への緑化範囲
 
 
 	//=============================================================================
@@ -98,13 +98,13 @@ class Tree:public Object
 private:
 	treeNS::TreeData		treeData;			// ツリーデータ
 	Object					leaf;				// 葉オブジェクト
-	BoundingSphere			greeningArea;		// 緑化範囲
+	GreeningArea			greeningArea;		// 緑化範囲
 	LPD3DXMESH				attractorMesh;		// 重力（引力）発生メッシュ
 	D3DXMATRIX*				attractorMatrix;	// 重力（引力）発生オブジェクトマトリックス
 	static int				numOfTree;			// ツリーオブジェクトの総数
 	treeNS::AbstractState*	state;				//状態クラス
 	bool					onTransState;		//状態遷移開始フラグ
-
+	bool					nowAroundGreening;	//現在周囲を緑化中
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();
@@ -120,14 +120,17 @@ public:
 	// Getter
 	Object* getLeaf();
 	Object* getTrunk();
+	Object* getGreeningArea();
 	static int getNumOfTree();			// ツリーの数を取得
 	treeNS::TreeData* getTreeData();	// ツリーデータを取得
 	LPD3DXMESH getMesh();				// 衝突用メッシュへの参照
+	bool isAroundGreening();			//周囲へ緑化中か
 
 	// Setter
-	void setDataToTree(treeNS::TreeData _treeData);
-	void addHp(int value);
-	void setGreeningArea(float value);
+	void setDataToTree(treeNS::TreeData _treeData);	
+	void addHp(int value);							//デジタル化するHPの増加
+	void setGreeningArea(float value);				//緑化エリアのスケールを設定
+	void disableAroundGreening();					//周囲への緑化を終了
 
 };
 

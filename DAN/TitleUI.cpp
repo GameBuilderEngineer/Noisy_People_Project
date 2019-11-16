@@ -144,7 +144,8 @@ void TitleUI::render()
 //============================
 void TitleUI::update(Input *input)
 {
-	if (input->wasKeyPressed(VK_DOWN))
+	if (input->wasKeyPressed(VK_DOWN)|| input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::DOWN)
+		/*|| input->getController()[inputNS::DINPUT_1P]->getLeftStick().y*0.1 ==1*/)
 	{
 		//ボタンが押される度にSEのを鳴らす処理
 		PLAY_PARAMETERS playParameters = { 0 };
@@ -154,7 +155,7 @@ void TitleUI::update(Input *input)
 		selectState++;
 	}
 
-	else if (input->wasKeyPressed(VK_UP))
+	else if (input->wasKeyPressed(VK_UP)|| input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::UP))
 	{
 		//ボタンが押される度にSEのを鳴らす処理
 		PLAY_PARAMETERS playParameters = { 0 };

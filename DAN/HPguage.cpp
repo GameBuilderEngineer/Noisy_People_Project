@@ -23,7 +23,7 @@ HPguage::HPguage()
 	uvCoord2 = D3DXVECTOR2(1.0, 0.0);
 	uvCoord3 = D3DXVECTOR2(0.0, 1.0);
 	uvCoord4 = D3DXVECTOR2(1.0, 1.0);
-	width = WIDTH_HP_GUAGE;
+	width	 = WIDTH_HP_GUAGE;
 }
 
 //====================================

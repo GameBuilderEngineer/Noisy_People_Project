@@ -12,21 +12,16 @@
 #include "D3DXAnimation.h"
 
 
-#define	MOVEP_MODEL		"07 Model File/man.x"
+#define	MOVEP_MODEL		"07 Model File/Male.X"
 
 #define TimePerFrame		(0.0167f)				// 1 / 60秒
 
 enum MovePAction
 {
 	MoveP_Idle,
-	MoveP_Attack,
-	MoveP_Defend,
-	MoveP_Die,
 	MoveP_Run,
-	MoveP_Walk,
-	MoveP_NoDefendImpact,
-	MoveP_DefendImpact,
-	MoveP_Roll,
+	MoveP_Jump,
+	MoveP_Shooting,
 	MoveP_Max
 };
 
@@ -39,54 +34,55 @@ typedef struct
 	D3DXVECTOR3			Pos;				// 座標
 	D3DXVECTOR3			Scl;				// 大きさ(スケール)
 	D3DXVECTOR3			Rot;				// 回転
+	D3DXQUATERNION		Quaternion;				// 回転
 	D3DXANIMATION		*Animation;			// アニメーション
 	float				ActionSpeed;		// 全体アクションの速度
 	float				fTimeDelta = 0.0f;
 
 
-//D3DXVECTOR3			PrePos;				// 1フレイム前の座標
-//D3DXVECTOR3			CenterPos;			// プレイヤーの中心座標
-//D3DXVECTOR3			NextPos;			// 次の座標
-//D3DXVECTOR3			Move;				// 移動量
-//D3DXVECTOR3			DestAngle;			// 向き
-//float				facing;				// 目標角度
-//float				facingTarget;		// 次のアニメーションの目標角度
-//int					HP;					// プレイヤーのHP
-//float				RunSpeedPl;			
-//float				WalkSpeedPl;
+D3DXVECTOR3			PrePos;				// 1フレイム前の座標
+D3DXVECTOR3			CenterPos;			// プレイヤーの中心座標
+D3DXVECTOR3			NextPos;			// 次の座標
+D3DXVECTOR3			Move;				// 移動量
+D3DXVECTOR3			DestAngle;			// 向き
+float				facing;				// 目標角度
+float				facingTarget;		// 次のアニメーションの目標角度
+int					HP;					// プレイヤーのHP
+float				RunSpeedPl;			
+float				WalkSpeedPl;
 
-////判断用変数
-//bool				IsRun = false;
-//bool				IsIdle = true;
-//bool				IsWalk = false;
-//bool				IsRoll = false;
-//bool				IsDefend = false;
-//bool				AnimeChange = true;
+//判断用変数
+bool				IsRun = false;
+bool				IsIdle = true;
+bool				IsWalk = false;
+bool				IsRoll = false;
+bool				IsDefend = false;
+bool				AnimeChange = true;
 
-////死亡の動作判断
-//bool				IsDie = false;
-////死亡した後判断
-//bool				IsDeath = false;
-////攻撃三段の判断
-//bool				IsAttack = false;
-//bool				IsAttack1 = false;
-//bool				IsAttack2 = false;
-////攻撃三段の移動判断
-//bool				AttackMove = false;
-//bool				AttackMove1 = false;
-//bool				AttackMove2 = false;
-////攻撃三段の攻撃判断
-//bool				IsDamage1 = false;
-//bool				flag1 = false;
-//bool				IsDamage2 = false;
-//bool				flag2 = false;
-//bool				IsDamage3 = false;
-//bool				flag3 = false;
-//bool				IsDefendDamage = false;
-//bool				IsNoDefendDamage = false;
+//死亡の動作判断
+bool				IsDie = false;
+//死亡した後判断
+bool				IsDeath = false;
+//攻撃三段の判断
+bool				IsAttack = false;
+bool				IsAttack1 = false;
+bool				IsAttack2 = false;
+//攻撃三段の移動判断
+bool				AttackMove = false;
+bool				AttackMove1 = false;
+bool				AttackMove2 = false;
+//攻撃三段の攻撃判断
+bool				IsDamage1 = false;
+bool				flag1 = false;
+bool				IsDamage2 = false;
+bool				flag2 = false;
+bool				IsDamage3 = false;
+bool				flag3 = false;
+bool				IsDefendDamage = false;
+bool				IsNoDefendDamage = false;
 
-////現在使用していない
-//bool				IsLock = false;
+//現在使用していない
+bool				IsLock = false;
 
 }MOVEP;
 

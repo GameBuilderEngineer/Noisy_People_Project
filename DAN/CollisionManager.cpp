@@ -46,31 +46,43 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 	{
 	case PLAYER:
 		switch (type2){
-		case PLAYER:	return playerAndPlayer((Player*)obj1, (Player*)obj2);	break;
-		case BULLET:	return false;											break;
-		case ENEMY:		return playerAndEnemy((Player*)obj1, (Enemy*)obj2);		break;
-		case TREE:		return playerAndTree((Player*)obj1, (Tree*)obj2);		break;
+		case PLAYER:		return playerAndPlayer((Player*)obj1, (Player*)obj2);				break;
+		case BULLET:		return false;														break;
+		case ENEMY:			return playerAndEnemy((Player*)obj1, (Enemy*)obj2);					break;
+		case TREE:			return playerAndTree((Player*)obj1, (Tree*)obj2);					break;
+		case GREENING_AREA:	return false;														break;
 		}break;
 	case BULLET:
 		switch (type2) {
-		case PLAYER:	return false; break;
-		case BULLET:	return false; break;
-		case ENEMY:		return bulletAndEnemy((Bullet*)obj1, (Enemy*)obj2);		break;
-		case TREE:		return bulletAndTree((Bullet*)obj1, (Tree*)obj2);		break;
+		case PLAYER:			return false;													break;
+		case BULLET:			return false;													break;
+		case ENEMY:				return bulletAndEnemy((Bullet*)obj1, (Enemy*)obj2);				break;
+		case TREE:				return bulletAndTree((Bullet*)obj1, (Tree*)obj2);				break;
+		case GREENING_AREA:		return false;													break;
 		}break;
 	case ENEMY:
 		switch (type2) {
-		case PLAYER:	return playerAndEnemy((Player*)obj2, (Enemy*)obj1);		break;
-		case BULLET:	return bulletAndTree((Bullet*)obj2, (Tree*)obj1);		break;
-		case ENEMY:		return enemyAndEnemy((Enemy*)obj1, (Enemy*)obj2);		break;
-		case TREE:		return enemyAndTree((Enemy*)obj1, (Tree*)obj2);			break;
+		case PLAYER:			return playerAndEnemy((Player*)obj2, (Enemy*)obj1);				break;
+		case BULLET:			return bulletAndEnemy((Bullet*)obj2, (Enemy*)obj1);				break;
+		case ENEMY:				return enemyAndEnemy((Enemy*)obj1, (Enemy*)obj2);				break;
+		case TREE:				return enemyAndTree((Enemy*)obj1, (Tree*)obj2);					break;
+		case GREENING_AREA:		return false;													break;
 		}break;
 	case TREE:
 		switch (type2) {
-		case PLAYER:	return playerAndTree((Player*)obj2, (Tree*)obj1);		break;
-		case BULLET:	return bulletAndTree((Bullet*)obj2, (Tree*)obj1);		break;
-		case ENEMY:		return enemyAndTree((Enemy*)obj2, (Tree*)obj1);			break;
-		case TREE:		return false;											break;
+		case PLAYER:			return playerAndTree((Player*)obj2, (Tree*)obj1);				break;
+		case BULLET:			return bulletAndTree((Bullet*)obj2, (Tree*)obj1);				break;
+		case ENEMY:				return enemyAndTree((Enemy*)obj2, (Tree*)obj1);					break;
+		case TREE:				return false;													break;
+		case GREENING_AREA:		return greeningAreaAndTree((GreeningArea*)obj2, (Tree*)obj1);	break;
+		}break;
+	case GREENING_AREA:
+		switch (type2) {
+		case PLAYER:			return false;													break;
+		case BULLET:			return false;													break;
+		case ENEMY:				return false;													break;
+		case TREE:				return greeningAreaAndTree((GreeningArea*)obj1,(Tree*)obj2);	break;
+		case GREENING_AREA:		return false;													break;
 		}break;
 	default:return false; break;
 	}
@@ -92,6 +104,23 @@ bool CollisionManager::collisionSphere(Object* obj1, Object* obj2)
 		obj2->radius, 		
 		obj1->matrixCenter, 
 		obj2->matrixCenter);
+}
+
+//===================================================================================================================================
+//y‹…‚Æ“_‚É‚æ‚éÕ“Ë”»’èz
+//	obj1:‹…<->obj2:“_
+//===================================================================================================================================
+bool CollisionManager::collisionSphereAndPoint(Object* obj1, Object* obj2)
+{
+	bool hit = false;
+
+	float distance = Base::between2VectorLength(obj1->center, obj2->center);
+	if (obj1->sphere->getRadius() > distance)
+	{
+		hit = true;
+	}
+
+	return hit;
 }
 
 //===================================================================================================================================
@@ -239,7 +268,7 @@ bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 
 	if (collisionCylinder(bullet, enemy))
 	{
-		hit = bullet->collide(enemy->getMesh(), enemy->matrixWorld);
+		hit = bullet->collide(enemy->getMesh(), enemy->matrixCenter);
 	}
 
 	if (hit)
@@ -315,5 +344,26 @@ bool CollisionManager::treeAndTree(Tree* tree1, Tree* tree2)
 }
 #pragma endregion
 
+#pragma region GreeningArea
+//===================================================================================================================================
+//y—Î‰»ƒGƒŠƒA<-> ƒcƒŠ[z
+//===================================================================================================================================
+bool CollisionManager::greeningAreaAndTree(GreeningArea* area, Tree* tree)
+{
+	bool hit = false;
+
+	hit = collisionSphereAndPoint(area, tree);
+
+	if (hit)
+	{
+		if(tree->getTreeData()->greenState == treeNS::DEAD)
+			tree->transState();//ó‘Ô‘JˆÚ
+	}
+
+	return hit;
+}
+#pragma endregion
+
 #pragma region newRegion
 #pragma endregion
+
