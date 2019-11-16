@@ -14,7 +14,7 @@ class Tiger: public Enemy
 private:
 
 public:
-	Tiger(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
+	Tiger(enemyNS::ConstructionPackage constructionPackage);
 	~Tiger();
 
 	void update(float frameTime);				// XV

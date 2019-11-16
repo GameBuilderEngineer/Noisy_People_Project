@@ -107,6 +107,8 @@ bool Bullet::isCollideInitial() {
 	float now = Base::between2VectorLength(ballisticRay.start, position);
 	return now >= initial; 
 }
+D3DXVECTOR3 Bullet::getBulletSpeed() { return this->speed; }
+
 
 //===================================================================================================================================
 //yíœz

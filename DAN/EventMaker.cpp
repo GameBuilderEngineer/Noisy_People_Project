@@ -55,7 +55,7 @@ void EventMaker::makeEventSpawningEnemyAroundPlayer()
 	enemyNS::ENEMYSET enemySet;
 	enemySet.enemyID = enemyManager->issueNewEnemyID();
 	enemySet.type = enemyNS::WOLF;
-	enemySet.defaultPosition = *player[0].getPosition() + D3DXVECTOR3(rand() % 5, 0.0f, rand() % 5);
+	enemySet.defaultPosition = *player[0].getPosition() + D3DXVECTOR3((float)(rand() % 5), 0.0f,(float)(rand() % 5));
 	enemySet.defaultDirection = *player[0].getPosition() - enemySet.defaultPosition;
 	enemySet.defaultState = stateMachineNS::PATROL;
 	opeGenerator->spawnEnemyAroundPlayer(enemySet);

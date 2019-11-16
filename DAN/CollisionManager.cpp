@@ -227,9 +227,12 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 	if (collisionCylinder(player, enemy))
 	{
 		horizontalCorrection(player, enemy, 0.5f);
-		enemy->setIsHitPlayer(true);
-
-		player->speed += enemy->speed * 5.0f;
+		if (enemy->getIsAttacking())
+		{
+			enemy->stopAttacking();
+			player->damage(enemyNS::ATTACK_DAMAGE[enemy->getEnemyData()->type]);
+			player->speed += enemy->speed * 5.0f;
+		}
 		return true;
 	}
 	return false;
@@ -274,12 +277,11 @@ bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 	if (hit)
 	{
 		enemy->damage(bullet->getDigitalPower());
+		enemy->setAttention(-bullet->getBulletSpeed());
 		bullet->destroy();
 	}
 
 	return hit;
-
-	return false;
 }
 
 //===================================================================================================================================

@@ -7,14 +7,14 @@
 #include"Enemy.h"
 
 //=============================================================================
-//クラス定義
+// クラス定義
 //=============================================================================
 class Wolf: public Enemy
 {
 private:
 
 public:
-	Wolf(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
+	Wolf(enemyNS::ConstructionPackage constructionPackage);
 	~Wolf();
 
 	void update(float frameTime);				// 更新

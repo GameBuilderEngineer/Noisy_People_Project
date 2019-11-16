@@ -10,7 +10,7 @@ using namespace stateMachineNS;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Tiger::Tiger(StaticMesh* _staticMesh, EnemyData* _enemyData): Enemy(_staticMesh, _enemyData)
+Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 {
 	setSize(D3DXVECTOR3(1.0f, 2.9, 1.0f));
 }
@@ -38,7 +38,7 @@ void Tiger::update(float frameTime)
 	case REST:   rest(frameTime);   break;
 	case DIE:    die(frameTime);    break;
 	}
-	Enemy::update(frameTime);
+	Enemy::postprocess(frameTime);
 }
 
 
@@ -53,7 +53,7 @@ void::Tiger::chase(float frameTime)
 
 	if (distance < 7.0f && canAttack)
 	{
-		shouldAttack = true;
+		attack();
 	}
 }
 
@@ -69,7 +69,7 @@ void::Tiger::patrol(float frameTime)
 	{
 		setDebugDestination();		// デバッグ用目的地を設定
 		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = true;		// パスサーチ実行
+		searchPath();
 	}
 }
 

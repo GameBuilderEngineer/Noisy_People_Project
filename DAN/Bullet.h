@@ -48,6 +48,7 @@ public:
 	//getter
 	int	getDigitalPower();
 	bool isCollideInitial();
+	D3DXVECTOR3	getBulletSpeed();
 };
 
 //===================================================================================================================================

@@ -234,6 +234,7 @@ private:
 	D3DXVECTOR3					shootingPosition;				//衝突位置(プレイヤーレイ準拠）
 	float						collideDistance;				//照射距離
 	BulletManager*				bulletManager;					//バレットマネージャー
+	bool						isExecutingShot;				//シューティングアクション実行確認フラグ						
 
 	//デジタルアクション
 	bool						isShifting;						//デジタルシフト中フラグ
@@ -310,7 +311,7 @@ public:
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
 	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
-	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
+	bool getWhetherShot();										//ショットアクション
 	bool getOnGround();											//接地しているか取得
 	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
 

@@ -14,7 +14,7 @@ class Bear: public Enemy
 private:
 
 public:
-	Bear(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
+	Bear(enemyNS::ConstructionPackage constructionPackage);
 	~Bear();
 
 	void update(float frameTime);				// XV

@@ -143,29 +143,23 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	bearRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 #ifdef _DEBUG
+
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
 		enemyList[i]->debugRender();
-		// バウンディングスフィアを描画
-#ifdef RENDER_SPHERE_COLLIDER
-		enemyList[i]->getSphereCollider()->render(*enemyList[i]->getCentralMatrixWorld());
-#endif
-		// 6軸を描画
-#ifdef RENDER_SIX_AXIS
-		enemyList[i]->debugRender();
-#endif
-		// デバッグセンサーを描画
+
+		// センサーを描画
 #ifdef RENDER_SENSOR
 		for (int k = 0; k < 4; k++)
 		{
 			enemyList[i]->eyeAngleRay[k].render(VISIBLE_DISTANCE[enemyList[i]->getEnemyData()->type]);
 		}
 		float len = D3DXVec3Length(&(player[0].center - enemyList[i]->center));
-		//enemyList[i]->gazePlayer.render(len);
 		enemyList[i]->hearingSphere[0].render(enemyList[i]->matrixCenter);
 		enemyList[i]->hearingSphere[1].render(enemyList[i]->matrixCenter);
 #endif
 	}
+
 #endif// _DEBUG
 }
 
@@ -200,26 +194,33 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 {
 	Enemy* enemy = NULL;
 
+	enemyNS::ConstructionPackage constructionPackage;
+	constructionPackage.enemyData = enemyData;
+	constructionPackage.player = player;
+	constructionPackage.attractorMesh = attractorMesh;
+	constructionPackage.attractorMatrix = attractorMatrix;
+
 	switch (enemyData->type)
 	{
 	case WOLF:
-		enemy = new Wolf(staticMeshNS::reference(staticMeshNS::WOLF), enemyData);
+		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::WOLF);
+		enemy = new Wolf(constructionPackage);
 		wolfRenderer->registerObject(enemy);
 		break;
 
 	case TIGER:
-		enemy = new Tiger(staticMeshNS::reference(staticMeshNS::TIGER), enemyData);
+		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::TIGER);
+		enemy = new Tiger(constructionPackage);
 		tigerRenderer->registerObject(enemy);
 		break;
 
 	case BEAR:
-		enemy = new Bear(staticMeshNS::reference(staticMeshNS::BEAR), enemyData);
+		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::BEAR);
+		enemy = new Bear(constructionPackage);
 		bearRenderer->registerObject(enemy);
 		break;
 	}
 
-	enemy->setAttractor(attractorMesh, attractorMatrix);
-	enemy->setPlayer(player);
 	enemyList.emplace_back(enemy);
 }
 
@@ -360,6 +361,8 @@ enemyNS::EnemyData* EnemyManager::findEnemyData(int _enemyID)
 			return enemyDataList.getValue(i);
 		}
 	}
+
+	return NULL;
 }
 
 //=============================================================================

@@ -10,7 +10,7 @@ using namespace stateMachineNS;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Wolf::Wolf(StaticMesh* _staticMesh, EnemyData* _enemyData): Enemy(_staticMesh, _enemyData)
+Wolf::Wolf(ConstructionPackage constructionPackage): Enemy(constructionPackage)
 {
 	setSize(D3DXVECTOR3(1.0f, 0.87f, 1.0f));
 }
@@ -38,7 +38,7 @@ void Wolf::update(float frameTime)
 	case REST:   rest(frameTime);   break;
 	case DIE:    die(frameTime);    break;
 	}
-	Enemy::update(frameTime);
+	Enemy::postprocess(frameTime);
 }
 
 
@@ -53,7 +53,7 @@ void::Wolf::chase(float frameTime)
 
 	if (distance < 7.0f && canAttack)
 	{
-		shouldAttack = true;
+		attack();
 	}
 }
 
@@ -69,8 +69,9 @@ void::Wolf::patrol(float frameTime)
 	{
 		setDebugDestination();		// デバッグ用目的地を設定
 		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = true;		// パスサーチ実行
+		searchPath();
 	}
+
 }
 
 
