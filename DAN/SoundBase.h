@@ -141,6 +141,7 @@ public:
 	void updateSound(void);									//更新
 	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void uninitSoundStop(void);								//停止(全部のサウンド)
+	void setEndPointVoiceVolume(float volume);				//エンドポイントボイスのボリューム
 
 protected:
 #if(XADUIO2_STATE)

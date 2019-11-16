@@ -8,6 +8,7 @@
 #include "Sound.h"
 #include "ImguiManager.h"
 #include "AbstractScene.h"
+#include "WaveBall.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -177,6 +178,12 @@ void BGMManager::outputGUI(void)
 					}
 					wtPos--;
 				}
+
+				if (scene == SceneList::TITLE)
+				{
+					WaveBall::SetWaveData(dataMax, fData);
+				}
+
 				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 100);
 				ImGui::PlotLines("", fData, dataMax, 0, "Sound wave", FLT_MAX, FLT_MAX, plotextent);
 				SAFE_DELETE_ARRAY(fData);

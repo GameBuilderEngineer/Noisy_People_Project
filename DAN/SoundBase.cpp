@@ -317,3 +317,13 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 
 	return tmpWavFile;
 }
+
+//===================================================================================================================================
+//yƒ~ƒ…[ƒgz
+//===================================================================================================================================
+void SoundBase::setEndPointVoiceVolume(float volume)
+{
+#if(XADUIO2_STATE)
+	EndpointVoice->SetVolume(volume);
+#endif
+}

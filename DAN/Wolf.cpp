@@ -67,7 +67,7 @@ void::Wolf::chase()
 		}
 
 		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = true;		// パスサーチ実行
+		shouldSearch = false;		// パスサーチ実行
 	}
 
 	setMove(true);
@@ -85,7 +85,7 @@ void::Wolf::patrol()
 		setDebugDestination();		// デバッグ用目的地を設定
 #endif // _DEBUG
 		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = true;		// パスサーチ実行
+		shouldSearch = false;		// パスサーチ実行
 	}
 
 	setMove(true);

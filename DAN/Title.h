@@ -17,6 +17,8 @@
 //#include "SceneEffect.h"
 #include "TitleUI.h"
 
+#include "WaveBall.h"
+
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
@@ -40,6 +42,7 @@ class Title : public AbstractScene
 {
 private:
 	TestEffect* testEffect;
+	WaveBall *waveBall;
 
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;

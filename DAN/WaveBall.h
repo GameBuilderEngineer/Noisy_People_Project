@@ -1,77 +1,56 @@
 //===================================================================================================================================
-//【BGM.h】
+//【WaveBall.h】
 // [作成者]HAL東京GP12A332 16 蔡 友剛
-// [作成日]2019/10/14
-// [更新日]2019/10/14
+// [作成日]2019/11/15
+// [更新日]2019/11/15
 //===================================================================================================================================
 #pragma once
+
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
 #include "Base.h"
-#include "LinkedList.h"
-#include "SoundBase.h"
+#include "Sprite.h"
 
 //===================================================================================================================================
-//【マクロ定義】
+//【定数】
 //===================================================================================================================================
-#define BGM_PATH_LIST_TAIL(num)			BGMPathList##[num]
+#define LINE_NUM_VERTEX (2)
+// ２Ｄポリゴン頂点フォーマット( 頂点座標[2D] / 反射光)
+#define	FVF_VERTEX_LINE	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 
 //===================================================================================================================================
-//【列挙型定数】
+//【構造体】
 //===================================================================================================================================
-enum BGM_LIST
+struct VertexLine
 {
-	BGM_Title,
-	BGM_Credit,
-	BGM_Game,
-	BGM_Tutorial,
-	BGM_Clear,
-	BGM_Failed,
-	BGM_MAX
+	D3DXVECTOR3		vtx;		// 頂点座標
+	D3DCOLOR			diffuse;	// 反射光
 };
 
 //===================================================================================================================================
-//【定数定義】
+//波形ボールクラス
 //===================================================================================================================================
-static const char *BGMPathList[] = {
-	"BGM_Title.wav","BGM_Credit.wav",
-	"BGM_Game.wav","BGM_Tutorial.wav",
-	"BGM_Clear.wav" ,"BGM_Failed.wav" };
-
-static const int titleBGMPathList[] = {
-	BGM_Title};
-
-static const int creditBGMPathList[] = {
-	BGM_Credit };
-
-static const int gameBGMPathList[] = {
-	BGM_Game };
-
-static const int tutorialBGMPathList[] = {
-	BGM_Tutorial };
-
-static const int resultBGMPathList[] = {
-	BGM_Clear,BGM_Failed };
-
-//===================================================================================================================================
-//【サウンド(XAudio2)】
-//サウンドのBGMクラス
-//===================================================================================================================================
-class BGMManager : public SoundBase
+class WaveBall
 {
 public:
-	BGMManager();
-	~BGMManager();
+	WaveBall();
+	~WaveBall();
 
-	//関数
-	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
-	void	 SetSpeed(void);							//再生速度の設定
-	
-	float *fData;
+	void update(void);
+	static void draw(void);
 
-	//debug用
-#if _DEBUG
-	void	 outputGUI(void)override;				//ImGUIへの出力
-#endif
+	void InitVertex(void);
+
+	static void SetWaveData(int inDataMax, float *inFdata)
+	{
+		dataMax = inDataMax;
+		fData = inFdata;
+	};
+
+	static int dataMax;
+	static float *fData;
+
+private:
+	VertexLine vertexWk[LINE_NUM_VERTEX]; // 頂点情報格納ワーク
 };

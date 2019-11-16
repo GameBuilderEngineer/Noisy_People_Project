@@ -76,6 +76,8 @@ void Title::initialize()
 		camera->nearZ,
 		camera->farZ);
 
+	//WaveBall
+	waveBall = new WaveBall;
 
 	// Light
 	light = new Light;
@@ -101,6 +103,9 @@ void Title::uninitialize(void)
 
 	//エフェクト（インスタンシング）テスト
 	SAFE_DELETE(testEffect);
+
+	//WaveBall
+	SAFE_DELETE(waveBall);
 
 	// タイトルUI
 	titleUI.uninitialize();
@@ -227,8 +232,8 @@ void Title::render3D(Camera _currentCamera)
 //============================================================================================================================================
 void Title::render2D()
 {
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);							// αブレンドを行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
 	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
@@ -237,6 +242,9 @@ void Title::render2D()
 
 	// タイトルUI
 	titleUI.render();
+
+	//WaveBall
+	waveBall->draw();
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
