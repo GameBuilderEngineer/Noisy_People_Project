@@ -17,11 +17,12 @@ public:
 	Wolf(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
 	~Wolf();
 
-	void update(float frameTime);			// 更新
-	void chase(float frameTime) override;	// 追跡ステート
-	void patrol(float frameTime) override;	// 警戒ステート
-	void rest(float frameTime) override;	// 休憩ステート
-	void die(float frameTime) override;		// 死亡ステート
+	void update(float frameTime);				// 更新
+	void chase(float frameTime) override;		// 追跡ステート
+	void patrol(float frameTime) override;		// 警戒ステート
+	void rest(float frameTime) override;		// 休憩ステート
+	void attackTree(float frameTime) override;	// ツリー攻撃ステート
+	void die(float frameTime) override;			// 死亡ステート
 
 	// Getter
 

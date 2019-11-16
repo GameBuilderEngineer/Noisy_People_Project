@@ -63,7 +63,7 @@ Enemy::Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData)
 	sphereCollider.initialize(&position, _staticMesh->mesh);
 	radius = sphereCollider.getRadius();
 	Object::initialize(&position);
-	//postureControl(axisZ.direction, enemyData->defaultDirection, 1);
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 #ifdef _DEBUG
 #ifdef RENDER_SENSOR
 	hearingSphere[0].initialize(&center, NOTICEABLE_DISTANCE_PLAYER[enemyData->type]);
@@ -316,7 +316,6 @@ void Enemy::attacking(int playerType, float frameTime)
 	if (isHitPlayer)
 	{
 		player[playerType].damage(ATTACK_DAMAGE[enemyData->type]);
-		player[playerType].speed += vecAttack * ATTACK_SPEED[enemyData->type] * 100;
 		isAttacking = false;
 		attackTime = 0.0f;
 	}
@@ -686,6 +685,15 @@ void Enemy::rest(float frameTime)
 
 
 //=============================================================================
+//「ツリー攻撃」ステート
+//=============================================================================
+void Enemy::attackTree(float frameTime)
+{
+
+}
+
+
+//=============================================================================
 //「死亡」ステート
 //=============================================================================
 void Enemy::die(float frameTime)
@@ -706,6 +714,7 @@ BoundingSphere*  Enemy::getSphereCollider() { return &sphereCollider; }
 //D3DXMATRIX* Enemy::getCentralMatrixWorld() { return &centralMatrixWorld; }
 LPD3DXMESH Enemy::getMesh() { return box->mesh; }
 bool Enemy::getNoticedOfPlayer(int playerType) { return isNoticingPlayer[playerType]; }
+bool Enemy::getIsAttacking() { return isAttacking; }
 
 
 //=============================================================================

@@ -354,6 +354,7 @@ public:
 	virtual void chase(float frameTime);
 	virtual void patrol(float frameTime);
 	virtual void rest(float frameTime);
+	virtual void attackTree(float frameTime);
 	virtual void die(float frameTime);
 
 	// Getter
@@ -363,6 +364,7 @@ public:
 	BoundingSphere* getSphereCollider();
 	LPD3DXMESH getMesh();
 	bool getNoticedOfPlayer(int playerType);
+	bool getIsAttacking();
 
 	// Setter
 	void setMove(bool setting);

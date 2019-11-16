@@ -199,6 +199,8 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 	{
 		horizontalCorrection(player, enemy, 0.5f);
 		enemy->setIsHitPlayer(true);
+
+		player->speed += enemy->speed * 5.0f;
 		return true;
 	}
 	return false;
