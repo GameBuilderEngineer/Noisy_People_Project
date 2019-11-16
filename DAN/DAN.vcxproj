@@ -151,6 +151,7 @@
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="CharaIcon.h" />
+    <ClInclude Include="GreeningArea.h" />
     <ClInclude Include="Guage.h" />
     <ClInclude Include="Battery.h" />
     <ClInclude Include="Bear.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="DebugBox.h" />
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
+    <ClInclude Include="HPguageP2.h" />
     <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="StatusFrame.h" />
     <ClInclude Include="CollisionManager.h" />
@@ -290,6 +292,7 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
+    <ClCompile Include="GreeningArea.cpp" />
     <ClCompile Include="Guage.cpp" />
     <ClCompile Include="Battery.cpp" />
     <ClCompile Include="Bear.cpp" />
@@ -300,6 +303,7 @@
     <ClCompile Include="DebugBox.cpp" />
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
+    <ClCompile Include="HPguageP2.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="WaveBall.cpp" />
     <ClCompile Include="StatusFrame.cpp" />

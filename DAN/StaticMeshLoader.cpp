@@ -38,6 +38,9 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
 	fileName[ENEMY_01]								= { "Enemy01.x" };
 	fileName[ENEMY_02]								= { "Enemy02.x" };
+	fileName[WOLF]									= { "Wolf.x" };
+	fileName[TIGER]									= { "Tiger.x" };
+	fileName[BEAR]									= { "Bear.x" };
 
 	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
 	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02

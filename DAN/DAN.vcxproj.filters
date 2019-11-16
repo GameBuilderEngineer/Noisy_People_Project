@@ -304,9 +304,6 @@
     <Filter Include="Game Layer\GameUI\Guage">
       <UniqueIdentifier>{5bb8b9a2-f308-41f1-a6dd-48e0aee779fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene\Title\WaveBall">
-      <UniqueIdentifier>{39bbb91b-427e-462b-8c2a-f850d599be46}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -700,8 +697,11 @@
     <ClCompile Include="DebugBox.cpp">
       <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClCompile>
-    <ClCompile Include="WaveBall.cpp">
-      <Filter>Game Layer\Scene\Title\WaveBall</Filter>
+    <ClCompile Include="HPguageP2.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="GreeningArea.cpp">
+      <Filter>Game Layer\Tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1119,8 +1119,11 @@
     <ClInclude Include="DebugBox.h">
       <Filter>Constant Layer\Collision\CollisionManager</Filter>
     </ClInclude>
-    <ClInclude Include="WaveBall.h">
-      <Filter>Game Layer\Scene\Title\WaveBall</Filter>
+    <ClInclude Include="HPguageP2.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="GreeningArea.h">
+      <Filter>Game Layer\Tree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

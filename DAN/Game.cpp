@@ -16,6 +16,7 @@
 //===================================================================================================================================
 using namespace gameNS;
 
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -100,8 +101,8 @@ void Game::initialize() {
 		switch (i)
 		{
 		case gameMasterNS::PLAYER_1P:
-			infomation.playerType	= gameMasterNS::PLAYER_1P;
-			infomation.modelType	= gameMasterNS::MODEL_FEMALE;
+			infomation.playerType = gameMasterNS::PLAYER_1P;
+			infomation.modelType = gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			break;
 		case gameMasterNS::PLAYER_2P:
@@ -111,7 +112,7 @@ void Game::initialize() {
 			break;
 		}
 		//カメラポインタのセット
-		player[i].setCamera(&camera[i]);	
+		player[i].setCamera(&camera[i]);
 
 		//モデルの設定
 		switch (player[i].getInfomation()->modelType)
@@ -126,9 +127,9 @@ void Game::initialize() {
 
 		//重力を設定
 		player[i].configurationGravityWithRay(
-			testField->getPosition(), 
-			testFieldRenderer->getStaticMesh()->mesh, 
-			testField->getMatrixWorld());	
+			testField->getPosition(),
+			testFieldRenderer->getStaticMesh()->mesh,
+			testField->getMatrixWorld());
 	}
 
 	//エフェクシアーの設定
@@ -157,9 +158,8 @@ void Game::initialize() {
 	//海面の初期化
 	ocean = new Ocean();
 
-	//アニメーションキャラの初期化
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
-	MoveP1 = GetMovePAdr();
+	//アニメションキャラの初期化
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.006f, 0.006f, 0.006f), true);
 
 
 	// サウンドの再生
@@ -170,7 +170,7 @@ void Game::initialize() {
 	//text2.initialize(direct3D9->device,11,11, 0xff0000ff);
 
 	//エフェクト（インスタンシング）テスト
-	testEffect = new TestEffect();
+	//testEffect = new TestEffect();
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane = new TestPlane();
@@ -227,10 +227,10 @@ void Game::initialize() {
 	//Sprite実験
 	spriteGauge = new SpriteGauge;
 	spriteGauge->initialize();
-
 #ifdef _DEBUG
 	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+#endif // _DEBUG
 	// エネミーをランダムに設置する
 	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
 	{
@@ -239,7 +239,7 @@ void Game::initialize() {
 		enemyNS::ENEMYSET tmp =
 		{
 			enemyManager->issueNewEnemyID(),
-			enemyNS::WOLF,
+			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
 			stateMachineNS::PATROL,
 			pos,
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
@@ -248,7 +248,6 @@ void Game::initialize() {
 		enemyManager->createEnemy(p);
 	}
 
-#endif
 	// ツリーをランダムに設置する
 	treeNS::TreeData treeData;
 	treeData.treeID = treeManager->issueNewTreeID();
@@ -292,7 +291,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(stone);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
-	SAFE_DELETE(testEffect);
+	//SAFE_DELETE(testEffect);
 	SAFE_DELETE(samplePlane);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
@@ -340,11 +339,8 @@ void Game::update(float _frameTime) {
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].update(frameTime);		//オブジェクト
-	//アニメーションモデルの同期
-	MoveP1->Pos = player[gameMasterNS::PLAYER_1P].position;
-	MoveP1->Rot = (D3DXVECTOR3)player[gameMasterNS::PLAYER_1P].quaternion;
-	maleRenderer->update();				//レンダラー
-	femaleRenderer->update();			//レンダラー
+	maleRenderer->update();					//レンダラー
+	femaleRenderer->update();				//レンダラー
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
@@ -365,6 +361,13 @@ void Game::update(float _frameTime) {
 
 	UpdateMoveP(0.01f);
 
+	//キャラクターの場所と回転の連携
+	MOVEP *mp = GetMovePAdr();
+	mp->Pos = player->position;
+	D3DXQUATERNION q = player->quaternion;
+	Base::anyAxisRotation(&q,D3DXVECTOR3(0,1,0),180);
+	mp->Quaternion = q;
+
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
 	//エフェクトの再生
@@ -379,8 +382,8 @@ void Game::update(float _frameTime) {
 		class Fire :public effekseerNS::Instance
 		{
 		public:
-			D3DXVECTOR3* syncPosition;
-			Fire() { 
+			D3DXVECTOR3 * syncPosition;
+			Fire() {
 				effectNo = effekseerNS::TEST0;
 				deltaRadian = D3DXVECTOR3(0, 0.3, 0);
 			}
@@ -442,7 +445,7 @@ void Game::update(float _frameTime) {
 	ocean->update();
 
 	//エフェクト（インスタンシング）テスト
-	testEffect->update(frameTime);
+	//testEffect->update(frameTime);
 
 	//ディスプレイ用プレーンサンプル
 	samplePlane->update(frameTime);
@@ -453,7 +456,7 @@ void Game::update(float _frameTime) {
 	player->pullpower(1);
 
 	//カメラの更新
-	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		camera[i].update();
 
 	//固定UIの更新
@@ -487,8 +490,8 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Game::render() {	
-		
+void Game::render() {
+
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
 	camera[gameMasterNS::PLAYER_1P].renderReady();
@@ -526,9 +529,9 @@ void Game::render3D(Camera currentCamera) {
 
 	// プレイヤーの描画
 	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
-	femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	//femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
-	for(int i = 0;i<gameMasterNS::PLAYER_NUM;i++)
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//アニメーションモデルの描画
 	DrawMoveP();
@@ -664,7 +667,7 @@ void Game::tree8Reregister(Object* tmp)
 //===================================================================================================================================
 //【衝突判定処理】
 //===================================================================================================================================
-void Game::collisions() 
+void Game::collisions()
 {
 	//8分木への再登録
 	//プレイヤーの登録
@@ -685,6 +688,11 @@ void Game::collisions()
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)
 	{
 		tree8Reregister(treeManager->getTreeList()[i]);
+		if (treeManager->getTreeList()[i]->getTreeData()->type == treeNS::DIGITAL_TREE
+			&&treeManager->getTreeList()[i]->isAroundGreening())
+		{
+			tree8Reregister(treeManager->getTreeList()[i]->getGreeningArea());
+		}
 	}
 
 	//衝突対応リストを取得
@@ -748,7 +756,7 @@ void Game::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Text("collisionNum:%d", collisionNum);
 	if (ImGui::CollapsingHeader("CollisionList"))
 	{

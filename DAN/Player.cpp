@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
+#include "MoveP.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -73,6 +74,9 @@ void Player::initialize(PlayerTable info)
 	//サイズの設定
 	setSize(D3DXVECTOR3(0.5f, 1.7f, 0.5f));
 
+	// HPの設定
+	hp = MAX_HP;
+
 	//電力の設定
 	power				= MAX_POWER;							//キャラクター電力確認用
 
@@ -119,9 +123,11 @@ void Player::update(float frameTime)
 		shiftTimer -= frameTime;
 		float rate = 1.0f -(shiftTimer/SHIFT_TIME);
 		D3DXVec3Lerp(&position, &shiftLine.start, &shiftLine.end,rate);
+		isShiftAble = false;//ボタンUIの透明化変化確認のため一時的に
 	}
 	else if(isShifting){
 		isShifting = false;
+		isShiftAble = true;//ボタンUIの透明化変化確認のため一時的に
 	}
 
 	//バレットマネージャーの更新
@@ -381,7 +387,6 @@ void Player::updatePhysics(float frameTime)
 	insetCorrection();//移動後のめり込み補正
 }
 
-
 #pragma endregion
 
 // [操作]
@@ -392,6 +397,10 @@ void Player::updatePhysics(float frameTime)
 //===================================================================================================================================
 void Player::moveOperation()
 {
+	MOVEP *MoveP = GetMovePAdr();
+	if (!MoveP->IsAttack)
+	{
+	}
 	//前へ進む
 	if (input->isKeyDown(keyTable.front)) {
 		move(D3DXVECTOR2(0, -1), camera->getDirectionX(), camera->getDirectionZ());

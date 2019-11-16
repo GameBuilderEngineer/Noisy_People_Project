@@ -76,6 +76,12 @@ StaticMeshRenderer::~StaticMeshRenderer()
 //===================================================================================================================================
 void StaticMeshRenderer::update()
 {
+	if (didRegister || didUnRegister)
+	{
+		objectList->listUpdate();
+		objectNum = objectList->nodeNum;
+	}
+
 	for (int i = 0; i < objectNum; i++)
 	{
 		unRegisterObject(i);							//‰ğœˆ—
@@ -240,8 +246,9 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 	{	
 		if ((*objectList->getValue(i))->id == id)
 		{
+			unRegisterObject(i);
 			//‘¶İŠÔ‚ğ0‚É‚µ‚Äíœ‰Â”\ó‘Ô‚É‚·‚é
-			(*objectList->getValue(i))->existenceTimer = 0.0f;
+			//(*objectList->getValue(i))->existenceTimer = 0.0f;
 			//ŒŸõI—¹
 			return;	
 		}

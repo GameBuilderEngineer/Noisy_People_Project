@@ -12,7 +12,7 @@ using namespace stateMachineNS;
 //=============================================================================
 Wolf::Wolf(StaticMesh* _staticMesh, EnemyData* _enemyData): Enemy(_staticMesh, _enemyData)
 {
-
+	setSize(D3DXVECTOR3(1.0f, 0.87f, 1.0f));
 }
 
 
@@ -33,10 +33,10 @@ void Wolf::update(float frameTime)
 	Enemy::preprocess(frameTime);
 	switch (enemyData->state)
 	{
-	case CHASE:  chase();  break;
-	case PATROL: patrol(); break;
-	case REST:   rest();   break;
-	case DIE:    die();    break;
+	case CHASE:  chase(frameTime);  break;
+	case PATROL: patrol(frameTime); break;
+	case REST:   rest(frameTime);   break;
+	case DIE:    die(frameTime);    break;
 	}
 	Enemy::update(frameTime);
 }
@@ -45,57 +45,39 @@ void Wolf::update(float frameTime)
 //=============================================================================
 // 追跡ステート
 //=============================================================================
-void::Wolf::chase()
+void::Wolf::chase(float frameTime)
 {
-	if (onGround && isArraved || isDestinationLost)
+	Enemy::chase(frameTime);
+
+	float distance = between2VectorLength(position, *movingTarget);
+
+	if (distance < 7.0f && canAttack)
 	{
-		// 適切なプレイヤーを移動ターゲットに設定する
-		if (isNoticedPlayer[gameMasterNS::PLAYER_1P] && isNoticedPlayer[gameMasterNS::PLAYER_2P] == false)
-		{
-			setMovingTarget(&player[gameMasterNS::PLAYER_1P].position);
-		}
-		else if (isNoticedPlayer[gameMasterNS::PLAYER_1P] == false && isNoticedPlayer[gameMasterNS::PLAYER_2P])
-		{
-			setMovingTarget(&player[gameMasterNS::PLAYER_2P].position);
-		}
-		else if (isNoticedPlayer[gameMasterNS::PLAYER_1P] && isNoticedPlayer[gameMasterNS::PLAYER_2P])
-		{
-			float distance1 = between2VectorLength(position, player[gameMasterNS::PLAYER_1P].position);
-			float distance2 = between2VectorLength(position, player[gameMasterNS::PLAYER_2P].position);
-			if (distance1 < distance2) { setMovingTarget(&player[gameMasterNS::PLAYER_1P].position); }
-			else { setMovingTarget(&player[gameMasterNS::PLAYER_1P].position); }
-		}
-
-		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = false;		// パスサーチ実行
+		shouldAttack = true;
 	}
-
-	setMove(true);
 }
 
 
 //=============================================================================
 // 警戒ステート
 //=============================================================================
-void::Wolf::patrol()
+void::Wolf::patrol(float frameTime)
 {
+	Enemy::patrol(frameTime);
+
 	if (onGround && isArraved || isDestinationLost)
 	{
-#ifdef _DEBUG
 		setDebugDestination();		// デバッグ用目的地を設定
-#endif // _DEBUG
 		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = false;		// パスサーチ実行
+		shouldSearch = true;		// パスサーチ実行
 	}
-
-	setMove(true);
 }
 
 
 //=============================================================================
 // 休憩ステート
 //=============================================================================
-void::Wolf::rest()
+void::Wolf::rest(float frameTime)
 {
 
 }
@@ -104,9 +86,9 @@ void::Wolf::rest()
 //=============================================================================
 // 死亡ステート
 //=============================================================================
-void::Wolf::die()
+void::Wolf::die(float frameTime)
 {
-
+	Enemy::die(frameTime);
 }
 
 

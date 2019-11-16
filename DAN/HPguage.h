@@ -17,6 +17,7 @@ namespace hpGuageNS
 	const int WIDTH_HP_GUAGE = (500);	//タイマーフレームの横幅
 	const int HEIGHT_HP_GUAGE = (30);	//タイマーフレームの縦幅
 	const D3DXVECTOR3 POSITION_HP_GUAGE = D3DXVECTOR3(102, 35, 0);	//タイマーフレームの表示位置(仮)
+	
 }
 
 //======================================

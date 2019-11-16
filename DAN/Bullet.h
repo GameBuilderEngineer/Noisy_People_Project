@@ -44,8 +44,10 @@ public:
 	void update(float frameTime);
 	void render();
 	bool collide(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix);
-	int	getDigitalPower();
 	void destroy();
+	//getter
+	int	getDigitalPower();
+	bool isCollideInitial();
 };
 
 //===================================================================================================================================
@@ -81,7 +83,9 @@ public:
 	bool launch(Ray shootingRay);
 	//ÉäÉçÅ[Éh
 	void reload();
-	
+	//íeçÌèú
+	void destroy(Bullet* bullet,int nodeNumber);
+
 //[getter]
 	int getRemaining();
 	float getReloadTime();

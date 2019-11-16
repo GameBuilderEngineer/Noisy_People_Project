@@ -97,7 +97,7 @@ private:
 	MOVEP*					MoveP1;
 
 	//ビルボード
-	TestEffect*						testEffect;			//インスタンシングビルボードテスト
+	//TestEffect*						testEffect;			//インスタンシングビルボードテスト
 	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
 	Advertisement*					ad;					//開発中広告
 
