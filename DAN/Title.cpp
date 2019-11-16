@@ -137,6 +137,22 @@ void Title::update(float _frameTime)
 	{
 		effekseerNS::play(new effekseerNS::Instance);
 	}
+	//ミュート
+	if (input->isKeyDown('M'))
+	{
+		SoundInterface::SE->setEndPointVoiceVolume(0.0f);
+		SoundInterface::BGM->setEndPointVoiceVolume(0.0f);
+		SoundInterface::S3D->setEndPointVoiceVolume(0.0f);
+		waveBall->setOnCol(false);
+	}
+	//ミュート解除
+	if (input->isKeyDown('N'))
+	{
+		SoundInterface::SE->setEndPointVoiceVolume(1.0f);
+		SoundInterface::BGM->setEndPointVoiceVolume(1.0f);
+		SoundInterface::S3D->setEndPointVoiceVolume(1.0f);
+		waveBall->setOnCol(true);
+	}
 
 	// タイトルUI
 	titleUI.update(input);

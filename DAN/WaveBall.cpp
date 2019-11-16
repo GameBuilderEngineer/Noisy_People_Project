@@ -16,6 +16,9 @@ WaveBall::WaveBall()
 {
 	LPDIRECT3DDEVICE9 device = getDevice();
 	D3DXCreateLine(device, &pLine);
+
+	switchFlag = true;
+	diffuse = ON_COL_IN;
 }
 
 //===================================================================================================================================
@@ -32,12 +35,15 @@ WaveBall::~WaveBall()
 //===================================================================================================================================
 void WaveBall::draw(void)
 {
+
+	setOnCol(switchFlag);
+
 	const float inRadius = 50;
 	const float amplitude = inRadius / 2;
 	const float inX = inRadius + amplitude;
 	const float inY = inRadius + amplitude;
 	const int inSides = dataMax;
-	const D3DCOLOR inColor = D3DCOLOR_XRGB(255, 0, 0);
+	const D3DCOLOR inColor = diffuse;
 
 	const float outX = inX;
 	const float outY = inY;
@@ -88,7 +94,10 @@ void WaveBall::draw(void)
 	pLine->SetGLLines(false);
 	pLine->Begin();
 	pLine->Draw(inLine, (inSides + 1), inColor);
-	pLine->Draw(outLine, (outSides + 1), outColor);
+	if (switchFlag)
+	{
+		pLine->Draw(outLine, (outSides + 1), outColor);
+	}
 	pLine->End();
 	SAFE_DELETE_ARRAY(inLine);
 	SAFE_DELETE_ARRAY(outLine);

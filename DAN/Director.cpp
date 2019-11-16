@@ -298,21 +298,6 @@ void Director::update() {
 		imgui->endImGui();
 	}
 
-	//ミュート
-	if (input->isKeyDown('M'))
-	{
-		soundInterface->SE->setEndPointVoiceVolume(0.0f);
-		soundInterface->BGM->setEndPointVoiceVolume(0.0f);
-		soundInterface->S3D->setEndPointVoiceVolume(0.0f);
-	}
-	//ミュート解除
-	if (input->isKeyDown('N'))
-	{
-		soundInterface->SE->setEndPointVoiceVolume(1.0f);
-		soundInterface->BGM->setEndPointVoiceVolume(1.0f);
-		soundInterface->S3D->setEndPointVoiceVolume(1.0f);
-	}
-
 #endif // _DEBUG
 }
 

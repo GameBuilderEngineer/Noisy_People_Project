@@ -19,14 +19,10 @@
 // ２Ｄポリゴン頂点フォーマット( 頂点座標[2D] / 反射光)
 #define	FVF_VERTEX_LINE	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 
-//===================================================================================================================================
-//【構造体】
-//===================================================================================================================================
-struct VertexLine
-{
-	D3DXVECTOR3		vtx;		// 頂点座標
-	D3DCOLOR			diffuse;	// 反射光
-};
+#define ON_COL_IN			D3DCOLOR(D3DCOLOR_RGBA(255,0,0,255))
+#define OFF_COL_IN			D3DCOLOR(D3DCOLOR_RGBA(255,0,0,50))
+#define MOUSE_IN_COL_IN		D3DCOLOR(D3DCOLOR_RGBA(255,0,0,255))
+#define MOUSE_OUT_COL_IN		D3DCOLOR(D3DCOLOR_RGBA(255,0,0,50))
 
 //===================================================================================================================================
 //波形ボールクラス
@@ -38,6 +34,17 @@ public:
 	~WaveBall();
 
 	void draw(void);
+	void setMouseInCol(bool flag) 
+	{
+		if ((flag) && (!switchFlag))diffuse = MOUSE_IN_COL_IN;
+		else diffuse = MOUSE_OUT_COL_IN;
+	}
+	void setOnCol(bool flag)
+	{
+		if (flag)diffuse = ON_COL_IN;
+		else diffuse = OFF_COL_IN;
+		switchFlag = flag;
+	}
 
 	static int dataMax;
 	static float *fData;
@@ -52,6 +59,9 @@ public:
 	};
 
 private:
+
+	bool switchFlag;
+
 	LPD3DXLINE pLine;
-	VertexLine vertexWk[LINE_NUM_VERTEX]; // 頂点情報格納ワーク
+	D3DCOLOR	 diffuse;		// 反射光
 };
