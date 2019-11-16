@@ -37,20 +37,21 @@ public:
 	WaveBall();
 	~WaveBall();
 
-	void update(void);
-	static void draw(void);
-
-	void InitVertex(void);
-
-	static void SetWaveData(int inDataMax, float *inFdata)
-	{
-		dataMax = inDataMax;
-		fData = inFdata;
-	};
+	void draw(void);
 
 	static int dataMax;
 	static float *fData;
 
+	static void SetWaveData(int inDataMax, float *inFdata)
+	{
+		SAFE_DELETE_ARRAY(fData);
+		dataMax = inDataMax - 1;
+		fData = new float[dataMax];
+		memset(fData, 0, dataMax * sizeof(float));
+		memcpy(fData, inFdata, dataMax * sizeof(float));
+	};
+
 private:
+	LPD3DXLINE pLine;
 	VertexLine vertexWk[LINE_NUM_VERTEX]; // í∏ì_èÓïÒäiî[ÉèÅ[ÉN
 };

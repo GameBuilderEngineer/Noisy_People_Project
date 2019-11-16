@@ -68,8 +68,6 @@ public:
 	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void	 SetSpeed(void);							//再生速度の設定
 	
-	float *fData;
-
 	//debug用
 #if _DEBUG
 	void	 outputGUI(void)override;				//ImGUIへの出力

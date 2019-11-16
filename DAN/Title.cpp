@@ -243,8 +243,10 @@ void Title::render2D()
 	// タイトルUI
 	titleUI.render();
 
+#if _DEBUG
 	//WaveBall
 	waveBall->draw();
+#endif
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);

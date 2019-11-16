@@ -179,6 +179,7 @@ void BGMManager::outputGUI(void)
 					wtPos--;
 				}
 
+				//テスト用@sai
 				if (scene == SceneList::TITLE)
 				{
 					WaveBall::SetWaveData(dataMax, fData);

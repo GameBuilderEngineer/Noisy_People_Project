@@ -9,22 +9,13 @@
 
 int WaveBall::dataMax = 0;
 float *WaveBall::fData = 0;
-
 //===================================================================================================================================
 //ÅyÉRÉìÉXÉgÉâÉNÉ^Åz
 //===================================================================================================================================
 WaveBall::WaveBall()
 {
-	////í∏ì_ÇÃç¿ïW
-	//D3DXVECTOR3 vertex[] = {
-	//	D3DXVECTOR3(-0.2f, 0.5f, 0.0f),
-	//	D3DXVECTOR3(0.2f, 0.5f, 0.0f),
-	//};
-
-	InitVertex();
-
-	//D3D9_BUFFER_DESC bd;
-	//bd.ByteWidth = sizeof(VERTEX) * 2;
+	LPDIRECT3DDEVICE9 device = getDevice();
+	D3DXCreateLine(device, &pLine);
 }
 
 //===================================================================================================================================
@@ -32,15 +23,8 @@ WaveBall::WaveBall()
 //===================================================================================================================================
 WaveBall::~WaveBall()
 {
-
-}
-
-//===================================================================================================================================
-//ÅyçXêVÅz
-//===================================================================================================================================
-void WaveBall::update()
-{
-
+	SAFE_DELETE_ARRAY(fData);
+	SAFE_RELEASE(pLine);
 }
 
 //===================================================================================================================================
@@ -48,48 +32,64 @@ void WaveBall::update()
 //===================================================================================================================================
 void WaveBall::draw(void)
 {
-	LPDIRECT3DDEVICE9 device = getDevice();
-	LPD3DXLINE pLine;
-	D3DXCreateLine(device, &pLine);
+	const float inRadius = 50;
+	const float amplitude = inRadius / 2;
+	const float inX = inRadius + amplitude;
+	const float inY = inRadius + amplitude;
+	const int inSides = dataMax;
+	const D3DCOLOR inColor = D3DCOLOR_XRGB(255, 0, 0);
 
-	const float X = 400;
-	const float Y = 400;
-	const int Sides = dataMax;
-	const float Radius = 300;
-	const D3DCOLOR color = D3DCOLOR_XRGB(255, 0, 0);
+	const float outX = inX;
+	const float outY = inY;
+	const int outSides = 8;
+	float outRadius = 0;
+	float baseRadius = inRadius + (amplitude / 2);
+	D3DCOLOR outColor = D3DCOLOR_RGBA(0, 255, 0, 0);
 
-	D3DXVECTOR2* vLine;
-	vLine = new D3DXVECTOR2[Sides + 1];
+	D3DXVECTOR2* inLine;
+	D3DXVECTOR2* outLine;
+	outLine = new D3DXVECTOR2[outSides + 1];
+	inLine = new D3DXVECTOR2[inSides + 1];
+
 	float Theta;
 	float WedgeAngle;
 
-	WedgeAngle = (float)((2 * D3DX_PI) / Sides);
-	for (int i = 0; i <= Sides; i++)
+	WedgeAngle = (float)((2 * D3DX_PI) / inSides);
+	for (int i = 0; i <= inSides; i++)
 	{
-		float xSize = X + 200 * (fData[i] / FLT_MAX);
-		float ySize = X + 200 * (fData[i] / FLT_MAX);
 		Theta = i * WedgeAngle;
-		vLine[i].x = (xSize + Radius * cos(Theta));
-		vLine[i].y = (ySize - Radius * sin(Theta));
+		float size = 0;
+		if (fData[i] > 0)
+		{
+			size = amplitude * ((float)(unsigned short)fData[i] / (float)USHRT_MAX);
+		}
+		inLine[i].x = (inX + (inRadius + size) * cos(Theta));
+		inLine[i].y = (inY - (inRadius + size) * sin(Theta));
+
+		if (outRadius < size)
+		{
+			outRadius = size;
+		}
 	}
+
+	WedgeAngle = (float)((2 * D3DX_PI) / outSides);
+	for (int i = 0; i <= outSides; i++)
+	{
+		Theta = i * WedgeAngle;
+		outLine[i].x = outX + (baseRadius + outRadius) * cos(Theta);
+		outLine[i].y = outY - (baseRadius + outRadius) * sin(Theta);
+	}
+
+	int a = 155 * (outRadius / amplitude);
+	outColor = D3DCOLOR_RGBA(0, 255, 0, a);
+
 	pLine->SetWidth(2);
 	pLine->SetAntialias(false);
 	pLine->SetGLLines(false);
 	pLine->Begin();
-	pLine->Draw(vLine, (Sides + 1), color);
+	pLine->Draw(inLine, (inSides + 1), inColor);
+	pLine->Draw(outLine, (outSides + 1), outColor);
 	pLine->End();
-
-	SAFE_DELETE(vLine);
-}
-
-//===================================================================================================================================
-//ÅyvertexWkèâä˙âªÅz
-//===================================================================================================================================
-void WaveBall::InitVertex(void)
-{
-	vertexWk[0].diffuse = D3DCOLOR_RGBA(255, 255, 255, 255);
-	vertexWk[1].diffuse = D3DCOLOR_RGBA(255, 255, 255, 255);
-
-	vertexWk[0].vtx = D3DXVECTOR3(100.0f,100.0f,0.0f);
-	vertexWk[1].vtx = D3DXVECTOR3(200.0f, 500.0f, 0.0f);
+	SAFE_DELETE_ARRAY(inLine);
+	SAFE_DELETE_ARRAY(outLine);
 }
