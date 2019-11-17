@@ -11,6 +11,7 @@
 //===================================================================================================================================
 #include "Base.h"
 #include "Sprite.h"
+#include "Sound.h"
 
 //===================================================================================================================================
 //y’è”z
@@ -48,6 +49,11 @@ public:
 	void setVolume(float inVolume)
 	{
 		volume = inVolume;
+		SoundInterface::SE->setEndPointVoiceVolume(volume);
+		SoundInterface::BGM->setEndPointVoiceVolume(volume);
+		SoundInterface::S3D->setEndPointVoiceVolume(volume);
+		if (inVolume == NULL) { setOnCol(false); }
+		else setOnCol(true);
 	}
 
 	static int dataMax;

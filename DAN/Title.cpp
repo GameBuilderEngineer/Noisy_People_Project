@@ -40,6 +40,9 @@ Title::Title(void)
 
 	//再生
 	SoundInterface::BGM->playSound(&playParameters);
+
+	//初期化
+	tmpVolume = 1.0f;
 }
 
 //============================================================================================================================================
@@ -302,12 +305,20 @@ void Title::AI(void)
 void Title::createGUI()
 {
 	bool createScene = false;
+	float backUpTmpVolume = tmpVolume;
 
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Checkbox("Create Scene", &createScene);
+	ImGui::SliderFloat("volume control", &tmpVolume, 0.0f, 1.0f);
+
+	if (backUpTmpVolume != tmpVolume)
+	{
+		backUpTmpVolume = tmpVolume;
+		waveBall->setVolume(tmpVolume);
+	}
 
 	//ツール用シーン
 	if (createScene)
