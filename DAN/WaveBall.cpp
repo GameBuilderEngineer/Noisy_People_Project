@@ -18,6 +18,7 @@ WaveBall::WaveBall()
 	D3DXCreateLine(device, &pLine);
 
 	switchFlag = true;
+	volume = 1.0f;
 	diffuse = ON_COL_IN;
 }
 
@@ -82,8 +83,8 @@ void WaveBall::draw(void)
 	for (int i = 0; i <= outSides; i++)
 	{
 		Theta = i * WedgeAngle;
-		outLine[i].x = outX + (baseRadius + outRadius) * cos(Theta);
-		outLine[i].y = outY - (baseRadius + outRadius) * sin(Theta);
+		outLine[i].x = outX + (baseRadius + outRadius)*volume * cos(Theta);
+		outLine[i].y = outY - (baseRadius + outRadius)*volume * sin(Theta);
 	}
 
 	int a = 155 * (outRadius / amplitude);

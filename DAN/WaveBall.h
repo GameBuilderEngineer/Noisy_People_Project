@@ -45,6 +45,10 @@ public:
 		else diffuse = OFF_COL_IN;
 		switchFlag = flag;
 	}
+	void setVolume(float inVolume)
+	{
+		volume = inVolume;
+	}
 
 	static int dataMax;
 	static float *fData;
@@ -61,7 +65,7 @@ public:
 private:
 
 	bool switchFlag;
-
+	float volume;
 	LPD3DXLINE pLine;
 	D3DCOLOR	 diffuse;		// ”½ŽËŒõ
 };

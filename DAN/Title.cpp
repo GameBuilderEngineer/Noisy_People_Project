@@ -143,6 +143,7 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(0.0f);
 		SoundInterface::BGM->setEndPointVoiceVolume(0.0f);
 		SoundInterface::S3D->setEndPointVoiceVolume(0.0f);
+		waveBall->setVolume(0.0f);
 		waveBall->setOnCol(false);
 	}
 	//ƒ~ƒ…[ƒg‰ðœ
@@ -151,6 +152,16 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(1.0f);
 		SoundInterface::BGM->setEndPointVoiceVolume(1.0f);
 		SoundInterface::S3D->setEndPointVoiceVolume(1.0f);
+		waveBall->setVolume(1.0f);
+		waveBall->setOnCol(true);
+	}
+	//10%(test)
+	if (input->isKeyDown('B'))
+	{
+		SoundInterface::SE->setEndPointVoiceVolume(0.1f);
+		SoundInterface::BGM->setEndPointVoiceVolume(0.1f);
+		SoundInterface::S3D->setEndPointVoiceVolume(0.1f);
+		waveBall->setVolume(0.1f);
 		waveBall->setOnCol(true);
 	}
 
