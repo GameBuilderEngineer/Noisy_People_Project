@@ -8,15 +8,16 @@
 //インクルード
 //======================================
 #include "BasicUI.h"
+#include "VirtualController.h"
 
 //======================================
 //名前空間
 //======================================
 namespace hpGuageP2NS
 {
-	const int WIDTH_HP_GUAGE = (500);	//タイマーフレームの横幅
-	const int HEIGHT_HP_GUAGE = (30);	//タイマーフレームの縦幅
-	const D3DXVECTOR3 POSITION_HP_GUAGE = D3DXVECTOR3(1818, 35, 0);	//タイマーフレームの表示位置(仮)
+	const int WIDTH_HP_GUAGE = (500 * WINDOW_WIDTH / 1920);	//タイマーフレームの横幅
+	const int HEIGHT_HP_GUAGE = (30 * WINDOW_HEIGHT / 1080);	//タイマーフレームの縦幅
+	const D3DXVECTOR3 POSITION_HP_GUAGE = D3DXVECTOR3(1818 * WINDOW_WIDTH / 1920, 35 * WINDOW_HEIGHT / 1080, 0);	//タイマーフレームの表示位置(仮)
 
 }
 

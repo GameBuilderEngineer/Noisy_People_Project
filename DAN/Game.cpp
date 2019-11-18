@@ -42,15 +42,13 @@ Game::Game()
 	//Ä¶ƒpƒ‰ƒ[ƒ^
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
-	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL, true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL,true, filterParameters };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL};
 	
-
+	
 	//Ä¶
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
-	
 }
 
 //===================================================================================================================================

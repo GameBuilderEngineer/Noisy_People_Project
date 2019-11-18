@@ -33,13 +33,15 @@ Title::Title(void)
 	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
-	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
+	PLAY_PARAMETERS playParameters[2];//同時に再生したい数
+	memset(playParameters, 0, sizeof(playParameters));//
 	//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
-	playParameters= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL,true, filterParameters };//BGMの設定
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Cancel, false,1.0f,false,NULL };//SEの設定
+	playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
 
 	//再生
-	SoundInterface::BGM->playSound(&playParameters);
+	SoundInterface::SE->playSound(&playParameters[0]);
+	//SoundInterface::BGM->playSound(&playParameters[1]);
 }
 
 //============================================================================================================================================
@@ -117,15 +119,6 @@ void Title::update(float _frameTime)
 
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
-
-	// カメラ
-	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
-	//camera[0].update();
-
-	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
-
-	//バーの移動
-	//if(input->wasKeyPressed()
 
 	//エフェクトの再生
 	if (input->wasKeyPressed('1'))
@@ -208,18 +201,6 @@ void Title::render3D(Camera _currentCamera)
 {
 	//エフェクト（インスタンシング）テスト
 	testEffect->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
-
-	// タイトルプレイヤー描画
-	//player[0].toonRender
-	//(
-	//	_direct3D9->device,
-	//	_currentCamera.view,
-	//	_currentCamera.projection,
-	//	_currentCamera.position,
-	//	*shaderLoader->getEffect(shaderNS::TOON),
-	//	*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-	//	*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-
 }
 
 //============================================================================================================================================
