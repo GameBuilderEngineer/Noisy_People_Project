@@ -70,7 +70,7 @@ void VisionState::update(float frameTime)
 	}
 
 	//状態遷移
-	if (player->cancelSkyVision())			return;		//ビジョンのキャンセル
+	if (player->cancelVision())			return;		//ビジョンのキャンセル
 	else if (player->skyVision())			return;		//スカイビジョン
 	else if (player->digitalShift())		return;		//デジタルシフト
 	else if (player->getPower() <= 0)

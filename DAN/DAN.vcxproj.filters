@@ -724,7 +724,9 @@
     <ClCompile Include="VisionState.cpp">
       <Filter>Game Layer\Player\VisionState</Filter>
     </ClCompile>
-    <ClCompile Include="SkyVisionState.cpp" />
+    <ClCompile Include="SkyVisionState.cpp">
+      <Filter>Game Layer\Player\SkyVisionState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1156,7 +1158,9 @@
     <ClInclude Include="VisionState.h">
       <Filter>Game Layer\Player\VisionState</Filter>
     </ClInclude>
-    <ClInclude Include="SkyVisionState.h" />
+    <ClInclude Include="SkyVisionState.h">
+      <Filter>Game Layer\Player\SkyVisionState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

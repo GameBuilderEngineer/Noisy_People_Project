@@ -29,6 +29,15 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
 	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
 
+	//葉のライトを切る
+	aLeafRenderer->disableLight();
+	bLeafRenderer->disableLight();
+	cLeafRenderer->disableLight();
+	//透過処理を有効にする
+	aLeafRenderer->enableTransparent();
+	bLeafRenderer->enableTransparent();
+	cLeafRenderer->enableTransparent();
+
 #if 0	// ツリーツールのデータを読み込む
 
 #endif

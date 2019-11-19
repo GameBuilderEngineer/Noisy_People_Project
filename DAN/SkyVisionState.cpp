@@ -24,12 +24,12 @@ using namespace skyVisionNS;
 //===================================================================================================================================
 SkyVisionState::SkyVisionState(Player* player) :AbstractState()
 {
-	this->player = player;
-	stateTimer = 0.0f;
-	type		= SKY_VISION;
-	nextType	= NORMAL;
-	stateName	= "SKY_VISION";
-	onTrans		= false;
+	this->player	= player;
+	stateTimer		= 0.0f;
+	type			= SKY_VISION;
+	nextType		= NORMAL;
+	stateName		= "SKY_VISION";
+	onTrans			= false;
 	player->setValidOperation(
 		ENABLE_SHIFT|
 		ENABLE_CANCEL_SKY_VISION);

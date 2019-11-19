@@ -104,7 +104,7 @@ float4 PS(VS_OUT In) : COLOR0
 float4 PS1(VS_OUT In) : COLOR0
 {
 	float4 texel		= tex2D(textureSampler, In.uv);
-	float4 finalColor	= texel;
+	float4 finalColor	= texel;//float4(texel.x,texel.y,texel.z, 0.5f);
 	return finalColor;
 }
 
@@ -120,6 +120,8 @@ technique mainTechnique {
 		ShadeMode				= GOURAUD;		//グーロー・シェーディング
 		CullMode				= CCW;			//背面をカリング
 		MultiSampleAntialias	= TRUE;			//アンチエイリアシングを有効
+		AlphaTestEnable			= TRUE;			//αテストの有効
+		AlphaBlendEnable		= FALSE;		//αブレンドの無効
 
 		//シェーダ設定
 		VertexShader			= compile vs_3_0 VS();
@@ -130,10 +132,32 @@ technique mainTechnique {
 	pass p1 {
 		//ステート設定
 		Zenable					= TRUE;			//Zバッファ有効
-		ZWriteEnable			= FALSE;		//Zバッファへの書き込み有効
+		ZWriteEnable			= TRUE;			//Zバッファへの書き込み有効
 		ShadeMode				= GOURAUD;		//グーロー・シェーディング
 		CullMode				= CCW;			//背面をカリング
-		MultiSampleAntialias	= TRUE;			//アンチエイリアシングを有効
+		MultiSampleAntialias	= FALSE;		//アンチエイリアシングを有効
+		AlphaTestEnable			= FALSE;		//αテストの有効
+		AlphaBlendEnable		= FALSE;		//αブレンドの無効
+		//AlphaFunc				= GREATEREQUAL;	//アルファ比較関数(>=)
+		//AlphaRef				= 0x00000001;	//α比較後、黒以上の場合描画
+
+		//シェーダ設定
+		VertexShader			= compile vs_3_0 VS();
+		PixelShader				= compile ps_3_0 PS1();
+	}
+
+	//ランバート拡散反射を考慮せずテクセルカラーのみで出力
+	pass p2 {
+		//ステート設定
+		Zenable					= TRUE;			//Zバッファ有効
+		ZWriteEnable			= TRUE;			//Zバッファへの書き込み有効
+		ShadeMode				= GOURAUD;		//グーロー・シェーディング
+		CullMode				= NONE;			//背面をカリング
+		MultiSampleAntialias	= FALSE;		//アンチエイリアシングを有効
+		AlphaTestEnable			= TRUE;			//αテストの有効
+		AlphaBlendEnable		= TRUE;			//αブレンドの無効
+		AlphaFunc				= GREATEREQUAL;	//アルファ比較関数(>=)
+		AlphaRef				= 0x00000001;	//α比較後、黒以上の場合描画
 
 		//シェーダ設定
 		VertexShader			= compile vs_3_0 VS();

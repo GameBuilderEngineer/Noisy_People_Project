@@ -94,6 +94,9 @@ public:
 	//setter
 	void enableLight();
 	void disableLight();
+	void enableTransparent();
+	void disableTransparent();
+
 
 	//getter
 	StaticMesh* getStaticMesh();

@@ -19,12 +19,12 @@
 namespace reticleNS
 {
 	//レティクル情報の定義
-	const int	NUM_U			= 5;
-	const int	NUM_V			= 3;
+	const int	NUM_U			= 1;
+	const int	NUM_V			= 1;
 	const float UNIT_U			= 1.0f/NUM_U;//単位U
 	const float UNIT_V			= 1.0f/NUM_V;//単位V
-	const int WIDTH				= 1250;//テクスチャ全体の幅
-	const int HEIGHT			= 750;//テクスチャ全体の高さ	
+	const int WIDTH				= 128;//テクスチャ全体の幅
+	const int HEIGHT			= 128;//テクスチャ全体の高さ	
 	const int UNIT_WIDTH		= (int)(WIDTH/NUM_U);//単位幅
 	const int UNIT_HEIGHT		= (int)(HEIGHT/NUM_V);//単位高さ
 
