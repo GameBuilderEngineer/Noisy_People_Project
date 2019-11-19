@@ -20,12 +20,12 @@ float4		lightDirection		= float4(-1.0f, 1.0f, -1.0f, 0.2f);
 sampler textureSampler = sampler_state
 {
 	texture			= <textureDecal>;
-	MinFilter		= ANISOTROPIC;
-	MagFilter		= POINT;
-	MipFilter		= POINT;
-	MaxAnisotropy	= 4;
-	AddressU		= Wrap;
-	AddressV		= Wrap;
+	//MinFilter		= ANISOTROPIC;
+	//MagFilter		= POINT;
+	//MipFilter		= LINEAR;
+	//MaxAnisotropy	= 4;
+	//AddressU		= Wrap;
+	//AddressV		= Wrap;
 };
 
 struct VS_OUT
