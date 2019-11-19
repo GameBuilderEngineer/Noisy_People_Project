@@ -144,9 +144,9 @@ BulletManager::BulletManager()
 	reloading		= false;
 
 	//ÉTÉEÉìÉhÇÃê›íË
-	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Shot, false ,NULL,false,NULL, true, filterParameters };
-	reroadSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Reload, false ,NULL,false,NULL, true, filterParameters };
+	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Shot, false ,NULL,false,NULL};
+	reroadSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Reload, false ,NULL,false,NULL};
 }
 
 //===================================================================================================================================

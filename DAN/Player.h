@@ -105,9 +105,10 @@ namespace playerNS{
 		VK_ESCAPE,		//ReverseCameraAxisY
 	};
 
-	const BYTE BUTTON_VISION		= virtualControllerNS::B;
+	const BYTE BUTTON_VISION		= virtualControllerNS::Y;
 	const BYTE BUTTON_SKY_VISION	= virtualControllerNS::X;
-	const BYTE BUTTON_JUMP			= virtualControllerNS::L1;
+	const BYTE BUTTON_DIGITA_SHIFT	= virtualControllerNS::R1;
+	const BYTE BUTTON_JUMP			= virtualControllerNS::B;
 	const BYTE BUTTON_BULLET		= virtualControllerNS::R1;
 	const BYTE BUTTON_PASUE			= virtualControllerNS::SPECIAL_MAIN;
 

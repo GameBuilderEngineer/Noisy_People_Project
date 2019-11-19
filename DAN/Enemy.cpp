@@ -117,7 +117,7 @@ void Enemy::update(float frameTime)
 			attackTargetPlayer = gameMasterNS::PLAYER_1P;
 			PLAY_PARAMETERS playParameters = { 0 };
 			//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
-			playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_EnemyAttack, false,NULL,false,NULL };//SEの1曲目の設定
+			playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_EnemyAttack, false,NULL,false,NULL};//SEの1曲目の設定
 			SoundInterface::SE->playSound(&playParameters);
 
 			//enemyData->isAlive = false;

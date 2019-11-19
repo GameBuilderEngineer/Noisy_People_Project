@@ -59,14 +59,17 @@ void DigitalShiftState::update(float frameTime)
 	this->frameTime = frameTime;
 	stateTimer += frameTime;
 	shiftTimer += frameTime;
-	effectTimer += frameTime;
 
-
-	//エフェクト後デジタルシフトを実行
-	if (effectTimer > EFFECT_TIME)
+	if (EFFECT_TIME > effectTimer && effectTimer >= 0.0f )
 	{
-		player->executionDigitalShift();
+		effectTimer += frameTime;
 	}
+	else if(EFFECT_TIME > 0.0f){
+		//エフェクト後デジタルシフトを実行
+		player->executionDigitalShift();
+		effectTimer = -1.0f;
+	}
+
 
 	//状態遷移
 	if (shiftTimer > SHIFT_TIME)

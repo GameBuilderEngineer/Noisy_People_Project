@@ -95,14 +95,14 @@ void Player::initialize(PlayerTable info)
 
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
-	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	shiftStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftStart, false ,NULL,false,NULL, true, filterParameters };
-	shiftFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftFinish, false ,NULL,false,NULL, true, filterParameters };
-	visionSE			= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Vision, false ,NULL,false,NULL, true, filterParameters };
-	visionStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionStart, false ,NULL,false,NULL, true, filterParameters };
-	visionFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL, true, filterParameters };
-	skyVisionStartSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL, true, filterParameters };
-	skyVisionFinishSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL, true, filterParameters };
+	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	shiftStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftStart, false ,NULL,false,NULL};
+	shiftFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftFinish, false ,NULL,false,NULL};
+	visionSE			= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Vision, false ,NULL,false,NULL};
+	visionStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionStart, false ,NULL,false,NULL};
+	visionFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL};
+	skyVisionStartSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL};
+	skyVisionFinishSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL};
 
 }
 
@@ -545,11 +545,11 @@ bool Player::shot()
 //===================================================================================================================================
 bool Player::digitalShift()
 {
-	if (!input->wasKeyPressed(keyTable.skyVision) &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return false;
+	if (!input->getMouseLButton() &&
+		!input->getController()[infomation.playerType]->isButton(BUTTON_DIGITA_SHIFT))return false;
 	//シフトレイをカメラからのレイとして更新
 	shiftRay.update(camera->position, camera->getDirectionZ());
-	//シフトレイが衝突していたら場合
+	//シフトレイが衝突していた場合
 	if (shiftRay.rayIntersect(attractorMesh, *attractorMatrix))
 	{
 		//デジタルシフト開始

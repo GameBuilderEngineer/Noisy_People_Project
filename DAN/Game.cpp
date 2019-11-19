@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/11/13
+// [更新日]2019/11/19
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -42,9 +42,9 @@ Game::Game()
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
-	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL, true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL,true, filterParameters };
+	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL};
 	
 
 	//再生
@@ -727,8 +727,8 @@ void Game::collisions()
 			{
 				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
 				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
-				FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyAttack, false ,NULL,false,NULL,true, filterParameters };
+				//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyAttack, false ,NULL,false,NULL};
 				SoundInterface::SE->playSound(&playParameters);	//SE再生
 				itemManager->destroyAllItem();					//デリート(今は全消し)
 			}
