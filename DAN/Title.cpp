@@ -41,7 +41,7 @@ Title::Title(void)
 
 	//Ä¶
 	SoundInterface::SE->playSound(&playParameters[0]);
-	//SoundInterface::BGM->playSound(&playParameters[1]);
+	SoundInterface::BGM->playSound(&playParameters[1]);
 }
 
 //============================================================================================================================================

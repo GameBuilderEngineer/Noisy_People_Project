@@ -73,6 +73,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_HP_GUAGE_P1] = { "HPGuage1.png" };
 	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
+	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Emp1.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

@@ -703,6 +703,9 @@
     <ClCompile Include="GreeningArea.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
+    <ClCompile Include="ElectGuageEmp.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1124,6 +1127,9 @@
     </ClInclude>
     <ClInclude Include="GreeningArea.h">
       <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectGuageeEmp.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 //============================
 #include "Sprite.h"
 #include "TextureLoader.h"
+#include "VirtualController.h"
 
 //============================
 //名前空間 定数
@@ -24,13 +25,13 @@ namespace uiNumberNS
 	};
 
 	//数字の表示位置
-	const int WIDTH_NUMBER = (100);									//初期の幅
-	const int HEIGHT_NUMBER = (100);								//初期の高さ
+	const int WIDTH_NUMBER = (100 * WINDOW_WIDTH / 1920);									//初期の幅
+	const int HEIGHT_NUMBER = (100 * WINDOW_HEIGHT / 1080);								//初期の高さ
 	const int DIGIT_NUMBER = 3;										//桁数
-	const D3DXVECTOR3 P1_GREENIG_POS = D3DXVECTOR3(750, 415, 0);	//P1用緑化率の表示位置
-	const D3DXVECTOR3 P2_GREENIG_POS = D3DXVECTOR3(1710, 415, 0);	//P1用緑化率の表示位置
-	const D3DXVECTOR3 P1_DEFEAT_POS = D3DXVECTOR3(835, 585, 0);		//P1用撃退数の表示位置
-	const D3DXVECTOR3 P2_DEFEAT_POS = D3DXVECTOR3(1800, 585, 0);	//P1用撃退数の表示位置
+	const D3DXVECTOR3 P1_GREENIG_POS = D3DXVECTOR3(750 * WINDOW_WIDTH / 1920, 415 * WINDOW_HEIGHT / 1080, 0);	//P1用緑化率の表示位置
+	const D3DXVECTOR3 P2_GREENIG_POS = D3DXVECTOR3(1710 * WINDOW_WIDTH / 1920, 415 * WINDOW_HEIGHT / 1080, 0);	//P1用緑化率の表示位置
+	const D3DXVECTOR3 P1_DEFEAT_POS = D3DXVECTOR3(835 * WINDOW_WIDTH / 1920, 585 * WINDOW_HEIGHT / 1080, 0);		//P1用撃退数の表示位置
+	const D3DXVECTOR3 P2_DEFEAT_POS = D3DXVECTOR3(1800 * WINDOW_WIDTH / 1920, 585 * WINDOW_HEIGHT / 1080, 0);	//P1用撃退数の表示位置
 
 	//共通
 	const D3DXVECTOR3 ROTATION_TEX = D3DXVECTOR3(0, 0, 0);			//回転
