@@ -453,7 +453,7 @@ void Game::update(float _frameTime) {
 	ad->update(frameTime);
 
 	//電力減少（電力回復確認用）
-	player->pullpower(1);
+	//player->pullpower(1);
 
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -596,7 +596,6 @@ void Game::render3D(Camera currentCamera) {
 		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
 		ray.initialize(tmp1->position, direction);
 		ray.render(length);
-
 	}
 #endif
 
@@ -691,6 +690,7 @@ void Game::collisions()
 		if (treeManager->getTreeList()[i]->getTreeData()->type == treeNS::DIGITAL_TREE
 			&&treeManager->getTreeList()[i]->isAroundGreening())
 		{
+			//緑化エリアオブジェクトの登録
 			tree8Reregister(treeManager->getTreeList()[i]->getGreeningArea());
 		}
 	}

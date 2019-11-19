@@ -151,6 +151,7 @@
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="CharaIcon.h" />
+    <ClInclude Include="DigitalShiftState.h" />
     <ClInclude Include="GreeningArea.h" />
     <ClInclude Include="Guage.h" />
     <ClInclude Include="Battery.h" />
@@ -163,7 +164,9 @@
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
+    <ClInclude Include="NormalState.h" />
     <ClInclude Include="PlayerUI.h" />
+    <ClInclude Include="SkyVisionState.h" />
     <ClInclude Include="StatusFrame.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="MapObject.h" />
@@ -275,6 +278,7 @@
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
+    <ClInclude Include="VisionState.h" />
     <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Wolf.h" />
@@ -291,6 +295,7 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
+    <ClCompile Include="DigitalShiftState.cpp" />
     <ClCompile Include="GreeningArea.cpp" />
     <ClCompile Include="Guage.cpp" />
     <ClCompile Include="Battery.cpp" />
@@ -303,7 +308,9 @@
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
+    <ClCompile Include="NormalState.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
+    <ClCompile Include="SkyVisionState.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="MapObject.cpp" />
@@ -408,6 +415,7 @@
     <ClCompile Include="UItex.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
+    <ClCompile Include="VisionState.cpp" />
     <ClCompile Include="Wind.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Wolf.cpp" />

@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/11/05
+// [更新日]2019/11/17
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -12,6 +12,7 @@
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
 #include "MoveP.h"
+#include "NormalState.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -31,7 +32,6 @@ Player::Player()
 
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
 	onGravity			= true;
-	//state				= NORMAL;
 	invincibleTimer		= 0.0f;					//無敵時間
 	onGround			= false;				//接地判定
 	reverseValueXAxis	= CAMERA_SPEED;			//操作Ｘ軸
@@ -81,7 +81,7 @@ void Player::initialize(PlayerTable info)
 	power				= MAX_POWER;							//キャラクター電力確認用
 
 	//通常状態
-	state = new NormalState(this);
+	state = new normalNS::NormalState(this);
 
 	//シューティングアクション
 	bulletManager		= new BulletManager;
@@ -90,8 +90,8 @@ void Player::initialize(PlayerTable info)
 	//デジタルシフト
 	shiftLine.start = position;
 	shiftLine.end	= position+axisZ.direction;
-	shiftTimer		= 0.0f;
-	isShifting		= false;
+	//shiftTimer		= 0.0f;
+	//isShifting		= false;
 
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
@@ -116,8 +116,11 @@ void Player::update(float frameTime)
 	isExecutingMoveOperation = false;
 	onJump = false;
 	acceleration *= 0.0f;
+
+	//状態別更新
 	state->update(frameTime);
 
+/*
 	//デジタルシフト更新
 	if (shiftTimer > 0) {
 		shiftTimer -= frameTime;
@@ -129,6 +132,7 @@ void Player::update(float frameTime)
 		isShifting = false;
 		isShiftAble = true;//ボタンUIの透明化変化確認のため一時的に
 	}
+*/
 
 	//バレットマネージャーの更新
 	bulletManager->update(frameTime);
@@ -153,36 +157,19 @@ void Player::update(float frameTime)
 	//物理更新(状態別)
 	state->physics();
 
-	//照準レイの更新
-	aimingRay.update(camera->position + camera->getDirectionZ(), camera->getDirectionZ());
-	//照射位置の算出
-	collideDistance = MAX_DISTANCE;
-	aimingPosition = aimingRay.start + (aimingRay.direction * collideDistance);
-	if (aimingRay.rayIntersect(attractorMesh, *attractorMatrix) && aimingRay.distance <= MAX_DISTANCE )
-	{
-		if (collideDistance > aimingRay.distance)
-		{
-			collideDistance = aimingRay.distance;
-			aimingPosition = aimingRay.start + (aimingRay.direction* aimingRay.distance);//衝突位置
-		}
-	}
+	//カメラ操作（状態別）
+	state->controlCamera();
 
-	//姿勢制御:射撃方向へ向く
-	D3DXVECTOR3 front;
-	Base::between2VectorDirection(&front, position, aimingPosition);	//射撃方向ベクトルの算出
-	front = slip(front, axisY.direction);								//Y軸方向への成分を削除する
-	D3DXVec3Normalize(&front, &front);									//正規化
-	postureControl(getAxisZ()->direction, front, 0.3f);
-	
+	//照準方向の更新
+	updateAiming();
+	//姿勢制御:狙撃方向へ向く
+	updatePostureByAiming();
+
 	// オブジェクトの更新
 	Object::update();
 
-	//発射位置の更新
-	launchPosition = center + axisZ.direction*radius;
-	//狙撃レイの更新
-	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
-	shootingRay.update(launchPosition, shootingRay.direction);
-	shootingRay.rayIntersect(attractorMesh, *attractorMatrix);
+	//狙撃方向の更新
+	updateShooting();
 }
 
 //===================================================================================================================================
@@ -198,6 +185,17 @@ void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 #endif // _DEBUG
 }
 
+//===================================================================================================================================
+//【状態遷移】
+//===================================================================================================================================
+void Player::transState(int next)
+{
+	state->nextType = next;
+	AbstractState* nextState = state->transition();
+	SAFE_DELETE(state);
+	state = nextState;
+}
+
 // [衝突]
 #pragma region BodyCollision
 //===================================================================================================================================
@@ -210,40 +208,40 @@ void Player::grounding()
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
 	gravityRay.update(center, gravityDirection);
 	
-	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
-	groundNormal = gravityRay.normal;
+	//bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
+	//groundNormal = gravityRay.normal;
 
-	if (hit == false)
-	{// プレイヤーは地面の無い空中にいる
-		onGround = false;
-		return;
-	}
+	//if (hit == false)
+	//{// プレイヤーは地面の無い空中にいる
+	//	onGround = false;
+	//	return;
+	//}
 
-	if (radius + difference >= gravityRay.distance)
-	{// プレイヤーは地上に接地している
-		onGround = true;
+	//if (radius + difference >= gravityRay.distance)
+	//{// プレイヤーは地上に接地している
+	//	onGround = true;
 	
-		if (onJump)
-		{
-			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
-			setPosition(center + gravityRay.direction * (gravityRay.distance - radius));
-			// 重力方向に落ちるときだけ移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			if (speed.y < 0) setSpeed(slip(speed, gravityRay.normal));
-		}
-		else
-		{
-			// めり込み補正（現在位置 + 重力方向 * めり込み距離）
-			setPosition(position + gravityRay.direction * (gravityRay.distance - radius));
-			// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			setSpeed(slip(speed, gravityRay.normal));
-			// 直前フレームで空中にいたならジャンプ終了とする
-			if (onGroundBefore == false) jumping = false;
-		}
-	}
-	else
-	{// プレイヤーは地面のある空中にいる
-		onGround = false;
-	}
+	//	if (onJump)
+	//	{
+	//		// めり込み補正（現在位置 + 重力方向 * めり込み距離）
+	//		setPosition(center + gravityRay.direction * (gravityRay.distance - radius));
+	//		// 重力方向に落ちるときだけ移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+	//		if (speed.y < 0) setSpeed(slip(speed, gravityRay.normal));
+	//	}
+	//	else
+	//	{
+	//		// めり込み補正（現在位置 + 重力方向 * めり込み距離）
+	//		setPosition(position + gravityRay.direction * (gravityRay.distance - radius));
+	//		// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+	//		setSpeed(slip(speed, gravityRay.normal));
+	//		// 直前フレームで空中にいたならジャンプ終了とする
+	//		if (onGroundBefore == false) jumping = false;
+	//	}
+	//}
+	//else
+	//{// プレイヤーは地面のある空中にいる
+	//	onGround = false;
+	//}
 }
 
 
@@ -255,11 +253,11 @@ void Player::wallScratch()
 	//スピード
 	ray.update(center, D3DXVECTOR3(speed.x,0, speed.z));
 	// 壁ずり処理
-	if (ray.rayIntersect(attractorMesh, *attractorMatrix)&& radius/2 >= ray.distance)
-	{
-		position += ray.normal*(radius/2-ray.distance);		//めり込み補正
-		speed = slip(speed, ray.normal);		// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-	}
+	//if (ray.rayIntersect(attractorMesh, *attractorMatrix)&& radius/2 >= ray.distance)
+	//{
+	//	position += ray.normal*(radius/2-ray.distance);		//めり込み補正
+	//	speed = slip(speed, ray.normal);		// 移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+	//}
 }
 
 //===================================================================================================================================
@@ -268,29 +266,29 @@ void Player::wallScratch()
 void Player::insetCorrection()
 {
 	//Z軸めり込み補正
-	ray.update(center, axisZ.direction);
-	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
-	{
-		position += ray.normal*(radius / 2 - ray.distance);
-	}
-	//-Z軸めり込み補正
-	ray.update(center, reverseAxisZ.direction);
-	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
-	{
-		position += ray.normal*(radius / 2 - ray.distance);
-	}
-	//X軸めり込み補正
-	ray.update(center, axisX.direction);
-	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
-	{
-		position += ray.normal*(radius / 2 - ray.distance);
-	}
-	//-X軸めり込み補正
-	ray.update(center, reverseAxisX.direction);
-	if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
-	{
-		position += ray.normal*(radius / 2 - ray.distance);
-	}
+	//ray.update(center, axisZ.direction);
+	//if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
+	//{
+	//	position += ray.normal*(radius / 2 - ray.distance);
+	//}
+	////-Z軸めり込み補正
+	//ray.update(center, reverseAxisZ.direction);
+	//if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
+	//{
+	//	position += ray.normal*(radius / 2 - ray.distance);
+	//}
+	////X軸めり込み補正
+	//ray.update(center, axisX.direction);
+	//if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
+	//{
+	//	position += ray.normal*(radius / 2 - ray.distance);
+	//}
+	////-X軸めり込み補正
+	//ray.update(center, reverseAxisX.direction);
+	//if (ray.rayIntersect(attractorMesh, *attractorMatrix) && radius / 2 >= ray.distance)
+	//{
+	//	position += ray.normal*(radius / 2 - ray.distance);
+	//}
 }
 #pragma endregion
 
@@ -312,20 +310,20 @@ void Player::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXM
 	attractorMatrix = _attractorMatrix;
 
 	//重力線を作成
-	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	gravityRay.initialize(position, gravityDirection);		//重力レイの初期化
+	//D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	//gravityRay.initialize(position, gravityDirection);		//重力レイの初期化
 
 	//レイ判定
-	if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
-	{//重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
+	//if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
+	//{//重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
 		//postureControl(axisY.direction, gravityRay.normal, 1.0f);
-		setGravity(-gravityRay.normal, GRAVITY_FORCE);
-	}
-	else
-	{//衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
+	//	setGravity(-gravityRay.normal, GRAVITY_FORCE);
+	//}
+	//else
+	//{//衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
 		//postureControl(axisY.direction, gravityDirection, 1.0f);
-		setGravity(gravityDirection, GRAVITY_FORCE);
-	}
+	//	setGravity(gravityDirection, GRAVITY_FORCE);
+	//}
 }
 
 //===================================================================================================================================
@@ -337,13 +335,10 @@ void Player::physicalBehavior()
 	// 加速度処理
 	//------------
 	// 重力処理
- 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	gravityRay.update(position, gravityDirection);
-	if (onGround == false)
-	{
-	}
+ 	//D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	//gravityRay.update(position, gravityDirection);
 	// 空中で重力をかける（地上では重力をかけない）
-	setGravity(gravityDirection, GRAVITY_FORCE);
+	//setGravity(gravityDirection, GRAVITY_FORCE);
 
 	// 地上摩擦係数
 	if (onGround)
@@ -366,25 +361,25 @@ void Player::updatePhysics(float frameTime)
 {
 	// 加速度の影響を速度に与える
 	speed += acceleration * frameTime;
-	if (onGround) {
+	//if (onGround) {
 		//摩擦方向を算出
-		D3DXVECTOR3 frictionDirection;
-		D3DXVec3Normalize(&frictionDirection,&speed);
+		//D3DXVECTOR3 frictionDirection;
+		//D3DXVec3Normalize(&frictionDirection,&speed);
 		// 速度に摩擦の影響を与える
-		speed -= frictionDirection * MOVE_FRICTION*GRAVITY_FORCE * frameTime;
+		//speed -= frictionDirection * MOVE_FRICTION*GRAVITY_FORCE * frameTime;
 		//速度に最大速度で制限をかける
-		if (D3DXVec3Length(&speed) > MAX_SPEED)
-		{
-			speed = MAX_SPEED * frictionDirection;
-		}
-		wallScratch();					//壁ずり
-		position += speed* frameTime;	// 速度の影響を位置に与える
-	}
-	else {
-		wallScratch();						//壁ずり
+		//if (D3DXVec3Length(&speed) > MAX_SPEED)
+		//{
+		//	speed = MAX_SPEED * frictionDirection;
+		//}
+		//wallScratch();					//壁ずり
+		//position += speed* frameTime;	// 速度の影響を位置に与える
+	//}
+	//else {
+		//wallScratch();						//壁ずり
 		position += speed * frameTime;		// 速度の影響を位置に与える
-	}
-	insetCorrection();//移動後のめり込み補正
+	//}
+	//insetCorrection();//移動後のめり込み補正
 }
 
 #pragma endregion
@@ -537,35 +532,141 @@ void Player::jump()
 //===================================================================================================================================
 //【射撃】
 //===================================================================================================================================
-void Player::shot()
+bool Player::shot()
 {
 	if (!input->getMouseLButton() && 
-		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return;
+		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return false;
 	bulletManager->launch(shootingRay);
+	return true;
 }
 
 //===================================================================================================================================
 //【デジタルシフト】
 //===================================================================================================================================
-void Player::digitalShift()
+bool Player::digitalShift()
 {
 	if (!input->wasKeyPressed(keyTable.skyVision) &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return;
-	if (isShifting)return;//シフト中：デジタルシフトしない
-
+		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return false;
 	//シフトレイをカメラからのレイとして更新
 	shiftRay.update(camera->position, camera->getDirectionZ());
-
 	//シフトレイが衝突していたら場合
 	if (shiftRay.rayIntersect(attractorMesh, *attractorMatrix))
 	{
 		//デジタルシフト開始
 		shiftLine.start = position;
 		shiftLine.end = shiftRay.start + shiftRay.direction*shiftRay.distance;
-		isShifting = true;
-		shiftTimer = SHIFT_TIME;
+		transState(DIGITAL_SHIFT);
 	}
 
+	return true;
+
+}
+
+//===================================================================================================================================
+//【デジタルシフト実行】
+//===================================================================================================================================
+bool Player::executionDigitalShift()
+{
+	//デジタルシフト開始
+	position = shiftLine.end;
+	return true;
+}
+
+//===================================================================================================================================
+//【ビジョン】
+//===================================================================================================================================
+bool Player::vision()
+{
+	if (!input->wasKeyPressed(keyTable.vision) &&
+		!input->getController()[infomation.playerType]->isButton(BUTTON_VISION))return false;
+	transState(VISION);
+	return true;
+}
+
+//===================================================================================================================================
+//【ビジョンのキャンセル】
+//===================================================================================================================================
+bool Player::cancelVision()
+{
+	if (!input->wasKeyPressed(keyTable.vision) &&
+		!input->getController()[infomation.playerType]->isButton(BUTTON_VISION))return false;
+	transState(NORMAL);
+	return true;
+}
+
+//===================================================================================================================================
+//【スカイビジョン】
+//===================================================================================================================================
+bool Player::skyVision()
+{
+	if (!input->wasKeyPressed(keyTable.skyVision) &&
+		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return false;
+	transState(SKY_VISION);
+	return true;
+}
+
+//===================================================================================================================================
+//【スカイビジョンのキャンセル】
+//===================================================================================================================================
+bool Player::cancelSkyVision()
+{
+	if (!input->wasKeyPressed(keyTable.skyVision) &&
+		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return false;
+	transState(NORMAL);
+	return true;
+}
+
+//===================================================================================================================================
+//【射撃方向を更新する】
+//===================================================================================================================================
+void Player::updateAiming()
+{
+	aimingRay.update(camera->position + camera->getDirectionZ(), camera->getDirectionZ());
+	//照射位置の算出
+	collideDistance = MAX_DISTANCE;
+	aimingPosition = aimingRay.start + (aimingRay.direction * collideDistance);
+	if (aimingRay.rayIntersect(attractorMesh, *attractorMatrix) && aimingRay.distance <= MAX_DISTANCE)
+	{
+		if (collideDistance > aimingRay.distance)
+		{
+			collideDistance = aimingRay.distance;
+			aimingPosition = aimingRay.start + (aimingRay.direction* aimingRay.distance);//衝突位置
+		}
+	}
+
+}
+//===================================================================================================================================
+//【射撃方向へ姿勢を向ける】
+//===================================================================================================================================
+void Player::updatePostureByAiming()
+{
+
+	D3DXVECTOR3 front;
+	Base::between2VectorDirection(&front, position, aimingPosition);	//射撃方向ベクトルの算出
+	front = slip(front, axisY.direction);								//Y軸方向への成分を削除する
+	D3DXVec3Normalize(&front, &front);									//正規化
+	postureControl(getAxisZ()->direction, front, 0.3f);
+}
+//===================================================================================================================================
+//【発射位置の更新】
+//===================================================================================================================================
+void Player::updateShooting()
+{
+	//発射位置の更新
+	launchPosition = center + axisZ.direction*radius;
+	//狙撃レイの更新
+	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
+	shootingRay.update(launchPosition, shootingRay.direction);
+	if (shootingRay.rayIntersect(attractorMesh, *attractorMatrix) &&
+		shootingRay.distance < MAX_DISTANCE)
+	{
+		//衝突時、狙撃レイの衝突位置にレティクル位置を置く
+		aimingPosition = shootingRay.start + (shootingRay.direction * shootingRay.distance);
+	}
+	else {
+		//非衝突の場合、最大距離を入れる。
+		shootingRay.distance = MAX_DISTANCE;
+	}
 }
 
 #pragma endregion
@@ -586,6 +687,8 @@ void Player::outputGUI()
 		ImGuiIO& io = ImGui::GetIO();
 		float limitTop = 1000;
 		float limitBottom = -1000;
+		ImGui::Text("state[%s]", state->stateName.c_str());
+		ImGui::Text("shootingRay.distance %.02f", shootingRay.distance);
 		ImGui::Text("speedVectorLength %f", D3DXVec3Length(&speed));
 		ImGui::Text("power %d", power);													//電力
 		ImGui::Text("BulletRmaining [%d/%d]",
@@ -635,7 +738,6 @@ void Player::setCamera(Camera* _camera) {
 	shootingRay.color = D3DXCOLOR(120, 10, 20, 255);
 }
 void Player::setInfomation(PlayerTable info) { infomation = info; };
-
 void Player::addpower(int add)
 {
 	power = UtilityFunction::clamp( power + add, MIN_POWER, MAX_POWER);		//電力回復
@@ -644,13 +746,23 @@ void Player::pullpower(int pull)
 {
 	power = UtilityFunction::clamp( power - pull, MIN_POWER, MAX_POWER);		//電力消費
 }
-
 void Player::damage(int _damage)
 {
 	hp -= _damage;
 	if (hp < 0) hp = 0;
 }
-
+void Player::setValidOperation(int value) 
+{
+	validOperation = value;
+}
+void Player::enableOperation(int value) 
+{
+	validOperation |= value;
+}
+void Player::disableOperation(int value) 
+{
+	validOperation &= ~value;
+}
 
 //===================================================================================================================================
 //【getter】
@@ -658,6 +770,10 @@ void Player::damage(int _damage)
 int Player::getHp() { return hp; }
 int Player::getPower() { return power; }
 int Player::getState() { return state->type; }
+bool Player::whetherValidOperation(int operation) {
+	if (validOperation & operation)	return true;
+	return false;
+}
 bool Player::canShot() { return isShotAble; }
 bool Player::canJump() { return isJumpAble; }
 bool Player::canDoVision(){ return isVisionAble; }
@@ -673,53 +789,4 @@ bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
 bool Player::getOnGround() { return onGround; }
 D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
 LPD3DXMESH Player::getMesh() { return box->mesh; };
-
-
-
-//(仮)通常状態
-
-NormalState::NormalState(Player* player):AbstractState()
-{
-	this->player = player;
-	type = NORMAL;
-}
-
-void NormalState::start()
-{
-
-}
-
-void NormalState::update(float frameTime)
-{
-	this->frameTime = frameTime;
-}
-
-
-void NormalState::operation()
-{
-	// 操作
-	player->shot();						//弾の発射
-	player->digitalShift();				//デジタルシフト
-	player->moveOperation();			// 移動操作
-	player->jumpOperation();			// ジャンプ操作
-}
-
-void NormalState::physics()
-{
-	player->grounding();				// 接地処理
-	player->physicalBehavior();			// 物理挙動
-	player->updatePhysics(frameTime);	// 物理の更新
-	player->controlCamera(frameTime);
-}
-
-
-AbstractState* NormalState::transition()
-{
-	return new NormalState(player);
-}
-
-void NormalState::end()
-{
-
-}
 

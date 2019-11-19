@@ -101,8 +101,8 @@ namespace faderNS
 		virtual void setValue(D3DSURFACE_DESC desc) override
 		{
 			effect->SetTechnique("tecBlur");
-			effect->SetFloat("TexWidth", desc.Width);
-			effect->SetFloat("TexHeight", desc.Height);
+			effect->SetFloat("TexWidth", (float)desc.Width);
+			effect->SetFloat("TexHeight", (float)desc.Height);
 			effect->SetFloat("Level", level);
 		}
 		//’l‚ÌXV

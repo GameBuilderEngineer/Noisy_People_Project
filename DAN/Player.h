@@ -48,7 +48,10 @@ namespace playerNS{
 		BYTE dash;
 		BYTE jump;
 		BYTE vision;
+		BYTE cancelVision;
 		BYTE skyVision;
+		BYTE cancelSkyVision;
+		BYTE digitalShift;
 		BYTE reverseCameraX;
 		BYTE reverseCameraY;
 	};
@@ -64,7 +67,10 @@ namespace playerNS{
 			VK_ESCAPE,				//DASH:廃止
 			VK_ESCAPE,				//JUMP:右クリック
 			VK_LSHIFT,				//VISION
+			VK_LSHIFT,				//CANCEL_VISION
 			VK_SPACE,				//SKY_VISION
+			VK_SPACE,				//CANCEL_SKY_VISION
+			VK_ESCAPE,				//DIGITAL_SHIFT:左クリック
 			VK_F7,					//ReverseCameraAxisX
 			VK_F8,					//ReverseCameraAxisY
 		},
@@ -76,9 +82,12 @@ namespace playerNS{
 			VK_LEFT,				//LEFT
 			'R',					//RESET
 			VK_ESCAPE,				//DASH
-			VK_ESCAPE,				//JUMP
+			VK_ESCAPE,				//JUMP:右クリック
 			VK_RSHIFT,				//VISION
+			VK_RSHIFT,				//CANCEL_VISION
 			VK_BACK,				//SKY_VISION
+			VK_BACK,				//CANCEL_SKY_VISION
+			VK_ESCAPE,				//DIGITAL_SHIFT:左クリック
 			VK_F9,					//ReverseCameraAxisX
 			VK_F10,					//ReverseCameraAxisY
 		}
@@ -103,10 +112,11 @@ namespace playerNS{
 	const BYTE BUTTON_PASUE			= virtualControllerNS::SPECIAL_MAIN;
 
 	enum STATE {
+		NONE,
 		NORMAL,
 		VISION,
 		SKY_VISION,
-		SHIFT,
+		DIGITAL_SHIFT,
 		STATE_NUM
 	};
 
@@ -147,9 +157,16 @@ namespace playerNS{
 	//Shooting
 	const float MAX_DISTANCE				= 100.0f;								//最大照準距離
 
-	//DigitalShift
-	const float SHIFT_TIME				= 2.0f;									//デジタルシフト時間
-
+	//EnableOperation
+	const int	DISABLE_OPERATION			= 0x00000000;
+	const int	ENABLE_SHOT					= 0x00000001;
+	const int	ENABLE_JUMP					= 0x00000002;
+	const int	ENABLE_VISION				= 0x00000004;
+	const int	ENABLE_CANCEL_VISION		= 0x00000008;
+	const int	ENABLE_SKY_VISION			= 0x00000010;
+	const int	ENABLE_CANCEL_SKY_VISION	= 0x00000020;
+	const int	ENABLE_SHIFT				= 0x00000040;
+	const int	ALL_OPERATION				= 0xffffffff;
 }
 
 
@@ -160,15 +177,28 @@ namespace playerNS{
 class AbstractState:public Base
 {
 public:
-	float	frameTime;
-	int		type;
+	float			frameTime;
+	float			stateTimer;
+	int				type;
+	int				nextType;
+	bool			onTrans;
+	std::string		stateName;
 public:
+	AbstractState() {
+		frameTime	= 0.0f;
+		stateTimer	= 0.0f;
+		type		= playerNS::STATE::NONE;
+		nextType	= playerNS::STATE::NONE;
+		onTrans		= false;
+		stateName	= "none";
+	}
 	virtual void start()					= 0;
 	virtual void update(float frameTime)	= 0;
 	virtual void operation()				= 0;
 	virtual void physics()					= 0;
+	virtual void controlCamera()			= 0;
 	virtual void end()						= 0;
-	virtual AbstractState* transition()				= 0;
+	virtual AbstractState* transition()		= 0;
 };
 
 //===================================================================================================================================
@@ -185,6 +215,9 @@ private:
 	AbstractState*				state;							//状態クラス
 	int							hp;								// HP
 	int							power;							// 電力
+	int							validOperation;					//有効な操作ビットフラグ
+
+
 
 	//タイマー
 	float						frameTime;						//フレームタイム
@@ -223,8 +256,6 @@ private:
 	Camera*						camera;							// 操作するカメラへのポインタ
 	D3DXVECTOR3					cameraGaze;						//カメラ注視位置
 	D3DXVECTOR3					cameraGazeRelative;				//カメラ注視相対位置
-	//D3DXVECTOR3					centralPosition;				// 中心座標
-	//D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
 
 	//シューティングアクション
 	Ray							aimingRay;						//照準レイ（カメラからのレイ）
@@ -236,8 +267,8 @@ private:
 	BulletManager*				bulletManager;					//バレットマネージャー
 
 	//デジタルアクション
-	bool						isShifting;						//デジタルシフト中フラグ
-	float						shiftTimer;						//デジタルシフトタイマー
+	//bool						isShifting;						//デジタルシフト中フラグ
+	//float						shiftTimer;						//デジタルシフトタイマー
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
 
@@ -259,6 +290,9 @@ public:
 	virtual void update(float frameTime);
 	void otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
+	//状態遷移
+	void transState(int next);											//状態遷移
+
 	// 衝突
 	void grounding();											// 接地処理
 	void wallScratch();											// 壁ずり処理
@@ -279,24 +313,38 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 	void jump();												//ジャンプ
 	float dash();
-	void shot();												//弾を打つ
-	void digitalShift();										//デジタルシフト
+	bool shot();												//弾を打つ
+	bool digitalShift();										//デジタルシフト
+	bool executionDigitalShift();								//デジタルシフト実行
+	bool skyVision();											//スカイビジョン
+	bool vision();												//ビジョン
+	bool cancelSkyVision();											//スカイビジョン
+	bool cancelVision();												//ビジョン
+
+	//シューティング
+	void updateAiming();										//照準方向を更新する
+	void updatePostureByAiming();								//狙撃方向へ姿勢を向ける
+	void updateShooting();										//狙撃位置の更新
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI
 	void reset();												// リセット
 
 	//setter
-	void setCamera(Camera* _camera);							//操作対象カメラのセット
-	void addpower(int add);										//電力加算
-	void pullpower(int pull);									//電力減算
-	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
-	void damage(int _damage);									//ダメージ処理
+	void	setCamera(Camera* _camera);							//操作対象カメラのセット
+	void	addpower(int add);									//電力加算
+	void	pullpower(int pull);								//電力減算
+	void	setInfomation(PlayerTable info);					//プレイヤー情報のセット
+	void	damage(int _damage);								//ダメージ処理
+	void	setValidOperation(int value);						//有効操作の設定
+	void	enableOperation(int value);							//操作を有効にする
+	void	disableOperation(int value);						//操作を無効にする
 
 	//getter
 	int getHp();												// HPの取得
 	int getPower();												// 電力の取得
 	int getState();
+	bool whetherValidOperation(int operation);					//有効操作の確認
 	bool canShot();
 	bool canJump();
 	bool canDoVision();
@@ -315,20 +363,3 @@ public:
 	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
 
 };
-
-
-//通常状態
-class NormalState:public AbstractState
-{
-private:
-	Player* player;
-public:
-	NormalState(Player* player);
-	virtual void update(float frameTime);
-	virtual void start();
-	virtual void operation();
-	virtual void physics();
-	virtual AbstractState* transition();
-	virtual void end();
-};
-

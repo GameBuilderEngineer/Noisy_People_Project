@@ -22,9 +22,8 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	onRender				= true;
 	onTransparent			= false;
 	onLight					= true;
-	didDelete				= false;
 	didRegister				= false;
-	didGenerate				= false;
+	didUnRegister			= false;
 	objectNum				= 0;
 	fillMode				= staticMeshRendererNS::FILLMODE::SOLID;
 	matrixBuffer			= NULL;
@@ -244,6 +243,18 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 	//総当たり検索
 	for (int i = 0; i < objectNum; i++)
 	{	
+		bool enable = true;
+		//有効値判定
+		if (*objectList->getValue(i))
+		{
+			enable = true;
+		}
+		else {
+			enable = false;
+		}
+
+		if (enable == false)continue;//有効値でない場合スルー
+
 		if ((*objectList->getValue(i))->id == id)
 		{
 			unRegisterObject(i);
@@ -281,6 +292,7 @@ void StaticMeshRenderer::unRegisterObject(int i)
 void StaticMeshRenderer::updateAccessList()
 {
 	objectList->listUpdate();
+	objectNum = objectList->nodeNum;
 }
 
 //===================================================================================================================================
