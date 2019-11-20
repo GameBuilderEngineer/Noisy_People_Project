@@ -67,10 +67,9 @@ void HPguageP2::update(int hp)
 //====================================
 void HPguageP2::changeGage(int hp)
 {
-	//HPを参照しサイズを変更
+	//HPを参照しUV座標を変換
 	float hpPersent = (float)hp / 100;//現在のHPを最大HPで割って割合を出す
-	if (BasicUI::widthSize>WIDTH_HP_GUAGE*hpPersent)
-	{
-		BasicUI::reductionWidthSize(hpGuage, 1.0f);
-	}
+	uvCoord01.x = 1 - hpPersent;
+	uvCoord03.x = 1 - hpPersent;
+	
 }
