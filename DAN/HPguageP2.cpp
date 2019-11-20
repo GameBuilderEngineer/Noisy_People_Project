@@ -51,7 +51,6 @@ void HPguageP2::initialize()
 //====================================
 void HPguageP2::render()
 {
-
 	hpGuage->render();
 }
 

@@ -22,12 +22,12 @@ using namespace creditTex;
 //============================
 void CreditTex::initialize()
 {
-	credit = new Sprite;
-
-	//開始位置の初期化
-	pos = POSITION;
-
-	credit->initialize(
+	for (int i = 0; i < CREDIT_MAX; i++)
+	{
+		credit[i] = new Sprite;
+	}
+	
+	credit[0]->initialize(
 						*textureNS::reference(textureNS::CREDIT)//テクスチャ
 						,SpriteNS::CENTER						//中心
 						,WIDTH									//横幅
@@ -36,6 +36,18 @@ void CreditTex::initialize()
 						,ROTATION								//回転
 						,COLOR);								//色
 
+	credit[1]->initialize(
+						*textureNS::reference(textureNS::CREDIT2)//テクスチャ
+						, SpriteNS::CENTER						//中心
+						, WIDTH									//横幅
+						, HEIGHT								//縦幅
+						, POSITION_2							//表示位置
+						, ROTATION								//回転
+						, COLOR);								//色
+						
+	pos[0] = POSITION;
+	pos[1] = POSITION_2;
+
 }
 
 //============================
@@ -43,7 +55,10 @@ void CreditTex::initialize()
 //============================
 void CreditTex::render()
 {
-	credit->render();
+	for (int i = 0; i < CREDIT_MAX; i++)
+	{
+		credit[i]->render();
+	}
 }
 
 //============================
@@ -51,7 +66,7 @@ void CreditTex::render()
 //============================
 void CreditTex::update()
 {
-	if (pos.y > MOVE_MAX)
+	if (pos[1].y >= MOVE_MAX)
 	{
 		moveCredit();
 	}
@@ -62,7 +77,10 @@ void CreditTex::update()
 //============================
 void CreditTex::uninitialize()
 {
-	delete credit;
+	for (int i = 0; i < CREDIT_MAX; i++)
+	{
+		delete credit[i];
+	}
 }
 
 //===========================
@@ -70,11 +88,11 @@ void CreditTex::uninitialize()
 //===========================
 void CreditTex::moveCredit()
 {
+	pos[0].y -= MOVE_SPEED;
+	pos[1].y -= MOVE_SPEED;
 
-	pos.y -= MOVE_SPEED;
-
-	credit->setPosition(pos);
-	credit->setVertex();
-	
-
+	credit[0]->setPosition(pos[0]);
+	credit[1]->setPosition(pos[1]);
+	credit[0]->setVertex();
+	credit[1]->setVertex();
 }

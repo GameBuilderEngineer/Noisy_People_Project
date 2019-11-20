@@ -49,7 +49,8 @@ TextureLoader::TextureLoader()
 	textureName[TITLE_BAR] = { "Select_Bar.png" };
 
 	// Credit
-	textureName[CREDIT] = { "Credit_01.png" };
+	textureName[CREDIT] = { "staffroll_1.png" };
+	textureName[CREDIT2] = { "staffroll_2.png" };
 
 	// Game
 	textureName[UI_INFO_10] = { "Info_10.png" };

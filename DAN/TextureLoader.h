@@ -44,6 +44,7 @@ namespace textureNS
 
 		// Credit
 		CREDIT,
+		CREDIT2,
 
 		// Game
 		UI_INFO_10,
