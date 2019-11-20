@@ -107,7 +107,7 @@ void SoundInterface::UpdateSound(void)
 
 	//BGMの更新処理
 	BGM->updateSound();
-	BGM->SetSpeed();
+	//BGM->SetSpeed();
 
 	//S3Dの更新処理
 	S3D->updateSound();

@@ -211,7 +211,7 @@ void S3DManager::MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *l
 		if (tmpSoundParameters->playParameters.speed != NULL)
 		{
 			//後でtrueにする
-			tmpSoundParameters->isSpeed = false;
+			tmpSoundParameters->isSpeed = true;
 		}
 
 		//波形のフォーマット

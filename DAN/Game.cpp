@@ -41,13 +41,15 @@ Game::Game()
 	memset(playParameters, 0, sizeof(playParameters));
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL, true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL,true, filterParameters };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL,true, filterParameters };
 	
 
 	//Ä¶
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
 	
+	//test
+	SoundInterface::SE->setEndPointVoiceVolume(0);
 }
 
 //===================================================================================================================================
@@ -477,9 +479,9 @@ void Game::update(float _frameTime) {
 		changeScene(nextScene);
 	}
 
-	if (gameMaster->getGameTime() <= 60)
+	if (gameMaster->getGameTime() <= 210)
 	{
-		/*SoundInterface::BGM->playSound(&playParameters[1]);*/
+		SoundInterface::BGM->SetSpeed();
 	}
 
 #ifdef _DEBUG

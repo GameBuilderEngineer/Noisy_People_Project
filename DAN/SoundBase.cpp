@@ -214,7 +214,7 @@ void SoundBase::MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *li
 	if (tmpSoundParameters->playParameters.speed != NULL)
 	{
 		//後でtrueにする
-		tmpSoundParameters->isSpeed = false;
+		tmpSoundParameters->isSpeed = true;
 	}
 
 	//波形のフォーマット
