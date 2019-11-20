@@ -462,8 +462,8 @@ void Game::update(float _frameTime) {
 		camera[i].update();
 
 	//固定UIの更新
-	fixedUI->update();
-	gameMaster->getGameTime();//←ソメヤくんへ：ゲームタイムです。
+	float gametime = gameMaster->getGameTime();//←ソメヤくんへ：ゲームタイムです。
+	fixedUI->update(gametime);
 
 
 	//プレイヤー周りのUIの更新

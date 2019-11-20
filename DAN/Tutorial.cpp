@@ -265,7 +265,7 @@ void Tutorial::update(float _frameTime)
 		camera[i].update();
 
 	//タイマーの更新
-	timer->update();
+	//timer->update();
 
 
 	//Enterまたは〇ボタンで次へ

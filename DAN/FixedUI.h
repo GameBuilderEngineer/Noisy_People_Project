@@ -44,7 +44,7 @@ public://ƒƒ“ƒo[ŠÖ”
 	~FixedUI();
 	void initialize();
 	void render();
-	void update();
+	void update(float gametime);
 	void uninitialize();
 private:
 };

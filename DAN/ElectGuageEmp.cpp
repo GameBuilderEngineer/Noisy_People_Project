@@ -43,6 +43,9 @@ void ElectGuageEmp::initialize(int playerType)
 		break;
 
 	case basicUiNS::P2:
+		BasicUI::assingPosition(POSITION_HP_GUAGE_EMP_P2);
+		BasicUI::assingSize(WIDTH_HP_GUAGE_EMP, HEIGHT_HP_GUAGE_EMP);
+		BasicUI::initialize(electGuageEmp, textureNS::reference(textureNS::UI_EN_GUAGE_EMP_P2));
 		break;
 
 	}

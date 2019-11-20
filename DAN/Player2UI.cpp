@@ -65,7 +65,7 @@ void Player2UI::update()
 	visionFlag = player->canDoVision();
 	hp = player->getHp();
 
-	//P1—p
+	//P2—p
 	buttonUi->update(skyVisionFlag, 3);
 	buttonUi->update(shiftFlag, 2);
 	buttonUi->update(shotFlag, 1);

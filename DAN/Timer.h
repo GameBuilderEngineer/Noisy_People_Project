@@ -39,7 +39,7 @@ public://メンバー関数
 	~Timer();				//デストラクタ
 	void initialize();		//初期化
 	void render();			//描画処理
-	void update();			//更新処理
+	void update(float gametime);			//更新処理
 	void uninitialize();	//終了処理
 	void setUV(int time);	//uv座標の設定
 };

@@ -78,10 +78,10 @@ void Timer::render()
 //====================================
 //更新処理
 //====================================
-void Timer::update()
+void Timer::update(float gametime)
 {
 	//タイマーの初期値
-	keepTime = GameMaster::getGameTime();
+	keepTime = gametime;
 }
 
 //====================================

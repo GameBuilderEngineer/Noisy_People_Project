@@ -76,9 +76,9 @@ void FixedUI::render()
 //================================
 // XV
 //================================
-void FixedUI::update()
+void FixedUI::update(float gametime)
 {
-	timer->update();
+	timer->update(gametime);
 	guage->update();
 }
 
