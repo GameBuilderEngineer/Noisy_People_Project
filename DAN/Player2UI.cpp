@@ -17,6 +17,7 @@ Player2UI::Player2UI()
 	hpGuage = new HPguageP2;
 	charaIcon = new CharaIcon;
 	hpGuageEmp = new HPguageEmp;
+	electGuageEmp = new ElectGuageEmp;
 }
 
 //=================================
@@ -28,6 +29,7 @@ Player2UI::~Player2UI()
 	delete hpGuage;
 	delete charaIcon;
 	delete hpGuageEmp;
+	delete electGuageEmp;
 }
 
 //==================================
@@ -38,8 +40,9 @@ void Player2UI::initialize(Player *player)
 	this->player = player;
 	buttonUi->initialize();
 	hpGuage->initialize();
-	charaIcon->initialize();
+	charaIcon->initialize(basicUiNS::P2);
 	hpGuageEmp->initialize(basicUiNS::P2);
+	electGuageEmp->initialize(basicUiNS::P2);
 }
 
 //==================================
@@ -51,6 +54,7 @@ void Player2UI::render()
 	hpGuageEmp->render();
 	hpGuage->render();
 	charaIcon->render();
+	electGuageEmp->render();
 }
 
 //==================================

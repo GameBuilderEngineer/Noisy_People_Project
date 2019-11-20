@@ -25,7 +25,6 @@ FixedUI::FixedUI()
 	buttonFrameP2 = new ButtonFrame;
 	statusFrameP1 = new StatusFrame;
 	statusFrameP2 = new StatusFrame;
-	guage = new Guage;
 }
 
 //================================
@@ -40,7 +39,6 @@ FixedUI::~FixedUI()
 	delete buttonFrameP2;
 	delete statusFrameP1;
 	delete statusFrameP2;
-	delete guage;
 }
 
 //================================
@@ -55,7 +53,6 @@ void FixedUI::initialize()
 	buttonFrameP2->initialize(basicUiNS::P2);
 	statusFrameP1->initialize(basicUiNS::P1);
 	statusFrameP2->initialize(basicUiNS::P2);
-	guage->initialize();
 }
 
 //================================
@@ -70,7 +67,6 @@ void FixedUI::render()
 	buttonP2->renderP2();
 	statusFrameP1->render();
 	statusFrameP2->render();
-	guage->render();
 }
 
 //================================
@@ -79,7 +75,6 @@ void FixedUI::render()
 void FixedUI::update(float gametime)
 {
 	timer->update(gametime);
-	guage->update();
 }
 
 //================================

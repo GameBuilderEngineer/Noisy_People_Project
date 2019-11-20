@@ -153,7 +153,6 @@
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
     <ClInclude Include="GreeningArea.h" />
-    <ClInclude Include="Guage.h" />
     <ClInclude Include="Battery.h" />
     <ClInclude Include="Bear.h" />
     <ClInclude Include="BGM.h" />
@@ -295,7 +294,6 @@
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
     <ClCompile Include="GreeningArea.cpp" />
-    <ClCompile Include="Guage.cpp" />
     <ClCompile Include="Battery.cpp" />
     <ClCompile Include="Bear.cpp" />
     <ClCompile Include="BGM.cpp" />

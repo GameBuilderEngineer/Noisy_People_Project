@@ -12,6 +12,7 @@
 #include "HPguage.h"
 #include "CharaIcon.h"
 #include "HPguageEmp.h"
+#include "ElectGuageeEmp.h"
 
 //==================================
 //名前空間
@@ -32,6 +33,7 @@ public://メンバー変数
 	HPguage  * hpGuage;
 	HPguageEmp *hpGuageEmp;
 	CharaIcon * charaIcon;
+	ElectGuageEmp* electGuageEmp;
 	Player *player;			//P1の情報
 	bool	skyVisionFlag;	//スカイビジョンフラグ
 	bool	shotFlag;		//ショットフラグ

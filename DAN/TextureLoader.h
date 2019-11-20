@@ -69,6 +69,7 @@ namespace textureNS
 		UI_HP_GUAGE_EMP_P1,
 		UI_HP_GUAGE_EMP_P2,
 		UI_ICON_P1,
+		UI_ICON_P2,
 		UI_EN_GUAGE_EMP_P1,
 		UI_EN_GUAGE_EMP_P2,
 

@@ -673,9 +673,6 @@
     <ClCompile Include="HPguage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
-    <ClCompile Include="Guage.cpp">
-      <Filter>Game Layer\GameUI\Guage</Filter>
-    </ClCompile>
     <ClCompile Include="HPguageEmp.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
@@ -1102,9 +1099,6 @@
       <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
     </ClInclude>
     <ClInclude Include="HPguage.h">
-      <Filter>Game Layer\GameUI\Guage</Filter>
-    </ClInclude>
-    <ClInclude Include="Guage.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
     <ClInclude Include="HPguageEmp.h">
