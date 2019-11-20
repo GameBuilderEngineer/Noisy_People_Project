@@ -29,9 +29,6 @@ Title::Title(void)
 	sceneName = ("Scene -Title-");
 	nextScene = SceneList::TUTORIAL;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);
-
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.1f, 1.5f };//フィルターの設定
@@ -51,7 +48,7 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================

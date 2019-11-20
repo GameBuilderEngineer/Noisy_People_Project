@@ -157,6 +157,7 @@ protected:
 
 	//基本機能(読み込み・停止)
 	static WAV_FILE	LoadWavChunk(FILE *fp);					//WAVファイルの読み込み処理
+	virtual void loadBuffer() {};							//必要なサウンドバッファを用意する
 
 	//リスト
 #if(XADUIO2_STATE)

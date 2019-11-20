@@ -21,9 +21,6 @@ Splash::Splash()
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::SPLASH);
-
 	//エフェクシアーテスト
 	effekseerNS::setProjectionMatrix(90.0f / 180.0f * 3.14f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 10000.0f);
 
@@ -35,7 +32,7 @@ Splash::Splash()
 Splash::~Splash()
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 
 	effekseerNS::stop(effekseerNS::TEST0);
 }

@@ -26,9 +26,6 @@ Credit::Credit()
 	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::CREDIT);
-
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
@@ -47,7 +44,7 @@ Credit::Credit()
 Credit::~Credit()
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================

@@ -50,7 +50,16 @@ SoundBase::SoundBase()
 SoundBase::~SoundBase()
 {
 #if(XADUIO2_STATE)
+	//曲の停止
 	uninitSoundStop();
+
+	//バッファ解放処理
+	for (int i = 0; i < bufferMax; i++)
+	{
+		SAFE_DELETE_ARRAY(bufferList[i].wavFile.data.waveData);
+	}
+	SAFE_DELETE_ARRAY(bufferList);
+
 	soundParametersList->terminate();
 	SAFE_DELETE(soundParametersList);
 

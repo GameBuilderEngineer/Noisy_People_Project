@@ -32,9 +32,6 @@ Tutorial::Tutorial()
 	// 次のシーン(ゲーム)
 	nextScene = SceneList::GAME;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TUTORIAL);
-
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
@@ -53,7 +50,7 @@ Tutorial::Tutorial()
 Tutorial::~Tutorial()
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================
