@@ -111,28 +111,8 @@ void S3DManager::outputGUI(void)
 				//ボイスID
 				ImGui::Text("Voice ID:%d", tmpSoundParameters->playParameters.voiceID);
 
-				//サウンド名
-				switch (scene)
-				{
-				case SceneList::SPLASH:
-					break;
-				case SceneList::TITLE:
-					break;
-				case SceneList::TUTORIAL:
-					ImGui::Text("%s", S3D_PATH_LIST_TAIL(tutorial, [tmpSoundParameters->playParameters.soundId]));
-					break;
-				case SceneList::CREDIT:
-					break;
-				case SceneList::GAME:
-					ImGui::Text("%s", S3D_PATH_LIST_TAIL(game, [tmpSoundParameters->playParameters.soundId]));
-					break;
-				case SceneList::RESULT:
-					break;
-				case SceneList::NONE_SCENE:
-					break;
-				default:
-					break;
-				}
+				//名
+				ImGui::Text("%s", S3D_PATH_LIST_TAIL(tutorial, [tmpSoundParameters->playParameters.soundId]));
 
 				//音量
 				ImGui::Text("volume:%f", volume);
@@ -173,90 +153,41 @@ void S3DManager::outputGUI(void)
 }
 #endif
 
-//===================================================================================================================================
-//【ステージ遷移に合わせて必要なサウンドバッファを用意する】
-//===================================================================================================================================
-void S3DManager::SwitchAudioBuffer(int scene)
-{
-#if(XADUIO2_STATE)
-	//サウンドディレクトリに設定する
-	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_S3D);
-
-#if _DEBUG
-	//シーンの更新
-	S3DManager::scene = scene;
-#endif
-
-	//解放処理
-	for (int i = 0; i < S3DManager::bufferMax; i++)
-	{
-		SAFE_DELETE_ARRAY(S3DManager::bufferList[i].wavFile.data.waveData);
-	}
-	SAFE_DELETE_ARRAY(S3DManager::bufferList);
-
-	switch (scene)
-	{
-	case SceneList::SPLASH:
-		S3DManager::bufferList = new LIST_BUFFER[SPLASH_S3D_LIST::SPLASH_S3D_MAX];
-		bufferMax = SPLASH_S3D_LIST::SPLASH_S3D_MAX;
-		break;
-	case SceneList::TITLE:
-		S3DManager::bufferList = new LIST_BUFFER[TITLE_S3D_LIST::TITLE_S3D_MAX];
-		bufferMax = TITLE_S3D_LIST::TITLE_S3D_MAX;
-		break;
-	case SceneList::TUTORIAL:
-		S3DManager::bufferList = new LIST_BUFFER[TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX];
-		for (int i = 0; i < TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX; i++)
-		{
-			S3DManager::bufferList[i].buffer = { 0 };
-
-			FILE *fp = nullptr;
-			fp = fopen(S3D_PATH_LIST_TAIL(tutorial, [i]), "rb");
-			S3DManager::bufferList[i].wavFile = LoadWavChunk(fp);
-
-			S3DManager::bufferList[i].buffer.pAudioData = (BYTE*)S3DManager::bufferList[i].wavFile.data.waveData;
-			S3DManager::bufferList[i].buffer.AudioBytes = S3DManager::bufferList[i].wavFile.data.waveSize;
-			S3DManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
-
-			fclose(fp);
-		}
-		bufferMax = TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX;
-		break;
-	case SceneList::CREDIT:
-		bufferMax = CREDIT_S3D_LIST::CREDIT_S3D_MAX;
-		break;
-	case SceneList::GAME:
-		S3DManager::bufferList = new LIST_BUFFER[GAME_S3D_LIST::GAME_S3D_MAX];
-		for (int i = 0; i < GAME_S3D_LIST::GAME_S3D_MAX; i++)
-		{
-			S3DManager::bufferList[i].buffer = { 0 };
-
-			FILE *fp = nullptr;
-			fp = fopen(S3D_PATH_LIST_TAIL(game, [i]), "rb");
-			S3DManager::bufferList[i].wavFile = LoadWavChunk(fp);
-
-			S3DManager::bufferList[i].buffer.pAudioData = (BYTE*)S3DManager::bufferList[i].wavFile.data.waveData;
-			S3DManager::bufferList[i].buffer.AudioBytes = S3DManager::bufferList[i].wavFile.data.waveSize;
-			S3DManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
-
-			fclose(fp);
-		}
-		bufferMax = GAME_S3D_LIST::GAME_S3D_MAX;
-		break;
-	case SceneList::RESULT:
-		bufferMax = RESULT_S3D_LIST::RESULT_S3D_MAX;
-		break;
-	case SceneList::NONE_SCENE:
-		bufferMax = 0;
-		break;
-	case SceneList::CREATE:
-		bufferMax = CREATE_S3D_LIST::CREATE_S3D_MAX;
-		break;
-	default:
-		break;
-	}
-#endif
-}
+////===================================================================================================================================
+////【ステージ遷移に合わせて必要なサウンドバッファを用意する】
+////===================================================================================================================================
+//void S3DManager::SwitchAudioBuffer(int scene)
+//{
+//#if(XADUIO2_STATE)
+//	//サウンドディレクトリに設定する
+//	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_S3D);
+//
+//	//解放処理
+//	for (int i = 0; i < S3DManager::bufferMax; i++)
+//	{
+//		SAFE_DELETE_ARRAY(S3DManager::bufferList[i].wavFile.data.waveData);
+//	}
+//	SAFE_DELETE_ARRAY(S3DManager::bufferList);
+//
+//	bufferMax = TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX;
+//	S3DManager::bufferList = new LIST_BUFFER[TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX];
+//	for (int i = 0; i < TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX; i++)
+//	{
+//		S3DManager::bufferList[i].buffer = { 0 };
+//
+//		FILE *fp = nullptr;
+//		fp = fopen(S3D_PATH_LIST_TAIL(tutorial, [i]), "rb");
+//		S3DManager::bufferList[i].wavFile = LoadWavChunk(fp);
+//
+//		S3DManager::bufferList[i].buffer.pAudioData = (BYTE*)S3DManager::bufferList[i].wavFile.data.waveData;
+//		S3DManager::bufferList[i].buffer.AudioBytes = S3DManager::bufferList[i].wavFile.data.waveSize;
+//		S3DManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+//
+//		fclose(fp);
+//	}
+//
+//#endif
+//}
 
 #if(XADUIO2_STATE)
 //===================================================================================================================================

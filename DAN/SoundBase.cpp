@@ -37,10 +37,6 @@ SoundBase::SoundBase()
 	SendDescriptor = { XAUDIO2_SEND_USEFILTER,EndpointVoice };
 	SendList = { 1,&SendDescriptor };
 
-#if _DEBUG
-	//ƒV[ƒ“‚Ì‰Šú‰»
-	scene = SceneList::SPLASH;
-#endif
 #endif
 }
 

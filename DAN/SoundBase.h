@@ -170,7 +170,6 @@ protected:
 	//debug
 #if _DEBUG
 	virtual	void	 outputGUI(void) {};							//ImGUI‚Ö‚Ìo—Í
-	int	scene;												//ƒV[ƒ“
 #endif
 
 };
