@@ -164,7 +164,8 @@
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
-    <ClInclude Include="PlayerUI.h" />
+    <ClInclude Include="Player1UI.h" />
+    <ClInclude Include="Player2UI.h" />
     <ClInclude Include="StatusFrame.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="MapObject.h" />
@@ -305,7 +306,8 @@
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
-    <ClCompile Include="PlayerUI.cpp" />
+    <ClCompile Include="Player1UI.cpp" />
+    <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="MapObject.cpp" />

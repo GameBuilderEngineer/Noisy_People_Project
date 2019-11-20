@@ -6,49 +6,49 @@
 //================================
 //インクルード
 //================================
-#include "PlayerUI.h"
+#include "Player2UI.h"
 
 //================================
 //コンストラクタ
 //================================
-PlayerUI::PlayerUI()
+Player2UI::Player2UI()
 {
-	buttonUiP1 = new ButtonUI;
-	buttonUiP2 = new ButtonUI;
-	hpGuage = new HPguage;
+	buttonUi = new ButtonUI;
+	hpGuage = new HPguageP2;
 	charaIcon = new CharaIcon;
+	hpGuageEmp = new HPguageEmp;
 }
 
 //=================================
 //デストラクタ
 //=================================
-PlayerUI::~PlayerUI()
+Player2UI::~Player2UI()
 {
-	delete buttonUiP1;
-	delete buttonUiP2;
+	delete buttonUi;
 	delete hpGuage;
 	delete charaIcon;
+	delete hpGuageEmp;
 }
 
 //==================================
 //初期化
 //==================================
-void PlayerUI::initialize(Player *player)
+void Player2UI::initialize(Player *player)
 {
 	this->player = player;
-	buttonUiP1->initialize();
-	buttonUiP2->initialize();
+	buttonUi->initialize();
 	hpGuage->initialize();
 	charaIcon->initialize();
+	hpGuageEmp->initialize(basicUiNS::P2);
 }
 
 //==================================
 //描画
 //==================================
-void PlayerUI::render()
+void Player2UI::render()
 {
-	buttonUiP1->renderP1();
-	buttonUiP2->renderP2();
+	buttonUi->renderP1();
+	hpGuageEmp->render();
 	hpGuage->render();
 	charaIcon->render();
 }
@@ -56,7 +56,7 @@ void PlayerUI::render()
 //==================================
 //更新
 //==================================
-void PlayerUI::update()
+void Player2UI::update()
 {
 	//各フラグの獲得
 	skyVisionFlag = player->canDoSkyVision();
@@ -66,10 +66,10 @@ void PlayerUI::update()
 	hp = player->getHp();
 
 	//P1用
-	buttonUiP1->update(skyVisionFlag, 3);
-	buttonUiP1->update(shiftFlag, 2);
-	buttonUiP1->update(shotFlag, 1);
-	buttonUiP1->update(visionFlag, 0);
+	buttonUi->update(skyVisionFlag, 3);
+	buttonUi->update(shiftFlag, 2);
+	buttonUi->update(shotFlag, 1);
+	buttonUi->update(visionFlag, 0);
 
 	hpGuage->update(hp);
 }

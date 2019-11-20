@@ -39,6 +39,8 @@ void TimerFlame::initialize()
 	BasicUI::assingPosition(POSITION_TIMERFLAME);
 	//初期サイズの代入
 	BasicUI::assingSize(WIDTH_TIMERFLAME, HEIGHT_TIMERFLAME);
+	//中心の変更
+	BasicUI::changePivot();
 	//テクスチャの初期化
 	BasicUI::initialize(timerFlame, textureNS::reference(textureNS::UI_TIMERFLAME));
 }

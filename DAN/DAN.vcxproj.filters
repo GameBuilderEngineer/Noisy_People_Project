@@ -304,6 +304,12 @@
     <Filter Include="Game Layer\GameUI\Guage">
       <UniqueIdentifier>{5bb8b9a2-f308-41f1-a6dd-48e0aee779fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\GameUI\PlayerUI">
+      <UniqueIdentifier>{1a6b29fe-98bc-409c-aba0-e4f152286367}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Timer">
+      <UniqueIdentifier>{266e6feb-4d63-4f03-937d-34ed7770dab2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -508,9 +514,6 @@
     <ClCompile Include="UInumber.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="exampleItem.cpp">
       <Filter>Game Layer\Item</Filter>
     </ClCompile>
@@ -646,9 +649,6 @@
     <ClCompile Include="TestEffectOccurrence.cpp">
       <Filter>Game Layer\TestEffect</Filter>
     </ClCompile>
-    <ClCompile Include="TimerFrame.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="ButtonFrame.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
@@ -682,9 +682,6 @@
     <ClCompile Include="CharaIcon.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerUI.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="ButtonUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
@@ -705,6 +702,18 @@
     </ClCompile>
     <ClCompile Include="ElectGuageEmp.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerFrame.cpp">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Player1UI.cpp">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Player2UI.cpp">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -933,9 +942,6 @@
     <ClInclude Include="UInumber.h">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="EffekseerManager.h">
       <Filter>Constant Layer\Effekseer</Filter>
     </ClInclude>
@@ -1071,9 +1077,6 @@
     <ClInclude Include="TestEffectOccurrence.h">
       <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
-    <ClInclude Include="TimerFrame.h">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="ButtonFrame.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
@@ -1110,9 +1113,6 @@
     <ClInclude Include="CharaIcon.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerUI.h">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="ButtonUI.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
@@ -1130,6 +1130,18 @@
     </ClInclude>
     <ClInclude Include="ElectGuageeEmp.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerFrame.h">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Player1UI.h">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Player2UI.h">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

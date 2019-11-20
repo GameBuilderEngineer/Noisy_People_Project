@@ -10,6 +10,7 @@
 #include "HPguage.h"
 #include "HPguageEmp.h"
 #include "Player.h"
+#include "ElectGuageeEmp.h"
 
 //=====================================
 //名前空間
@@ -25,9 +26,7 @@ namespace guageNS
 class Guage:public Player
 {
 public://メンバー変数
-	HPguage  *hpGuage;
-	HPguageEmp *hpGuageEmp;
-	int hp;
+	ElectGuageEmp *electGuageEmp;
 	
 private:
 public://メンバー関数

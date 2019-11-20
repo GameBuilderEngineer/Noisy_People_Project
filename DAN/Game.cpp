@@ -212,9 +212,13 @@ void Game::initialize() {
 	fixedUI = new FixedUI;
 	fixedUI->initialize();
 
-	//プレイヤー周りのUI
-	playerUI = new PlayerUI;
-	playerUI->initialize(&player[gameMasterNS::PLAYER_1P]);
+	//プレイヤー1周りのUI
+	player1UI = new Player1UI;
+	player1UI->initialize(&player[gameMasterNS::PLAYER_1P]);
+
+	//プレイヤー２周りのUI
+	player2UI = new Player2UI;
+	player2UI->initialize(&player[gameMasterNS::PLAYER_2P]);
 
 	//レティクル
 	reticle = new Reticle();
@@ -301,7 +305,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
 	SAFE_DELETE(fixedUI);
-	SAFE_DELETE(playerUI);
+	SAFE_DELETE(player1UI);
+	SAFE_DELETE(player2UI);
 	SAFE_DELETE(ad);
 
 	UninitMoveP();
@@ -462,7 +467,7 @@ void Game::update(float _frameTime) {
 
 
 	//プレイヤー周りのUIの更新
-	playerUI->update();
+	player1UI->update();
 
 	//レティクルの更新
 	reticle->update(frameTime);
@@ -630,8 +635,11 @@ void Game::renderUI() {
 	//固定UIの描画
 	fixedUI->render();
 
-	//プレイヤー周りのUIの描画
-	playerUI->render();
+	//プレイヤー1周りのUIの描画
+	player1UI->render();
+
+	//プレイヤー2周りのUIの描画
+	player2UI->render();
 
 	//レティクルの描画
 	reticle->render2D();

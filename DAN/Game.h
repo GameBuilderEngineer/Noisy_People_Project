@@ -43,7 +43,8 @@
 #include "movep.h"
 
 #include "TelopManager.h"
-#include "PlayerUI.h"
+#include "Player1UI.h"
+#include "Player2UI.h"
 //#include "Text.h"
 
 
@@ -116,7 +117,8 @@ private:
 	Reticle*						reticle;			//レティクル
 	TelopManager*					telopManager;		//テロップマネジャー
 	FixedUI*						fixedUI;			//固定されたUI
-	PlayerUI*						playerUI;			//プレイヤー周りのUI
+	Player1UI*						player1UI;			//プレイヤー周りのUI
+	Player2UI*						player2UI;			//プレイヤー２周りのUI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];

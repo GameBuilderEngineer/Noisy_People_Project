@@ -43,7 +43,7 @@ void HPguageP2::initialize()
 	BasicUI::assingSize(WIDTH_HP_GUAGE, HEIGHT_HP_GUAGE);
 	BasicUI::assingUV(uvCoord1, uvCoord2, uvCoord3, uvCoord4);
 	BasicUI::changePivot();
-	BasicUI::initialize(hpGuage, textureNS::reference(textureNS::UI_HP_GUAGE_P1));
+	BasicUI::initialize(hpGuage, textureNS::reference(textureNS::UI_HP_GUAGE_P2));
 }
 
 //====================================

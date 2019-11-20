@@ -15,9 +15,9 @@
 //==================================
 namespace timerFlameNS
 {
-	const int WIDTH_TIMERFLAME = (1920 * WINDOW_WIDTH / 1920);	//タイマーフレームの横幅
-	const int HEIGHT_TIMERFLAME = (169 * WINDOW_HEIGHT / 1080);	//タイマーフレームの縦幅
-	const D3DXVECTOR3 POSITION_TIMERFLAME = D3DXVECTOR3(960 * WINDOW_WIDTH / 1920, 84 * WINDOW_HEIGHT / 1080, 0);	//タイマーフレームの表示位置(仮)
+	const int WIDTH_TIMERFLAME = (2048 * WINDOW_WIDTH / 1920);	//タイマーフレームの横幅
+	const int HEIGHT_TIMERFLAME = (256 * WINDOW_HEIGHT / 1080);	//タイマーフレームの縦幅
+	const D3DXVECTOR3 POSITION_TIMERFLAME = D3DXVECTOR3(0 * WINDOW_WIDTH / 1920, 0 * WINDOW_HEIGHT / 1080, 0);	//タイマーフレームの表示位置(仮)
 }
 
 //==================================

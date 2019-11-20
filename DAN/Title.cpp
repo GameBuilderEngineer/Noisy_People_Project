@@ -253,6 +253,13 @@ void Title::createGUI()
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Checkbox("Create Scene", &createScene);
 
+	ImGui::Text("controller1 LStick(%.02f,%.02f)", 
+		input->getController()[inputNS::DINPUT_1P]->getLeftStick().x,
+		input->getController()[inputNS::DINPUT_1P]->getLeftStick().y);
+	ImGui::Text("controller1 LStickTrigger(%.02f,%.02f)", 
+		input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().x,
+		input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().y);
+
 	//ツール用シーン
 	if (createScene)
 	{

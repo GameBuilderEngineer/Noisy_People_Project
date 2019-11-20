@@ -62,7 +62,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
 	textureName[UI_RETICLE] = { "Reticle.png" };
 	textureName[UI_DIGITAL_RETICLE] = { "Digi_Reticle.png" };
-	textureName[UI_TIMERFLAME] = { "Time_Frame.png" };
+	textureName[UI_TIMERFLAME] = { "Time_Frame_Left.png" };
 	textureName[UI_BUTTON1] = { "SV.png" };
 	textureName[UI_BUTTON2] = { "shot.png" };
 	textureName[UI_BUTTON3] = { "shift.png" };
@@ -71,7 +71,9 @@ TextureLoader::TextureLoader()
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
 	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };
 	textureName[UI_HP_GUAGE_P1] = { "HPGuage1.png" };
+	textureName[UI_HP_GUAGE_P2] = { "HPGuage2.png" };
 	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
+	textureName[UI_HP_GUAGE_EMP_P2] = { "HPGuage_Emp2.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
 	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Emp1.png" };
 

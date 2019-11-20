@@ -18,8 +18,7 @@ using namespace guageNS;
 //================================
 Guage::Guage()
 {
-	hpGuageEmp = new HPguageEmp;
-	
+	electGuageEmp = new ElectGuageEmp;
 }
 
 //================================
@@ -27,7 +26,8 @@ Guage::Guage()
 //================================
 Guage::~Guage()
 {
-	delete hpGuageEmp;
+	
+	delete electGuageEmp;
 	
 }
 
@@ -36,7 +36,8 @@ Guage::~Guage()
 //================================
 void Guage::initialize()
 {
-	hpGuageEmp->initialize();
+	
+	electGuageEmp->initialize(0);
 	
 }
 
@@ -45,7 +46,8 @@ void Guage::initialize()
 //================================
 void Guage::render()
 {
-	hpGuageEmp->render();
+	
+	electGuageEmp->render();
 	
 }
 
