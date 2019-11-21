@@ -102,9 +102,21 @@ void BasicUI::assingUV(D3DXVECTOR2 uvCoord1, D3DXVECTOR2 uvCoord2, D3DXVECTOR2 u
 //==================================
 // íÜêSà íuÇÃë„ì¸
 //==================================
-void BasicUI::changePivot()
+void BasicUI::changePivot(int pivotType)
 {
-	pivot = SpriteNS::TOP_LEFT;
+	switch (pivotType)
+	{
+	case SpriteNS::TOP_LEFT:
+		pivot = SpriteNS::TOP_LEFT;
+		break;
+	case SpriteNS::TOP_RIGHT:
+		pivot = SpriteNS::TOP_RIGHT;
+		break;
+	default:
+		pivot = SpriteNS::TOP_CENTER;
+		break;
+	}
+	
 }
 
 //==================================

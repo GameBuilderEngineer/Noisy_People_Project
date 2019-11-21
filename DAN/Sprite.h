@@ -22,7 +22,7 @@ namespace SpriteNS
 		CENTER,						// 中心
 		TOP_LEFT,					// 左上頂点
 		TOP_CENTER,					// テロップ表示用頂点
-		TOP_RIGHT,					// 右上頂点（未対応）
+		TOP_RIGHT,					// 染矢作、回転することは考慮してないです
 		BOTTOM_LEFT,				// 左下頂点（未対応）
 		BOTTOM_RIGHT,				// 右下頂点（未対応）
 		PIVOT_MAX

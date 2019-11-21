@@ -31,6 +31,7 @@ namespace basicUiNS
 		PLAYER_TYPE_MAX,
 	};
 
+
 	const float SLIDE_SPEED = 20.0f;		//スライドインの速度
 	const int	CHANGE_SIZE_SPEED = 20;		//サイズ変更の速度
 	const float   CHANGE_ALPHA_SPEED = 155.0f;		//α値の変更速度
@@ -66,7 +67,7 @@ public://メンバー関数
 	void	assingColor(D3DCOLOR col);								//色の代入
 	void	assingSize(int widh, int height);						//サイズの代入
 	void    assingUV(D3DXVECTOR2 uvCoord1, D3DXVECTOR2 uvCoord2, D3DXVECTOR2 uvCoord3, D3DXVECTOR2 uvCoord4);//UV座標の代入
-	void	changePivot();								//中心を左上に変更
+	void	changePivot(int pivotTyp);								//中心を変更
 	void	changePostion(Sprite *sprite,int movetype);//位置変更	
 	void	increaseAlpha(Sprite *sprite,float alpha);//透明度増加
 	void	decreaseAlpha(Sprite *sprite,float alpha);//透明度減少

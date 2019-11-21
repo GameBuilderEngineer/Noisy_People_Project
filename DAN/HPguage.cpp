@@ -23,7 +23,6 @@ HPguage::HPguage()
 	uvCoord2 = D3DXVECTOR2(1.0, 0.0);
 	uvCoord3 = D3DXVECTOR2(0.0, 1.0);
 	uvCoord4 = D3DXVECTOR2(1.0, 1.0);
-	width	 = WIDTH_HP_GUAGE;
 }
 
 //====================================
@@ -42,7 +41,7 @@ void HPguage::initialize()
 	BasicUI::assingPosition(POSITION_HP_GUAGE);
 	BasicUI::assingSize(WIDTH_HP_GUAGE, HEIGHT_HP_GUAGE);
 	BasicUI::assingUV(uvCoord1, uvCoord2, uvCoord3, uvCoord4);
-	BasicUI::changePivot();
+	BasicUI::changePivot(SpriteNS::TOP_LEFT);
 	BasicUI::initialize(hpGuage, textureNS::reference(textureNS::UI_HP_GUAGE_P1));
 }
 

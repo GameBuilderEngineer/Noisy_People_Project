@@ -468,6 +468,7 @@ void Game::update(float _frameTime) {
 
 	//プレイヤー周りのUIの更新
 	player1UI->update();
+	player2UI->update();
 
 	//レティクルの更新
 	reticle->update(frameTime);

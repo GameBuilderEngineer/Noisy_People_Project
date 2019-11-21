@@ -712,6 +712,9 @@
     <ClCompile Include="Player2UI.cpp">
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClCompile>
+    <ClCompile Include="ElectGuage.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1136,6 +1139,9 @@
     </ClInclude>
     <ClInclude Include="Player2UI.h">
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectGuage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

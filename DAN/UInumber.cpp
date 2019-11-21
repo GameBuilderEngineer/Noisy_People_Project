@@ -161,8 +161,7 @@ void UInumber::countUp(int score)
 	if (displayScore < score)
 	{
 		PLAY_PARAMETERS playParameters = { 0 };
-		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::HighPassFilter, 0.75f, 1.0f };
-		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AddTree, false,NULL,false,NULL,true, filterParameters };
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AddTree, false,NULL,false,NULL};
 		SoundInterface::SE->playSound(&playParameters);
 
 		//保存用変数に表示しているスコアと最終的に表示したいスコアの差分を入れる
