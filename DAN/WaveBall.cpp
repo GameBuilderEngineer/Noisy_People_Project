@@ -57,8 +57,8 @@ void WaveBall::draw(void)
 	outLine = new D3DXVECTOR2[outSides + 1];
 	inLine = new D3DXVECTOR2[inSides + 1];
 
-	float Theta;
-	float WedgeAngle;
+	float Theta = NULL;
+	float WedgeAngle = NULL;
 
 	WedgeAngle = (float)((2 * D3DX_PI) / inSides);
 	for (int i = 0; i <= inSides; i++)

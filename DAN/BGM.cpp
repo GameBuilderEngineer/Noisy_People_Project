@@ -144,7 +144,7 @@ void BGMManager::outputGUI(void)
 				ImGui::ProgressBar(playPoint / (float)(tmpBuffer->wavFile.data.waveSize / sizeof(short) / tmpBuffer->wavFile.fmt.fmtChannel));
 
 				//‘¬“x’²®
-				ImGui::Text("%d", ((int)state.SamplesPlayed / 44100));
+				ImGui::Text("%d", ((int)state.SamplesPlayed / tmpBuffer->wavFile.fmt.fmtSampleRate));
 				ImGui::SliderFloat("Speed", &tmpSoundParameters->playParameters.speed, 0.1f, 3.0f);
 
 				if (backUpSpeed != tmpSoundParameters->playParameters.speed)
