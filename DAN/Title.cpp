@@ -61,15 +61,16 @@ void Title::initialize()
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_TITLE, soundNS::METHOD::LOOP);
 
+
 	// Camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	camera->setRelative(D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f));
+	camera->setGaze(D3DXVECTOR3(0, 100, 0));
+	//camera->setRelative(D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f));	※元の値※
+	camera->setRelative(D3DXQUATERNION(0.0f, 150.0f, -180.0f, 0.0f));
 	camera->setRelativeGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 10);
-
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(
 		camera->fieldOfView,
@@ -88,6 +89,12 @@ void Title::initialize()
 
 	//エフェクト（インスタンシング）テスト
 	testEffect = new TestEffect();
+	
+	//タイトルフィールド（テスト）
+	titleField = new Object();
+	titleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	titleFieldRenderer->registerObject(titleField);
+	titleField->initialize(&D3DXVECTOR3(0, 0, 0));
 }
 
 //============================================================================================================================================
@@ -104,6 +111,10 @@ void Title::uninitialize(void)
 	//エフェクト（インスタンシング）テスト
 	SAFE_DELETE(testEffect);
 
+	//タイトルフィールド
+	SAFE_DELETE(titleField);
+	SAFE_DELETE(titleFieldRenderer);
+			
 	// タイトルUI
 	titleUI.uninitialize();
 
@@ -119,6 +130,19 @@ void Title::update(float _frameTime)
 
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
+	
+	//タイトルフィールド（テスト）
+	titleField->update();	//オブジェクト
+	titleFieldRenderer->update();
+
+	// カメラ
+	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
+	//camera[0].update();
+
+	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
+
+	//バーの移動
+	//if(input->wasKeyPressed()
 
 	//エフェクトの再生
 	if (input->wasKeyPressed('1'))
@@ -133,13 +157,38 @@ void Title::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
-
 		updateInput();
 		changeScene(nextScene);
 	}
 
 	//カメラ
 	camera->update();
+	//カメラ回転
+	camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
+	
+	//カメラ移動
+	/*if (input->isKeyDown('W'))
+	{
+		camera->relativeQuaternion.z += 5.0f;
+		camera->gazePosition.z += 5.0f;
+	}
+	if (input->isKeyDown('S'))
+	{
+		camera->relativeQuaternion.z -= 5.0f;
+		camera->gazePosition.z -= 5.0f;
+	}
+	if (input->isKeyDown('A'))
+	{
+		camera->relativeQuaternion.x -= 5.0f;
+		camera->gazePosition.x -= 5.0f;
+	}
+	if (input->isKeyDown('D'))
+	{
+		camera->relativeQuaternion.x += 5.0f;
+		camera->gazePosition.x += 5.0f;
+	}*/
+
+
 }
 
 //============================================================================================================================================
@@ -199,8 +248,24 @@ void Title::render()
 //============================================================================================================================================
 void Title::render3D(Camera _currentCamera)
 {
+
 	//エフェクト（インスタンシング）テスト
 	testEffect->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	
+	//タイトルフィールド（テスト）
+	titleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+
+	// タイトルプレイヤー描画
+	//player[0].toonRender
+	//(
+	//	_direct3D9->device,
+	//	_currentCamera.view,
+	//	_currentCamera.projection,
+	//	_currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::TOON),
+	//	*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+	//	*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+
 }
 
 //============================================================================================================================================

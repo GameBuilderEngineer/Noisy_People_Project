@@ -316,11 +316,11 @@
     <Filter Include="Game Layer\Player\SkyVisionState">
       <UniqueIdentifier>{3defbaa2-c089-4688-8fea-df82a12dc227}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\GameUI\PlayerUI">
-      <UniqueIdentifier>{1a6b29fe-98bc-409c-aba0-e4f152286367}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\GameUI\Timer">
       <UniqueIdentifier>{266e6feb-4d63-4f03-937d-34ed7770dab2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\DebugScene">
+      <UniqueIdentifier>{09a2ad63-61ff-45ec-b780-9fc1dec511e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -741,6 +741,9 @@
     </ClCompile>
     <ClCompile Include="ElectTank.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugScene.cpp">
+      <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1184,6 +1187,9 @@
     </ClInclude>
     <ClInclude Include="ElectTank.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugScene.h">
+      <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
