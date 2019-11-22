@@ -17,6 +17,9 @@
 //#include "SceneEffect.h"
 #include "TitleUI.h"
 
+#include "Object.h"
+#include "StaticMeshRenderer.h"
+
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
@@ -41,8 +44,14 @@ class Title : public AbstractScene
 private:
 	TestEffect* testEffect;
 
+	//フィールド描画実験
+	Object*					titleField;
+	StaticMeshRenderer*		titleFieldRenderer;	
+
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;
+
+	float degree = 1.0f / 10.0f;
 public:
 	Title(void);
 	~Title(void);

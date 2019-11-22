@@ -143,6 +143,10 @@ void Enemy::update(float frameTime)
 		naviMesh->pathSearch(&edgeList, &naviFaceIndex, centralPosition, *movingTarget);
 		destination = *movingTarget;
 	}
+
+
+
+
 	if (shouldAttack)
 	{// çUåÇ
 		shouldAttack = false;

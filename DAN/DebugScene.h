@@ -10,19 +10,20 @@
 #include "ItemManager.h"
 #include "EnemyManager.h"
 #include "Player.h"
+#include "ItemManager.h"
 
 class DebugScene :public AbstractScene
 {
 private: 
 
 	int i;				//ループカウント
-
+	std::vector<Tree*> treeList;
 	Object* testField;
 	StaticMeshRenderer* testFieldRenderer;
 	TreeManager* treeManager;
 	ItemManager* itemManager;
 	EnemyManager* enemyManager;
-	Player* player;
+	Player* player; 
 public:
 	DebugScene();
 	~DebugScene();
