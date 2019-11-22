@@ -758,13 +758,19 @@ void Game::collisions()
 	//プレイヤーとフィールド
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
+		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
+		D3DXMATRIX matrix = testField->matrixWorld;
 		//地面方向補正処理
-		player[i].grounding(testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		player[i].grounding(mesh,matrix);
 		//壁ずり処理
 		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
 		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
 		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
 		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		//狙撃レイ/姿勢更新/
+		player[i].updateAiming(mesh, matrix);
+		player[i].updatePostureByAiming();
+		player[i].updateShooting(mesh, matrix);
 	}
 
 	//ビジョン|スカイビジョン状態の時

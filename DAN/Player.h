@@ -255,8 +255,8 @@ private:
 	// 物理
 	float						friction;						// 摩擦係数
 	Ray							ray;							// レイ
-	LPD3DXMESH					attractorMesh;					//重力（引力）発生メッシュ
-	D3DXMATRIX*					attractorMatrix;				//重力（引力）発生オブジェクトマトリックス
+	//LPD3DXMESH					attractorMesh;					//重力（引力）発生メッシュ
+	//D3DXMATRIX*					attractorMatrix;				//重力（引力）発生オブジェクトマトリックス
 
 	// 汎用
 	LPDIRECT3DDEVICE9			device;							// Direct3Dデバイス
@@ -348,9 +348,9 @@ public:
 
 
 	//シューティング
-	void updateAiming();										//照準方向を更新する
+	void updateAiming(LPD3DXMESH mesh, D3DXMATRIX matrix);		//照準方向を更新する
 	void updatePostureByAiming();								//狙撃方向へ姿勢を向ける
-	void updateShooting();										//狙撃位置の更新
+	void updateShooting(LPD3DXMESH mesh, D3DXMATRIX matrix);										//狙撃位置の更新
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI

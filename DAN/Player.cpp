@@ -163,15 +163,15 @@ void Player::update(float frameTime)
 	state->controlCamera();
 
 	//照準方向の更新
-	updateAiming();
+	//updateAiming();
 	//姿勢制御:狙撃方向へ向く
-	updatePostureByAiming();
+	//updatePostureByAiming();
 
 	// オブジェクトの更新
 	Object::update();
 
 	//狙撃方向の更新
-	updateShooting();
+	//updateShooting();
 }
 
 //===================================================================================================================================
@@ -295,7 +295,7 @@ bool Player::grounding(LPD3DXMESH mesh, D3DXMATRIX matrix)
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
 	gravityRay.update(center, gravityDirection);
 
-	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
+	bool hit = gravityRay.rayIntersect(mesh, matrix);
 
 	if (hit && size.y/2 + difference >= gravityRay.distance)
 	{
@@ -404,8 +404,8 @@ void Player::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXM
 	//※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 
 	//レイ判定を行うために必要な要素をセット
-	attractorMesh = _attractorMesh;
-	attractorMatrix = _attractorMatrix;
+	//attractorMesh = _attractorMesh;
+	//attractorMatrix = _attractorMatrix;
 }
 
 //===================================================================================================================================
@@ -749,13 +749,13 @@ bool Player::cancelSkyVision()
 //===================================================================================================================================
 //【射撃方向を更新する】
 //===================================================================================================================================
-void Player::updateAiming()
+void Player::updateAiming(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
 	aimingRay.update(camera->position + camera->getDirectionZ(), camera->getDirectionZ());
 	//照射位置の算出
 	collideDistance = MAX_DISTANCE;
 	aimingPosition = aimingRay.start + (aimingRay.direction * collideDistance);
-	if (aimingRay.rayIntersect(attractorMesh, *attractorMatrix) && aimingRay.distance <= MAX_DISTANCE)
+	if (aimingRay.rayIntersect(mesh, matrix) && aimingRay.distance <= MAX_DISTANCE)
 	{
 		if (collideDistance > aimingRay.distance)
 		{
@@ -781,14 +781,14 @@ void Player::updatePostureByAiming()
 //===================================================================================================================================
 //【発射位置の更新】
 //===================================================================================================================================
-void Player::updateShooting()
+void Player::updateShooting(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
 	//発射位置の更新
 	launchPosition = center + axisZ.direction*radius;
 	//狙撃レイの更新
 	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
 	shootingRay.update(launchPosition, shootingRay.direction);
-	if (shootingRay.rayIntersect(attractorMesh, *attractorMatrix) &&
+	if (shootingRay.rayIntersect(mesh, matrix) &&
 		shootingRay.distance < MAX_DISTANCE)
 	{
 		//衝突時、狙撃レイの衝突位置にレティクル位置を置く
