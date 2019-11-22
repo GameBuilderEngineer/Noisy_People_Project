@@ -37,7 +37,7 @@ Title::Title(void)
 	playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGM‚Ìİ’è
 
 	//Ä¶
-	SoundInterface::BGM->playSound(&playParameters);
+	SoundInterface::BGM->playSound(&playParameters[1]);
 
 	//‰Šú‰»
 	tmpVolume = 1.0f;

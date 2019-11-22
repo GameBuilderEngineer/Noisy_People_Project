@@ -68,9 +68,9 @@ public:
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
 
+	float tmpVolume = 0;
 #ifdef _DEBUG
 	virtual void createGUI() override;
 
-	float tmpVolume = 0;
 #endif
 };

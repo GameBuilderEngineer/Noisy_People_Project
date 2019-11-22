@@ -733,12 +733,6 @@
     <ClCompile Include="TimerFrame.cpp">
       <Filter>Game Layer\GameUI\Timer</Filter>
     </ClCompile>
-    <ClCompile Include="Player1UI.cpp">
-      <Filter>Game Layer\GameUI\PlayerUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Player2UI.cpp">
-      <Filter>Game Layer\GameUI\PlayerUI</Filter>
-    </ClCompile>
     <ClCompile Include="ElectGuage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
@@ -750,6 +744,12 @@
     </ClCompile>
     <ClCompile Include="WaveBall.cpp">
       <Filter>Constant Layer\Sound\WaveBall</Filter>
+    </ClCompile>
+    <ClCompile Include="Player1UI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Player2UI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1182,12 +1182,6 @@
     <ClInclude Include="TimerFrame.h">
       <Filter>Game Layer\GameUI\Timer</Filter>
     </ClInclude>
-    <ClInclude Include="Player1UI.h">
-      <Filter>Game Layer\GameUI\PlayerUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Player2UI.h">
-      <Filter>Game Layer\GameUI\PlayerUI</Filter>
-    </ClInclude>
     <ClInclude Include="ElectGuage.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
@@ -1199,6 +1193,12 @@
     </ClInclude>
     <ClInclude Include="WaveBall.h">
       <Filter>Constant Layer\Sound\WaveBall</Filter>
+    </ClInclude>
+    <ClInclude Include="Player1UI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Player2UI.h">
+      <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
