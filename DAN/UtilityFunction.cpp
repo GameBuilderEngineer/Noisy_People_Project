@@ -112,3 +112,96 @@ float UtilityFunction::wrap(float x, float low, float high)
 	const float n = std::fmod(x - low,high - low);
 	return (n >= 0) ? (n + low) : (n + high);
 }
+
+//===================================================================================================================================
+//【視錐台カリング】
+//===================================================================================================================================
+bool UtilityFunction::culling(D3DXVECTOR3 center, float radius, D3DXMATRIX view, float angle, float  nearClip, float farClip, float aspect)
+{
+	D3DXPLANE VFLeftPlane, VFRightPlane, VFTopPlane, VFBottomPlane;
+	//まず、ジオメトリの位置ベクトルをワールドからビュー空間に変換
+	D3DXVECTOR3 position;
+	D3DXVec3TransformCoord(&position, &center, &view);
+
+	//左右、上下の平面を計算
+	{
+		D3DXVECTOR3 p1, p2, p3;
+		//左面
+		p1 = D3DXVECTOR3(0, 0, 0);
+		p2.x = -farClip * ((FLOAT)tan(angle / 2)*aspect);
+		p2.y = -farClip * (FLOAT)tan(angle / 2);
+		p2.z = farClip;
+		p3.x = p2.x;
+		p3.y = -p2.y;
+		p3.z = p2.z;
+		D3DXPlaneFromPoints(&VFLeftPlane, &p1, &p2, &p3);
+		//右面
+		p1 = D3DXVECTOR3(0, 0, 0);
+		p2.x = farClip * ((FLOAT)tan(angle / 2)*aspect);
+		p2.y = farClip * (FLOAT)tan(angle / 2);
+		p2.z = farClip;
+		p3.x = p2.x;
+		p3.y = -p2.y;
+		p3.z = p2.z;
+		D3DXPlaneFromPoints(&VFRightPlane, &p1, &p2, &p3);
+		//上面
+		p1 = D3DXVECTOR3(0, 0, 0);
+		p2.x = -farClip * ((FLOAT)tan(angle / 2)*aspect);
+		p2.y = farClip * (FLOAT)tan(angle / 2);
+		p2.z = farClip;
+		p3.x = -p2.x;
+		p3.y = p2.y;
+		p3.z = p2.z;
+		D3DXPlaneFromPoints(&VFTopPlane, &p1, &p2, &p3);
+		//下面
+		p1 = D3DXVECTOR3(0, 0, 0);
+		p2.x = farClip * ((FLOAT)tan(angle / 2)*aspect);
+		p2.y = -farClip * (FLOAT)tan(angle / 2);
+		p2.z = farClip;
+		p3.x = -p2.x;
+		p3.y = p2.y;
+		p3.z = p2.z;
+		D3DXPlaneFromPoints(&VFBottomPlane, &p1, &p2, &p3);
+	}
+
+	//6つの平面とジオメトリ境界球をチェック
+	{
+		//ニアクリップ面について
+		if ((position.z + radius) < nearClip)
+		{
+			return false;
+		}
+		//ファークリップ面について
+		if ((position.z - radius) > farClip)
+		{
+			return false;
+		}
+		//左クリップ面について
+		FLOAT Distance = (position.x * VFLeftPlane.a) + (position.z * VFLeftPlane.c);
+		if (Distance > radius)
+		{
+			return false;
+		}
+		//右クリップ面について
+		Distance = (position.x * VFRightPlane.a) + (position.z * VFRightPlane.c);
+		if (Distance > radius)
+		{
+			return false;
+		}
+		//上クリップ面について
+		Distance = (position.y * VFTopPlane.b) + (position.z * VFTopPlane.c);
+		if (Distance > radius)
+		{
+			return false;
+		}
+		//下クリップ面について
+		Distance = (position.y * VFBottomPlane.b) + (position.z * VFBottomPlane.c);
+		if (Distance > radius)
+		{
+			return false;
+		}
+	}
+
+	return true;
+
+}

@@ -70,6 +70,8 @@ public:
 		result = min(result, high);
 		return result;
 	}
+	//視錐台カリング
+	static bool culling(D3DXVECTOR3 center, float radius, D3DXMATRIX view, float angle, float  nearClip, float farClip, float aspect);
 
 	//【変換】極座標->直交座標
 	//Polar Coordinates Transformation

@@ -159,7 +159,7 @@ void Game::initialize() {
 	ocean = new Ocean();
 
 	//アニメションキャラの初期化
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.006f, 0.006f, 0.006f), true);
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 
 
 	// サウンドの再生
@@ -715,6 +715,48 @@ void Game::collisions()
 	{
 		windManager->windCollision(&player[i]);
 	}
+
+	//プレイヤーとフィールド
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		//地面方向補正処理
+		player[i].grounding(testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		//壁ずり処理
+		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+	}
+
+	//ビジョン|スカイビジョン状態の時
+	//プレイヤー[シフトレイ]とデジタルツリー
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		if (player[i].getState() == playerNS::VISION||
+			player[i].getState() == playerNS::SKY_VISION)
+		{
+			std::vector<Tree*> list = treeManager->getTreeList();
+			for (int num = 0; num < list.size(); num++)
+			{
+				//デジタルツリーの場合
+				if (list[num]->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+
+				//カリング処理
+				//カメラ視野角内の場合
+				D3DXVECTOR3 center = list[num]->center;
+				float radius = list[num]->radius;
+				if (!UtilityFunction::culling(
+					center, radius, camera[i].view, camera[i].fieldOfView,
+					camera[i].nearZ, camera[i].farZ, camera[i].aspect))continue;
+
+				//シフトレイの更新
+				LPD3DXMESH mesh = list[num]->getMesh();
+				D3DXMATRIX matrix = list[num]->matrixWorld;
+				player[i].collideShiftRay(mesh,matrix);
+			}
+		}
+	}
+
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();

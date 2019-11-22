@@ -94,15 +94,20 @@ namespace playerNS{
 	};
 
 	const OperationKeyTable NON_CONTOROL = {
-		VK_ESCAPE,		//FRONT
-		VK_ESCAPE,		//BACK
-		VK_ESCAPE,		//RIGHT
-		VK_ESCAPE,		//LEFT
-		VK_ESCAPE,		//RESET
-		VK_ESCAPE,		//DASH
-		VK_ESCAPE,		//JUMP
-		VK_ESCAPE,		//ReverseCameraAxisX
-		VK_ESCAPE,		//ReverseCameraAxisY
+		VK_ESCAPE,					//FRONT
+		VK_ESCAPE,					//BACK
+		VK_ESCAPE,					//RIGHT
+		VK_ESCAPE,					//LEFT
+		VK_ESCAPE,					//RESET
+		VK_ESCAPE,					//DASH
+		VK_ESCAPE,					//JUMP:右クリック
+		VK_ESCAPE,					//VISION
+		VK_ESCAPE,					//CANCEL_VISION
+		VK_ESCAPE,					//SKY_VISION
+		VK_ESCAPE,					//CANCEL_SKY_VISION
+		VK_ESCAPE,					//DIGITAL_SHIFT:左クリック
+		VK_ESCAPE,					//ReverseCameraAxisX
+		VK_ESCAPE,					//ReverseCameraAxisY
 	};
 
 	const BYTE BUTTON_VISION		= virtualControllerNS::Y;
@@ -136,23 +141,25 @@ namespace playerNS{
 
 
 	//CameraParameter
-	const D3DXVECTOR3 CAMERA_GAZE			= D3DXVECTOR3(1.0f,2.0f,0.0f);
+	const D3DXVECTOR3 CAMERA_GAZE			= D3DXVECTOR3(1.0f,1.5f,0.0f);
 
 	// Physics
 	const float MOVE_ACC					= 27.0f;								// 移動加速度
 	const float MOVE_ACC_WHEN_NOT_GROUND	= MOVE_ACC / 8.5f;						// 空中移動加速度
 	const float STOP_SPEED					= 0.5f;									// 移動停止速度
 	const float MAX_SPEED					= 6.0f;									// 移動停止速度
+	const float MAX_SLIP					= 10.0f;									// 移動停止速度
 	const float FALL_SPEED_MAX				= 60.0f;								// 落下最高速度
-	const float MOVE_FRICTION				= 0.93f;								// 地面摩擦係数
+	const float MOVE_FRICTION				= 1.3f;								// 地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									// 壁ずり摩擦係数
 	const float GROUND_FRICTION				= 0.25;									// 着地摩擦係数
 	const float GRAVITY_FORCE				= 9.8f;									// 重力
 	const float JUMP_SPEED					= 6.0f;									// ジャンプ初速
+	const float JUMP_TIME					= 0.3f;									// ジャンプ初速
 	const float JUMP_CONTROL_SPEED			= 1.0f;									// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION			= 2.0f;									// ダッシュ倍率
 	// Another
-	const float DIFFERENCE_FIELD			= 0.05f;								// フィールド補正差分
+	const float DIFFERENCE_FIELD			= 0.1f;								// フィールド補正差分
 	const float CAMERA_SPEED				= 1.0f;									// カメラの速さ
 	
 	//Shooting
@@ -268,10 +275,10 @@ private:
 	BulletManager*				bulletManager;					//バレットマネージャー
 
 	//デジタルアクション
-	//bool						isShifting;						//デジタルシフト中フラグ
-	//float						shiftTimer;						//デジタルシフトタイマー
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
+	bool						enableShift;					//シフトが可能
+
 
 	//再生パラメータ
 	PLAY_PARAMETERS shiftStartSE;
@@ -281,6 +288,9 @@ private:
 	PLAY_PARAMETERS visionFinishSE;
 	PLAY_PARAMETERS skyVisionStartSE;
 	PLAY_PARAMETERS skyVisionFinishSE;
+
+	//debug
+	float dot;
 
 public:
 	Player();
@@ -298,6 +308,17 @@ public:
 	void grounding();											// 接地処理
 	void wallScratch();											// 壁ずり処理
 
+	bool grounding(LPD3DXMESH mesh, D3DXMATRIX matrix);
+	
+	//めり込み補正
+	//Ray ray：補正方向レイ（取得した法線方向に補正される）
+	//float distance：補正距離
+	//LPD3DXMESH mesh：衝突対象メッシュ
+	//D3DXMATRIX matrix：衝突対象行列
+	bool insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
+	bool insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
+
+
 	// 物理
 	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition,
 		LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
@@ -313,14 +334,18 @@ public:
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 	void jump();												//ジャンプ
-	float dash();
+	float dash();												//ダッシュ
 	bool shot();												//弾を打つ
+
+	//デジタルアクション
 	bool digitalShift();										//デジタルシフト
 	bool executionDigitalShift();								//デジタルシフト実行
 	bool skyVision();											//スカイビジョン
 	bool vision();												//ビジョン
-	bool cancelSkyVision();											//スカイビジョン
-	bool cancelVision();												//ビジョン
+	bool cancelSkyVision();										//スカイビジョン
+	bool cancelVision();										//ビジョン
+	void collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix);	//シフトレイとの衝突
+
 
 	//シューティング
 	void updateAiming();										//照準方向を更新する
@@ -340,6 +365,7 @@ public:
 	void	setValidOperation(int value);						//有効操作の設定
 	void	enableOperation(int value);							//操作を有効にする
 	void	disableOperation(int value);						//操作を無効にする
+	
 
 	//getter
 	int getHp();												// HPの取得

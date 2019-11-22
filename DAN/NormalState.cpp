@@ -66,8 +66,8 @@ void NormalState::operation()
 //===================================================================================================================================
 void NormalState::physics()
 {
-	player->grounding();				// 接地処理
 	player->physicalBehavior();			// 物理挙動
+	player->grounding();				// 接地処理
 	player->updatePhysics(frameTime);	// 物理の更新
 }
 

@@ -227,7 +227,7 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 	if (collisionCylinder(player, enemy))
 	{
 		horizontalCorrection(player, enemy, 0.5f);
-		enemy->setIsHitPlayer(true);
+		//enemy->setIsHitPlayer(true);
 		return true;
 	}
 	return false;

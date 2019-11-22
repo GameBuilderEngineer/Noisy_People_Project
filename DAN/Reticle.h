@@ -31,7 +31,7 @@ namespace reticleNS
 	const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2, 0.0f);
 	const D3DXVECTOR3 POSITION2 = D3DXVECTOR3((float)WINDOW_WIDTH / 4 *3, (float)WINDOW_HEIGHT / 2, 0.0f);
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);
+	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 128);
 
 	class Reticle3D :public InstancingBillboardNS::Instance
 	{

@@ -200,11 +200,11 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	
 	//デバイスデータストリームにメッシュの各バッファをバインド
 	device->SetStreamSource(0, vertexBuffer,	0, sizeof(InstancingBillboardNS::Vertex));		//頂点バッファ
-	device->SetStreamSource(1, positionBuffer,	0, sizeof(D3DXVECTOR3));								//位置バッファ
-	device->SetStreamSource(2, colorBuffer,		0, sizeof(D3DXCOLOR));									//カラーバッファ
-	device->SetStreamSource(3, uvBuffer,		0, sizeof(D3DXVECTOR2));								//UVバッファ
-	device->SetStreamSource(4, rotationBuffer,	0, sizeof(D3DXVECTOR3));								//回転バッファ
-	device->SetStreamSource(5, scaleBuffer,		0, sizeof(D3DXVECTOR2));								//スケールバッファ
+	device->SetStreamSource(1, positionBuffer,	0, sizeof(D3DXVECTOR3));						//位置バッファ
+	device->SetStreamSource(2, colorBuffer,		0, sizeof(D3DXCOLOR));							//カラーバッファ
+	device->SetStreamSource(3, uvBuffer,		0, sizeof(D3DXVECTOR2));						//UVバッファ
+	device->SetStreamSource(4, rotationBuffer,	0, sizeof(D3DXVECTOR3));						//回転バッファ
+	device->SetStreamSource(5, scaleBuffer,		0, sizeof(D3DXVECTOR2));						//スケールバッファ
 
 	//インデックスバッファをセット
 	device->SetIndices(indexBuffer);

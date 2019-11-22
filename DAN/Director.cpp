@@ -341,6 +341,7 @@ void Director::render() {
 	{
 		if (fader->nowProcessing())
 		{
+
 			fader->setRenderTexture();
 			d3d->clear(imgui->getClearColor());
 			scene->render();
@@ -356,6 +357,7 @@ void Director::render() {
 			scene->render();
 		}
 		imgui->render();
+
 		d3d->endScene();
 	}
 	d3d->present(); 

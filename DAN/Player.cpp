@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/24
-// [更新日]2019/11/17
+// [更新日]2019/11/21
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -19,6 +19,8 @@
 //===================================================================================================================================
 using namespace playerNS;
 
+//[基本処理]
+#pragma region Basic
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -43,7 +45,7 @@ Player::Player()
 	isVisionAble		= true;
 	isSkyVisionAble		= true;
 	isShiftAble			= true;
-
+	enableShift			= false;
 }
 
 //===================================================================================================================================
@@ -195,8 +197,9 @@ void Player::transState(int next)
 	SAFE_DELETE(state);
 	state = nextState;
 }
+#pragma endregion
 
-// [衝突]
+//[衝突]
 #pragma region BodyCollision
 //===================================================================================================================================
 // 接地処理
@@ -204,10 +207,13 @@ void Player::transState(int next)
 void Player::grounding()
 {
 
-	onGroundBefore = onGround;
-	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	gravityRay.update(center, gravityDirection);
-	
+
+	//※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+	//※ [変更予定]                                         ※
+	//※ メッシュとの衝突判定はフィールドだけではないので、 ※
+	//※ 関数で複数のオブジェクトと接地判定ができるようにす ※
+	//※ る                                                 ※
+	//※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 	//bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
 	//groundNormal = gravityRay.normal;
 
@@ -216,6 +222,39 @@ void Player::grounding()
 	//	onGround = false;
 	//	return;
 	//}
+
+	
+	if (onGround)
+	{
+		if (onJump)
+		{
+			// 重力方向に落ちるときだけ移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+			//if (speed.y < 0) speed = slip(speed, gravityRay.normal);
+		}
+		else {
+			dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
+			if (dot > 60.0f / 90.0f) {
+				speed = slip(speed, gravityRay.normal);
+			}
+			else {
+				speed = slip(speed, gravityRay.normal);
+			}
+			//	
+			//	D3DXVECTOR3 speedDirection;
+			//	D3DXVec3Normalize(&speedDirection, &speed);
+			//	
+			//	speedDirection = slip(speedDirection, gravityRay.normal);
+			//	D3DXVec3Normalize(&speedDirection, &speedDirection);
+			//
+			//	if (speedDirection.y > 0)
+			//	{
+			//		speedDirection *= -1.0f;
+			//	}
+			//
+			//	speed = D3DXVec3Length(&speed)*speedDirection;
+			//}
+		}
+	}
 
 	//if (radius + difference >= gravityRay.distance)
 	//{// プレイヤーは地上に接地している
@@ -244,6 +283,30 @@ void Player::grounding()
 	//}
 }
 
+bool Player::grounding(LPD3DXMESH mesh, D3DXMATRIX matrix)
+{
+	onGroundBefore = onGround;
+	if (onJump)
+	{
+		onGround = false;
+		return false;
+	}
+
+	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	gravityRay.update(center, gravityDirection);
+
+	bool hit = gravityRay.rayIntersect(attractorMesh, *attractorMatrix);
+
+	if (hit && size.y/2 + difference >= gravityRay.distance)
+	{
+		onGround = true;
+		position += gravityRay.direction*(gravityRay.distance - size.y / 2);
+		return true;
+	}
+
+	onGround = false;
+	return false;
+}
 
 //===================================================================================================================================
 // 壁ずり処理
@@ -251,7 +314,7 @@ void Player::grounding()
 void Player::wallScratch()
 {
 	//スピード
-	ray.update(center, D3DXVECTOR3(speed.x,0, speed.z));
+	//ray.update(center, D3DXVECTOR3(speed.x,0, speed.z));
 	// 壁ずり処理
 	//if (ray.rayIntersect(attractorMesh, *attractorMatrix)&& radius/2 >= ray.distance)
 	//{
@@ -290,9 +353,35 @@ void Player::insetCorrection()
 	//	position += ray.normal*(radius / 2 - ray.distance);
 	//}
 }
+
+bool Player::insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix)
+{
+	using namespace objectNS;
+	switch (axisID)
+	{
+	case AXIS_X:	return insetCorrection(axisX,			distance, mesh, matrix); break;
+	case AXIS_RX:	return insetCorrection(reverseAxisX,	distance, mesh, matrix); break;
+	case AXIS_Y:	return insetCorrection(axisY,			distance, mesh, matrix); break;
+	case AXIS_RY:	return insetCorrection(reverseAxisY,	distance, mesh, matrix); break;
+	case AXIS_Z:	return insetCorrection(axisZ,			distance, mesh, matrix); break;
+	case AXIS_RZ:	return insetCorrection(reverseAxisZ,	distance, mesh, matrix); break;
+	}
+	return false;
+}
+bool Player::insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix)
+{
+	if (!ray.rayIntersect(mesh, matrix))return false;
+
+	if (distance >= ray.distance)
+	{
+		position += ray.normal*(distance - ray.distance);
+		return true;
+	}
+	return false;
+}
 #pragma endregion
 
-// [物理]
+//[物理]
 #pragma region PhysicsMovement
 //===================================================================================================================================
 //【重力設定(レイ)】
@@ -305,25 +394,18 @@ void Player::insetCorrection()
 //===================================================================================================================================
 void Player::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
+
+	//※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+	//※ [変更予定]                                         ※
+	//※ 重力方向は一様のためこの関数自体機能する必要なし   ※
+	//※ バレットにも便宜的に使用しているためバレットの対応 ※
+	//※ が完了するまでは実行する。                         ※
+	//※                                                    ※
+	//※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
 	//レイ判定を行うために必要な要素をセット
 	attractorMesh = _attractorMesh;
 	attractorMatrix = _attractorMatrix;
-
-	//重力線を作成
-	//D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	//gravityRay.initialize(position, gravityDirection);		//重力レイの初期化
-
-	//レイ判定
-	//if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
-	//{//重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
-		//postureControl(axisY.direction, gravityRay.normal, 1.0f);
-	//	setGravity(-gravityRay.normal, GRAVITY_FORCE);
-	//}
-	//else
-	//{//衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
-		//postureControl(axisY.direction, gravityDirection, 1.0f);
-	//	setGravity(gravityDirection, GRAVITY_FORCE);
-	//}
 }
 
 //===================================================================================================================================
@@ -335,10 +417,10 @@ void Player::physicalBehavior()
 	// 加速度処理
 	//------------
 	// 重力処理
- 	//D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-	//gravityRay.update(position, gravityDirection);
+ 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	gravityRay.update(position, gravityDirection);
 	// 空中で重力をかける（地上では重力をかけない）
-	//setGravity(gravityDirection, GRAVITY_FORCE);
+	setGravity(gravityDirection, GRAVITY_FORCE);
 
 	// 地上摩擦係数
 	if (onGround)
@@ -361,30 +443,49 @@ void Player::updatePhysics(float frameTime)
 {
 	// 加速度の影響を速度に与える
 	speed += acceleration * frameTime;
-	//if (onGround) {
-		//摩擦方向を算出
-		//D3DXVECTOR3 frictionDirection;
-		//D3DXVec3Normalize(&frictionDirection,&speed);
-		// 速度に摩擦の影響を与える
-		//speed -= frictionDirection * MOVE_FRICTION*GRAVITY_FORCE * frameTime;
-		//速度に最大速度で制限をかける
-		//if (D3DXVec3Length(&speed) > MAX_SPEED)
-		//{
-		//	speed = MAX_SPEED * frictionDirection;
-		//}
-		//wallScratch();					//壁ずり
-		//position += speed* frameTime;	// 速度の影響を位置に与える
-	//}
-	//else {
-		//wallScratch();						//壁ずり
-		position += speed * frameTime;		// 速度の影響を位置に与える
-	//}
-	//insetCorrection();//移動後のめり込み補正
-}
 
+	if (onGround) {
+		//摩擦方向を算出
+		D3DXVECTOR3 frictionDirection;
+		D3DXVec3Normalize(&frictionDirection,&speed);
+
+		dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
+		if (dot > 60.0f / 90.0f) {
+			// 速度に摩擦の影響を与える
+			speed -= frictionDirection * MOVE_FRICTION * GRAVITY_FORCE * frameTime;
+		}
+		else {
+			// 速度に摩擦の影響を与える
+			speed -= frictionDirection * MOVE_FRICTION * GRAVITY_FORCE  * frameTime;
+
+			//斜面滑りベクトル
+			D3DXVECTOR3 slipVector;
+			D3DXVec3Normalize(&slipVector, &slip(D3DXVECTOR3(0, -1, 0), gravityRay.normal));
+			if (D3DXVec3Length(&speed) < MAX_SLIP * dot)
+			{
+				speed += slipVector * MOVE_ACC * frameTime;
+			}
+		}
+	}
+
+	D3DXVECTOR3 ySpeed			= D3DXVECTOR3(0.0f,speed.y,0.0f);
+	D3DXVECTOR3 yAcceleration	= D3DXVECTOR3(0.0f, acceleration.y, 0.0f);
+
+	D3DXVECTOR3 xzSpeed			= D3DXVECTOR3(speed.x,0.0f, speed.z);
+	D3DXVECTOR3 xzAcceleration	= D3DXVECTOR3(acceleration.x, 0.0f, acceleration.z);
+
+	//速度に最大速度で制限をかける
+	if (D3DXVec3Length(&xzSpeed) > MAX_SPEED)
+	{
+		speed -= xzAcceleration * frameTime;
+	}
+
+	position += speed * frameTime;		// 速度の影響を位置に与える
+
+}
 #pragma endregion
 
-// [操作]
+//[操作]
 #pragma region Operation
 //===================================================================================================================================
 //【移動操作】
@@ -427,11 +528,12 @@ void Player::jumpOperation()
 {
 	if (input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP))
 	{
-		if (jumping == false) onJump = true;	// ジャンプ踏切フラグをオンにする
+		jump();
 	}
+
 	if (input->getMouseRButton() || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))
 	{
-		jump();
+
 	}
 }
 
@@ -444,6 +546,7 @@ void Player::controlCamera(float frameTime)
 	//操作軸反転操作
 	if (input->wasKeyPressed(keyTable.reverseCameraX))reverseValueXAxis *= -1;
 	if (input->wasKeyPressed(keyTable.reverseCameraY))reverseValueYAxis *= -1;
+
 	//マウス操作
 	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
 	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
@@ -467,7 +570,7 @@ void Player::controlCamera(float frameTime)
 }
 #pragma endregion
 
-// [アクション]
+//[アクション]
 #pragma region Action
 //===================================================================================================================================
 //【移動】
@@ -480,26 +583,25 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	if (operationDirection.x == 0 && operationDirection.y == 0)return;//入力値が0以下ならば移動しない
 	isExecutingMoveOperation = true;
 
-	//Y軸方向への成分を削除する
-	D3DXVECTOR3 front = slip(cameraAxisZ, axisY.direction);
-	D3DXVECTOR3 right = slip(cameraAxisX, axisY.direction);
-	D3DXVec3Normalize(&front, &front);//正規化
-	D3DXVec3Normalize(&right, &right);//正規化
+//Y軸方向への成分を削除する
+D3DXVECTOR3 front = slip(cameraAxisZ, axisY.direction);
+D3DXVECTOR3 right = slip(cameraAxisX, axisY.direction);
+D3DXVec3Normalize(&front, &front);//正規化
+D3DXVec3Normalize(&right, &right);//正規化
 
-	//操作方向をカメラのXZ方向に準拠した移動ベクトルへ変換する
-	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
+//操作方向をカメラのXZ方向に準拠した移動ベクトルへ変換する
+D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 
-	if (onGround)
-	{
-		acceleration = moveDirection * MOVE_ACC * dash();
-	}
-	else
-	{
-		acceleration.x += moveDirection.x * MOVE_ACC_WHEN_NOT_GROUND;
-		acceleration.z += moveDirection.z * MOVE_ACC_WHEN_NOT_GROUND;
-	}
+if (onGround)
+{
+	acceleration = moveDirection * MOVE_ACC * dash();
 }
-
+else
+{
+	acceleration.x += moveDirection.x * MOVE_ACC_WHEN_NOT_GROUND;
+	acceleration.z += moveDirection.z * MOVE_ACC_WHEN_NOT_GROUND;
+}
+}
 
 //===================================================================================================================================
 //【ダッシュ】
@@ -517,15 +619,10 @@ float Player::dash()
 //===================================================================================================================================
 void Player::jump()
 {
-	if (onGround && onJump)
+	if (onGround && !onJump)
 	{
+		onJump = true;	// ジャンプ踏切フラグをオンにする
 		speed += axisY.direction * JUMP_SPEED;	// 初速を加える
-		jumping = true;
-	}
-
-	if (speed.y > 0)
-	{
-		acceleration.y += JUMP_CONTROL_SPEED;		// 上昇中は入力継続で飛距離が伸びる
 	}
 }
 
@@ -534,7 +631,7 @@ void Player::jump()
 //===================================================================================================================================
 bool Player::shot()
 {
-	if (!input->getMouseLButton() && 
+	if (!input->getMouseLButton() &&
 		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return false;
 	bulletManager->launch(shootingRay);
 	return true;
@@ -547,14 +644,10 @@ bool Player::digitalShift()
 {
 	if (!input->getMouseLButton() &&
 		!input->getController()[infomation.playerType]->isButton(BUTTON_DIGITA_SHIFT))return false;
-	//シフトレイをカメラからのレイとして更新
-	shiftRay.update(camera->position, camera->getDirectionZ());
+
 	//シフトレイが衝突していた場合
-	if (shiftRay.rayIntersect(attractorMesh, *attractorMatrix))
+	if (enableShift)
 	{
-		//デジタルシフト開始
-		shiftLine.start = position;
-		shiftLine.end = shiftRay.start + shiftRay.direction*shiftRay.distance;
 		transState(DIGITAL_SHIFT);
 	}
 
@@ -563,12 +656,49 @@ bool Player::digitalShift()
 }
 
 //===================================================================================================================================
+//【シフトレイとの衝突処理】
+//===================================================================================================================================
+void Player::collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix)
+{
+
+	//シフトレイをカメラからのレイとして更新
+	shiftRay.update(camera->position, camera->getDirectionZ());
+
+	//シフトレイと衝突&&最短距離更新
+	if (shiftRay.rayIntersect(mesh, matrix))
+	{
+		if (enableShift == false)
+		{
+			//シフトを有効にする
+			enableShift = true;
+			//デジタルシフトを行うラインを設定
+			shiftLine.start = position;
+			shiftLine.end = shiftLine.start + shiftRay.direction*shiftRay.distance;
+		}
+		else if (shiftRay.distance < Base::between2VectorLength(shiftLine.start, shiftLine.end))
+		{
+			//デジタルシフトを行うラインを設定
+			shiftLine.start = position;
+			shiftLine.end = shiftLine.start + shiftRay.direction*shiftRay.distance;
+		}
+	}
+	else {
+		//シフトを無効にする
+		enableShift = false;
+	}
+
+}
+
+
+//===================================================================================================================================
 //【デジタルシフト実行】
 //===================================================================================================================================
 bool Player::executionDigitalShift()
 {
+	if (!enableShift)return false;
 	//デジタルシフト開始
 	position = shiftLine.end;
+	enableShift = false;
 	return true;
 }
 
@@ -635,6 +765,7 @@ void Player::updateAiming()
 	}
 
 }
+
 //===================================================================================================================================
 //【射撃方向へ姿勢を向ける】
 //===================================================================================================================================
@@ -671,7 +802,7 @@ void Player::updateShooting()
 
 #pragma endregion
 
-// [デバッグ]
+//[デバッグ]
 #pragma region Debug
 //===================================================================================================================================
 //【ImGUIへの出力】
@@ -679,9 +810,6 @@ void Player::updateShooting()
 void Player::outputGUI()
 {
 #ifdef _DEBUG
-
-	//ImGui::Text(sceneName.c_str());
-
 	if (ImGui::CollapsingHeader("PlayerInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
@@ -694,6 +822,19 @@ void Player::outputGUI()
 		ImGui::Text("BulletRmaining [%d/%d]",
 			bulletManager->getRemaining(),bulletNS::MAGAZINE_NUM);						//残弾数
 		ImGui::Text("ReloadTime:%.02f", bulletManager->getReloadTime());				//リロード時間
+		ImGui::Text("dot:%.02f", dot);
+
+		ImGui::Text("[shiftRay] start(%.02f,%.02f,%.02f):distance(%.02f)",
+			shiftRay.start.x, shiftRay.start.y, shiftRay.start.z,
+			shiftRay.distance);
+
+		ImGui::Text("[shiftLine] start(%.02f,%.02f,%.02f):end(%.02f,%.02f,%.02f)",
+			shiftLine.start.x, shiftLine.start.y, shiftLine.start.z,
+			shiftLine.end.x, shiftLine.end.y, shiftLine.end.z);
+
+		ImGui::Text(enableShift ? "enableShift:On":"enableShift:Off");
+		
+		ImGui::Text(onGround ? "onGround:On":"onGround:Off");
 
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
@@ -715,9 +856,9 @@ void Player::outputGUI()
 //===================================================================================================================================
 void Player::reset()
 {
-	position = START_POSITION[infomation.playerType];
-	speed = acceleration = D3DXVECTOR3(0, 0, 0);
-	quaternion = D3DXQUATERNION(0, 0, 0, 1);
+	position	= START_POSITION[infomation.playerType];
+	speed		= acceleration = D3DXVECTOR3(0, 0, 0);
+	quaternion	= D3DXQUATERNION(0, 0, 0, 1);
 	axisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(1, 0, 0));
 	axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));
 	axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));
@@ -728,6 +869,8 @@ void Player::reset()
 }
 #pragma endregion
 
+//[Setter]
+#pragma region Setter
 //===================================================================================================================================
 //【setter】
 //===================================================================================================================================
@@ -763,7 +906,10 @@ void Player::disableOperation(int value)
 {
 	validOperation &= ~value;
 }
+#pragma endregion
 
+//[Getter]
+#pragma region Getter
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
@@ -789,4 +935,5 @@ bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
 bool Player::getOnGround() { return onGround; }
 D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
 LPD3DXMESH Player::getMesh() { return box->mesh; };
+#pragma endregion
 
