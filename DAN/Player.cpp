@@ -117,7 +117,6 @@ void Player::update(float frameTime)
 	onJump = false;
 	acceleration *= 0.0f;
 	state->update(frameTime);
-	isExecutingShot = false;
 
 
 	//デジタルシフト更新
@@ -544,7 +543,6 @@ void Player::shot()
 	if (!input->getMouseLButton() && 
 		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return;
 	bulletManager->launch(shootingRay);
-	isExecutingShot = true;
 
 }
 
@@ -674,11 +672,10 @@ D3DXVECTOR3* Player::getAiming() { return &aimingPosition; }
 Bullet* Player::getBullet(int i) { return bulletManager->getBullet(i); }
 int Player::getShootingNum() { return bulletManager->getNum(); }
 bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
-bool Player::getWhetherShot() { return isExecutingShot; }
 bool Player::getOnGround() { return onGround; }
 D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
 LPD3DXMESH Player::getMesh() { return box->mesh; };
-
+BulletManager*  Player::getBulletManager() { return bulletManager; }
 
 
 //(仮)通常状態

@@ -102,6 +102,14 @@ void Tree::update(float frameTime)
 		state = tmp;
 		onTransState = false;
 	}
+
+	// ●●●中込追記●●●
+	if (treeData.hp <= 0)
+	{
+		treeData.isAttaked = false;
+		// アナログツリーに戻し、
+		// 緑化範囲を枯れ木に戻してください！
+	}
 	
 	// オブジェクトのアップデート
 	leaf.update();

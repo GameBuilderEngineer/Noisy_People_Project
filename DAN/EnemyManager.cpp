@@ -3,8 +3,6 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
-// 更新日 : 2019/11/14 【菅野 樹】:debugRender実行
-//-----------------------------------------------------------------------------
 #include <cassert>
 #include "EnemyManager.h"
 #include "ImguiManager.h"
@@ -16,7 +14,7 @@ using namespace enemyNS;
 // 初期化
 //=============================================================================
 void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
-	D3DXMATRIX* _attractorMatrix, Player* _player)
+	D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player)
 {
 	nextID = 0;								// 次回発行IDを0に初期化
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
@@ -25,6 +23,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	// 接地フィールドとプレイヤーをセット
 	attractorMesh = _attractorMesh;
 	attractorMatrix = _attractorMatrix;
+	gameMaster = _gameMaster;
 	player = _player;
 
 	// 描画オブジェクトの作成
@@ -176,6 +175,9 @@ enemyNS::EnemyData* EnemyManager::createEnemyData(enemyNS::ENEMYSET enemySetting
 	enemyData.defaultState = enemySetting.defaultState;
 	enemyData.defaultPosition = enemySetting.defaultPosition;
 	enemyData.defaultDirection = enemySetting.defaultDirection;
+	enemyData.numRoute = enemySetting.numRoute;
+	//enemyData.patrolRoute = new D3DXVECTOR3[enemyData.numRoute];
+	//memcpy(enemyData.patrolRoute, (const void*)enemySetting.numRoute, sizeof(D3DXVECTOR3) * enemyData.numRoute);
 	enemyData.setUp();
 	// リストに追加
 	enemyDataList.insertFront(enemyData);
@@ -196,6 +198,7 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 
 	enemyNS::ConstructionPackage constructionPackage;
 	constructionPackage.enemyData = enemyData;
+	constructionPackage.gameMaster = gameMaster;
 	constructionPackage.player = player;
 	constructionPackage.attractorMesh = attractorMesh;
 	constructionPackage.attractorMatrix = attractorMatrix;
@@ -421,7 +424,8 @@ void EnemyManager::outputGUI()
 			enemyNS::TIGER,
 			stateMachineNS::PATROL,
 			*player->getPosition(),
-			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			0
 		};
 		EnemyData* p = createEnemyData(tmp);
 		createEnemy(p);

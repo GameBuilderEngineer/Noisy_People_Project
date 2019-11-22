@@ -12,7 +12,11 @@ using namespace stateMachineNS;
 //=============================================================================
 Wolf::Wolf(ConstructionPackage constructionPackage): Enemy(constructionPackage)
 {
+	// サイズを設定後にオブジェクト⇒姿勢制御の順で初期化
 	setSize(D3DXVECTOR3(1.0f, 0.87f, 1.0f));
+	Object::initialize(&position);
+	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 }
 
 
@@ -71,7 +75,6 @@ void::Wolf::patrol(float frameTime)
 		isDestinationLost = false;	// 目的地はロストしていない
 		searchPath();
 	}
-
 }
 
 

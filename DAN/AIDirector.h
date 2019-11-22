@@ -39,10 +39,48 @@ namespace aiNS
 	};
 
 	// イベント発生の評価値定数（下記値を上回ればイベントが実行される）
-	const float WEIGHT_SPAWN = 0.8f;						// SPAWN_ENEMY_AROUND_PLAYER
-	const float WEIGHT_RESPAWN = 0.7f;						// RESPAWN_ENEMY
-	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.9f;			// ENEMY_ATTACKS_TREE
+	const float WEIGHT_SPAWN = 0.8f;				// SPAWN_ENEMY_AROUND_PLAYER
+	const float WEIGHT_RESPAWN = 0.7f;				// RESPAWN_ENEMY
+	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.9f;	// ENEMY_ATTACKS_TREE
+
+	// ツリー襲撃イベントの例外となる木のID
+	const int EXCEPTION_TREE_MAX = 3;// ●
+	const int EXCEPTION_TREE_ID[EXCEPTION_TREE_MAX] =
+	{
+		10000,
+		10001,
+		10002
+	};
+
+	// すぽーん
+	const float SPAWN_ADJUST_HEIGHT = 0.3f;
+
+
+	// enemySensor()
+	const float RECENT_SECOND = 30.0f;				// 最近と見なす秒数（直近○秒）
+	const float MANDATORY_SPAWN_INTERVAL = 20.0f;	// スポーンのための最低経過間隔秒
+
+	struct AttackCandidate
+	{
+		int treeID;
+		float distanceToNearPlayer;
+		float score;
+	};
+
+	//typedef struct OperationSettingOfSpawn
+
+	// ENEMY_ATTACKS_TREE
+	typedef struct OperationSettingOfEnemyAttaksTree
+	{
+		int treeID;
+		int numEnemy;
+		enemyNS::ENEMY_TYPE enemyType[3];
+	} ENMY_ATK_SET;
 	
+	//--------------------------------------------------------
+	// メタAI解析データ
+	// Sensor, EventMaker, OperationGeneratorで共有し利用する
+	//--------------------------------------------------------
 	struct AnalyticalData
 	{
 		// プレイヤー
@@ -59,6 +97,10 @@ namespace aiNS
 		int numDigital;										// デジタルツリーの数
 		int numGreen;										// 緑化されている木の数	
 		int numBeingAttackedTree;							// 襲撃されている木の数
+		float* treeDistanceFromPlayer[2];
+
+		// フィールド
+		float fieldRadius;									// フィールド半径サイズ
 
 		// イベント発生の評価値（0.0～1.0）
 		float weightSpawn[gameMasterNS::PLAYER_NUM];		// SPAWN_ENEMY_AROUND_PLAYER
@@ -79,12 +121,13 @@ class AIDirector
 private:
 	aiNS::AnalyticalData data;			// 解析データ
 
-	Sensor sensor;						// センサーモジュール
-	EventMaker eventMaker;				// イベント生成モジュール
-	OperationGenerator opeGenerator;	// イベント実行モジュール
+	//Sensor sensor;						// センサーモジュール
+	//EventMaker eventMaker;				// イベント生成モジュール
+	//OperationGenerator opeGenerator;	// イベント実行モジュール
 	int frameCnt;						// フレームカウンタ
 
 	GameMaster* gameMaster;				// ゲーム管理オブジェクト
+	LPD3DXMESH fieldMesh;				// フィールドメッシュ
 	Player* player;						// プレイヤー
 	EnemyManager* enemyManager;			// エネミー管理オブジェクト
 	TreeManager* treeManager;			// ツリー管理オブジェクト
@@ -92,11 +135,24 @@ private:
 	TelopManager* telopManager;			// テロップ管理オブジェクト
 
 public:
+	//●
+	Sensor sensor;						// センサーモジュール
+	EventMaker eventMaker;				// イベント生成モジュール
+	OperationGenerator opeGenerator;	// イベント実行モジュール
+
+	AIDirector();
+	~AIDirector();
+
+	// 初期化
+	void initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Player* _player,
+		EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager,
+		TelopManager* _telopManager);
+
+	// 終了処理
+	void uninitialize();
+	
 	// 実行
 	void run();
-	// 初期化
-	void initialize(GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager,
-		TreeManager* _treeManager, ItemManager* _itemManager, TelopManager* _telopManager);
 	// ImGuiに表示
 	void outputGUI();
 };

@@ -22,6 +22,7 @@ namespace bulletNS{
 	const int		MAGAZINE_NUM	= 8;		//弾数
 	const float		EXIST_TIME		= 1.0f;		//存在時間
 	const int		DIGITAL_POWER	= 8;		//デジタルパワー
+	const float		LAUNCH_FACT_TIME = 0.333f;	//発射事実残存時間
 }
 
 //===================================================================================================================================
@@ -63,6 +64,8 @@ private:
 	float					intervalTimer;	//次の発射までのインターバル時間
 	float					reloadTimer;	//リロード時間
 	bool					reloading;		//リロード中
+	bool					isLaunched;		//発射したか
+	float					launchFactTime;	//発射事実残存時間（発射した事実をゲーム中に残す時間.更新頻度の低いエネミーセンサにのせるため）
 
 	PLAY_PARAMETERS shotSE;
 	PLAY_PARAMETERS reroadSE;
@@ -92,4 +95,5 @@ public:
 	float getReloadTime();
 	Bullet* getBullet(int i);
 	int getNum();
+	bool getIsLaunched();
 };

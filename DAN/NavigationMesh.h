@@ -12,6 +12,7 @@
 #include "MeshData.h"
 #include "AStar.h"
 #include "PathFollowing.h"
+#include <cassert>
 
 
 //=============================================================================
@@ -67,8 +68,23 @@ public:
 	// ステアリング（移動ベクトルの作成）
 	navigationMeshNS::NAVIRESULT steering(D3DXVECTOR3* out, DWORD* faceIndex,
 		D3DXVECTOR3 _position, LinkedList<meshDataNS::Index2>* _edgeList);
+	// 接地チェック
+	bool isHitGrounding(float* distance, DWORD* faceIndex, D3DXVECTOR3 _position);
 	// Getter
-	static NavigationMesh* getNaviMesh() { return pointer; }
+	static NavigationMesh* getNaviMesh()
+	{
+		assert(pointer != NULL);
+		return pointer;
+	}
+	D3DXVECTOR3 getGravityDirection()
+	{
+		return gravityDirection;
+	}
+
+	MeshData* getMeshData()
+	{
+		return &meshData;
+	}
 
 #ifdef _DEBUG
 	void dumpEdgeList();

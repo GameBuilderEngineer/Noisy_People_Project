@@ -231,7 +231,7 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 		{
 			enemy->stopAttacking();
 			player->damage(enemyNS::ATTACK_DAMAGE[enemy->getEnemyData()->type]);
-			player->speed += enemy->speed * 5.0f;
+			player->speed += enemy->speed;
 		}
 		return true;
 	}

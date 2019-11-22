@@ -13,8 +13,8 @@ Usage : 10
 [3]Type : 1
 Usage : 5
 
-[4]Type : 17
-Usage : 0
+[4]Type : 2
+Usage : 6
 
 [5]Type : 2
 Usage : 7

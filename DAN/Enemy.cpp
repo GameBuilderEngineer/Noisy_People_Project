@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "ImguiManager.h"
 #include "Sound.h"
+#include <cassert>
 using namespace enemyNS;
 using namespace stateMachineNS;
 
@@ -14,7 +15,6 @@ int Enemy::numOfEnemy = 0;			// エネミーの総数
 #ifdef _DEBUG
 int Enemy::debugEnemyID = -1;		// デバッグするエネミーのID
 #endif//_DEBUG
-
 
 #pragma region [Basic Process]
 //=============================================================================
@@ -26,6 +26,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 
 	enemyData = constructionPackage.enemyData;
 	staticMesh = constructionPackage.staticMesh;
+	gameMaster = constructionPackage.gameMaster;
 	player = constructionPackage.player;
 	attractorMesh = constructionPackage.attractorMesh;
 	attractorMatrix = constructionPackage.attractorMatrix;
@@ -35,7 +36,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	axisZ.direction = enemyData->defaultDirection;
 
 	// ステートマシンの初期化
-	stateMachine.initialize(enemyData->defaultState);
+	stateMachine.initialize(enemyData->state);
 
 	// ブラックボードの初期化
 	ZeroMemory(isNoticingPlayer, sizeof(bool) * gameMasterNS::PLAYER_NUM);
@@ -44,6 +45,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	attackTarget = NULL;
 	attentionDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	isPayingNewAttention = false;
+	nextIndexOfRoute = 0;
 
 	// センサーの初期化
 	canSense = false;
@@ -70,7 +72,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	isArraved = false;
 	movingTime = 0.0f;
-	isDestinationLost = true;
+	isDestinationLost = false;
 	onJump = false;
 	jumping = false;
 
@@ -84,8 +86,12 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	friction = 1.0f;
 
 	// サウンドの初期化
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		footStepsParameters[i] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::S3D_GAME_FOOTSTEP_02, true ,NULL,true, i};
+	}
 
-	// オブジェクト初期化
+	// オブジェクト初期化(initialize()は派生クラス)
 	onGravity = true;
 	radius = sphereCollider.getRadius();
 	{// オブジェクトタイプと衝突対象の指定
@@ -93,7 +99,24 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 		treeCell.type = ENEMY;
 		treeCell.target = PLAYER | ENEMY | BULLET | TREE;
 	}
-	Object::initialize(&position);
+
+	// 初期ステートごとのセットアップ
+	switch (enemyData->state)
+	{
+	case CHASE:
+		isNoticingPlayer[gameMasterNS::PLAYER_1P] = true;
+		isNoticingPlayer[gameMasterNS::PLAYER_2P] = true;
+		break;
+	case PATROL:
+		isDestinationLost = true;
+		break;
+	case REST:
+		break;
+	case ATTACK_TREE:
+		break;
+	case DIE:
+		break;
+	}
 
 #ifdef _DEBUG
 #ifdef RENDER_SENSOR
@@ -116,16 +139,6 @@ Enemy::~Enemy()
 	}
 
 	numOfEnemy--;
-}
-
-
-//=============================================================================
-// 更新処理
-//=============================================================================
-void Enemy::update(float frameTime)
-{
-	preprocess(frameTime);
-	postprocess(frameTime);
 }
 
 
@@ -175,9 +188,37 @@ void Enemy::preprocess(float frameTime)
 	acceleration *= 0.0f;	// 加速度を初期化
 
 #ifdef _DEBUG
+	if (enemyData->state == CHASE)
+	{
+		// 追跡ステートで両プレイヤーに認識されていない状態はエラー
+		assert(isNoticingPlayer[gameMasterNS::PLAYER_1P] || isNoticingPlayer[gameMasterNS::PLAYER_2P]);
+	}
 #ifdef RENDER_SENSOR
 	debugSensor();
 #endif
+#endif
+
+#ifdef _DEBUG
+	if (enemyData->enemyID == debugEnemyID)
+	{
+		controlCamera(frameTime);
+		moveOperation();
+		enemyData->state = stateMachineNS::ENEMY_STATE::REST;
+
+		if (input->wasKeyPressed('8'))
+		{
+			destination = player->position;
+			movingTarget = &destination;
+		}
+		if (input->wasKeyPressed('7'))
+		{
+			searchPath();
+		}
+		if (input->isKeyDown('M'))
+		{
+			move(frameTime);
+		}
+	}
 #endif
 }
 
@@ -209,6 +250,13 @@ void Enemy::postprocess(float frameTime)
 	enemyData->state = stateNumber;
 	enemyData->position = position;
 	enemyData->direction = axisZ.direction;
+	// 自動破棄を行うか確認
+	checkAutoDestruction();
+
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	footsteps(player[i].position, i);
+	//}
 }
 #pragma endregion
 
@@ -241,6 +289,14 @@ void Enemy::searchPath()
 {
 	canSearch = false;
 	isArraved = false;
+
+	if (edgeList != NULL)
+	{
+		// エッジリストの破棄
+		edgeList->terminate();
+		SAFE_DELETE(edgeList);
+	}
+
 	naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	destination = *movingTarget;
 }
@@ -336,7 +392,7 @@ bool Enemy::earSensor(int playerType)
 
 	// プレイヤーの銃声を聞き取れる距離か調べる
 	if (distanceToPlayer[playerType] < NOTICEABLE_DISTANCE_PLAYER[enemyData->type] * SHOT_SOUND_SCALE &&
-		player[playerType].getWhetherShot())
+		player[playerType].getBulletManager()->getIsLaunched())
 	{// 銃声を聞き取れた
 		return true;
 	}
@@ -629,7 +685,8 @@ void Enemy::prepareRest()
 //=============================================================================
 void Enemy::prepareAttackTree()
 {
-
+	setAttackTarget(enemyData->targetTree);
+	setMovingTarget(enemyData->targetTree->getPosition());
 }
 
 
@@ -659,7 +716,6 @@ void Enemy::chase(float frameTime)
 		setPlayerChaseTarget();
 		searchPath();
 	}
-
 
 	move(frameTime);
 }
@@ -704,7 +760,19 @@ void Enemy::rest(float frameTime)
 //=============================================================================
 void Enemy::attackTree(float frameTime)
 {
+	if (canSense)
+	{
+		sensor();
+	}
 
+	if (canSearch)
+	{
+		//setPlayerChaseTarget();
+		searchPath();
+	}
+
+
+	move(frameTime);
 }
 
 
@@ -714,13 +782,41 @@ void Enemy::attackTree(float frameTime)
 void Enemy::die(float frameTime)
 {
 	enemyData->isAlive = false;
+	enemyData->deadTime = gameMaster->getGameTime();
 }
 #pragma endregion
 
 
 #pragma region [Other]
 //=============================================================================
-// 適切なプレイヤーを追跡ターゲットに設定する
+// リスポーンと破棄を行うか自己判定
+//=============================================================================
+void Enemy::reset()
+{
+	if (isDestinationLost)
+	{
+		position = enemyData->position;
+		axisZ.direction = enemyData->defaultDirection;
+		enemyData->state = enemyData->defaultState;
+	}
+
+}
+
+
+//=============================================================================
+// 自動破棄を行うか確認
+//=============================================================================
+void Enemy::checkAutoDestruction()
+{
+	if (position.y <= AUTO_DESTRUCTION_HEIGHT)
+	{// 島の下に落下した場合
+		enemyData->isAlive = false;
+	}
+}
+
+
+//=============================================================================
+// 適切なプレイヤーをターゲットに設定する
 //=============================================================================
 void Enemy::setPlayerChaseTarget()
 {
@@ -772,6 +868,24 @@ void Enemy::setDebugDestination()
 
 
 //=============================================================================
+// 巡回路リングバッファの更新
+//=============================================================================
+void Enemy::updatePatrolRoute()
+{
+	if (onGround && isArraved)
+	{// 到着していたら次の座標に移動ターゲットを更新する
+		nextIndexOfRoute %= enemyData->numRoute;
+		movingTarget = &enemyData->patrolRoute[nextIndexOfRoute];
+	}
+
+	if (isDestinationLost)
+	{//●
+
+	}
+}
+
+
+//=============================================================================
 // 足音の処理
 //=============================================================================
 void Enemy::footsteps(D3DXVECTOR3 playerPos, int playerID)
@@ -783,7 +897,7 @@ void Enemy::footsteps(D3DXVECTOR3 playerPos, int playerID)
 		volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
 	}
 
-	SoundInterface::S3D->SetVolume(playParameters, volume);
+	SoundInterface::S3D->SetVolume(footStepsParameters[playerID], volume);
 }
 #pragma endregion
 
@@ -834,6 +948,11 @@ void Enemy::setAttention(D3DXVECTOR3 setting)
 void Enemy::setMovingTarget(D3DXVECTOR3* _target)
 {
 	movingTarget = _target;
+}
+
+void Enemy::setAttackTarget(Object* _target)
+{
+	attackTarget = _target;
 }
 #pragma endregion
 

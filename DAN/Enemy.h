@@ -13,7 +13,7 @@
 #include "StateMachine.h"
 #include "Sound.h"
 #include "SoundBase.h"
-
+#include "Tree.h"
 
 //=============================================================================
 // ビルドスイッチ
@@ -122,9 +122,9 @@ namespace enemyNS
 	// エネミーのプレイヤー記憶時間テーブル
 	const float PLAYER_MEMORIZED_TIME[TYPE_MAX] =
 	{
-		4.0f,		// WOLF
-		4.0f,		// TIGER
-		4.0f,		// BEAR
+		14.0f,		// WOLF
+		14.0f,		// TIGER
+		14.0f,		// BEAR
 	};
 
 	// エネミーの移動加速度テーブル
@@ -156,6 +156,8 @@ namespace enemyNS
 	const float JUMP_CONTROL_SPEED = 1.0f;				// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION = 2.0f;				// ダッシュ倍率
 	const float CAMERA_SPEED = 1.0f;					// カメラの速さ
+	const int PATOROL_ROUTE_MAX = 8;					// 警戒ステート時の巡回座標最大数
+	const float AUTO_DESTRUCTION_HEIGHT = -100.0f;		// 自動破棄される高さ
 
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
@@ -163,11 +165,13 @@ namespace enemyNS
 	//-----------------------------------------------------------------
 	typedef struct EnemyInitialSettingData
 	{
-		int enemyID;					// 識別番号(0..*)
-		int type;						// エネミー種別
-		int defaultState;				// 初期ステート	
-		D3DXVECTOR3 defaultPosition;	// 初期座標
-		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+		int enemyID;									// 識別番号(0..*)
+		int type;										// エネミー種別
+		int defaultState;								// 初期ステート	
+		D3DXVECTOR3 defaultPosition;					// 初期座標
+		D3DXVECTOR3 defaultDirection;					// 初期正面方向
+		int numRoute;									// 警戒ステート時の巡回座標の数
+		D3DXVECTOR3 patrolRoute[PATOROL_ROUTE_MAX];		// 警戒ステート時の巡回座標
 	} ENEMYSET;
  
 	//--------------------------------------------------------------------------
@@ -184,10 +188,14 @@ namespace enemyNS
 		D3DXVECTOR3 defaultPosition;	// 初期座標
 		D3DXVECTOR3 direction;			// 正面方向
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+		int numRoute;					// 警戒ステート時の巡回座標の数
+		D3DXVECTOR3* patrolRoute;		// 警戒ステート時の巡回座標
+		Tree* targetTree;				// 攻撃対象ツリー
 		int hp;							// HP
 		float deadTime;					// 撃退時刻
 		bool isAlive;					// 生存フラグ
 
+		//~EnemyData() { SAFE_DELETE_ARRAY(patrolRoute); }
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
 		void setUp()
 		{
@@ -200,11 +208,14 @@ namespace enemyNS
 		}
 	};
 
+	//----------------------------------------------
 	// コンストラクタ引数に渡す初期化用データセット
+	//----------------------------------------------
 	struct ConstructionPackage
 	{
 		StaticMesh* staticMesh;
 		EnemyData* enemyData;
+		GameMaster* gameMaster;
 		Player* player;
 		LPD3DXMESH	attractorMesh;
 		D3DXMATRIX*	attractorMatrix;
@@ -247,6 +258,7 @@ protected:
 	enemyNS::EnemyData* enemyData;					// エネミーデータ
 	static int numOfEnemy;							// エネミーの総数
 	StaticMesh* staticMesh;							// メッシュ情報
+	GameMaster* gameMaster;							// ゲーム管理オブジェクト
 	Player* player;									// プレイヤー
 	LPD3DXMESH	attractorMesh;						// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;					// 重力（引力）発生オブジェクトマトリックス
@@ -256,9 +268,10 @@ protected:
 	bool isNoticingPlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識フラグ
 	float noticedTimePlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識時間
 	D3DXVECTOR3* movingTarget;						// 移動ターゲット
-	Player* attackTarget;							// 攻撃対象プレイヤー
+	Object* attackTarget;							// 攻撃対象（プレイヤー,ツリー）
 	D3DXVECTOR3 attentionDirection;					// 注目方向
 	bool isPayingNewAttention;						// 新規注目フラグ
+	int nextIndexOfRoute;							// 警戒ステート時の次の巡回座標（リングバッファ添え字）
 
 	// センサー
 	bool canSense;									// センサー実行可能フラグ
@@ -301,7 +314,7 @@ protected:
 
 	// サウンド
 	PLAY_PARAMETERS playParameters;
-	PLAY_PARAMETERS footStepsSetting;
+	PLAY_PARAMETERS footStepsParameters[gameMasterNS::PLAYER_NUM];
 
 	//------------------
 	// アクションクエリ
@@ -358,10 +371,16 @@ protected:
 	//--------
 	// その他
 	//--------
+	//
+	void reset();
+	// 自動破棄を行うか確認
+	void checkAutoDestruction();
 	// 適切なプレイヤーを追跡ターゲットに設定する
 	void setPlayerChaseTarget();
 	// デバッグ用目的地設定
 	void setDebugDestination();
+	// 巡回路リングバッファの更新
+	void updatePatrolRoute();
 	// 足音の処理
 	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 
@@ -372,7 +391,7 @@ public:
 	Enemy(enemyNS::ConstructionPackage constructionPackage);
 	~Enemy();
 	// 更新処理
-	virtual void update(float frameTime);
+	virtual void update(float frameTime) = 0;
 	// 事前処理
 	virtual void preprocess(float frameTime);
 	// 事後処理
@@ -411,6 +430,8 @@ public:
 	void setAttention(D3DXVECTOR3 setting);
 	// 移動ターゲットを設定
 	void setMovingTarget(D3DXVECTOR3* _target);
+	// 攻撃ターゲットを設定
+	void setAttackTarget(Object* _target);
 
 #ifdef _DEBUG
 	//-----------

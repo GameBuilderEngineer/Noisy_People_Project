@@ -45,12 +45,10 @@ Game::Game()
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL, true, filterParameters };
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL,true, filterParameters };
-	
 
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
-	
 }
 
 //===================================================================================================================================
@@ -177,10 +175,14 @@ void Game::initialize() {
 	//開発中広告
 	ad = new Advertisement();
 
+	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
+	naviMesh->initialize();
+
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), player);
-
+	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player);
+	
 	// ツリー
 	treeManager = new TreeManager;
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
@@ -205,12 +207,6 @@ void Game::initialize() {
 	telopManager = new TelopManager;
 	telopManager->initialize();
 
-	// AI
-	aiDirector = new AIDirector;
-	aiDirector->initialize(gameMaster, player, enemyManager, treeManager, itemManager, NULL);
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
-	naviMesh->initialize();
-
 	//固定されたUI
 	fixedUI = new FixedUI;
 	fixedUI->initialize();
@@ -231,41 +227,46 @@ void Game::initialize() {
 	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
-	//// エネミーをランダムに設置する
-	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	//{
-	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-	//	pos -= D3DXVECTOR3(200, 0, 240);
-	//	enemyNS::ENEMYSET tmp =
-	//	{
-	//		enemyManager->issueNewEnemyID(),
-	//		rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
-	//		stateMachineNS::PATROL,
-	//		pos,
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-	//	};
-	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-	//	enemyManager->createEnemy(p);
-	//}
+	// エネミーをランダムに設置する
+	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		pos -= D3DXVECTOR3(200, 0, 240);
+		enemyNS::ENEMYSET tmp =
+		{
+			enemyManager->issueNewEnemyID(),
+			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
+			stateMachineNS::PATROL,
+			pos,
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+		enemyManager->createEnemy(p);
+	}
 
 	// ツリーをランダムに設置する
 	treeNS::TreeData treeData;
-	treeData.treeID = treeManager->issueNewTreeID();
 	treeData.hp = 0;
 	treeData.type = treeNS::ANALOG_TREE;
 	treeData.size = treeNS::STANDARD;
 	treeData.greenState = treeNS::DEAD;
 	treeData.model = treeNS::B_MODEL;
+	treeData.isAttaked = false;
 	for (int i = 0; i < 50; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
 		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		treeData.treeID = treeManager->issueNewTreeID();
+
 		
 		treeManager->createTree(treeData);
 	}
 
-
+	// メタAI（メタAIはツリーの数が確定した後に初期化する）
+	aiDirector = new AIDirector;
+	aiDirector->initialize(gameMaster, testFieldRenderer->getStaticMesh()->mesh,
+		player, enemyManager, treeManager, itemManager, telopManager);
 	
 	//ゲーム開始時処理
 	gameMaster->startGame();
@@ -547,7 +548,7 @@ void Game::render3D(Camera currentCamera) {
 	//スカイドームの描画
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//海面の描画
-	ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 
 	// エネミーの描画
@@ -740,7 +741,6 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	//エネミー増殖し続けるのでコメントアウト
 	aiDirector->run();		// メタAI実行
 }
 
@@ -806,17 +806,24 @@ void Game::test()
 	}
 
 	// デバッグエネミーで'7','8'使用中
-	// マップオブジェクトマネージャーのテスト
-	if (input->wasKeyPressed('7'))	// 作成
-	{
-		mapObjectNS::MapObjectData mapObjectData;
-		mapObjectData.zeroClear();
-		mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
-		mapObjectData.type = mapObjectNS::STONE_01;
-		mapObjectData.defaultPosition = *player->getPosition();
-		mapObjectManager->createMapObject(mapObjectData);
-	}
+	//// マップオブジェクトマネージャーのテスト
+	//if (input->wasKeyPressed('7'))	// 作成
+	//{
+	//	mapObjectNS::MapObjectData mapObjectData;
+	//	mapObjectData.zeroClear();
+	//	mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
+	//	mapObjectData.type = mapObjectNS::STONE_01;
+	//	mapObjectData.defaultPosition = *player->getPosition();
+	//	mapObjectManager->createMapObject(mapObjectData);
+	//}
 
+
+	if (input->wasKeyPressed('6'))
+	{
+		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer();
+
+		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
+	}
 
 	// ツリーマネージャのテスト
 	if (input->wasKeyPressed('5'))	// 作成

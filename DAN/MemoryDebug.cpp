@@ -15,7 +15,7 @@ void MemoryDebug::debugEnemyManager()
 	int numAfterCreate, numAfterDestroy;
 	int numDataAfterCreate, numDataAfterDestroy;
 	EnemyManager* enemyManager = new EnemyManager;
-	enemyManager->initialize(NULL, NULL, NULL, NULL);
+	enemyManager->initialize(NULL, NULL, NULL, NULL, NULL);
 
 	// enemyID
 	for(int i = 0; i < LOOPTIME; i++)
