@@ -715,6 +715,9 @@
     <ClCompile Include="ElectGuage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
+    <ClCompile Include="ElectTank.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1141,6 +1144,9 @@
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClInclude>
     <ClInclude Include="ElectGuage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectTank.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
   </ItemGroup>

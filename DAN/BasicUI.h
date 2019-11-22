@@ -76,5 +76,6 @@ public://メンバー関数
 	void	reductionWidthSize(Sprite *sprite,int speed);//横サイズの縮小
 	void	reductionHeightSize(Sprite *sprite,int speed);//縦サイズの縮小
 	void    changeUV(Sprite *sprite,D3DXVECTOR2 uv);//UV座標の変化
+	void	changeWhidthSize(Sprite *sprite, int size);//横幅の変化
 private:
 };

@@ -18,6 +18,7 @@ Player2UI::Player2UI()
 	charaIcon = new CharaIcon;
 	hpGuageEmp = new HPguageEmp;
 	electGuageEmp = new ElectGuageEmp;
+	electGuage = new ElectGuage;
 }
 
 //=================================
@@ -30,6 +31,7 @@ Player2UI::~Player2UI()
 	delete charaIcon;
 	delete hpGuageEmp;
 	delete electGuageEmp;
+	delete electGuage;
 }
 
 //==================================
@@ -43,6 +45,7 @@ void Player2UI::initialize(Player *player)
 	charaIcon->initialize(basicUiNS::P2);
 	hpGuageEmp->initialize(basicUiNS::P2);
 	electGuageEmp->initialize(basicUiNS::P2);
+	electGuage->initialize(basicUiNS::P2);
 }
 
 //==================================
@@ -55,6 +58,7 @@ void Player2UI::render()
 	hpGuage->render();
 	charaIcon->render();
 	electGuageEmp->render();
+	electGuage->render();
 }
 
 //==================================
@@ -68,6 +72,7 @@ void Player2UI::update()
 	shotFlag = player->canShot();
 	visionFlag = player->canDoVision();
 	hp = player->getHp();
+	power = player->getPower();
 
 	//P2用
 	buttonUi->update(skyVisionFlag, 3);
@@ -75,5 +80,9 @@ void Player2UI::update()
 	buttonUi->update(shotFlag, 1);
 	buttonUi->update(visionFlag, 0);
 
+	//HPゲージ処理
 	hpGuage->update(hp);
+
+	//電力ゲージ処理
+	electGuage->update(power);
 }

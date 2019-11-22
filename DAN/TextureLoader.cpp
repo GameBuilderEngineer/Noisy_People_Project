@@ -79,6 +79,8 @@ TextureLoader::TextureLoader()
 	textureName[UI_ICON_P2] = { "Chara_2.png" };
 	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Emp1.png" };
 	textureName[UI_EN_GUAGE_EMP_P2] = { "EnGuage_Emp2.png" };
+	textureName[UI_EN_GUAGE_P1] = { "EnGuage1.png" };
+	textureName[UI_EN_GUAGE_P2] = { "EnGuage2.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

@@ -235,3 +235,14 @@ void BasicUI::changeUV(Sprite *sprite,D3DXVECTOR2 uv)
 	sprite->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
 	sprite->render();
 }
+
+//=================================
+//‰¡ƒTƒCƒY‚Ì•Ï‰»
+//=================================
+void BasicUI::changeWhidthSize(Sprite *sprite, int size)
+{
+	widthSize = size;
+	sprite->setSize(widthSize, heightSize);
+	sprite->setVertex();
+	sprite->render();
+}

@@ -19,6 +19,7 @@ Player1UI::Player1UI()
 	charaIcon = new CharaIcon;
 	hpGuageEmp = new HPguageEmp;
 	electGuageEmp = new ElectGuageEmp;
+	electGuage = new ElectGuage;
 }
 
 //=================================
@@ -32,6 +33,7 @@ Player1UI::~Player1UI()
 	delete charaIcon;
 	delete hpGuageEmp;
 	delete electGuageEmp;
+	delete electGuage;
 }
 
 //==================================
@@ -46,6 +48,7 @@ void Player1UI::initialize(Player *player)
 	charaIcon->initialize(basicUiNS::P1);
 	hpGuageEmp->initialize(basicUiNS::P1);
 	electGuageEmp->initialize(basicUiNS::P1);
+	electGuage->initialize(basicUiNS::P1);
 }
 
 //==================================
@@ -59,6 +62,7 @@ void Player1UI::render()
 	hpGuage->render();
 	charaIcon->render();
 	electGuageEmp->render();
+	electGuage->render();
 }
 
 //==================================
@@ -72,6 +76,7 @@ void Player1UI::update()
 	shotFlag = player->canShot();
 	visionFlag = player->canDoVision();
 	hp = player->getHp();
+	power = player->getPower();
 
 	//P1—p
 	buttonUiP1->update(skyVisionFlag, 3);
@@ -80,4 +85,5 @@ void Player1UI::update()
 	buttonUiP1->update(visionFlag, 0);
 
 	hpGuage->update(hp);
+	electGuage->update(power);
 }

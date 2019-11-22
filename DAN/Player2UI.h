@@ -13,6 +13,7 @@
 #include "CharaIcon.h"
 #include "HPguageEmp.h"
 #include "ElectGuageeEmp.h"
+#include "ElectGuage.h"
 
 //==================================
 //名前空間
@@ -33,12 +34,14 @@ public://メンバー変数
 	CharaIcon* charaIcon;
 	HPguageEmp*  hpGuageEmp;
 	ElectGuageEmp* electGuageEmp;
+	ElectGuage*	electGuage;
 	Player *player;			//P2の情報
 	bool	skyVisionFlag;	//スカイビジョンフラグ
 	bool	shotFlag;		//ショットフラグ
 	bool	shiftFlag;		//シフトフラグ
 	bool	visionFlag;		//ビィジョンフラグ
 	int		hp;				//hp保存
+	int     power;			//電力
 private:
 public://メンバー関数
 	Player2UI();
