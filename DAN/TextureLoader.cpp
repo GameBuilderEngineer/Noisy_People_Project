@@ -49,7 +49,8 @@ TextureLoader::TextureLoader()
 	textureName[TITLE_BAR] = { "Select_Bar.png" };
 
 	// Credit
-	textureName[CREDIT] = { "Credit_01.png" };
+	textureName[CREDIT] = { "staffroll_1.png" };
+	textureName[CREDIT2] = { "staffroll_2.png" };
 
 	// Game
 	textureName[UI_INFO_10] = { "Info_10.png" };
@@ -73,8 +74,15 @@ TextureLoader::TextureLoader()
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
 	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };
 	textureName[UI_HP_GUAGE_P1] = { "HPGuage1.png" };
+	textureName[UI_HP_GUAGE_P2] = { "HPGuage2.png" };
 	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
+	textureName[UI_HP_GUAGE_EMP_P2] = { "HPGuage_Emp2.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
+	textureName[UI_ICON_P2] = { "Chara_2.png" };
+	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Emp1.png" };
+	textureName[UI_EN_GUAGE_EMP_P2] = { "EnGuage_Emp2.png" };
+	textureName[UI_EN_GUAGE_P1] = { "EnGuage1.png" };
+	textureName[UI_EN_GUAGE_P2] = { "EnGuage2.png" };
 
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

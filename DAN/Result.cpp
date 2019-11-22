@@ -47,36 +47,6 @@ Result::~Result(void)
 //===================================================================================================================================
 void Result::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_RESULT, soundNS::METHOD::LOOP);
-
-	// Camera
-	//camera = new Camera[PLAYER_TYPE::PLAYER_TYPE_MAX];
-
-	//for (int i = 0; i < PLAYER_TYPE::PLAYER_TYPE_MAX; i++)
-	//{
-	//	camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//	//camera[i].setTarget(player[i].getPosition());
-	//	//camera[i].setTargetX(&player[i].getAxisX()->direction);
-	//	//camera[i].setTargetY(&player[i].getAxisY()->direction);
-	//	//camera[i].setTargetZ(&player[i].getAxisZ()->direction);
-	//	camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[0]);
-	//	camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
-	//	camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
-	//	camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-	//	camera[i].setFieldOfView(D3DX_PI / 2.5);
-	//}
-
-	// Light
-	//light = new Light;
-	//light->initialize(_direct3D9);
-
-	// リザルトUIの初期化
-	//uiResult.initialize(_direct3D9->device, _textureLoader, _textManager, gameMaster);
-
-	// シーンエフェクト初期化
-	//sceneEffect.initialize(_direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
-
 	//リザルトUIの初期化
 	resultUI.initialize();
 

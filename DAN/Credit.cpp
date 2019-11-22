@@ -32,9 +32,8 @@ Credit::Credit()
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
-	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false,1.0f,false,NULL,true, filterParameters };
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Credit, true,1.0f,false,NULL,true, filterParameters };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false,1.0f,false,NULL };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Credit, true,1.0f,false,NULL };
 
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
@@ -55,19 +54,6 @@ Credit::~Credit()
 //===================================================================================================================================
 void Credit::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_CREDIT, soundNS::METHOD::LOOP);
-
-	//camera
-	//camera = new Camera;
-	//camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
-	//camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	//camera->setPosition(D3DXVECTOR3(0, 0, -1));
-	//camera->setUpVector(D3DXVECTOR3(0, 1, 0));
-
-	// クレジット2D初期化
-	//credit2D.initialize(direct3D9->device, 0, _textureLoader);
-
 	creditTex.initialize();
 }
 
@@ -76,8 +62,6 @@ void Credit::initialize()
 //===================================================================================================================================
 void Credit::uninitialize()
 {
-	//credit2D.uninitialize();
-	//SAFE_DELETE(camera);
 	creditTex.uninitialize();
 }
 
@@ -86,27 +70,18 @@ void Credit::uninitialize()
 //===================================================================================================================================
 void Credit::update(float frameTime)
 {
-	// カメラ更新
-	//camera->update();
 
-	// クレジット2D更新
-	//credit2D.update();
-
-	//Enter,BackSpaceまたは〇ボタン,×ボタンでタイトルへ
 	// 前の遷移へ戻る
 	if (input->wasKeyPressed(VK_BACK) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
 	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
 		nextScene = SceneList::TITLE;
 		changeScene(nextScene);
 		return;
 	}
 
 	creditTex.update();
-
 }
 
 //===================================================================================================================================
@@ -121,7 +96,6 @@ void Credit::render()
 	//render3D(direct3D9);
 	//UI
 	renderUI(direct3D9->device);
-	
 }
 
 //===================================================================================================================================
@@ -138,7 +112,6 @@ void Credit::render()
 void Credit::renderUI(LPDIRECT3DDEVICE9 device)
 {
 	// クレジット2D描画
-	//credit2D.render(device);
 	creditTex.render();
 }
 

@@ -11,6 +11,9 @@
 #include "Player.h"
 #include "HPguage.h"
 #include "CharaIcon.h"
+#include "HPguageEmp.h"
+#include "ElectGuageeEmp.h"
+#include "ElectGuage.h"
 
 //==================================
 //名前空間
@@ -23,23 +26,27 @@ namespace playerUiNS
 //==================================
 //クラス定義
 //==================================
-class PlayerUI
+class Player1UI
 {
 public://メンバー変数
 	ButtonUI * buttonUiP1;
 	ButtonUI * buttonUiP2;
 	HPguage  * hpGuage;
+	HPguageEmp *hpGuageEmp;
 	CharaIcon * charaIcon;
+	ElectGuageEmp* electGuageEmp;
+	ElectGuage* electGuage;
 	Player *player;			//P1の情報
 	bool	skyVisionFlag;	//スカイビジョンフラグ
 	bool	shotFlag;		//ショットフラグ
 	bool	shiftFlag;		//シフトフラグ
 	bool	visionFlag;		//ビィジョンフラグ
 	int		hp;				//hp保存
+	int		power;			//電力保存
 private:
 public://メンバー関数
-	PlayerUI();
-	~PlayerUI();
+	Player1UI();
+	~Player1UI();
 	void initialize(Player *player);
 	void render();
 	void update();

@@ -44,6 +44,7 @@ namespace textureNS
 
 		// Credit
 		CREDIT,
+		CREDIT2,
 
 		// Game
 		UI_INFO_10,
@@ -67,8 +68,15 @@ namespace textureNS
 		UI_STATUSFRAME_P1,
 		UI_STATUSFRAME_P2,
 		UI_HP_GUAGE_P1,
+		UI_HP_GUAGE_P2,
 		UI_HP_GUAGE_EMP_P1,
+		UI_HP_GUAGE_EMP_P2,
 		UI_ICON_P1,
+		UI_ICON_P2,
+		UI_EN_GUAGE_EMP_P1,
+		UI_EN_GUAGE_EMP_P2,
+		UI_EN_GUAGE_P1,
+		UI_EN_GUAGE_P2,
 
 		// Result
 		RESULT,

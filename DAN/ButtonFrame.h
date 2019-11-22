@@ -8,16 +8,17 @@
 //インクルード
 //==================================
 #include "BasicUI.h"
+#include "VirtualController.h"
 
 //==================================
 //名前空間
 //==================================
 namespace buttonFrameNS
 {
-	const int WIDTH_BUTTONFLAME = (185);	//ボタンフレームの横幅
-	const int HEIGHT_BUTTONFLAME = (255);	//ボタンフレームの縦幅
-	const D3DXVECTOR3 POSITION_BUTTONFLAME01 = D3DXVECTOR3(100, 870, 0);	//ボタンフレームの表示位置(仮)
-	const D3DXVECTOR3 POSITION_BUTTONFLAME02 = D3DXVECTOR3(1800, 870, 0);	//ボタンフレームの表示位置(仮)
+	const int WIDTH_BUTTONFLAME = (185 * WINDOW_WIDTH / 1920);	//ボタンフレームの横幅
+	const int HEIGHT_BUTTONFLAME = (255 * WINDOW_HEIGHT / 1080);	//ボタンフレームの縦幅
+	const D3DXVECTOR3 POSITION_BUTTONFLAME01 = D3DXVECTOR3(100 * WINDOW_WIDTH / 1920, 870 * WINDOW_HEIGHT / 1080, 0);	//ボタンフレームの表示位置(仮)
+	const D3DXVECTOR3 POSITION_BUTTONFLAME02 = D3DXVECTOR3(1800 * WINDOW_WIDTH / 1920, 870 * WINDOW_HEIGHT / 1080, 0);	//ボタンフレームの表示位置(仮)
 }
 
 //==================================

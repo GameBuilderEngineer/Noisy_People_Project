@@ -152,8 +152,10 @@
     <ClInclude Include="Base.h" />
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="DigitalShiftState.h" />
+    <ClInclude Include="ElectGuage.h" />
+    <ClInclude Include="ElectGuageeEmp.h" />
+    <ClInclude Include="ElectTank.h" />
     <ClInclude Include="GreeningArea.h" />
-    <ClInclude Include="Guage.h" />
     <ClInclude Include="Battery.h" />
     <ClInclude Include="Bear.h" />
     <ClInclude Include="BGM.h" />
@@ -164,8 +166,9 @@
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
+    <ClInclude Include="Player1UI.h" />
+    <ClInclude Include="Player2UI.h" />
     <ClInclude Include="NormalState.h" />
-    <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="SkyVisionState.h" />
     <ClInclude Include="StatusFrame.h" />
     <ClInclude Include="CollisionManager.h" />
@@ -296,8 +299,10 @@
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
+    <ClCompile Include="ElectGuage.cpp" />
+    <ClCompile Include="ElectGuageEmp.cpp" />
+    <ClCompile Include="ElectTank.cpp" />
     <ClCompile Include="GreeningArea.cpp" />
-    <ClCompile Include="Guage.cpp" />
     <ClCompile Include="Battery.cpp" />
     <ClCompile Include="Bear.cpp" />
     <ClCompile Include="BGM.cpp" />
@@ -308,8 +313,9 @@
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
+    <ClCompile Include="Player1UI.cpp" />
+    <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="NormalState.cpp" />
-    <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="SkyVisionState.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />

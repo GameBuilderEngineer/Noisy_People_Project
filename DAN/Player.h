@@ -235,8 +235,8 @@ private:
 	float						reverseValueXAxis;				//操作X軸
 	float						reverseValueYAxis;				//操作Y軸
 	bool						isExecutingMoveOperation;		// 移動操作中フラグ
-	bool						onJump;							// ジャンプフラグ
 	bool						jumping;						// ジャンプ中フラグ
+	bool						onJump;
 
 	// UI用操作判定フラグ
 	bool						isShotAble;

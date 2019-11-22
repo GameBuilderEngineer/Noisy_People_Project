@@ -42,11 +42,9 @@ Game::Game()
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
-	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL};
 	
-
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
@@ -212,9 +210,13 @@ void Game::initialize() {
 	fixedUI = new FixedUI;
 	fixedUI->initialize();
 
-	//プレイヤー周りのUI
-	playerUI = new PlayerUI;
-	playerUI->initialize(&player[gameMasterNS::PLAYER_1P]);
+	//プレイヤー1周りのUI
+	player1UI = new Player1UI;
+	player1UI->initialize(&player[gameMasterNS::PLAYER_1P]);
+
+	//プレイヤー２周りのUI
+	player2UI = new Player2UI;
+	player2UI->initialize(&player[gameMasterNS::PLAYER_2P]);
 
 	//レティクル
 	reticle = new Reticle();
@@ -306,7 +308,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
 	SAFE_DELETE(fixedUI);
-	SAFE_DELETE(playerUI);
+	SAFE_DELETE(player1UI);
+	SAFE_DELETE(player2UI);
 	SAFE_DELETE(ad);
 
 	UninitMoveP();
@@ -455,19 +458,19 @@ void Game::update(float _frameTime) {
 	ad->update(frameTime);
 
 	//電力減少（電力回復確認用）
-	//player->pullpower(1);
+	//player[gameMasterNS::PLAYER_1P].pullpower(1);
 
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		camera[i].update();
 
 	//固定UIの更新
-	fixedUI->update();
-	gameMaster->getGameTime();//←ソメヤくんへ：ゲームタイムです。
+	fixedUI->update(gameMaster->getGameTime());
 
 
 	//プレイヤー周りのUIの更新
-	playerUI->update();
+	player1UI->update();
+	player2UI->update();
 
 	//レティクルの更新
 	reticle->update(frameTime);
@@ -634,8 +637,11 @@ void Game::renderUI() {
 	//固定UIの描画
 	fixedUI->render();
 
-	//プレイヤー周りのUIの描画
-	playerUI->render();
+	//プレイヤー1周りのUIの描画
+	player1UI->render();
+
+	//プレイヤー2周りのUIの描画
+	player2UI->render();
 
 	//レティクルの描画
 	reticle->render2D();
