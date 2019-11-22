@@ -162,10 +162,10 @@ void Title::update(float _frameTime)
 	//ƒJƒƒ‰
 	camera->update();
 	//ƒJƒƒ‰‰ñ“]
-	//camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
+	camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
 	
 	//ƒJƒƒ‰ˆÚ“®
-	if (input->isKeyDown('W'))
+	/*if (input->isKeyDown('W'))
 	{
 		camera->relativeQuaternion.z += 5.0f;
 		camera->gazePosition.z += 5.0f;
@@ -184,7 +184,7 @@ void Title::update(float _frameTime)
 	{
 		camera->relativeQuaternion.x += 5.0f;
 		camera->gazePosition.x += 5.0f;
-	}
+	}*/
 
 
 }
