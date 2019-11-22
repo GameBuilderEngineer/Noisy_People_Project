@@ -13,10 +13,39 @@
 //=============================================================================
 namespace mapObjectNS
 {
-	enum MAP_OBJECT_TYPE
+	// マップオブジェクトの種類
+	// モデル違いも全てタイプとして分けしている
+	enum MAPOBJECT_TYPE
 	{
 		STONE_01,
-		MAP_OBJECT_MAX
+		STONE_02, 
+		STONE_03,
+
+		MAPOBJECT_MAX
+	};
+
+	// 衝突判定を取るオブジェクトか設定
+	const bool CAN_COLLISION[MAPOBJECT_MAX] =
+	{
+		true,										// STONE_01
+	};
+
+	// 衝突判定オブジェクトタイプ
+	const int OBJECT_TYPE[MAPOBJECT_MAX] =
+	{
+		ObjectType::STONE,							// STONE_01
+	};
+
+	// 衝突判定ターゲット
+	const int COLLISION_TARGET[MAPOBJECT_MAX] =
+	{
+		ObjectType::PLAYER | ObjectType::ENEMY,		// STONE_01
+	};
+
+	// サイズ
+	const D3DXVECTOR3 SETTING_SIZE[MAPOBJECT_MAX] =
+	{
+		D3DXVECTOR3(1.7f, 1.0f, 1.7f),				// STONE_01
 	};
 
 	typedef struct MapObjectData
@@ -39,10 +68,9 @@ private:
 	mapObjectNS::MapObjectData mapObjectData;	// マップオブジェクトデータ
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
-	BoundingSphere sphereCollider;				// コライダ
 
 	// Static
-	static int numOfMapObject;				// アイテムオブジェクトの総数
+	static int numOfMapObject;					// アイテムオブジェクトの総数
 
 public:
 	MapObject(StaticMesh* _staticMesh, mapObjectNS::MapObjectData _itemData);
@@ -53,7 +81,6 @@ public:
 	// Getter
 	static int getNumOfMapObject();					// マップオブジェクトの数を取得
 	mapObjectNS::MapObjectData* getMapObjectData();	// マップオブジェクトデータを取得
-	BoundingSphere* getSphereCollider();			// コライダの取得
 
 	// Setter
 	void setDataToMapObject(mapObjectNS::MapObjectData _itemData);

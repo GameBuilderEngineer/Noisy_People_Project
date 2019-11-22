@@ -144,7 +144,7 @@ AStarNode* AStar::getLeastCostNode()
 {
 	AStarNode *p = head;			// リストの先頭を指す
 	AStarNode *leastScoreNode = p;	// 最低スコアのノード
-	int leastScore = FLT_MAX;		// 最低スコア
+	float leastScore = FLT_MAX;		// 最低スコア
 	bool isEnterLoop = false;		// whileループに入っていない
 
 	// リスト末尾までノードを探索
@@ -179,7 +179,7 @@ AStarNode* AStar::getLeastHeuristicNode()
 {
 	AStarNode *p = head;					// リストの先頭を指す
 	AStarNode *leastHeuristicNode = p;	// 最低推定コストのノード
-	int leastHeuristic = FLT_MAX;		// 最低推定コスト
+	float leastHeuristic = FLT_MAX;		// 最低推定コスト
 
 	// リスト末尾までノードを探索
 	while (p->next != NULL)

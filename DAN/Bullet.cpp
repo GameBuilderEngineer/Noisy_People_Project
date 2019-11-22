@@ -107,6 +107,8 @@ bool Bullet::isCollideInitial() {
 	float now = Base::between2VectorLength(ballisticRay.start, position);
 	return now >= initial; 
 }
+D3DXVECTOR3 Bullet::getBulletSpeed() { return this->speed; }
+
 
 //===================================================================================================================================
 //yíœz
@@ -142,6 +144,8 @@ BulletManager::BulletManager()
 	intervalTimer	= 0.0f;
 	reloadTimer		= 0.0f;
 	reloading		= false;
+	isLaunched		= false;
+	launchFactTime	= 0.0f;
 
 	//ƒTƒEƒ“ƒh‚ÌÝ’è
 	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
@@ -213,6 +217,15 @@ void BulletManager::update(float frameTime)
 		}
 	}
 
+	//LAUNCH_FACT_TIME•b‚Å”­ŽËŽ–ŽÀ‚ðÁ‚·
+	if (isLaunched)
+	{
+		launchFactTime += frameTime;
+		if (launchFactTime > LAUNCH_FACT_TIME)
+		{
+			isLaunched = false;
+		}
+	}
 }
 
 //===================================================================================================================================
@@ -272,6 +285,9 @@ bool BulletManager::launch(Ray shootingRay)
 	//instance->position = newBullet->position;
 	//effekseerNS::play(instance);
 
+	//ƒQ[ƒ€’†‚É”­ŽËŽ–ŽÀ‚ðŽc‚·
+	isLaunched = true;
+	launchFactTime = 0.0f;
 
 	return true;
 }
@@ -309,4 +325,5 @@ int BulletManager::getRemaining(){return remaining;}
 float BulletManager::getReloadTime() { return reloadTimer; }
 Bullet* BulletManager::getBullet(int i) { return *bulletList->getValue(i); }
 int BulletManager::getNum() { return bulletList->nodeNum; }
+bool BulletManager::getIsLaunched() { return isLaunched; }
 #pragma endregion

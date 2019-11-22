@@ -54,9 +54,278 @@ void EventMaker::makeEventSpawningEnemyAroundPlayer()
 {
 	enemyNS::ENEMYSET enemySet;
 	enemySet.enemyID = enemyManager->issueNewEnemyID();
-	enemySet.type = enemyNS::WOLF;
-	enemySet.defaultPosition = *player[0].getPosition() + D3DXVECTOR3(rand() % 5, 0.0f, rand() % 5);
+	enemySet.type = decideSpawnEnemyType();
+	enemySet.defaultPosition = createGroundedPositionFromPivot(player[0].position, 25.0f, 5.0f);
 	enemySet.defaultDirection = *player[0].getPosition() - enemySet.defaultPosition;
 	enemySet.defaultState = stateMachineNS::PATROL;
-	opeGenerator->spawnEnemyAroundPlayer(enemySet);
+	opeGenerator->spawnEnemy(enemySet);
+}
+
+
+//=============================================================================
+// エネミーリスポーンイベントの作成（RESPAWN_ENEMY)
+//=============================================================================
+void EventMaker::makeEventRespawnEnemy()
+{
+	// リスポーンは今のところしない
+}
+
+
+//=============================================================================
+// エネミーデジタルツリー襲撃イベントの作成（ENEMY_ATTACKS_TREE）
+//=============================================================================
+void EventMaker::makeEventEnemyAttaksTree()
+{
+	if (data->numDigital <= data->numBeingAttackedTree) { return; }
+
+	// 襲撃ツリーを決める
+	int treeID = decideAttackTargetTree();
+
+	// 襲撃対象ツリーの準備
+	Tree* attackTarget = NULL;
+	D3DXVECTOR3 treePosition;
+	std::vector<Tree*> treeList = treeManager->getTreeList();
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		if (treeList[i]->getTreeData()->treeID == treeID)
+		{
+			attackTarget = treeList[i];						// 攻撃対象ツリーを記録
+			treeList[i]->getTreeData()->isAttaked = true;	// ツリーの攻撃中フラグをOn
+			treePosition = treeList[i]->position;			// ツリーの座標を取得
+		}
+	}
+
+	// エネミーの数を決める(2体もしくは3体)
+	int numEnemy = 2 + rand() % 2;
+
+	// エネミーのパラメータ作成
+	for (int i = 0; i < numEnemy; i++)
+	{
+		enemyNS::ENEMYSET enemySet;
+		enemySet.enemyID = enemyManager->issueNewEnemyID();
+		enemySet.type = decideSpawnEnemyType();
+		enemySet.defaultState = stateMachineNS::ATTACK_TREE;
+		enemySet.defaultPosition = createGroundedPositionFromPivot(treePosition, 10.0f, 3.0f);
+		enemySet.defaultDirection = treePosition - enemySet.defaultPosition;
+
+		// 実行
+		opeGenerator->enemyAttaksTree(enemySet, attackTarget);
+	}	
+}
+
+
+//=============================================================================
+// 動的作成するエネミーのパラメータを決める
+//=============================================================================
+enemyNS::ENEMY_TYPE EventMaker::decideSpawnEnemyType()
+{
+	enemyNS::ENEMY_TYPE ans;
+	float score = 0.0f;
+
+	// 最近倒した敵の数が多いほど高くなるようスコアをプロット
+	score = fuzzy.grade((float)data->numKilledRecently, 0.0f, 7.0f);
+
+	// プレイヤー2名のコンディションによってスコアを補正
+	int sum = (data->playerCondition[gameMasterNS::PLAYER_1P] + data->playerCondition[gameMasterNS::PLAYER_2P]);
+	switch (sum)
+	{
+	case 0:	// GOOD + GOOD
+		score += 0.0;
+		break;
+
+	case 1:	// GOOD + NORMAL
+		score += 0.1;
+		break;
+
+	case 2: // GOOD + BAD, NORMAL + NORMAL
+		score += 0.3f;
+		break;
+
+	case 3:	// NORMAL + BAD
+		score += 0.4f;
+		break;
+
+	case 4:	// BAD + BAD
+		score += 0.5f;
+		break;
+	}
+
+	// 乱数でスコアを撹拌
+	score += (float)((rand() % 5) - 2);
+
+	// スコアによってエネミーのタイプを変更する
+	if (score > 0.7f)
+	{
+		ans = enemyNS::WOLF;
+	}
+	else if (score > 0.3f)
+	{
+		ans = enemyNS::TIGER;
+	}
+	else
+	{
+		ans = enemyNS::BEAR;
+	}
+
+	return ans;
+}
+
+
+//=============================================================================
+// 襲撃イベント対象デジタルツリーを選定する
+//=============================================================================
+int EventMaker::decideAttackTargetTree()
+{
+	using gameMasterNS::PLAYER_1P;
+	using gameMasterNS::PLAYER_2P;
+	using gameMasterNS::PLAYER_NUM;
+
+	// 候補リストを作成（要素数 = デジタルツリーの数 - 例外ツリーの数 - 攻撃中ツリーの数）
+	int candidateMax = data->numDigital /*- EXCEPTION_TREE_MAX●ここ注意*/ - data->numBeingAttackedTree;
+	AttackCandidate* candidateList = new AttackCandidate[candidateMax];
+	int cntCandidate = 0;
+
+	// 候補リストを埋めていく
+	std::vector<Tree*> treeList = treeManager->getTreeList();
+	bool isPass;				// ループパスフラグ
+	float maxDistance = 0.0f;	// 最大距離
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		isPass = false;
+		//---------------------------------------------------------------------
+		// アナログツリーと対象外のデジタルツリーに対して処理をパスする
+		if (treeList[i]->getTreeData()->type != treeNS::DIGITAL_TREE) { isPass = true; }
+		for (int k = 0; k < EXCEPTION_TREE_MAX; k++)
+		{
+			if (treeList[i]->getTreeData()->treeID == EXCEPTION_TREE_ID[k])
+			{
+				isPass = true;
+			}
+		}
+		if (treeList[i]->getTreeData()->isAttaked) { isPass = true; }
+		if (isPass) { continue; }
+		//---------------------------------------------------------------------
+		// IDを記録
+		candidateList[cntCandidate].treeID = treeList[i]->getTreeData()->treeID;
+		// 距離を測る
+		float distanceToPlayer[PLAYER_NUM];
+		for (int k = 0; k < PLAYER_NUM; k++)
+		{
+			distanceToPlayer[k] = between2VectorLength(player[k].position, treeList[i]->getTreeData()->initialPosition);
+		}
+		// 近いプレイヤーとの距離を保管
+		if (distanceToPlayer[PLAYER_1P] < distanceToPlayer[PLAYER_2P])
+		{
+			candidateList[cntCandidate].distanceToNearPlayer = distanceToPlayer[PLAYER_1P];
+		}
+		else
+		{
+			candidateList[cntCandidate].distanceToNearPlayer = distanceToPlayer[PLAYER_2P];
+		}
+		// 近いプレイヤーとの距離の中で最高距離を更新
+		if (candidateList[cntCandidate].distanceToNearPlayer > maxDistance)
+		{
+			maxDistance = candidateList[cntCandidate].distanceToNearPlayer;
+		}
+		cntCandidate++;
+	}
+
+	// 候補のスコアを算出し規定値以上であれば選択リストに加える
+	int* selectIndexList = new int[candidateMax];
+	int cntSelectIndex = 0;
+	for (int i = 0; i < candidateMax; i++)
+	{
+		candidateList[i].score = fuzzy.grade(candidateList[i].distanceToNearPlayer, 0.0f, maxDistance);
+		if (candidateList[i].score > 0.7)
+		{
+			selectIndexList[cntSelectIndex++] = i;
+		}
+	}
+
+	// 選択リストからランダムで候補リストのインデックスを選びツリーを選定する
+	// 決まったツリーのIDを返却する
+	int resultIndex = rand() % cntSelectIndex;
+	int resultCandidate = selectIndexList[resultIndex];
+	int treeID = candidateList[resultCandidate].treeID;
+	SAFE_DELETE_ARRAY(selectIndexList);
+	SAFE_DELETE_ARRAY(candidateList);
+	return treeID;
+}
+
+
+//=============================================================================
+// 基準座標を基に接地座標を作成する
+//=============================================================================
+D3DXVECTOR3 EventMaker::createGroundedPositionFromPivot(D3DXVECTOR3 pivot, float distance, float reduction)
+{
+	D3DXVECTOR3 tempDirection;	// 方角
+	D3DXVECTOR3 ans;			// 求める座標
+	NavigationMesh* naviMesh = NavigationMesh::getNaviMesh();
+	bool isFinish = false;
+	float distanceToGround = 0.0f;
+	int cnt = 0;
+
+	while (isFinish == false)
+	{//方向を変えて接地するか確認するループ
+		tempDirection = createRandomDirectionXZ();
+
+		while (distance != 1.0f)
+		{// 距離を動かして接地するか確認するループ
+			ans = pivot + tempDirection * distance;
+
+			// 接地確認
+			static float RAY_ADDITIONAL_HEIGHT = 20.0f;
+			if (naviMesh->isHitGrounding(&distanceToGround, NULL, ans + D3DXVECTOR3(0, RAY_ADDITIONAL_HEIGHT, 0)))
+			{
+				// Y座標を地面の高さに修正
+				if (distanceToGround < RAY_ADDITIONAL_HEIGHT)
+				{
+					ans.y += (RAY_ADDITIONAL_HEIGHT - distanceToGround);
+				}
+				else
+				{
+					ans.y -= (distanceToGround - RAY_ADDITIONAL_HEIGHT);
+				}
+
+				isFinish = true;
+				break;
+			}
+			else
+			{
+				distance -= reduction;
+				if (distance < 1.0f) { distance = 1.0f; }
+			}
+		}
+		cnt++;
+
+		if (cnt > 5/*この回数方向を変えたら終了する*/)
+		{
+			isFinish = true;
+			ans = pivot;
+		}
+	}
+
+	return ans;
+}
+
+
+//=============================================================================
+// XZ平面上のベクトル(長さ1.0)をランダムに作成する
+//=============================================================================
+D3DXVECTOR3 EventMaker::createRandomDirectionXZ()
+{
+	// 方向
+	D3DXVECTOR3 direction = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+
+	// 回転させる
+	D3DXQUATERNION quaternion;
+	D3DXQuaternionIdentity(&quaternion);
+	D3DXMATRIX matrix;
+	D3DXMatrixIdentity(&matrix);
+	D3DXVECTOR3 axisY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	anyAxisRotation(&quaternion, axisY, rand() % 361);
+	D3DXMatrixRotationQuaternion(&matrix, &quaternion);
+	D3DXVec3TransformCoord(&direction, &direction, &matrix);
+
+	return direction;
 }

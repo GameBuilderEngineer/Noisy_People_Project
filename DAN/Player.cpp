@@ -935,5 +935,6 @@ bool Player::getWhetherExecutingMoveOpe() { return isExecutingMoveOperation; }
 bool Player::getOnGround() { return onGround; }
 D3DXVECTOR3* Player::getGroundNormal() { return &groundNormal; }
 LPD3DXMESH Player::getMesh() { return box->mesh; };
+BulletManager*  Player::getBulletManager() { return bulletManager; }
 #pragma endregion
 

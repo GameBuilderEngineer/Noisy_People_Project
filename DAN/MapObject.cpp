@@ -10,6 +10,7 @@ using namespace mapObjectNS;
 
 int MapObject::numOfMapObject = 0;
 
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -20,8 +21,27 @@ MapObject::MapObject(StaticMesh* _staticMesh, MapObjectData _itemData)
 	onGravity = true;
 	mapObjectData = _itemData;
 	position = mapObjectData.defaultPosition;
+
+	if (CAN_COLLISION[mapObjectData.type])
+	{
+		treeCell.type = OBJECT_TYPE[mapObjectData.type];
+		treeCell.target = COLLISION_TARGET[mapObjectData.type];
+		setSize(SETTING_SIZE[mapObjectData.type]);
+	}
+	else
+	{
+		treeCell.type = ObjectType::NONE;
+	}
+
+
+
 	Object::initialize(&position);
-	sphereCollider.initialize(&position, _staticMesh->mesh);
+
+
+
+	//setRadius(1.0f);
+
+
 }
 
 
@@ -58,7 +78,6 @@ void MapObject::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 //=============================================================================
 int MapObject::getNumOfMapObject(){ return numOfMapObject; }
 MapObjectData* MapObject::getMapObjectData() { return &mapObjectData; }
-BoundingSphere* MapObject::getSphereCollider() { return &sphereCollider; }
 
 
 //=============================================================================

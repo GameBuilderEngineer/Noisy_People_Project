@@ -365,7 +365,7 @@ public:
 	void	setValidOperation(int value);						//有効操作の設定
 	void	enableOperation(int value);							//操作を有効にする
 	void	disableOperation(int value);						//操作を無効にする
-	
+	//void resetOnGround() { onGround = false;  jumping = true; }	//
 
 	//getter
 	int getHp();												// HPの取得
@@ -385,7 +385,7 @@ public:
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
 	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
-	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
+	BulletManager*  getBulletManager();							//バレットマネージャを取得
 	bool getOnGround();											//接地しているか取得
 	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
 

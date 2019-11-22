@@ -74,6 +74,7 @@ namespace staticMeshNS {
 		TUTORIAL_FILED,							//10
 		DATE_ISLAND,							//11
 		DATE_ISLAND_V2,							//12
+		DATE_ISLAND_V2_NAVI_MESH,				//13
 
 		MESH_NUM,								//NUM
 	};

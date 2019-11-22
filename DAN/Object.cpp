@@ -125,9 +125,6 @@ void Object::update()
 	reverseAxisX.update(center, -D3DXVECTOR3(matrixWorld._11, matrixWorld._12, matrixWorld._13));
 	reverseAxisY.update(center, -D3DXVECTOR3(matrixWorld._21, matrixWorld._22, matrixWorld._23));
 	reverseAxisZ.update(center, -D3DXVECTOR3(matrixWorld._31, matrixWorld._32, matrixWorld._33));
-
-
-
 }
 
 //===================================================================================================================================

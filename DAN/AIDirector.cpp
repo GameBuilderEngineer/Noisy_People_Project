@@ -10,12 +10,32 @@ using namespace aiNS;
 
 
 //=============================================================================
+// コンストラクタ
+//=============================================================================
+AIDirector::AIDirector()
+{
+
+}
+
+
+//=============================================================================
+// デストラクタ
+//=============================================================================
+AIDirector::~AIDirector()
+{
+	uninitialize();
+}
+
+
+//=============================================================================
 // 初期化
 //=============================================================================
-void AIDirector::initialize(GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager,
-	TreeManager* _treeManager, ItemManager* _itemManager, TelopManager* _telopManager)
+void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Player* _player,
+	EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager,
+	TelopManager* _telopManager)
 {
 	gameMaster = _gameMaster;
+	fieldMesh = _fieldMesh;
 	player = _player;
 	enemyManager = _enemyManager;
 	treeManager = _treeManager;
@@ -26,6 +46,24 @@ void AIDirector::initialize(GameMaster* _gameMaster, Player* _player, EnemyManag
 	eventMaker.initialize(&data, &opeGenerator, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
 	opeGenerator.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
 	frameCnt = 0;
+
+	// 解析データの初期化
+	data.treeDistanceFromPlayer[gameMasterNS::PLAYER_1P] = new float[treeManager->getTreeList().size()];
+	data.treeDistanceFromPlayer[gameMasterNS::PLAYER_2P] = new float[treeManager->getTreeList().size()];
+
+	BoundingSphere temp;
+	temp.initialize(NULL, fieldMesh);
+	data.fieldRadius = temp.getRadius();
+}
+
+
+//=============================================================================
+// 終了処理
+//=============================================================================
+void AIDirector::uninitialize()
+{
+	SAFE_DELETE_ARRAY(data.treeDistanceFromPlayer[gameMasterNS::PLAYER_1P]);
+	SAFE_DELETE_ARRAY(data.treeDistanceFromPlayer[gameMasterNS::PLAYER_2P]);
 }
 
 

@@ -63,7 +63,7 @@ void Sensor::playerSensor()
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		// HP‚ÌŽc—Ê‚ð0.0`1.0‚É•ÏŠ·
-		float fuzzyHp = fuzzy.grade(player[i].getHp(), 0, playerNS::MAX_HP);
+		float fuzzyHp = fuzzy.grade((float)player[i].getHp(), 0, playerNS::MAX_HP);
 
 		if (fuzzyHp > 0.7f)
 		{
@@ -76,7 +76,7 @@ void Sensor::playerSensor()
 		else if(fuzzyHp > 0.2f)
 		{
 			// “d—Í‚ÌŽc—Ê‚ð0.0`1.0‚É•ÏŠ·
-			float fuzzyPower = fuzzy.grade(player[i].getPower(), 0, playerNS::MAX_POWER);
+			float fuzzyPower = fuzzy.grade((float)player[i].getPower(), 0, playerNS::MAX_POWER);
 
 			if (fuzzyPower > 0.33f)
 			{

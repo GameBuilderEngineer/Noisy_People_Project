@@ -31,6 +31,10 @@ Director::Director() {
 #ifdef _DEBUG
 	onGUI = true;
 	memory = new MemoryViewer;
+	hiddenCursor = false;
+	lockCursor = false;
+	ShowCursor(FALSE);
+	ShowCursor(TRUE); 
 #else
 	hiddenCursor = true;
 	lockCursor = true;
@@ -251,6 +255,26 @@ void Director::update() {
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
+	if (input->wasKeyPressed(VK_F1))
+	{
+		hiddenCursor = !hiddenCursor;
+		if (hiddenCursor) {
+			ShowCursor(FALSE);
+		}
+		else {
+			ShowCursor(TRUE);
+		}
+	}
+	if (input->wasKeyPressed(VK_F2))
+		lockCursor = !lockCursor;
+	if (lockCursor)
+	{
+		if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
+		{
+			SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		}
+	}
+
 #else
 	if (input->wasKeyPressed(VK_F1))
 	{

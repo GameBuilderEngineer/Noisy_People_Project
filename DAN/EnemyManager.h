@@ -16,7 +16,7 @@
 #include "Wolf.h"
 #include "Tiger.h"
 #include "Bear.h"
-
+#include "GameMaster.h"
 #include "Sound.h"
 #include "SoundBase.h"
 
@@ -45,10 +45,11 @@ private:
 	int nextID;											// 次回エネミー発行ID
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
+	GameMaster* gameMaster;								// ゲーム管理オブジェクト
 	Player* player;										// プレイヤー
 
 public:
-	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, Player* _player);
+	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player);
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);

@@ -13,17 +13,11 @@
 #include "StateMachine.h"
 #include "Sound.h"
 #include "SoundBase.h"
-
+#include "Tree.h"
 
 //=============================================================================
 // ビルドスイッチ
 //=============================================================================
-#if 0	// バウンディングスフィアを描画
-#define RENDER_SPHERE_COLLIDER
-#endif
-#if 1	// 6軸を描画
-#define RENDER_SIX_AXIS
-#endif
 #if 1	// センサーを描画
 #define RENDER_SENSOR
 #endif
@@ -32,7 +26,7 @@
 //=============================================================================
 // 名前空間
 //=============================================================================
-#pragma region namespace
+#pragma region [Name Space]
 namespace enemyNS
 {
 	// エネミーの種類
@@ -128,9 +122,9 @@ namespace enemyNS
 	// エネミーのプレイヤー記憶時間テーブル
 	const float PLAYER_MEMORIZED_TIME[TYPE_MAX] =
 	{
-		4.0f,		// WOLF
-		4.0f,		// TIGER
-		4.0f,		// BEAR
+		14.0f,		// WOLF
+		14.0f,		// TIGER
+		14.0f,		// BEAR
 	};
 
 	// エネミーの移動加速度テーブル
@@ -156,13 +150,14 @@ namespace enemyNS
 	const float MOVE_LIMIT_TIME = 10.0f;				// 移動リミット時間
 	const float PATH_SEARCH_INTERVAL_WHEN_CHASE = 0.3f;	// 追跡ステート時のパス検索間隔
 
-	// Another Constant
+	// Other Constant
 	const float DIFFERENCE_FIELD = 0.05f;				// フィールド補正差分
 	const float JUMP_SPEED = 6.0f;						// ジャンプ初速
 	const float JUMP_CONTROL_SPEED = 1.0f;				// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION = 2.0f;				// ダッシュ倍率
 	const float CAMERA_SPEED = 1.0f;					// カメラの速さ
-
+	const int PATOROL_ROUTE_MAX = 8;					// 警戒ステート時の巡回座標最大数
+	const float AUTO_DESTRUCTION_HEIGHT = -100.0f;		// 自動破棄される高さ
 
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
@@ -170,14 +165,15 @@ namespace enemyNS
 	//-----------------------------------------------------------------
 	typedef struct EnemyInitialSettingData
 	{
-		int enemyID;					// 識別番号(0..*)
-		int type;						// エネミー種別
-		int defaultState;				// 初期ステート	
-		D3DXVECTOR3 defaultPosition;	// 初期座標
-		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+		int enemyID;									// 識別番号(0..*)
+		int type;										// エネミー種別
+		int defaultState;								// 初期ステート	
+		D3DXVECTOR3 defaultPosition;					// 初期座標
+		D3DXVECTOR3 defaultDirection;					// 初期正面方向
+		int numRoute;									// 警戒ステート時の巡回座標の数
+		D3DXVECTOR3 patrolRoute[PATOROL_ROUTE_MAX];		// 警戒ステート時の巡回座標
 	} ENEMYSET;
  
-
 	//--------------------------------------------------------------------------
 	// EnemyDataクラスはエネミー固有のステータスを保持する
 	// EnemyクラスオブジェクトはEnemyDataのポインタを介してステータスを参照する
@@ -192,10 +188,14 @@ namespace enemyNS
 		D3DXVECTOR3 defaultPosition;	// 初期座標
 		D3DXVECTOR3 direction;			// 正面方向
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
+		int numRoute;					// 警戒ステート時の巡回座標の数
+		D3DXVECTOR3* patrolRoute;		// 警戒ステート時の巡回座標
+		Tree* targetTree;				// 攻撃対象ツリー
 		int hp;							// HP
 		float deadTime;					// 撃退時刻
 		bool isAlive;					// 生存フラグ
 
+		//~EnemyData() { SAFE_DELETE_ARRAY(patrolRoute); }
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
 		void setUp()
 		{
@@ -206,6 +206,19 @@ namespace enemyNS
 			deadTime = 10000.0;
 			isAlive = true;
 		}
+	};
+
+	//----------------------------------------------
+	// コンストラクタ引数に渡す初期化用データセット
+	//----------------------------------------------
+	struct ConstructionPackage
+	{
+		StaticMesh* staticMesh;
+		EnemyData* enemyData;
+		GameMaster* gameMaster;
+		Player* player;
+		LPD3DXMESH	attractorMesh;
+		D3DXMATRIX*	attractorMatrix;
 	};
 
 #if _DEBUG
@@ -238,87 +251,96 @@ namespace enemyNS
 //=============================================================================
 // クラス定義
 //=============================================================================
-#pragma region class
-// エネミー基底クラス
+#pragma region [Class]
 class Enemy: public Object
 {
 protected:
-	enemyNS::EnemyData* enemyData;		// エネミーデータ
-	static int numOfEnemy;				// エネミーの総数
-	StateMachine stateMachine;			// ステートマシン
-	Player* player;						// プレイヤー
+	enemyNS::EnemyData* enemyData;					// エネミーデータ
+	static int numOfEnemy;							// エネミーの総数
+	StaticMesh* staticMesh;							// メッシュ情報
+	GameMaster* gameMaster;							// ゲーム管理オブジェクト
+	Player* player;									// プレイヤー
+	LPD3DXMESH	attractorMesh;						// 重力（引力）発生メッシュ
+	D3DXMATRIX*	attractorMatrix;					// 重力（引力）発生オブジェクトマトリックス
+	StateMachine stateMachine;						// ステートマシン
+
+	// ブラックボード
+	bool isNoticingPlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識フラグ
+	float noticedTimePlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識時間
+	D3DXVECTOR3* movingTarget;						// 移動ターゲット
+	Object* attackTarget;							// 攻撃対象（プレイヤー,ツリー）
+	D3DXVECTOR3 attentionDirection;					// 注目方向
+	bool isPayingNewAttention;						// 新規注目フラグ
+	int nextIndexOfRoute;							// 警戒ステート時の次の巡回座標（リングバッファ添え字）
 
 	// センサー
-	float sensorTime;					// センサー更新時間カウンタ
-	bool shouldSense;					// センサー実行フラグ
-	bool isSensingPlayer[gameMasterNS::PLAYER_NUM];// プレイヤー感知フラグ
+	bool canSense;									// センサー実行可能フラグ
+	float cntSensorInterval;						// センサー再実行間隔カウンタ
+	bool isSensingPlayer[gameMasterNS::PLAYER_NUM];	// プレイヤー感知フラグ
+	float distanceToPlayer[gameMasterNS::PLAYER_NUM];// プレイヤーとの距離
 
-	// 環境認識・記憶領域ブラックボード
-	bool isNoticingPlayer[gameMasterNS::PLAYER_NUM];
-	float noticedTimePlayer[gameMasterNS::PLAYER_NUM];
-	float pathSearchInterval;			// パス検索インターバル
-
-	// ナビゲーションメッシュ
-	NavigationMesh* naviMesh;			// ナビメッシュ
-	LinkedList<meshDataNS::Index2>* edgeList;// エッジリスト
-	DWORD naviFaceIndex;				// パス検索時のナビメッシュ設置面インデックス
-	bool shouldSearch;					// パス検索フラグ	
-
-	// 移動
-	bool shouldMove;					// 移動フラグ
-	D3DXVECTOR3* movingTarget;			// 移動ターゲット
-	D3DXVECTOR3 destination;			// 目的地
-	D3DXVECTOR3 moveDirection;			// 移動ベクトル
-	bool isArraved;						// 到着フラグ
-	float movingTime;					// 計測移動時間
-	bool isDestinationLost;				// 目的地を見失った
-	bool onJump;						// ジャンプフラグ
-	bool jumping;						// ジャンプ中フラグ
+	// 経路探索
+	bool canSearch;									// 経路探索実行可能フラグ
+	float cntPathSearchInterval;					// 経路探索再実行間隔カウンタ
+	NavigationMesh* naviMesh;						// ナビメッシュ
+	LinkedList<meshDataNS::Index2>* edgeList;		// エッジリスト
+	DWORD naviFaceIndex;							// パス検索時のナビメッシュ設置面インデックス
 
 	// 攻撃
-	bool shouldAttack;
-	bool canAttack;
-	bool isAttacking;
-	float attackTime;					// 攻撃中時間（秒）
-	float attackInterval;				// 攻撃間隔（秒）
-	int attackTargetPlayer;
-	D3DXVECTOR3 vecAttack;
+	bool canAttack;									// 攻撃可能フラグ
+	float cntAttackInterval;						// 攻撃再実行間隔カウンタ
+	bool isAttacking;								// 攻撃中フラグ
+	float attackTime;								// 攻撃中時間（秒）
+	D3DXVECTOR3 attackDirection;					// 攻撃方向ベクトル
 
-	// コリジョン
-	Ray	ray;							// レイ
-	BoundingSphere sphereCollider;		// バウンディングスフィア
-	float difference;					// フィールド補正差分
-	bool onGround;						// 接地判定
-	bool onGroundBefore;				// 直前フレームの接地判定
-	D3DXVECTOR3	groundNormal;			// 接地面法線
-	bool isHitPlayer;					// プレイヤーと接触している
+	// 移動
+	D3DXVECTOR3 destination;						// 目的地
+	D3DXVECTOR3 moveDirection;						// 移動ベクトル
+	bool isArraved;									// 到着フラグ
+	float movingTime;								// 計測移動時間
+	bool isDestinationLost;							// 目的地を見失った
+	bool onJump;									// ジャンプフラグ
+	bool jumping;									// ジャンプ中フラグ
 
-	// 物理挙動
-	LPD3DXMESH	attractorMesh;			// 重力（引力）発生メッシュ
-	D3DXMATRIX*	attractorMatrix;		// 重力（引力）発生オブジェクトマトリックス
-	float friction;						// 摩擦係数
+	// コリジョンと物理挙動
+	Ray	ray;										// レイ
+	BoundingSphere sphereCollider;					// バウンディングスフィア
+	float difference;								// フィールド補正差分
+	bool onGround;									// 接地判定
+	bool onGroundBefore;							// 直前フレームの接地判定
+	D3DXVECTOR3	groundNormal;						// 接地面法線
+	bool isHitPlayer;								// プレイヤーと接触している
+	float friction;									// 摩擦係数
 
 	// サウンド
 	PLAY_PARAMETERS playParameters;
-	void footsteps(D3DXVECTOR3 playerPos, int playerID);
+	PLAY_PARAMETERS footStepsParameters[gameMasterNS::PLAYER_NUM];
 
-public:
-	Enemy(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
-	~Enemy();
-	// 更新処理
-	virtual void update(float frameTime);
-	// 事前処理
-	virtual void preprocess(float frameTime);
+	//------------------
+	// アクションクエリ
+	//------------------
+	// センサー
+	bool sensor();
+	// 経路探索
+	void searchPath();
+	// 攻撃
+	void attack();
+	// 移動
+	void move(float frameTime);
+	//------------------
+	// アクションの実装
+	//------------------
 	// 視覚センサー
 	bool eyeSensor(int playerType);
 	// 聴覚センサー
 	bool earSensor(int playerType);
 	// ステアリング
 	void steering();
-	// 攻撃
-	void attacking(int playerType, float frameTime);
-	// 到着判定
-	void checkArrival();
+	// 攻撃中
+	void attacking(float frameTime);
+	//----------------
+	// 事後処理の実装
+	//----------------
 	// 接地処理
 	void grounding();
 	// 壁ずり
@@ -329,53 +351,92 @@ public:
 	void updatePhysics(float frameTime);
 	// 姿勢の更新
 	void updatePosture(float frameTime);
+	// 到着判定
+	void checkArrival();
 	// 記憶の更新
 	void updataBlackBoard(float frameTime);
-	// 重力発生メッシュ（接地メッシュ）の設定
-	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
-	void setPlayer(Player* _player);
-	// エネミーのオブジェクトの数を初期化
-	static void resetNumOfEnemy();
-
-	// 適切なプレイヤーを移動ターゲットに設定する
-	void setPlayerMovingTarget();
-	//void moveQuery();
-	//void attackQuery();
-	//void sensorQuery();
-
-	// ステート遷移前の準備
-	void prepareChase();
-	void preparePatrol();
-	void prepareRest();
-	void prepareAttackTree();
-	void prepareDie();
-
+	//--------------
 	// ステート処理
+	//--------------
+	// 追跡ステート
 	virtual void chase(float frameTime);
+	// 警戒ステート
 	virtual void patrol(float frameTime);
+	// 休憩ステート
 	virtual void rest(float frameTime);
+	// ツリー攻撃ステート
+	virtual void attackTree(float frameTime);
+	// 死亡ステート
 	virtual void die(float frameTime);
+	//--------
+	// その他
+	//--------
+	//
+	void reset();
+	// 自動破棄を行うか確認
+	void checkAutoDestruction();
+	// 適切なプレイヤーを追跡ターゲットに設定する
+	void setPlayerChaseTarget();
+	// デバッグ用目的地設定
+	void setDebugDestination();
+	// 巡回路リングバッファの更新
+	void updatePatrolRoute();
+	// 足音の処理
+	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 
-	// Getter
+public:
+	//----------
+	// 基本処理
+	//----------
+	Enemy(enemyNS::ConstructionPackage constructionPackage);
+	~Enemy();
+	// 更新処理
+	virtual void update(float frameTime) = 0;
+	// 事前処理
+	virtual void preprocess(float frameTime);
+	// 事後処理
+	virtual void postprocess(float frameTime);
+	//----------------------
+	// ステート切り替え準備
+	//----------------------
+	// 追跡ステートの準備
+	void prepareChase();
+	// 警戒ステートの準備
+	void preparePatrol();
+	// 休憩ステートの準備
+	void prepareRest();
+	// ツリー攻撃ステートの準備
+	void prepareAttackTree();
+	// 死亡ステートの準備
+	void prepareDie();
+	//-----------------
+	// Getter & Setter
+	//-----------------
 	int getEnemyID();
 	static int getNumOfEnemy();
 	enemyNS::EnemyData* getEnemyData();
 	BoundingSphere* getSphereCollider();
 	LPD3DXMESH getMesh();
 	bool getNoticedOfPlayer(int playerType);
+	bool getIsAttacking();
 
-	// Setter
-	void setMove(bool setting);
-	void setMovingTarget(D3DXVECTOR3* _target);
-	void setDestinationAndResetArrival(D3DXVECTOR3 _destination);
-	void setAttack(bool shouldAttack, int _attackTargetPlayer);
-	void setIsHitPlayer(bool setting);
+	// エネミーのオブジェクトの数を初期化
+	static void resetNumOfEnemy();
+	// ダメージ処理
 	void damage(int _damage);
-
-	// デバッグ用目的地設定
-	void setDebugDestination();
+	// 攻撃中状態を止める
+	void stopAttacking();
+	// プレイヤーに気づく
+	void setAttention(D3DXVECTOR3 setting);
+	// 移動ターゲットを設定
+	void setMovingTarget(D3DXVECTOR3* _target);
+	// 攻撃ターゲットを設定
+	void setAttackTarget(Object* _target);
 
 #ifdef _DEBUG
+	//-----------
+	// Debug Use
+	//-----------
 	LPDIRECT3DDEVICE9 device;			// Direct3Dデバイス
 	Camera*	camera;						// 操作するカメラへのポインタ
 	Input* input;						// 入力処理
@@ -383,6 +444,8 @@ public:
 	float reverseValueXAxis;			// 操作X軸
 	float reverseValueYAxis;			// 操作Y軸
 	static int debugEnemyID;			// デバッグするエネミーのID
+	Ray eyeAngleRay[4];					// 視覚レイ表示用
+	BoundingSphere hearingSphere[2];	// 聴覚距離表示用
 
 	// デバッグ環境を設定
 	void setDebugEnvironment();
@@ -395,9 +458,7 @@ public:
 	// 移動
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
 	// デバッグセンサー
-	Ray eyeAngleRay[4];					// 視覚レイ表示用
-	BoundingSphere hearingSphere[2];	// 聴覚距離表示用
-	void debugSensor();					// デバッグ関数
+	void debugSensor();
 	// ImGUIへの出力
 	void outputGUI();
 #endif//_DEBUG

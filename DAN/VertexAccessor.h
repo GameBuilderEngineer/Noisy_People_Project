@@ -16,6 +16,8 @@ namespace vtxAccess
 		NORMAL,
 		COLOR,
 		UV,
+		// バンプマップとかする場合は
+		// ここを増やす！
 		ELEMENT_MAX
 	};
 }

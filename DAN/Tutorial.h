@@ -70,11 +70,12 @@ private:
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 
-	Sky*								sky;					//スカイドーム
+	Sky*								sky;				//スカイドーム
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
 
+	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 	EnemyManager*					enemyManager;		// エネミーマネージャー
 
 	//UI
