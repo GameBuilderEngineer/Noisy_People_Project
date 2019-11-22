@@ -141,6 +141,7 @@ public:
 	void updateSound(void);									//更新
 	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void uninitSoundStop(void);								//停止(全部のサウンド)
+	void setEndPointVoiceVolume(float volume);				//エンドポイントボイスのボリューム
 
 protected:
 #if(XADUIO2_STATE)
@@ -156,6 +157,7 @@ protected:
 
 	//基本機能(読み込み・停止)
 	static WAV_FILE	LoadWavChunk(FILE *fp);					//WAVファイルの読み込み処理
+	virtual void loadBuffer() {};							//必要なサウンドバッファを用意する
 
 	//リスト
 #if(XADUIO2_STATE)
@@ -168,7 +170,6 @@ protected:
 	//debug
 #if _DEBUG
 	virtual	void	 outputGUI(void) {};							//ImGUIへの出力
-	int	scene;												//シーン
 #endif
 
 };

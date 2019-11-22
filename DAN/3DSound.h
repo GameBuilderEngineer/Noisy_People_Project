@@ -79,7 +79,7 @@ public:
 	~S3DManager();
 
 	//基本機能
-	void	 SwitchAudioBuffer(int scene)override;							//ステージ遷移に合わせて必要なサウンドバッファを用意する
+	//void	 SwitchAudioBuffer(int scene)override;							//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void SetVolume(const PLAY_PARAMETERS playParameters, float volume);	//ボリューム
 
 	//debug用

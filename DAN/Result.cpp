@@ -27,9 +27,6 @@ Result::Result(void)
 	// 次のシーン( タイトル )
 	nextScene = SceneList::TITLE;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::RESULT);
-
 	
 }
 
@@ -39,7 +36,7 @@ Result::Result(void)
 Result::~Result(void)
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================

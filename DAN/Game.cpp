@@ -36,9 +36,6 @@ Game::Game()
 
 	nextScene = SceneList::RESULT;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::GAME);
-
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
@@ -48,6 +45,9 @@ Game::Game()
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
+	
+	//test
+	SoundInterface::SE->setEndPointVoiceVolume(0);
 }
 
 //===================================================================================================================================
@@ -56,7 +56,7 @@ Game::Game()
 Game::~Game()
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================
@@ -377,8 +377,6 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-		//enemyManager->footsteps(*player[i].getPosition(), i);		//足音
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -513,6 +511,11 @@ void Game::update(float _frameTime) {
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		// シーン遷移
 		changeScene(nextScene);
+	}
+
+	if (gameMaster->getGameTime() <= 210)
+	{
+		SoundInterface::BGM->SetSpeed();
 	}
 
 #ifdef _DEBUG

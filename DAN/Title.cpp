@@ -29,9 +29,6 @@ Title::Title(void)
 	sceneName = ("Scene -Title-");
 	nextScene = SceneList::TUTORIAL;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TITLE);
-
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];//同時に再生したい数
 	memset(playParameters, 0, sizeof(playParameters));//
@@ -40,8 +37,10 @@ Title::Title(void)
 	playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
 
 	//再生
-	SoundInterface::SE->playSound(&playParameters[0]);
-	SoundInterface::BGM->playSound(&playParameters[1]);
+	SoundInterface::BGM->playSound(&playParameters);
+
+	//初期化
+	tmpVolume = 1.0f;
 }
 
 //============================================================================================================================================
@@ -50,7 +49,7 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================
@@ -79,6 +78,8 @@ void Title::initialize()
 		camera->nearZ,
 		camera->farZ);
 
+	//WaveBall
+	waveBall = new WaveBall;
 
 	// Light
 	light = new Light;
@@ -115,6 +116,9 @@ void Title::uninitialize(void)
 	SAFE_DELETE(titleField);
 	SAFE_DELETE(titleFieldRenderer);
 			
+	//WaveBall
+	SAFE_DELETE(waveBall);
+
 	// タイトルUI
 	titleUI.uninitialize();
 
@@ -148,6 +152,33 @@ void Title::update(float _frameTime)
 	if (input->wasKeyPressed('1'))
 	{
 		effekseerNS::play(new effekseerNS::Instance);
+	}
+	//ミュート
+	if (input->isKeyDown('M'))
+	{
+		SoundInterface::SE->setEndPointVoiceVolume(0.0f);
+		SoundInterface::BGM->setEndPointVoiceVolume(0.0f);
+		SoundInterface::S3D->setEndPointVoiceVolume(0.0f);
+		waveBall->setVolume(0.0f);
+		waveBall->setOnCol(false);
+	}
+	//ミュート解除
+	if (input->isKeyDown('N'))
+	{
+		SoundInterface::SE->setEndPointVoiceVolume(1.0f);
+		SoundInterface::BGM->setEndPointVoiceVolume(1.0f);
+		SoundInterface::S3D->setEndPointVoiceVolume(1.0f);
+		waveBall->setVolume(1.0f);
+		waveBall->setOnCol(true);
+	}
+	//10%(test)
+	if (input->isKeyDown('B'))
+	{
+		SoundInterface::SE->setEndPointVoiceVolume(0.1f);
+		SoundInterface::BGM->setEndPointVoiceVolume(0.1f);
+		SoundInterface::S3D->setEndPointVoiceVolume(0.1f);
+		waveBall->setVolume(0.1f);
+		waveBall->setOnCol(true);
 	}
 
 	// タイトルUI
@@ -273,8 +304,8 @@ void Title::render3D(Camera _currentCamera)
 //============================================================================================================================================
 void Title::render2D()
 {
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);							// αブレンドを行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
 	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
@@ -283,6 +314,11 @@ void Title::render2D()
 
 	// タイトルUI
 	titleUI.render();
+
+#if _DEBUG
+	//WaveBall
+	waveBall->draw();
+#endif
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -311,12 +347,20 @@ void Title::AI(void)
 void Title::createGUI()
 {
 	bool createScene = false;
+	float backUpTmpVolume = tmpVolume;
 
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Checkbox("Create Scene", &createScene);
+	ImGui::SliderFloat("volume control", &tmpVolume, 0.0f, 1.0f);
+
+	if (backUpTmpVolume != tmpVolume)
+	{
+		backUpTmpVolume = tmpVolume;
+		waveBall->setVolume(tmpVolume);
+	}
 
 	ImGui::Text("controller1 LStick(%.02f,%.02f)", 
 		input->getController()[inputNS::DINPUT_1P]->getLeftStick().x,

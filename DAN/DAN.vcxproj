@@ -283,6 +283,7 @@
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="VisionState.h" />
+    <ClInclude Include="WaveBall.h" />
     <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Wolf.h" />
@@ -319,6 +320,7 @@
     <ClCompile Include="NormalState.cpp" />
     <ClCompile Include="SkyVisionState.cpp" />
     <ClCompile Include="DebugScene.cpp" />
+    <ClCompile Include="WaveBall.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="MapObject.cpp" />

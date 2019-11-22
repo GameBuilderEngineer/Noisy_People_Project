@@ -97,19 +97,6 @@ IXAudio2 *SoundInterface::GetXAudio2Interface(void)
 #endif
 
 //===================================================================================================================================
-//【シーンの更新】
-//===================================================================================================================================
-void SoundInterface::SwitchAudioBuffer(int scene)
-{
-#if(XADUIO2_STATE)
-	//シーンの更新
-	BGM->SwitchAudioBuffer(scene);
-	SE->SwitchAudioBuffer(scene);
-	S3D->SwitchAudioBuffer(scene);
-#endif
-}
-
-//===================================================================================================================================
 //【更新処理】
 //===================================================================================================================================
 void SoundInterface::UpdateSound(void)
@@ -120,7 +107,7 @@ void SoundInterface::UpdateSound(void)
 
 	//BGMの更新処理
 	BGM->updateSound();
-	BGM->SetSpeed();
+	//BGM->SetSpeed();
 
 	//S3Dの更新処理
 	S3D->updateSound();

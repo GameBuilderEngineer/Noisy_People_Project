@@ -32,9 +32,6 @@ Tutorial::Tutorial()
 	// 次のシーン(ゲーム)
 	nextScene = SceneList::GAME;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TUTORIAL);
-
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
@@ -53,7 +50,7 @@ Tutorial::Tutorial()
 Tutorial::~Tutorial()
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================
@@ -154,12 +151,11 @@ void Tutorial::initialize()
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),gameMaster, player);
-	//test(sai[マージする時に消して])
+	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),player);
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	enemySet.defaultPosition = ENEMY_POSTITION;
-	enemySet.defaultState = stateMachineNS::ENEMY_STATE::PATROL;
+	enemySet.defaultState = stateMachineNS::ENEMY_STATE::REST;
 	enemySet.type = enemyNS::ENEMY_TYPE::WOLF;
 	enemySet.enemyID = 0;
 	enemyData = enemyManager->createEnemyData(enemySet);
@@ -323,12 +319,6 @@ void Tutorial::update(float _frameTime)
 		{
 			changeScene(nextScene);
 		}
-	}
-
-	// チュートリアルが最後まで行ったらタイトルへ
-	if (tutorialTex.nextPage >= tutorialTex::TUTORIAL_2D_SCENE_MAX)
-	{
-		//changeScene(nextScene);
 	}
 
 	// チュートリアル2D更新

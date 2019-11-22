@@ -20,6 +20,8 @@
 #include "Object.h"
 #include "StaticMeshRenderer.h"
 
+#include "WaveBall.h"
+
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
@@ -43,6 +45,7 @@ class Title : public AbstractScene
 {
 private:
 	TestEffect* testEffect;
+	WaveBall *waveBall;
 
 	//フィールド描画実験
 	Object*					titleField;
@@ -67,5 +70,7 @@ public:
 
 #ifdef _DEBUG
 	virtual void createGUI() override;
+
+	float tmpVolume = 0;
 #endif
 };
