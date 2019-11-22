@@ -138,7 +138,7 @@ HRESULT Director::initialize() {
 	//animationLoader->initialize(d3d->device);
 
 	//scene
-	scene = new DebugScene();
+	scene = new Splash();
 	scene->setGameMaster(gameMaster);
 	scene->initialize();
 
