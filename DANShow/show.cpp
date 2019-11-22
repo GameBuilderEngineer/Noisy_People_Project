@@ -21,14 +21,15 @@ SHOW::SHOW(HWND hWnd)
 
 	// Video Window
 	hr = videoWindow->put_Owner((OAHWND)hWnd);
-	hr = videoWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
+	hr = videoWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS | WS_SYSMENU);
 	RECT rect = { 0 };
-	GetClientRect(hWnd, &rect);
-	hr = videoWindow->SetWindowPosition(0, 0,rect.right - rect.left, rect.bottom - rect.top);
-	hr = videoWindow->SetWindowPosition(0, 0,rect.right - rect.left, rect.bottom - rect.top);
+	//GetClientRect(hWnd, &rect);
+	int xSize = GetSystemMetrics(SM_CXSCREEN);
+	int ySize = GetSystemMetrics(SM_CYSCREEN);
+	hr = videoWindow->SetWindowPosition(0, 0, xSize, ySize);
+	hr = videoWindow->SetWindowPosition(0, 0, xSize, ySize);
 	hr = videoWindow->SetWindowForeground(OATRUE);
 	hr = videoWindow->put_Visible(OATRUE);
-
 }
 
 SHOW::~SHOW()
