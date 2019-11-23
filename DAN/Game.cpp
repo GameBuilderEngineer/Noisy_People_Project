@@ -258,8 +258,6 @@ void Game::initialize() {
 			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
 		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
 		treeData.treeID = treeManager->issueNewTreeID();
-
-		
 		treeManager->createTree(treeData);
 	}
 

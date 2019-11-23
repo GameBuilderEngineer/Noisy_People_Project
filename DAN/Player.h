@@ -292,7 +292,6 @@ public:
 	void pullpower(int pull);									//電力減算
 	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
 	void damage(int _damage);									//ダメージ処理
-	void resetOnGround() { onGround = false;  jumping = true; }
 
 	//getter
 	int getHp();												// HPの取得
