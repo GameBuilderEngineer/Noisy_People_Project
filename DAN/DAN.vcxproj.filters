@@ -268,9 +268,6 @@
     <Filter Include="Game Layer\Reticle">
       <UniqueIdentifier>{781a28d9-41c9-4ecf-9eb3-f953ebcc4bf0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Player\Bullet">
-      <UniqueIdentifier>{83331455-372c-43e8-b5da-cc017d64c561}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Enemy\StateMachine">
       <UniqueIdentifier>{6b3788e2-4ae9-4b81-887d-d5b39aaf52e6}</UniqueIdentifier>
     </Filter>
@@ -298,23 +295,11 @@
     <Filter Include="Game Layer\GameUI\Guage">
       <UniqueIdentifier>{5bb8b9a2-f308-41f1-a6dd-48e0aee779fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Player\NormalState">
-      <UniqueIdentifier>{1dc0dacc-e6ae-4dd0-bfbe-a825349f46f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\Collision\Box">
       <UniqueIdentifier>{a7b425d0-f9ba-494e-bd85-330819bd8efd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\Collision\CollisionManager">
       <UniqueIdentifier>{5b82a205-c0e2-410a-8356-b67b8bf32594}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\DigitalShiftState">
-      <UniqueIdentifier>{98d371f2-8839-48d4-9d24-42e3827ab090}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\VisionState">
-      <UniqueIdentifier>{2f8a18bc-f623-4831-930f-3f8d43e67bb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\SkyVisionState">
-      <UniqueIdentifier>{3defbaa2-c089-4688-8fea-df82a12dc227}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Layer\GameUI\Timer">
       <UniqueIdentifier>{266e6feb-4d63-4f03-937d-34ed7770dab2}</UniqueIdentifier>
@@ -324,6 +309,30 @@
     </Filter>
     <Filter Include="Constant Layer\Sound\WaveBall">
       <UniqueIdentifier>{de30d108-8960-4bd0-8369-8236a6a6b381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State">
+      <UniqueIdentifier>{664fc8fa-2e71-4d1e-9e7d-71b1118fd7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\DigitalShiftState">
+      <UniqueIdentifier>{98d371f2-8839-48d4-9d24-42e3827ab090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\NormalState">
+      <UniqueIdentifier>{1dc0dacc-e6ae-4dd0-bfbe-a825349f46f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\SkyVisionState">
+      <UniqueIdentifier>{3defbaa2-c089-4688-8fea-df82a12dc227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\VisionState">
+      <UniqueIdentifier>{2f8a18bc-f623-4831-930f-3f8d43e67bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\OtherObject">
+      <UniqueIdentifier>{227ecf82-d0ce-4cf2-bbca-12aba10cdf13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\OtherObject\Bullet">
+      <UniqueIdentifier>{83331455-372c-43e8-b5da-cc017d64c561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\Effect">
+      <UniqueIdentifier>{95c3a96b-b2c5-44ac-a5cd-564022ef5073}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -614,7 +623,7 @@
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Game Layer\Player\Bullet</Filter>
+      <Filter>Game Layer\Player\OtherObject\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>Game Layer\Enemy\StateMachine</Filter>
@@ -710,19 +719,19 @@
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
     <ClCompile Include="NormalState.cpp">
-      <Filter>Game Layer\Player\NormalState</Filter>
+      <Filter>Game Layer\Player\State\NormalState</Filter>
     </ClCompile>
     <ClCompile Include="DebugBox.cpp">
       <Filter>Constant Layer\Collision\Box</Filter>
     </ClCompile>
     <ClCompile Include="DigitalShiftState.cpp">
-      <Filter>Game Layer\Player\DigitalShiftState</Filter>
+      <Filter>Game Layer\Player\State\DigitalShiftState</Filter>
     </ClCompile>
     <ClCompile Include="VisionState.cpp">
-      <Filter>Game Layer\Player\VisionState</Filter>
+      <Filter>Game Layer\Player\State\VisionState</Filter>
     </ClCompile>
     <ClCompile Include="SkyVisionState.cpp">
-      <Filter>Game Layer\Player\SkyVisionState</Filter>
+      <Filter>Game Layer\Player\State\SkyVisionState</Filter>
     </ClCompile>
     <ClCompile Include="ElectGuageEmp.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
@@ -750,6 +759,9 @@
     </ClCompile>
     <ClCompile Include="Player2UI.cpp">
       <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitalShiftEffect.cpp">
+      <Filter>Game Layer\Player\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1072,7 +1084,7 @@
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>Game Layer\Player\Bullet</Filter>
+      <Filter>Game Layer\Player\OtherObject\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
       <Filter>Game Layer\Enemy\StateMachine</Filter>
@@ -1159,19 +1171,19 @@
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
     <ClInclude Include="NormalState.h">
-      <Filter>Game Layer\Player\NormalState</Filter>
+      <Filter>Game Layer\Player\State\NormalState</Filter>
     </ClInclude>
     <ClInclude Include="DebugBox.h">
       <Filter>Constant Layer\Collision\Box</Filter>
     </ClInclude>
     <ClInclude Include="DigitalShiftState.h">
-      <Filter>Game Layer\Player\DigitalShiftState</Filter>
+      <Filter>Game Layer\Player\State\DigitalShiftState</Filter>
     </ClInclude>
     <ClInclude Include="VisionState.h">
-      <Filter>Game Layer\Player\VisionState</Filter>
+      <Filter>Game Layer\Player\State\VisionState</Filter>
     </ClInclude>
     <ClInclude Include="SkyVisionState.h">
-      <Filter>Game Layer\Player\SkyVisionState</Filter>
+      <Filter>Game Layer\Player\State\SkyVisionState</Filter>
     </ClInclude>
     <ClInclude Include="ElectGuageeEmp.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
@@ -1199,6 +1211,9 @@
     </ClInclude>
     <ClInclude Include="Player2UI.h">
       <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitalShiftEffect.h">
+      <Filter>Game Layer\Player\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

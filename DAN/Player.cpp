@@ -62,6 +62,7 @@ Player::Player()
 Player::~Player()
 {
 	SAFE_DELETE(bulletManager);
+	SAFE_DELETE(digitalShiftEffect);
 	SAFE_DELETE(state);
 }
 
@@ -99,8 +100,9 @@ void Player::initialize(PlayerTable info)
 
 	//デジタルアクション
 	//デジタルシフト
-	shiftLine.start = position;
-	shiftLine.end	= position+axisZ.direction;
+	digitalShiftEffect	= new DigitalShiftEffect;
+	shiftLine.start		= position;
+	shiftLine.end		= position+axisZ.direction;
 
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
@@ -138,6 +140,9 @@ void Player::update(float frameTime)
 	//バレットマネージャーの更新
 	bulletManager->update(frameTime);
 
+	//デジタルシフトエフェクトの更新
+	digitalShiftEffect->update(frameTime);
+
 	// 操作(状態別)
 	state->operation();
 
@@ -171,7 +176,11 @@ void Player::update(float frameTime)
 //===================================================================================================================================
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
+	//バレットの描画
 	bulletManager->render(view,projection,cameraPosition);
+	//デジタルシフトエフェクトの描画
+	digitalShiftEffect->render(view, projection, cameraPosition);
+
 #ifdef _DEBUG
 	aimingRay.render(collideDistance);
 	shootingRay.render(MAX_DISTANCE);
@@ -510,6 +519,7 @@ void Player::returnTransitionCamera(float time)
 		+ axisY.direction*CAMERA_GAZE.y;
 	startTransitionCamera(time, cameraGaze, nextGaze);
 }
+
 //===================================================================================================================================
 //【カメラ遷移開始】
 //===================================================================================================================================
@@ -678,6 +688,9 @@ bool Player::digitalShift()
 		//カメラ遷移を開始
 		startTransitionCamera(SKY_TRANSITION_TIME,cameraGaze,nextGaze);
 		
+		//デジタルシフトの開始エフェクトを再生
+		digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT,center);
+
 		transState(DIGITAL_SHIFT);
 		return true;
 	}
@@ -728,6 +741,13 @@ bool Player::executionDigitalShift()
 {
 	//デジタルシフト開始
 	position = shiftLine.end;
+
+	//センターも同時に更新
+	center = position + D3DXVECTOR3(0.0f, size.y / 2, 0.0f);
+
+	//デジタルシフトの終了エフェクトを再生
+	digitalShiftEffect->play(DigitalShiftEffectNS::END_SHIFT, center);
+
 	return true;
 }
 
@@ -894,33 +914,45 @@ void Player::outputGUI()
 		ImGuiIO& io = ImGui::GetIO();
 		float limitTop = 1000;
 		float limitBottom = -1000;
+
 		ImGui::Text("state[%s]", state->stateName.c_str());
-		ImGui::Text("shootingRay.distance %.02f", shootingRay.distance);
+		
+
 		ImGui::Text("speedVectorLength %f", D3DXVec3Length(&speed));
+
+		//電力関係
 		ImGui::Text("power %d", power);													//電力
 		ImGui::Text("recoveryPowerTimer:%.02f", recoveryPowerTimer);					//電力回復時間
+
+
+		//シューティング関係
+		ImGui::Text("bulletList->nodeNum [%d]", bulletManager->getNum());				//実際のバレットリストのノードの数
 		ImGui::Text("BulletRmaining [%d/%d]",
 			bulletManager->getRemaining(), bulletNS::MAGAZINE_NUM);						//残弾数
 		ImGui::Text("ReloadTime:%.02f", bulletManager->getReloadTime());				//リロード時間
-		ImGui::Text("dot:%.02f", dot);
+		ImGui::Text("shootingRay.distance %.02f", shootingRay.distance);
 
 		//カメラ遷移
 		ImGui::Text(nowCameraTransing? "nowCameraTransing:ON":"nowCameraTransing:OFF");
 		ImGui::Text("CameraTransTime : %.02f / %.02f",
 			cameraTransitionTimer,cameraTransitionTime);
-		
+		//デジタルシフトレイ
 		ImGui::Text("[shiftRay] start(%.02f,%.02f,%.02f):distance(%.02f)",
 			shiftRay.start.x, shiftRay.start.y, shiftRay.start.z,
 			shiftRay.distance);
-
 		ImGui::Text("[shiftLine] start(%.02f,%.02f,%.02f):end(%.02f,%.02f,%.02f)",
 			shiftLine.start.x, shiftLine.start.y, shiftLine.start.z,
 			shiftLine.end.x, shiftLine.end.y, shiftLine.end.z);
 
+		//操作有効フラグ
+		//シフト
 		ImGui::Text(whetherValidOperation(ENABLE_SHIFT) ? "ENABLE_SHIFT:ON":"ENABLE_SHIFT:OFF");
-		
-		ImGui::Text(onGround ? "onGround:ON":"onGround:OFF");
 
+		//接地関係
+		ImGui::Text(onGround ? "onGround:ON":"onGround:OFF");							//接地フラグ
+		ImGui::Text("dot:%.02f", dot);
+
+		//オブジェクトパラメータ
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
 		ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
 		ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);						//スケール

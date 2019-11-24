@@ -64,7 +64,7 @@ void DigitalShiftState::update(float frameTime)
 	{
 		effectTimer += frameTime;
 	}
-	else {
+	else if(effectTimer > EFFECT_TIME){
 		//エフェクト後デジタルシフトを実行
 		player->executionDigitalShift();
 		effectTimer = -1.0f;

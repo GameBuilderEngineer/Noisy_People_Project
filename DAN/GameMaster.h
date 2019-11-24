@@ -64,6 +64,19 @@ struct PlayerTable
 	int greeningTree;	//緑化した本数
 	int sedationEnemy;	//鎮静化したエネミー
 };
+//ツリー情報
+struct TreeTable
+{
+	int				treeType;			//ANALOG|DIGITAL
+	int				modelType;			//モデルタイプ
+	int				player;				//緑化したプレイヤー
+	int				greeningOrder;		//緑化された順位
+	float			greeningTime;		//緑化された時間
+	D3DXVECTOR3		position;			//位置
+	D3DXQUATERNION	rotation;			//回転
+	D3DXVECTOR3		scale;				//スケール
+
+};
 
 //===================================================================================================================================
 //【ゲーム管理クラス】
@@ -74,11 +87,19 @@ class GameMaster :public Base
 {
 private:
 	//Data
+	//ゲーム
 	float			gameTimer;										//ゲーム時間
 	float			countDownTimer;									//カウントダウン時間
+	bool			pause;											//ポーズ
+
+	//木関係情報
 	int				treeNum;										//枯木・緑化木の総計
 	int*			conversionOrder;								//変換順番：緑化された順番
+	
+	//プレイヤー
 	PlayerTable		playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
+
+
 public:
 	//基本処理
 	GameMaster();
@@ -86,10 +107,14 @@ public:
 	void initialize();
 	void update(float frameTime);
 
+
+
 	//ゲーム
-	void startGame();
+	void startGame();												//ゲーム開始関数
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
-	
+	bool paused();													//ポーズ処理
+
+
 	//木の設定関数
 	void readyConversionOrder(int treeNum);							//変換順番変数を準備する
 	void discardConversionOrder();									//変換順番変数を破棄する

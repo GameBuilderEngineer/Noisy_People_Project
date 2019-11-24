@@ -288,6 +288,8 @@ void Game::initialize() {
 		
 		treeManager->createTree(treeData);
 	}
+	//ツリーの最大数を取得
+	gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）
 	aiDirector = new AIDirector;
@@ -350,11 +352,13 @@ void Game::update(float _frameTime) {
 	//gameMaster処理落ちやポーズに関わらない更新
 	gameMaster->update(frameTime);
 
+	//ポーズ中ならリターン
+	if (gameMaster->paused())return;
 
 	//【処理落ち】
-	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
+	//フレーム時間が10FPS時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 0.10)return;
+	if (frameTime > 10.0f/60.0f)return;
 
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
@@ -556,7 +560,7 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	//testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
 	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);

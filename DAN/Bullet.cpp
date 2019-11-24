@@ -2,7 +2,7 @@
 //【Bullet.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/05
-// [更新日]2019/11/11
+// [更新日]2019/11/25
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -88,13 +88,20 @@ void Bullet::render()
 //===================================================================================================================================
 bool Bullet::collide(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix)
 {
-	bool hit = ballisticRay.rayIntersect(targetMesh, targetMatrix);
+	//弾道レイの書き換え防止
+	Ray ray;
+	ray.initialize(ballisticRay.start, ballisticRay.direction);
 	
+	//レイ判定
+	bool hit = ray.rayIntersect(targetMesh, targetMatrix);
+
 	if (hit)
 	{
+		//距離判定
 		hit = (Base::between2VectorLength(ballisticRay.start, position)
-		> ballisticRay.distance);
+		> ray.distance);
 	}
+	
 
 	return hit;
 }
@@ -117,9 +124,8 @@ void Bullet::destroy()
 {
 	existenceTimer = 0.0f;
 	//サウンドの再生
-	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 	PLAY_PARAMETERS hitSE;
-	hitSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_HitBulletTree, false ,NULL,false,NULL, true, filterParameters };
+	hitSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_HitBulletTree, false ,NULL,false,NULL};
 	SoundInterface::SE->playSound(&hitSE);
 	//エフェクトの再生
 	effekseerNS::Instance* instance = new effekseerNS::Instance();
@@ -148,7 +154,6 @@ BulletManager::BulletManager()
 	launchFactTime	= 0.0f;
 
 	//サウンドの設定
-	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Shot, false ,NULL,false,NULL};
 	reroadSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Reload, false ,NULL,false,NULL};
 }
@@ -180,29 +185,38 @@ void BulletManager::update(float frameTime)
 	{
 		//バレットのポインタ取得
 		Bullet* bullet = (*bulletList->getValue(i));
-
+		
 		//更新
 		bullet->update(frameTime);
+	
+		if(bullet->existenceTimer > 0 &&	//残存していて
+			bullet->isCollideInitial())		//初期衝突予定位置に衝突している場合
+		{
+			//衝突演出ありの消滅
+			bullet->destroy();
+		}
+	}
+
+	//レンダラーの更新
+	//実体が消える前に解除処理を先行する
+	renderer->update();
+
+	//各バレットの削除処理
+	for (int i = 0; i < bulletList->nodeNum; i++)
+	{
+		//バレットのポインタ取得
+		Bullet* bullet = (*bulletList->getValue(i));
 
 		//生存時間切れ
+		//自然消滅処理
 		if (bullet->existenceTimer <= 0)
 		{
 			destroy(bullet, i);
 		}
-		//初期衝突位置
-		else if(bullet->isCollideInitial())
-		{
-			bullet->destroy();
-			destroy(bullet, i);
-		}
 	}
+
 	//リストの更新[削除による対応]
 	bulletList->listUpdate();
-
-
-	//レンダラーの更新
-	renderer->update();
-
 
 	//リロード処理
 	if (reloadTimer > 0)
@@ -280,11 +294,6 @@ bool BulletManager::launch(Ray shootingRay)
 	//サウンドの再生
 	SoundInterface::SE->playSound(&shotSE);
 
-	//エフェクトの再生
-	//effekseerNS::Instance* instance = new effekseerNS::Instance();
-	//instance->position = newBullet->position;
-	//effekseerNS::play(instance);
-
 	//ゲーム中に発射事実を残す
 	isLaunched = true;
 	launchFactTime = 0.0f;
@@ -313,9 +322,8 @@ void BulletManager::reload()
 void BulletManager::destroy(Bullet* bullet,int nodeNumber)
 {
 	//削除
-	renderer->unRegisterObjectByID(bullet->id);//削除前にレンダラー解除
-	SAFE_DELETE(bullet);
-	bulletList->remove(bulletList->getNode(nodeNumber));
+	SAFE_DELETE(bullet);									//実体の削除
+	bulletList->remove(bulletList->getNode(nodeNumber));	//ポインタそのものの削除
 }
 
 //===================================================================================================================================

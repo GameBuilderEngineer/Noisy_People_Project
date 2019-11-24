@@ -225,26 +225,18 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 	//総当たり検索
 	for (int i = 0; i < objectNum; i++)
 	{	
-		bool enable = true;
-		//有効値判定
-		if (*objectList->getValue(i))
-		{
-			enable = true;
-		}
-		else {
-			enable = false;
-		}
-
-		if (enable == false)continue;//有効値でない場合スルー
-
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//ここで止まるバグあり(2019/11/24)
-		//おそらくバレットのサイクルに問題あり
-		//関連するバグとして、消失と思われるタイミングに、(0,0,0)地点に転送される
+		//記：菅野
+		//おそらくバレットのサイクルに問題あり(←11/25書き換えたので問題なさそう？)
+		//他のクラスなどでここで停止するバグがあった場合は菅野へ報告してください。
+		//書き換えを行っているので、影響が出ている恐れがあります。
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if ((*objectList->getValue(i))->id == id)
 		{
-			unRegisterObject(i);
+			//unRegisterObject(i);
 			//存在時間を0にして削除可能状態にする
-			//(*objectList->getValue(i))->existenceTimer = 0.0f;
+			(*objectList->getValue(i))->existenceTimer = 0.0f;
 			//検索終了
 			return;	
 		}
@@ -256,19 +248,19 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 //===================================================================================================================================
 void StaticMeshRenderer::unRegisterObject(int i)
 {
-	if (*objectList->getValue(i)) 
-	{
-		//有効値ならタイマーチェック後解除処理
-		if ((*objectList->getValue(i))->existenceTimer > 0)return;	//タイマーチェック
-		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
-		didUnRegister = true;
-	}
-	else
-	{
-		//有効値でなければ自動的に解除
-		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
-		didUnRegister = true;
-	}
+	//if (*objectList->getValue(i)) 
+	//{
+	//有効値ならタイマーチェック後解除処理
+	if ((*objectList->getValue(i))->existenceTimer > 0)return;	//タイマーチェック
+	objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+	didUnRegister = true;
+	//}
+	//else
+	//{
+	//	//有効値でなければ自動的に解除
+	//	objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+	//	didUnRegister = true;
+	//}
 }
 
 //===================================================================================================================================

@@ -24,6 +24,7 @@
 #include "Camera.h"
 #include "GameMaster.h"
 #include "Bullet.h"
+#include "DigitalShiftEffect.h"
 #include "Sound.h"
 
 //===================================================================================================================================
@@ -278,8 +279,10 @@ private:
 	D3DXVECTOR3					shootingPosition;				//衝突位置(プレイヤーレイ準拠）
 	float						collideDistance;				//照射距離
 	BulletManager*				bulletManager;					//バレットマネージャー
+	
 
 	//デジタルアクション
+	DigitalShiftEffect*			digitalShiftEffect;				//デジタルシフトエフェクト
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
 
