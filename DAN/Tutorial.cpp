@@ -118,12 +118,6 @@ void Tutorial::initialize()
 			break;
 		}
 
-		//èdóÕÇê›íË
-		player[i].configurationGravityWithRay(
-			testField->getPosition(),
-			testFieldRenderer->getStaticMesh()->mesh,
-			testField->getMatrixWorld());
-
 		//êiíª
 		step[i] = tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1;
 		planeStep[i] = tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_ENEMY;

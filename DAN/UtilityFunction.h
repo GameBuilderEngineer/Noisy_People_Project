@@ -80,4 +80,7 @@ public:
 	static utility::Polar3D fromRectangular3D(D3DXVECTOR3 coordinate);
 	//1Ÿ•âŠÔŠÖ”
 	static float lerp(float start, float end, float time);
+
+	//(floatŒ^)‘Î”ŠÖ”F”CˆÓ‚Ì’ê‚ğw’è
+	static float logarithm(float e, float x);
 };

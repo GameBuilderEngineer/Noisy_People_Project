@@ -122,19 +122,14 @@ void Game::initialize() {
 			break;
 		}
 
-		//重力を設定
-		player[i].configurationGravityWithRay(
-			testField->getPosition(),
-			testFieldRenderer->getStaticMesh()->mesh,
-			testField->getMatrixWorld());
 	}
 
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(
-		camera[0].fieldOfView, 
-		(float)camera[0].windowWidth, 
-		(float)camera[0].windowHeight, 
-		camera[0].nearZ, 
+		camera[0].fieldOfView,
+		(float)camera[0].windowWidth,
+		(float)camera[0].windowHeight,
+		camera[0].nearZ,
 		camera[0].farZ);
 
 	//light
@@ -767,7 +762,7 @@ void Game::collisions()
 		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
 		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
 		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
-		//狙撃レイ/姿勢更新/
+		//照準レイ更新/姿勢更新/狙撃レイ更新
 		player[i].updateAiming(mesh, matrix);
 		player[i].updatePostureByAiming();
 		player[i].updateShooting(mesh, matrix);
@@ -777,28 +772,27 @@ void Game::collisions()
 	//プレイヤー[シフトレイ]とデジタルツリー
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		if (player[i].getState() == playerNS::VISION||
-			player[i].getState() == playerNS::SKY_VISION)
+		if (player[i].getState() != playerNS::VISION &&
+			player[i].getState() != playerNS::SKY_VISION)continue;
+		
+		std::vector<Tree*> list = treeManager->getTreeList();
+		for (int num = 0; num < list.size(); num++)
 		{
-			std::vector<Tree*> list = treeManager->getTreeList();
-			for (int num = 0; num < list.size(); num++)
-			{
-				//デジタルツリーの場合
-				if (list[num]->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+			//デジタルツリーの場合
+			if (list[num]->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
 
-				//カリング処理
-				//カメラ視野角内の場合
-				D3DXVECTOR3 center = list[num]->center;
-				float radius = list[num]->radius;
-				if (!UtilityFunction::culling(
-					center, radius, camera[i].view, camera[i].fieldOfView,
-					camera[i].nearZ, camera[i].farZ, camera[i].aspect))continue;
+			//カリング処理
+			//カメラ視野角内の場合
+			D3DXVECTOR3 center = list[num]->center;
+			float radius = list[num]->radius;
+			if (!UtilityFunction::culling(
+				center, radius, camera[i].view, camera[i].fieldOfView,
+				camera[i].nearZ, camera[i].farZ, camera[i].aspect))continue;
 
-				//シフトレイの更新
-				LPD3DXMESH mesh = list[num]->getMesh();
-				D3DXMATRIX matrix = list[num]->matrixWorld;
-				player[i].collideShiftRay(mesh,matrix);
-			}
+			//シフトレイの更新
+			LPD3DXMESH mesh = list[num]->getMesh();
+			D3DXMATRIX matrix = list[num]->matrixWorld;
+			player[i].collideShiftRay(mesh,matrix);
 		}
 	}
 

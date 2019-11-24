@@ -133,37 +133,46 @@ namespace playerNS{
 	};
 
 	// StatusParameter
-	const int	MAX_HP						= 100;									// ＨＰ最大値
-	const int	FULL_POWER					= 100;									// 電力ゲージ一本
-	const int	MAX_POWER					= FULL_POWER * 3;						// 電力ゲージ最大値
-	const int	MIN_POWER					= 0;									// 電力ゲージ最低値
-	const float INVINCIBLE_TIME				= 3.0f;									// 無敵時間
+	const int	MAX_HP						= 100;									//ＨＰ最大値
+	const int	FULL_POWER					= 100;									//電力ゲージ一本分の電力量
+	const int	MAX_POWER					= FULL_POWER * 3;						//電力ゲージ最大値
+	const int	AUTO_RECOVERY_POWER			= (int)((float)FULL_POWER/30.0f);		//自動回復電力（1秒あたりの回復量:30秒で1本分全回復）
+	const int	MIN_POWER					= 0;									//電力ゲージ最低値
+	const float INVINCIBLE_TIME				= 3.0f;									//無敵時間
 
 
 	//CameraParameter
 	const D3DXVECTOR3 CAMERA_GAZE			= D3DXVECTOR3(1.0f,1.5f,0.0f);
 
 	// Physics
-	const float MOVE_ACC					= 27.0f;								// 移動加速度
-	const float MOVE_ACC_WHEN_NOT_GROUND	= MOVE_ACC / 8.5f;						// 空中移動加速度
-	const float STOP_SPEED					= 0.5f;									// 移動停止速度
-	const float MAX_SPEED					= 6.0f;									// 移動停止速度
-	const float MAX_SLIP					= 10.0f;									// 移動停止速度
-	const float FALL_SPEED_MAX				= 60.0f;								// 落下最高速度
-	const float MOVE_FRICTION				= 1.3f;								// 地面摩擦係数
-	const float WALL_FRICTION				= 0.98;									// 壁ずり摩擦係数
-	const float GROUND_FRICTION				= 0.25;									// 着地摩擦係数
-	const float GRAVITY_FORCE				= 9.8f;									// 重力
-	const float JUMP_SPEED					= 6.0f;									// ジャンプ初速
-	const float JUMP_TIME					= 0.3f;									// ジャンプ初速
-	const float JUMP_CONTROL_SPEED			= 1.0f;									// ジャンプ高さコントール速度
-	const float DASH_MAGNIFICATION			= 2.0f;									// ダッシュ倍率
+	const float MOVE_ACC					= 27.0f;								//移動加速度
+	const float MOVE_ACC_WHEN_NOT_GROUND	= MOVE_ACC / 8.5f;						//空中移動加速度
+	const float STOP_SPEED					= 0.5f;									//移動停止速度
+	const float MAX_SPEED					= 6.0f;									//移動停止速度
+	const float MAX_SLIP					= 10.0f;								//移動停止速度
+	const float FALL_SPEED_MAX				= 60.0f;								//落下最高速度
+	const float MOVE_FRICTION				= 1.3f;									//地面摩擦係数
+	const float WALL_FRICTION				= 0.98;									//壁ずり摩擦係数
+	const float GROUND_FRICTION				= 0.25;									//着地摩擦係数
+	const float GRAVITY_FORCE				= 9.8f;									//重力
+	const float JUMP_SPEED					= 6.0f;									//ジャンプ初速
+	const float JUMP_TIME					= 0.3f;									//ジャンプ初速
+	const float JUMP_CONTROL_SPEED			= 1.0f;									//ジャンプ高さコントール速度
+	const float DASH_MAGNIFICATION			= 2.0f;									//ダッシュ倍率
 	// Another
-	const float DIFFERENCE_FIELD			= 0.1f;								// フィールド補正差分
+	const float DIFFERENCE_FIELD			= 0.1f;									// フィールド補正差分
 	const float CAMERA_SPEED				= 1.0f;									// カメラの速さ
 	
 	//Shooting
 	const float MAX_DISTANCE				= 100.0f;								//最大照準距離
+
+	//DigitalAction
+	const float SKY_HEIGH					= 40.0f;								//スカイビジョン上昇距離
+	const int	COST_SHIFT					= 70;									//シフト使用電力
+	const float	SHIFT_TRANSITION_TIME		= 1.0f;									//空中への遷移時間
+	const float	SKY_TRANSITION_TIME			= 0.5f;									//空中への遷移時間
+	const float	SKY_RETURN_TIME				= 0.5f;									//空中から戻る遷移時間
+
 
 	//EnableOperation
 	const int	DISABLE_OPERATION			= 0x00000000;
@@ -174,6 +183,7 @@ namespace playerNS{
 	const int	ENABLE_SKY_VISION			= 0x00000010;
 	const int	ENABLE_CANCEL_SKY_VISION	= 0x00000020;
 	const int	ENABLE_SHIFT				= 0x00000040;
+	const int	ENABLE_CAMERA				= 0x00000080;
 	const int	ALL_OPERATION				= 0xffffffff;
 }
 
@@ -193,12 +203,12 @@ public:
 	std::string		stateName;
 public:
 	AbstractState() {
-		frameTime	= 0.0f;
-		stateTimer	= 0.0f;
-		type		= playerNS::STATE::NONE;
-		nextType	= playerNS::STATE::NONE;
-		onTrans		= false;
-		stateName	= "none";
+		frameTime		= 0.0f;
+		stateTimer		= 0.0f;
+		type			= playerNS::STATE::NONE;
+		nextType		= playerNS::STATE::NONE;
+		onTrans			= false;
+		stateName		= "none";
 	}
 	virtual void start()					= 0;
 	virtual void update(float frameTime)	= 0;
@@ -221,49 +231,44 @@ private:
 	//ステータス
 	playerNS::OperationKeyTable	keyTable;						//操作Keyテーブル
 	AbstractState*				state;							//状態クラス
-	int							hp;								// HP
-	int							power;							// 電力
+	int							hp;								//HP
+	int							power;							//電力
 	int							validOperation;					//有効な操作ビットフラグ
-
-
 
 	//タイマー
 	float						frameTime;						//フレームタイム
-	float						invincibleTimer;				//無敵時間
+	float						invincibleTimer;				//無敵タイマー
+	float						recoveryPowerTimer;				//自動電力回復タイマー
+	float						cameraTransitionTimer;			//カメラ遷移タイマー（遷移する際に0で初期化）
+	float						cameraTransitionTime;			//カメラ遷移時間（状態別で設定していく）
 
 	//操作
 	float						reverseValueXAxis;				//操作X軸
 	float						reverseValueYAxis;				//操作Y軸
-	bool						isExecutingMoveOperation;		// 移動操作中フラグ
-	bool						jumping;						// ジャンプ中フラグ
+	bool						isExecutingMoveOperation;		//移動操作中フラグ
+	bool						jumping;						//ジャンプ中フラグ
 	bool						onJump;
 
-	// UI用操作判定フラグ
-	bool						isShotAble;
-	bool						isJumpAble;
-	bool						isVisionAble;
-	bool						isSkyVisionAble;
-	bool						isShiftAble;
-
 	// 衝突
-	BoundingSphere				bodyCollide;					// 球コリジョン
+	BoundingSphere				bodyCollide;					//球コリジョン
 	float						difference;						//フィールド補正差分
 	bool						onGround;						//接地判定
-	bool						onGroundBefore;					// 直前フレームの接地判定
-	D3DXVECTOR3					groundNormal;					// 接地面法線
+	bool						onGroundBefore;					//直前フレームの接地判定
+	D3DXVECTOR3					groundNormal;					//接地面法線
 
 	// 物理
-	float						friction;						// 摩擦係数
-	Ray							ray;							// レイ
-	//LPD3DXMESH					attractorMesh;					//重力（引力）発生メッシュ
-	//D3DXMATRIX*					attractorMatrix;				//重力（引力）発生オブジェクトマトリックス
+	float						friction;						//摩擦係数
+	Ray							ray;							//レイ
 
 	// 汎用
-	LPDIRECT3DDEVICE9			device;							// Direct3Dデバイス
-	Input*						input;							// 入力系
-	Camera*						camera;							// 操作するカメラへのポインタ
+	LPDIRECT3DDEVICE9			device;							//Direct3Dデバイス
+	Input*						input;							//入力系
+	Camera*						camera;							//操作するカメラへのポインタ
 	D3DXVECTOR3					cameraGaze;						//カメラ注視位置
+	D3DXVECTOR3					beforeGaze;						//遷移前注視位置
+	D3DXVECTOR3					nextGaze;						//遷移後注視位置
 	D3DXVECTOR3					cameraGazeRelative;				//カメラ注視相対位置
+	bool						nowCameraTransing;				//カメラ遷移中
 
 	//シューティングアクション
 	Ray							aimingRay;						//照準レイ（カメラからのレイ）
@@ -277,7 +282,6 @@ private:
 	//デジタルアクション
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
-	bool						enableShift;					//シフトが可能
 
 
 	//再生パラメータ
@@ -302,7 +306,7 @@ public:
 	void otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	//状態遷移
-	void transState(int next);											//状態遷移
+	void transState(int next);									//状態遷移
 
 	// 衝突
 	void grounding();											// 接地処理
@@ -320,16 +324,22 @@ public:
 
 
 	// 物理
-	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition,
-		LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
-	void physicalBehavior();									// 物理挙動
-	void updatePhysics(float frameTime);						// 物理の更新
-	void insetCorrection();										//めり込み補正
+	void physicalBehavior();									//物理挙動
+	void updatePhysics(float frameTime);						//物理の更新
 
 	//操作
-	void moveOperation();										// 移動操作
-	void jumpOperation();										// ジャンプ操作
-	void controlCamera(float frameTime);						// カメラ操作
+	void moveOperation();										//移動操作
+	void jumpOperation();										//ジャンプ操作
+
+	//カメラ
+	void controlCamera(float frameTime);						//カメラ操作
+	void controlSkyCamera();									//スカイカメラ操作
+	void transitionCamera();									//カメラ遷移
+	void startTransitionCamera(float time, D3DXVECTOR3 before, D3DXVECTOR3 next);	//カメラ遷移を開始(位置指定)
+	void returnTransitionCamera(float time);
+
+	//自動処理
+	void recoveryPower();										//電力の自動回復
 
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
@@ -339,11 +349,13 @@ public:
 
 	//デジタルアクション
 	bool digitalShift();										//デジタルシフト
-	bool executionDigitalShift();								//デジタルシフト実行
 	bool skyVision();											//スカイビジョン
 	bool vision();												//ビジョン
-	bool cancelSkyVision();										//スカイビジョン
-	bool cancelVision();										//ビジョン
+	bool executionDigitalShift();								//[実行]デジタルシフト
+	bool executionSkyVision();									//[実行]スカイビジョン
+	bool executionVision();										//[実行]ビジョン
+	bool cancelSkyVision();										//[キャンセル]スカイビジョン
+	bool cancelVision();										//[キャンセル]ビジョン
 	void collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix);	//シフトレイとの衝突
 
 

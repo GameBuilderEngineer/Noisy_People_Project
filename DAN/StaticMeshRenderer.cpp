@@ -237,6 +237,9 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 
 		if (enable == false)continue;//有効値でない場合スルー
 
+		//ここで止まるバグあり(2019/11/24)
+		//おそらくバレットのサイクルに問題あり
+		//関連するバグとして、消失と思われるタイミングに、(0,0,0)地点に転送される
 		if ((*objectList->getValue(i))->id == id)
 		{
 			unRegisterObject(i);

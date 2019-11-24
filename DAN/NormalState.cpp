@@ -2,7 +2,7 @@
 //yNormalState.cppz
 // [ì¬ŽÒ]HAL“Œ‹žGP12A332 11 ›–ì Ž÷
 // [ì¬“ú]2019/11/17
-// [XV“ú]2019/11/17
+// [XV“ú]2019/11/24
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -29,7 +29,10 @@ NormalState::NormalState(Player* player) :AbstractState()
 	stateName	= "NORMAL";
 	onTrans = false;
 	player->setValidOperation(
-		ENABLE_SHOT | ENABLE_JUMP | ENABLE_SKY_VISION | ENABLE_VISION);
+		ENABLE_SHOT | 
+		ENABLE_JUMP | 
+		ENABLE_SKY_VISION |  
+		ENABLE_VISION);
 }
 
 //===================================================================================================================================
@@ -76,6 +79,9 @@ void NormalState::physics()
 //===================================================================================================================================
 void NormalState::controlCamera()
 {
+	//ƒJƒƒ‰‘JˆÚ
+	player->transitionCamera();
+	//ƒJƒƒ‰‘€ì
 	player->controlCamera(frameTime);
 }
 

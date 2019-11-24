@@ -2,7 +2,7 @@
 //【DigitalShiftState.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/17
-// [更新日]2019/11/17
+// [更新日]2019/11/24
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -64,19 +64,18 @@ void DigitalShiftState::update(float frameTime)
 	{
 		effectTimer += frameTime;
 	}
-	else if(EFFECT_TIME > 0.0f){
+	else {
 		//エフェクト後デジタルシフトを実行
 		player->executionDigitalShift();
 		effectTimer = -1.0f;
 	}
 
-
 	//状態遷移
 	if (shiftTimer > SHIFT_TIME)
 	{
+		player->returnTransitionCamera(0.5f);
 		player->transState(NORMAL); return;//通常状態に戻る
 	}
-
 
 }
 
@@ -101,6 +100,11 @@ void DigitalShiftState::physics()
 //===================================================================================================================================
 void DigitalShiftState::controlCamera()
 {
+	if (effectTimer> EFFECT_TIME) {
+		//エフェクト後カメラを遷移
+		player->transitionCamera();
+	}
+
 	player->controlCamera(frameTime);
 }
 

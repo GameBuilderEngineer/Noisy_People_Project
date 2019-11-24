@@ -31,7 +31,6 @@ SkyVisionState::SkyVisionState(Player* player) :AbstractState()
 	stateName		= "SKY_VISION";
 	onTrans			= false;
 	player->setValidOperation(
-		ENABLE_SHIFT|
 		ENABLE_CANCEL_SKY_VISION);
 
 }
@@ -57,6 +56,8 @@ void SkyVisionState::start()
 void SkyVisionState::update(float frameTime)
 {
 	this->frameTime = frameTime;
+	stateTimer += frameTime;
+
 	//電力消費
 	costTimer += frameTime;
 	if (costTimer > COST_TIME)
@@ -70,6 +71,8 @@ void SkyVisionState::update(float frameTime)
 	else if (player->digitalShift())			return;	//デジタルシフト
 	else if (player->getPower() <= 0)
 	{
+		player->returnTransitionCamera(0.5f);
+
 		player->transState(NORMAL);		return;	//通常状態
 	}
 
@@ -96,7 +99,10 @@ void SkyVisionState::physics()
 //===================================================================================================================================
 void SkyVisionState::controlCamera()
 {
-	player->controlCamera(frameTime);
+	//カメラ遷移
+	player->transitionCamera();
+	//上空カメラを操作
+	player->controlSkyCamera();
 }
 
 //===================================================================================================================================

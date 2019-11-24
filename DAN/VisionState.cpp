@@ -2,7 +2,7 @@
 //【VisionState.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/17
-// [更新日]2019/11/17
+// [更新日]2019/11/24
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -33,7 +33,6 @@ VisionState::VisionState(Player* player):AbstractState()
 	player->setValidOperation(
 		ENABLE_JUMP |
 		ENABLE_SKY_VISION | 
-		ENABLE_SHIFT|
 		ENABLE_CANCEL_VISION);
 	//固有項目
 	costTimer = 0.0f;		//電力消費タイマー
@@ -61,6 +60,7 @@ void VisionState::update(float frameTime)
 {
 	this->frameTime = frameTime;
 	stateTimer += frameTime;
+
 	//電力消費
 	costTimer += frameTime;
 	if (costTimer > COST_TIME)
@@ -75,6 +75,7 @@ void VisionState::update(float frameTime)
 	else if (player->digitalShift())		return;		//デジタルシフト
 	else if (player->getPower() <= 0)
 	{
+		player->returnTransitionCamera(0.0f);
 		player->transState(NORMAL);		return;	//通常状態
 	}
 }
@@ -104,6 +105,8 @@ void VisionState::physics()
 //===================================================================================================================================
 void VisionState::controlCamera()
 {
+	player->transitionCamera();
+
 	player->controlCamera(frameTime);
 }
 
