@@ -21,20 +21,28 @@ SHOW::SHOW(HWND hWnd)
 
 	// Video Window
 	hr = videoWindow->put_Owner((OAHWND)hWnd);
-	hr = videoWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS | WS_SYSMENU);
+	hr = videoWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
 	RECT rect = { 0 };
 	//GetClientRect(hWnd, &rect);
-	int xSize = GetSystemMetrics(SM_CXSCREEN);
-	int ySize = GetSystemMetrics(SM_CYSCREEN);
-	hr = videoWindow->SetWindowPosition(0, 0, xSize, ySize);
-	hr = videoWindow->SetWindowPosition(0, 0, xSize, ySize);
-	hr = videoWindow->SetWindowForeground(OATRUE);
+	hr = videoWindow->SetWindowPosition(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	hr = videoWindow->SetWindowPosition(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	//hr = videoWindow->SetWindowForeground(OATRUE);
+	//hr = videoWindow->put_AutoShow(OATRUE);
+	
+	// Show
 	hr = videoWindow->put_Visible(OATRUE);
+	
+	// Input
+	hr = videoWindow->put_MessageDrain((OAHWND)hWnd);
 }
 
 SHOW::~SHOW()
 {
 	pauseShow();
+
+	control->Stop();
+	videoWindow->put_Visible(OAFALSE);
+	videoWindow->put_Owner(NULL);
 
 	graph->Release();
 	control->Release();
