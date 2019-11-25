@@ -71,6 +71,9 @@ void TreeManager::uninitialize()
 //=============================================================================
 void TreeManager::update(float frameTime)
 {
+	//緑化した本数を数えなおす
+	greeningTreeNum = 0;
+	//各ツリーの更新
 	for (size_t i = 0; i < treeList.size(); i++)
 	{
 		treeList[i]->update(frameTime);
@@ -101,7 +104,19 @@ void TreeManager::update(float frameTime)
 				
 			}
 		}
+
+		//緑化している木をカウント
+		if (treeList[i]->getTreeData()->greenState == treeNS::GREEN)
+		{
+			greeningTreeNum++;
+		}
 	}
+
+	//緑化率の更新
+	if (treeList.size() != 0) {
+		greeningRate = (float)greeningTreeNum / (float)treeList.size();
+	}
+
 
 	//レンダラーの更新
 	aTrunkRenderer->update();
@@ -272,6 +287,7 @@ void TreeManager::outputGUI()
 		ImGui::Text("numOfTree:%d", Tree::getNumOfTree());
 
 	}
+	ImGui::Text("greeningRate:%.02f%", greeningRate*100.0f);
 #endif
 }
 

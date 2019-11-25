@@ -293,7 +293,8 @@ bool CollisionManager::bulletAndTree(Bullet* bullet, Tree* tree)
 
 	if (collisionCylinder(bullet, tree))
 	{
-		hit = bullet->collide(tree->getMesh(), tree->matrixWorld);
+		hit = true;
+		//hit = bullet->collide(tree->getMesh(), tree->matrixWorld);
 	}
 
 	if (hit)

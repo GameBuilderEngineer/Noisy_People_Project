@@ -170,7 +170,7 @@ void Game::initialize() {
 	ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	naviMesh->initialize();
 
 	// エネミー
@@ -274,20 +274,46 @@ void Game::initialize() {
 	treeNS::TreeData treeData;
 	treeData.hp = 0;
 	treeData.type = treeNS::ANALOG_TREE;
-	treeData.size = treeNS::STANDARD;
 	treeData.greenState = treeNS::DEAD;
-	treeData.model = treeNS::B_MODEL;
 	treeData.isAttaked = false;
-	for (int i = 0; i < 50; i++)
+
+	treeData.size = treeNS::STANDARD;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 250; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
 		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
 		treeData.treeID = treeManager->issueNewTreeID();
 
+		treeManager->createTree(treeData);
+	}
+
+	treeData.size = treeNS::LARGE;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 30; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		treeData.treeID = treeManager->issueNewTreeID();
 		
 		treeManager->createTree(treeData);
 	}
+
+	treeData.size = treeNS::VERY_LARGE;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 5; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		treeData.treeID = treeManager->issueNewTreeID();
+
+		treeManager->createTree(treeData);
+	}
+
+
 	//ツリーの最大数を取得
 	gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
 
@@ -560,14 +586,16 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	//testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
 	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//アニメーションモデルの描画
 	DrawMoveP();
 
@@ -583,7 +611,6 @@ void Game::render3D(Camera currentCamera) {
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//海面の描画
 	//ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
 
 	// エネミーの描画
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -856,7 +883,8 @@ void Game::createGUI()
 
 	player->outputGUI();			//プレイヤー
 	enemyManager->outputGUI();		//エネミー
-	itemManager->outputGUI();		// アイテムマネージャ
+	itemManager->outputGUI();		//アイテムマネージャ
+	treeManager->outputGUI();		//ツリーマネージャー
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	naviMesh->outputGUI();			//ナビゲーションAI

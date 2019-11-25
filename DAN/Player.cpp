@@ -671,7 +671,7 @@ bool Player::shot()
 bool Player::digitalShift()
 {
 	if (!input->getMouseLButton() &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_DIGITA_SHIFT))return false;
+		!input->getController()[infomation.playerType]->wasButton(BUTTON_DIGITA_SHIFT))return false;
 	if (power < COST_SHIFT)return false;
 
 	//シフトが可能な場合
@@ -777,7 +777,7 @@ bool Player::executionVision()
 bool Player::vision()
 {
 	if (!input->wasKeyPressed(keyTable.vision) &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_VISION))return false;
+		!input->getController()[infomation.playerType]->wasButton(BUTTON_VISION))return false;
 
 	returnTransitionCamera(0.0f);
 
@@ -791,7 +791,7 @@ bool Player::vision()
 bool Player::cancelVision()
 {
 	if (!input->wasKeyPressed(keyTable.vision) &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_VISION))return false;
+		!input->getController()[infomation.playerType]->wasButton(BUTTON_VISION))return false;
 
 	returnTransitionCamera(0.0f);
 
@@ -806,7 +806,7 @@ bool Player::skyVision()
 {
 	//入力検知
 	if (!input->wasKeyPressed(keyTable.skyVision) &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return false;
+		!input->getController()[infomation.playerType]->wasButton(BUTTON_SKY_VISION))return false;
 
 	//次のカメラ遷移先としてスカイカメラ位置を設定する
 	nextGaze = position
@@ -829,7 +829,7 @@ bool Player::cancelSkyVision()
 {
 	//入力検知
 	if (!input->wasKeyPressed(keyTable.skyVision) &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_SKY_VISION))return false;
+		!input->getController()[infomation.playerType]->wasButton(BUTTON_SKY_VISION))return false;
 
 	//次のカメラ位置を地上プレイヤーカメラ位置に設定する
 	nextGaze = position

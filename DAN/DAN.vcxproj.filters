@@ -763,6 +763,7 @@
     <ClCompile Include="DigitalShiftEffect.cpp">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="DigitalTreeEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1215,6 +1216,7 @@
     <ClInclude Include="DigitalShiftEffect.h">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="DigitalTreeEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

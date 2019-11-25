@@ -66,7 +66,7 @@ namespace treeNS
 
 	//定数
 	const int	MAX_HP					= 100;		//最大HP
-	const float	AROUND_GREEN_TIME		= 5.0f;		//周辺への緑化時間
+	const float	AROUND_GREEN_TIME		= 2.0f;		//周辺への緑化時間
 	const float	AROUND_GREEN_RANGE_S	= 50.0f;	//周辺への緑化範囲
 	const float	AROUND_GREEN_RANGE_L	= 100.0f;	//周辺への緑化範囲
 	const float	AROUND_GREEN_RANGE_V	= 200.0f;	//周辺への緑化範囲
@@ -98,6 +98,9 @@ private:
 	treeNS::TreeData		treeData;			// ツリーデータ
 	Object					leaf;				// 葉オブジェクト
 	GreeningArea			greeningArea;		// 緑化範囲
+
+
+
 	LPD3DXMESH				attractorMesh;		// 重力（引力）発生メッシュ
 	D3DXMATRIX*				attractorMatrix;	// 重力（引力）発生オブジェクトマトリックス
 	static int				numOfTree;			// ツリーオブジェクトの総数

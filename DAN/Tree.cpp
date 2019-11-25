@@ -42,9 +42,24 @@ Tree::Tree(treeNS::TreeData _treeData)
 
 
 	// treeData.initialDirection‚ğŠî‚É‚µ‚½Œü‚«“]Š·
+	//postureControl(axisZ.direction, treeData.initialDirection, 1.0f);
 
 	// treeData.size‚ğŠî‚É‚µ‚½Šg‘åk¬
+	switch (treeData.size)
+	{
+	case STANDARD:
+		scale = D3DXVECTOR3(1.0f, 0.5f, 1.0f);
+		break;
+	case LARGE:
+		scale = D3DXVECTOR3(5.0f, 1.5f, 5.0f);
+		break;
+	case VERY_LARGE:
+		scale = D3DXVECTOR3(10.0f, 3.0f, 10.0f);
+		break;
+	}
 
+	leaf.scale = scale;
+	
 	//ƒTƒCƒY‚Ìİ’è
 	setSize(D3DXVECTOR3(1.5f, 20.0f, 1.5f));
 
