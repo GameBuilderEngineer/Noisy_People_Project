@@ -56,7 +56,10 @@ void ElectTank::initialize(int playerType)
 	case basicUiNS::P2:
 		for (int i = 0; i < TANK_MAX; i++)
 		{
-			BasicUI::assingPosition(TANK_POSTION);
+			postion.x = TANK_POSTION_P2.x + (35 * i);
+			postion.y = TANK_POSTION_P2.y;
+			postion.z = TANK_POSTION_P2.z;
+			BasicUI::assingPosition(postion);
 			BasicUI::initialize(electTank[i], textureNS::reference(textureNS::UI_EN_TANK));
 		}
 		break;

@@ -70,6 +70,7 @@ void CreditTex::update()
 	{
 		moveCredit();
 	}
+		//fadeOut();
 }
 
 //============================
@@ -95,4 +96,14 @@ void CreditTex::moveCredit()
 	credit[1]->setPosition(pos[1]);
 	credit[0]->setVertex();
 	credit[1]->setVertex();
+}
+
+//===========================
+//フェードアウト処理
+//===========================
+void CreditTex::fadeOut()
+{
+	alpha -= 5.0f;
+	//credit[0]->setAlphaAllVertex(alpha);
+	credit[1]->setAlphaAllVertex(alpha);
 }
