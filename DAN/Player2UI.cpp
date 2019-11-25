@@ -19,6 +19,7 @@ Player2UI::Player2UI()
 	hpGuageEmp = new HPguageEmp;
 	electGuageEmp = new ElectGuageEmp;
 	electGuage = new ElectGuage;
+	electTank = new ElectTank;
 }
 
 //=================================
@@ -32,6 +33,7 @@ Player2UI::~Player2UI()
 	delete hpGuageEmp;
 	delete electGuageEmp;
 	delete electGuage;
+	delete electTank;
 }
 
 //==================================
@@ -46,6 +48,7 @@ void Player2UI::initialize(Player *player)
 	hpGuageEmp->initialize(basicUiNS::P2);
 	electGuageEmp->initialize(basicUiNS::P2);
 	electGuage->initialize(basicUiNS::P2);
+	electTank->initialize(basicUiNS::P2);
 }
 
 //==================================
@@ -59,6 +62,7 @@ void Player2UI::render()
 	charaIcon->render();
 	electGuageEmp->render();
 	electGuage->render();
+	electTank->render();
 }
 
 //==================================
@@ -85,4 +89,5 @@ void Player2UI::update()
 
 	//“d—ÍƒQ[ƒWˆ—
 	electGuage->update(power);
+	electTank->update(power);
 }

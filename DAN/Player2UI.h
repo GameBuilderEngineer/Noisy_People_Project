@@ -14,6 +14,7 @@
 #include "HPguageEmp.h"
 #include "ElectGuageeEmp.h"
 #include "ElectGuage.h"
+#include "ElectTank.h"
 
 //==================================
 //名前空間
@@ -35,6 +36,7 @@ public://メンバー変数
 	HPguageEmp*  hpGuageEmp;
 	ElectGuageEmp* electGuageEmp;
 	ElectGuage*	electGuage;
+	ElectTank* electTank;
 	Player *player;			//P2の情報
 	bool	skyVisionFlag;	//スカイビジョンフラグ
 	bool	shotFlag;		//ショットフラグ

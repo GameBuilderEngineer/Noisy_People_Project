@@ -334,6 +334,9 @@
     <Filter Include="Game Layer\Player\Effect">
       <UniqueIdentifier>{95c3a96b-b2c5-44ac-a5cd-564022ef5073}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\GameUI\PlayerUI">
+      <UniqueIdentifier>{c4a17d3a-65fb-442e-a2b6-2d471a197331}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -755,10 +758,10 @@
       <Filter>Constant Layer\Sound\WaveBall</Filter>
     </ClCompile>
     <ClCompile Include="Player1UI.cpp">
-      <Filter>Game Layer\GameUI</Filter>
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClCompile>
     <ClCompile Include="Player2UI.cpp">
-      <Filter>Game Layer\GameUI</Filter>
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClCompile>
     <ClCompile Include="DigitalShiftEffect.cpp">
       <Filter>Game Layer\Player\Effect</Filter>
@@ -1208,10 +1211,10 @@
       <Filter>Constant Layer\Sound\WaveBall</Filter>
     </ClInclude>
     <ClInclude Include="Player1UI.h">
-      <Filter>Game Layer\GameUI</Filter>
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClInclude>
     <ClInclude Include="Player2UI.h">
-      <Filter>Game Layer\GameUI</Filter>
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClInclude>
     <ClInclude Include="DigitalShiftEffect.h">
       <Filter>Game Layer\Player\Effect</Filter>

@@ -143,7 +143,7 @@ void UInumber::setNumber(int score)
 	for (int i = 0; i < DIGIT_NUMBER; i++)
 	{
 		float x = (float)(num % 10);
-		uvCoord01.x = 0.1*x;
+		uvCoord01.x = 0.1 *x;
 		uvCoord02.x = 0.1 *(x + 1);
 		uvCoord03.x = 0.1 *x;
 		uvCoord04.x = 0.1 *(x + 1);

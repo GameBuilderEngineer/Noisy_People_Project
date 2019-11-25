@@ -228,11 +228,10 @@ void BasicUI::reductionHeightSize(Sprite *sprite,int speed)
 //=================================
 //UVÀ•W‚Ì•Ï‰»
 //=================================
-void BasicUI::changeUV(Sprite *sprite,D3DXVECTOR2 uv)
+void BasicUI::changeUV(Sprite *sprite,D3DXVECTOR2 uv01, D3DXVECTOR2 uv02, D3DXVECTOR2 uv03, D3DXVECTOR2 uv04)
 {
-	uvCoord02.x = CHANGE_UV_SPEED;
-	uvCoord04.x = CHANGE_UV_SPEED;
-	sprite->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
+	
+	sprite->setUVCoord(uv01, uv02, uv03, uv04);
 	sprite->render();
 }
 
