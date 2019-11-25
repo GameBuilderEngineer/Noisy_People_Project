@@ -45,9 +45,6 @@ Game::Game()
 	//Ä¶
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
-	
-	//test
-	SoundInterface::SE->setEndPointVoiceVolume(0);
 }
 
 //===================================================================================================================================

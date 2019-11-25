@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "TutorialTex.h"
 #include "EnemyManager.h"
+#include "TreeManager.h"
 #include "tutorialPlane.h"
 #include "Sky.h"
 #include "Timer.h"
@@ -37,14 +38,17 @@ namespace tutorialNS
 	};
 
 	//プレイヤー初期位置
-	const D3DXVECTOR3 PLAYER_P1_POSITION = D3DXVECTOR3(-20, 150, -45);
-	const D3DXVECTOR3 PLAYER_P2_POSITION = D3DXVECTOR3(20, 150, -45);
+	const D3DXVECTOR3 PLAYER_P1_POSITION = D3DXVECTOR3(-20, 20, -45);
+	const D3DXVECTOR3 PLAYER_P2_POSITION = D3DXVECTOR3(20, 20, -45);
 
 	//エネミー初期位置
 	const D3DXVECTOR3 ENEMY_POSTITION = D3DXVECTOR3(0, 20, 0);
 
+	//ツリー初期位置
+	const D3DXVECTOR3 FIRST_TREE_POSTITION = D3DXVECTOR3(-20, 50, -45);
+
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 5.0f, 5.0f, 0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 5.0f, -5.0f, 0.0f);
 
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0, 2.0f, 0);
@@ -70,13 +74,15 @@ private:
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 
-	Sky*								sky;				//スカイドーム
+	Sky*							sky;					//スカイドーム
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
 
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 	EnemyManager*					enemyManager;		// エネミーマネージャー
+
+	TreeManager*					treeManager;			// ツリーマネージャー
 
 	//UI
 	TutorialUI *tutorialUI;
@@ -87,7 +93,7 @@ private:
 	//タイマー
 	Timer *timer;
 
-	//test(sai[del])
+	//データ
 	enemyNS::EnemyData* enemyData;
 
 	//進捗

@@ -124,6 +124,8 @@ void Tutorial::initialize()
 			testFieldRenderer->getStaticMesh()->mesh,
 			testField->getMatrixWorld());
 
+
+
 		//進捗
 		step[i] = tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1;
 		planeStep[i] = tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_ENEMY;
@@ -157,11 +159,25 @@ void Tutorial::initialize()
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	enemySet.defaultPosition = ENEMY_POSTITION;
-	enemySet.defaultState = stateMachineNS::ENEMY_STATE::REST;
-	enemySet.type = enemyNS::ENEMY_TYPE::WOLF;
+	enemySet.defaultState = stateMachineNS::ENEMY_STATE::CHASE;
+	enemySet.type = enemyNS::ENEMY_TYPE::TIGER;
 	enemySet.enemyID = 0;
 	enemyData = enemyManager->createEnemyData(enemySet);
 	enemyManager->createEnemy(enemyData);
+
+	//ツリー
+	treeManager = new TreeManager;
+	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	treeNS::TreeData treeData = { 0 };
+	treeData.treeID = treeManager->issueNewTreeID();
+	treeData.initialDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	treeData.initialPosition = FIRST_TREE_POSTITION;
+	treeData.greenState = treeNS::GREEN_STATE::DEAD;
+	treeData.model = treeNS::TREE_MODEL::B_MODEL;
+	treeData.type = treeNS::TREE_TYPE::ANALOG_TREE;
+	treeData.size = treeNS::TREE_SIZE::STANDARD;
+	treeData.hp = 100;
+	treeManager->createTree(treeData);
 
 	//ディスプレイプレーン
 	D3DXVECTOR3 enemyPlanePos = enemySet.defaultPosition;
@@ -190,8 +206,8 @@ void Tutorial::initialize()
 	tutorialTex.initialize();
 
 #ifdef _DEBUG
-	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
-	playerSelect = gameMasterNS::PLAYER_1P;
+	//enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
+	//playerSelect = gameMasterNS::PLAYER_1P;
 #endif
 }
 
@@ -208,6 +224,7 @@ void Tutorial::uninitialize()
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(maleRenderer);
 	SAFE_DELETE(enemyManager);
+	SAFE_DELETE(treeManager);
 	SAFE_DELETE(femaleRenderer);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(timer);
@@ -232,19 +249,53 @@ void Tutorial::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
+	//Enterまたは〇ボタンで次へ
+	if (input->wasKeyPressed(VK_RETURN) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A))
+	{
+		// サウンドの再生
+		//sound->play(soundNS::TYPE::SE_PAPER, soundNS::METHOD::PLAY);
+
+		//チュートリアルを次へ
+		tutorialTex.nextPage++;
+
+		return;
+	}
+	//Backまたは×ボタンで前へ
+	else if (input->wasKeyPressed(VK_BACK) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
+
+	{
+		// サウンドの再生
+		//sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+
+		if (tutorialTex.nextPage > 0)
+		{
+			// チュートリアルを前へ
+			tutorialTex.nextPage--;
+		}
+		return;
+	}
+
+	if (tutorialTex.nextPage >= 2)
+	{
+		//プレイヤーの更新
+		for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		{
+			//オブジェクト
+			player[i].update(frameTime);
+
+			//ディスプレイプレーン
+			plane[i]->update(frameTime, planeStep[i]);
+		}
+	}
+
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
 
-	//プレイヤーの更新
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{		
-		//オブジェクト
-		player[i].update(frameTime);	
-
-		//ディスプレイプレーン
-		plane[i]->update(frameTime, planeStep[i]);
-	}
 
 	maleRenderer->update();				//レンダラー
 	femaleRenderer->update();			//レンダラー
@@ -253,6 +304,9 @@ void Tutorial::update(float _frameTime)
 	enemyManager->update(frameTime);
 	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	//	enemyManager->footsteps(*player[i].getPosition(), i);		//足音
+
+	//ツリーの更新
+	treeManager->update(frameTime);
 
 	UpdateMoveP(0.01f);
 
@@ -268,37 +322,6 @@ void Tutorial::update(float _frameTime)
 
 	//タイマーの更新
 	//timer->update();
-
-
-	//Enterまたは〇ボタンで次へ
-	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A))
-	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_PAPER, soundNS::METHOD::PLAY);
-
-		//チュートリアルを次へ
-		tutorialTex.nextPage++;
-
-		return;
-	}
-	//Backまたは×ボタンで前へ
-	else if (input->wasKeyPressed(VK_BACK)||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
-		
-	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
-
-		if (tutorialTex.nextPage > 0)
-		{
-			// チュートリアルを前へ
-			tutorialTex.nextPage--;
-		}
-		return;
-	}
 
 	//Deleteまたは特殊メインボタンでタイトルへ
 	if (input->wasKeyPressed(VK_DELETE) ||
@@ -380,6 +403,9 @@ void Tutorial::render3D(Camera currentCamera, int playerID)
 
 	// エネミーの描画
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//ツリーの描画
+	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//ディスプレイ用プレーンサンプル
 	plane[playerID]->render(currentCamera.view, currentCamera.projection, currentCamera.position);
