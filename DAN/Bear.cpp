@@ -52,14 +52,13 @@ void Bear::update(float frameTime)
 //=============================================================================
 void::Bear::chase(float frameTime)
 {
-	Enemy::chase(frameTime);
-
 	float distance = between2VectorLength(position, *movingTarget);
 
 	if (distance < 7.0f && canAttack)
 	{
 		attack();
 	}
+	Enemy::chase(frameTime);
 }
 
 
@@ -68,14 +67,13 @@ void::Bear::chase(float frameTime)
 //=============================================================================
 void::Bear::patrol(float frameTime)
 {
-	Enemy::patrol(frameTime);
-
 	if (onGround && isArraved || isDestinationLost)
 	{
 		setDebugDestination();		// デバッグ用目的地を設定
 		isDestinationLost = false;	// 目的地はロストしていない
 		searchPath();
 	}
+	Enemy::patrol(frameTime);
 }
 
 

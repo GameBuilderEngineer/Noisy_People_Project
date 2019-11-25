@@ -229,9 +229,16 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 		horizontalCorrection(player, enemy, 0.5f);
 		if (enemy->getIsAttacking())
 		{
-			enemy->stopAttacking();
 			player->damage(enemyNS::ATTACK_DAMAGE[enemy->getEnemyData()->type]);
-			player->speed += enemy->speed;
+			if (player->getOnGround())
+			{// 接地時（ノックバックの強さをここで調整）
+				player->speed += enemy->speed * 0.85f;
+			}
+			else
+			{// 空中時（ノックバックの強さをここで調整）
+				player->speed += enemy->speed * 0.65f;
+			}
+			enemy->stopAttacking();	// 減速処理が入っているためプレイヤーに速度を移した後に呼ぶ
 		}
 		return true;
 	}

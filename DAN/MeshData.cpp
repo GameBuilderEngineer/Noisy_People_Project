@@ -96,7 +96,7 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 	}
 #endif
 
-#if 0	// 配列の中身をファイルにダンプ
+#if 1// 配列の中身をファイルにダンプ
 	FILE* fp;
 	setDataDirectory();
 
@@ -142,6 +142,7 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 		fprintf(fp, "%d,", adjacencyArray[i]);
 		if (i % 3 == 2) fprintf(fp, "\n");
 	}
+	fclose(fp);
 
 	// ポリゴン面配列
 	fp = fopen("FaceArray.txt", "w");
@@ -164,7 +165,6 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 		fprintf(fp, "法線ベクトル(%f, %f, %f)\n\n",
 			faceArray[i].nor.x, faceArray[i].nor.y, faceArray[i].nor.z);
 	}
-
 	fclose(fp);
 #endif
 }

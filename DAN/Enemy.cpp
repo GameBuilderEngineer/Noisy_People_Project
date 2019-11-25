@@ -195,8 +195,8 @@ void Enemy::preprocess(float frameTime)
 	}
 #ifdef RENDER_SENSOR
 	debugSensor();
-#endif
-#endif
+#endif// RENDER_SENSOR
+#endif// _DEBUG
 
 #ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)
@@ -219,7 +219,7 @@ void Enemy::preprocess(float frameTime)
 			move(frameTime);
 		}
 	}
-#endif
+#endif// _DEBUG
 }
 
 
@@ -299,6 +299,11 @@ void Enemy::searchPath()
 
 	naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	destination = *movingTarget;
+
+	if (enemyData->enemyID == debugEnemyID)
+	{
+		naviMesh->debugEdgeList = edgeList;
+	}
 }
 
 
@@ -414,6 +419,8 @@ void Enemy::attacking(float frameTime)
 		attackDirection = attackTarget->center - center;
 		slip(attackDirection, groundNormal);
 		D3DXVec3Normalize(&attackDirection, &attackDirection);
+		// 初速を与える
+		speed += attackDirection * ATTACK_SPEED[enemyData->type];
 	}
 	// 攻撃時間終了判定
 	attackTime += frameTime;
@@ -423,8 +430,11 @@ void Enemy::attacking(float frameTime)
 		isAttacking = false;
 		attackTime = 0.0f;
 	}
-	// 移動処理
-	speed += attackDirection * ATTACK_SPEED[enemyData->type];
+	if (onGround)
+	{
+		// 速度がある程度維持されるよう加速度を加算（地面摩擦係数の打ち消し）
+		acceleration += attackDirection * ATTACK_SPEED[enemyData->type] * MULTIPLICATION_TO_MAKE_ATTACK_ACC;
+	}
 }
 
 
@@ -453,6 +463,13 @@ void Enemy::steering()
 		// ナビメッシュによる移動ベクトル生成（ステアリング）
 		naviMesh->steering(&moveDirection, &naviFaceIndex, center, edgeList);
 	}
+
+#ifdef _DEBUG
+	if (enemyData->enemyID == debugEnemyID)
+	{
+		naviMesh->debugEdgeList = edgeList;
+	}
+#endif//_DEBUG
 
 	acceleration += moveDirection * MOVE_ACC[enemyData->type];
 }
@@ -1103,7 +1120,7 @@ void Enemy::debugSensor()
 		if (sound)
 		{
 			// 音を鳴らす
-			playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };//SEの1曲目の設定
+			playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
 			SoundInterface::SE->playSound(&playParameters);	//SE再生
 		}
 
@@ -1111,10 +1128,19 @@ void Enemy::debugSensor()
 }
 
 
+//=============================================================================
+// ナビメッシュデバッグ描画
+//=============================================================================
+void Enemy::debugNavimesh()
+{
+	naviMesh->affectToEdgeVertex(edgeList);
+	naviMesh->debugRenderEdge(edgeList);
+}
 
-//===================================================================================================================================
+
+//=============================================================================
 // ImGUIへの出力
-//===================================================================================================================================
+//=============================================================================
 void Enemy::outputGUI()
 {
 
