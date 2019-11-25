@@ -46,8 +46,6 @@ protected:
 	bool								onLight;				//ライトフラグ
 	bool								didRegister;			//登録フラグ
 	bool								didUnRegister;			//解除フラグ
-	bool								didGenerate;			//生成フラグ
-	bool								didDelete;				//削除フラグ
 	int									objectNum;				//オブジェクトの数
 	int									fillMode;				//描画モード
 
@@ -96,6 +94,9 @@ public:
 	//setter
 	void enableLight();
 	void disableLight();
+	void enableTransparent();
+	void disableTransparent();
+
 
 	//getter
 	StaticMesh* getStaticMesh();

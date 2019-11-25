@@ -3,7 +3,7 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
-// 更新日 : 2019/11/14 【菅野 樹】
+// 更新日 : 2019/11/17 【菅野 樹】
 //-----------------------------------------------------------------------------
 
 //=============================================================================
@@ -73,6 +73,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 Tree::~Tree()
 {
 	numOfTree--;
+	SAFE_DELETE(state);
 }
 
 
@@ -101,6 +102,14 @@ void Tree::update(float frameTime)
 		SAFE_DELETE(state);
 		state = tmp;
 		onTransState = false;
+	}
+
+	// ●●●中込追記●●●
+	if (treeData.hp <= 0)
+	{
+		treeData.isAttaked = false;
+		// アナログツリーに戻し、
+		// 緑化範囲を枯れ木に戻してください！
 	}
 	
 	// オブジェクトのアップデート
@@ -189,7 +198,10 @@ void Tree::setGreeningArea(float value)
 	greeningArea.sphere->setScale(value);
 }
 //周囲への緑化を終了
-void Tree::disableAroundGreening()	{ nowAroundGreening = false; }
+void Tree::disableAroundGreening()	{ 
+	nowAroundGreening = false; 
+	greeningArea.treeCell.remove();//衝突空間から離脱
+}
 
 
 //=============================================================================

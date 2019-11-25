@@ -17,6 +17,7 @@
 namespace aiNS
 {
 	// 前方宣言
+	typedef struct OperationSettingOfEnemyAttaksTree ENMY_ATK_SET;
 	struct AnalyticalData;
 }
 
@@ -24,28 +25,27 @@ namespace aiNS
 //=============================================================================
 //クラス定義
 //=============================================================================
-class OperationGenerator
+class OperationGenerator :public Base
 {
 private:
 	aiNS::AnalyticalData* data;			// 解析データ
-
 	GameMaster* gameMaster;				// ゲーム管理オブジェクト
 	Player* player;						// プレイヤー
 	EnemyManager* enemyManager;			// エネミー管理オブジェクト
 	TreeManager* treeManager;			// ツリー管理オブジェクト
 	ItemManager* itemManager;			// アイテム管理オブジェクト
 	TelopManager* telopManager;			// テロップ管理オブジェクト
+	Ray ray;
 	
 public:
 	// 初期化
 	void initialize(aiNS::AnalyticalData* _data, GameMaster* _gameMaster,
 		Player* _player, EnemyManager* _enemyManager, TreeManager* _treeManager,
 		ItemManager* _itemManager, TelopManager* _telopManager);
-
-	// エネミー動的作成（SPAWN_ENEMY_AROUND_PLAYER)
-	void spawnEnemyAroundPlayer(enemyNS::ENEMYSET _enemySet);
-	// エネミーリスポーン(RESPAWN_ENEMY)
+	// エネミー動的作成
+	void spawnEnemy(enemyNS::ENEMYSET _enemySet);
+	// エネミーリスポーン
 	void respawnEnemy(int _enemyID);
-	// エネミーデジタルツリー襲撃（ENEMY_ATTACKS_TREE）
-	void enemyAttaksTree();
+	// エネミーデジタルツリー襲撃
+	void enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _attackTarget);
 };

@@ -166,8 +166,7 @@ void UIrank::update(int rankType)
 	if (widthSize == END_WIDTH_RANK && heightSize == END_HEIGHT_RANK&&playedSE==true)
 	{
 		PLAY_PARAMETERS playParameters = { 0 };
-		FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::HighPassFilter, 0.75f, 1.0f };
-		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Score, false,NULL,false,NULL,true, filterParameters };
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Score, false,NULL,false,NULL};
 		SoundInterface::SE->playSound(&playParameters);
 		playedSE = false;
 	}

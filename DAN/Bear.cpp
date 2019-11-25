@@ -11,9 +11,13 @@ using namespace stateMachineNS;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Bear::Bear(StaticMesh* _staticMesh, EnemyData* _enemyData): Enemy(_staticMesh, _enemyData)
+Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 {
+	// サイズを設定後にオブジェクト⇒姿勢制御の順で初期化
 	setSize(D3DXVECTOR3(1.0f, 2.7f, 1.0f));
+	Object::initialize(&position);
+	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 }
 
 
@@ -39,7 +43,7 @@ void Bear::update(float frameTime)
 	case REST:   rest(frameTime);   break;
 	case DIE:    die(frameTime);    break;
 	}
-	Enemy::update(frameTime);
+	Enemy::postprocess(frameTime);
 }
 
 
@@ -54,7 +58,7 @@ void::Bear::chase(float frameTime)
 
 	if (distance < 7.0f && canAttack)
 	{
-		shouldAttack = true;
+		attack();
 	}
 }
 
@@ -70,7 +74,7 @@ void::Bear::patrol(float frameTime)
 	{
 		setDebugDestination();		// デバッグ用目的地を設定
 		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = true;		// パスサーチ実行
+		searchPath();
 	}
 }
 
@@ -81,6 +85,15 @@ void::Bear::patrol(float frameTime)
 void::Bear::rest(float frameTime)
 {
 
+}
+
+
+//=============================================================================
+// ツリー攻撃ステート
+//=============================================================================
+void Bear::attackTree(float frameTime)
+{
+	Enemy::attackTree(frameTime);
 }
 
 

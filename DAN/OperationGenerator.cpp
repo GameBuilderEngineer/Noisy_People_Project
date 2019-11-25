@@ -5,30 +5,31 @@
 //-----------------------------------------------------------------------------
 #include "AIDirector.h"
 #include "OperationGenerator.h"
+#include "NavigationMesh.h"
 using namespace aiNS;
 
 
 //=============================================================================
 // 初期化
 //=============================================================================
-void OperationGenerator::initialize(aiNS::AnalyticalData* _data,
-	GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager, TreeManager* _treeManager,
+void OperationGenerator::initialize(aiNS::AnalyticalData* _data, GameMaster* _gameMaster, 
+	Player* _player, EnemyManager* _enemyManager, TreeManager* _treeManager,
 	ItemManager* _itemManager, TelopManager* _telopManager)
 {
-	data = _data;
-	gameMaster = _gameMaster;
-	player = _player;
-	enemyManager = _enemyManager;
-	treeManager = _treeManager;
-	itemManager = _itemManager;
-	telopManager = _telopManager;
+	data			= _data;
+	gameMaster		= _gameMaster;
+	player			= _player;
+	enemyManager	= _enemyManager;
+	treeManager		= _treeManager;
+	itemManager		= _itemManager;
+	telopManager	= _telopManager;
 }
 
 
 //=============================================================================
-// エネミー動的作成（SPAWN_ENEMY_AROUND_PLAYER)
+// エネミー動的作成
 //=============================================================================
-void OperationGenerator::spawnEnemyAroundPlayer(enemyNS::ENEMYSET _enemySet)
+void OperationGenerator::spawnEnemy(enemyNS::ENEMYSET _enemySet)
 {
 	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
 	enemyManager->createEnemy(p);
@@ -36,7 +37,7 @@ void OperationGenerator::spawnEnemyAroundPlayer(enemyNS::ENEMYSET _enemySet)
 
 
 //=============================================================================
-// エネミーリスポーン(RESPAWN_ENEMY)
+// エネミーリスポーン
 //=============================================================================
 void OperationGenerator::respawnEnemy(int _enemyID)
 {
@@ -47,9 +48,13 @@ void OperationGenerator::respawnEnemy(int _enemyID)
 
 
 //=============================================================================
-// エネミーデジタルツリー襲撃（ENEMY_ATTACKS_TREE）
+// エネミーデジタルツリー襲撃
 //=============================================================================
-void OperationGenerator::enemyAttaksTree()
+void OperationGenerator::enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _attackTarget)
 {
+	telopManager->play(telopManagerNS::TELOP_TYPE3);
+	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
+	p->targetTree = _attackTarget;
+	enemyManager->createEnemy(p);
 
 }

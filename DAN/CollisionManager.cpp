@@ -178,7 +178,7 @@ void CollisionManager::horizontalCorrection(Object* obj1, Object* obj2, float ra
 	}
 	if (ratio1 <= 1.0f)
 	{
-		obj2->position += repulsion * (length*(1.0-ratio1));
+		obj2->position += repulsion * (length*(1.0f-ratio1));
 		obj2->Object::update();
 	}
 }
@@ -227,7 +227,12 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 	if (collisionCylinder(player, enemy))
 	{
 		horizontalCorrection(player, enemy, 0.5f);
-		enemy->setIsHitPlayer(true);
+		if (enemy->getIsAttacking())
+		{
+			enemy->stopAttacking();
+			player->damage(enemyNS::ATTACK_DAMAGE[enemy->getEnemyData()->type]);
+			player->speed += enemy->speed;
+		}
 		return true;
 	}
 	return false;
@@ -272,12 +277,11 @@ bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 	if (hit)
 	{
 		enemy->damage(bullet->getDigitalPower());
+		enemy->setAttention(-bullet->getBulletSpeed());
 		bullet->destroy();
 	}
 
 	return hit;
-
-	return false;
 }
 
 //===================================================================================================================================

@@ -48,7 +48,10 @@ namespace playerNS{
 		BYTE dash;
 		BYTE jump;
 		BYTE vision;
+		BYTE cancelVision;
 		BYTE skyVision;
+		BYTE cancelSkyVision;
+		BYTE digitalShift;
 		BYTE reverseCameraX;
 		BYTE reverseCameraY;
 	};
@@ -64,7 +67,10 @@ namespace playerNS{
 			VK_ESCAPE,				//DASH:廃止
 			VK_ESCAPE,				//JUMP:右クリック
 			VK_LSHIFT,				//VISION
+			VK_LSHIFT,				//CANCEL_VISION
 			VK_SPACE,				//SKY_VISION
+			VK_SPACE,				//CANCEL_SKY_VISION
+			VK_ESCAPE,				//DIGITAL_SHIFT:左クリック
 			VK_F7,					//ReverseCameraAxisX
 			VK_F8,					//ReverseCameraAxisY
 		},
@@ -76,37 +82,47 @@ namespace playerNS{
 			VK_LEFT,				//LEFT
 			'R',					//RESET
 			VK_ESCAPE,				//DASH
-			VK_ESCAPE,				//JUMP
+			VK_ESCAPE,				//JUMP:右クリック
 			VK_RSHIFT,				//VISION
+			VK_RSHIFT,				//CANCEL_VISION
 			VK_BACK,				//SKY_VISION
+			VK_BACK,				//CANCEL_SKY_VISION
+			VK_ESCAPE,				//DIGITAL_SHIFT:左クリック
 			VK_F9,					//ReverseCameraAxisX
 			VK_F10,					//ReverseCameraAxisY
 		}
 	};
 
 	const OperationKeyTable NON_CONTOROL = {
-		VK_ESCAPE,		//FRONT
-		VK_ESCAPE,		//BACK
-		VK_ESCAPE,		//RIGHT
-		VK_ESCAPE,		//LEFT
-		VK_ESCAPE,		//RESET
-		VK_ESCAPE,		//DASH
-		VK_ESCAPE,		//JUMP
-		VK_ESCAPE,		//ReverseCameraAxisX
-		VK_ESCAPE,		//ReverseCameraAxisY
+		VK_ESCAPE,					//FRONT
+		VK_ESCAPE,					//BACK
+		VK_ESCAPE,					//RIGHT
+		VK_ESCAPE,					//LEFT
+		VK_ESCAPE,					//RESET
+		VK_ESCAPE,					//DASH
+		VK_ESCAPE,					//JUMP:右クリック
+		VK_ESCAPE,					//VISION
+		VK_ESCAPE,					//CANCEL_VISION
+		VK_ESCAPE,					//SKY_VISION
+		VK_ESCAPE,					//CANCEL_SKY_VISION
+		VK_ESCAPE,					//DIGITAL_SHIFT:左クリック
+		VK_ESCAPE,					//ReverseCameraAxisX
+		VK_ESCAPE,					//ReverseCameraAxisY
 	};
 
-	const BYTE BUTTON_VISION		= virtualControllerNS::B;
+	const BYTE BUTTON_VISION		= virtualControllerNS::Y;
 	const BYTE BUTTON_SKY_VISION	= virtualControllerNS::X;
-	const BYTE BUTTON_JUMP			= virtualControllerNS::L1;
+	const BYTE BUTTON_DIGITA_SHIFT	= virtualControllerNS::R1;
+	const BYTE BUTTON_JUMP			= virtualControllerNS::B;
 	const BYTE BUTTON_BULLET		= virtualControllerNS::R1;
 	const BYTE BUTTON_PASUE			= virtualControllerNS::SPECIAL_MAIN;
 
 	enum STATE {
+		NONE,
 		NORMAL,
 		VISION,
 		SKY_VISION,
-		SHIFT,
+		DIGITAL_SHIFT,
 		STATE_NUM
 	};
 
@@ -125,31 +141,40 @@ namespace playerNS{
 
 
 	//CameraParameter
-	const D3DXVECTOR3 CAMERA_GAZE			= D3DXVECTOR3(1.0f,2.0f,0.0f);
+	const D3DXVECTOR3 CAMERA_GAZE			= D3DXVECTOR3(1.0f,1.5f,0.0f);
 
 	// Physics
 	const float MOVE_ACC					= 27.0f;								// 移動加速度
 	const float MOVE_ACC_WHEN_NOT_GROUND	= MOVE_ACC / 8.5f;						// 空中移動加速度
 	const float STOP_SPEED					= 0.5f;									// 移動停止速度
 	const float MAX_SPEED					= 6.0f;									// 移動停止速度
+	const float MAX_SLIP					= 10.0f;									// 移動停止速度
 	const float FALL_SPEED_MAX				= 60.0f;								// 落下最高速度
-	const float MOVE_FRICTION				= 0.93f;								// 地面摩擦係数
+	const float MOVE_FRICTION				= 1.3f;								// 地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									// 壁ずり摩擦係数
 	const float GROUND_FRICTION				= 0.25;									// 着地摩擦係数
 	const float GRAVITY_FORCE				= 9.8f;									// 重力
 	const float JUMP_SPEED					= 6.0f;									// ジャンプ初速
+	const float JUMP_TIME					= 0.3f;									// ジャンプ初速
 	const float JUMP_CONTROL_SPEED			= 1.0f;									// ジャンプ高さコントール速度
 	const float DASH_MAGNIFICATION			= 2.0f;									// ダッシュ倍率
 	// Another
-	const float DIFFERENCE_FIELD			= 0.05f;								// フィールド補正差分
+	const float DIFFERENCE_FIELD			= 0.1f;								// フィールド補正差分
 	const float CAMERA_SPEED				= 1.0f;									// カメラの速さ
 	
 	//Shooting
 	const float MAX_DISTANCE				= 100.0f;								//最大照準距離
 
-	//DigitalShift
-	const float SHIFT_TIME				= 2.0f;									//デジタルシフト時間
-
+	//EnableOperation
+	const int	DISABLE_OPERATION			= 0x00000000;
+	const int	ENABLE_SHOT					= 0x00000001;
+	const int	ENABLE_JUMP					= 0x00000002;
+	const int	ENABLE_VISION				= 0x00000004;
+	const int	ENABLE_CANCEL_VISION		= 0x00000008;
+	const int	ENABLE_SKY_VISION			= 0x00000010;
+	const int	ENABLE_CANCEL_SKY_VISION	= 0x00000020;
+	const int	ENABLE_SHIFT				= 0x00000040;
+	const int	ALL_OPERATION				= 0xffffffff;
 }
 
 
@@ -160,15 +185,28 @@ namespace playerNS{
 class AbstractState:public Base
 {
 public:
-	float	frameTime;
-	int		type;
+	float			frameTime;
+	float			stateTimer;
+	int				type;
+	int				nextType;
+	bool			onTrans;
+	std::string		stateName;
 public:
+	AbstractState() {
+		frameTime	= 0.0f;
+		stateTimer	= 0.0f;
+		type		= playerNS::STATE::NONE;
+		nextType	= playerNS::STATE::NONE;
+		onTrans		= false;
+		stateName	= "none";
+	}
 	virtual void start()					= 0;
 	virtual void update(float frameTime)	= 0;
 	virtual void operation()				= 0;
 	virtual void physics()					= 0;
+	virtual void controlCamera()			= 0;
 	virtual void end()						= 0;
-	virtual AbstractState* transition()				= 0;
+	virtual AbstractState* transition()		= 0;
 };
 
 //===================================================================================================================================
@@ -185,6 +223,9 @@ private:
 	AbstractState*				state;							//状態クラス
 	int							hp;								// HP
 	int							power;							// 電力
+	int							validOperation;					//有効な操作ビットフラグ
+
+
 
 	//タイマー
 	float						frameTime;						//フレームタイム
@@ -194,8 +235,8 @@ private:
 	float						reverseValueXAxis;				//操作X軸
 	float						reverseValueYAxis;				//操作Y軸
 	bool						isExecutingMoveOperation;		// 移動操作中フラグ
-	bool						onJump;							// ジャンプフラグ
 	bool						jumping;						// ジャンプ中フラグ
+	bool						onJump;
 
 	// UI用操作判定フラグ
 	bool						isShotAble;
@@ -223,8 +264,6 @@ private:
 	Camera*						camera;							// 操作するカメラへのポインタ
 	D3DXVECTOR3					cameraGaze;						//カメラ注視位置
 	D3DXVECTOR3					cameraGazeRelative;				//カメラ注視相対位置
-	//D3DXVECTOR3					centralPosition;				// 中心座標
-	//D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
 
 	//シューティングアクション
 	Ray							aimingRay;						//照準レイ（カメラからのレイ）
@@ -236,10 +275,10 @@ private:
 	BulletManager*				bulletManager;					//バレットマネージャー
 
 	//デジタルアクション
-	bool						isShifting;						//デジタルシフト中フラグ
-	float						shiftTimer;						//デジタルシフトタイマー
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
+	bool						enableShift;					//シフトが可能
+
 
 	//再生パラメータ
 	PLAY_PARAMETERS shiftStartSE;
@@ -250,6 +289,9 @@ private:
 	PLAY_PARAMETERS skyVisionStartSE;
 	PLAY_PARAMETERS skyVisionFinishSE;
 
+	//debug
+	float dot;
+
 public:
 	Player();
 	~Player();
@@ -259,9 +301,23 @@ public:
 	virtual void update(float frameTime);
 	void otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
+	//状態遷移
+	void transState(int next);											//状態遷移
+
 	// 衝突
 	void grounding();											// 接地処理
 	void wallScratch();											// 壁ずり処理
+
+	bool grounding(LPD3DXMESH mesh, D3DXMATRIX matrix);
+	
+	//めり込み補正
+	//Ray ray：補正方向レイ（取得した法線方向に補正される）
+	//float distance：補正距離
+	//LPD3DXMESH mesh：衝突対象メッシュ
+	//D3DXMATRIX matrix：衝突対象行列
+	bool insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
+	bool insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
+
 
 	// 物理
 	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition,
@@ -278,25 +334,44 @@ public:
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 	void jump();												//ジャンプ
-	float dash();
-	void shot();												//弾を打つ
-	void digitalShift();										//デジタルシフト
+	float dash();												//ダッシュ
+	bool shot();												//弾を打つ
+
+	//デジタルアクション
+	bool digitalShift();										//デジタルシフト
+	bool executionDigitalShift();								//デジタルシフト実行
+	bool skyVision();											//スカイビジョン
+	bool vision();												//ビジョン
+	bool cancelSkyVision();										//スカイビジョン
+	bool cancelVision();										//ビジョン
+	void collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix);	//シフトレイとの衝突
+
+
+	//シューティング
+	void updateAiming();										//照準方向を更新する
+	void updatePostureByAiming();								//狙撃方向へ姿勢を向ける
+	void updateShooting();										//狙撃位置の更新
 
 	// その他
 	virtual void outputGUI() override;							// ImGUI
 	void reset();												// リセット
 
 	//setter
-	void setCamera(Camera* _camera);							//操作対象カメラのセット
-	void addpower(int add);										//電力加算
-	void pullpower(int pull);									//電力減算
-	void setInfomation(PlayerTable info);						//プレイヤー情報のセット
-	void damage(int _damage);									//ダメージ処理
+	void	setCamera(Camera* _camera);							//操作対象カメラのセット
+	void	addpower(int add);									//電力加算
+	void	pullpower(int pull);								//電力減算
+	void	setInfomation(PlayerTable info);					//プレイヤー情報のセット
+	void	damage(int _damage);								//ダメージ処理
+	void	setValidOperation(int value);						//有効操作の設定
+	void	enableOperation(int value);							//操作を有効にする
+	void	disableOperation(int value);						//操作を無効にする
+	//void resetOnGround() { onGround = false;  jumping = true; }	//
 
 	//getter
 	int getHp();												// HPの取得
 	int getPower();												// 電力の取得
 	int getState();
+	bool whetherValidOperation(int operation);					//有効操作の確認
 	bool canShot();
 	bool canJump();
 	bool canDoVision();
@@ -310,25 +385,8 @@ public:
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
 	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
-	bool getWhetherShot() { return false;/*仮*/ }				//←つくってほしい（ショットアクションしたか取得）
+	BulletManager*  getBulletManager();							//バレットマネージャを取得
 	bool getOnGround();											//接地しているか取得
 	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
 
 };
-
-
-//通常状態
-class NormalState:public AbstractState
-{
-private:
-	Player* player;
-public:
-	NormalState(Player* player);
-	virtual void update(float frameTime);
-	virtual void start();
-	virtual void operation();
-	virtual void physics();
-	virtual AbstractState* transition();
-	virtual void end();
-};
-

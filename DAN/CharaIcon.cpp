@@ -33,14 +33,28 @@ CharaIcon::~CharaIcon()
 //==================================
 //初期化
 //==================================
-void CharaIcon::initialize()
+void CharaIcon::initialize(int playerType)
 {
-	//初期表示位置の代入
-	BasicUI::assingPosition(POSITION_ICON);
-	//初期サイズの代入
-	BasicUI::assingSize(WIDTH_ICON, HEIGHT_ICON);
-	//テクスチャの初期化
-	BasicUI::initialize(charaIcon, textureNS::reference(textureNS::UI_ICON_P1));
+	switch (playerType)
+	{
+	case basicUiNS::P1:
+		//初期表示位置の代入
+		BasicUI::assingPosition(POSITION_ICON);
+		//初期サイズの代入
+		BasicUI::assingSize(WIDTH_ICON, HEIGHT_ICON);
+		//テクスチャの初期化
+		BasicUI::initialize(charaIcon, textureNS::reference(textureNS::UI_ICON_P1));
+		break;
+		
+	case basicUiNS::P2:
+		//初期表示位置の代入
+		BasicUI::assingPosition(POSITION_ICON_P2);
+		//初期サイズの代入
+		BasicUI::assingSize(WIDTH_ICON, HEIGHT_ICON);
+		//テクスチャの初期化
+		BasicUI::initialize(charaIcon, textureNS::reference(textureNS::UI_ICON_P2));
+	}
+	
 }
 
 //=================================

@@ -22,9 +22,8 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	onRender				= true;
 	onTransparent			= false;
 	onLight					= true;
-	didDelete				= false;
 	didRegister				= false;
-	didGenerate				= false;
+	didUnRegister			= false;
 	objectNum				= 0;
 	fillMode				= staticMeshRendererNS::FILLMODE::SOLID;
 	matrixBuffer			= NULL;
@@ -112,24 +111,6 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 	//レンダーステートの設定
 	device->SetRenderState(D3DRS_FILLMODE, fillMode);
 
-	//透過処理
-	if (onTransparent)
-	{//有効
-		//αブレンディングを設定する
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);	// ポリゴンのαと
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);	// テクスチャのαを
-		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// 混ぜる
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);				// 加算合成を行う
-	}
-	else
-	{//無効
-		//αブレンディングを設定しない
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	}
-
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA		| objectNum);
 	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
@@ -160,9 +141,9 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 		//シェーダー更新
 		//effect->CommitChanges();
 		effect->Begin(0, 0);
-		if(onLight)		effect->BeginPass(0);
-		else			effect->BeginPass(1);
-
+		if(onTransparent)	effect->BeginPass(2);
+		else if(onLight)	effect->BeginPass(0);
+		else				effect->BeginPass(1);
 		//Drawコール
 		device->DrawIndexedPrimitive(
 			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type				:描画タイプ
@@ -244,6 +225,18 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 	//総当たり検索
 	for (int i = 0; i < objectNum; i++)
 	{	
+		bool enable = true;
+		//有効値判定
+		if (*objectList->getValue(i))
+		{
+			enable = true;
+		}
+		else {
+			enable = false;
+		}
+
+		if (enable == false)continue;//有効値でない場合スルー
+
 		if ((*objectList->getValue(i))->id == id)
 		{
 			unRegisterObject(i);
@@ -281,6 +274,7 @@ void StaticMeshRenderer::unRegisterObject(int i)
 void StaticMeshRenderer::updateAccessList()
 {
 	objectList->listUpdate();
+	objectNum = objectList->nodeNum;
 }
 
 //===================================================================================================================================
@@ -329,6 +323,8 @@ void StaticMeshRenderer::outputGUI()
 //===================================================================================================================================
 void StaticMeshRenderer::enableLight()	{ onLight = true; }
 void StaticMeshRenderer::disableLight()	{ onLight = false; }
+void StaticMeshRenderer::enableTransparent()	{ onTransparent = true; }
+void StaticMeshRenderer::disableTransparent()	{ onTransparent = false; }
 
 //===================================================================================================================================
 //【getter】

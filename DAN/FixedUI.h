@@ -12,7 +12,6 @@
 #include "ButtonUI.h"
 #include "ButtonFrame.h"
 #include "StatusFrame.h"
-#include "Guage.h"
 #include "CharaIcon.h"
 
 //=================================
@@ -37,14 +36,13 @@ private:
 	ButtonFrame *buttonFrameP2;//ボタンのボックス
 	StatusFrame *statusFrameP1;//HPとかのフレーム
 	StatusFrame *statusFrameP2;//HPとかのフレーム
-	Guage		*guage;		   //ゲージ
 	
 public://メンバー関数
 	FixedUI();
 	~FixedUI();
 	void initialize();
 	void render();
-	void update();
+	void update(float gametime);
 	void uninitialize();
 private:
 };

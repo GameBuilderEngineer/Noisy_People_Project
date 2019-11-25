@@ -32,11 +32,21 @@ HPguageEmp::~HPguageEmp()
 //====================================
 //èâä˙âª
 //====================================
-void HPguageEmp::initialize()
+void HPguageEmp::initialize(int playerType)
 {
-	BasicUI::assingPosition(POSITION_HP_GUAGE_EMP);
-	BasicUI::assingSize(WIDTH_HP_GUAGE_EMP, HEIGHT_HP_GUAGE_EMP);
-	BasicUI::initialize(hpGuageEmp, textureNS::reference(textureNS::UI_HP_GUAGE_EMP_P1));
+	switch (playerType)
+	{
+	case basicUiNS::P1:
+		BasicUI::assingPosition(POSITION_HP_GUAGE_EMP);
+		BasicUI::assingSize(WIDTH_HP_GUAGE_EMP, HEIGHT_HP_GUAGE_EMP);
+		BasicUI::initialize(hpGuageEmp, textureNS::reference(textureNS::UI_HP_GUAGE_EMP_P1));
+		break;
+	case basicUiNS::P2:
+		BasicUI::assingPosition(POSITION_HP_GUAGE_EMP_P2);
+		BasicUI::assingSize(WIDTH_HP_GUAGE_EMP, HEIGHT_HP_GUAGE_EMP);
+		BasicUI::initialize(hpGuageEmp, textureNS::reference(textureNS::UI_HP_GUAGE_EMP_P2));
+	}
+	
 }
 
 //====================================

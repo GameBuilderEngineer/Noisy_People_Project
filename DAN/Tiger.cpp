@@ -10,9 +10,13 @@ using namespace stateMachineNS;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Tiger::Tiger(StaticMesh* _staticMesh, EnemyData* _enemyData): Enemy(_staticMesh, _enemyData)
+Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 {
+	// サイズを設定後にオブジェクト⇒姿勢制御の順で初期化
 	setSize(D3DXVECTOR3(1.0f, 2.9, 1.0f));
+	Object::initialize(&position);
+	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
+	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 }
 
 
@@ -38,7 +42,7 @@ void Tiger::update(float frameTime)
 	case REST:   rest(frameTime);   break;
 	case DIE:    die(frameTime);    break;
 	}
-	Enemy::update(frameTime);
+	Enemy::postprocess(frameTime);
 }
 
 
@@ -53,7 +57,7 @@ void::Tiger::chase(float frameTime)
 
 	if (distance < 7.0f && canAttack)
 	{
-		shouldAttack = true;
+		attack();
 	}
 }
 
@@ -69,7 +73,7 @@ void::Tiger::patrol(float frameTime)
 	{
 		setDebugDestination();		// デバッグ用目的地を設定
 		isDestinationLost = false;	// 目的地はロストしていない
-		shouldSearch = true;		// パスサーチ実行
+		searchPath();
 	}
 }
 
@@ -80,6 +84,15 @@ void::Tiger::patrol(float frameTime)
 void::Tiger::rest(float frameTime)
 {
 
+}
+
+
+//=============================================================================
+// ツリー攻撃ステート
+//=============================================================================
+void Tiger::attackTree(float frameTime)
+{
+	Enemy::attackTree(frameTime);
 }
 
 

@@ -30,7 +30,6 @@
 #include "Sky.h"
 #include "SpriteGauge.h"
 #include "Battery.h"
-#include "telop.h"
 #include "Timer.h"
 #include "Reticle.h"
 #include "Ocean.h"
@@ -43,7 +42,8 @@
 #include "movep.h"
 
 #include "TelopManager.h"
-#include "PlayerUI.h"
+#include "Player1UI.h"
+#include "Player2UI.h"
 //#include "Text.h"
 
 
@@ -56,7 +56,7 @@ namespace gameNS
 	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,0.0f,-3.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,0.0f,-1.5f,0.0f);
 
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f,0.0f,0.0f);
@@ -116,7 +116,8 @@ private:
 	Reticle*						reticle;			//レティクル
 	TelopManager*					telopManager;		//テロップマネジャー
 	FixedUI*						fixedUI;			//固定されたUI
-	PlayerUI*						playerUI;			//プレイヤー周りのUI
+	Player1UI*						player1UI;			//プレイヤー周りのUI
+	Player2UI*						player2UI;			//プレイヤー２周りのUI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];

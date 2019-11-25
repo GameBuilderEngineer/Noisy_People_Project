@@ -114,7 +114,7 @@ public:
 	virtual ~InstancingBillboard();
 
 	//基本関数
-	virtual HRESULT initialize(LPDIRECT3DTEXTURE9 texture,int divideU = 0,int divideV = 0);				//初期化
+	virtual HRESULT initialize(LPDIRECT3DTEXTURE9 texture,int divideU = 0,int divideV = 0);	//初期化
 	virtual void update(float frameTime);													//更新
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);	//描画
 
@@ -139,7 +139,7 @@ public:
 	void updateArray();
 
 	//getter
-	int getInstanceNum();																			//インスタンスの数を取得する
+	int getInstanceNum();																	//インスタンスの数を取得する
 	InstancingBillboardNS::InstanceList getList();											//リストを取得する
 
 };

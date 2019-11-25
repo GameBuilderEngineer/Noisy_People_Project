@@ -18,12 +18,12 @@ NavigationMesh::NavigationMesh(StaticMesh* _staticMesh)
 {
 	pointer = this;
 	staticMesh = _staticMesh;
+	Object::initialize(&D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-
 void NavigationMesh::initialize()
 {
 	vtxAccessor.initialize(staticMesh);
@@ -61,7 +61,7 @@ void NavigationMesh::uninitialize()
 //=============================================================================
 void NavigationMesh::update()
 {
-
+	Object::update();
 }
 
 
@@ -87,19 +87,20 @@ NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** pOut,
 	D3DXMatrixInverse(&Inv, NULL, &matrixWorld);
 
 	// 現在地がナビメッシュに接地するかチェック
-	rayPos = _from;
-	D3DXVec3TransformCoord(&rayPos, &rayPos, &Inv);
-	D3DXIntersect(staticMesh->mesh, &rayPos, &gravityDirection,
-		&hit, &startIndex, NULL, NULL, NULL, NULL, NULL);
-	*faceIndex = startIndex;								// 呼び出し側のインデックスを更新
-	if (hit == false) { return CURRENT_NOT_ON_MESH; }		// 現在地がナビメッシュ上ではない
+	if (isHitGrounding(NULL, &startIndex, from))
+	{
+		*faceIndex = startIndex;			// 呼び出し側のインデックスを更新
+	}
+	else
+	{
+		return CURRENT_NOT_ON_MESH;			// 現在地がナビメッシュ上ではない
+	}
 
 	// 目的地がナビメッシュに接地するかチェック
-	rayPos = _dest;
-	D3DXVec3TransformCoord(&rayPos, &rayPos, &Inv);
-	D3DXIntersect(staticMesh->mesh, &rayPos, &gravityDirection,
-		&hit, &destIndex, NULL, NULL, NULL, NULL, NULL);
-	if (hit == false) { return DESTINATION_NOT_ON_MESH; }	// 目的地がナビメッシュ上ではない
+	if (isHitGrounding(NULL, &destIndex, dest) == false)
+	{
+		return DESTINATION_NOT_ON_MESH;		// 目的地がナビメッシュ上ではない
+	}
 
 	// A*アルゴリズムによる経路探索でエッジリストを取得する
 	edgeList = aStar.pathSearch(startIndex, destIndex, from, dest);
@@ -127,12 +128,11 @@ NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECT
 	float distance;
 	D3DXMatrixInverse(&Inv, NULL, &matrixWorld);
 
-	// レイでナビメッシュに接地するかチェック
-	rayPos = _position;
-	D3DXVec3TransformCoord(&rayPos, &rayPos, &Inv);
-	D3DXIntersect(staticMesh->mesh, &rayPos, &gravityDirection,
-		&hit, &currentIndex, NULL, NULL, &distance, NULL, NULL);
-	if (hit == false) { return CURRENT_NOT_ON_MESH; }	// 現在地がナビメッシュ上ではない
+	// 現在地がナビメッシュに接地するかチェック
+	if (isHitGrounding(&distance, &currentIndex, _position) == false)
+	{
+		return CURRENT_NOT_ON_MESH;			// 現在地がナビメッシュ上ではない
+	}
 
 	// ポリゴン面インデックスが変わればエッジをリストからノードを削除後に更新
 	if (currentIndex != *faceIndex)
@@ -148,8 +148,28 @@ NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECT
 	  
 	// 接地座標をもとにパスフォローイングを実行
 	D3DXVECTOR3 surfaceIntersection = _position + gravityDirection * distance;
-	pathFollowing.createVector(out, surfaceIntersection, faceIndex, edgeList);
+	pathFollowing.createVector(out, surfaceIntersection, faceIndex, _edgeList);
 	return NAVI_OK;
+}
+
+
+//=============================================================================
+// 接地チェック
+//=============================================================================
+bool NavigationMesh::isHitGrounding(float *distance, DWORD* faceIndex, D3DXVECTOR3 _position)
+{
+	D3DXMATRIX Inv;
+	D3DXMatrixInverse(&Inv, NULL, &matrixWorld);
+	D3DXVECTOR3 rayPos = _position;
+	BOOL hit;
+
+	// レイでナビメッシュに接地するかチェック
+	rayPos = _position;
+	D3DXVec3TransformCoord(&rayPos, &rayPos, &Inv);
+	D3DXIntersect(staticMesh->mesh, &rayPos, &gravityDirection,
+		&hit, faceIndex, NULL, NULL, distance, NULL, NULL);
+
+	return hit;
 }
 
 

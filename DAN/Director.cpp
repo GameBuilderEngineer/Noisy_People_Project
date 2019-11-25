@@ -20,6 +20,7 @@
 #include "Credit.h"
 #include "SE.h"
 #include "LinearTreeCell.h"
+#include "DebugScene.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -31,6 +32,10 @@ Director::Director() {
 #ifdef _DEBUG
 	onGUI = true;
 	memory = new MemoryViewer;
+	hiddenCursor = false;
+	lockCursor = false;
+	ShowCursor(FALSE);
+	ShowCursor(TRUE); 
 #else
 	hiddenCursor = true;
 	lockCursor = true;
@@ -142,21 +147,33 @@ HRESULT Director::initialize() {
 	fader->setShader(faderNS::BLUR);
 
 #pragma region MemoryTest
-	//メモリ解放テスト
+	////メモリ解放テスト
+	////削除（これは今シーン扱いたいから書いたもの）
 	//scene->uninitialize();
 	//SAFE_DELETE(scene);
-	//int i = 1;
-	//while (i >= 0)
+
+	//int i = 100000;					//この回数繰り返す
+	//while (i >= 0)					//0回になったら終了
 	//{
-	//	scene = new Title();
-	//	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
-	//	scene->uninitialize();
-	//	SAFE_DELETE(scene);
-	//	i--;
-	//}
+	//	scene = new Splash();		//新たにシーン作成
+	//	
+	//	//ここから↓
+
+	//	scene->initialize();		//初期化
+
+	//	scene->update(1.0/60.0);	//更新
+
+	//	scene->uninitialize();		//終了
+
+	//	//ここまでに一連の処理を書いて実験する
 	//
+	//	SAFE_DELETE(scene);			//削除
+	//	i--;//カウント減
+	//}
+
+	////新規作成（これは今シーン扱いたいから書いたもの）
 	//scene = new Splash();
-	//scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+	//scene->initialize();
 #pragma endregion
 
 	// 高分解能タイマーの準備を試みる
@@ -218,7 +235,7 @@ void Director::mainLoop() {
 	//リセット
 	if (input->wasKeyPressed(VK_F5))
 	{
-		scene->changeScene(SceneList::SPLASH);
+		scene->changeScene(SceneList::DEBUG);
 		changeNextScene();
 	}
 
@@ -251,6 +268,26 @@ void Director::update() {
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
+	if (input->wasKeyPressed(VK_F1))
+	{
+		hiddenCursor = !hiddenCursor;
+		if (hiddenCursor) {
+			ShowCursor(FALSE);
+		}
+		else {
+			ShowCursor(TRUE);
+		}
+	}
+	if (input->wasKeyPressed(VK_F2))
+		lockCursor = !lockCursor;
+	if (lockCursor)
+	{
+		if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
+		{
+			SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		}
+	}
+
 #else
 	if (input->wasKeyPressed(VK_F1))
 	{
@@ -341,6 +378,7 @@ void Director::render() {
 	{
 		if (fader->nowProcessing())
 		{
+
 			fader->setRenderTexture();
 			d3d->clear(imgui->getClearColor());
 			scene->render();
@@ -356,6 +394,7 @@ void Director::render() {
 			scene->render();
 		}
 		imgui->render();
+
 		d3d->endScene();
 	}
 	d3d->present(); 
@@ -471,6 +510,7 @@ void Director::changeNextScene() {
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{
+	case SceneList::DEBUG:					scene = new DebugScene(); break;
 	case SceneList::SPLASH:					scene = new Splash();	break;
 	case SceneList::TITLE:					scene = new Title();		break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;

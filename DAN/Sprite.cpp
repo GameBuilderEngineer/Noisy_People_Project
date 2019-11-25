@@ -185,13 +185,24 @@ void Sprite::setVertex()
 		vertexWk[0].vtx.y = position.y;
 		vertexWk[1].vtx.x = position.x + cosf(rotation.z) * width;
 		vertexWk[1].vtx.y = position.y + sinf(rotation.z) * width;
-		vertexWk[2].vtx.x = position.x - sin(rotation.z) * height;
-		vertexWk[2].vtx.y = position.y + cos(rotation.z) * height;
-		vertexWk[3].vtx.x = position.x + cosf(rotation.z) * width - sin(rotation.z) * height;
-		vertexWk[3].vtx.y = position.y + sinf(rotation.z) * width + cos(rotation.z) * height;
+		vertexWk[2].vtx.x = position.x - sinf(rotation.z) * height;
+		vertexWk[2].vtx.y = position.y + cosf(rotation.z) * height;
+		vertexWk[3].vtx.x = position.x + cosf(rotation.z) * width - sinf(rotation.z) * height;
+		vertexWk[3].vtx.y = position.y + sinf(rotation.z) * width + cosf(rotation.z) * height;
 		break;
 	case TOP_CENTER:
 		break;
+	case TOP_RIGHT://êıñÓçÏÅAâÒì]Ç∑ÇÈÇ±Ç∆ÇÕçló∂ÇµÇƒÇ»Ç¢Ç≈Ç∑
+		vertexWk[0].vtx.x = position.x - width;
+		vertexWk[0].vtx.y = position.y ;
+		vertexWk[1].vtx.x = position.x;
+		vertexWk[1].vtx.y = position.y;
+		vertexWk[2].vtx.x = position.x - width;
+		vertexWk[2].vtx.y = position.y + height;
+		vertexWk[3].vtx.x = position.x ;
+		vertexWk[3].vtx.y = position.y + height;
+		break;
+
 	}
 	vertexWk[0].vtx.z = 0.0f;
 	vertexWk[1].vtx.z = 0.0f;

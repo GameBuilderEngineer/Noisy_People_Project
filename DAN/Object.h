@@ -33,6 +33,13 @@ namespace objectNS {
 		POINT		= (int)D3DFILL_POINT,
 	};
 
+	const int AXIS_X	= 0x00000001;
+	const int AXIS_RX	= 0x00000002;
+	const int AXIS_Y	= 0x00000004;
+	const int AXIS_RY	= 0x00000008;
+	const int AXIS_Z	= 0x00000010;
+	const int AXIS_RZ	= 0x00000020;
+
 	void resetCounter();
 }
 

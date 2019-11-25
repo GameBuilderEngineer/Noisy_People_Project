@@ -20,17 +20,13 @@ namespace aiNS
 {
 	// 前方宣言
 	struct AnalyticalData;
-
-	// enemySensor()
-	const float RECENT_SECOND = 30.0f;				// 最近と見なす秒数（直近○秒）
-	const float MANDATORY_SPAWN_INTERVAL = 20.0f;	// スポーンのための最低経過間隔秒
 }
 
 
 //=============================================================================
 //クラス定義
 //=============================================================================
-class Sensor
+class Sensor :public Base
 {
 private:
 	aiNS::AnalyticalData* data;			// 解析データ

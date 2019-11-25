@@ -22,12 +22,21 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	attractorMatrix = _attractorMatrix;
 
 	// 描画オブジェクトの作成
-	aTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_TRUNK));
-	aLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_LEAF));
-	bTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_TRUNK));
-	bLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_LEAF));
-	cTrunkRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	cLeafRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	aTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_TRUNK));
+	aLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_LEAF));
+	bTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_TRUNK));
+	bLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_LEAF));
+	cTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
+	cLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+
+	//葉のライトを切る
+	aLeafRenderer->disableLight();
+	bLeafRenderer->disableLight();
+	cLeafRenderer->disableLight();
+	//透過処理を有効にする
+	aLeafRenderer->enableTransparent();
+	bLeafRenderer->enableTransparent();
+	cLeafRenderer->enableTransparent();
 
 #if 0	// ツリーツールのデータを読み込む
 
@@ -48,12 +57,12 @@ void TreeManager::uninitialize()
 	treeList.swap(temp);
 
 	// 描画オブジェクトの破棄
-	SAFE_DELETE(aTrunkRenderer);
-	SAFE_DELETE(aLeafRenderer);
-	SAFE_DELETE(bTrunkRenderer);
-	SAFE_DELETE(bLeafRenderer);
-	SAFE_DELETE(cTrunkRenderer);
 	SAFE_DELETE(cLeafRenderer);
+	SAFE_DELETE(cTrunkRenderer);
+	SAFE_DELETE(bLeafRenderer);
+	SAFE_DELETE(bTrunkRenderer);
+	SAFE_DELETE(aLeafRenderer);
+	SAFE_DELETE(aTrunkRenderer);
 }
 
 

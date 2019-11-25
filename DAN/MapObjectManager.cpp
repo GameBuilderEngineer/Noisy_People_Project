@@ -66,6 +66,13 @@ void MapObjectManager::update(float frameTime)
 void MapObjectManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	stone01Renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+
+#ifdef _DEBUG
+	for (size_t i = 0; i < mapObjectList.size(); i++)
+	{
+		mapObjectList[i]->debugRender();
+	}
+#endif //_DEBUG
 }
 
 

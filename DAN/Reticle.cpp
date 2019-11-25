@@ -59,26 +59,26 @@ Reticle::Reticle()
 	reticle2D = new Sprite();
 	//UI情報の設定
 	reticle2D->initialize(
-		*textureNS::reference(textureNS::UI_RETICLE),	//テクスチャポインタ
-		SpriteNS::CENTER,							//原点
-		(int)((float)UNIT_WIDTH/2),					//幅
-		(int)((float)UNIT_HEIGHT/2),				//高さ
-		POSITION1,									//位置
-		ROTATION,									//回転
-		COLOR										//色
+		*textureNS::reference(textureNS::UI_SUB_RETICLE),	//テクスチャポインタ
+		SpriteNS::CENTER,								//原点
+		(int)((float)UNIT_WIDTH),						//幅
+		(int)((float)UNIT_HEIGHT),					//高さ
+		POSITION1,										//位置
+		ROTATION,										//回転
+		COLOR											//色
 	);
 	//描画UV値を設定
 	reticle2D->setUVCoord(
-		uv[4][2] + D3DXVECTOR2(0.0, 0.0),
-		uv[4][2] + D3DXVECTOR2(UNIT_U, 0.0),
-		uv[4][2] + D3DXVECTOR2(0.0, UNIT_V),
-		uv[4][2] + D3DXVECTOR2(UNIT_U, UNIT_V));
+		uv[0][0] + D3DXVECTOR2(0.0, 0.0),
+		uv[0][0] + D3DXVECTOR2(UNIT_U, 0.0),
+		uv[0][0] + D3DXVECTOR2(0.0, UNIT_V),
+		uv[0][0] + D3DXVECTOR2(UNIT_U, UNIT_V));
 
 	//レティクル3D
 	currentU = 0;
 	currentV = 0;
 	billboard = new InstancingBillboard();
-	billboard->initialize(*textureNS::reference(textureNS::UI_RETICLE),NUM_U-1,NUM_V-1);
+	billboard->initialize(*textureNS::reference(textureNS::UI_MAIN_RETICLE),NUM_U-1,NUM_V-1);
 	billboard->generateInstance(new Reticle3D(D3DXVECTOR3(0,0,0),D3DXVECTOR2(UNIT_U*0,UNIT_V*0)) );
 }
 
