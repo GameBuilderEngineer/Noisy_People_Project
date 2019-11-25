@@ -67,16 +67,20 @@ public:
 	//Method
 	Camera();
 	~Camera();
+
+	//Šî–{ŠÖ”
 	HRESULT initialize(DWORD _windowWidth, DWORD _windowHeight);
 	void update();
 	void renderReady();
 	void outputGUI();
 
-	void enableLimit(int limitParameter);
-	void disableLimit(int limitParameter);
-	void setLimitRotationTop(float value);
-	void setLimitRotationBottom(float value);
+	//§ŒÀ[limit]
+	void enableLimit(int limitParameter);				//§ŒÀ‚Ì—LŒø‰»
+	void disableLimit(int limitParameter);				//§ŒÀ‚Ì–³Œø‰»
+	void setLimitRotationTop(float value);				//‰ñ“]ã•ûŒü§ŒÀ
+	void setLimitRotationBottom(float value);			//‰ñ“]‰º•ûŒü§ŒÀ
 
+	//‘€ì[operation]
 	void rotation(D3DXVECTOR3 axis, float angle);
 	void lockOn(D3DXVECTOR3 lockOnTarget,float frameTime);
 

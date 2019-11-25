@@ -32,9 +32,6 @@ Tutorial::Tutorial()
 	// 次のシーン(ゲーム)
 	nextScene = SceneList::GAME;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::TUTORIAL);
-
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
@@ -53,7 +50,7 @@ Tutorial::Tutorial()
 Tutorial::~Tutorial()
 {
 	// サウンドの停止
-	SoundInterface::StopAllSound();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================
@@ -86,7 +83,9 @@ void Tutorial::initialize()
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-		camera[i].setFieldOfView((D3DX_PI / 180) * 90);
+		camera[i].setFieldOfView((D3DX_PI / 180) * 91);
+		camera[i].setLimitRotationTop(0.3f);
+		camera[i].setLimitRotationBottom(0.7f);
 
 		//プレイヤーの設定
 		PlayerTable infomation;
@@ -154,12 +153,11 @@ void Tutorial::initialize()
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),gameMaster, player);
-	//test(sai[マージする時に消して])
+	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),gameMaster,player);
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	enemySet.defaultPosition = ENEMY_POSTITION;
-	enemySet.defaultState = stateMachineNS::ENEMY_STATE::PATROL;
+	enemySet.defaultState = stateMachineNS::ENEMY_STATE::REST;
 	enemySet.type = enemyNS::ENEMY_TYPE::WOLF;
 	enemySet.enemyID = 0;
 	enemyData = enemyManager->createEnemyData(enemySet);
@@ -269,7 +267,7 @@ void Tutorial::update(float _frameTime)
 		camera[i].update();
 
 	//タイマーの更新
-	timer->update();
+	//timer->update();
 
 
 	//Enterまたは〇ボタンで次へ
@@ -323,12 +321,6 @@ void Tutorial::update(float _frameTime)
 		{
 			changeScene(nextScene);
 		}
-	}
-
-	// チュートリアルが最後まで行ったらタイトルへ
-	if (tutorialTex.nextPage >= tutorialTex::TUTORIAL_2D_SCENE_MAX)
-	{
-		//changeScene(nextScene);
 	}
 
 	// チュートリアル2D更新
@@ -462,6 +454,20 @@ void Tutorial::collisions()
 	//衝突対応リストを取得
 	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
 	collisionNum /= 2;//2で割るのはペアになっているため
+
+		//プレイヤーとフィールド
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		//地面方向補正処理
+		player[i].grounding(testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+		//壁ずり処理
+		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+	}
+
+
 }
 
 //===================================================================================================================================

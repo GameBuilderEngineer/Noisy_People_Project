@@ -61,7 +61,6 @@ public:
 #endif
 
 	//基本機能
-	static void							SwitchAudioBuffer(int scene);	//シーンの更新
 	static void							StopAllSound(void);				//音の停止処理(全部)
 	void									UpdateSound(void);				//更新処理
 	void									outputSoundGUI(void);			//ImGUIへの出力

@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "TextureLoader.h"
 #include "Input.h"
+#include "VirtualController.h"
 
 //============================
 //名前空間 定数
@@ -41,17 +42,17 @@ namespace uiCharacterNS
 	};
 
 	//リザルトロゴ
-	const int WIDTH_RESULT = (330);			//幅
-	const int HEIGHT_RESULT = (170);		//高さ
-	const D3DXVECTOR3 POSITION_RESULT = D3DXVECTOR3(2100, 70, 0);//初期位置
-	const float	END_POS_RESULT =(215.0f);	//最終位置のx座標
+	const int WIDTH_RESULT = (330 * WINDOW_WIDTH / 1920);			//幅
+	const int HEIGHT_RESULT = (170 * WINDOW_HEIGHT / 1080);		//高さ
+	const D3DXVECTOR3 POSITION_RESULT = D3DXVECTOR3(2100, 70 * WINDOW_HEIGHT / 1080, 0);//初期位置
+	const float	END_POS_RESULT =(215.0f * WINDOW_WIDTH / 1920);	//最終位置のx座標
 
 	//プレイヤー
-	const int WIDTH_PLAYER = (345);			//幅
-	const int HEIGHT_PLAYER = (90);			//高さ
-	const D3DXVECTOR3 POSITION_PLAYER = D3DXVECTOR3(3800, 250, 0);//初期位置
-	const float END_POS_PLAYER_01 = (645.0f);//プレイヤー１の最終位置のx座標
-	const float END_POS_PLAYER_02 = (1605);	 //プレイヤー２の最終位置のx座標
+	const int WIDTH_PLAYER = (345 * WINDOW_WIDTH / 1920);			//幅
+	const int HEIGHT_PLAYER = (90 * WINDOW_HEIGHT / 1080);			//高さ
+	const D3DXVECTOR3 POSITION_PLAYER = D3DXVECTOR3(3800, 250 * WINDOW_HEIGHT / 1080, 0);//初期位置
+	const float END_POS_PLAYER_01 = (645.0f* WINDOW_WIDTH / 1920);//プレイヤー１の最終位置のx座標
+	const float END_POS_PLAYER_02 = (1605 * WINDOW_WIDTH / 1920);	 //プレイヤー２の最終位置のx座標
 	//uv座標
 	const D3DXVECTOR2 PLAYER1_UV_VERTEX01 = D3DXVECTOR2(0.0, 0.0);
 	const D3DXVECTOR2 PLAYER1_UV_VERTEX02 = D3DXVECTOR2(1.0, 0.0);
@@ -63,39 +64,39 @@ namespace uiCharacterNS
 	const D3DXVECTOR2 PLAYER2_UV_VERTEX04 = D3DXVECTOR2(1.0, 1.0);
 
 	//緑化(英語)
-	const int WIDTH_GREENIG = (334);		//幅
-	const int HEIGHT_GREENIG = (53);		//高さ
-	const D3DXVECTOR3 POSITION_GREENIG_01 = D3DXVECTOR3(248, 3500, 0);//プレイヤー１用初期位置
-	const D3DXVECTOR3 POSITION_GREENIG_02 = D3DXVECTOR3(1208, 3500, 0);//プレイヤー２用初期位置
-	const float END_POS_GREENING = (353.0f);//最終位置のy座標
+	const int WIDTH_GREENIG = (334 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_GREENIG = (53 * WINDOW_HEIGHT / 1080);		//高さ
+	const D3DXVECTOR3 POSITION_GREENIG_01 = D3DXVECTOR3(248 * WINDOW_WIDTH / 1920, 3500, 0);//プレイヤー１用初期位置
+	const D3DXVECTOR3 POSITION_GREENIG_02 = D3DXVECTOR3(1208 * WINDOW_WIDTH / 1920, 3500, 0);//プレイヤー２用初期位置
+	const float END_POS_GREENING = (353.0f* WINDOW_HEIGHT / 1080);//最終位置のy座標
 
 	//緑化
-	const int WIDTH_RYOKUKA = (256);		//幅
-	const int HEIGHT_RYOKUKA = (86);		//高さ
-	const D3DXVECTOR3 POSITION_RYOKUKA_01 = D3DXVECTOR3(358, 4500, 0);//プレイヤー１用初期位置
-	const D3DXVECTOR3 POSITION_RYOKUKA_02 = D3DXVECTOR3(1318, 4500, 0);//プレイヤー２用初期位置
-	const float END_POS_RYOKUKA = (425.0f);	//最終位置のy座標
+	const int WIDTH_RYOKUKA = (256 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_RYOKUKA = (86 * WINDOW_HEIGHT / 1080);		//高さ
+	const D3DXVECTOR3 POSITION_RYOKUKA_01 = D3DXVECTOR3(358 * WINDOW_WIDTH / 1920, 4500, 0);//プレイヤー１用初期位置
+	const D3DXVECTOR3 POSITION_RYOKUKA_02 = D3DXVECTOR3(1318 * WINDOW_WIDTH / 1920, 4500, 0);//プレイヤー２用初期位置
+	const float END_POS_RYOKUKA = (425.0f * WINDOW_HEIGHT / 1080);	//最終位置のy座標
 
 	//パーセント
-	const int WIDTH_PERSENT = (115);		//幅
-	const int HEIGHT_PERSENT = (124);		//高さ
-	const D3DXVECTOR3 POSITION_PERSENT_01 = D3DXVECTOR3(845, 4500, 0);//プレイヤー１用初期位置
-	const D3DXVECTOR3 POSITION_PERSENT_02 = D3DXVECTOR3(1805, 4500, 0);//プレイヤー２用初期位置
-	const float END_POS_PERSENT = (429.0f);	//最終位置のy座標
+	const int WIDTH_PERSENT = (115 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_PERSENT = (124 * WINDOW_HEIGHT / 108);		//高さ
+	const D3DXVECTOR3 POSITION_PERSENT_01 = D3DXVECTOR3(845 * WINDOW_WIDTH / 1920, 4500, 0);//プレイヤー１用初期位置
+	const D3DXVECTOR3 POSITION_PERSENT_02 = D3DXVECTOR3(1805 * WINDOW_WIDTH / 1920, 4500, 0);//プレイヤー２用初期位置
+	const float END_POS_PERSENT = (429.0f* WINDOW_HEIGHT / 108);	//最終位置のy座標
 
 	//撃退(英語)
-	const int WIDTH_DEFEAT = (390);			//幅
-	const int HEIGHT_DEFEAT = (53);			//高さ
-	const D3DXVECTOR3 POSITION_DEFEAT_01 = D3DXVECTOR3(273, 5500, 0);//プレイヤー１用初期位置
-	const D3DXVECTOR3 POSITION_DEFEAT_02 = D3DXVECTOR3(1318, 5500, 0);//プレイヤー２用初期位置
-	const float END_POS_DEFEAT = (523.0f);	//最終位置のy座標
+	const int WIDTH_DEFEAT = (390 * WINDOW_WIDTH / 1920);			//幅
+	const int HEIGHT_DEFEAT = (53 * WINDOW_HEIGHT / 108);			//高さ
+	const D3DXVECTOR3 POSITION_DEFEAT_01 = D3DXVECTOR3(273 * WINDOW_WIDTH / 1920, 5500, 0);//プレイヤー１用初期位置
+	const D3DXVECTOR3 POSITION_DEFEAT_02 = D3DXVECTOR3(1318 * WINDOW_WIDTH / 1920, 5500, 0);//プレイヤー２用初期位置
+	const float END_POS_DEFEAT = (523.0f * WINDOW_HEIGHT / 108);	//最終位置のy座標
 
 	//撃退
-	const int WIDTH_GEKITAI = (255);		//幅
-	const int HEIGHT_GEKITAI = (86);		//高さ
-	const D3DXVECTOR3 POSITION_GEKITAI_01 = D3DXVECTOR3(358, 6500, 0);//プレイヤー１用初期位置
-	const D3DXVECTOR3 POSITION_GEKITAI_02 = D3DXVECTOR3(1318, 6500, 0);//プレイヤー２用初期位置
-	const float END_POS_GEKITAI = (595.0f);	//最終位置のy座標
+	const int WIDTH_GEKITAI = (255 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_GEKITAI = (86 * WINDOW_HEIGHT / 108);		//高さ
+	const D3DXVECTOR3 POSITION_GEKITAI_01 = D3DXVECTOR3(358 * WINDOW_WIDTH / 1920, 6500, 0);//プレイヤー１用初期位置
+	const D3DXVECTOR3 POSITION_GEKITAI_02 = D3DXVECTOR3(1318 * WINDOW_WIDTH / 1920, 6500, 0);//プレイヤー２用初期位置
+	const float END_POS_GEKITAI = (595.0f* WINDOW_HEIGHT / 108);	//最終位置のy座標
 
 	 //共通
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0, 0, 0);			//回転

@@ -37,10 +37,6 @@ SoundBase::SoundBase()
 	SendDescriptor = { XAUDIO2_SEND_USEFILTER,EndpointVoice };
 	SendList = { 1,&SendDescriptor };
 
-#if _DEBUG
-	//シーンの初期化
-	scene = SceneList::SPLASH;
-#endif
 #endif
 }
 
@@ -50,7 +46,16 @@ SoundBase::SoundBase()
 SoundBase::~SoundBase()
 {
 #if(XADUIO2_STATE)
+	//曲の停止
 	uninitSoundStop();
+
+	//バッファ解放処理
+	for (int i = 0; i < bufferMax; i++)
+	{
+		SAFE_DELETE_ARRAY(bufferList[i].wavFile.data.waveData);
+	}
+	SAFE_DELETE_ARRAY(bufferList);
+
 	soundParametersList->terminate();
 	SAFE_DELETE(soundParametersList);
 
@@ -209,7 +214,7 @@ void SoundBase::MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *li
 	if (tmpSoundParameters->playParameters.speed != NULL)
 	{
 		//後でtrueにする
-		tmpSoundParameters->isSpeed = false;
+		tmpSoundParameters->isSpeed = true;
 	}
 
 	//波形のフォーマット
@@ -316,4 +321,14 @@ WAV_FILE SoundBase::LoadWavChunk(FILE *fp)
 	}
 
 	return tmpWavFile;
+}
+
+//===================================================================================================================================
+//【ミュート】
+//===================================================================================================================================
+void SoundBase::setEndPointVoiceVolume(float volume)
+{
+#if(XADUIO2_STATE)
+	EndpointVoice->SetVolume(volume);
+#endif
 }

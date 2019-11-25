@@ -178,7 +178,7 @@ void CollisionManager::horizontalCorrection(Object* obj1, Object* obj2, float ra
 	}
 	if (ratio1 <= 1.0f)
 	{
-		obj2->position += repulsion * (length*(1.0-ratio1));
+		obj2->position += repulsion * (length*(1.0f-ratio1));
 		obj2->Object::update();
 	}
 }

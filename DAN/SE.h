@@ -72,38 +72,6 @@ static const char *SEPathList[SE_LIST::SE_MAX] = {
 	"SE_StartGame.wav","SE_AnnounceTelop.wav","SE_Telop.wav","SE_TimeUp.wav",
 	"SE_Bird0.wav","SE_Bird1.wav","SE_Wind.wav" };
 
-static const int titleSEPathList[] = {
-	SE_Cursor,SE_Decision ,SE_Cancel };
-
-static const int creditSEPathList[] = {
-	SE_Cursor,SE_Decision ,SE_Cancel };
-
-static const int gameSEPathList[] = {
-	SE_Cursor,SE_Decision ,SE_Cancel ,
-	SE_Shot,SE_Reload,SE_Getlem,SE_RecoverPower,
-	SE_BanOperation,SE_VisionStart,SE_VisionFinish,
-	SE_Vision,SE_SkyVisionStart,SE_VisionFinish,
-	SE_ShiftStart, SE_ShiftFinish,SE_HitBulletTree,
-	SE_Convert,SE_Greening,SE_EnemyActive,
-	SE_EnemyAttack,SE_EnemyAttackHit,SE_EnemyDefeated,
-	SE_StartGame,SE_AnnounceTelop,SE_Telop,SE_TimeUp,
-	SE_BIRD_0,SE_BIRD_1,SE_WIND };
-
-static const int tutorialSEPathList[] = {
-	SE_Cursor,SE_Decision ,SE_Cancel ,
-	SE_Shot,SE_Reload,SE_Getlem,SE_RecoverPower,
-	SE_BanOperation,SE_VisionStart,SE_VisionFinish,
-	SE_Vision,SE_SkyVisionStart,SE_VisionFinish,
-	SE_ShiftStart, SE_ShiftFinish,SE_HitBulletTree,
-	SE_Convert,SE_Greening,SE_EnemyActive,
-	SE_EnemyAttack,SE_EnemyAttackHit,SE_EnemyDefeated,
-	SE_StartGame,SE_AnnounceTelop,SE_Telop,SE_TimeUp,
-	SE_BIRD_0,SE_BIRD_1,SE_WIND };
-
-static const int resultSEPathList[] = {
-	SE_Cursor,SE_Decision ,SE_Cancel,
-	SE_AddTree,SE_Score};
-
 //===================================================================================================================================
 //【サウンド(XAudio2)】
 //サウンドのSEクラス
@@ -111,14 +79,16 @@ static const int resultSEPathList[] = {
 class SEManager : public SoundBase
 {
 public:
-	SEManager() {};
+	SEManager() { loadBuffer(); };
 	~SEManager() {};
 
-	//関数
-	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
 
-		//debug用
 #if _DEBUG
 	void	 outputGUI(void)override;				//ImGUIへの出力
 #endif
+
+private:
+	//関数
+	void loadBuffer()override;	//必要なサウンドバッファを用意する
+
 };

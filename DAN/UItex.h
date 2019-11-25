@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "TextureLoader.h"
 #include "Input.h"
+#include "VirtualController.h"
 //#include "UIcharacter.h"
 
 //============================
@@ -40,35 +41,35 @@ namespace uiTexNS
 	};
 
 	//ライン
-	const int WIDTH_LINE = (1920);			//幅
-	const int HEIGHT_LINE = (15);			//高さ
-	const D3DXVECTOR3 POSITION_LINE = D3DXVECTOR3(-1000, 150, 0);//初期位置
-	const float END_POS_LINE = (960);		//最終位置のx座標
+	const int WIDTH_LINE = (1920 * WINDOW_WIDTH / 1920);			//幅
+	const int HEIGHT_LINE = (15 * WINDOW_HEIGHT / 1080);			//高さ
+	const D3DXVECTOR3 POSITION_LINE = D3DXVECTOR3(-1000, 150 * WINDOW_HEIGHT / 1080, 0);//初期位置
+	const float END_POS_LINE = (960 * WINDOW_WIDTH / 1920);		//最終位置のx座標
 
 	//フレーム
-	const int WIDTH_FLAME = (860);			//幅
-	const int HEIGHT_FLAME = (755);			//高さ
-	const D3DXVECTOR3 POSITION_FLAME_01 = D3DXVECTOR3(480, 2000, 0);//位置
-	const D3DXVECTOR3 POSITION_FLAME_02 = D3DXVECTOR3(1440, 2000, 0);//位置
-	const float END_POS_FLAME = (578);		//最終位置のy座標
+	const int WIDTH_FLAME = (860 * WINDOW_WIDTH / 1920);			//幅
+	const int HEIGHT_FLAME = (755 * WINDOW_HEIGHT / 1080);			//高さ
+	const D3DXVECTOR3 POSITION_FLAME_01 = D3DXVECTOR3(480 * WINDOW_WIDTH / 1920, 2000, 0);//位置
+	const D3DXVECTOR3 POSITION_FLAME_02 = D3DXVECTOR3(1440 * WINDOW_WIDTH / 1920, 2000, 0);//位置
+	const float END_POS_FLAME = (578 * WINDOW_HEIGHT / 1080);		//最終位置のy座標
 
 	//キャラA
-	const int WIDTH_CHARA_A = (478);		//幅
-	const int HEIGHT_CHARA_A = (624);		//高さ
-	const D3DXVECTOR3 POSITION_CHARA_A = D3DXVECTOR3(480, 2500, 0);//位置
-	const float END_POS_CHARA_A = (618);	//最終座標のy座標
+	const int WIDTH_CHARA_A = (478 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_CHARA_A = (624 * WINDOW_HEIGHT / 1080);		//高さ
+	const D3DXVECTOR3 POSITION_CHARA_A = D3DXVECTOR3(480 * WINDOW_WIDTH / 1920, 2500, 0);//位置
+	const float END_POS_CHARA_A = (618 * WINDOW_HEIGHT / 1080);	//最終座標のy座標
 
 	//キャラB
-	const int WIDTH_CHARA_B = (478);		//幅
-	const int HEIGHT_CHARA_B = (624);		//高さ
-	const D3DXVECTOR3 POSITION_CHARA_B = D3DXVECTOR3(1440,2500, 0);//位置
-	const float END_POS_CHARA_B = (628);	//最終座標のy座標
+	const int WIDTH_CHARA_B = (478 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_CHARA_B = (624 * WINDOW_HEIGHT / 1080);		//高さ
+	const D3DXVECTOR3 POSITION_CHARA_B = D3DXVECTOR3(1440 * WINDOW_WIDTH / 1920,2500, 0);//位置
+	const float END_POS_CHARA_B = (628 * WINDOW_HEIGHT / 1080);	//最終座標のy座標
 
 	//NEXTテクスチャ
-	const int WIDTH_NEXT = (381);		//幅
-	const int HEIGHT_NEXT = (95);		//高さ
+	const int WIDTH_NEXT = (381 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_NEXT = (95 * WINDOW_HEIGHT / 1080);		//高さ
 	const D3DXVECTOR3 POSITION_NEXT = D3DXVECTOR3(4500, 1017, 0);//位置
-	const float END_POS_NEXT = (1730);	//最終座標のx座標
+	const float END_POS_NEXT = (1730 * WINDOW_WIDTH / 1920);	//最終座標のx座標
 
 	//共通
 	const D3DXVECTOR3 ROTATION_TEX = D3DXVECTOR3(0, 0, 0);			//回転

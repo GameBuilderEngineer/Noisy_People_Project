@@ -3,7 +3,7 @@
 // Author : HAL“Œ‹’‹ŠÔ•” 2”N§ƒQ[ƒ€Šw‰È GP12A332 32 ’†˜a‹P
 // ì¬ŠJn“ú : 2019/10/13
 //-----------------------------------------------------------------------------
-// XV“ú : 2019/11/14 y›–ì ÷z
+// XV“ú : 2019/11/17 y›–ì ÷z
 //-----------------------------------------------------------------------------
 
 //=============================================================================
@@ -73,6 +73,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 Tree::~Tree()
 {
 	numOfTree--;
+	SAFE_DELETE(state);
 }
 
 
@@ -197,7 +198,10 @@ void Tree::setGreeningArea(float value)
 	greeningArea.sphere->setScale(value);
 }
 //üˆÍ‚Ö‚Ì—Î‰»‚ğI—¹
-void Tree::disableAroundGreening()	{ nowAroundGreening = false; }
+void Tree::disableAroundGreening()	{ 
+	nowAroundGreening = false; 
+	greeningArea.treeCell.remove();//Õ“Ë‹óŠÔ‚©‚ç—£’E
+}
 
 
 //=============================================================================

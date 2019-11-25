@@ -59,14 +59,15 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
 #ifdef _DEBUG
 	d3dpp.Windowed					= true;
+	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
 #else
+	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
 	d3dpp.Windowed					= false;
+	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_DEFAULT;
 #endif // _DEBUG
-
 	d3dpp.BackBufferWidth			= WINDOW_WIDTH;
 	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
 	d3dpp.EnableAutoDepthStencil	= true;
-	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
 	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;
 
 	if (FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, targetWnd,

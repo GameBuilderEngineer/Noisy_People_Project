@@ -23,7 +23,6 @@ HPguageP2::HPguageP2()
 	uvCoord2 = D3DXVECTOR2(1.0, 0.0);
 	uvCoord3 = D3DXVECTOR2(0.0, 1.0);
 	uvCoord4 = D3DXVECTOR2(1.0, 1.0);
-	width = WIDTH_HP_GUAGE;
 }
 
 //====================================
@@ -39,11 +38,11 @@ HPguageP2::~HPguageP2()
 //====================================
 void HPguageP2::initialize()
 {
-	BasicUI::assingPosition(POSITION_HP_GUAGE);
 	BasicUI::assingSize(WIDTH_HP_GUAGE, HEIGHT_HP_GUAGE);
+	BasicUI::assingPosition(POSITION_HP_GUAGE);
 	BasicUI::assingUV(uvCoord1, uvCoord2, uvCoord3, uvCoord4);
-	BasicUI::changePivot();
-	BasicUI::initialize(hpGuage, textureNS::reference(textureNS::UI_HP_GUAGE_P1));
+	BasicUI::changePivot(SpriteNS::TOP_RIGHT);
+	BasicUI::initialize(hpGuage, textureNS::reference(textureNS::UI_HP_GUAGE_P2));
 }
 
 //====================================
@@ -51,7 +50,6 @@ void HPguageP2::initialize()
 //====================================
 void HPguageP2::render()
 {
-
 	hpGuage->render();
 }
 
@@ -68,7 +66,7 @@ void HPguageP2::update(int hp)
 //====================================
 void HPguageP2::changeGage(int hp)
 {
-	//HPを参照しサイズを変更
+	//HPを参照しUV座標を変換
 	float hpPersent = (float)hp / 100;//現在のHPを最大HPで割って割合を出す
 	if (BasicUI::widthSize>WIDTH_HP_GUAGE*hpPersent)
 	{

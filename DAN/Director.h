@@ -78,6 +78,8 @@ public:
 	bool				hiddenCursor;			//カーソル非表示フラグ
 	bool				lockCursor;				//カーソル位置固定フラグ
 
+
+
 	//Method
 	Director();
 	~Director();

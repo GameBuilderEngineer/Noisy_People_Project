@@ -76,7 +76,9 @@ void  WindManager::windCollision(Player* player)
 		if (ray.rayIntersect(staticMeshNS::reference(staticMeshNS::STAR_REGULAR_POLYHEDRON_X10)->mesh,
 			wind[i].matrixWorld))
 		{
+			player->jump();
 			player->addSpeed(wind[i].windDirection * wind[i].windSpeed);
+			//player->acceleration += (wind[i].windDirection * wind[i].windSpeed *20);
 		}
 	}
 }

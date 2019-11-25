@@ -39,21 +39,6 @@ static const char *BGMPathList[] = {
 	"BGM_Game.wav","BGM_Tutorial.wav",
 	"BGM_Clear.wav" ,"BGM_Failed.wav" };
 
-static const int titleBGMPathList[] = {
-	BGM_Title};
-
-static const int creditBGMPathList[] = {
-	BGM_Credit };
-
-static const int gameBGMPathList[] = {
-	BGM_Game };
-
-static const int tutorialBGMPathList[] = {
-	BGM_Tutorial };
-
-static const int resultBGMPathList[] = {
-	BGM_Clear,BGM_Failed };
-
 //===================================================================================================================================
 //【サウンド(XAudio2)】
 //サウンドのBGMクラス
@@ -61,15 +46,18 @@ static const int resultBGMPathList[] = {
 class BGMManager : public SoundBase
 {
 public:
-	BGMManager();
-	~BGMManager();
+	BGMManager() { loadBuffer(); };
+	~BGMManager() {};
 
-	//関数
-	void	 SwitchAudioBuffer(int scene)override;	//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void	 SetSpeed(void);							//再生速度の設定
 	
 	//debug用
 #if _DEBUG
 	void	 outputGUI(void)override;				//ImGUIへの出力
 #endif
+
+private:
+	//関数
+	void	 loadBuffer(void)override;
+
 };

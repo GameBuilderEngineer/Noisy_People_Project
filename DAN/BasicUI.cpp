@@ -102,9 +102,21 @@ void BasicUI::assingUV(D3DXVECTOR2 uvCoord1, D3DXVECTOR2 uvCoord2, D3DXVECTOR2 u
 //==================================
 // 中心位置の代入
 //==================================
-void BasicUI::changePivot()
+void BasicUI::changePivot(int pivotType)
 {
-	pivot = SpriteNS::TOP_LEFT;
+	switch (pivotType)
+	{
+	case SpriteNS::TOP_LEFT:
+		pivot = SpriteNS::TOP_LEFT;
+		break;
+	case SpriteNS::TOP_RIGHT:
+		pivot = SpriteNS::TOP_RIGHT;
+		break;
+	default:
+		pivot = SpriteNS::TOP_CENTER;
+		break;
+	}
+	
 }
 
 //==================================
@@ -221,5 +233,16 @@ void BasicUI::changeUV(Sprite *sprite,D3DXVECTOR2 uv)
 	uvCoord02.x = CHANGE_UV_SPEED;
 	uvCoord04.x = CHANGE_UV_SPEED;
 	sprite->setUVCoord(uvCoord01, uvCoord02, uvCoord03, uvCoord04);
+	sprite->render();
+}
+
+//=================================
+//横サイズの変化
+//=================================
+void BasicUI::changeWhidthSize(Sprite *sprite, int size)
+{
+	widthSize = size;
+	sprite->setSize(widthSize, heightSize);
+	sprite->setVertex();
 	sprite->render();
 }
