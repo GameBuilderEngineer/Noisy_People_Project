@@ -7,6 +7,7 @@
 //インクルード
 //===================================
 #include "ElectGuage.h"
+#include "Input.h"
 
 //===================================
 // usuing宣言
@@ -58,6 +59,7 @@ void ElectGuage::initialize(int playerType)
 //===================================
 void ElectGuage::render()
 {
+	
 	electGuage->render();
 }
 
@@ -68,6 +70,7 @@ void ElectGuage::render()
 void ElectGuage::update(int power)
 {
 	changeGuage(power);
+	
 }
 
 //===================================
@@ -76,14 +79,25 @@ void ElectGuage::update(int power)
 //===================================
 void ElectGuage::changeGuage(int power)
 {
-	//電力の下2桁を取り出す
-	int  enPersent = power % 100;
-	if (BasicUI::widthSize > WIDTH_EN_GUAGE*enPersent)
+	//電力の下2桁を取り出して割合を出す
+	if (power == 100 || power == 200 || power == 300)
 	{
-		BasicUI::reductionWidthSize(electGuage, 1.0);
+		BasicUI::changeWhidthSize(electGuage,width);
+		/*uvCoord01 = D3DXVECTOR2(0.0f, 0.0f);
+		uvCoord02 = D3DXVECTOR2(1.0f, 0.0f);
+		uvCoord03 = D3DXVECTOR2(0.0f, 1.0f);
+		uvCoord04 = D3DXVECTOR2(1.0f, 1.0f);
+		BasicUI::changeUV(electGuage, uvCoord01, uvCoord02, uvCoord03, uvCoord04);*/
 	}
-	else if (enPersent == 0)//0の時はゲージがMAX
+	else
 	{
-		BasicUI::changeWhidthSize(electGuage, WIDTH_EN_GUAGE);
+		float  enPersent = (power % 100)/100.0f;
+		width= WIDTH_EN_GUAGE * enPersent;
+		BasicUI::changeWhidthSize(electGuage, width);
+		/*uvCoord01 = D3DXVECTOR2(0.0f, 0.0f);
+		uvCoord02 = D3DXVECTOR2(enPersent, 0.0f);
+		uvCoord03 = D3DXVECTOR2(0.0f, 1.0f);
+		uvCoord04 = D3DXVECTOR2(enPersent, 1.0f);
+		BasicUI::changeUV(electGuage, uvCoord01, uvCoord02, uvCoord03, uvCoord04);*/
 	}
 }

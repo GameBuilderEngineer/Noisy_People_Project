@@ -83,7 +83,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_EN_GUAGE_EMP_P2] = { "EnGuage_Emp2.png" };
 	textureName[UI_EN_GUAGE_P1] = { "EnGuage1.png" };
 	textureName[UI_EN_GUAGE_P2] = { "EnGuage2.png" };
-
+	textureName[UI_EN_TANK] = { "EnGuage_Stock.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };

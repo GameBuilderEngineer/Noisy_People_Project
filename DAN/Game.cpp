@@ -482,10 +482,7 @@ void Game::update(float _frameTime) {
 	samplePlane->update(frameTime);
 	// 開発中広告
 	ad->update(frameTime);
-
-	//電力減少（電力回復確認用）
-	//player[gameMasterNS::PLAYER_1P].pullpower(1);
-
+	
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		camera[i].update();
@@ -926,6 +923,18 @@ void Game::test()
 	if (input->wasKeyPressed('3'))	// 全破棄
 	{
 		treeManager->destroyAllTree();
+	}
+
+	//電力関係UIのテスト
+	//電力減少（電力回復確認用）
+	if (input->isKeyDown('U'))
+	{
+		player[gameMasterNS::PLAYER_1P].pullpower(1);
+	}
+	//電力増加（ゲージ、タンクテスト用）
+	if (input->isKeyDown('I'))
+	{
+		player[gameMasterNS::PLAYER_1P].addpower(1);
 	}
 }
 #endif // _DEBUG
