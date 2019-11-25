@@ -78,7 +78,7 @@ NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** pOut,
 	dest = _dest;
 	startIndex = -1;
 	destIndex = -1;
-	edgeList = NULL;
+	LinkedList<meshDataNS::Index2>* edgeList = NULL;
 
 	// レイの準備（逆マトリクスでメッシュの位置・回転をレイに適用）
 	D3DXMATRIX Inv;
@@ -89,22 +89,25 @@ NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** pOut,
 	// 現在地がナビメッシュに接地するかチェック
 	if (isHitGrounding(NULL, &startIndex, from))
 	{
-		*faceIndex = startIndex;			// 呼び出し側のインデックスを更新
+		*faceIndex = startIndex;		// 呼び出し側のインデックスを更新
 	}
 	else
 	{
-		return CURRENT_NOT_ON_MESH;			// 現在地がナビメッシュ上ではない
+		return CURRENT_NOT_ON_MESH;		// 現在地がナビメッシュ上ではない
 	}
 
 	// 目的地がナビメッシュに接地するかチェック
 	if (isHitGrounding(NULL, &destIndex, dest) == false)
 	{
-		return DESTINATION_NOT_ON_MESH;		// 目的地がナビメッシュ上ではない
+		return DESTINATION_NOT_ON_MESH;	// 目的地がナビメッシュ上ではない
 	}
 
 	// A*アルゴリズムによる経路探索でエッジリストを取得する
 	edgeList = aStar.pathSearch(startIndex, destIndex, from, dest);
-	if (edgeList == NULL) { return IMPASSE; }				// 袋小路のためパス検索失敗
+	if (edgeList == NULL)
+	{
+		return IMPASSE;					// 袋小路のためパス検索失敗
+	}
 
 	// エッジリストを更新し返却する
 	edgeList->listUpdate();
@@ -149,6 +152,14 @@ NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECT
 	// 接地座標をもとにパスフォローイングを実行
 	D3DXVECTOR3 surfaceIntersection = _position + gravityDirection * distance;
 	pathFollowing.createVector(out, surfaceIntersection, faceIndex, _edgeList);
+	if (_edgeList->nodeNum == 0)
+	{
+		int unko = 99;
+	}
+	if (_edgeList->nodeNum > 0)
+	{
+		int tinko = 1;
+	}
 	return NAVI_OK;
 }
 
@@ -177,7 +188,7 @@ bool NavigationMesh::isHitGrounding(float *distance, DWORD* faceIndex, D3DXVECTO
 //=============================================================================
 // エッジリストをファイルにダンプ
 //=============================================================================
-void NavigationMesh::dumpEdgeList()
+void NavigationMesh::dumpEdgeList(LinkedList<meshDataNS::Index2>* _edgeList)
 {
 	FILE* fp;
 	setDataDirectory();
@@ -185,10 +196,10 @@ void NavigationMesh::dumpEdgeList()
 	fp = fopen("EdgeList.txt", "w");
 	fprintf(fp, "エッジリストの中身\n出力元：NavigationMesh.cpp\n");
 
-	edgeList->listUpdate();
-	for (int i = 0; i < edgeList->nodeNum; i++)
+	_edgeList->listUpdate();
+	for (int i = 0; i < _edgeList->nodeNum; i++)
 	{
-		Index2 vtx = *edgeList->getValue(i);
+		Index2 vtx = *_edgeList->getValue(i);
 		fprintf(fp, "%d, %d\n", vtx.index[0], vtx.index[1]);
 	}
 	fclose(fp);
@@ -202,6 +213,11 @@ void NavigationMesh::debugRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 {
 #if 1	// メッシュを描画する
 	debugRenderMesh(view, projection, cameraPosition);
+#endif
+
+#if 1	// エッジ関係を描画する
+	affectToEdgeVertex(debugEdgeList);
+	debugRenderEdge(debugEdgeList);
 #endif
 }
 
@@ -280,6 +296,7 @@ void NavigationMesh::debugRenderMesh(D3DXMATRIX view, D3DXMATRIX projection, D3D
 void NavigationMesh::debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList)
 {
 	if (_edgeList == NULL) return;
+
 	_edgeList->listUpdate();
 
 	// レイの配列を作成
@@ -288,8 +305,8 @@ void NavigationMesh::debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList)
 	for (int i = 0; i < _edgeList->nodeNum; i++)
 	{
 		// インデックスの頂点座標を取得
-		BYTE* p1 = meshData.getVertexPointerFromVertexIndex(edgeList->getValue(i)->index[0]);
-		BYTE* p2 = meshData.getVertexPointerFromVertexIndex(edgeList->getValue(i)->index[1]);
+		BYTE* p1 = meshData.getVertexPointerFromVertexIndex(_edgeList->getValue(i)->index[0]);
+		BYTE* p2 = meshData.getVertexPointerFromVertexIndex(_edgeList->getValue(i)->index[1]);
 		D3DXVECTOR3 tempPos1 = *(D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, p1);
 		D3DXVECTOR3 tempPos2 = *(D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, p2);
 		tempPos1 += D3DXVECTOR3(0.0f, FLOATING_HEIGHT + 0.1f, 0.0f);	
@@ -314,7 +331,7 @@ void NavigationMesh::debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList)
 //=============================================================================
 void NavigationMesh::changeColor()
 {
-	D3DCOLOR setting = D3DCOLOR_RGBA(255, 255, 255, 155);
+	D3DCOLOR setting = D3DCOLOR_RGBA(2, 255, 255, 155);
 
 	// 頂点バッファの準備
 	LPDIRECT3DVERTEXBUFFER9	vertexBuffer;
@@ -342,10 +359,10 @@ void NavigationMesh::changeColor()
 //=============================================================================
 // エッジの頂点に影響を与える
 //=============================================================================
-void NavigationMesh::affectToEdgeVertex()
+void NavigationMesh::affectToEdgeVertex(LinkedList<meshDataNS::Index2>* _edgeList)
 {
-	if (edgeList == NULL) return;
-	edgeList->listUpdate();
+	if (_edgeList == NULL) return;
+	_edgeList->listUpdate();
 	D3DCOLOR red = D3DCOLOR_RGBA(255, 0, 0, 255);
 
 	// 頂点バッファの準備
@@ -355,11 +372,11 @@ void NavigationMesh::affectToEdgeVertex()
 
 	if (SUCCEEDED(vertexBuffer->Lock(0, 0, (void**)&pVtx, 0)))
 	{
-		for (int i = 0; i < edgeList->nodeNum; i++)
+		for (int i = 0; i < _edgeList->nodeNum; i++)
 		{
 			// インデックスから頂点を取得
-			WORD index1 = edgeList->getValue(i)->index[0];
-			WORD index2 = edgeList->getValue(i)->index[1];
+			WORD index1 = _edgeList->getValue(i)->index[0];
+			WORD index2 = _edgeList->getValue(i)->index[1];
 			BYTE* p1 = meshData.getVertexPointerFromVertexIndex(index1, pVtx);
 			BYTE* p2 = meshData.getVertexPointerFromVertexIndex(index2, pVtx);
 
@@ -403,7 +420,7 @@ void NavigationMesh::outputGUI()
 		ImGui::Text("from-->faceIndex:%d\n", startIndex);
 		ImGui::Text("dest(%.3f, %.3f, %.3f)\n", dest.x, dest.y, dest.z);
 		ImGui::Text("dest-->faceIndex:%d\n", destIndex);
-		if(edgeList) ImGui::Text("edgeList->nodeNum:%d\n", edgeList->nodeNum);
+		//if(edgeList) ImGui::Text("edgeList->nodeNum:%d\n", edgeList->nodeNum);
 	}
 }
 #endif // _DEBUG

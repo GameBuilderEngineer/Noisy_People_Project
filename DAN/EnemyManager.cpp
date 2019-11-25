@@ -157,6 +157,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 		enemyList[i]->hearingSphere[0].render(enemyList[i]->matrixCenter);
 		enemyList[i]->hearingSphere[1].render(enemyList[i]->matrixCenter);
 #endif
+
 	}
 
 #endif// _DEBUG
@@ -441,10 +442,13 @@ void EnemyManager::outputGUI()
 			camera->setTargetX(&debugEnemy->getAxisX()->direction);
 			camera->setTargetY(&debugEnemy->getAxisY()->direction);
 			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
+			camera->setRelative(D3DXQUATERNION(0.0f, 6.0f, -4.5f, 0.0f));
 			debugEnemy->setDebugEnvironment();
 			debugEnemy->setCamera(&camera[0]);
 			debugEnemy->setDebugEnvironment();
 		}
+
+		
 	}
 
 	if (returnPlayer)
@@ -453,6 +457,7 @@ void EnemyManager::outputGUI()
 		camera->setTargetX(&player->getAxisX()->direction);
 		camera->setTargetY(&player->getAxisY()->direction);
 		camera->setTargetZ(&player->getAxisZ()->direction);
+		//camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -1.5f, 0.0f));
 	}
 
 	if (destroyAllFlag)

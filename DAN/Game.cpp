@@ -175,7 +175,7 @@ void Game::initialize() {
 	ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	naviMesh->initialize();
 
 	// エネミー
@@ -258,39 +258,41 @@ void Game::initialize() {
 	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
-	// エネミーをランダムに設置する
-	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	//{
-	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-	//	pos -= D3DXVECTOR3(200, 0, 240);
-	//	enemyNS::ENEMYSET tmp =
-	//	{
-	//		enemyManager->issueNewEnemyID(),
-	//		rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
-	//		stateMachineNS::PATROL,
-	//		pos,
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-	//	};
-	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-	//	enemyManager->createEnemy(p);
-	//}
-
-	// ツリーをランダムに設置する
-	treeNS::TreeData treeData;
-	treeData.hp = 0;
-	treeData.type = treeNS::ANALOG_TREE;
-	treeData.size = treeNS::STANDARD;
-	treeData.greenState = treeNS::DEAD;
-	treeData.model = treeNS::B_MODEL;
-	treeData.isAttaked = false;
-	for (int i = 0; i < 50; i++)
+	 //エネミーをランダムに設置する
+	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
 	{
-		treeData.initialPosition =
-			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		treeData.treeID = treeManager->issueNewTreeID();
-		treeManager->createTree(treeData);
+		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		pos -= D3DXVECTOR3(200, 0, 240);
+		enemyNS::ENEMYSET tmp =
+		{
+			enemyManager->issueNewEnemyID(),
+			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
+			stateMachineNS::PATROL,
+			pos,
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+		enemyManager->createEnemy(p);
 	}
+
+	//player[0].position = D3DXVECTOR3(-7.0f, 0.0f, 7.0f);
+
+	//// ツリーをランダムに設置する
+	//treeNS::TreeData treeData;
+	//treeData.hp = 0;
+	//treeData.type = treeNS::ANALOG_TREE;
+	//treeData.size = treeNS::STANDARD;
+	//treeData.greenState = treeNS::DEAD;
+	//treeData.model = treeNS::B_MODEL;
+	//treeData.isAttaked = false;
+	//for (int i = 0; i < 50; i++)
+	//{
+	//	treeData.initialPosition =
+	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+	//	treeData.treeID = treeManager->issueNewTreeID();
+	//	treeManager->createTree(treeData);
+	//}
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）
 	aiDirector = new AIDirector;
@@ -361,7 +363,6 @@ void Game::update(float _frameTime) {
 
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
-
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -819,7 +820,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	aiDirector->run();		// メタAI実行
+	//aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================

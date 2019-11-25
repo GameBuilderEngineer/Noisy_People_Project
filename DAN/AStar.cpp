@@ -69,8 +69,8 @@ LinkedList<meshDataNS::Index2>* AStar::pathSearch(
 		for (int i = 0; i < 3; i++)
 		{
 			DWORD adjacentIndex = meshData->getFaceArray()[work->faceIndex].adjacency[i];
-			if (adjacentIndex == -1){ continue; }									// 隣接面がない
-			if (searchNodeByFaceIndex(adjacentIndex) != NULL) { continue; }	// リストに既出
+			if (adjacentIndex == -1){ continue; }								// 隣接面がない
+			if (searchNodeByFaceIndex(adjacentIndex) != NULL) { continue; }		// リストに既出
 
 			// 新しいノードをリストに追加
 			AStarNode data;

@@ -41,11 +41,30 @@ namespace enemyNS
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
-		40,		// WOLF
-		40,		// TIGER
-		40,		// BEAR
+		40,			// WOLF
+		40,			// TIGER
+		40,			// BEAR
 	};
 
+	// エネミーのプレイヤー記憶時間テーブル
+	const float PLAYER_MEMORIZED_TIME[TYPE_MAX] =
+	{
+		14.0f,		// WOLF
+		14.0f,		// TIGER
+		14.0f,		// BEAR
+	};
+
+	// エネミーの移動加速度テーブル
+	const float MOVE_ACC[TYPE_MAX] =
+	{
+		20.0f,		// WOLF
+		20.0f,		// TIGER
+		20.0f,		// BEAR
+	};
+
+	//-------------
+	//センサー関係
+	//-------------
 	// エネミーのセンサー更新頻度テーブル（x秒に1度更新）
 	const float SENSOR_UPDATE_INTERVAL[TYPE_MAX] =
 	{
@@ -87,6 +106,9 @@ namespace enemyNS
 	};
 	const float SHOT_SOUND_SCALE = 4.5f;// ショット音距離倍率
 
+	//----------
+	// 攻撃関係
+	//----------
 	// エネミーの攻撃力テーブル
 	const int ATTACK_DAMAGE[TYPE_MAX] =
 	{
@@ -98,41 +120,26 @@ namespace enemyNS
 	// エネミーの攻撃移動速度テーブル
 	const float ATTACK_SPEED[TYPE_MAX] =
 	{
-		15.0f,		// WOLF
-		15.0f,		// TIGER
-		15.0f,		// BEAR
+		10.0f,		// WOLF
+		12.0f,		// TIGER
+		12.0f,		// BEAR
 	};
+	const float MULTIPLICATION_TO_MAKE_ATTACK_ACC = 6.5f;//加速度化する係数
 
 	// エネミーの攻撃移動時間テーブル
 	const float ATTACK_TIME[TYPE_MAX] =
 	{
-		0.3f,		// WOLF
-		0.3f,		// TIGER
-		0.3f,		// BEAR
+		0.7f,		// WOLF
+		0.7f,		// TIGER
+		0.7f,		// BEAR
 	};
 
 	// エネミーの攻撃間隔テーブル
 	const float ATTACK_INTERVAL[TYPE_MAX] =
 	{
-		3.0f,		// WOLF
-		3.0f,		// TIGER
-		3.0f,		// BEAR
-	};
-
-	// エネミーのプレイヤー記憶時間テーブル
-	const float PLAYER_MEMORIZED_TIME[TYPE_MAX] =
-	{
-		14.0f,		// WOLF
-		14.0f,		// TIGER
-		14.0f,		// BEAR
-	};
-
-	// エネミーの移動加速度テーブル
-	const float MOVE_ACC[TYPE_MAX] =
-	{
-		20.0f,		// WOLF
-		20.0f,		// TIGER
-		20.0f,		// BEAR
+		4.0f,		// WOLF
+		4.0f,		// TIGER
+		4.0f,		// BEAR
 	};
 
 	// Physics Constant
@@ -459,6 +466,8 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
 	// デバッグセンサー
 	void debugSensor();
+	// ナビメッシュデバッグ描画
+	void debugNavimesh();
 	// ImGUIへの出力
 	void outputGUI();
 #endif//_DEBUG

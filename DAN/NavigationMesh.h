@@ -55,7 +55,6 @@ private:
 	D3DXVECTOR3 dest;							// 目的地座標
 	DWORD startIndex;							// 開始ポリゴン面インデックス
 	DWORD destIndex;							// 目的地面ポリゴンインデックス
-	LinkedList<meshDataNS::Index2>* edgeList;	// エッジリスト
 
 public:
 	NavigationMesh(StaticMesh* staticMesh);
@@ -87,12 +86,13 @@ public:
 	}
 
 #ifdef _DEBUG
-	void dumpEdgeList();
+	LinkedList<meshDataNS::Index2>* debugEdgeList;
+	void dumpEdgeList(LinkedList<meshDataNS::Index2>* _edgeList);
 	void debugRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void debugRenderMesh(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList);
 	void changeColor();
-	void affectToEdgeVertex();
+	void affectToEdgeVertex(LinkedList<meshDataNS::Index2>* _edgeList);
 	void outputGUI();
 #endif // _DEBUG
 };
