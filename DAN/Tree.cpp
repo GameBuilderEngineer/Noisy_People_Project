@@ -49,19 +49,20 @@ Tree::Tree(treeNS::TreeData _treeData)
 	{
 	case STANDARD:
 		scale = D3DXVECTOR3(1.0f, 0.5f, 1.0f);
+		setSize(D3DXVECTOR3(1.5f, 10.0f, 1.5f));		//サイズの設定
 		break;
 	case LARGE:
 		scale = D3DXVECTOR3(5.0f, 1.5f, 5.0f);
+		setSize(D3DXVECTOR3(7.5f, 30.0f, 7.5f));		//サイズの設定
 		break;
 	case VERY_LARGE:
 		scale = D3DXVECTOR3(10.0f, 3.0f, 10.0f);
+		setSize(D3DXVECTOR3(15.0f, 60.0f, 15.0f));		//サイズの設定
 		break;
 	}
 
 	leaf.scale = scale;
 	
-	//サイズの設定
-	setSize(D3DXVECTOR3(1.5f, 20.0f, 1.5f));
 
 	//半径の設定
 	setRadius(size.y);

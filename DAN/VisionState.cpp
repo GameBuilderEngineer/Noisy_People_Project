@@ -31,6 +31,7 @@ VisionState::VisionState(Player* player):AbstractState()
 	stateName	= "VISION";
 	onTrans		= false;
 	player->setValidOperation(
+		ENABLE_MOVE |
 		ENABLE_JUMP |
 		ENABLE_SKY_VISION | 
 		ENABLE_CANCEL_VISION);

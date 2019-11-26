@@ -67,6 +67,7 @@ void Game::initialize() {
 	//テストフィールド
 	testField = new Object();
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -170,7 +171,9 @@ void Game::initialize() {
 	ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_NAVI_MESH));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviMesh->initialize();
 
 	// エネミー
@@ -478,6 +481,7 @@ void Game::update(float _frameTime) {
 		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 	}
+
 	if (input->wasKeyPressed('K'))
 	{
 		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
@@ -523,10 +527,13 @@ void Game::update(float _frameTime) {
 
 
 	// Enterまたは〇ボタンでリザルトへ
-	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	//if (input->wasKeyPressed(VK_RETURN) ||
+	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	if(gameMaster->getGameTime() <= 0)
 	{
+
+
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		// シーン遷移

@@ -21,7 +21,7 @@ namespace bulletNS{
 	const float		RELOAD_TIME		= 0.5f;		//リロード時間
 	const int		MAGAZINE_NUM	= 8;		//弾数
 	const float		EXIST_TIME		= 1.0f;		//存在時間
-	const int		DIGITAL_POWER	= 8;		//デジタルパワー
+	const int		DIGITAL_POWER	= 20;		//デジタルパワー
 	const float		LAUNCH_FACT_TIME = 0.333f;	//発射事実残存時間
 }
 

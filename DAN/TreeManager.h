@@ -11,6 +11,7 @@
 #include "Tree.h"
 #include "AnalogTree.h"
 #include "DigitalTree.h"
+#include "DigitalTreeEffect.h"
 
 
 //=============================================================================
@@ -18,6 +19,7 @@
 //=============================================================================
 namespace treeManagerNS
 {	
+	const float EFFECT_CYCLE = 0.1f;
 }
 
 
@@ -34,12 +36,15 @@ private:
 	StaticMeshRenderer* bLeafRenderer;			// Bモデル葉描画オブジェクト
 	StaticMeshRenderer* cTrunkRenderer;			// Cモデル幹描画オブジェクト
 	StaticMeshRenderer* cLeafRenderer;			// Cモデル葉描画オブジェクト
+	float effectCycle;							//エフェクト周期
+	DigitalTreeEffect*	digitalTreeEffect;		//デジタルツリーエフェクト
 	int nextID;									// 次回ツリー発行ID
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
 
 	int greeningTreeNum;						//緑化本数
 	float greeningRate;							//緑化率
+
 
 public:
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);

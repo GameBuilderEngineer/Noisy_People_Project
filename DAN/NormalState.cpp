@@ -29,6 +29,7 @@ NormalState::NormalState(Player* player) :AbstractState()
 	stateName	= "NORMAL";
 	onTrans = false;
 	player->setValidOperation(
+		ENABLE_MOVE | 
 		ENABLE_SHOT | 
 		ENABLE_JUMP | 
 		ENABLE_SKY_VISION |  

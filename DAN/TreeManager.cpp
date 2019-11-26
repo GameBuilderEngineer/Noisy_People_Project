@@ -38,6 +38,9 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	bLeafRenderer->enableTransparent();
 	cLeafRenderer->enableTransparent();
 
+	//デジタルツリーエフェクト
+	digitalTreeEffect = new DigitalTreeEffect();
+
 #if 0	// ツリーツールのデータを読み込む
 
 #endif
@@ -63,6 +66,9 @@ void TreeManager::uninitialize()
 	SAFE_DELETE(bTrunkRenderer);
 	SAFE_DELETE(aLeafRenderer);
 	SAFE_DELETE(aTrunkRenderer);
+
+	//デジタルツリーエフェクト
+	SAFE_DELETE(digitalTreeEffect);
 }
 
 
@@ -110,7 +116,26 @@ void TreeManager::update(float frameTime)
 		{
 			greeningTreeNum++;
 		}
+
 	}
+
+	//エフェクトの発生
+	effectCycle += frameTime;
+	if (effectCycle >= treeManagerNS::EFFECT_CYCLE)
+	{
+		effectCycle = 0.0f;
+		//各ツリーの更新
+		for (size_t i = 0; i < treeList.size(); i++)
+		{
+			//デジタルツリーの周囲にエフェクトを発生
+			if (treeList[i]->getTreeData()->type == treeNS::DIGITAL_TREE)
+			{
+				//エフェクトの生成
+				digitalTreeEffect->generateInstance(treeList[i]->position);
+			}
+		}
+	}
+
 
 	//緑化率の更新
 	if (treeList.size() != 0) {
@@ -125,6 +150,10 @@ void TreeManager::update(float frameTime)
 	bLeafRenderer->update();
 	cTrunkRenderer->update();
 	cLeafRenderer->update();
+
+	//デジタルツリーエフェクトの更新
+	digitalTreeEffect->update(frameTime);
+
 }
 
 
@@ -146,6 +175,8 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 	bLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	cTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	cLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+
+	digitalTreeEffect->render(view, projection, cameraPosition);
 }
 
 

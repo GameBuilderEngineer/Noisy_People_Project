@@ -215,7 +215,7 @@ void Player::grounding()
 		}
 		else {
 			dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-			if (dot > 60.0f / 90.0f) {
+			if (dot > 70.0f / 90.0f) {
 				speed = slip(speed, gravityRay.normal);
 			}
 			else {
@@ -391,10 +391,15 @@ void Player::updatePhysics(float frameTime)
 //===================================================================================================================================
 void Player::moveOperation()
 {
+
 	MOVEP *MoveP = GetMovePAdr();
 	if (!MoveP->IsAttack)
 	{
 	}
+
+	//移動操作が無効
+	if (!whetherValidOperation(ENABLE_MOVE))return;
+
 	//前へ進む
 	if (input->isKeyDown(keyTable.front)) {
 		move(D3DXVECTOR2(0, -1), camera->getDirectionX(), camera->getDirectionZ());
@@ -424,6 +429,9 @@ void Player::moveOperation()
 //===================================================================================================================================
 void Player::jumpOperation()
 {
+	//ジャンプ操作が無効
+	if (!whetherValidOperation(ENABLE_JUMP))return;
+
 	if (input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP))
 	{
 		jump();
@@ -670,34 +678,34 @@ bool Player::shot()
 //===================================================================================================================================
 bool Player::digitalShift()
 {
+	//シフト操作不能
+	if (!whetherValidOperation(ENABLE_SHIFT))	return false;
+
 	if (!input->getMouseLButton() &&
 		!input->getController()[infomation.playerType]->wasButton(BUTTON_DIGITA_SHIFT))return false;
 	if (power < COST_SHIFT)return false;
 
-	//シフトが可能な場合
-	if (whetherValidOperation(ENABLE_SHIFT))
-	{
-		//電力の使用
-		power -= COST_SHIFT;
 
-		//次の遷移先を設定
-		nextGaze = shiftLine.end
-			+ cameraGazeRelative * CAMERA_GAZE.x
-			+ axisY.direction*CAMERA_GAZE.y;
+	//電力の使用
+	power -= COST_SHIFT;
 
-		//カメラ遷移を開始
-		startTransitionCamera(SKY_TRANSITION_TIME,cameraGaze,nextGaze);
-		
-		//デジタルシフトの開始エフェクトを再生
-		digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT,center);
+	//次の遷移先を設定
+	nextGaze = shiftLine.end
+		+ cameraGazeRelative * CAMERA_GAZE.x
+		+ axisY.direction*CAMERA_GAZE.y;
 
-		transState(DIGITAL_SHIFT);
-		return true;
-	}
+	//カメラ遷移を開始
+	startTransitionCamera(SKY_TRANSITION_TIME,cameraGaze,nextGaze);
+	
+	//デジタルシフトの開始エフェクトを再生
+	digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT,center);
+
+	transState(DIGITAL_SHIFT);
+	return true;
 
 
 
-	return false;//デジタルシフト失敗
+
 }
 
 //===================================================================================================================================

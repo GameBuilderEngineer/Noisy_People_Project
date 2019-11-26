@@ -185,6 +185,7 @@ namespace playerNS{
 	const int	ENABLE_CANCEL_SKY_VISION	= 0x00000020;
 	const int	ENABLE_SHIFT				= 0x00000040;
 	const int	ENABLE_CAMERA				= 0x00000080;
+	const int	ENABLE_MOVE					= 0x00000100;
 	const int	ALL_OPERATION				= 0xffffffff;
 }
 
