@@ -147,7 +147,7 @@ void Tutorial::initialize()
 	sky = new Sky();
 
 	//アニメションキャラの初期化
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.04f, 0.04f, 0.04f), true);
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 
 	// ナビメッシュの初期化
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
@@ -159,29 +159,36 @@ void Tutorial::initialize()
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	enemySet.defaultPosition = ENEMY_POSTITION;
-	enemySet.defaultState = stateMachineNS::ENEMY_STATE::CHASE;
+	enemySet.defaultState = stateMachineNS::ENEMY_STATE::REST;
 	enemySet.type = enemyNS::ENEMY_TYPE::TIGER;
 	enemySet.enemyID = 0;
 	enemyData = enemyManager->createEnemyData(enemySet);
+	enemyData->isAlive = true;
+	enemyData->hp = 100;
 	enemyManager->createEnemy(enemyData);
 
 	//ツリー
 	treeManager = new TreeManager;
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
-	treeNS::TreeData treeData = { 0 };
-	treeData.treeID = treeManager->issueNewTreeID();
-	treeData.initialDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	treeData.initialPosition = FIRST_TREE_POSTITION;
-	treeData.greenState = treeNS::GREEN_STATE::DEAD;
-	treeData.model = treeNS::TREE_MODEL::B_MODEL;
-	treeData.type = treeNS::TREE_TYPE::ANALOG_TREE;
-	treeData.size = treeNS::TREE_SIZE::STANDARD;
-	treeData.hp = 100;
-	treeManager->createTree(treeData);
+	const int treeMax = 20;
+	treeNS::TreeData treeData[treeMax] = { 0 };
+	for (int i = 0; i < treeMax; i++)
+	{
+		treeData[i].treeID = treeManager->issueNewTreeID();
+		treeData[i].initialDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+		treeData[i].initialPosition = FIRST_TREE_POSTITION;
+		treeData[i].initialPosition.z += (65 / treeMax) * i;
+		treeData[i].greenState = treeNS::GREEN_STATE::DEAD;
+		treeData[i].model = treeNS::TREE_MODEL::B_MODEL;
+		treeData[i].type = treeNS::TREE_TYPE::ANALOG_TREE;
+		treeData[i].size = treeNS::TREE_SIZE::STANDARD;
+		treeData[i].hp = 100;
+		treeManager->createTree(treeData[i]);
+	}
 
 	//ディスプレイプレーン
 	D3DXVECTOR3 enemyPlanePos = enemySet.defaultPosition;
-	enemyPlanePos.y -= 10;
+	enemyPlanePos.y += 10;	//差分
 	plane = new TutorialPlane*[gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
@@ -309,6 +316,13 @@ void Tutorial::update(float _frameTime)
 	treeManager->update(frameTime);
 
 	UpdateMoveP(0.01f);
+
+	//キャラクターの場所と回転の連携
+	MOVEP *mp = GetMovePAdr();
+	mp->Pos = player->position;
+	D3DXQUATERNION q = player->quaternion;
+	Base::anyAxisRotation(&q, D3DXVECTOR3(0, 1, 0), 180);
+	mp->Quaternion = q;
 
 	//スカイドームの更新
 	sky->update();

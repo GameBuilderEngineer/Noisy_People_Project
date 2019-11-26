@@ -40,7 +40,7 @@ Game::Game()
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL};
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.5f,false,NULL};
 	
 	//Ä¶
 	SoundInterface::SE->playSound(&playParameters[0]);

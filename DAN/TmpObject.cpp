@@ -119,6 +119,11 @@ void TmpObject::update(float frameTime)
 	reverseAxisX.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._11, centralMatrixWorld._12, centralMatrixWorld._13));
 	reverseAxisY.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._21, centralMatrixWorld._22, centralMatrixWorld._23));
 	reverseAxisZ.update(centralPosition, -D3DXVECTOR3(centralMatrixWorld._31, centralMatrixWorld._32, centralMatrixWorld._33));
+
+	//yeah!!!
+	PositionYeah = position;
+	PositionYeah.y += 1.7f;
+
 }
 
 //===================================================================================================================================
