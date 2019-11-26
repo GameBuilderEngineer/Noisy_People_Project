@@ -66,10 +66,11 @@ TextureLoader::TextureLoader()
 	textureName[UI_MAIN_DIGITAL_RETICLE] = { "Digi_Reticle_Target.png" };
 	textureName[UI_SUB_DIGITAL_RETICLE] = { "Digi_Reticle.png" };
 	textureName[UI_TIMERFLAME] = { "Time_Frame.png" };
-	textureName[UI_BUTTON1] = { "SV.png" };
-	textureName[UI_BUTTON2] = { "shot.png" };
-	textureName[UI_BUTTON3] = { "shift.png" };
-	textureName[UI_BUTTON4] = { "vision.png" };
+	textureName[UI_BUTTON_SHOT] = { "shot.png" };
+	textureName[UI_BUTTON_JUMP] = { "jump.png" };
+	textureName[UI_BUTTON_VISION] = { "vision.png" };
+	textureName[UI_BUTTON_SV] = { "Sky_Vision.png" };
+	textureName[UI_BUTTON_SHIFT] = { "shift.png" };
 	textureName[UI_BUTTON_BOX] = { "CommandBox.png" };
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
 	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };

@@ -75,20 +75,30 @@ void Player1UI::render()
 void Player1UI::update()
 {
 	//各フラグの獲得
+	getFlag();
+
+	//P1用
+	buttonUiP1->update(shotFlag, 0);
+	buttonUiP1->update(jumpFlag, 1);
+	buttonUiP1->update(visionFlag, 2);
+	buttonUiP1->update(skyVisionFlag, 3);
+
+	hpGuage->update(hp);
+	electGuage->update(power);
+	electTank->update(power,basicUiNS::P1);
+}
+
+//==================================
+//各フラグの獲得
+//==================================
+void Player1UI::getFlag()
+{
+	//各フラグの獲得
 	skyVisionFlag = player->canDoSkyVision();
 	shiftFlag = player->canShift();
 	shotFlag = player->canShot();
 	visionFlag = player->canDoVision();
+	jumpFlag = player->canJump();
 	hp = player->getHp();
 	power = player->getPower();
-
-	//P1用
-	buttonUiP1->update(skyVisionFlag, 3);
-	buttonUiP1->update(shiftFlag, 2);
-	buttonUiP1->update(shotFlag, 1);
-	buttonUiP1->update(visionFlag, 0);
-
-	hpGuage->update(hp);
-	electGuage->update(power);
-	electTank->update(power);
 }

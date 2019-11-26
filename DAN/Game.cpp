@@ -490,7 +490,6 @@ void Game::update(float _frameTime) {
 	//固定UIの更新
 	fixedUI->update(gameMaster->getGameTime());
 
-
 	//プレイヤー周りのUIの更新
 	player1UI->update();
 	player2UI->update();

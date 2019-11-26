@@ -47,7 +47,8 @@ void CreditTex::initialize()
 						
 	pos[0] = POSITION;
 	pos[1] = POSITION_2;
-
+	secneState = 4;
+	alpha = 255.0f;
 }
 
 //============================
@@ -64,13 +65,17 @@ void CreditTex::render()
 //============================
 //更新
 //============================
-void CreditTex::update()
+void  CreditTex::update()
 {
 	if (pos[1].y >= MOVE_MAX)
 	{
 		moveCredit();
 	}
-		//fadeOut();
+
+	if (pos[1].y <= -540)
+	{
+		fadeOut();
+	}
 }
 
 //============================
@@ -103,7 +108,18 @@ void CreditTex::moveCredit()
 //===========================
 void CreditTex::fadeOut()
 {
-	alpha -= 5.0f;
-	//credit[0]->setAlphaAllVertex(alpha);
+	alpha -= 0.5f;
 	credit[1]->setAlphaAllVertex(alpha);
+	if (alpha <= 0)
+	{
+		secneState = 2;
+	}
+}
+
+//===========================
+//シーン遷移管理用
+//===========================
+int CreditTex::getSceneState()
+{
+	return secneState;
 }

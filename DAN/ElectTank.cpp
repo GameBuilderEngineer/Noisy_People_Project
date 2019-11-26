@@ -80,30 +80,52 @@ void ElectTank::render()
 //==========================================
 //更新処理
 //==========================================
-void ElectTank::update(int power)
+void ElectTank::update(int power,int playerType)
 {
-	renderRestriction(power);
+	renderRestriction(power,playerType);
 }
 
 //==========================================
 //タンクの描画制限
 //引数：電力
 //==========================================
-void ElectTank::renderRestriction(int power)
+void ElectTank::renderRestriction(int power, int playerType)
 {
-	if (power <100)
+	switch (playerType)
 	{
-		BasicUI::increaseAlpha(electTank[0], ALPHA_MIN);
-		BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
+	case basicUiNS::P1:
+		if (power <100)
+		{
+			BasicUI::increaseAlpha(electTank[0], ALPHA_MIN);
+			BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
+		}
+		else if (power >= 100 && power < 200)
+		{
+			BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
+			BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
+		}
+		else
+		{
+			BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
+			BasicUI::increaseAlpha(electTank[1], ALPHA_MAX);
+		}
+		break;
+	case basicUiNS::P2:
+		if (power <100)
+		{
+			BasicUI::increaseAlpha(electTank[0], ALPHA_MIN);
+			BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
+		}
+		else if (power >= 100 && power < 200)
+		{
+			BasicUI::increaseAlpha(electTank[0], ALPHA_MIN);
+			BasicUI::increaseAlpha(electTank[1], ALPHA_MAX);
+		}
+		else
+		{
+			BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
+			BasicUI::increaseAlpha(electTank[1], ALPHA_MAX);
+		}
 	}
-	else if (power >= 100 && power < 200)
-	{
-		BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
-		BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
-	}
-	else
-	{
-		BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
-		BasicUI::increaseAlpha(electTank[1], ALPHA_MAX);
-	}
+	
 }
