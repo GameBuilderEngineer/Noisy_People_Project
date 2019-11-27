@@ -247,10 +247,6 @@ void ENEMY_TOOLS::outputRootToolGUI(int enemyID, D3DXVECTOR3 pos)
 		if ((backUp != enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent]) ||
 			(backUpSize != enemyFile.efmt[EnemyListboxCurrent].rootSize))
 		{
-			if (EnemyListboxRootCurrent > backUpSize)
-			{
-				EnemyListboxRootCurrent = 0;
-			}
 			enemyFile.efmt[EnemyListboxCurrent].rootSize = backUpSize;
 			for (int i = enemyFile.efmt[EnemyListboxCurrent].rootSize + 1; i < 7; i++)
 			{
@@ -262,6 +258,11 @@ void ENEMY_TOOLS::outputRootToolGUI(int enemyID, D3DXVECTOR3 pos)
 
 			//レンダラーのリセット処理
 			ResetRenderer();
+
+			if (EnemyListboxRootCurrent > backUpSize)
+			{
+				EnemyListboxRootCurrent = backUpSize;
+			}
 		}
 	}
 }
