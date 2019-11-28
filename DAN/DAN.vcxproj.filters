@@ -667,9 +667,6 @@
     <ClCompile Include="TestEffectOccurrence.cpp">
       <Filter>Game Layer\TestEffect</Filter>
     </ClCompile>
-    <ClCompile Include="ButtonFrame.cpp">
-      <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
     <ClCompile Include="StatusFrame.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
@@ -1115,9 +1112,6 @@
     </ClInclude>
     <ClInclude Include="TestEffectOccurrence.h">
       <Filter>Game Layer\TestEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="ButtonFrame.h">
-      <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
     <ClInclude Include="StatusFrame.h">
       <Filter>Game Layer\GameUI</Filter>

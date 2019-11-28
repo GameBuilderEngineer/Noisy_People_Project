@@ -71,6 +71,7 @@ void ButtonUI::renderP1()
 		button[i]->setVertex();
 		button[i]->render();
 	}
+	
 }
 
 //==================================
@@ -111,11 +112,11 @@ void  ButtonUI::changeAlpha(bool flag,int buttontype)
 {
 	if (flag == true)//使用可能の場合は可視化
 	{
-		BasicUI::increaseAlpha(button[buttontype],ALPHA_MAX);
+		BasicUI::changeAlpha(button[buttontype],ALPHA_MAX);
 	}
 	else//使用不可の場合は不可視
 	{
-		BasicUI::increaseAlpha(button[buttontype],ALPHA_MINIMAM);
+		BasicUI::changeAlpha(button[buttontype],ALPHA_MINIMAM);
 	}
 }
 
@@ -128,6 +129,7 @@ void ButtonUI::changeRender(bool visionFlag)
 	{
 		//ショットUIを透明化してシフトUIの描画
 		button[SHOT]->setAlphaAllVertex(0);
+		button[SHOT]->render();
 		button[SHIFT]->render();
 	}
 }

@@ -9,8 +9,6 @@
 //=================================
 #include "Timer.h"
 #include "TimerFrame.h"
-#include "ButtonUI.h"
-#include "ButtonFrame.h"
 #include "StatusFrame.h"
 #include "CharaIcon.h"
 
@@ -31,9 +29,6 @@ public://メンバー変数
 private:
 	Timer * timer;				//タイマー
 	TimerFlame * timerFlame;	//タイマーフレーム
-	ButtonUI   * buttonP2;		//ボタンUI
-	ButtonFrame *buttonFrameP1;//ボタンのボックス
-	ButtonFrame *buttonFrameP2;//ボタンのボックス
 	StatusFrame *statusFrameP1;//HPとかのフレーム
 	StatusFrame *statusFrameP2;//HPとかのフレーム
 	

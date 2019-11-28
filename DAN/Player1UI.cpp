@@ -82,6 +82,7 @@ void Player1UI::update()
 	buttonUiP1->update(jumpFlag, 1);
 	buttonUiP1->update(visionFlag, 2);
 	buttonUiP1->update(skyVisionFlag, 3);
+	buttonUiP1->update(shiftFlag, 4);
 
 	hpGuage->update(hp);
 	electGuage->update(power);

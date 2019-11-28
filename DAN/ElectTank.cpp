@@ -96,35 +96,35 @@ void ElectTank::renderRestriction(int power, int playerType)
 	case basicUiNS::P1:
 		if (power <100)
 		{
-			BasicUI::increaseAlpha(electTank[0], ALPHA_MIN);
-			BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
+			BasicUI::changeAlpha(electTank[0], ALPHA_MIN);
+			BasicUI::changeAlpha(electTank[1], ALPHA_MIN);
 		}
 		else if (power >= 100 && power < 200)
 		{
-			BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
-			BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
+			BasicUI::changeAlpha(electTank[0], ALPHA_MAX);
+			BasicUI::changeAlpha(electTank[1], ALPHA_MIN);
 		}
 		else
 		{
-			BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
-			BasicUI::increaseAlpha(electTank[1], ALPHA_MAX);
+			BasicUI::changeAlpha(electTank[0], ALPHA_MAX);
+			BasicUI::changeAlpha(electTank[1], ALPHA_MAX);
 		}
 		break;
 	case basicUiNS::P2:
 		if (power <100)
 		{
-			BasicUI::increaseAlpha(electTank[0], ALPHA_MIN);
-			BasicUI::increaseAlpha(electTank[1], ALPHA_MIN);
+			BasicUI::changeAlpha(electTank[0], ALPHA_MIN);
+			BasicUI::changeAlpha(electTank[1], ALPHA_MIN);
 		}
 		else if (power >= 100 && power < 200)
 		{
-			BasicUI::increaseAlpha(electTank[0], ALPHA_MIN);
-			BasicUI::increaseAlpha(electTank[1], ALPHA_MAX);
+			BasicUI::changeAlpha(electTank[0], ALPHA_MIN);
+			BasicUI::changeAlpha(electTank[1], ALPHA_MAX);
 		}
 		else
 		{
-			BasicUI::increaseAlpha(electTank[0], ALPHA_MAX);
-			BasicUI::increaseAlpha(electTank[1], ALPHA_MAX);
+			BasicUI::changeAlpha(electTank[0], ALPHA_MAX);
+			BasicUI::changeAlpha(electTank[1], ALPHA_MAX);
 		}
 	}
 	

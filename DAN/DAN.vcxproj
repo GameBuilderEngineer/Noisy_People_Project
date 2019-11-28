@@ -161,7 +161,6 @@
     <ClInclude Include="BGM.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
-    <ClInclude Include="ButtonFrame.h" />
     <ClInclude Include="DebugBox.h" />
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
@@ -310,7 +309,6 @@
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="ButtonFrame.cpp" />
     <ClCompile Include="DebugBox.cpp" />
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
