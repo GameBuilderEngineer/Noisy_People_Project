@@ -151,6 +151,8 @@
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="CharaIcon.h" />
+    <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="DeathState.h" />
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
     <ClInclude Include="DigitalTreeEffect.h" />
@@ -302,6 +304,8 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
     <ClCompile Include="DigitalTreeEffect.cpp" />

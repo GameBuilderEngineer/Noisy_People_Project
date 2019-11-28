@@ -20,9 +20,9 @@ using namespace DigitalShiftEffectNS;
 //===================================================================================================================================
 DigitalShiftEffect::DigitalShiftEffect()
 {
-	objectList		= new LinkedList<Object*>;
-	renderer		= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DIGITAL_SPHERE));
-
+	sphereList			= new LinkedList<Object*>;
+	sphereRenderer		= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DIGITAL_SPHERE));
+	onPlayedSelectLight = false;
 };
 
 //===================================================================================================================================
@@ -31,11 +31,11 @@ DigitalShiftEffect::DigitalShiftEffect()
 DigitalShiftEffect::~DigitalShiftEffect()
 {
 	//レンダラーの解除/終了
-	renderer->allUnRegister();
-	SAFE_DELETE(renderer);
+	sphereRenderer->allUnRegister();
+	SAFE_DELETE(sphereRenderer);
 	//オブジェクトリストの削除
-	objectList->terminate();
-	SAFE_DELETE(objectList);
+	sphereList->terminate();
+	SAFE_DELETE(sphereList);
 }
 
 
@@ -44,10 +44,10 @@ DigitalShiftEffect::~DigitalShiftEffect()
 //===================================================================================================================================
 void DigitalShiftEffect::update(float frameTime)
 {
-	for (int i = 0; i < objectList->nodeNum; i++)
+	for (int i = 0; i < sphereList->nodeNum; i++)
 	{
 		//オブジェクトのポインタ取得
-		Object* object = (*objectList->getValue(i));
+		Object* object = (*sphereList->getValue(i));
 
 		if (object->existenceTimer > 0.5f)
 		{
@@ -66,10 +66,20 @@ void DigitalShiftEffect::update(float frameTime)
 	}
 
 	//レンダラーの更新
-	renderer->update();
+	sphereRenderer->update();
 
 	//自動削除処理
 	autoDestroy();
+
+}
+//===================================================================================================================================
+//【更新】
+//===================================================================================================================================
+void DigitalShiftEffect::updateSelectLight(D3DXVECTOR3 position)
+{
+	if (selectLight == NULL)return;
+
+	//effekseerNS
 
 }
 
@@ -79,7 +89,7 @@ void DigitalShiftEffect::update(float frameTime)
 void DigitalShiftEffect::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	//デジタルスフィアの描画
-	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	sphereRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 //===================================================================================================================================
@@ -133,6 +143,33 @@ void DigitalShiftEffect::playEndShift(D3DXVECTOR3 position)
 }
 
 //===================================================================================================================================
+//【再生：選択ライトエフェクト】
+//===================================================================================================================================
+void DigitalShiftEffect::playSelectLight(D3DXVECTOR3* position)
+{
+	if (onPlayedSelectLight)
+	{
+
+	}
+	else {
+		createSelectLight(position);
+		onPlayedSelectLight = true;
+	}
+}
+
+//===================================================================================================================================
+//【再生：選択ライトエフェクト】
+//===================================================================================================================================
+void DigitalShiftEffect::stopSelectLight()
+{
+	if (onPlayedSelectLight)
+	{
+		deleteSelectLight();
+		onPlayedSelectLight = false;
+	}
+}
+
+//===================================================================================================================================
 //【オブジェクト生成：シフト終了エフェクト】
 //===================================================================================================================================
 void DigitalShiftEffect::createDigitalSphere(D3DXVECTOR3 position,float runTime)
@@ -146,15 +183,59 @@ void DigitalShiftEffect::createDigitalSphere(D3DXVECTOR3 position,float runTime)
 	object->existenceTimer = runTime;
 
 	//リスト先頭へ追加
-	objectList->insertFront(object);
+	sphereList->insertFront(object);
 
 	//リストの更新[追加による対応]
-	objectList->listUpdate();
+	sphereList->listUpdate();
 
 	//レンダラーへ登録
-	renderer->registerObject(object);
+	sphereRenderer->registerObject(object);
 
 }
+
+//===================================================================================================================================
+//【オブジェクト生成：選択ライトエフェクト】
+//===================================================================================================================================
+//Object* DigitalShiftEffect::createSelectLight(D3DXVECTOR3 position)
+//{
+//	//オブジェクトを生成
+//	Object* object = new Object();
+//
+//	object->position = position;
+//
+//	//リスト先頭へ追加
+//	//selectLightList->insertFront(object);
+//
+//	//リストの更新[追加による対応]
+//	//selectLightList->listUpdate();
+//
+//	//レンダラーへ登録
+//	//selectLightRenderer->registerObject(object);
+//
+//	return object;
+//
+//}
+
+//===================================================================================================================================
+//【エフェクト生成：選択ライトエフェクト】
+//===================================================================================================================================
+void DigitalShiftEffect::createSelectLight(D3DXVECTOR3* position)
+{
+	//エフェクトの生成
+	selectLight = new SelectLight(position);
+	effekseerNS::play(selectLight);
+}
+
+//===================================================================================================================================
+//【エフェクト削除：選択ライトエフェクト】
+//===================================================================================================================================
+void DigitalShiftEffect::deleteSelectLight()
+{
+	//エフェクトの停止
+	effekseerNS::stop(selectLight->handle);
+}
+
+
 
 //===================================================================================================================================
 //【自動削除】
@@ -162,16 +243,30 @@ void DigitalShiftEffect::createDigitalSphere(D3DXVECTOR3 position,float runTime)
 void DigitalShiftEffect::autoDestroy()
 {
 	//オブジェクトの削除
-	for (int i = 0; i < objectList->nodeNum; i++)
+	for (int i = 0; i < sphereList->nodeNum; i++)
 	{
 		//オブジェクトのポインタ取得
-		Object* object = (*objectList->getValue(i));
+		Object* object = (*sphereList->getValue(i));
 		//残存時間があれば削除しない
 		if (object->existenceTimer > 0)continue;
-		Node<Object*>* node = objectList->getNode(i);
+		Node<Object*>* node = sphereList->getNode(i);
 		//削除
 		SAFE_DELETE(object);
-		objectList->remove(node);
+		sphereList->remove(node);
 	}
-	objectList->listUpdate();
+	sphereList->listUpdate();
+
+	//オブジェクトの削除
+	//for (int i = 0; i < sphereList->nodeNum; i++)
+	//{
+	//	//オブジェクトのポインタ取得
+	//	Object* object = (*sphereList->getValue(i));
+	//	//残存時間があれば削除しない
+	//	if (object->existenceTimer > 0)continue;
+	//	Node<Object*>* node = sphereList->getNode(i);
+	//	//削除
+	//	SAFE_DELETE(object);
+	//	sphereList->remove(node);
+	//}
+	//sphereList->listUpdate();
 }

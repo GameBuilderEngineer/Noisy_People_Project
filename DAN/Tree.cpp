@@ -12,6 +12,7 @@
 #include "Tree.h"
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
+#include "EffekseerManager.h"
 
 //=============================================================================
 //【using宣言】
@@ -205,6 +206,12 @@ void Tree::addHp(int value) {
 	treeData.hp += value; 
 	if (treeData.hp >=MAX_HP)
 	{
+		//エフェクトの再生
+		//DA変換エフェクト
+		effekseerNS::Instance* instance = new effekseerNS::Instance();
+		instance->effectNo = effekseerNS::DAC;
+		instance->position = position;
+		effekseerNS::play(instance);
 		transState();//状態遷移
 	}
 }

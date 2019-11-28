@@ -34,7 +34,7 @@ Splash::~Splash()
 	// ƒTƒEƒ“ƒh‚Ì’âŽ~
 	SoundInterface::BGM->uninitSoundStop();
 
-	effekseerNS::stop(effekseerNS::TEST0);
+	effekseerNS::stop(effekseerNS::BLOW);
 }
 
 //===================================================================================================================================

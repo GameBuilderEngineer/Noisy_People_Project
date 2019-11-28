@@ -40,14 +40,12 @@ Game::Game()
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.0f,false,NULL};
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL};
 	
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
 	
-	//test
-	SoundInterface::SE->setEndPointVoiceVolume(0);
 }
 
 //===================================================================================================================================
@@ -172,8 +170,8 @@ void Game::initialize() {
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_NAVI_MESH));
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_NAVI_MESH));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	naviMesh->initialize();
 
 	// エネミー
@@ -196,9 +194,6 @@ void Game::initialize() {
 	mapObjectManager = new MapObjectManager;
 	mapObjectManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
-	// テロップ
-	/*telop = new Telop;
-	telop->initialize();*/
 
 	//テロップマネージャー
 	telopManager = new TelopManager;
@@ -441,7 +436,7 @@ void Game::update(float _frameTime) {
 		public:
 			D3DXVECTOR3 * syncPosition;
 			Fire() {
-				effectNo = effekseerNS::TEST0;
+				effectNo = effekseerNS::BLOW;
 				deltaRadian = D3DXVECTOR3(0, 0.3, 0);
 			}
 			virtual void update() {
@@ -476,16 +471,27 @@ void Game::update(float _frameTime) {
 	//テロップマネージャーの更新
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
-	if (input->wasKeyPressed('L'))
+	//緑化状況10%
+	if (treeManager->getGreeningRate() >= 0.1 && 
+		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10))
 	{
-		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
+		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
 	}
 
-	if (input->wasKeyPressed('K'))
+	//緑化状況30%
+	if (treeManager->getGreeningRate() >= 0.3 &&
+		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30))
 	{
-		//telopManager->play(telopManagerNS::TELOP_INFO_BAR);
 		telopManager->play(telopManagerNS::TELOP_TYPE1);
+		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30);
+	}
+	//緑化状況50%
+	if (treeManager->getGreeningRate() >= 0.5 &&
+		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50))
+	{
+		telopManager->play(telopManagerNS::TELOP_TYPE2);
+		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 	}
 	
 
@@ -532,15 +538,13 @@ void Game::update(float _frameTime) {
 	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	if(gameMaster->getGameTime() <= 0)
 	{
-
-
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		// シーン遷移
 		changeScene(nextScene);
 	}
 
-	if (gameMaster->getGameTime() <= 210)
+	if (gameMaster->getGameTime() <= 60)
 	{
 		SoundInterface::BGM->SetSpeed();
 	}
@@ -618,6 +622,13 @@ void Game::render3D(Camera currentCamera) {
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
+	//if (player[0].getState() == playerNS::STATE::VISION || player[0].getState() == playerNS::STATE::SKY_VISION)
+	//{
+	//	treeManager->changeWireFrame();
+	//}
+	//else {
+	//	treeManager->changeSolid();
+	//}
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// アイテムの描画
@@ -805,30 +816,49 @@ void Game::collisions()
 	//プレイヤー[シフトレイ]とデジタルツリー
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
+		//シフト操作の無効化(初期値）
+		player[i].disableOperation(playerNS::ENABLE_SHIFT);
 		if (player[i].getState() != playerNS::VISION &&
 			player[i].getState() != playerNS::SKY_VISION)continue;
 		
 		std::vector<Tree*> list = treeManager->getTreeList();
 		for (int num = 0; num < list.size(); num++)
 		{
+			Tree* tree = list[num];
 			//デジタルツリーの場合
-			if (list[num]->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+			if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
 
 			//カリング処理
 			//カメラ視野角内の場合
-			D3DXVECTOR3 center = list[num]->center;
-			float radius = list[num]->radius;
+			D3DXVECTOR3 center = tree->center;
+			float radius = tree->radius;
 			if (!UtilityFunction::culling(
 				center, radius, camera[i].view, camera[i].fieldOfView,
 				camera[i].nearZ, camera[i].farZ, camera[i].aspect))continue;
 
 			//シフトレイの更新
-			LPD3DXMESH mesh = list[num]->getMesh();
-			D3DXMATRIX matrix = list[num]->matrixWorld;
-			player[i].collideShiftRay(mesh,matrix);
+			//LPD3DXMESH mesh = list[num]->getMesh();
+			//D3DXMATRIX matrix = list[num]->matrixWorld;
+			//player[i].collideShiftRay(mesh,matrix);
+			//player[i].collideShiftRay(list[num]->center);
+			Cylinder treeCylinder;
+			treeCylinder.centerLine.start	= tree->position;
+			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*tree->size.y;
+			treeCylinder.radius				= tree->size.x;
+			player[i].collideShiftRay(treeCylinder);
 		}
+		//エフェクトの再生/停止
+		if (player[i].whetherValidOperation(playerNS::ENABLE_SHIFT))
+		{
+			player[i].playSelectLight();
+		}
+		else {
+			player[i].stopSelectLight();
+		}
+
 	}
 
+	
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();

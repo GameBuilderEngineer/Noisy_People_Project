@@ -35,8 +35,12 @@ EffekseerManager::EffekseerManager()
 	xa2Master	= NULL;
 #endif
 
-	fileName[TEST0] = { L"test.efk" };
-	fileName[TEST1] = { L"r_square.efk" };
+	fileName[BLOW]			= { L"blow.efk" };
+	fileName[DIGIT_TREE]	= { L"Digit_Tree.efk" };
+	fileName[MUZZLE]		= { L"muzzle.efk" };
+	fileName[DAC]			= { L"DAC.efk" };
+	fileName[GREENING]		= { L"Greening.efk" };
+
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }
@@ -134,7 +138,7 @@ void EffekseerManager::setCameraMatrix(D3DXVECTOR3 position,D3DXVECTOR3 eye,D3DX
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-void EffekseerManager::play(effekseerNS::Instance* instance)
+::Effekseer::Handle EffekseerManager::play(effekseerNS::Instance* instance)
 {
 	instance->handle = manager->Play(
 		effect[instance->effectNo], 
@@ -142,6 +146,7 @@ void EffekseerManager::play(effekseerNS::Instance* instance)
 		instance->position.y,
 		instance->position.z);
 	instanceList->insertFront(instance);
+	return instance->handle;
 }
 
 //===================================================================================================================================
@@ -239,7 +244,7 @@ void EffekseerManager::update()
 	//リスト更新
 	instanceList->listUpdate();
 
-	// エフェクトの移動処理を行う
+	// エフェクトの更新処理を行う
 	for (int i = 0; i < instanceList->nodeNum; i++)
 	{
 		(*instanceList->getValue(i))->update();
@@ -279,9 +284,9 @@ void EffekseerManager::render()
 //===================================================================================================================================
 //【外部参照：再生】
 //===================================================================================================================================
-void effekseerNS::play(effekseerNS::Instance* instance)
+::Effekseer::Handle effekseerNS::play(effekseerNS::Instance* instance)
 {
-	pointerEffekseerManager->play(instance);
+	return pointerEffekseerManager->play(instance);
 }
 
 //===================================================================================================================================

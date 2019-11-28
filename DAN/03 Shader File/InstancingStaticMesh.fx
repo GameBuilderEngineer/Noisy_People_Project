@@ -146,7 +146,7 @@ technique mainTechnique {
 		PixelShader				= compile ps_3_0 PS1();
 	}
 
-	//ランバート拡散反射を考慮せずテクセルカラーのみで出力
+	//αテスト
 	pass p2 {
 		//ステート設定
 		Zenable					= TRUE;			//Zバッファ有効

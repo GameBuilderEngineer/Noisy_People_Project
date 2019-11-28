@@ -320,7 +320,7 @@ void StaticMeshRenderer::enableLight()	{ onLight = true; }
 void StaticMeshRenderer::disableLight()	{ onLight = false; }
 void StaticMeshRenderer::enableTransparent()	{ onTransparent = true; }
 void StaticMeshRenderer::disableTransparent()	{ onTransparent = false; }
-
+void StaticMeshRenderer::setFillMode(int mode) { fillMode = mode; }
 //===================================================================================================================================
 //ÅygetterÅz
 //===================================================================================================================================

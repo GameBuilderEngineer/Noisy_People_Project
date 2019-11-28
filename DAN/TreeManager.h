@@ -58,6 +58,10 @@ public:
 	int issueNewTreeID();
 	void outputGUI();
 
+	void changeWireFrame();
+	void changeSolid();
+
 	// Getter
 	std::vector<Tree*>& getTreeList();
+	float getGreeningRate();
 };

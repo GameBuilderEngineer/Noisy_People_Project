@@ -337,6 +337,12 @@
     <Filter Include="Game Layer\GameUI\PlayerUI">
       <UniqueIdentifier>{c4a17d3a-65fb-442e-a2b6-2d471a197331}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Player\State\DeathState">
+      <UniqueIdentifier>{fbfae732-4b57-444b-b50b-4f490b25165b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\Cylinder">
+      <UniqueIdentifier>{4e7b6768-8cad-46b1-85f4-0ca83835b231}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -769,6 +775,8 @@
     <ClCompile Include="DigitalTreeEffect.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
+    <ClCompile Include="DeathState.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1224,6 +1232,8 @@
     <ClInclude Include="DigitalTreeEffect.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
+    <ClInclude Include="DeathState.h" />
+    <ClInclude Include="Cylinder.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

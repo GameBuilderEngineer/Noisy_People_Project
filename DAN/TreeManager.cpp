@@ -179,7 +179,26 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 	digitalTreeEffect->render(view, projection, cameraPosition);
 }
 
+void TreeManager::changeWireFrame()
+{
+	aTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
+	aLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
+	bTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
+	bLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
+	cTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
+	cLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
 
+};
+void TreeManager::changeSolid()
+{
+	aTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
+	aLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
+	bTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
+	bLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
+	cTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
+	cLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
+
+};
 //=============================================================================
 // ツリーオブジェクトの作成
 //=============================================================================
@@ -327,3 +346,4 @@ void TreeManager::outputGUI()
 // Getter
 //=============================================================================
 std::vector<Tree*>& TreeManager::getTreeList(){ return treeList; }
+float TreeManager::getGreeningRate() { return greeningRate; }

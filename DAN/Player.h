@@ -124,13 +124,14 @@ namespace playerNS{
 		VISION,
 		SKY_VISION,
 		DIGITAL_SHIFT,
+		DEATH,
 		STATE_NUM
 	};
 
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
-		D3DXVECTOR3(-10, 20, -220),			//1P
-		D3DXVECTOR3(10, 20, -220)			//2P
+		D3DXVECTOR3(0, 20, -220),			//1P
+		D3DXVECTOR3(130, 10, 230)				//2P
 	};
 
 	// StatusParameter
@@ -286,6 +287,7 @@ private:
 	DigitalShiftEffect*			digitalShiftEffect;				//デジタルシフトエフェクト
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
+	float						shiftDistance;
 
 
 	//再生パラメータ
@@ -344,7 +346,7 @@ public:
 
 	//自動処理
 	void recoveryPower();										//電力の自動回復
-
+	void respawn();
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 	void jump();												//ジャンプ
@@ -361,7 +363,10 @@ public:
 	bool cancelSkyVision();										//[キャンセル]スカイビジョン
 	bool cancelVision();										//[キャンセル]ビジョン
 	void collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix);	//シフトレイとの衝突
-
+	void collideShiftRay(D3DXVECTOR3 position);					//シフトレイとの衝突
+	bool collideShiftRay(Cylinder target);						//シフトレイとの衝突
+	void stopSelectLight();
+	void playSelectLight();
 
 	//シューティング
 	void updateAiming(LPD3DXMESH mesh, D3DXMATRIX matrix);		//照準方向を更新する
@@ -400,9 +405,9 @@ public:
 	Bullet*			getBullet(int i);							//発射中の弾へのポインタ
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
-	bool getWhetherExecutingMoveOpe();							//移動操作中か取得
+	bool			getWhetherExecutingMoveOpe();							//移動操作中か取得
 	BulletManager*  getBulletManager();							//バレットマネージャを取得
-	bool getOnGround();											//接地しているか取得
-	D3DXVECTOR3* getGroundNormal();								//接地面法線を取得
+	bool			getOnGround();											//接地しているか取得
+	D3DXVECTOR3*	getGroundNormal();								//接地面法線を取得
 
 };

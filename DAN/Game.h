@@ -111,7 +111,6 @@ private:
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 
 	//UI
-	Telop*							telop;				// テロップ
 	SpriteGauge*					spriteGauge;		//Sprite実験
 	Reticle*						reticle;			//レティクル
 	TelopManager*					telopManager;		//テロップマネジャー

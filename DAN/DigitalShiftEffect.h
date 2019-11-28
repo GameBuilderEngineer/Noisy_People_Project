@@ -23,6 +23,7 @@ namespace DigitalShiftEffectNS
 	const int	START_SHIFT			= 0x00000001;
 	const int	RUNNING_SHIFT		= 0x00000002;
 	const int	END_SHIFT			= 0x00000004;
+	const int	SELECT_LIGHT		= 0x00000008;
 
 
 	//エフェクト時間
@@ -30,6 +31,20 @@ namespace DigitalShiftEffectNS
 	const float	RUNNING_TIME		= 1.0f;
 	const float	END_TIME			= 1.0f;
 
+	//選択用ライトクラス
+	class SelectLight:public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3* syncPosition;
+		SelectLight(D3DXVECTOR3* sync) {
+			syncPosition = sync;
+			effectNo = effekseerNS::DIGIT_TREE;
+		}
+		virtual void update() {
+			position = *syncPosition;
+			Instance::update();
+		};
+	};
 }
 
 //===================================================================================================================================
@@ -38,12 +53,20 @@ namespace DigitalShiftEffectNS
 class DigitalShiftEffect :public Base
 {
 private:
-	LinkedList<Object*>*	objectList;		//オブジェクトリスト
-	StaticMeshRenderer*		renderer;
+	//デジタルスフィア
+	LinkedList<Object*>*	sphereList;		
+	StaticMeshRenderer*		sphereRenderer;
+
 	
-	InstancingBillboard* billboard;
+	InstancingBillboard*	billboard;
 
 
+	//選択表示ライトリスト
+	bool onPlayedSelectLight;
+	DigitalShiftEffectNS::SelectLight* selectLight;
+	//LinkedList<Object*>*	selectLightList;
+	//StaticMeshRenderer*		selectLightRenderer;
+	//::Effekseer::Handle		selectLight;
 
 	//同期位置リスト
 	std::vector<D3DXVECTOR3*> syncPositionList;
@@ -54,6 +77,7 @@ public:
 	~DigitalShiftEffect();
 	//基本
 	void update(float frameTime);
+	void updateSelectLight(D3DXVECTOR3 position);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	//再生/一時停止
@@ -65,12 +89,20 @@ public:
 	void playStartShift(D3DXVECTOR3 position);
 	void playRunningShift(D3DXVECTOR3 position);
 	void playEndShift(D3DXVECTOR3 position);
-	
+	void playSelectLight(D3DXVECTOR3* position);
+	void stopSelectLight();
+
 	//オブジェクト生成
 	void createDigitalSphere(D3DXVECTOR3 position, float runTime);
+	//Object* createSelectLight(D3DXVECTOR3 position);
+	//エフェクトインスタンス生成/削除
+	void createSelectLight(D3DXVECTOR3* position);
+	void deleteSelectLight();
+
 
 	//削除
 	void autoDestroy();
+
 
 
 };

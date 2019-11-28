@@ -96,7 +96,7 @@ public:
 	void disableLight();
 	void enableTransparent();
 	void disableTransparent();
-
+	void setFillMode(int mode);
 
 	//getter
 	StaticMesh* getStaticMesh();

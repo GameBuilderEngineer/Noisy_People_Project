@@ -215,7 +215,7 @@ void Player::grounding()
 		}
 		else {
 			dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-			if (dot > 70.0f / 90.0f) {
+			if (dot >= 1.0f - 70.0f / 90.0f) {
 				speed = slip(speed, gravityRay.normal);
 			}
 			else {
@@ -604,6 +604,22 @@ void Player::recoveryPower()
 	recoveryPowerTimer = 0.0f;
 	power = UtilityFunction::clamp(power + AUTO_RECOVERY_POWER,0,FULL_POWER);
 }
+//===================================================================================================================================
+//【リスポーン】
+//===================================================================================================================================
+void Player::respawn()
+{
+	//position = START_POSITION[infomation.playerType];
+	//speed = acceleration = D3DXVECTOR3(0, 0, 0);
+	//quaternion = D3DXQUATERNION(0, 0, 0, 1);
+	//axisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(1, 0, 0));
+	//axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));
+	//axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));
+	//reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));
+	//reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));
+	//reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
+	//Object::update();
+}
 
 #pragma endregion
 
@@ -703,8 +719,107 @@ bool Player::digitalShift()
 	transState(DIGITAL_SHIFT);
 	return true;
 
+}
+
+//===================================================================================================================================
+//【シフトレイ（ボリュームレイ）との衝突処理】
+//===================================================================================================================================
+bool Player::collideShiftRay(Cylinder target)
+{
+	//シフトレイをカメラからのレイとして更新
+	shiftRay.update(camera->position, camera->getDirectionZ());
+
+	//カメラからの半径付きレイを設定
+	Cylinder volumeRayFromCamera;
+	volumeRayFromCamera.centerLine.start	= camera->position;
+	volumeRayFromCamera.centerLine.end		= camera->position + camera->getDirectionZ()*10000.0f;
+	volumeRayFromCamera.radius				= 3.0f;
+
+	//
+	D3DXVECTOR3 nearest =
+		Base::nearestPointOnLine(
+			shiftRay.start,
+			shiftRay.start + shiftRay.direction*10000.0f,
+			target.centerLine.start);
+
+	//カメラからのレイ上での距離
+	float distanceOnRay = Base::between2VectorLength(nearest, camera->position);
+
+	//円柱間の距離
+	float distance = Base::between2LineDistance(target.centerLine,volumeRayFromCamera.centerLine);
+
+	//円柱同士の衝突時距離
+	float radiusDistance = target.radius + volumeRayFromCamera.radius;
+
+	if (distance <= radiusDistance)
+	{
+		//デジタルシフト有効でない場合
+		if (!whetherValidOperation(ENABLE_SHIFT))
+		{
+			//シフトを有効にする
+			enableOperation(ENABLE_SHIFT);
+			//デジタルシフトを行うラインを設定
+			shiftLine.start = this->position;
+			shiftLine.end = target.centerLine.start;// -shiftRay.direction*3.0f;
+			shiftDistance = distance + distanceOnRay;//レイ間距離+レイ上距離
+			return true;
+		}
+		else if (shiftDistance > distance + distanceOnRay)//レイ間距離+レイ上距離
+		{
+			//デジタルシフトを行うラインを設定
+			shiftLine.start = this->position;
+			shiftLine.end = target.centerLine.start;// -shiftRay.direction*3.0f;
+			shiftDistance = distance + distanceOnRay;//レイ間距離+レイ上距離
+			return true;
+		}
+		return false;
+	}
+
+	//条件
+	//円柱衝突もしていない場合や、
+	//円柱衝突していたとしても、最短シフト先でない　
+	return false;
+
+}
+
+//===================================================================================================================================
+//【シフトレイ（ボリュームレイ）との衝突処理】
+//===================================================================================================================================
+void Player::collideShiftRay(D3DXVECTOR3 position)
+{
+	//シフトレイをカメラからのレイとして更新
+	shiftRay.update(camera->position, camera->getDirectionZ());
+
+	D3DXVECTOR3 nearest =
+		Base::nearestPointOnLine(
+			shiftRay.start,
+			shiftRay.start + shiftRay.direction*10000.0f,
+			position);
 
 
+	float radiusDistance = Base::between2VectorLength(nearest, position);
+	float distance = Base::between2VectorLength(nearest, camera->position);
+
+	if (radiusDistance <= 3.0f)
+	{
+		//デジタルシフト有効でない場合
+		if (!whetherValidOperation(ENABLE_SHIFT))
+		{
+			//シフトを有効にする
+			enableOperation(ENABLE_SHIFT);
+			//デジタルシフトを行うラインを設定
+			shiftLine.start = this->position;
+			shiftLine.end = position - shiftRay.direction*3.0f;
+			shiftDistance = distance;
+		}
+		else if (shiftDistance > distance)
+		{
+			//デジタルシフトを行うラインを設定
+			shiftLine.start = this->position;
+			shiftLine.end = position - shiftRay.direction*3.0f;
+			shiftDistance = distance;
+		}
+	}
 
 }
 
@@ -735,12 +850,27 @@ void Player::collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix)
 			shiftLine.end = camera->position + shiftRay.direction*shiftRay.distance;
 		}
 	}
-	else {
-		//シフトを無効にする
-		disableOperation(ENABLE_SHIFT);
-	}
 
 }
+
+//===================================================================================================================================
+//【デジタルシフト先選択表示エフェクト再生】
+//===================================================================================================================================
+void Player::playSelectLight()
+{
+	//選択エフェクトライト表示
+	digitalShiftEffect->playSelectLight(&shiftLine.end);
+}
+
+//===================================================================================================================================
+//【デジタルシフト先選択表示エフェクト停止】
+//===================================================================================================================================
+void Player::stopSelectLight()
+{
+	//選択エフェクトライト表示
+	digitalShiftEffect->stopSelectLight();
+}
+
 
 //===================================================================================================================================
 //【デジタルシフト実行】
@@ -951,6 +1081,7 @@ void Player::outputGUI()
 		ImGui::Text("[shiftLine] start(%.02f,%.02f,%.02f):end(%.02f,%.02f,%.02f)",
 			shiftLine.start.x, shiftLine.start.y, shiftLine.start.z,
 			shiftLine.end.x, shiftLine.end.y, shiftLine.end.z);
+		ImGui::Text("[shiftDistance] %.02f", shiftDistance);
 
 		//操作有効フラグ
 		//シフト

@@ -89,6 +89,7 @@ void GameMaster::startGame()
 {
 	gameTimer = GAME_TIME;
 	pause = false;
+	progress = 0x00000000;
 }
 
 //===================================================================================================================================
@@ -133,12 +134,15 @@ void GameMaster::discardConversionOrder() {
 //ysetterz
 //===================================================================================================================================
 void GameMaster::setConversionOrder(int* newValue) {conversionOrder = newValue;};
+void GameMaster::setProgress(int achievement) { progress |= achievement; }
 
 //===================================================================================================================================
 //ygetterz
 //===================================================================================================================================
 PlayerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}	//ƒvƒŒƒCƒ„[î•ñ‚Ìæ“¾
 float GameMaster::getGameTime() {return gameTimer;}							//ƒQ[ƒ€§ŒÀŠÔ‚Ìæ“¾
+int GameMaster::getProgress() { return progress; }
+bool GameMaster::whetherAchieved(int ahievement) { return progress & ahievement; }
 
 //===================================================================================================================================
 //yGUIz

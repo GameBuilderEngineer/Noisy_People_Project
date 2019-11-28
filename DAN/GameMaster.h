@@ -51,6 +51,10 @@ namespace gameMasterNS {
 
 	const int	PLAYER_NUM				= 2;
 
+	const int	ACHIEVEMENT_GREENING_RATE_10	= 0x00000001;
+	const int	ACHIEVEMENT_GREENING_RATE_30	= 0x00000002;
+	const int	ACHIEVEMENT_GREENING_RATE_50	= 0x00000004;
+
 }
 
 //===================================================================================================================================
@@ -98,7 +102,7 @@ private:
 	
 	//プレイヤー
 	PlayerTable		playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
-
+	int				progress;										//達成状況
 
 public:
 	//基本処理
@@ -106,8 +110,6 @@ public:
 	~GameMaster();
 	void initialize();
 	void update(float frameTime);
-
-
 
 	//ゲーム
 	void startGame();												//ゲーム開始関数
@@ -120,12 +122,16 @@ public:
 	void discardConversionOrder();									//変換順番変数を破棄する
 	void recordGreeningTree(int treeNo,int orderNo);				//緑化した木の本数を記録
 
+
 	//setter
 	void setConversionOrder(int* newValue);
+	void setProgress(int achievement);
 
 	//getter
 	PlayerTable*	getPlayerInfomation();
 	float			getGameTime();
+	int				getProgress();									//達成状況取得
+	bool			whetherAchieved(int achievement);
 
 #ifdef _DEBUG
 	bool			showGUI;										//GUIの可視フラグ
