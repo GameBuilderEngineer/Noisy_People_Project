@@ -935,5 +935,15 @@ void Game::test()
 	{
 		player[gameMasterNS::PLAYER_1P].addpower(1);
 	}
+	//電力減少（電力回復確認用）
+	if (input->isKeyDown('O'))
+	{
+		player[gameMasterNS::PLAYER_2P].pullpower(1);
+	}
+	//電力増加（ゲージ、タンクテスト用）
+	if (input->isKeyDown('P'))
+	{
+		player[gameMasterNS::PLAYER_2P].addpower(1);
+	}
 }
 #endif // _DEBUG
