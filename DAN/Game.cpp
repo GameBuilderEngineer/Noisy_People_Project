@@ -89,8 +89,8 @@ void Game::initialize() {
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
 		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
-		camera[i].setLimitRotationTop(0.3f);
-		camera[i].setLimitRotationBottom(0.7f);
+		camera[i].setLimitRotationTop(0.1f);
+		camera[i].setLimitRotationBottom(0.3f);
 
 		//ÉvÉåÉCÉÑÅ[ÇÃê›íË
 		PlayerTable infomation;
