@@ -14,12 +14,14 @@ float *WaveBall::fData = 0;
 //===================================================================================================================================
 WaveBall::WaveBall()
 {
+#if(XADUIO2_STATE)
 	LPDIRECT3DDEVICE9 device = getDevice();
 	D3DXCreateLine(device, &pLine);
 
 	switchFlag = true;
 	volume = 1.0f;
 	diffuse = ON_COL_IN;
+#endif
 }
 
 //===================================================================================================================================
@@ -27,8 +29,10 @@ WaveBall::WaveBall()
 //===================================================================================================================================
 WaveBall::~WaveBall()
 {
+#if(XADUIO2_STATE)
 	SAFE_DELETE_ARRAY(fData);
 	SAFE_RELEASE(pLine);
+#endif
 }
 
 //===================================================================================================================================
@@ -36,6 +40,7 @@ WaveBall::~WaveBall()
 //===================================================================================================================================
 void WaveBall::draw(void)
 {
+#if(XADUIO2_STATE)
 	setOnCol(switchFlag);
 
 	const float inRadius = 50;
@@ -65,7 +70,7 @@ void WaveBall::draw(void)
 	{
 		Theta = i * WedgeAngle;
 		float size = 0;
- 		if (fData[i] > 0)
+		if (fData[i] > 0)
 		{
 			size = amplitude * ((float)(unsigned short)fData[i] / (float)USHRT_MAX);
 		}
@@ -101,4 +106,5 @@ void WaveBall::draw(void)
 	pLine->End();
 	SAFE_DELETE_ARRAY(inLine);
 	SAFE_DELETE_ARRAY(outLine);
+#endif
 }

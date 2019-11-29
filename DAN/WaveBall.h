@@ -37,23 +37,29 @@ public:
 	void draw(void);
 	void setMouseInCol(bool flag) 
 	{
+#if(XADUIO2_STATE)
 		if ((flag) && (!switchFlag))diffuse = MOUSE_IN_COL_IN;
 		else diffuse = MOUSE_OUT_COL_IN;
+#endif
 	}
 	void setOnCol(bool flag)
 	{
+#if(XADUIO2_STATE)
 		if (flag)diffuse = ON_COL_IN;
 		else diffuse = OFF_COL_IN;
 		switchFlag = flag;
+#endif
 	}
 	void setVolume(float inVolume)
 	{
+#if(XADUIO2_STATE)
 		volume = inVolume;
 		SoundInterface::SE->setEndPointVoiceVolume(volume);
 		SoundInterface::BGM->setEndPointVoiceVolume(volume);
 		SoundInterface::S3D->setEndPointVoiceVolume(volume);
 		if (inVolume == NULL) { setOnCol(false); }
 		else setOnCol(true);
+#endif
 	}
 
 	static int dataMax;
@@ -61,11 +67,13 @@ public:
 
 	static void SetWaveData(int inDataMax, float *inFdata)
 	{
+#if(XADUIO2_STATE)
 		SAFE_DELETE_ARRAY(fData);
 		dataMax = inDataMax - 1;
 		fData = new float[dataMax];
 		memset(fData, 0, dataMax * sizeof(float));
 		memcpy(fData, inFdata, dataMax * sizeof(float));
+#endif
 	};
 
 private:
