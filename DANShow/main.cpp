@@ -109,7 +109,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
-	SetLayeredWindowAttributes(hWnd, (COLORREF)0x000000ff, 255, LWA_COLORKEY | LWA_ALPHA);
+	SetLayeredWindowAttributes(hWnd, (COLORREF)0x000000ff, 0, LWA_COLORKEY | LWA_ALPHA);
 
 	// メッセージループ
 	while(g_bGameLoop)
