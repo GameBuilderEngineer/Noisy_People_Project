@@ -66,13 +66,22 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 				MoveP.Animation->AnimData[Set_No] = { "Idle",			NULL, 0.3f,	0.0f };
 				break;
 			case MoveP_Run:
-				MoveP.Animation->AnimData[Set_No] = { "Run",		NULL, 0.1f,	0.0f };
+				MoveP.Animation->AnimData[Set_No] = { "Runing",		NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_FireIdle:
+				MoveP.Animation->AnimData[Set_No] = { "FireIdle",		NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_FireRun:
+				MoveP.Animation->AnimData[Set_No] = { "FireRun",	NULL, 0.1f,	0.0f };
 				break;
 			case MoveP_Jump:
-				MoveP.Animation->AnimData[Set_No] = { "Jump",		NULL, 0.1f,	0.0f };
+				MoveP.Animation->AnimData[Set_No] = { "SmallJump",		NULL, 0.1f,	0.0f };
 				break;
-			case MoveP_Shooting:
-				MoveP.Animation->AnimData[Set_No] = { "Shooting",	NULL, 0.1f,	0.0f };
+			case MoveP_JumpFire:
+				MoveP.Animation->AnimData[Set_No] = { "JumpFire",		NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_Die:
+				MoveP.Animation->AnimData[Set_No] = { "Death",	NULL, 0.1f,	0.0f };
 				break;
 			default:
 				break;
@@ -123,9 +132,27 @@ void UpdateMoveP(float f_TimeDelta)
 {
 	Input *input = getInput();
 
-	//移動制限
-	if (!MoveP.IsAttack)
+	if (input->getMouseRButton())
 	{
+		MoveP.IsChange = true;
+	}
+	else
+	{
+		MoveP.IsChange = false;
+	}
+
+	if (input->isKeyDown(VK_SPACE))
+	{
+		MoveP.IsJump = true;
+	}
+
+
+	//移動制限
+	if (!MoveP.IsChange)
+	{
+		MoveP.IsChangeRun = false;
+
+		MoveP.Animation->NextAnimID = MoveP_Idle;
 
 		if (input->isKeyDown('W'))
 		{
@@ -147,24 +174,64 @@ void UpdateMoveP(float f_TimeDelta)
 		{
 			MoveP.IsRun = false;
 		}
+
+		if (MoveP.IsRun)
+		{
+			MoveP.Animation->NextAnimID = MoveP_Run;
+		}
+
+	}
+	if (MoveP.IsChange)
+	{
+		MoveP.IsRun = false;
+
+		MoveP.Animation->NextAnimID = MoveP_FireIdle;
+
+		if (input->isKeyDown('W'))
+		{
+			MoveP.IsChangeRun = true;
+		}
+		else if (input->isKeyDown('S'))
+		{
+			MoveP.IsChangeRun = true;
+		}
+		else if (input->isKeyDown('A'))
+		{
+			MoveP.IsChangeRun = true;
+		}
+		else if (input->isKeyDown('D'))
+		{
+			MoveP.IsChangeRun = true;
+		}
+		else
+		{
+			MoveP.IsChangeRun = false;
+		}
+
+		if (MoveP.IsChangeRun)
+		{
+			MoveP.Animation->NextAnimID = MoveP_FireRun;
+		}
 	}
 
-	if (MoveP.IsRun)
+	if (MoveP.IsJump)
 	{
-		MoveP.Animation->NextAnimID = MoveP_Run;
+		MoveP.Animation->NextAnimID = MoveP_JumpFire;
 	}
 
-	//攻撃
-	if (input->getMouseLButtonTrigger() && !MoveP.IsRoll)
+	if (input->isKeyDown('Q'))
 	{
-		MoveP.Animation->NextAnimID = MoveP_Shooting;
-		MoveP.IsAttack = true;
+		MoveP.Animation->NextAnimID = MoveP_Die;
+		MoveP.IsDie = true;
 	}
 
-	if (input->isKeyDown(VK_SPACE) && !MoveP.IsAttack && !MoveP.IsRoll)
+	if (MoveP.IsDeath)
 	{
-		MoveP.Animation->NextAnimID = MoveP_Jump;
+		MoveP.Animation->AnimController->SetTrackPosition(0, 3.8f);
+
+
 	}
+
 
 
 	MovePAnimeCur();
@@ -191,6 +258,7 @@ void UpdateMoveP(float f_TimeDelta)
 void DrawMoveP()
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
+
 
 	//         大きさ　回転　　移動　　　　　カプセル判定　　盾のカプセル　　　　　剣のカプセル
 	D3DXMATRIX mtxScl, mtxRot, mtxTranslate, CapsuleMatrix, CapsuleMatrix_Shield, CapsuleMatrix_Sword;
@@ -449,12 +517,29 @@ void MovePAnimeNext(void)
 			MoveP.Animation->NextAnimID = MoveP_Idle;
 			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
 			break;
-		case MoveP_Jump:
-			ChangeAnimation(MoveP.Animation, MoveP_Jump, 1.0f, false);
-			MoveP.Animation->NextAnimID = MoveP_Idle;
+		case MoveP_FireIdle:
+			ChangeAnimation(MoveP.Animation, MoveP_FireIdle, 1.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_FireIdle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
 			break;
-		case MoveP_Shooting:
-			ChangeAnimation(MoveP.Animation, MoveP_Shooting, 1.2f, false);
+		case MoveP_FireRun:
+			ChangeAnimation(MoveP.Animation, MoveP_FireRun, 0.8f, false);
+			MoveP.Animation->NextAnimID = MoveP_FireIdle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_JumpFire:
+			ChangeAnimation(MoveP.Animation, MoveP_JumpFire, 1.0f, false);
+			if (MoveP.IsChange)
+			{
+				MoveP.Animation->NextAnimID = MoveP_FireIdle;
+			}
+			if (!MoveP.IsChange)
+			{
+				MoveP.Animation->NextAnimID = MoveP_Idle;
+			}
+			break;
+		case MoveP_Die:
+			ChangeAnimation(MoveP.Animation, MoveP_Die, 1.0f, false);
 			MoveP.Animation->NextAnimID = MoveP_Idle;
 			break;
 		default:
@@ -484,10 +569,18 @@ void MovePAnimeCur(void)
 			MoveP.AnimeChange = true;
 		}
 		break;
-	case MoveP_Jump:
-		MoveP.Animation->NextAnimID = MoveP_Idle;
+	case MoveP_FireIdle:
 		break;
-	case MoveP_Shooting:
+	case MoveP_FireRun:
+		if (!MoveP.IsChangeRun)
+		{
+			MoveP.Animation->NextAnimID = MoveP_FireIdle;
+			MoveP.AnimeChange = true;
+		}
+		break;
+	case MoveP_JumpFire:
+		break;
+	case MoveP_Die:
 		MoveP.Animation->NextAnimID = MoveP_Idle;
 		break;
 	default:
@@ -527,13 +620,17 @@ HRESULT InitCallbackKeys_MoveP(void)
 		case MoveP_Run:
 			AddKeydata(0.95f, MotionEnd);
 			break;
-		case MoveP_Jump:
-			AddKeydata(0.05f, MovePRollStart);
-			AddKeydata(0.75f, MovePRollEnd);
+		case MoveP_FireIdle:
 			break;
-		case MoveP_Shooting:
-			AddKeydata(0.01f, MovePAttackStart);  //アニメの時間によってイベントを発生します
-			AddKeydata(0.9f, MovePAttackEnd);
+		case MoveP_FireRun:
+			AddKeydata(0.95f, MotionEnd);
+			break;
+		case MoveP_JumpFire:
+			AddKeydata(0.01f, MovePJumpFireStart);
+			AddKeydata(0.8f, MovePJumpFireEnd);
+			break;
+		case MoveP_Die:
+			AddKeydata(0.95f, MovePDeath);
 			break;
 		default:
 			continue;
