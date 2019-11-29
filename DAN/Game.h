@@ -2,7 +2,7 @@
 //【Game.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/10/18
+// [更新日]2019/11/05
 //===================================================================================================================================
 #pragma once
 
@@ -18,25 +18,34 @@
 #include "TreeTypeA.h"
 #include "TreeTypeB.h"
 #include "TestEffect.h"
+#include "TestPlane.h"
 #include "EnemyManager.h"
 #include "AIDirector.h"
 #include "NavigationMesh.h"
 #include "TreeManager.h"
 #include "ItemManager.h"
+#include "Wind.h"
+#include "MapObjectManager.h"
 #include "Telop.h"
 #include "Sky.h"
 #include "SpriteGauge.h"
 #include "Battery.h"
+#include "Timer.h"
+#include "Reticle.h"
+#include "Ocean.h"
+#include "FixedUI.h"
+#include "Advertisement.h"
 
 #include "Sound.h"
 #include "SoundBase.h"
-
-
+#include "LinearTreeCell.h"
 #include "movep.h"
-//#include "GameMaster.h"
-//#include "PointSprite.h"
-//#include "Object.h"
+
+#include "TelopManager.h"
+#include "Player1UI.h"
+#include "Player2UI.h"
 //#include "Text.h"
+
 
 //===================================================================================================================================
 //【名前空間】
@@ -47,11 +56,10 @@ namespace gameNS
 	const D3DXVECTOR3 PLAYER_POSITION =	D3DXVECTOR3(0,100,0);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,5.0f,5.0f,0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f,0.0f,-1.5f,0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,5.0f,0);
-
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f,0.0f,0.0f);
 }
 
 //===================================================================================================================================
@@ -61,40 +69,58 @@ class Game : public AbstractScene
 {
 private:
 
-	Player*					player;				//プレイヤー
-	StaticMeshRenderer*		maleRenderer;		//男プレイヤーレンダラー
-	StaticMeshRenderer*		femaleRenderer;		//女プレイヤーレンダラー
-	Object*					testField;			//フィールド
-	StaticMeshRenderer*		testFieldRenderer;	//フィールドレンダラー
+	int								nowRenderingWindow;	//現在の描画ウィンドウ識別子
+
+	//衝突判定
+	//Linear4TreeManager<Object>*	linear4TreeManager;	//線形４分木管理クラス
+	Linear8TreeManager<Object>*		linear8TreeManager;	//線形８分木管理クラス
+	ObjectTree<Object>*				objectTreeArray;	//オブジェクトツリー
+	DWORD							collisionNum;		//衝突判定回数
+	CollisionList<Object>*			collisionList;		//衝突判定リスト
+
+	//3Dオブジェクト
+	Player*							player;				//プレイヤー
+	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
+	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
+
+	Object*							testField;			//フィールド
+	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
+
+	DeadTree*						deadTree;			//枯木
+	TreeTypeA*						treeA;				//木Ａ
+	TreeTypeB*						treeB;				//木B
+	Stone*							stone;				//石
+	Sky*							sky;				//スカイドーム
+	Ocean*							ocean;				//海面
 
 	StaticMeshRenderer*		MoveP;
-
-	DeadTree*				deadTree;			//枯木
-	TreeTypeA*				treeA;				//木Ａ
-	TreeTypeB*				treeB;				//木B
-	Stone*					stone;				//石
-	Sky*					sky;				//スカイドーム
-
 	MOVEP*					MoveP1;
 
-	TestEffect*				testEffect;			//インスタンシングビルボードテスト
+	//ビルボード
+	//TestEffect*						testEffect;			//インスタンシングビルボードテスト
+	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
+	Advertisement*					ad;					//開発中広告
 
-	EnemyManager*			enemyManager;		// エネミーマネージャー
-	Enemy*					enemy;				// エネミー
-	TreeManager*			treeManager;		// ツリーマネージャー
-	ItemManager*			itemManager;		// アイテムマネージャー
+	EnemyManager*					enemyManager;		// エネミーマネージャー
+	TreeManager*					treeManager;		// ツリーマネージャー
+	ItemManager*					itemManager;		// アイテムマネージャー
+	WindManager*					windManager;		// 風マネージャー
+	MapObjectManager*				mapObjectManager;	// マップオブジェクトマネージャー
 
-	Telop*					telop;				// テロップ
+	AIDirector*						aiDirector;			// AI
+	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 
-	AIDirector*				aiDirector;			// AI
-	NavigationMesh*			naviAI;				// naviAI
+	//UI
+	SpriteGauge*					spriteGauge;		//Sprite実験
+	Reticle*						reticle;			//レティクル
+	TelopManager*					telopManager;		//テロップマネジャー
+	FixedUI*						fixedUI;			//固定されたUI
+	Player1UI*						player1UI;			//プレイヤー周りのUI
+	Player2UI*						player2UI;			//プレイヤー２周りのUI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
-
-	//Sprite実験
-	SpriteGauge* spriteGauge;
-
+	
 public:
 	Game();
 	~Game();
@@ -108,6 +134,8 @@ public:
 	void render3D(Camera currentCamera);
 	void renderUI();
 	void test();
+	//void tree4Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
+	void tree8Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
 
 #ifdef _DEBUG
 	virtual void createGUI() override;
@@ -120,9 +148,6 @@ public:
 //===================================================================================================================================
 #ifdef _DEBUG
 
-#if 1	// ここを1でナビメッシュデバッグモード
-#define DEBUG_NAVIMESH
-#endif
 
 
 #endif// _DEBUG

@@ -18,6 +18,7 @@
 //===================================================================================================================================
 ImguiManager::ImguiManager(HWND wnd)
 {
+	setRootDirectory();
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -41,6 +42,7 @@ ImguiManager::ImguiManager(HWND wnd)
 //===================================================================================================================================
 ImguiManager::~ImguiManager()
 {
+	setRootDirectory();
 	ImGui_ImplDX9_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
@@ -154,3 +156,4 @@ D3DCOLOR ImguiManager::getClearColor()
 
 	return color;
 }
+

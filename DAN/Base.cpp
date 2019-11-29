@@ -90,6 +90,10 @@ void setSoundDirectory(int endpointVoiceId)
 	{
 		strcat(tmporary, "\\04 Sound File\\BGM");
 	}
+	else if (endpointVoiceId == ENDPOINT_VOICE_LIST::ENDPOINT_S3D)
+	{
+		strcat(tmporary, "\\04 Sound File\\3D");
+	}
 	else
 	{
 		strcat(tmporary, "\\04 Sound File");
@@ -264,3 +268,36 @@ D3DXVECTOR3 Base::nearestPointOnLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXVEC
 		return result;
 	}
 }
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+//Ç†ÇÈì_Ç©ÇÁïΩñ Ç‹Ç≈ÇÃãóó£ÇãÅÇﬂÇÈ
+//-----------------------------------------------------------------------------------------------------------------------------------
+float Base::betweenDistancePointAndPlane(D3DXPLANE plane, D3DXVECTOR3 point)
+{
+	D3DXVECTOR3 normal;
+	D3DXVec3Normalize(&normal,&D3DXVECTOR3(plane.a,plane.b,plane.c));
+	D3DXPLANE tmp = D3DXPLANE(normal.x, normal.y, normal.z, plane.d);
+	return D3DXPlaneDotCoord(&tmp, &point);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+//ÇQíºê¸ÇÃç≈íZãóó£
+//-----------------------------------------------------------------------------------------------------------------------------------
+float Base::between2LineDistance(Line line1, Line line2)
+{
+	float distance;
+	
+	D3DXVECTOR3 v1;between2VectorDirection(&v1, line1.start, line1.end);
+	D3DXVECTOR3 v2;between2VectorDirection(&v2, line2.start, line2.end);
+	D3DXVECTOR3 v12 = line2.start - line1.start;
+	D3DXVECTOR3 normal;D3DXVec3Cross(&normal, &v1, &v2);D3DXVec3Normalize(&normal, &normal);
+	//ãóó£ = |NÅEv12|/|N|;
+	distance = D3DXVec3Dot(&normal, &v12);
+
+	if (distance < 0)distance *= -1;
+
+	return distance;
+}
+
+
+

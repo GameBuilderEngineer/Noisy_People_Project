@@ -2,7 +2,7 @@
 //【StaticMeshLoader.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/24
+// [更新日]2019/11/07
 //===================================================================================================================================
 #pragma once
 
@@ -43,6 +43,11 @@ namespace staticMeshNS {
 
 		SAMPLE_REDBULL,							//03
 		SAMPLE_SCISSORS,						//08
+		ENEMY_01,
+		ENEMY_02,
+		WOLF,
+		TIGER,
+		BEAR,
 
 		DEAD_TREE,								//01
 		GREEN_TREE_001,							//02
@@ -51,6 +56,11 @@ namespace staticMeshNS {
 		STONE_001,								//05
 		STONE_002,								//06
 		STONE_003,								//07
+		A_TRUNK,								//08
+		A_LEAF,									//09
+		B_TRUNK,								//10
+		B_LEAF,									//11
+		OCEAN,									//12
 
 		YAMADA_LAND,							//01
 		NAKAGOMI_LAND,							//02
@@ -61,7 +71,12 @@ namespace staticMeshNS {
 		DICE,									//07
 		YAMADA_TEST_ZONE,						//08
 		SKY_DOME,								//09
-
+		TUTORIAL_FILED,							//10
+		DATE_ISLAND,							//11
+		DATE_ISLAND_V2,							//12
+		DATE_ISLAND_V2_NAVI_MESH,				//13
+		
+		DIGITAL_SPHERE,							//01
 
 		MESH_NUM,								//NUM
 	};

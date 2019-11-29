@@ -2,7 +2,7 @@
 //【Object.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/23
+// [更新日]2019/11/11
 //===================================================================================================================================
 #pragma once
 
@@ -16,6 +16,11 @@
 #include "StaticMeshLoader.h"
 #include "TextureLoader.h"
 #include "ShaderLoader.h"
+#include "LinearTreeCell.h"
+#include "ObjectTypeList.h"
+#include "DebugBox.h"
+#include "BoundingSphere.h"
+
 
 //===================================================================================================================================
 //【名前空間】
@@ -27,6 +32,13 @@ namespace objectNS {
 		WIREFRAME	= (int)D3DFILL_WIREFRAME,
 		POINT		= (int)D3DFILL_POINT,
 	};
+
+	const int AXIS_X	= 0x00000001;
+	const int AXIS_RX	= 0x00000002;
+	const int AXIS_Y	= 0x00000004;
+	const int AXIS_RY	= 0x00000008;
+	const int AXIS_Z	= 0x00000010;
+	const int AXIS_RZ	= 0x00000020;
 
 	void resetCounter();
 }
@@ -42,15 +54,18 @@ public:
 	static int			objectCounter;			//オブジェクトカウンター：IDの割当に使用
 	int					id;						//ID
 	D3DXVECTOR3			position;				//位置
+	D3DXVECTOR3			center;					//中心位置
 	D3DXQUATERNION		quaternion;				//回転
 	D3DXVECTOR3			scale;					//スケール
 	float				radius;					//衝突半径
+	D3DXVECTOR3			size;					//衝突サイズ(幅/高さ/奥行き)
 	float				alpha;					//透過値
 
 	//移動系変数
 	D3DXVECTOR3			speed;					//速度
 	D3DXVECTOR3			acceleration;			//加速度
 	D3DXVECTOR3			gravity;				//重力
+
 
 	//各種フラグ
 	bool				onGravity;				//重力有効化フラグ
@@ -72,11 +87,19 @@ public:
 	D3DXMATRIX			matrixRotation;			//回転行列
 	D3DXMATRIX			matrixScale;			//スケール行列
 	D3DXMATRIX			matrixWorld;			//ワールド行列
+	D3DXMATRIX			matrixCenter;			//中心座標行列
 
 	//タイマー
 	float				existenceTimer;			//存在時間
 
+	//オブジェクトツリーへ所属するためのインターフェースクラス
+	ObjectTree<Object>	treeCell;				//木空間
 
+	//衝突判定インスタンス
+	BoundingSphere* sphere;
+	DebugBox* box;
+
+public:
 	//Method
 	Object();
 	virtual ~Object();
@@ -90,31 +113,41 @@ public:
 	virtual void outputGUI();			//ImGUIへObjectの情報を出力
 
 	//getter
-	D3DXMATRIX*				getMatrixWorld()								{ return &matrixWorld; }	
-	D3DXVECTOR3*			getPosition()									{ return &position; };
-	D3DXQUATERNION			getQuaternion()									{ return quaternion; };
-	float					getRadius()										{ return radius; }
-	D3DXVECTOR3				getSpeed()										{ return speed; }
-	D3DXVECTOR3				getAcceleration()								{ return acceleration; }
-	D3DXVECTOR3				getGravity()									{ return gravity; };
-	Ray*					getAxisX()										{ return &axisX; };
-	Ray*					getAxisY()										{ return &axisY; };
-	Ray*					getAxisZ()										{ return &axisZ; };
-	Ray*					getReverseAxisX()								{ return &reverseAxisX; };
-	Ray*					getReverseAxisY()								{ return &reverseAxisY; };
-	Ray*					getReverseAxisZ()								{ return &reverseAxisZ; };
-	Ray*					getGravityRay()									{ return &gravityRay; };
-	bool					getActive()										{ return onActive; }
+	D3DXMATRIX*				getMatrixWorld();
+	D3DXVECTOR3*			getPosition();
+	D3DXQUATERNION			getQuaternion();
+	float					getRadius();
+	D3DXVECTOR3				getSpeed();
+	D3DXVECTOR3				getAcceleration();
+	D3DXVECTOR3				getGravity();
+	Ray*					getAxisX();
+	Ray*					getAxisY();
+	Ray*					getAxisZ();
+	Ray*					getReverseAxisX();
+	Ray*					getReverseAxisY();
+	Ray*					getReverseAxisZ();
+	Ray*					getGravityRay();
+	bool					getActive();
+	float					getRight();
+	float					getLeft();
+	float					getTop();
+	float					getBottom();
+	float					getFront();
+	float					getBack();
+	D3DXVECTOR3				getMin();
+	D3DXVECTOR3				getMax();
 
 	//setter
-	void					setSpeed(D3DXVECTOR3 _speed)					{ speed = _speed; }
-	void					addSpeed(D3DXVECTOR3 add)						{ speed += add; }
-	void					setPosition(D3DXVECTOR3 _position)				{ position = _position; }
-	void					setQuaternion(D3DXQUATERNION _quaternion)		{ quaternion = _quaternion; }
+	void					setSpeed(D3DXVECTOR3 _speed);
+	void					addSpeed(D3DXVECTOR3 add);
+	void					setPosition(D3DXVECTOR3 _position);
+	void					setQuaternion(D3DXQUATERNION _quaternion);
 	void					setAlpha(float value);							//α値の設定
 	void					setGravity(D3DXVECTOR3 source, float power);	//重力の設定
 	void					activation();									//アクティブ化
 	void					inActivation();									//非アクティブ化
+	void					setRadius(float value);
+	void					setSize(D3DXVECTOR3 value);
 
 	//姿勢制御
 	void postureControl(D3DXVECTOR3 currentDirection, D3DXVECTOR3 nextDirection,float t)

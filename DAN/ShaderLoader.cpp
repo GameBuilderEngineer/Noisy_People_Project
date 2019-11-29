@@ -2,7 +2,7 @@
 //【ShaderLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/09/23
+// [更新日]2019/11/07
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -25,10 +25,12 @@ static ShaderLoader* pointerShaderLoader;
 //===================================================================================================================================
 ShaderLoader::ShaderLoader()
 {
-	pointerShaderLoader = this;
-	shaderName[TOON] = { "ToonShader.fx" };
-	shaderName[INSTANCE_BILLBOARD] = { "InstancingBillboard.fx" };
-	shaderName[INSTANCE_STATIC_MESH] = { "InstancingStaticMesh.fx" };
+	pointerShaderLoader					= this;
+	shaderName[TOON]					= { "ToonShader.fx" };
+	shaderName[BLUR]					= { "BlurShader.fx" };
+	shaderName[OCEAN]					= { "Ocean.fx" };
+	shaderName[INSTANCE_BILLBOARD]		= { "InstancingBillboard.fx" };
+	shaderName[INSTANCE_STATIC_MESH]	= { "InstancingStaticMesh.fx" };
 }
 
 //===================================================================================================================================

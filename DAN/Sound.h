@@ -12,7 +12,7 @@
 #include "Base.h"
 #include "SE.h"
 #include "BGM.h"
-
+#include "3DSound.h"
 //===================================================================================================================================
 //【マクロ定義】
 //===================================================================================================================================
@@ -29,6 +29,7 @@ enum ENDPOINT_VOICE_LIST
 {
 	ENDPOINT_BGM,
 	ENDPOINT_SE,
+	ENDPOINT_S3D,
 	ENDPOINT_MAX
 };
 
@@ -39,35 +40,28 @@ enum ENDPOINT_VOICE_LIST
 class SoundInterface
 {
 private:
-	//変数
-#if(_MSC_VER >= GAME_MSC_VER)
-	IXAudio2MasteringVoice				*MasteringVoice;											//XAudio2 Mastering Voice
-	IXAudio2SubmixVoice					*EndpointVoice[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];		//XAudio2 Submix Vice(Endpoint Voice)
-	XAUDIO2_SEND_DESCRIPTOR				SendDescriptor[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];		//XAudio2 Send Descriptor(BGM/SE Endpoint Voice)
+	//マスタリングボイス
+#if(XADUIO2_STATE)
+	IXAudio2MasteringVoice				*MasteringVoice;					//XAudio2 Mastering Voice
 #endif
 
 public:
 	SoundInterface();
 	~SoundInterface();
 
-	//クラス
-	static SEManager *SE;
-	static BGMManager *BGM;
-	
-	//変数
-#if(_MSC_VER >= GAME_MSC_VER)
-	static IXAudio2						*XAudio2Interface;										//XAudio2 COM interface
-	static XAUDIO2_VOICE_SENDS			SendList[ENDPOINT_VOICE_LIST::ENDPOINT_MAX];				//XAudio2 Send List(BGM/SE Endpoint Voice)
+	//マネージャー
+	static SEManager		*SE;
+	static BGMManager	*BGM;
+	static S3DManager	*S3D;
+
+	//インタフェース
+#if(XADUIO2_STATE)
+	static IXAudio2						*XAudio2Interface;				//XAudio2 COM Interface
+	static IXAudio2						*GetXAudio2Interface(void);		//XAudio2のインタフェースを取得する
 #endif
 
-	//関数
-#if(_MSC_VER >= GAME_MSC_VER)
-	static XAUDIO2_VOICE_SENDS			GetSendList(int endpointVoiceId);						//送信リストを取得する
-	static IXAudio2						*GetXAudio2Interface(void);								//XAudio2のインタフェースを取得する
-#endif
-	static void							SwitchAudioBuffer(int scene);							//シーンの更新
-	static void							playSound(const PLAY_PARAMETERS playParameters);			//再生
-	static void							stopSound(const PLAY_PARAMETERS playParameters);			//停止
-	void								UpdateSound(void);										//更新処理
-	void								outputSoundGUI(void);									//ImGUIへの出力
+	//基本機能
+	static void							StopAllSound(void);				//音の停止処理(全部)
+	void									UpdateSound(void);				//更新処理
+	void									outputSoundGUI(void);			//ImGUIへの出力
 };

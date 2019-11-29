@@ -2,7 +2,7 @@
 //【StaticMeshRenderer.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/23
+// [更新日]2019/11/11
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -13,6 +13,11 @@
 #include "ImguiManager.h"
 
 //===================================================================================================================================
+//【using宣言】
+//===================================================================================================================================
+using namespace staticMeshRendererNS;
+
+//===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
@@ -21,15 +26,16 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	this->staticMesh		= _staticMesh;
 	onRender				= true;
 	onTransparent			= false;
+	onForeground			= false;
 	onLight					= true;
-	didDelete				= false;
 	didRegister				= false;
-	didGenerate				= false;
+	didUnRegister			= false;
 	objectNum				= 0;
 	fillMode				= staticMeshRendererNS::FILLMODE::SOLID;
 	matrixBuffer			= NULL;
 	worldMatrix				= NULL;
 	declaration				= NULL;
+	renderPass				= LAMBERT_PASS;
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[65];
@@ -76,20 +82,20 @@ StaticMeshRenderer::~StaticMeshRenderer()
 //===================================================================================================================================
 void StaticMeshRenderer::update()
 {
+	if (didRegister || didUnRegister)
+	{
+		objectList->listUpdate();
+		objectNum = objectList->nodeNum;
+	}
+
 	for (int i = 0; i < objectNum; i++)
 	{
-		(*objectList->getValue(i))->update();			//更新処理
 		unRegisterObject(i);							//解除処理
 	}
 
 	if (didRegister|| didUnRegister)
 	{
-
 		objectList->listUpdate();
-		for (int i = 0; i < objectList->nodeNum; i++)
-		{
-			(*objectList->getValue(i))->update();			//更新処理
-		}
 		updateBuffer();
 		updateArray();
 		didRegister = false;
@@ -103,7 +109,7 @@ void StaticMeshRenderer::update()
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	//描画が有効でない場合終了
 	if (onRender == false)return;
@@ -111,24 +117,6 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 	
 	//レンダーステートの設定
 	device->SetRenderState(D3DRS_FILLMODE, fillMode);
-
-	//透過処理
-	if (onTransparent)
-	{//有効
-		//αブレンディングを設定する
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);	// ポリゴンのαと
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);	// テクスチャのαを
-		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// 混ぜる
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);				// 加算合成を行う
-	}
-	else
-	{//無効
-		//αブレンディングを設定しない
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	}
 
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA		| objectNum);
@@ -140,29 +128,43 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 
 	//ストリームにメッシュの頂点バッファをバインド
 	device->SetStreamSource(0, staticMesh->vertexBuffer,	0, staticMesh->numBytesPerVertex);
-	device->SetStreamSource(1, matrixBuffer,						0, sizeof(D3DXMATRIX));
+	device->SetStreamSource(1, matrixBuffer,				0, sizeof(D3DXMATRIX));
 
 	//インデックスバッファをセット
 	device->SetIndices(staticMesh->indexBuffer);
 
-	effect->SetTechnique("mainTechnique");
 
 	//シェーダへ値をセット
+	effect->SetTechnique("mainTechnique");
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);	
-	//effect->SetValue("positionList", position,objectNum*sizeof(D3DXVECTOR3));
 
 	// レンダリング
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
-		effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
+		if (renderPass == TRANSPARENT_PASS || renderPass == FOREGROUND_PASS)
+		{
+			D3DCOLORVALUE diffuse = staticMesh->materials[i].Diffuse;
+			diffuse.a = 0.5f;
+			effect->SetFloatArray("diffuse", (FLOAT*)&diffuse, 4);
+		}
+		else {
+			effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
+		}
 		effect->SetTexture("textureDecal", staticMesh->textures[i]);
 		
 		//シェーダー更新
 		//effect->CommitChanges();
 		effect->Begin(0, 0);
-		if(onLight)		effect->BeginPass(0);
-		else			effect->BeginPass(1);
+
+		//描画パスの切替
+		switch (renderPass)
+		{
+		case LAMBERT_PASS:		effect->BeginPass(0);	break;
+		case TEXEL_PASS:		effect->BeginPass(1);	break;
+		case TRANSPARENT_PASS:	effect->BeginPass(2);	break;
+		case FOREGROUND_PASS:	effect->BeginPass(3);	break;
+		}
 
 		//Drawコール
 		device->DrawIndexedPrimitive(
@@ -245,10 +247,20 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 	//総当たり検索
 	for (int i = 0; i < objectNum; i++)
 	{	
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//ここで止まるバグあり(2019/11/24)
+		//記：菅野
+		//おそらくバレットのサイクルに問題あり(←11/25書き換えたので問題なさそう？)
+		//他のクラスなどでここで停止するバグがあった場合は菅野へ報告してください。
+		//書き換えを行っているので、影響が出ている恐れがあります。
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if ((*objectList->getValue(i))->id == id)
 		{
+			//unRegisterObject(i);
 			//存在時間を0にして削除可能状態にする
-			(*objectList->getValue(i))->existenceTimer = 0.0f;
+			//(*objectList->getValue(i))->existenceTimer = 0.0f;
+			objectList->remove(objectList->getNode(i));
+			didUnRegister = true;
 			//検索終了
 			return;	
 		}
@@ -260,19 +272,19 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 //===================================================================================================================================
 void StaticMeshRenderer::unRegisterObject(int i)
 {
-	if (*objectList->getValue(i)) 
-	{
-		//有効値ならタイマーチェック後解除処理
-		if ((*objectList->getValue(i))->existenceTimer > 0)return;	//タイマーチェック
-		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
-		didUnRegister = true;
-	}
-	else
-	{
-		//有効値でなければ自動的に解除
-		objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
-		didUnRegister = true;
-	}
+	//if (*objectList->getValue(i)) 
+	//{
+	//有効値ならタイマーチェック後解除処理
+	if ((*objectList->getValue(i))->existenceTimer > 0)return;	//タイマーチェック
+	objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+	didUnRegister = true;
+	//}
+	//else
+	//{
+	//	//有効値でなければ自動的に解除
+	//	objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
+	//	didUnRegister = true;
+	//}
 }
 
 //===================================================================================================================================
@@ -281,6 +293,7 @@ void StaticMeshRenderer::unRegisterObject(int i)
 void StaticMeshRenderer::updateAccessList()
 {
 	objectList->listUpdate();
+	objectNum = objectList->nodeNum;
 }
 
 //===================================================================================================================================
@@ -327,8 +340,14 @@ void StaticMeshRenderer::outputGUI()
 //===================================================================================================================================
 //【setter】
 //===================================================================================================================================
-void StaticMeshRenderer::enableLight()	{ onLight = true; }
-void StaticMeshRenderer::disableLight()	{ onLight = false; }
+void StaticMeshRenderer::enableLight()			{ onLight = true; }
+void StaticMeshRenderer::disableLight()			{ onLight = false; }
+void StaticMeshRenderer::enableTransparent()	{ onTransparent = true; }
+void StaticMeshRenderer::disableTransparent()	{ onTransparent = false; }
+void StaticMeshRenderer::enableForeground()		{ onForeground = true; }
+void StaticMeshRenderer::disableForeground()	{ onForeground = false; }
+void StaticMeshRenderer::setFillMode(int mode)	{ fillMode = mode; }
+void StaticMeshRenderer::setRenderPass(int pass){ renderPass = pass; }
 
 //===================================================================================================================================
 //【getter】

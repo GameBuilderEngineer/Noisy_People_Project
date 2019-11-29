@@ -2,7 +2,7 @@
 //【AbstractScene.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/19
-// [更新日]2019/10/24
+// [更新日]2019/11/01
 //===================================================================================================================================
 #pragma once
 
@@ -19,9 +19,9 @@
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "EffekseerManager.h"
+#include "Fader.h"
 #include "GameMaster.h"
 //#include "TextManager.h"
-//#include "AnimationLoader.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -31,6 +31,7 @@ namespace SceneList
 {
 	enum {
 		NONE_SCENE = -1,
+		DEBUG,			//デバッグシーン
 		SPLASH,			//スプラッシュ
 		TITLE,			//タイトル
 		TUTORIAL,		//チュートリアル

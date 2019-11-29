@@ -2,7 +2,7 @@
 //【Light.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/20
+// [更新日]2019/11/13
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -35,9 +35,9 @@ void Light::initialize() {
 	D3DLIGHT9 light;
 	ZeroMemory(&light, sizeof(D3DLIGHT9));
 	light.Type = D3DLIGHT_DIRECTIONAL;
-	light.Diffuse.r = 1.5f;
-	light.Diffuse.g = 1.5f;
-	light.Diffuse.b = 1.5f;
+	light.Diffuse.r = 1.0f;
+	light.Diffuse.g = 1.0f;
+	light.Diffuse.b = 1.0f;
 	light.Diffuse.a = 1.0f;
 	light.Specular = light.Diffuse;
 	D3DXVec3Normalize((D3DXVECTOR3*)&light.Direction, &vDirection);

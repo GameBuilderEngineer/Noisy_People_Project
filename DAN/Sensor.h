@@ -4,6 +4,14 @@
 // 作成開始日 : 2019/10/12
 //-----------------------------------------------------------------------------
 #pragma once
+#include "GameMaster.h"
+#include "Player.h"
+#include "EnemyManager.h"
+#include "TreeManager.h"
+#include "ItemManager.h"
+#include "Telop.h"
+#include "Fuzzy.h"
+
 
 //=============================================================================
 // 名前空間
@@ -11,31 +19,35 @@
 namespace aiNS
 {
 	// 前方宣言
-	struct	PlayerAnalyticalData;
-	typedef PlayerAnalyticalData PLAYERAD;
-	struct	EnemyAnalyticalData;
-	typedef EnemyAnalyticalData	ENEMYAD;
-	struct	TreeAnalyticalData;
-	typedef TreeAnalyticalData TREEAD;
-	struct	ItemAnalyticalData;
-	typedef ItemAnalyticalData ITEMAD;
+	struct AnalyticalData;
 }
 
 
 //=============================================================================
 //クラス定義
 //=============================================================================
-class Sensor
+class Sensor :public Base
 {
 private:
-	aiNS::PLAYERAD* playerAD;
-	aiNS::ENEMYAD* enemyAD;
-	aiNS::TREEAD* treeAD;
-	aiNS::ITEMAD* itemAD;
+	aiNS::AnalyticalData* data;			// 解析データ
+
+	GameMaster* gameMaster;				// ゲーム管理オブジェクト
+	Player* player;						// プレイヤー
+	EnemyManager* enemyManager;			// エネミー管理オブジェクト
+	TreeManager* treeManager;			// ツリー管理オブジェクト
+	ItemManager* itemManager;			// アイテム管理オブジェクト
+
+	Fuzzy fuzzy;				
+	void playerSensor();				// プレイヤーセンサー
+	void enemySensor();					// エネミーセンサー
+	void treeSensor();					// ツリーセンサー
+	void itemSensor();					// アイテムセンサー
 
 public:
-	void initialize(aiNS::PLAYERAD* _playerAD, aiNS::ENEMYAD* _enemyAD,
-		aiNS::TREEAD* _treeAD, aiNS::ITEMAD* _itemAD);
-	void uninitialize();
+	// 初期化
+	void initialize(aiNS::AnalyticalData* _data, GameMaster* _gameMaster, Player* _player,
+		EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager);
+
+	// 更新処理
 	void update();
 };

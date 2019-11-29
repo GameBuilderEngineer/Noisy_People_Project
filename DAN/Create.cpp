@@ -25,13 +25,12 @@ Create::Create()
 
 	nextScene = SceneList::RESULT;
 
-	//シーンの更新
-	SoundInterface::SwitchAudioBuffer(SceneList::CREATE);
-
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;
 	//アイテムツール
 	itemTools = new ITEM_TOOLS;
+	//ツリーツール
+	treeTools = new TREE_TOOLS;
 
 }
 
@@ -44,6 +43,8 @@ Create::~Create()
 	SAFE_DELETE(enemyTools);
 	//アイテムツール
 	SAFE_DELETE(itemTools);
+	//ツリーツール
+	SAFE_DELETE(treeTools);
 }
 
 //===================================================================================================================================
@@ -57,7 +58,7 @@ void Create::initialize() {
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	camera->setTarget(tmpObject->getPosition());
+	camera->setTarget(tmpObject->getPositionYeah());
 	camera->setTargetX(&tmpObject->getAxisX()->direction);
 	camera->setTargetY(&tmpObject->getAxisY()->direction);
 	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
@@ -66,6 +67,8 @@ void Create::initialize() {
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI / 18) * 9);
+	camera->setLimitRotationTop(0.3f);
+	camera->setLimitRotationBottom(0.7f);
 
 	//light
 	light = new Light;
@@ -73,7 +76,7 @@ void Create::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_TEST_ZONE));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -173,6 +176,7 @@ void Create::update(float _frameTime) {
 	//ツールの更新
 	enemyTools->update();
 	itemTools->update();
+	treeTools->update();
 
 	//プレイヤーの更新
 	tmpObject->update(frameTime);
@@ -262,6 +266,7 @@ void Create::render3D(Camera currentCamera) {
 	//ツールの描画
 	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	itemTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	treeTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 }
 
 //===================================================================================================================================
@@ -325,7 +330,8 @@ void Create::toolsGUI()
 
 		enemyTools->outputEnemyToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 		itemTools->outputItemToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
-		
+		treeTools->outputTreeToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
+
 		int backupMeshId = meshId;
 		switch (ToolsListboxType)
 		{

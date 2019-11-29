@@ -23,9 +23,7 @@ public:
 
 	float distance;			//Õ“Ë‘ÎÛ‚Æ‚Ì‹——£
 	D3DXVECTOR3 normal;		//Õ“Ë‘ÎÛ‚Ì–@ü
-#ifdef _DEBUG
 	D3DXCOLOR color;		//•`‰æF
-#endif // _DEBUG
 
 	//Method
 	Ray();

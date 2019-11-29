@@ -2,7 +2,7 @@
 //【Director.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/25
+// [更新日]2019/11/01
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -20,6 +20,7 @@
 #include "Credit.h"
 #include "SE.h"
 #include "LinearTreeCell.h"
+#include "DebugScene.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -31,6 +32,10 @@ Director::Director() {
 #ifdef _DEBUG
 	onGUI = true;
 	memory = new MemoryViewer;
+	hiddenCursor = false;
+	lockCursor = false;
+	ShowCursor(FALSE);
+	ShowCursor(TRUE); 
 #else
 	hiddenCursor = true;
 	lockCursor = true;
@@ -101,7 +106,6 @@ HRESULT Director::initialize() {
 	//sound
 	soundInterface = new SoundInterface();
 
-
 	//input
 	input = new Input();
 	input->initialize(instance, window->wnd, true);
@@ -116,11 +120,6 @@ HRESULT Director::initialize() {
 	//StaticMesh
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(getDevice());
-
-	//HierarchyMesh
-	//setVisualDirectory();
-	//SKINMESH
-	//setVisualDirectory();
 
 	//シェーダー読込
 	//Shader
@@ -145,85 +144,36 @@ HRESULT Director::initialize() {
 
 	//fader
 	fader = new Fader();
-
-#pragma region LinearTreeCellTest
-#if 0
-
-	//オブジェクトの初期化
-	const int testNum = 10;
-	Object object[testNum];
-	ObjectTree<Object>* objectTreeArray[testNum];//Objectを包むObjectTreeポインタ配列
-	//オブジェクトの登録
-	for (int i = 0; i < testNum; i++)
-	{
-		//オブジェクトツリーに登録
-		ObjectTree<Object>* objectTree = new ObjectTree<Object>;
-		objectTree->object = &object[i]; //登録
-		objectTreeArray[i] = objectTree;
-	}
-	int partitionLevel = 4;
-	//線形4分木マネージャー
-	//空間範囲をX=-60～720; Y=-60～1200; Z=-60～720に設定
-	Linear4TreeManager<Object> l4Tree;
-	if (!l4Tree.initialize(
-		partitionLevel,
-		-60, -60,
-		720, 720))
-	{
-		MSG("線形４分木空間の初期化に失敗しました。");
-	}
-	//ループ内一時変数
-	DWORD collisionNum;
-	vector<Object*> collisionVector;	//衝突対象リスト
-	//仮ループ
-	do {
-		for (int i = 0; i < testNum; i++)
-		{
-			Object* tmp = objectTreeArray[i]->object;
-			objectTreeArray[i]->remove();//一度リストから外れる
-			//再登録
-			float top		= tmp->position.y + tmp->radius;
-			float bottom	= tmp->position.y - tmp->radius;
-			float right		= tmp->position.x + tmp->radius;
-			float left		= tmp->position.x - tmp->radius;
-			l4Tree.registObject(left, top, right, bottom, objectTreeArray[i]);
-		}
-		//衝突対応リストを取得
-		collisionNum = l4Tree.getAllCollisionList(collisionVector);
-
-		//衝突判定
-		DWORD c;
-		collisionNum /= 2;//2で割るのはペアになっているので
-		for (c = 0; c < collisionNum; c++)
-		{
-			//衝突判定処理
-			//collision(collisionVector[c*2],collisionVector[c*2+1]);
-		}
-
-
-
-	} while (true);
-
-#endif // TRUE
-#pragma endregion
-
+	fader->setShader(faderNS::BLUR);
 
 #pragma region MemoryTest
-	//メモリ解放テスト
+	////メモリ解放テスト
+	////削除（これは今シーン扱いたいから書いたもの）
 	//scene->uninitialize();
 	//SAFE_DELETE(scene);
-	//int i = 1;
-	//while (i >= 0)
+
+	//int i = 100000;					//この回数繰り返す
+	//while (i >= 0)					//0回になったら終了
 	//{
-	//	scene = new Title();
-	//	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
-	//	scene->uninitialize();
-	//	SAFE_DELETE(scene);
-	//	i--;
-	//}
+	//	scene = new Splash();		//新たにシーン作成
+	//	
+	//	//ここから↓
+
+	//	scene->initialize();		//初期化
+
+	//	scene->update(1.0/60.0);	//更新
+
+	//	scene->uninitialize();		//終了
+
+	//	//ここまでに一連の処理を書いて実験する
 	//
+	//	SAFE_DELETE(scene);			//削除
+	//	i--;//カウント減
+	//}
+
+	////新規作成（これは今シーン扱いたいから書いたもの）
 	//scene = new Splash();
-	//scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+	//scene->initialize();
 #pragma endregion
 
 	// 高分解能タイマーの準備を試みる
@@ -285,14 +235,17 @@ void Director::mainLoop() {
 	//リセット
 	if (input->wasKeyPressed(VK_F5))
 	{
-		scene->changeScene(SceneList::SPLASH);
+		scene->changeScene(SceneList::DEBUG);
 		changeNextScene();
 	}
 
 	//シーン切替フラグの確認
 	if (scene->checkChangeOrder())
-		changeNextScene();
-
+	{
+		//fader->start();
+		//if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
+			changeNextScene();
+	}
 	setFrameTime();				//フレーム時間の初期化処理
 	update();					//メイン更新処理
 	render();					//メイン描画処理
@@ -315,6 +268,26 @@ void Director::update() {
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
+	if (input->wasKeyPressed(VK_F1))
+	{
+		hiddenCursor = !hiddenCursor;
+		if (hiddenCursor) {
+			ShowCursor(FALSE);
+		}
+		else {
+			ShowCursor(TRUE);
+		}
+	}
+	if (input->wasKeyPressed(VK_F2))
+		lockCursor = !lockCursor;
+	if (lockCursor)
+	{
+		if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
+		{
+			SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		}
+	}
+
 #else
 	if (input->wasKeyPressed(VK_F1))
 	{
@@ -337,11 +310,11 @@ void Director::update() {
 	}
 #endif // _DEBUG
 	effekseerManager->update();
+	fader->update(frameTime);
 	scene->update(frameTime);
 	scene->collisions();
 	scene->AI();
 	soundInterface->UpdateSound();
-
 #ifdef _DEBUG
 	if (*scene->getShowGUI())
 	{
@@ -355,6 +328,13 @@ void Director::update() {
 		gameMaster->createGUI();
 		imgui->endImGui();
 	}
+	if (*fader->getShowGUI())
+	{
+		imgui->beginImGui("FaderGUI");
+		fader->outputGUI();
+		imgui->endImGui();
+	}
+
 #endif // _DEBUG
 }
 
@@ -368,8 +348,10 @@ void Director::createGUI()
 	if (!onGUI)return;
 	ImGui::SliderInt("fpsMode", &fpsMode, VARIABLE_FPS, FIXED_FPS);
 	ImGui::SliderInt("fixedFPS", &fixedFps, MIN_FRAME_RATE, MAX_FRAME_RATE);
+	ImGui::ColorEdit3("clear color", (float*)&imgui->clearColor);
 	ImGui::Checkbox("SceneGUI", scene->getShowGUI());	
 	ImGui::Checkbox("gameMasterGUI", gameMaster->getShowGUI());	
+	ImGui::Checkbox("faderGUI", fader->getShowGUI());	
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Text("CPU %.2f ％", memory->getCpuUsege());
 	ImGui::Text("MEMORY %d kb", memory->getMemoryUsege());
@@ -382,7 +364,7 @@ void Director::createGUI()
 // [用途]アプリ全体の描画処理
 //===================================================================================================================================
 void Director::render() {
-
+	
 #ifndef _DEBUG
 	//描画スキップ
 	//sleepRenderTime += frameTime;
@@ -392,21 +374,50 @@ void Director::render() {
 
 #ifdef _DEBUG
 	//Debug
-	d3d->clear(imgui->getClearColor());
 	if (SUCCEEDED(d3d->beginScene()))
 	{
-		scene->render();
+		if (fader->nowProcessing())
+		{
+
+			fader->setRenderTexture();
+			d3d->clear(imgui->getClearColor());
+			scene->render();
+
+			d3d->setRenderBackBuffer(0);
+			d3d->clear(imgui->getClearColor());
+			fader->render();
+		}
+		else
+		{
+			d3d->clear(imgui->getClearColor());
+			d3d->setRenderBackBuffer(0);
+			scene->render();
+		}
 		imgui->render();
+
 		d3d->endScene();
 	}
 	d3d->present(); 
 #else
 	//Release
-	d3d->clear();
 	if (SUCCEEDED(d3d->beginScene()))
 	{
-		scene->render();
-		effekseerManager->render();
+		if (fader->nowProcessing())
+		{
+			fader->setRenderTexture();
+			d3d->clear();
+			scene->render();
+
+			d3d->setRenderBackBuffer(0);
+			d3d->clear();
+			fader->render();
+		}
+		else
+		{
+			d3d->clear();
+			d3d->setRenderBackBuffer(0);
+			scene->render();
+		}
 		d3d->endScene();
 	}
 	d3d->present(); 
@@ -499,8 +510,9 @@ void Director::changeNextScene() {
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{
+	case SceneList::DEBUG:					scene = new DebugScene(); break;
 	case SceneList::SPLASH:					scene = new Splash();	break;
-	case SceneList::TITLE:					scene = new Title();	break;
+	case SceneList::TITLE:					scene = new Title();		break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
 	case SceneList::CREDIT:					scene = new Credit();	break;
 	case SceneList::GAME:					scene = new Game();		break;

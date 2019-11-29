@@ -2,7 +2,7 @@
 //【Direct3D9.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/17
-// [更新日]2019/10/16
+// [更新日]2019/11/09
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -51,13 +51,24 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	//「DIRECT3Dデバイス」オブジェクトの作成
 	D3DPRESENT_PARAMETERS d3dpp;
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
-	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
-	d3dpp.BackBufferCount = 1;
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.Windowed = true;
-	d3dpp.EnableAutoDepthStencil = true;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+	//d3dpp.BackBufferFormat			= D3DFMT_UNKNOWN;
+	D3DDISPLAYMODE dMode;
+	d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dMode);
+	d3dpp.BackBufferFormat			= dMode.Format;
+	d3dpp.BackBufferCount			= 1;
+	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
+#ifdef _DEBUG
+	d3dpp.Windowed					= true;
+	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
+#else
+	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
+	d3dpp.Windowed					= false;
+	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_DEFAULT;
+#endif // _DEBUG
+	d3dpp.BackBufferWidth			= WINDOW_WIDTH;
+	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
+	d3dpp.EnableAutoDepthStencil	= true;
+	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;
 
 	if (FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, targetWnd,
 		D3DCREATE_HARDWARE_VERTEXPROCESSING,
@@ -84,18 +95,20 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 		}
 	}
 
-	device->SetRenderState(D3DRS_ZENABLE, true);										//Zバッファー処理を有効にする
-	device->SetRenderState(D3DRS_LIGHTING, true);										//ライトを有効にする
-	device->SetRenderState(D3DRS_AMBIENT, 0x22111111);							//アンビエントライト（環境光）を設定する
-	device->SetRenderState(D3DRS_SPECULARENABLE, true);							//スペキュラ（光沢反射）を有効にする
-	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);					//カリングの無効化
-	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);						//反時計回りカリング有効化
-	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);					//時計回りカリング有効化
-	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);					//アンチエイリアシングをかける
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						//αブレンドを行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			//αソースカラーの指定
+	device->SetRenderState(D3DRS_ZENABLE, true);					//Zバッファー処理を有効にする
+	device->SetRenderState(D3DRS_LIGHTING, true);					//ライトを有効にする
+	device->SetRenderState(D3DRS_AMBIENT, 0x22111111);				//アンビエントライト（環境光）を設定する
+	device->SetRenderState(D3DRS_SPECULARENABLE, true);				//スペキュラ（光沢反射）を有効にする
+	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);			//カリングの無効化
+	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);			//反時計回りカリング有効化
+	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);			//時計回りカリング有効化
+	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);		//アンチエイリアシングをかける
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);			//αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		//αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	//αデスティネーションカラーの指定
-	device->GetViewport(&viewPort);																//ビューポートを取得
+	device->GetViewport(&viewPort);									//ビューポートを取得
+	device->GetRenderTarget(0,&backBuffer);							//バックバッファを取得
+	device->GetDepthStencilSurface(&zBuffer);						//Zバッファを取得
 	return S_OK;
 }
 
@@ -214,6 +227,15 @@ HRESULT Direct3D9::changeViewport(DWORD x, DWORD y, DWORD width, DWORD height)
 	MFAIL(device->SetViewport(&vp), "ビューポート切り替え失敗");
 
 	return S_OK;
+}
+
+//===================================================================================================================================
+//【バックバッファへレンダーターゲットする】
+//===================================================================================================================================
+void Direct3D9::setRenderBackBuffer(DWORD index)
+{
+	device->SetRenderTarget(index, backBuffer);
+	device->SetDepthStencilSurface(zBuffer);
 }
 
 //===================================================================================================================================

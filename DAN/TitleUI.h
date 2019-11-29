@@ -9,12 +9,14 @@
 #include "Sprite.h"
 #include "TextureLoader.h"
 #include "Input.h"
+#include "VirtualController.h"
 
 //============================
 //名前空間 定数
 //============================
 namespace titleUiNS
 {
+	
 	//ロゴ
 	const int WIDTH_LOGO = (908 * WINDOW_WIDTH / 1920);						//幅
 	const int HEIGHT_LOGO = (376 * WINDOW_HEIGHT / 1080);						//高さ
@@ -26,7 +28,7 @@ namespace titleUiNS
 	const D3DXVECTOR3 POSITION_MENU = D3DXVECTOR3(1600 * WINDOW_WIDTH / 1920, 895 * WINDOW_HEIGHT / 1080, 0);//位置
 
 	//選択肢の説明
-	const int WIDTH_MENU_INFO = (692 * WINDOW_WIDTH / 1920);					//幅
+	const int WIDTH_MENU_INFO = (587 * WINDOW_WIDTH / 1920);					//幅
 	const int HEIGHT_MENU_INFO = (37 * WINDOW_HEIGHT / 1080);					//高さ
 	const D3DXVECTOR3 POSITION_MENU_INFO = D3DXVECTOR3(340 * WINDOW_WIDTH / 1920, 960 * WINDOW_HEIGHT / 1080, 0);//位置
 

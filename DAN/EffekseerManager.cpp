@@ -29,14 +29,18 @@ EffekseerManager::EffekseerManager()
 	pointerEffekseerManager = this;
 	manager		= NULL;
 	renderer	= NULL;
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	sound		= NULL;	
 	xa2			= NULL;
 	xa2Master	= NULL;
 #endif
 
-	fileName[TEST0] = { L"test.efk" };
-	fileName[TEST1] = { L"r_square.efk" };
+	fileName[BLOW]			= { L"blow.efk" };
+	fileName[DIGIT_TREE]	= { L"Digit_Tree.efk" };
+	fileName[MUZZLE]		= { L"muzzle.efk" };
+	fileName[DAC]			= { L"DAC.efk" };
+	fileName[GREENING]		= { L"Greening.efk" };
+
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }
@@ -54,7 +58,7 @@ EffekseerManager::~EffekseerManager()
 //===================================================================================================================================
 void EffekseerManager::initialize()
 {
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	// XAudio2の初期化を行う
 	XAudio2Create(&xa2);
 	xa2->CreateMasteringVoice(&xa2Master);
@@ -78,7 +82,7 @@ void EffekseerManager::initialize()
 	manager->SetTextureLoader(renderer->CreateTextureLoader());
 	manager->SetModelLoader(renderer->CreateModelLoader());
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	// 音再生用インスタンスの生成
 	sound = ::EffekseerSound::Sound::Create(xa2, 16, 16);
 	// 音再生用インスタンスから再生機能を指定
@@ -134,7 +138,7 @@ void EffekseerManager::setCameraMatrix(D3DXVECTOR3 position,D3DXVECTOR3 eye,D3DX
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-void EffekseerManager::play(effekseerNS::Instance* instance)
+::Effekseer::Handle EffekseerManager::play(effekseerNS::Instance* instance)
 {
 	instance->handle = manager->Play(
 		effect[instance->effectNo], 
@@ -142,6 +146,7 @@ void EffekseerManager::play(effekseerNS::Instance* instance)
 		instance->position.y,
 		instance->position.z);
 	instanceList->insertFront(instance);
+	return instance->handle;
 }
 
 //===================================================================================================================================
@@ -196,7 +201,7 @@ void EffekseerManager::uninitialize()
 	// 次に描画用インスタンスを破棄
 	renderer->Destroy();
 
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	// 次に音再生用インスタンスを破棄
 	sound->Destroy();
 	// XAudio2の解放
@@ -239,7 +244,7 @@ void EffekseerManager::update()
 	//リスト更新
 	instanceList->listUpdate();
 
-	// エフェクトの移動処理を行う
+	// エフェクトの更新処理を行う
 	for (int i = 0; i < instanceList->nodeNum; i++)
 	{
 		(*instanceList->getValue(i))->update();
@@ -279,9 +284,9 @@ void EffekseerManager::render()
 //===================================================================================================================================
 //【外部参照：再生】
 //===================================================================================================================================
-void effekseerNS::play(effekseerNS::Instance* instance)
+::Effekseer::Handle effekseerNS::play(effekseerNS::Instance* instance)
 {
-	pointerEffekseerManager->play(instance);
+	return pointerEffekseerManager->play(instance);
 }
 
 //===================================================================================================================================

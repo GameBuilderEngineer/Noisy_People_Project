@@ -10,6 +10,7 @@
 //===================================================================================================================================
 #include "InstancingBillboard.h"
 #include "Direct3D9.h"
+#include "ShaderLoader.h"
 #include "Input.h"
 #include <time.h>
 
@@ -32,6 +33,7 @@ InstancingBillboard::InstancingBillboard()
 	color				= NULL;
 	uv					= NULL;
 	texture				= NULL;
+	zBufferEnable		= true;
 	device				= getDevice();
 	srand((unsigned int)time(NULL));
 }
@@ -69,14 +71,20 @@ InstancingBillboard::~InstancingBillboard()
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
-HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9 _texture)
+HRESULT InstancingBillboard::initialize(LPDIRECT3DTEXTURE9 _texture,int divideU, int divideV)
 {
+	this->divideU = divideU + 1;
+	this->divideV = divideV + 1;
+	unitU = 1.0f/(float)this->divideU;
+	unitV = 1.0f/(float)this->divideV;
+
+
 	//インスタンシングビルボードの頂点定義
 	InstancingBillboardNS::Vertex vertex[4] = {
 		{D3DXVECTOR2(-1.0f,  1.0f),	D3DXVECTOR2(0.0f,0.0f)},
-		{D3DXVECTOR2(1.0f,  1.0f),	D3DXVECTOR2(1.0f,0.0f)},
-		{D3DXVECTOR2(-1.0f, -1.0f),	D3DXVECTOR2(0.0f,1.0f)},
-		{D3DXVECTOR2(1.0f, -1.0f),	D3DXVECTOR2(1.0f,1.0f)},
+		{D3DXVECTOR2(1.0f,  1.0f),	D3DXVECTOR2(unitU,0.0f)},
+		{D3DXVECTOR2(-1.0f, -1.0f),	D3DXVECTOR2(0.0f,unitV)},
+		{D3DXVECTOR2(1.0f, -1.0f),	D3DXVECTOR2(unitU,unitV)},
 	};
 
 	//頂点バッファの作成
@@ -109,7 +117,7 @@ HRESULT InstancingBillboard::initialize(LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9
 	device->CreateVertexDeclaration(vertexElement, &declation);
 
 	//シェーダーを設定
-	effect = _effect;
+	effect = *shaderNS::reference(shaderNS::INSTANCE_BILLBOARD);
 	
 	//テクスチャを設定
 	texture = _texture;
@@ -164,8 +172,8 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	if (instanceNum <= 0)return;
 
 	//Z深度バッファ
-	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	//device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	//device->SetRenderState(D3DRS_ZENABLE, TRUE);
 
 	//αテスト
 	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
@@ -193,11 +201,11 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	
 	//デバイスデータストリームにメッシュの各バッファをバインド
 	device->SetStreamSource(0, vertexBuffer,	0, sizeof(InstancingBillboardNS::Vertex));		//頂点バッファ
-	device->SetStreamSource(1, positionBuffer,	0, sizeof(D3DXVECTOR3));								//位置バッファ
-	device->SetStreamSource(2, colorBuffer,		0, sizeof(D3DXCOLOR));									//カラーバッファ
-	device->SetStreamSource(3, uvBuffer,		0, sizeof(D3DXVECTOR2));								//UVバッファ
-	device->SetStreamSource(4, rotationBuffer,	0, sizeof(D3DXVECTOR3));								//回転バッファ
-	device->SetStreamSource(5, scaleBuffer,		0, sizeof(D3DXVECTOR2));								//スケールバッファ
+	device->SetStreamSource(1, positionBuffer,	0, sizeof(D3DXVECTOR3));						//位置バッファ
+	device->SetStreamSource(2, colorBuffer,		0, sizeof(D3DXCOLOR));							//カラーバッファ
+	device->SetStreamSource(3, uvBuffer,		0, sizeof(D3DXVECTOR2));						//UVバッファ
+	device->SetStreamSource(4, rotationBuffer,	0, sizeof(D3DXVECTOR3));						//回転バッファ
+	device->SetStreamSource(5, scaleBuffer,		0, sizeof(D3DXVECTOR2));						//スケールバッファ
 
 	//インデックスバッファをセット
 	device->SetIndices(indexBuffer);
@@ -208,7 +216,9 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->SetTexture("planeTexture", texture);
 
 	effect->Begin(0, 0);
-	effect->BeginPass(0);
+
+	if(zBufferEnable)effect->BeginPass(0);
+	else effect->BeginPass(1);
 		
 	device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
 
@@ -421,3 +431,18 @@ void InstancingBillboard::updateArray()
 InstancingBillboardNS::InstanceList InstancingBillboard::getList() { return *instanceList; }
 int InstancingBillboard::getInstanceNum() { return instanceList->nodeNum; }
 
+//===================================================================================================================================
+//【Zバッファを有効にする】
+//===================================================================================================================================
+void InstancingBillboard::enableZBuffer()
+{
+	zBufferEnable = true;
+}
+
+//===================================================================================================================================
+//【Zバッファを無効にする】
+//===================================================================================================================================
+void InstancingBillboard::disableZBuffer()
+{
+	zBufferEnable = false;
+}

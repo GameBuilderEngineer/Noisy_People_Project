@@ -17,8 +17,8 @@
 namespace splashSpriteNS
 {
 	//スプラッシュスプライト情報の定義
-	const int WIDTH				= 800;
-	const int HEIGHT			= 568;
+	const int WIDTH				= 908;
+	const int HEIGHT			= 376;
 	const D3DXVECTOR3 POSITION	= D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 2, 0.0f);
 	const D3DXVECTOR3 ROTATION	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	const D3DCOLOR COLOR		= D3DCOLOR_RGBA(255, 255, 255, 0);

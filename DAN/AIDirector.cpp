@@ -10,14 +10,64 @@ using namespace aiNS;
 
 
 //=============================================================================
+// コンストラクタ
+//=============================================================================
+AIDirector::AIDirector()
+{
+
+}
+
+
+//=============================================================================
+// デストラクタ
+//=============================================================================
+AIDirector::~AIDirector()
+{
+	uninitialize();
+}
+
+
+//=============================================================================
 // 初期化
 //=============================================================================
-void AIDirector::initialize()
+void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Player* _player,
+	EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager,
+	TelopManager* _telopManager)
 {
-	sensor.initialize(&playerAD, &enemyAD, &treeAD, &itemAD);
-	eventMaker.initialize(&playerAD, &enemyAD, &treeAD, &itemAD);
-	opeGenerator.initialize(&playerAD, &enemyAD, &treeAD, &itemAD);
+	gameMaster = _gameMaster;
+	fieldMesh = _fieldMesh;
+	player = _player;
+	enemyManager = _enemyManager;
+	treeManager = _treeManager;
+	itemManager = _itemManager;
+	telopManager = _telopManager;
+
+	sensor.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager);
+	eventMaker.initialize(&data, &opeGenerator, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
+	opeGenerator.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
 	frameCnt = 0;
+
+	// 解析データの初期化
+	data.lastSpawnTime[gameMasterNS::PLAYER_1P] =
+	data.lastSpawnTime[gameMasterNS::PLAYER_2P] = gameMasterNS::GAME_TIME;
+	data.treeDistanceFromPlayer[gameMasterNS::PLAYER_1P] = new float[treeManager->getTreeList().size()];
+	data.treeDistanceFromPlayer[gameMasterNS::PLAYER_2P] = new float[treeManager->getTreeList().size()];
+	data.lastTimeEnemyAttaksTree = gameMasterNS::GAME_TIME;
+	data.lastTimeCheckedWeightEnemyAttacksTree = gameMasterNS::GAME_TIME;
+
+	BoundingSphere temp;
+	temp.initialize(NULL, fieldMesh);
+	data.fieldRadius = temp.getRadius();
+}
+
+
+//=============================================================================
+// 終了処理
+//=============================================================================
+void AIDirector::uninitialize()
+{
+	SAFE_DELETE_ARRAY(data.treeDistanceFromPlayer[gameMasterNS::PLAYER_1P]);
+	SAFE_DELETE_ARRAY(data.treeDistanceFromPlayer[gameMasterNS::PLAYER_2P]);
 }
 
 
@@ -26,12 +76,15 @@ void AIDirector::initialize()
 //=============================================================================
 void AIDirector::run()
 {
-	switch (frameCnt %= 3)
+	if (frameCnt % 2 == 0)
 	{
-	case 0:	sensor.update();		break;
-	case 1:	eventMaker.update();	break;
-	case 2:	opeGenerator.update();	break;
+		sensor.update();
 	}
+	else// frameCnt % 2 == 1
+	{
+		eventMaker.update();
+	}
+
 	frameCnt++;
 }
 
@@ -42,33 +95,5 @@ void AIDirector::run()
 void AIDirector::outputGUI()
 {
 #ifdef _DEBUG
-
-	//if (ImGui::CollapsingHeader("EnemyInformation"))
-	//{
-	//	ImGuiIO& io = ImGui::GetIO();
-	//	//float limitTop = 1000;
-	//	//float limitBottom = -1000;
-
-	//	ImGui::Text("numOfEnemy:%d", Enemy::getNumOfEnemy());
-
-	//	//ImGui::SliderFloat3("position", position, limitBottom, limitTop);				//位置
-	//	//ImGui::SliderFloat4("quaternion", quaternion, limitBottom, limitTop);			//回転
-	//	//ImGui::SliderFloat3("scale", scale, limitBottom, limitTop);					//スケール
-	//	//ImGui::SliderFloat("radius", &radius, 0, limitTop);							//半径
-	//	//ImGui::SliderFloat("alpha", &alpha, 0, 255);									//透過値
-	//	//ImGui::SliderFloat3("speed", speed, limitBottom, limitTop);					//速度
-	//	//ImGui::SliderFloat3("acceleration", acceleration, limitBottom, limitTop);		//加速度
-	//	//ImGui::SliderFloat3("gravity", gravity, limitBottom, limitTop);				//重力
-
-	//	//ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
-	//	//ImGui::Checkbox("onActive", &onActive);										//アクティブ化フラグ
-	//	//ImGui::Checkbox("onRender", &onRender);										//描画有効化フラグ
-	//	//ImGui::Checkbox("onLighting", &onLighting);									//光源処理フラグ
-	//	//ImGui::Checkbox("onTransparent", &onTransparent);								//透過フラグ
-	//	//ImGui::Checkbox("operationAlpha", &operationAlpha);							//透過値の操作有効フラグ
-
-	//	//ImGui::SliderInt("renderNum", &renderNum, 1, (int)limitTop);					//透過値の操作有効フラグ
-	//}
-
 #endif
 }

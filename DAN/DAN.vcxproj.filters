@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Game Layer">
@@ -157,6 +157,18 @@
     <Filter Include="Constant Layer\MemoryViewer">
       <UniqueIdentifier>{3b26cda4-5a87-4203-8a61-d7d497b4335f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Splash">
+      <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Title">
+      <UniqueIdentifier>{45d838b7-c16c-4367-a8c0-9dfbca4a6704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Result">
+      <UniqueIdentifier>{2c09a369-b6e9-48fe-9f8c-07e62bbd5daa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Game">
+      <UniqueIdentifier>{0d7ffe8c-9ab6-484a-af3f-b6631db469ab}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Constant Layer\GameMaster">
       <UniqueIdentifier>{bbdbb2d7-1fec-484a-8148-f8d253d7bd5e}</UniqueIdentifier>
     </Filter>
@@ -225,6 +237,111 @@
     </Filter>
     <Filter Include="Constant Layer\SkinMeshRenderer">
       <UniqueIdentifier>{42fda601-8ce6-4c87-a6d3-5d7af4425d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Window">
+      <UniqueIdentifier>{ecc2556b-7a62-4a1e-9d86-d0af6de44857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\TestPlane">
+      <UniqueIdentifier>{894de7c2-d832-4250-9290-aa96ae0df910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\LinearTreeCell">
+      <UniqueIdentifier>{c0a6d1a3-e57e-41d9-a77e-de4fdf678641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\APO">
+      <UniqueIdentifier>{9d675f58-8269-44bd-bbeb-37ce8eabb979}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Text">
+      <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Result\ResultUI">
+      <UniqueIdentifier>{4dc50f57-80c6-4b00-afff-0ede059a0e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash">
+      <UniqueIdentifier>{7e90f73f-c023-4178-b4ce-89a5f474389c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Splash\SplashSprite">
+      <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI">
+      <UniqueIdentifier>{05377823-85f2-4b8f-a3aa-3c22d42106b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Reticle">
+      <UniqueIdentifier>{781a28d9-41c9-4ecf-9eb3-f953ebcc4bf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\StateMachine">
+      <UniqueIdentifier>{6b3788e2-4ae9-4b81-887d-d5b39aaf52e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean">
+      <UniqueIdentifier>{e83e2464-3a91-4e6f-8cdb-74e19f96def1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\Plane">
+      <UniqueIdentifier>{648a5834-23ef-46f1-ace4-2bc7184665b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Tutorial\UI">
+      <UniqueIdentifier>{4898cc1a-35f9-4d06-b769-a8498a62798b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\ObjectTypeList">
+      <UniqueIdentifier>{bbadf48a-b7ee-4467-b11b-92cf1d3f1918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Wind">
+      <UniqueIdentifier>{7e5456ec-bcd4-45ac-be25-598b3d9ca5cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MapObject">
+      <UniqueIdentifier>{a583c9e0-b07d-4db7-9164-83c3fb26a395}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\AxisAlinedBoundingBox">
+      <UniqueIdentifier>{7987e540-3b47-4ee8-ae2c-ef5d997eb416}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Guage">
+      <UniqueIdentifier>{5bb8b9a2-f308-41f1-a6dd-48e0aee779fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\Box">
+      <UniqueIdentifier>{a7b425d0-f9ba-494e-bd85-330819bd8efd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\CollisionManager">
+      <UniqueIdentifier>{5b82a205-c0e2-410a-8356-b67b8bf32594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Timer">
+      <UniqueIdentifier>{266e6feb-4d63-4f03-937d-34ed7770dab2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\DebugScene">
+      <UniqueIdentifier>{09a2ad63-61ff-45ec-b780-9fc1dec511e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Sound\WaveBall">
+      <UniqueIdentifier>{de30d108-8960-4bd0-8369-8236a6a6b381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State">
+      <UniqueIdentifier>{664fc8fa-2e71-4d1e-9e7d-71b1118fd7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\DigitalShiftState">
+      <UniqueIdentifier>{98d371f2-8839-48d4-9d24-42e3827ab090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\NormalState">
+      <UniqueIdentifier>{1dc0dacc-e6ae-4dd0-bfbe-a825349f46f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\SkyVisionState">
+      <UniqueIdentifier>{3defbaa2-c089-4688-8fea-df82a12dc227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\VisionState">
+      <UniqueIdentifier>{2f8a18bc-f623-4831-930f-3f8d43e67bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\OtherObject">
+      <UniqueIdentifier>{227ecf82-d0ce-4cf2-bbca-12aba10cdf13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\OtherObject\Bullet">
+      <UniqueIdentifier>{83331455-372c-43e8-b5da-cc017d64c561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\Effect">
+      <UniqueIdentifier>{95c3a96b-b2c5-44ac-a5cd-564022ef5073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\PlayerUI">
+      <UniqueIdentifier>{c4a17d3a-65fb-442e-a2b6-2d471a197331}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\DeathState">
+      <UniqueIdentifier>{fbfae732-4b57-444b-b50b-4f490b25165b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constant Layer\Collision\Cylinder">
+      <UniqueIdentifier>{4e7b6768-8cad-46b1-85f4-0ca83835b231}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -327,9 +444,6 @@
     <ClCompile Include="SplashSprite.cpp">
       <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Game Layer\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Constant Layer\Object</Filter>
     </ClCompile>
@@ -344,9 +458,6 @@
     </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Constant Layer\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyTools.cpp">
-      <Filter>Tools Layer\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="BGM.cpp">
       <Filter>Constant Layer\Sound\BGM</Filter>
@@ -430,8 +541,11 @@
     <ClCompile Include="TitleUI.cpp">
       <Filter>Game Layer\Scene\Title</Filter>
     </ClCompile>
-    <ClCompile Include="ResultUIcpp.cpp">
-      <Filter>Game Layer\Scene\Result</Filter>
+    <ClCompile Include="UIrank.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UInumber.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClCompile>
     <ClCompile Include="exampleItem.cpp">
       <Filter>Game Layer\Item</Filter>
@@ -439,7 +553,6 @@
     <ClCompile Include="SpriteGauge.cpp">
       <Filter>Constant Layer\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="TestEffectOccurrence.cpp" />
     <ClCompile Include="EffekseerManager.cpp">
       <Filter>Constant Layer\Effekseer</Filter>
     </ClCompile>
@@ -473,9 +586,6 @@
     <ClCompile Include="MapObjectTool.cpp">
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="TreeToools.cpp">
-      <Filter>Tools Layer\Tree</Filter>
-    </ClCompile>
     <ClCompile Include="MapObjectTool.cpp">
       <Filter>Tools Layer\MapObject</Filter>
     </ClCompile>
@@ -491,8 +601,24 @@
     <ClCompile Include="MemoryDebug.cpp">
       <Filter>Game Layer</Filter>
     </ClCompile>
-    <ClCompile Include="LinearTreeCell.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Window.cpp">
+      <Filter>Constant Layer\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlane.cpp">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearTreeCell.cpp">
+      <Filter>Constant Layer\LinearTreeCell</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTools.cpp">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSound.cpp">
+      <Filter>Constant Layer\Sound\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFollowing.cpp">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClCompile>
     <ClCompile Include="AllocateHierarchy.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
@@ -505,6 +631,149 @@
     <ClCompile Include="ActionEventSeting.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Game Layer\Player\OtherObject\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="StateType.cpp">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyTools.cpp">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Fuzzy.cpp">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClCompile>
+    <ClCompile Include="Reticle.cpp">
+      <Filter>Game Layer\Reticle</Filter>
+    </ClCompile>
+    <ClCompile Include="Ocean.cpp">
+      <Filter>Game Layer\Ocean</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIcharacter.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultUI.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UItex.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="tutorialPlane.cpp">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialUI.cpp">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TelopManager.cpp">
+      <Filter>Game Layer\Tlop</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEffectOccurrence.cpp">
+      <Filter>Game Layer\TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusFrame.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Constant Layer\Collision\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Wind.cpp">
+      <Filter>Game Layer\Wind</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectManager.cpp">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
+    </ClCompile>
+    <ClCompile Include="HPguage.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="HPguageEmp.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="CharaIcon.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Advertisement.cpp">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game Layer\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="HPguageP2.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="GreeningArea.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalState.cpp">
+      <Filter>Game Layer\Player\State\NormalState</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugBox.cpp">
+      <Filter>Constant Layer\Collision\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitalShiftState.cpp">
+      <Filter>Game Layer\Player\State\DigitalShiftState</Filter>
+    </ClCompile>
+    <ClCompile Include="VisionState.cpp">
+      <Filter>Game Layer\Player\State\VisionState</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyVisionState.cpp">
+      <Filter>Game Layer\Player\State\SkyVisionState</Filter>
+    </ClCompile>
+    <ClCompile Include="ElectGuageEmp.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerFrame.cpp">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="ElectGuage.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="ElectTank.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugScene.cpp">
+      <Filter>Game Layer\Scene\DebugScene</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveBall.cpp">
+      <Filter>Constant Layer\Sound\WaveBall</Filter>
+    </ClCompile>
+    <ClCompile Include="Player1UI.cpp">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Player2UI.cpp">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitalShiftEffect.cpp">
+      <Filter>Game Layer\Player\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitalTreeEffect.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathState.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -633,9 +902,6 @@
     <ClInclude Include="Sound.h">
       <Filter>Constant Layer\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyTools.h">
-      <Filter>Tools Layer\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="BGM.h">
       <Filter>Constant Layer\Sound\BGM</Filter>
     </ClInclude>
@@ -717,11 +983,23 @@
     <ClInclude Include="TitleUI.h">
       <Filter>Game Layer\Scene\Title</Filter>
     </ClInclude>
-    <ClInclude Include="ResultUI.h">
-      <Filter>Game Layer\Scene\Result</Filter>
-    </ClInclude>
     <ClInclude Include="TestEffect.h">
       <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultUI.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIcharacter.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UItex.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIrank.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UInumber.h">
+      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClInclude>
     <ClInclude Include="EffekseerManager.h">
       <Filter>Constant Layer\Effekseer</Filter>
@@ -774,9 +1052,6 @@
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="TreeToools.h">
-      <Filter>Tools Layer\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="MapObjectTool.h">
       <Filter>Tools Layer\MapObject</Filter>
     </ClInclude>
@@ -786,12 +1061,27 @@
     <ClInclude Include="SpriteGauge.h">
       <Filter>Constant Layer\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="TestEffectOccurrence.h" />
     <ClInclude Include="MemoryDebug.h">
       <Filter>Game Layer</Filter>
     </ClInclude>
-    <ClInclude Include="LinearTreeCell.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="Window.h">
+      <Filter>Constant Layer\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPlane.h">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearTreeCell.h">
+      <Filter>Constant Layer\LinearTreeCell</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTools.h">
+      <Filter>Tools Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSound.h">
+      <Filter>Constant Layer\Sound\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFollowing.h">
+      <Filter>Game Layer\NaviAI</Filter>
+    </ClInclude>
     <ClInclude Include="AllocateHierarchy.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClInclude>
@@ -804,6 +1094,140 @@
     <ClInclude Include="ActionEventSeting.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Game Layer\Player\OtherObject\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="StateType.h">
+      <Filter>Game Layer\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyTools.h">
+      <Filter>Tools Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Fuzzy.h">
+      <Filter>Game Layer\MetaAI</Filter>
+    </ClInclude>
+    <ClInclude Include="Reticle.h">
+      <Filter>Game Layer\Reticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Ocean.h">
+      <Filter>Game Layer\Ocean</Filter>
+    </ClInclude>
+    <ClInclude Include="FixedUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorialPlane.h">
+      <Filter>Game Layer\Scene\Tutorial\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialUI.h">
+      <Filter>Game Layer\Scene\Tutorial\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TelopManager.h">
+      <Filter>Game Layer\Tlop</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEffectOccurrence.h">
+      <Filter>Game Layer\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusFrame.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTypeList.h">
+      <Filter>Game Layer\ObjectTypeList</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Constant Layer\Collision\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Wind.h">
+      <Filter>Game Layer\Wind</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectManager.h">
+      <Filter>Game Layer\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguageEmp.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="CharaIcon.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonUI.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Advertisement.h">
+      <Filter>Game Layer\TestPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="HPguageP2.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="GreeningArea.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalState.h">
+      <Filter>Game Layer\Player\State\NormalState</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugBox.h">
+      <Filter>Constant Layer\Collision\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitalShiftState.h">
+      <Filter>Game Layer\Player\State\DigitalShiftState</Filter>
+    </ClInclude>
+    <ClInclude Include="VisionState.h">
+      <Filter>Game Layer\Player\State\VisionState</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyVisionState.h">
+      <Filter>Game Layer\Player\State\SkyVisionState</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectGuageeEmp.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerFrame.h">
+      <Filter>Game Layer\GameUI\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectGuage.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectTank.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugScene.h">
+      <Filter>Game Layer\Scene\DebugScene</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveBall.h">
+      <Filter>Constant Layer\Sound\WaveBall</Filter>
+    </ClInclude>
+    <ClInclude Include="Player1UI.h">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Player2UI.h">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitalShiftEffect.h">
+      <Filter>Game Layer\Player\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitalTreeEffect.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathState.h" />
+    <ClInclude Include="Cylinder.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
@@ -816,7 +1240,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Readme\コーディング規約.txt">
+    <Text Include="Readme\Readme.txt">
       <Filter>Readme</Filter>
     </Text>
     <Text Include="01 Data File\DumpFuzzyRecognition.txt">
@@ -834,7 +1258,7 @@
     <Text Include="01 Data File\wasuremonoPosCheck.txt">
       <Filter>Resorce Layer\01 Data File</Filter>
     </Text>
-    <Text Include="Readme\Readme.txt">
+    <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
     </Text>
   </ItemGroup>

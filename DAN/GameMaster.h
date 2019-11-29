@@ -51,6 +51,10 @@ namespace gameMasterNS {
 
 	const int	PLAYER_NUM				= 2;
 
+	const int	ACHIEVEMENT_GREENING_RATE_10	= 0x00000001;
+	const int	ACHIEVEMENT_GREENING_RATE_30	= 0x00000002;
+	const int	ACHIEVEMENT_GREENING_RATE_50	= 0x00000004;
+
 }
 
 //===================================================================================================================================
@@ -64,6 +68,19 @@ struct PlayerTable
 	int greeningTree;	//緑化した本数
 	int sedationEnemy;	//鎮静化したエネミー
 };
+//ツリー情報
+struct TreeTable
+{
+	int				treeType;			//ANALOG|DIGITAL
+	int				modelType;			//モデルタイプ
+	int				player;				//緑化したプレイヤー
+	int				greeningOrder;		//緑化された順位
+	float			greeningTime;		//緑化された時間
+	D3DXVECTOR3		position;			//位置
+	D3DXQUATERNION	rotation;			//回転
+	D3DXVECTOR3		scale;				//スケール
+
+};
 
 //===================================================================================================================================
 //【ゲーム管理クラス】
@@ -74,11 +91,19 @@ class GameMaster :public Base
 {
 private:
 	//Data
+	//ゲーム
 	float			gameTimer;										//ゲーム時間
 	float			countDownTimer;									//カウントダウン時間
+	bool			pause;											//ポーズ
+
+	//木関係情報
 	int				treeNum;										//枯木・緑化木の総計
 	int*			conversionOrder;								//変換順番：緑化された順番
+	
+	//プレイヤー
 	PlayerTable		playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
+	int				progress;										//達成状況
+
 public:
 	//基本処理
 	GameMaster();
@@ -86,19 +111,27 @@ public:
 	void initialize();
 	void update(float frameTime);
 
+	//ゲーム
+	void startGame();												//ゲーム開始関数
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
-	
+	bool paused();													//ポーズ処理
+
+
 	//木の設定関数
 	void readyConversionOrder(int treeNum);							//変換順番変数を準備する
 	void discardConversionOrder();									//変換順番変数を破棄する
 	void recordGreeningTree(int treeNo,int orderNo);				//緑化した木の本数を記録
 
+
 	//setter
 	void setConversionOrder(int* newValue);
+	void setProgress(int achievement);
 
 	//getter
 	PlayerTable*	getPlayerInfomation();
 	float			getGameTime();
+	int				getProgress();									//達成状況取得
+	bool			whetherAchieved(int achievement);
 
 #ifdef _DEBUG
 	bool			showGUI;										//GUIの可視フラグ

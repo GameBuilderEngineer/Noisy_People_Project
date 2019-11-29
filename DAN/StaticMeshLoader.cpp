@@ -2,7 +2,7 @@
 //【StaticMeshLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/25
+// [更新日]2019/11/07
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -36,6 +36,11 @@ StaticMeshLoader::StaticMeshLoader()
 
 	fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
 	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
+	fileName[ENEMY_01]								= { "Enemy01.x" };
+	fileName[ENEMY_02]								= { "Enemy02.x" };
+	fileName[WOLF]									= { "Wolf.x" };
+	fileName[TIGER]									= { "Tiger.x" };
+	fileName[BEAR]									= { "Bear.x" };
 
 	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
 	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
@@ -44,6 +49,11 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STONE_001]								= { "stone001.x" };							//05
 	fileName[STONE_002]								= { "stone002.x" };							//06
 	fileName[STONE_003]								= { "Rocks.x" };							//07
+	fileName[A_TRUNK]								= { "tree_01_blanch.x" };					//08
+	fileName[A_LEAF]								= { "tree_01_leaf.x" };						//09
+	fileName[B_TRUNK]								= { "tree_02_blanch.x" };					//10
+	fileName[B_LEAF]								= { "tree_02_leaf.x" };						//11
+	fileName[OCEAN]									= { "Water4.x" };							//12
 
 	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
 	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
@@ -54,6 +64,14 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[YAMADA_ROBOT2]							= { "Robot.x" };							//07
 	fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
 	fileName[SKY_DOME]								= { "domebase.x" };							//09
+	fileName[TUTORIAL_FILED]						= { "Tutorial_Stage.x" };					//10
+	fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
+	fileName[DATE_ISLAND_V2]						= { "DateIsland_v2.x" };					//12
+	fileName[DATE_ISLAND_V2_NAVI_MESH]				= { "mesh.x" };								//13
+
+	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };					//01
+
+
 }
 
 //===================================================================================================================================

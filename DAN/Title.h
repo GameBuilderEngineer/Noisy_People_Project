@@ -17,6 +17,11 @@
 //#include "SceneEffect.h"
 #include "TitleUI.h"
 
+#include "Object.h"
+#include "StaticMeshRenderer.h"
+
+#include "WaveBall.h"
+
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
@@ -40,12 +45,16 @@ class Title : public AbstractScene
 {
 private:
 	TestEffect* testEffect;
+	WaveBall *waveBall;
 
-	//再生パラメータ
-	PLAY_PARAMETERS playParameters[3];
+	//フィールド描画実験
+	Object*					titleField;
+	StaticMeshRenderer*		titleFieldRenderer;	
 
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;
+
+	float degree = 1.0f / 10.0f;
 public:
 	Title(void);
 	~Title(void);
@@ -59,7 +68,9 @@ public:
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
 
+	float tmpVolume = 0;
 #ifdef _DEBUG
 	virtual void createGUI() override;
+
 #endif
 };

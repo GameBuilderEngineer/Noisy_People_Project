@@ -13,30 +13,31 @@
 #include "SoundBase.h"
 
 //===================================================================================================================================
+//【マクロ定義】
+//===================================================================================================================================
+#define BGM_PATH_LIST_TAIL(num)			BGMPathList##[num]
+
+//===================================================================================================================================
 //【列挙型定数】
 //===================================================================================================================================
-enum SPLASH_BGM_LIST
+enum BGM_LIST
 {
-	SPLASH_BGM_01,
-	SPLASH_BGM_MAX
+	BGM_Title,
+	BGM_Credit,
+	BGM_Game,
+	BGM_Tutorial,
+	BGM_Clear,
+	BGM_Failed,
+	BGM_MAX
 };
 
-enum TITLE_BGM_LIST
-{
-	TITLE_BGM_01,
-	TITLE_BGM_MAX
-};
-
-enum GAME_BGM_LIST
-{
-	GAME_BGM_01,
-	GAME_BGM_MAX
-};
-
-enum CREATE_BGM_LIST
-{
-	CREATE_BGM_MAX
-};
+//===================================================================================================================================
+//【定数定義】
+//===================================================================================================================================
+static const char *BGMPathList[] = {
+	"BGM_Title.wav","BGM_Credit.wav",
+	"BGM_Game.wav","BGM_Tutorial.wav",
+	"BGM_Clear.wav" ,"BGM_Failed.wav" };
 
 //===================================================================================================================================
 //【サウンド(XAudio2)】
@@ -45,27 +46,18 @@ enum CREATE_BGM_LIST
 class BGMManager : public SoundBase
 {
 public:
-	BGMManager();
-	~BGMManager();
+	BGMManager() { loadBuffer(); };
+	~BGMManager() {};
 
-	//変数
-#if(_MSC_VER >= GAME_MSC_VER)
-	static const char * const splashBGMPathList[];
-	static const char * const titleBGMPathList[];
-	static const char * const gameBGMPathList[];
-	static int		BGMScene;
-	static float	startTime;
-	static float	currentTime;
-#endif
-
-	//関数
-	static void		SwitchAudioBuffer(int scene);	//ステージ遷移に合わせて必要なサウンドバッファを用意する
-	void			SetSpeed(void);					//再生速度の設定
-	void			SetSpeedOn(void);				//再生速度の設定(On)
+	void	 SetSpeed(void);							//再生速度の設定
 	
 	//debug用
-#ifdef _DEBUG
-	void				outputBGMGUI(void);				//ImGUIへの出力
+#if _DEBUG
+	void	 outputGUI(void)override;				//ImGUIへの出力
 #endif
+
+private:
+	//関数
+	void	 loadBuffer(void)override;
 
 };

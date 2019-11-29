@@ -14,14 +14,15 @@ class Bear: public Enemy
 private:
 
 public:
-	Bear(StaticMesh* _staticMesh, enemyNS::EnemyData* _enemyData);
+	Bear(enemyNS::ConstructionPackage constructionPackage);
 	~Bear();
 
-	void update(float frameTime);	// 更新
-	void chase() override;			// 追跡ステート
-	void patrol() override;			// 警戒ステート
-	void rest() override;			// 休憩ステート
-	void die() override;			// 死亡ステート
+	void update(float frameTime);				// 更新
+	void chase(float frameTime) override;		// 追跡ステート
+	void patrol(float frameTime) override;		// 警戒ステート
+	void rest(float frameTime) override;		// 休憩ステート
+	void attackTree(float frameTime) override;	// ツリー攻撃ステート
+	void die(float frameTime) override;			// 死亡ステート
 
 	// Getter
 

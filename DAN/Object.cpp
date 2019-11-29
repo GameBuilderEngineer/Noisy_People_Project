@@ -2,7 +2,7 @@
 //【Object.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/10/23
+// [更新日]2019/11/11
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -29,14 +29,17 @@ Object::Object()
 {
 	id					= objectCounter;									//IDの割当
 	objectCounter++;														//オブジェクトカウンターの加算：IDの割当に使用
+	treeCell.type		= ObjectType::NONE;									//オブジェクトタイプ：初期値NONE
+	treeCell.target		= ObjectType::NONE;									//オブジェクトタイプ：初期値NONE
 
 	ZeroMemory(&position, sizeof(D3DXVECTOR3));								//位置
 	quaternion			= D3DXQUATERNION(0, 0, 0, 1);						//回転
 	scale				= D3DXVECTOR3(1.0f,1.0f,1.0f);						//スケール
-	radius				= 0.0f;												//半径
+	radius				= 5.0f;												//半径
+	size				= D3DXVECTOR3(1.0f,1.0f,1.0f);						//サイズの設定
 	alpha				= 1.0f;												//α値の設定
-
 	ZeroMemory(&speed, sizeof(D3DXVECTOR3));								//速度
+
 
 	onGravity			= false;											//重力フラグ
 	onActive			= true;												//アクティブフラグ
@@ -47,6 +50,8 @@ Object::Object()
 	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));	//-x軸
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));	//-y軸
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));	//-z軸
+	sphere = new BoundingSphere(&center, radius);
+	box					= new DebugBox(size);
 #ifdef _DEBUG
 	axisX.color			= D3DXCOLOR(255, 0, 0, 255);						//x軸カラー
 	axisY.color			= D3DXCOLOR(0, 255, 0, 255);						//y軸カラー
@@ -63,6 +68,7 @@ Object::Object()
 
 	existenceTimer = 1.0f;													//存在時間
 
+	treeCell.object = this;
 }
 
 //===================================================================================================================================
@@ -70,7 +76,9 @@ Object::Object()
 //===================================================================================================================================
 Object::~Object()
 {
-	
+	treeCell.remove();//リストから外れる
+	SAFE_DELETE(box);
+	SAFE_DELETE(sphere);
 }
 
 //===================================================================================================================================
@@ -108,12 +116,15 @@ void Object::update()
 	D3DXMatrixMultiply(&matrixWorld, &matrixWorld,&matrixPosition);		//*位置行列
 
 	//ワールド座標から自身の軸レイを更新する
-	axisX.update(position, D3DXVECTOR3(matrixWorld._11,matrixWorld._12,matrixWorld._13));
-	axisY.update(position, D3DXVECTOR3(matrixWorld._21,matrixWorld._22,matrixWorld._23));
-	axisZ.update(position, D3DXVECTOR3(matrixWorld._31,matrixWorld._32,matrixWorld._33));
-	reverseAxisX.update(position, -D3DXVECTOR3(matrixWorld._11, matrixWorld._12, matrixWorld._13));
-	reverseAxisY.update(position, -D3DXVECTOR3(matrixWorld._21, matrixWorld._22, matrixWorld._23));
-	reverseAxisZ.update(position, -D3DXVECTOR3(matrixWorld._31, matrixWorld._32, matrixWorld._33));
+	center = position + D3DXVECTOR3(0.0f,size.y/2,0.0f);
+	//センター行列の作成（センター座標→センター行列への変換）
+	D3DXMatrixTranslation(&matrixCenter, center.x, center.y, center.z);
+	axisX.update(center, D3DXVECTOR3(matrixWorld._11,matrixWorld._12,matrixWorld._13));
+	axisY.update(center, D3DXVECTOR3(matrixWorld._21,matrixWorld._22,matrixWorld._23));
+	axisZ.update(center, D3DXVECTOR3(matrixWorld._31,matrixWorld._32,matrixWorld._33));
+	reverseAxisX.update(center, -D3DXVECTOR3(matrixWorld._11, matrixWorld._12, matrixWorld._13));
+	reverseAxisY.update(center, -D3DXVECTOR3(matrixWorld._21, matrixWorld._22, matrixWorld._23));
+	reverseAxisZ.update(center, -D3DXVECTOR3(matrixWorld._31, matrixWorld._32, matrixWorld._33));
 }
 
 //===================================================================================================================================
@@ -128,6 +139,8 @@ void Object::debugRender()
 	reverseAxisX.render(10.0f);
 	reverseAxisY.render(10.0f);
 	reverseAxisZ.render(10.0f);
+	box->render(matrixCenter);
+	sphere->render();
 #endif // _DEBUG
 }
 
@@ -171,15 +184,60 @@ void Object::setGravity(D3DXVECTOR3 source, float power)
 	if (onGravity)acceleration += gravity;
 }
 
+
 //===================================================================================================================================
-//【setter】
+//【getter】
 //===================================================================================================================================
-void Object::activation()					{ onActive = true;}
-void Object::inActivation()				{ onActive = false;}
-void Object::setAlpha(float value)	{ alpha = value;}
+D3DXMATRIX*		Object::getMatrixWorld() { return &matrixWorld; }
+D3DXVECTOR3*	Object::getPosition() { return &position; };
+D3DXQUATERNION	Object::getQuaternion() { return quaternion; };
+float			Object::getRadius() { return radius; }
+D3DXVECTOR3		Object::getSpeed() { return speed; }
+D3DXVECTOR3		Object::getAcceleration() { return acceleration; }
+D3DXVECTOR3		Object::getGravity() { return gravity; };
+Ray*			Object::getAxisX() { return &axisX; };
+Ray*			Object::getAxisY() { return &axisY; };
+Ray*			Object::getAxisZ() { return &axisZ; };
+Ray*			Object::getReverseAxisX() { return &reverseAxisX; };
+Ray*			Object::getReverseAxisY() { return &reverseAxisY; };
+Ray*			Object::getReverseAxisZ() { return &reverseAxisZ; };
+Ray*			Object::getGravityRay() { return &gravityRay; };
+bool			Object::getActive() { return onActive; }
+float			Object::getRight() { return position.x + radius; }
+float			Object::getLeft() { return position.x - radius; }
+float			Object::getTop() { return position.z + radius; }
+float			Object::getBottom() { return position.z - radius; }
+float			Object::getFront() { return position.z + radius; }
+float			Object::getBack() { return position.z - radius; }
+D3DXVECTOR3		Object::getMin() { return position - (size / 2); }
+D3DXVECTOR3		Object::getMax() { return position + (size / 2); }
 
 //===================================================================================================================================
 //【setter】
+//===================================================================================================================================
+void Object::setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
+void Object::addSpeed(D3DXVECTOR3 add) { speed += add; }
+void Object::setPosition(D3DXVECTOR3 _position) { position = _position; }
+void Object::setQuaternion(D3DXQUATERNION _quaternion) { quaternion = _quaternion; }
+void Object::activation() { onActive = true; }
+void Object::inActivation() { onActive = false; }
+void Object::setAlpha(float value) { alpha = value; }
+void Object::setRadius(float value)
+{
+	radius = value;
+	SAFE_DELETE(sphere);
+	sphere = new BoundingSphere(&center,radius);
+}
+void Object::setSize(D3DXVECTOR3 value) { 
+	size = value; 
+	SAFE_DELETE(box);
+	box = new DebugBox(size);
+#ifdef _DEBUG
+#endif // _DEBUG
+}
+
+//===================================================================================================================================
+//【オブジェクトIDのカウンターをリセット】
 //===================================================================================================================================
 void objectNS::resetCounter()
 {

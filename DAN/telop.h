@@ -6,24 +6,37 @@
 #pragma once
 #include "Telop.h"
 #include "Sprite.h"
+#include "TextureLoader.h"
+#include "Input.h"
+#include "UtilityFunction.h"
+
 
 //=============================================================================
 // 名前空間
 //=============================================================================
 namespace telopNS
 {
-	// テロップタイプ
-	enum TYPE
+	
+	enum STATE
 	{
-		TELOP_TYPE0,
-		TELOP_TYPE1,
-		TELOP_TYPE2,
-		TELOP_TYPE3,
-		TELOP_TYPE4,
-		TELOP_TYPE5,
-		TELOP_TYPE6,
-		MAX_TELOP
+		OPEN,			//テロップの状態
+		DISPLAY,
+		CLOSE,
+		END,
+		STATE_NUM,
 	};
+
+	const int WIDTH = 1500;
+	const int MIN_HEIGHT = 0;
+	const int MAX_HEIGHT = 120;
+	const int WIDTH_BAR = 1920;
+	const int HEIGHT_BAR = 62;
+	const D3DXVECTOR3 POSITION = D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 4, 0.0f);
+	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);
+	const float OPEN_TIME = 0.5f;
+	const float CLOSE_TIME = 0.3f;
+	const float DISPLAY_TIME = 1.0f;
 }
 
 
@@ -33,11 +46,33 @@ namespace telopNS
 class Telop
 {
 private:
-	Sprite *telop = new Sprite;
+	Sprite* sprite;
+	Input*	input;
+
+	float frameTime;
+	float telopTimer;
+	float displayTimer;
+	int heightValue = 0;
+	bool telopFlag;
+	bool barFlag;
+	int state;
+	float rate;
+	float closeTimer;;
+	bool* playFlag;
+	 
 
 public:
-	void initialize();
+	void initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
+		int _width, int _height, D3DXVECTOR3 _position, D3DXVECTOR3 _rotation, D3DCOLOR color);
 	void uninitialize();
-	void update(float frameTime);
+	void update(float _frameTimer);
 	void render();
+	void open();
+	void openBar();
+	void display();
+	void close();
+	void closeBar();
+	void playTelop();
+	void playTelopBar();
+	void setManagerFlag(bool* managerFlag);
 };

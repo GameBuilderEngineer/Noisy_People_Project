@@ -6,6 +6,15 @@
 //===================================================================================================================================
 #include "GameMaster.h"
 #include "ImguiManager.h"
+#include "Input.h"
+
+//===================================================================================================================================
+//【名前空間】
+//===================================================================================================================================
+namespace gameMasterNS
+{
+	Input* input = NULL;
+}
 
 //===================================================================================================================================
 //【using宣言】
@@ -25,7 +34,7 @@ GameMaster::GameMaster()
 	}
 	treeNum				= 0;
 	conversionOrder		= NULL;
-
+	input = getInput();
 #ifdef _DEBUG
 	showGUI = true;
 #endif // _DEBUG
@@ -52,8 +61,35 @@ void GameMaster::initialize()
 //===================================================================================================================================
 void GameMaster::update(float frameTime)
 {
-	//ゲームタイムの更新
-	updateGameTime(frameTime);
+	//ゲーム中ならば、ポーズ切り替え受付
+	if (gameTimer > 0)
+	{
+		//スタートボタン/Ｐキーを入力された場合ポーズにする。
+		if (input->wasKeyPressed('P') || 
+			input->getController()[0]->wasButton(virtualControllerNS::SPECIAL_MAIN)||
+			input->getController()[1]->wasButton(virtualControllerNS::SPECIAL_MAIN))
+		{
+			pause = !pause;
+		}
+	}
+}
+
+//===================================================================================================================================
+//【ポーズ処理】
+//===================================================================================================================================
+bool GameMaster::paused()
+{
+	return pause;
+}
+
+//===================================================================================================================================
+//【ゲーム開始時処理】
+//===================================================================================================================================
+void GameMaster::startGame()
+{
+	gameTimer = GAME_TIME;
+	pause = false;
+	progress = 0x00000000;
 }
 
 //===================================================================================================================================
@@ -98,12 +134,15 @@ void GameMaster::discardConversionOrder() {
 //【setter】
 //===================================================================================================================================
 void GameMaster::setConversionOrder(int* newValue) {conversionOrder = newValue;};
+void GameMaster::setProgress(int achievement) { progress |= achievement; }
 
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
 PlayerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}	//プレイヤー情報の取得
 float GameMaster::getGameTime() {return gameTimer;}							//ゲーム制限時間の取得
+int GameMaster::getProgress() { return progress; }
+bool GameMaster::whetherAchieved(int ahievement) { return progress & ahievement; }
 
 //===================================================================================================================================
 //【GUI】
@@ -113,6 +152,7 @@ void GameMaster::createGUI()
 {
 	ImGui::Text("gameTime = %f",		gameTimer);
 	ImGui::Text("countDownTimer = %f",	countDownTimer);
+	ImGui::Text("TreeNum = %d",	treeNum);
 	if (ImGui::CollapsingHeader("TreeOrderList"))
 	{
 		for (int i = 0; i < treeNum; i++)

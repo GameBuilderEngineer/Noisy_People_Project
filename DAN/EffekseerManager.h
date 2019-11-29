@@ -28,7 +28,7 @@
 #include <windows.h>
 #include <string>
 #include <d3d9.h>
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #include <XAudio2.h>
 #endif
 #include <Effekseer.h>
@@ -40,13 +40,13 @@
 //yƒ‰ƒCƒuƒ‰ƒŠ‚Ì“Ç‚Ýž‚Ýz
 //===================================================================================================================================
 #pragma comment(lib, "d3d9.lib" )
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #pragma comment(lib, "xaudio2.lib" )
 #endif
 #if _DEBUG
 #pragma comment(lib, "VS2017/Debug/Effekseer.lib" )
 #pragma comment(lib, "VS2017/Debug/EffekseerRendererDX9.lib" )
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 #pragma comment(lib, "VS2017/Debug/EffekseerSoundXAudio2.lib" )
 #endif
 #else
@@ -64,8 +64,11 @@ namespace effekseerNS
 {
 	enum EFFEKSEER_NUMBER
 	{
-		TEST0,
-		TEST1,
+		BLOW,
+		MUZZLE,
+		DIGIT_TREE,
+		DAC,
+		GREENING,
 		MAX_EFFEKSEER,
 	};
 
@@ -82,7 +85,7 @@ namespace effekseerNS
 		D3DXVECTOR3 deltaScale;
 
 
-		Instance(int effectNo = TEST0)
+		Instance(int effectNo = BLOW)
 		{
 			this->effectNo	= effectNo;
 			handle		= -1;
@@ -100,7 +103,7 @@ namespace effekseerNS
 	//===================================================================================================================================
 	//yŠO•”ŽQÆz
 	//===================================================================================================================================
-	void play(Instance*);
+	::Effekseer::Handle play(Instance*);
 	void stop();
 	void stop(::Effekseer::Handle handle);
 	void setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf);
@@ -119,7 +122,7 @@ public:
 
 	::Effekseer::Manager*				manager;
 	::EffekseerRendererDX9::Renderer*	renderer;
-#if(_MSC_VER >= GAME_MSC_VER)
+#if(XADUIO2_STATE)
 	::EffekseerSound::Sound*			sound;
 	IXAudio2*							xa2;
 	IXAudio2MasteringVoice*				xa2Master;
@@ -151,7 +154,7 @@ public:
 
 	void setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf);
 	void setCameraMatrix(D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up);
-	void play(effekseerNS::Instance* instance);
+	::Effekseer::Handle play(effekseerNS::Instance* instance);
 	void stop();
 	void stop(::Effekseer::Handle handle);
 	void pause(bool flag);

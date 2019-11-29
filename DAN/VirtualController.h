@@ -45,6 +45,8 @@ namespace virtualControllerNS {
 		DOWN,
 		RIGHT,
 		LEFT,
+		L_STICK,
+		R_STICK,
 		SPECIAL_MAIN,
 		SPECIAL_SUB,
 		HOME,
@@ -99,7 +101,7 @@ protected:
 	void initBefore() { for (int i = 0; i < virtualControllerNS::BUTTONS::MAX_BUTTON; i++)recorder[i] = false; }
 	void recordBefore() { for (int i = 0; i < virtualControllerNS::BUTTONS::MAX_BUTTON; i++)recorder[i] = buttons[i]; }
 	void resetButtons() { for (int i = 0; i < virtualControllerNS::BUTTONS::MAX_BUTTON; i++)buttons[i] = false; }
-	void resetStick() { leftStick = D3DXVECTOR2(0, 0); rightStick = D3DXVECTOR2(0, 0); }
+	void resetStick() 	{	leftStick = D3DXVECTOR2(0, 0); rightStick = D3DXVECTOR2(0, 0); }
 	
 	// 十字キーを設定
 	void setPOV(int pov) {
@@ -121,10 +123,10 @@ protected:
 	bool notDeadZone(LONG value)	{return !isDeadZone(value);}
 
 	//スティック情報のセット
-	void setX_Left_Stick(LONG axisValue) { leftStick.x = (float)axisValue; }		// x軸：左スティック
-	void setY_Left_Stick(LONG axisValue) { leftStick.y = (float)axisValue; }		// y軸：左スティック
-	void setX_Right_Stick(LONG axisValue) { rightStick.x = (float)axisValue; }		// x軸：右スティック
-	void setY_Right_Stick(LONG axisValue) { rightStick.y = (float)axisValue; }		// y軸：右スティック
+	void setX_Left_Stick(LONG axisValue)	{ leftStick.x = (float)axisValue;	onButton(virtualControllerNS::L_STICK);}// x軸：左スティック
+	void setY_Left_Stick(LONG axisValue)	{ leftStick.y = (float)axisValue;	onButton(virtualControllerNS::L_STICK);}// y軸：左スティック
+	void setX_Right_Stick(LONG axisValue)	{ rightStick.x = (float)axisValue;	onButton(virtualControllerNS::R_STICK);}// x軸：右スティック
+	void setY_Right_Stick(LONG axisValue)	{ rightStick.y = (float)axisValue;	onButton(virtualControllerNS::R_STICK);}// y軸：右スティック
 
 public:
 	void setPlayerID(int ID) { player_ID = ID; }
@@ -170,8 +172,14 @@ public:
 	}
 
 	// スティックの情報を取得
-	D3DXVECTOR2 getLeftStick() { return leftStick; }
+	D3DXVECTOR2 getLeftStick()			{ return leftStick; }
+	D3DXVECTOR2 getLeftStickTrigger() 
+	{	if (getBefore(virtualControllerNS::L_STICK) == true) { return D3DXVECTOR2(0,0); }
+		else { return leftStick; }}
 	D3DXVECTOR2 getRightStick() { return rightStick; }
+	D3DXVECTOR2 getRightStickTrigger() 
+	{	if (getBefore(virtualControllerNS::R_STICK) == true) { return D3DXVECTOR2(0,0); }
+		else { return rightStick; }}
 };
 
 //===================================================================================================================================
@@ -251,6 +259,7 @@ public:
 		// 左スティック入力値を格納
 		if (notDeadZone(DCon->joyState.lX)) setX_Left_Stick(DCon->joyState.lX);
 		if (notDeadZone(DCon->joyState.lY)) setY_Left_Stick(DCon->joyState.lY);
+
 		// 右スティック入力値を格納
 		if (notDeadZone(DCon->joyState.lRx)) setX_Right_Stick(DCon->joyState.lRx);
 		if (notDeadZone(DCon->joyState.lRy)) setY_Right_Stick(DCon->joyState.lRy);

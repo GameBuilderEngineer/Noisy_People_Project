@@ -26,6 +26,8 @@ Result::Result(void)
 
 	// 次のシーン( タイトル )
 	nextScene = SceneList::TITLE;
+
+	
 }
 
 //===================================================================================================================================
@@ -34,7 +36,7 @@ Result::Result(void)
 Result::~Result(void)
 {
 	// サウンドの停止
-	//sound->stop(soundNS::TYPE::BGM_RESULT);
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //===================================================================================================================================
@@ -42,35 +44,8 @@ Result::~Result(void)
 //===================================================================================================================================
 void Result::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_RESULT, soundNS::METHOD::LOOP);
-
-	// Camera
-	//camera = new Camera[PLAYER_TYPE::PLAYER_TYPE_MAX];
-
-	//for (int i = 0; i < PLAYER_TYPE::PLAYER_TYPE_MAX; i++)
-	//{
-	//	camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//	//camera[i].setTarget(player[i].getPosition());
-	//	//camera[i].setTargetX(&player[i].getAxisX()->direction);
-	//	//camera[i].setTargetY(&player[i].getAxisY()->direction);
-	//	//camera[i].setTargetZ(&player[i].getAxisZ()->direction);
-	//	camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[0]);
-	//	camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
-	//	camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
-	//	camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-	//	camera[i].setFieldOfView(D3DX_PI / 2.5);
-	//}
-
-	// Light
-	//light = new Light;
-	//light->initialize(_direct3D9);
-
-	// リザルトUIの初期化
-	//uiResult.initialize(_direct3D9->device, _textureLoader, _textManager, gameMaster);
-
-	// シーンエフェクト初期化
-	//sceneEffect.initialize(_direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+	//リザルトUIの初期化
+	resultUI.initialize();
 
 }
 
@@ -79,13 +54,7 @@ void Result::initialize()
 //===================================================================================================================================
 void Result::uninitialize(void)
 {
-	//uiResult.release();
-
-	// カメラ
-	//SAFE_DELETE_ARRAY(camera);
-
-	// ライト
-	//SAFE_DELETE(light);
+	resultUI.uninitialize();
 }
 
 //===================================================================================================================================
@@ -96,8 +65,12 @@ void Result::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	// Enterまたは〇ボタンでタイトルへ
-	if (input->wasKeyPressed(VK_RETURN) ||
+	//UIの更新処理
+	resultUI.update(frameTime);
+
+	//リザルトフェイズが5の時のみ Enterまたは〇ボタンでタイトルへ
+	if (resultUI.resultPhase == resultUiNS::PHASE_05&&
+		input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
@@ -143,7 +116,7 @@ void Result::render()
 void Result::renderUI()
 {
 	// リザルトUI
-	//uiResult.render(device);
+	resultUI.render();
 }
 
 //===================================================================================================================================

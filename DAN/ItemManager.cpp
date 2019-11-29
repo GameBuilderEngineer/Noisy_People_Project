@@ -158,11 +158,15 @@ int ItemManager::issueNewItemID()
 void ItemManager::outputGUI()
 {
 #ifdef _DEBUG
+	bool debugDestroyAllFlag = false;
+
 	if (ImGui::CollapsingHeader("ItemInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
 
 		ImGui::Text("numOfItem:%d", Item::getNumOfItem());
+
+		ImGui::Checkbox("Delete All Item", &debugDestroyAllFlag);
 	}
 #endif
 }

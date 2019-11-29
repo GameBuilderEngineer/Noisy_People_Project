@@ -2,7 +2,7 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/24
+// [更新日]2019/11/13
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -74,7 +74,6 @@ void Camera::update()
 		relativeGaze.x*D3DXVECTOR3(world._11,world._12,world._13)+
 		relativeGaze.y*D3DXVECTOR3(world._21,world._22,world._23)+
 		relativeGaze.z*D3DXVECTOR3(world._31,world._32,world._33);
-
 	setViewProjection();
 }
 
@@ -104,12 +103,50 @@ void Camera::rotation(D3DXVECTOR3 axis,float degree)
 	temporaryQ = conjugateQ * relativeQuaternion * rotationQ;
 
 	D3DXVECTOR3 relativePosition = (D3DXVECTOR3)temporaryQ;
-	if (relativePosition.y > LIMIT_TOP_Y)return;
-	if (relativePosition.y < LIMIT_BOTTOM_Y)return;
+	float relativeLength = D3DXVec3Length(&relativePosition);
+	if (limit & ROTATION_TOP_LIMIT && 
+		relativePosition.y > relativeLength-limitValueRotaionTop)return;
+	if (limit & ROTATION_BOTTOM_LIMIT && 
+		relativePosition.y < -relativeLength+limitValueRotaionBottom)return;
 
 	//共役*回転対象*回転クォータニオン
 	relativeQuaternion = temporaryQ;
 }
+
+//===================================================================================================================================
+//【回転時、相対位置ベクトルに高さ（上方向）制限をセットする】
+//===================================================================================================================================
+void Camera::setLimitRotationTop(float value)
+{
+	enableLimit(ROTATION_TOP_LIMIT);
+	limitValueRotaionTop = value;
+}
+
+//===================================================================================================================================
+//【回転時、相対位置ベクトルに高さ（下方向）制限をセットする】
+//===================================================================================================================================
+void Camera::setLimitRotationBottom(float value)
+{
+	enableLimit(ROTATION_BOTTOM_LIMIT);
+	limitValueRotaionBottom = value;
+}
+
+//===================================================================================================================================
+//【制限パラメータを有効にする】
+//===================================================================================================================================
+void Camera::enableLimit(int limitParameter)
+{
+	limit |= limitParameter;
+}
+
+//===================================================================================================================================
+//【制限パラメータを無効にする】
+//===================================================================================================================================
+void Camera::disableLimit(int limitParameter)
+{
+	limit &= ~limitParameter;
+}
+
 
 //===================================================================================================================================
 //【ターゲット位置をロックオンする】
@@ -145,13 +182,19 @@ void Camera::outputGUI()
 		float limitTop = 1000;
 		float limitBottom = -1000;
 
-		ImGui::SliderFloat("fieldOfView", &fieldOfView, 0, limitTop);							//視野角
+		float minFOV = (D3DX_PI / 180) * 1;
+		float maxFOV = (D3DX_PI / 180) * 180;
+
+		float minRelative = 0;
+		float maxRelative = 5;
+
+		ImGui::SliderFloat("fieldOfView", &fieldOfView, minFOV, maxFOV);						//視野角
 		ImGui::SliderFloat("nearZ", &nearZ, INIT_NEAR_Z, INIT_FAR_Z);							//視認近距離
 		ImGui::SliderFloat("farZ", &farZ, INIT_FAR_Z, INIT_FAR_Z*10);							//視認遠距離
 
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);						//位置
 		ImGui::SliderFloat3("gazePosition", gazePosition, limitBottom, limitTop);				//注視位置
-		ImGui::SliderFloat4("relativeQuaternion", relativeQuaternion, limitBottom, limitTop);	//相対位置
+		ImGui::SliderFloat4("relativeQuaternion", relativeQuaternion, minRelative, maxRelative);//相対位置
 		ImGui::SliderFloat3("upVector", upVector, -1, 1);										//上方ベクトル
 		ImGui::SliderFloat4("posture", posture, limitBottom, limitTop);							//姿勢クォータニオン
 
