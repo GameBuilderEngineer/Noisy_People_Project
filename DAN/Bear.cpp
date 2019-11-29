@@ -14,7 +14,8 @@ using namespace stateMachineNS;
 Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 {
 	// サイズを設定後にオブジェクト⇒姿勢制御の順で初期化
-	setSize(D3DXVECTOR3(1.0f, 2.7f, 1.0f));
+	scale *= 6.0f;
+	setSize(D3DXVECTOR3(1.0f, 2.7f, 1.0f) * 6.0f);
 	Object::initialize(&position);
 	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);

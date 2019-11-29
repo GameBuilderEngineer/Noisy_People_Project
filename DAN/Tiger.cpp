@@ -13,7 +13,8 @@ using namespace stateMachineNS;
 Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 {
 	// サイズを設定後にオブジェクト⇒姿勢制御の順で初期化
-	setSize(D3DXVECTOR3(1.0f, 2.9, 1.0f));
+	scale *= 2.5f;
+	setSize(D3DXVECTOR3(1.0f, 2.9, 1.0f) * 2.5f);
 	Object::initialize(&position);
 	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);

@@ -42,24 +42,24 @@ namespace enemyNS
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
 		40,			// WOLF
-		40,			// TIGER
-		40,			// BEAR
+		100,		// TIGER
+		250,		// BEAR
 	};
 
 	// エネミーのプレイヤー記憶時間テーブル
 	const float PLAYER_MEMORIZED_TIME[TYPE_MAX] =
 	{
-		14.0f,		// WOLF
-		14.0f,		// TIGER
-		14.0f,		// BEAR
+		4.0f,		// WOLF
+		8.0f,		// TIGER
+		10.0f,		// BEAR
 	};
 
 	// エネミーの移動加速度テーブル
 	const float MOVE_ACC[TYPE_MAX] =
 	{
-		20.0f,		// WOLF
-		20.0f,		// TIGER
-		20.0f,		// BEAR
+		15.0f,		// WOLF
+		15.0f,		// TIGER
+		15.0f,		// BEAR
 	};
 
 	//-------------
@@ -137,9 +137,9 @@ namespace enemyNS
 	// エネミーの攻撃間隔テーブル
 	const float ATTACK_INTERVAL[TYPE_MAX] =
 	{
-		4.0f,		// WOLF
-		4.0f,		// TIGER
-		4.0f,		// BEAR
+		8.0f,		// WOLF
+		8.0f,		// TIGER
+		8.0f,		// BEAR
 	};
 
 	//------------
