@@ -19,6 +19,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	nextID = 0;								// 次回発行IDを0に初期化
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
 	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
+	cntTimeDataList = 0.0f;
 
 	// 接地フィールドとプレイヤーをセット
 	attractorMesh = _attractorMesh;
@@ -110,15 +111,67 @@ void EnemyManager::uninitialize()
 //=============================================================================
 void EnemyManager::update(float frameTime)
 {
+	//----------------------
+	// エネミーデータリスト
+	//----------------------
+	cntTimeDataList += frameTime;
+	if (cntTimeDataList > DATA_LIST_CHECK_INTERVAL)
+	{
+		cntTimeDataList = 0.0f;
+
+		for (int i = 0; i < enemyDataList.nodeNum; i++)
+		{
+			// 存在している or 死亡済みのデータをパスする
+			if (enemyDataList.getValue(i)->isObjectExists ||
+				enemyDataList.getValue(i)->isAlive == false)
+			{
+				continue;
+			}
+
+			// 近距離エネミーの自動作成
+			float dist1 = D3DXVec3LengthSq(&(enemyDataList.getValue(i)->position - player[gameMasterNS::PLAYER_1P].position));
+			float dist2 = D3DXVec3LengthSq(&(enemyDataList.getValue(i)->position - player[gameMasterNS::PLAYER_2P].position));
+			if (dist1 < NEAR_DISTANCE2 || dist2 < NEAR_DISTANCE2)
+			{
+				createEnemy(enemyDataList.getValue(i));
+			}
+		}
+	}
+
+	//----------------
+	// エネミーリスト
+	//----------------
 	vector<Enemy*>::iterator itr;
 	for (itr = enemyList.begin(); itr != enemyList.end();)
 	{
+		// エネミーの更新
 		(*itr)->update(frameTime);
 
-		if ((*itr)->getEnemyData()->isAlive == false)
-		{// 撃退したエネミーオブジェクトを破棄する
+		// 遠距離エネミーの計算
+		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
+		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
+
+		if (dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2 ||	// 遠距離もしくは
+			(*itr)->getEnemyData()->isAlive == false)			// 死亡済み
+		{// エネミーオブジェクトを破棄する
+			int destroyTargetEnemyData = -1;
+			if ((*itr)->getEnemyData()->isGeneratedBySpawnEvent)
+			{// 動的作成イベントで作ったエネミーを死亡させIDを記録する
+				(*itr)->getEnemyData()->isAlive = false;
+				destroyTargetEnemyData = (*itr)->getEnemyID();
+			}
+			else
+			{// 初期配置エネミーはデータを初期化する
+				(*itr)->getEnemyData()->setUp();
+			}
+
+			(*itr)->getEnemyData()->isObjectExists = false;
 			destroyEnemy((*itr));
 			itr = enemyList.erase(itr);
+			if (destroyTargetEnemyData != -1)
+			{// 動的作成イベントで作ったエネミーのみエネミーデータも破棄する
+				destroyEnemyData(destroyTargetEnemyData);
+			}
 		}
 		else
 		{// イテレータを進める
@@ -203,6 +256,7 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	constructionPackage.player = player;
 	constructionPackage.attractorMesh = attractorMesh;
 	constructionPackage.attractorMatrix = attractorMatrix;
+	constructionPackage.enemyData->isObjectExists = true;
 
 	switch (enemyData->type)
 	{
@@ -265,6 +319,7 @@ void EnemyManager::destroyAllEnemyData()
 #endif//_DEBUG
 }
 
+
 //=============================================================================
 // エネミーオブジェクトを破棄その１
 //=============================================================================
@@ -280,6 +335,7 @@ void EnemyManager::destroyEnemy(int _enemyID)
 		}
 	}
 }
+
 
 //=============================================================================
 // エネミーオブジェクトを破棄その２（実際の破棄はこちら）
@@ -304,7 +360,6 @@ void EnemyManager::destroyEnemy(Enemy* enemy)
 	enemy->treeCell.remove();					// 衝突判定リストから削除
 	SAFE_DELETE(enemy);							// インスタンス破棄
 }
-
 
 
 //=============================================================================
@@ -368,6 +423,22 @@ enemyNS::EnemyData* EnemyManager::findEnemyData(int _enemyID)
 
 	return NULL;
 }
+
+
+//=============================================================================
+// エネミーを探す
+//=============================================================================
+Enemy* EnemyManager::findEnemy(int _enemyID)
+{
+	for (size_t i = 0; i < enemyList.size(); i++)
+	{
+		if (enemyList[i]->getEnemyID() == _enemyID)
+		{
+			return enemyList[i];
+		}
+	}
+}
+
 
 //=============================================================================
 // エネミーIDを発行する

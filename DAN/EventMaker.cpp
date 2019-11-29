@@ -39,24 +39,69 @@ void EventMaker::uninitialize()
 //=============================================================================
 void EventMaker::update()
 {
-	//// エネミー動的作成イベントの作成
-	//if (enemyAD->shouldSpawnFuzzily > FUZZY_VALUE_SHOULD_SPAWN)
-	//{
-	//	makeEventSpawningEnemyAroundPlayer();
-	//}
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		// エネミーをプレイヤー周りにスポーンすべきか解析
+		if (enemyManager->getEnemyList().size() < enemyNS::ENEMY_OBJECT_MAX &&				// 同時存在数チェック
+			data->lastSpawnTime[i] - gameMaster->getGameTime() > MANDATORY_SPAWN_INTERVAL)	// スポーン間隔チェック
+		{
+			// ファジー論理演算 
+			float tmp1 = fuzzy.reverseGrade((float)data->numChasingPlayer[i], 0.0f, 4.0f);		
+			float tmp2 = fuzzy.reverseGrade((float)data->numKilledRecently, 0.0f, 7.0f);
+			data->weightSpawn[i] = fuzzy.AND(tmp1, tmp2);
+
+			// エネミー動的作成イベントの最終的な実行判断（プレイヤーごとに判断される）
+			if (data->weightSpawn[i] > WEIGHT_SPAWN)
+			{
+				/*具体例 WEIGHT_SPAWN = 0.7のとき
+					[1]
+					エネミーに追跡されていない→	temp1 = 1.0  ◎
+					エネミー1体に追跡されている→	temp1 = 0.75 ◎
+					エネミー2体に追跡されている→	temp1 = 0.5　×
+					[2]
+					最近1体も倒していない→			temp2 = 1.0   ◎
+					最近1体倒した→					temp2 = 0.857 ◎
+					最近2体倒した→					temp2 = 0.714 ◎
+					最近3体倒した→					temp2 = 0.571 ×
+					[1][2]で低い方の数値で判定される
+				*/
+				makeEventSpawningEnemyAroundPlayer(i);
+				data->lastSpawnTime[i] = gameMaster->getGameTime();
+			}
+		}
+	}
+
+	// デジタルツリー襲撃イベント
+	if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE)
+	{// 最低経過時間チェック
+		float tmp1 = fuzzy.reverseGrade(gameMaster->getGameTime(), 120.0f, 180.0f);
+		float tmp2 = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 6.0f, 20.0f);
+		data->weightEnemyAttacksTree = fuzzy.OR(tmp1, tmp2);
+		data->weightEnemyAttacksTree *= (float)(rand() % 5 - 2);	// ランダム補正
+
+		if (data->lastTimeCheckedWeightEnemyAttacksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_CHECKING_WEIGHT)
+		{// 評価値（重み）のチェック間隔を空ける
+			data->lastTimeCheckedWeightEnemyAttacksTree = gameMaster->getGameTime();
+			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
+			{
+				data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
+				makeEventEnemyAttaksTree();
+			}
+		}
+	}
 }
 
 
 //=============================================================================
 // エネミー動的作成イベントの作成（SPAWN_ENEMY_AROUND_PLAYER)
 //=============================================================================
-void EventMaker::makeEventSpawningEnemyAroundPlayer()
+void EventMaker::makeEventSpawningEnemyAroundPlayer(int playerType)
 {
 	enemyNS::ENEMYSET enemySet;
 	enemySet.enemyID = enemyManager->issueNewEnemyID();
 	enemySet.type = decideSpawnEnemyType();
-	enemySet.defaultPosition = createGroundedPositionFromPivot(player[0].position, 25.0f, 5.0f);
-	enemySet.defaultDirection = *player[0].getPosition() - enemySet.defaultPosition;
+	enemySet.defaultPosition = createGroundedPositionFromPivot(player[playerType].position, 25.0f, 5.0f);
+	enemySet.defaultDirection = *player[playerType].getPosition() - enemySet.defaultPosition;
 	enemySet.defaultState = stateMachineNS::PATROL;
 	opeGenerator->spawnEnemy(enemySet);
 }

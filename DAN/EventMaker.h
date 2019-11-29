@@ -13,10 +13,6 @@ namespace aiNS
 {
 	// 前方宣言
 	struct AnalyticalData;
-
-	// エネミー動的作成イベントの作成（SPAWN_ENEMY_AROUND_PLAYER)
-	const float FUZZY_VALUE_SHOULD_SPAWN = 0.8f;
-
 }
 
 
@@ -44,7 +40,7 @@ public:
 	void update();
 
 	// エネミー動的作成イベントの作成（SPAWN_ENEMY_AROUND_PLAYER)
-	void makeEventSpawningEnemyAroundPlayer();
+	void makeEventSpawningEnemyAroundPlayer(int playerType);
 	// エネミーリスポーンイベントの作成（RESPAWN_ENEMY)
 	void makeEventRespawnEnemy();
 	// エネミーデジタルツリー襲撃イベントの作成（ENEMY_ATTACKS_TREE）

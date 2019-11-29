@@ -33,18 +33,6 @@ void Sensor::update()
 	enemySensor();
 	treeSensor();
 	itemSensor();
-
-	//// エネミーをプレイヤー周りにスポーンすべきか解析
-	//if (gameMaster->getGameTime() - enemyAD->lastSpawnTime > MANDATORY_SPAWN_INTERVAL)
-	//{
-	//	float tmp1 = fuzzy.reverseGrade((float)enemyAD->numChase, 0.0f, 4.0f);
-	//	float tmp2 = fuzzy.reverseGrade((float)enemyAD->numKilledRecently, 0.0f, 6.0f);
-	//	weightSpawn = fuzzy.AND(tmp1, tmp2);
-	//}
-
-	// 倒したエネミーをリスポーンすべきか解析
-
-	// エネミーのツリー襲撃イベントを発生させるか解析
 }
 
 
@@ -101,6 +89,8 @@ void Sensor::playerSensor()
 void Sensor::enemySensor()
 {
 	data->numChase = 0;
+	data->numChasingPlayer[gameMasterNS::PLAYER_1P] = 0;
+	data->numChasingPlayer[gameMasterNS::PLAYER_2P] = 0;
 	data->numKilled = 0;
 	data->numKilledRecently = 0;
 
@@ -108,9 +98,17 @@ void Sensor::enemySensor()
 	{
 		enemyNS::EnemyData* enemyData = enemyManager->getEnemyDataList()->getValue(i);
 
-		if (enemyData->state == stateMachineNS::CHASE)
+		if (enemyData->isObjectExists && enemyData->state == stateMachineNS::CHASE)
 		{// 追跡ステートに入っているエネミーの数
 			data->numChase++;
+			if (enemyManager->findEnemy(enemyData->enemyID)->getChasingPlayer() == gameMasterNS::PLAYER_1P)
+			{
+				data->numChasingPlayer[gameMasterNS::PLAYER_1P]++;
+			}
+			else
+			{
+				data->numChasingPlayer[gameMasterNS::PLAYER_2P]++;
+			}
 		}
 		if (enemyData->isAlive == false)
 		{

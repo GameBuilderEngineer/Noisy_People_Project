@@ -48,8 +48,12 @@ void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Play
 	frameCnt = 0;
 
 	// ‰ðÍƒf[ƒ^‚Ì‰Šú‰»
+	data.lastSpawnTime[gameMasterNS::PLAYER_1P] =
+	data.lastSpawnTime[gameMasterNS::PLAYER_2P] = gameMasterNS::GAME_TIME;
 	data.treeDistanceFromPlayer[gameMasterNS::PLAYER_1P] = new float[treeManager->getTreeList().size()];
 	data.treeDistanceFromPlayer[gameMasterNS::PLAYER_2P] = new float[treeManager->getTreeList().size()];
+	data.lastTimeEnemyAttaksTree = gameMasterNS::GAME_TIME;
+	data.lastTimeCheckedWeightEnemyAttacksTree = gameMasterNS::GAME_TIME;
 
 	BoundingSphere temp;
 	temp.initialize(NULL, fieldMesh);

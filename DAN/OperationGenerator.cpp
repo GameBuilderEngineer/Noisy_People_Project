@@ -32,6 +32,7 @@ void OperationGenerator::initialize(aiNS::AnalyticalData* _data, GameMaster* _ga
 void OperationGenerator::spawnEnemy(enemyNS::ENEMYSET _enemySet)
 {
 	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
+	p->isGeneratedBySpawnEvent = true;
 	enemyManager->createEnemy(p);
 }
 

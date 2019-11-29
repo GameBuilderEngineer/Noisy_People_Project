@@ -17,7 +17,6 @@
 namespace aiNS
 {
 	// ‘O•ûéŒ¾
-	typedef struct OperationSettingOfEnemyAttaksTree ENMY_ATK_SET;
 	struct AnalyticalData;
 }
 

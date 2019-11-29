@@ -215,7 +215,7 @@ void Player::grounding()
 		}
 		else {
 			dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-			if (dot > 70.0f / 90.0f) {
+			if (dot >=1.0f- 70.0f / 90.0f) {
 				speed = slip(speed, gravityRay.normal);
 			}
 			else {
