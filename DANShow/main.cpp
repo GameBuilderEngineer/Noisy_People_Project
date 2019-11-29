@@ -9,12 +9,6 @@
 #include "test.h"
 
 //=============================================================================
-// マクロ定義
-//=============================================================================
-#define CLASS_NAME			_T("AppClass")	// ウインドウのクラス名
-#define WINDOW_NAME			_T("player")	// ウインドウのキャプション名
-
-//=============================================================================
 // プロトタイプ宣言
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -84,7 +78,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	RegisterClassEx(&wcex);
 
 	// ウィンドウの作成
-	hWnd = CreateWindow(CLASS_NAME,
+	hWnd = CreateWindowEx(WS_EX_LAYERED,
+		CLASS_NAME,
 		WINDOW_NAME,
 		WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPCHILDREN,
 		CW_USEDEFAULT,																		// ウィンドウの左座標
@@ -113,7 +108,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	// ウインドウの表示(Init()の後に呼ばないと駄目)
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-	
+
+	SetLayeredWindowAttributes(hWnd, (COLORREF)0x000000ff, 255, LWA_COLORKEY | LWA_ALPHA);
+
 	// メッセージループ
 	while(g_bGameLoop)
 	{
@@ -147,7 +144,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			{
 				dwExecLastTime = dwCurrentTime;	// 処理した時刻を保存
 
-				Update(hWnd);		// 更新処理
+ 				Update(hWnd);		// 更新処理
 				Draw(hWnd);			// 描画処理
 				
 				dwFrameCount++;		// 処理回数のカウントを加算
@@ -245,30 +242,30 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	// デバイスの生成
 	// ディスプレイアダプタを表すためのデバイスを作成
 	// 描画と頂点処理をハードウェアで行なう
-	if(FAILED(g_pD3D->CreateDevice(D3DADAPTER_DEFAULT,							// ディスプレイアダプタ
-									D3DDEVTYPE_HAL,								// ディスプレイタイプ
-									hWnd,										// フォーカスするウインドウへのハンドル
-									D3DCREATE_HARDWARE_VERTEXPROCESSING,		// デバイス作成制御の組み合わせ
-									&d3dpp,										// デバイスのプレゼンテーションパラメータ
-									&g_pD3DDevice)))							// デバイスインターフェースへのポインタ
+	if (FAILED(g_pD3D->CreateDevice(D3DADAPTER_DEFAULT,							// ディスプレイアダプタ
+		D3DDEVTYPE_HAL,								// ディスプレイタイプ
+		hWnd,										// フォーカスするウインドウへのハンドル
+		D3DCREATE_HARDWARE_VERTEXPROCESSING,		// デバイス作成制御の組み合わせ
+		&d3dpp,										// デバイスのプレゼンテーションパラメータ
+		&g_pD3DDevice)))							// デバイスインターフェースへのポインタ
 	{
 		// 上記の設定が失敗したら
 		// 描画をハードウェアで行い、頂点処理はCPUで行なう
-		if(FAILED(g_pD3D->CreateDevice(D3DADAPTER_DEFAULT, 
-										D3DDEVTYPE_HAL, 
-										hWnd, 
-										D3DCREATE_SOFTWARE_VERTEXPROCESSING, 
-										&d3dpp,
-										&g_pD3DDevice)))
+		if (FAILED(g_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+			D3DDEVTYPE_HAL,
+			hWnd,
+			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+			&d3dpp,
+			&g_pD3DDevice)))
 		{
 			// 上記の設定が失敗したら
 			// 描画と頂点処理をCPUで行なう
-			if(FAILED(g_pD3D->CreateDevice(D3DADAPTER_DEFAULT, 
-											D3DDEVTYPE_REF,
-											hWnd, 
-											D3DCREATE_SOFTWARE_VERTEXPROCESSING, 
-											&d3dpp,
-											&g_pD3DDevice)))
+			if (FAILED(g_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+				D3DDEVTYPE_REF,
+				hWnd,
+				D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+				&d3dpp,
+				&g_pD3DDevice)))
 			{
 				// 初期化失敗
 				return E_FAIL;
@@ -344,7 +341,7 @@ void Update(HWND hWnd)
 		// 入力処理
 		UpdateInput();
 
-		show->update();
+		show->update(hWnd);
 
 		testPic->update();
 	}

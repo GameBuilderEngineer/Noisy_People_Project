@@ -28,8 +28,12 @@ SHOW::SHOW(HWND hWnd)
 	GetClientRect(hWnd, &rect);
 	//hr = videoWindow->SetWindowPosition(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 	//hr = videoWindow->SetWindowPosition(0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	//hr = videoWindow->SetWindowPosition(0, 0, rect.right, rect.bottom);
 	hr = videoWindow->SetWindowPosition(0, 0, rect.right, rect.bottom);
-	hr = videoWindow->SetWindowPosition(0, 0, rect.right, rect.bottom);
+
+	//“§–¾
+	alphaEndTime = clock() + ToMSec(3);
+	SetLayeredWindowAttributes(hWnd, (COLORREF)0x000000ff, (clock() / alphaEndTime) * 255, LWA_COLORKEY | LWA_ALPHA);
 
 	// EventEx
 	hr = eventEx->SetNotifyWindow((OAHWND)hWnd, WM_USER, 0);
@@ -42,14 +46,23 @@ SHOW::SHOW(HWND hWnd)
 	hr = videoWindow->put_MessageDrain((OAHWND)hWnd);
 }
 
-void SHOW::update()
+void SHOW::update(HWND hWnd)
 {
+	// Fade
+	if (clock() < alphaEndTime)
+	{
+		int alpha = ((float)clock() / (float)alphaEndTime) * 255.0f;
+		SetLayeredWindowAttributes(hWnd, (COLORREF)0x000000ff, alpha, LWA_COLORKEY | LWA_ALPHA);
+	}
+
 	long lEventCode = 0;
 	LONG_PTR lEvParam1 = 0;
 	LONG_PTR lEvParam2 = 0;
 
 	eventEx->GetEvent(&lEventCode, &lEvParam1, &lEvParam2, 0);
 
+
+	// Play/Pause
 	if (GetKeyboardTrigger(DIK_SPACE))
 	{
 		OAFilterState filterState;
