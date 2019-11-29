@@ -169,7 +169,7 @@ namespace playerNS{
 	const float MAX_DISTANCE				= 100.0f;								//最大照準距離
 
 	//DigitalAction
-	const float SKY_HEIGH					= 40.0f;								//スカイビジョン上昇距離
+	const float SKY_HEIGH					= 65.0f;								//スカイビジョン上昇距離
 	const int	COST_SHIFT					= 70;									//シフト使用電力
 	const float	SHIFT_TRANSITION_TIME		= 1.0f;									//空中への遷移時間
 	const float	SKY_TRANSITION_TIME			= 0.5f;									//空中への遷移時間

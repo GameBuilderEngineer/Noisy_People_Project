@@ -30,7 +30,10 @@ namespace aiNS
 		NUM_EVENT_LIST
 	};
 
-	// プレイヤーのコンディション
+	//--------
+	// Sensor
+	//--------
+	// プレイヤー
 	enum PLAYER_CONDITION
 	{
 		GOOD,
@@ -38,10 +41,20 @@ namespace aiNS
 		BAD
 	};
 
+	// エネミー
+	const float RECENT_SECOND = 30.0f;				// 最近と見なす秒数（直近○秒）最近倒したエネミーの数集計に使用
+
+	//-------------
+	// Event Maker
+	//-------------
 	// イベント発生の評価値定数（下記値を上回ればイベントが実行される）
-	const float WEIGHT_SPAWN = 0.8f;				// SPAWN_ENEMY_AROUND_PLAYER
+	const float WEIGHT_SPAWN = 0.7f;				// SPAWN_ENEMY_AROUND_PLAYER
 	const float WEIGHT_RESPAWN = 0.7f;				// RESPAWN_ENEMY
-	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.9f;	// ENEMY_ATTACKS_TREE
+	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.8f;	// ENEMY_ATTACKS_TREE
+
+	const float MANDATORY_SPAWN_INTERVAL = 20.0f;	// エネミースポーンのための最低経過間隔秒
+	const float MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE = 40.0f;	// ツリー襲撃イベントの最低経過間隔秒
+	const float MANDATOEY_INTERVAL_CHECKING_WEIGHT = 8.0f;		// ツリー襲撃イベントの発生評価値チェック間隔
 
 	// ツリー襲撃イベントの例外となる木のID
 	const int EXCEPTION_TREE_MAX = 3;// ●
@@ -52,14 +65,7 @@ namespace aiNS
 		10002
 	};
 
-	// すぽーん
-	const float SPAWN_ADJUST_HEIGHT = 0.3f;
-
-
-	// enemySensor()
-	const float RECENT_SECOND = 30.0f;				// 最近と見なす秒数（直近○秒）
-	const float MANDATORY_SPAWN_INTERVAL = 20.0f;	// スポーンのための最低経過間隔秒
-
+	// 襲撃イベント対象デジタルツリー
 	struct AttackCandidate
 	{
 		int treeID;
@@ -67,16 +73,6 @@ namespace aiNS
 		float score;
 	};
 
-	//typedef struct OperationSettingOfSpawn
-
-	// ENEMY_ATTACKS_TREE
-	typedef struct OperationSettingOfEnemyAttaksTree
-	{
-		int treeID;
-		int numEnemy;
-		enemyNS::ENEMY_TYPE enemyType[3];
-	} ENMY_ATK_SET;
-	
 	//--------------------------------------------------------
 	// メタAI解析データ
 	// Sensor, EventMaker, OperationGeneratorで共有し利用する
@@ -89,9 +85,10 @@ namespace aiNS
 
 		// エネミー
 		int numChase;										// 追跡ステートに入っているエネミーの数
+		int numChasingPlayer[gameMasterNS::PLAYER_NUM];		// 追跡しているプレイヤーの数
 		int numKilled;										// 倒されたエネミーの数
 		int numKilledRecently;								// 最近倒されたエネミーの数
-		float lastSpawnTime;								// 最後にスポーンした時刻
+		float lastSpawnTime[gameMasterNS::PLAYER_NUM];		// 最後にスポーンした時刻
 
 		// ツリー
 		int numDigital;										// デジタルツリーの数
@@ -101,6 +98,10 @@ namespace aiNS
 
 		// フィールド
 		float fieldRadius;									// フィールド半径サイズ
+
+		// イベント
+		float lastTimeEnemyAttaksTree;						// 最後にツリー襲撃イベントが発生した時間
+		float lastTimeCheckedWeightEnemyAttacksTree;		// 最後にツリー襲撃イベントの発生評価値をチェックした時間
 
 		// イベント発生の評価値（0.0～1.0）
 		float weightSpawn[gameMasterNS::PLAYER_NUM];		// SPAWN_ENEMY_AROUND_PLAYER

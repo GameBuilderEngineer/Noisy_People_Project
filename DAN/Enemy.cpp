@@ -85,12 +85,6 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	isHitPlayer = false;
 	friction = 1.0f;
 
-	// サウンドの初期化
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		footStepsParameters[i] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::S3D_GAME_FOOTSTEP_02, true ,NULL,true, i};
-	}
-
 	// オブジェクト初期化(initialize()は派生クラス)
 	onGravity = true;
 	radius = sphereCollider.getRadius();
@@ -297,7 +291,7 @@ void Enemy::searchPath()
 		SAFE_DELETE(edgeList);
 	}
 
-	naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	destination = *movingTarget;
 
 	if (enemyData->enemyID == debugEnemyID)
@@ -804,6 +798,87 @@ void Enemy::die(float frameTime)
 #pragma endregion
 
 
+#pragma region [Sound]
+//=============================================================================
+// サウンドプレイパラメータの取得
+//=============================================================================
+PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
+{
+	PLAY_PARAMETERS parameter = {
+		ENDPOINT_VOICE_LIST::ENDPOINT_S3D,	//エンドポイントボイスID
+		NULL,								// サウンドID ↓で設定
+		false,								// ループ
+		NULL,								// 再生速度
+		true,								// 3Dサウンドか
+		-1,									// プレイヤーID
+	};
+
+	switch (soundType)
+	{
+	//------
+	// 足音
+	//------
+	case FOOT_STEPS_SE:
+		switch (enemyType)
+		{
+		case WOLF:
+			parameter.soundId = GAME_S3D_LIST::S3D_GAME_FOOTSTEP_01;// 仮
+			break;
+
+		case TIGER:
+			parameter.soundId = GAME_S3D_LIST::S3D_GAME_FOOTSTEP_02;// 仮
+			break;
+
+		case BEAR:
+			parameter.soundId = GAME_S3D_LIST::S3D_GAME_FOOTSTEP_03;// 仮
+			break;
+		}
+		break;
+
+	//--------
+	// 攻撃音
+	//--------
+	case ATTACK_SE:
+	{
+	}
+	break;
+
+	//--------
+	// 死亡音
+	//--------
+	case DIE_SE:
+	{
+	}
+	break;
+
+	}// switch(soundType)
+
+	return parameter;
+}
+
+
+//=============================================================================
+// 足音の処理
+//=============================================================================
+void Enemy::footsteps(D3DXVECTOR3 playerPos, int playerID)
+{
+	PLAY_PARAMETERS playParameter = getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+	playParameter.playerID = playerID;
+
+	// よくわからんから蔡よろしく!
+
+	//float distance = D3DXVec3Length(&(position - playerPos));
+	//float volume = 0.0f;
+	//if (distance < DISTANCE_MAX)
+	//{
+	//	volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
+	//}
+
+	//SoundInterface::S3D->SetVolume(footStepsParameters[playerID], volume);
+}
+#pragma endregion
+
+
 #pragma region [Other]
 //=============================================================================
 // リスポーンと破棄を行うか自己判定
@@ -841,11 +916,13 @@ void Enemy::setPlayerChaseTarget()
 	{
 		setMovingTarget(&player[gameMasterNS::PLAYER_1P].position);
 		attackTarget = &player[gameMasterNS::PLAYER_1P];
+		chasingPlayer = gameMasterNS::PLAYER_1P;
 	}
 	else if (isNoticingPlayer[gameMasterNS::PLAYER_1P] == false && isNoticingPlayer[gameMasterNS::PLAYER_2P])
 	{
 		setMovingTarget(&player[gameMasterNS::PLAYER_2P].position);
 		attackTarget = &player[gameMasterNS::PLAYER_2P];
+		chasingPlayer = gameMasterNS::PLAYER_2P;
 	}
 	else if (isNoticingPlayer[gameMasterNS::PLAYER_1P] && isNoticingPlayer[gameMasterNS::PLAYER_2P])
 	{
@@ -853,11 +930,14 @@ void Enemy::setPlayerChaseTarget()
 		{
 			setMovingTarget(&player[gameMasterNS::PLAYER_1P].position);
 			attackTarget = &player[gameMasterNS::PLAYER_1P];
+			chasingPlayer = gameMasterNS::PLAYER_1P;
 		}
 		else
 		{
 			setMovingTarget(&player[gameMasterNS::PLAYER_2P].position);
 			attackTarget = &player[gameMasterNS::PLAYER_2P];
+			chasingPlayer = gameMasterNS::PLAYER_2P;
+
 		}
 	}
 }
@@ -900,22 +980,6 @@ void Enemy::updatePatrolRoute()
 
 	}
 }
-
-
-//=============================================================================
-// 足音の処理
-//=============================================================================
-void Enemy::footsteps(D3DXVECTOR3 playerPos, int playerID)
-{
-	float distance = D3DXVec3Length(&(position - playerPos));
-	float volume = 0.0f;
-	if (distance < DISTANCE_MAX)
-	{
-		volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
-	}
-
-	SoundInterface::S3D->SetVolume(footStepsParameters[playerID], volume);
-}
 #pragma endregion
 
 
@@ -930,6 +994,7 @@ BoundingSphere*  Enemy::getSphereCollider() { return &sphereCollider; }
 LPD3DXMESH Enemy::getMesh() { return box->mesh; }
 bool Enemy::getNoticedOfPlayer(int playerType) { return isNoticingPlayer[playerType]; }
 bool Enemy::getIsAttacking() { return isAttacking; }
+int Enemy::getChasingPlayer() { return chasingPlayer; };
 
 
 //=============================================================================

@@ -251,22 +251,23 @@ void Game::initialize() {
 	// デバッグエネミーモードにするための準備
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
-	 //エネミーをランダムに設置する
-	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	{
-		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-		pos -= D3DXVECTOR3(200, 0, 240);
-		enemyNS::ENEMYSET tmp =
-		{
-			enemyManager->issueNewEnemyID(),
-			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
-			stateMachineNS::PATROL,
-			pos,
-			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-		};
-		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-		enemyManager->createEnemy(p);
-	}
+
+	////エネミーをランダムに設置する
+	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	//{
+	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+	//	pos -= D3DXVECTOR3(200, 0, 240);
+	//	enemyNS::ENEMYSET tmp =
+	//	{
+	//		enemyManager->issueNewEnemyID(),
+	//		rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
+	//		stateMachineNS::PATROL,
+	//		pos,
+	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	//	};
+	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+	//	enemyManager->createEnemy(p);
+	//}
 
 	// ツリーをランダムに設置する
 	treeNS::TreeData treeData;
@@ -886,7 +887,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	//aiDirector->run();		// メタAI実行
+	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -966,7 +967,7 @@ void Game::test()
 
 	if (input->wasKeyPressed('6'))
 	{
-		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer();
+		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
 
 		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
 	}

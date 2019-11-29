@@ -142,6 +142,17 @@ namespace enemyNS
 		4.0f,		// BEAR
 	};
 
+	//------------
+	// 3Dサウンド
+	//------------
+	enum SE_3D
+	{
+		FOOT_STEPS_SE,	// 足音
+		ATTACK_SE,		// 攻撃音
+		DIE_SE,			// 死亡音
+		SE_3D_MAX
+	};
+
 	// Physics Constant
 	const float AIR_MOVE_ACC_MAGNIFICATION = 0.12f;		// 空中移動加速度倍率
 	const float STOP_SPEED = 0.5f;						// 移動停止速度
@@ -201,6 +212,8 @@ namespace enemyNS
 		int hp;							// HP
 		float deadTime;					// 撃退時刻
 		bool isAlive;					// 生存フラグ
+		bool isGeneratedBySpawnEvent;	// イベントによる生成フラグ(データ作成後オブジェクト作成前にtrueに設定)
+		bool isObjectExists;			// オブジェクト存在フラグ（オブジェクト作成破棄に合わせて設定）				
 
 		//~EnemyData() { SAFE_DELETE_ARRAY(patrolRoute); }
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }
@@ -211,6 +224,7 @@ namespace enemyNS
 			direction = defaultDirection;
 			hp = type >= 0 && type < TYPE_MAX ? ENEMY_HP_MAX[type] : 0;
 			deadTime = 10000.0;
+			isGeneratedBySpawnEvent = false;
 			isAlive = true;
 		}
 	};
@@ -274,6 +288,7 @@ protected:
 	// ブラックボード
 	bool isNoticingPlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識フラグ
 	float noticedTimePlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識時間
+	int chasingPlayer;								// 追跡プレイヤー
 	D3DXVECTOR3* movingTarget;						// 移動ターゲット
 	Object* attackTarget;							// 攻撃対象（プレイヤー,ツリー）
 	D3DXVECTOR3 attentionDirection;					// 注目方向
@@ -321,7 +336,6 @@ protected:
 
 	// サウンド
 	PLAY_PARAMETERS playParameters;
-	PLAY_PARAMETERS footStepsParameters[gameMasterNS::PLAYER_NUM];
 
 	//------------------
 	// アクションクエリ
@@ -375,10 +389,16 @@ protected:
 	virtual void attackTree(float frameTime);
 	// 死亡ステート
 	virtual void die(float frameTime);
+	//----------
+	// サウンド
+	//----------
+	// サウンドプレイパラメータの取得
+	PLAY_PARAMETERS getPlayParameters(enemyNS::SE_3D soundType, int enemyType);
+	// 足音の処理
+	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 	//--------
 	// その他
 	//--------
-	//
 	void reset();
 	// 自動破棄を行うか確認
 	void checkAutoDestruction();
@@ -388,8 +408,6 @@ protected:
 	void setDebugDestination();
 	// 巡回路リングバッファの更新
 	void updatePatrolRoute();
-	// 足音の処理
-	void footsteps(D3DXVECTOR3 playerPos, int playerID);
 
 public:
 	//----------
@@ -426,6 +444,7 @@ public:
 	LPD3DXMESH getMesh();
 	bool getNoticedOfPlayer(int playerType);
 	bool getIsAttacking();
+	int getChasingPlayer();
 
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();

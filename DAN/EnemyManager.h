@@ -28,13 +28,22 @@ namespace enemyNS
 {
 	// 同時に存在してよいエネミーの最大数
 	const int ENEMY_OBJECT_MAX = 30;
+
+	// オブジェクト作成基準の近距離(2乗)
+	const float NEAR_DISTANCE2 = 8100.0f;	// 90 * 90
+
+	// オブジェクト破棄基準の遠距離(2乗)
+	const float FAR_DISTANCE2 = 14400.0f;	// 120 * 120
+
+	// エネミーデータリストのチェック頻度
+	const float DATA_LIST_CHECK_INTERVAL = 0.5f;
 }
 
 
 //=============================================================================
 //クラス定義
 //=============================================================================
-class EnemyManager
+class EnemyManager :public Base
 {
 private:
 	LinkedList<enemyNS::EnemyData> enemyDataList;		// エネミーデータリスト
@@ -47,6 +56,7 @@ private:
 	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
 	GameMaster* gameMaster;								// ゲーム管理オブジェクト
 	Player* player;										// プレイヤー
+	float cntTimeDataList;								// エネミーデータリストのチェック時間カウンタ
 
 public:
 	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player);
@@ -61,7 +71,8 @@ public:
 	void destroyEnemy(Enemy* enemy);
 	void destroyAllEnemy();
 	void assertDestructionOrder();
-	enemyNS::EnemyData* findEnemyData(int enemyID);
+	enemyNS::EnemyData* findEnemyData(int _enemyID);
+	Enemy* findEnemy(int _enemyID);
 	int issueNewEnemyID();
 	void outputGUI();
 	void relocateEnemyAccordingToFile();
