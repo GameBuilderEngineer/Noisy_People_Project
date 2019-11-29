@@ -1021,7 +1021,7 @@ void Player::updatePostureByAiming()
 void Player::updateShooting(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
 	//発射位置の更新
-	launchPosition = center + axisZ.direction*radius;
+	launchPosition = center;// +axisZ.direction*radius;
 	//狙撃レイの更新
 	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
 	shootingRay.update(launchPosition, shootingRay.direction);
