@@ -61,7 +61,8 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 
 	//デジタルツリーエフェクト
 	digitalTreeEffect = new DigitalTreeEffect();
-
+	playedDigitalTreeEffect[gameMasterNS::PLAYER_1P] = false;
+	playedDigitalTreeEffect[gameMasterNS::PLAYER_2P] = false;
 #if 0	// ツリーツールのデータを読み込む
 
 #endif
@@ -218,10 +219,61 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 }
 
 //=============================================================================
+//【デジタルツリー用のエフェクトを再生する】
+//=============================================================================
+void TreeManager::playDigitalTreeEffect(int playerNo)
+{
+	if (playedDigitalTreeEffect[playerNo] == true)return;
+
+	playedDigitalTreeEffect[playerNo] = true;
+
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+		{
+			digitalTreeEffect->playStandardEffect(&tree->position);
+		}
+	}
+
+}
+
+//=============================================================================
+//【デジタルツリー用のエフェク停止停する】
+//=============================================================================
+void TreeManager::stopDigitalTreeEffect(int playerNo)
+{
+	if (playedDigitalTreeEffect[playerNo] == false)return;
+
+	playedDigitalTreeEffect[playerNo] = false;
+
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type = treeNS::DIGITAL_TREE)
+		{
+			digitalTreeEffect->playStandardEffect(&tree->position);
+		}
+	}
+
+
+
+}
+
+
+//=============================================================================
 //【通常ビューに切り替える】
 //=============================================================================
 void TreeManager::switchingNormalView()
 {
+	//アナログツリーの透過値の設定
+	aTrunkRenderer->setAlpha(1.0f);
+	aLeafRenderer->setAlpha(1.0f);
+	bTrunkRenderer->setAlpha(1.0f);
+	bLeafRenderer->setAlpha(1.0f);
+	cTrunkRenderer->setAlpha(1.0f);
+	cLeafRenderer->setAlpha(1.0f);
+
 	//アナログツリー
 	aTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
@@ -246,6 +298,13 @@ void TreeManager::switchingNormalView()
 void TreeManager::switchingVisionView()
 {
 
+	//アナログツリーの透過値の設定
+	aTrunkRenderer->setAlpha(0.3f);
+	aLeafRenderer->setAlpha(0.3f);
+	bTrunkRenderer->setAlpha(0.3f);
+	bLeafRenderer->setAlpha(0.3f);
+	cTrunkRenderer->setAlpha(0.3f);
+	cLeafRenderer->setAlpha(0.3f);
 	//アナログツリー
 	aTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
@@ -261,7 +320,6 @@ void TreeManager::switchingVisionView()
 	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
 	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-
 };
 
 //=============================================================================
@@ -541,7 +599,7 @@ void TreeManager::outputGUI()
 		ImGui::Text("DigitalLeafB[Num:%d]", bDLeafRenderer->getObjectNum());
 		ImGui::Text("DigitalLeafC[Num:%d]", cDLeafRenderer->getObjectNum());
 
-
+		bTrunkRenderer->outputGUI();
 
 	}
 #endif

@@ -56,6 +56,7 @@ protected:
 	int									objectNum;				//オブジェクトの数
 	int									fillMode;				//描画モード
 	int									renderPass;				//描画パス
+	float								alpha;					//α値
 
 	//セットストリーム用バッファ
 	LPDIRECT3DVERTEXBUFFER9				matrixBuffer;			//ワールドマトリックスバッファ
@@ -108,10 +109,11 @@ public:
 	void disableForeground();
 	void setFillMode(int mode);
 	void setRenderPass(int pass);
+	void setAlpha(float value);
 
 	//getter
 	StaticMesh* getStaticMesh();
 	int			getObjectNum();
-
+	float*		getAlpha();
 
 };

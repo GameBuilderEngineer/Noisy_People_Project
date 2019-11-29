@@ -67,8 +67,12 @@ namespace effekseerNS
 		BLOW,
 		MUZZLE,
 		DIGIT_TREE,
+		DIGIT_TREE_SELECT,
+		DIGIT_TREE_RAID,
 		DAC,
 		GREENING,
+		DIGIT_MODE,
+		DROP_ITEM,
 		MAX_EFFEKSEER,
 	};
 

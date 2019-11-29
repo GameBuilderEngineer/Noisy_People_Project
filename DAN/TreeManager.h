@@ -12,7 +12,7 @@
 #include "AnalogTree.h"
 #include "DigitalTree.h"
 #include "DigitalTreeEffect.h"
-
+#include "GameMaster.h"
 
 //=============================================================================
 // ñºëOãÛä‘
@@ -54,7 +54,7 @@ private:
 
 	int greeningTreeNum;						//óŒâªñ{êî
 	float greeningRate;							//óŒâªó¶
-
+	bool playedDigitalTreeEffect[gameMasterNS::PLAYER_NUM];
 
 public:
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
@@ -88,6 +88,8 @@ public:
 	void switchingVisionView();;
 	void switchingNormalView();;
 
+	void playDigitalTreeEffect(int playerNo);
+	void stopDigitalTreeEffect(int playerNo);
 
 	void changeWireFrame();
 	void changeSolid();

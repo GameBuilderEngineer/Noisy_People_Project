@@ -103,5 +103,20 @@ void DigitalTreeEffect::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTO
 
 }
 
+//===================================================================================================================================
+//【標準エフェクト】
+//===================================================================================================================================
+void DigitalTreeEffect::playStandardEffect(D3DXVECTOR3* position)
+{
+	DigitalTreeEffectNS::DigitTree* instance = new DigitalTreeEffectNS::DigitTree(position);
+	effekseerNS::play(instance);
+}
 
-
+//===================================================================================================================================
+//【被襲撃エフェクト】
+//===================================================================================================================================
+void DigitalTreeEffect::playRaidEffect(D3DXVECTOR3* position)
+{
+	DigitalTreeEffectNS::DigitTreeRaid* instance = new DigitalTreeEffectNS::DigitTreeRaid(position);
+	effekseerNS::play(instance);
+}

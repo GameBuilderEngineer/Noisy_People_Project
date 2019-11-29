@@ -11,6 +11,7 @@ float4x4	matrixProjection;
 float4x4	matrixView;
 texture		textureDecal;
 float4		diffuse;
+float		alphaValue;
 float4		lightDirection		= float4(-1.0f, 1.0f, -1.0f, 0.2f);
 
 
@@ -104,7 +105,8 @@ float4 PS(VS_OUT In) : COLOR0
 float4 PS1(VS_OUT In) : COLOR0
 {
 	float4 texel		= tex2D(textureSampler, In.uv);
-	float4 finalColor	= texel;//float4(texel.x,texel.y,texel.z, 0.5f);
+	float4 alpha		= float4(1.0f,1.0f,1.0f,alphaValue);
+	float4 finalColor	= texel * alpha;
 	return finalColor;
 }
 
@@ -161,7 +163,7 @@ technique mainTechnique {
 
 		//シェーダ設定
 		VertexShader			= compile vs_3_0 VS();
-		PixelShader				= compile ps_3_0 PS();
+		PixelShader				= compile ps_3_0 PS1();
 	}
 
 	//透過有効描画&最前面描画
@@ -179,6 +181,6 @@ technique mainTechnique {
 
 		//シェーダ設定
 		VertexShader			= compile vs_3_0 VS();
-		PixelShader				= compile ps_3_0 PS();
+		PixelShader				= compile ps_3_0 PS1();
 	}
 }

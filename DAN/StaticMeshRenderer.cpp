@@ -36,6 +36,7 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	worldMatrix				= NULL;
 	declaration				= NULL;
 	renderPass				= LAMBERT_PASS;
+	alpha					= 1.0f;
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[65];
@@ -138,23 +139,16 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 	effect->SetTechnique("mainTechnique");
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);	
+	effect->SetFloat("alphaValue", alpha);
 
 	// レンダリング
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
-		if (renderPass == TRANSPARENT_PASS || renderPass == FOREGROUND_PASS)
-		{
-			D3DCOLORVALUE diffuse = staticMesh->materials[i].Diffuse;
-			diffuse.a = 0.5f;
-			effect->SetFloatArray("diffuse", (FLOAT*)&diffuse, 4);
-		}
-		else {
-			effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
-		}
+		effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
 		effect->SetTexture("textureDecal", staticMesh->textures[i]);
-		
+
 		//シェーダー更新
-		//effect->CommitChanges();
+		effect->CommitChanges();
 		effect->Begin(0, 0);
 
 		//描画パスの切替
@@ -332,8 +326,10 @@ void StaticMeshRenderer::outputGUI()
 	for (int i = 0; i < objectNum; i++)
 	{
 		obj = *objectList->getValue(i);
-		obj->outputGUI();
+		ImGui::SliderFloat("alpha", &alpha, 0, 255.0f);			
+
 	}
+
 }
 #endif // _DEBUG
 
@@ -348,9 +344,11 @@ void StaticMeshRenderer::enableForeground()		{ onForeground = true; }
 void StaticMeshRenderer::disableForeground()	{ onForeground = false; }
 void StaticMeshRenderer::setFillMode(int mode)	{ fillMode = mode; }
 void StaticMeshRenderer::setRenderPass(int pass){ renderPass = pass; }
+void StaticMeshRenderer::setAlpha(float value)	{ alpha = value; }
 
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
 StaticMesh* StaticMeshRenderer::getStaticMesh(){return staticMesh;}
 int			StaticMeshRenderer::getObjectNum() { return objectNum; }
+float*		StaticMeshRenderer::getAlpha() { return &alpha; }

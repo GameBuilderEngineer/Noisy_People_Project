@@ -190,7 +190,7 @@ void Game::initialize() {
 	windManager = new WindManager;
 	windManager->initialize(*getSceneName(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
-	//// マップオブジェクト
+	// マップオブジェクト
 	mapObjectManager = new MapObjectManager;
 	mapObjectManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 
@@ -622,22 +622,15 @@ void Game::render3D(Camera currentCamera) {
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
-	//{
-	//	treeManager->changeWireFrame();
-	//}
-	//else {
-	//	treeManager->changeSolid();
-	//}
-
-
-
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
 	{
 		treeManager->switchingVisionView();
+		treeManager->playDigitalTreeEffect(nowRenderingWindow);
 	}
 	else {
 		treeManager->switchingNormalView();
+		//treeManager->stpoDigitalTreeEffect(nowRenderingWindow);
 	}
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 

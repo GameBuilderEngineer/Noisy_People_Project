@@ -31,6 +31,7 @@ namespace DigitalShiftEffectNS
 	const float	RUNNING_TIME		= 1.0f;
 	const float	END_TIME			= 1.0f;
 
+	//デジタルツリー選択エフェクト
 	//選択用ライトクラス
 	class SelectLight:public effekseerNS::Instance
 	{
@@ -38,13 +39,14 @@ namespace DigitalShiftEffectNS
 		D3DXVECTOR3* syncPosition;
 		SelectLight(D3DXVECTOR3* sync) {
 			syncPosition = sync;
-			effectNo = effekseerNS::DIGIT_TREE;
+			effectNo = effekseerNS::DIGIT_TREE_SELECT;
 		}
 		virtual void update() {
 			position = *syncPosition;
 			Instance::update();
 		};
 	};
+
 }
 
 //===================================================================================================================================
