@@ -85,6 +85,10 @@ public:
 	int	issueNewTreeID();
 	void outputGUI();
 
+	void switchingVisionView();;
+	void switchingNormalView();;
+
+
 	void changeWireFrame();
 	void changeSolid();
 

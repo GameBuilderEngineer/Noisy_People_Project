@@ -142,7 +142,15 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 	// レンダリング
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
-		effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
+		if (renderPass == TRANSPARENT_PASS || renderPass == FOREGROUND_PASS)
+		{
+			D3DCOLORVALUE diffuse = staticMesh->materials[i].Diffuse;
+			diffuse.a = 0.5f;
+			effect->SetFloatArray("diffuse", (FLOAT*)&diffuse, 4);
+		}
+		else {
+			effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
+		}
 		effect->SetTexture("textureDecal", staticMesh->textures[i]);
 		
 		//シェーダー更新

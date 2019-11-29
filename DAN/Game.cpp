@@ -622,13 +622,23 @@ void Game::render3D(Camera currentCamera) {
 	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// ツリーの描画
-	//if (player[0].getState() == playerNS::STATE::VISION || player[0].getState() == playerNS::STATE::SKY_VISION)
 	//{
 	//	treeManager->changeWireFrame();
 	//}
 	//else {
 	//	treeManager->changeSolid();
 	//}
+
+
+
+	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
+		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
+	{
+		treeManager->switchingVisionView();
+	}
+	else {
+		treeManager->switchingNormalView();
+	}
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// アイテムの描画

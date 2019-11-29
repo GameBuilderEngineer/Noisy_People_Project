@@ -218,6 +218,53 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 }
 
 //=============================================================================
+//【通常ビューに切り替える】
+//=============================================================================
+void TreeManager::switchingNormalView()
+{
+	//アナログツリー
+	aTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	bTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	bLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	cTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	//デジタルツリー
+	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+};
+
+//=============================================================================
+//【ビジョンビューに切り替える】
+//=============================================================================
+void TreeManager::switchingVisionView()
+{
+
+	//アナログツリー
+	aTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	bTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	bLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	cTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	//デジタルツリー
+	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
+	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
+	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
+	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
+	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
+	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
+
+};
+
+//=============================================================================
 //【ワイヤーフレーム描画に切り替える】
 //=============================================================================
 void TreeManager::changeWireFrame()
