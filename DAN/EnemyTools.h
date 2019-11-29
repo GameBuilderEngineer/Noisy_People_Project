@@ -36,17 +36,19 @@ typedef struct	//ENMYチャンク
 
 typedef struct	//EFMTチャンク
 {
-	char chunkId[ENEMY_CHUNK_ID];	//チャンクID
-	short size;				//このチャンクのサイズ
-	short enemyId;			//敵のID
-	short enemyType;		//敵の種類
-	short enemyState;		//敵の状態
-	float posX;				//敵の生成位置(X)
-	float posY;				//敵の生成位置(Y)
-	float posZ;				//敵の生成位置(Z)
-	float dirX;				//敵の向き(X)
-	float dirY;				//敵の向き(Y)
-	float dirZ;				//敵の向き(Z)
+	char	chunkId[ENEMY_CHUNK_ID];	//チャンクID
+	short	size;						//このチャンクのサイズ
+	short	enemyId;					//敵のID
+	short	enemyType;					//敵の種類
+	short	enemyState;					//敵の状態
+	float	posX;						//敵の生成位置(X)
+	float	posY;						//敵の生成位置(Y)
+	float	posZ;						//敵の生成位置(Z)
+	float	dirX;						//敵の向き(X)
+	float	dirY;						//敵の向き(Y)
+	float	dirZ;						//敵の向き(Z)
+	short	rootSize;					//ルートの利用数
+	D3DXVECTOR3	root[8];				//ルート
 }ENEMY_EFMT;
 
 typedef struct	//ENEMYファイル構造体
@@ -78,6 +80,7 @@ public:
 	//GUI
 	void outputEnemyToolsGUI(int GUIid,						//GUI
 		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);		
+	void outputRootToolGUI(int enemyId, D3DXVECTOR3 pos);	//ルートツール
 
 	//レンダラー
 	int  GetStaticMeshID(short enemyType);					//メッシュIDを取得
@@ -102,7 +105,9 @@ private:
 #ifdef _DEBUG
 	//変数	
 	StaticMeshRenderer** renderer;							//レンダラー
+	bool rootEdit;											//ルートの編集フラグ
 	bool needUpdate;										//更新フラグ
+	int EnemyListboxRootCurrent;							//エネミー選択用(リストボックス)
 	int EnemyListboxCurrent;								//エネミー選択用(リストボックス)
 	int EnemyListboxState;									//エネミーの状態(リストボックス)
 

@@ -423,10 +423,10 @@ int TREE_TOOLS::GetStaticTrunkMeshID(short treeType)
 	switch (treeType)
 	{
 	case treeNS::TREE_MODEL::A_MODEL:
-		staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
+		staticMeshNo = staticMeshNS::A_TRUNK;
 		break;
 	case treeNS::TREE_MODEL::B_MODEL:
-		staticMeshNo = staticMeshNS::GREEN_TREE_001;
+		staticMeshNo = staticMeshNS::B_TRUNK;
 		break;
 	case treeNS::TREE_MODEL::C_MODEL:
 		staticMeshNo = staticMeshNS::GREEN_TREE_002;
@@ -446,7 +446,7 @@ int TREE_TOOLS::GetStaticLeafMeshID(short treeState)
 	switch (treeState)
 	{
 	case treeNS::GREEN_STATE::GREEN:
-		staticMeshNo = staticMeshNS::DEAD_TREE;
+		staticMeshNo = staticMeshNS::A_LEAF;
 		break;
 	case treeNS::GREEN_STATE::DEAD:
 		staticMeshNo = staticMeshNS::GRASS;

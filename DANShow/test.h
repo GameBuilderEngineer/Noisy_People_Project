@@ -8,7 +8,7 @@
 class TestPic
 {
 public:
-	TestPic();
+	TestPic(HWND hWnd);
 	~TestPic();
 
 	void update() {};

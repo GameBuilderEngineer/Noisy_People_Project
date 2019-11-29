@@ -116,6 +116,8 @@ private:
 	// その他
 	int							staticMeshNo;				// メッシュのID
 	int							ItemListboxMesh;				// メッシュの種類(リストボックス)
+	
+	D3DXVECTOR3					PositionYeah;
 
 public:
 	TmpObject();
@@ -149,4 +151,5 @@ public:
 	//getter
 	int getState();
 	BoundingSphere* getBodyCollide();							//球コリジョンの取得
+	D3DXVECTOR3*	getPositionYeah() { return&PositionYeah; };
 };

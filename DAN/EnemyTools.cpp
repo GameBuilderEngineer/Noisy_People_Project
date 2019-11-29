@@ -59,6 +59,9 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 #endif
 	}
 
+	rootEdit = false;
+	EnemyListboxRootCurrent = 0;
+
 #ifdef _DEBUG
 	//エネミー情報
 	EnemyListboxCurrent = 0;
@@ -175,6 +178,9 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 				delete[] ListboxIndexName[i];
 			}
 			delete[] ListboxIndexName;
+
+			//ルート
+			outputRootToolGUI(EnemyListboxCurrent,pos);
 		}
 
 		//削除
@@ -189,6 +195,74 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 		{
 			//作成
 			AddEnemyFormat(EnemyListboxType, EnemyListboxState, pos, dir);
+		}
+	}
+}
+
+//===================================================================================================================================
+//【ルートツール】
+//===================================================================================================================================
+void ENEMY_TOOLS::outputRootToolGUI(int enemyID, D3DXVECTOR3 pos)
+{
+	D3DXVECTOR3 backUp = enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent];
+	int backUpSize = enemyFile.efmt[EnemyListboxCurrent].rootSize;
+
+	ImGui::Checkbox("Edit", &rootEdit);
+	const char* listboxEnemyRoot[] = {
+		"Root ID:0",
+		"Root ID:1",
+		"Root ID:2",
+		"Root ID:3",
+		"Root ID:4",
+		"Root ID:5",
+		"Root ID:6",
+		"Root ID:7" };
+	ImGui::ListBox("Enemy Root", &EnemyListboxRootCurrent, listboxEnemyRoot,enemyFile.efmt[EnemyListboxCurrent].rootSize + 1);
+	ImGui::Text("Root In Used:%d", enemyFile.efmt[EnemyListboxCurrent].rootSize);
+	ImGui::Text("Root[%d]:%f %f %f", EnemyListboxRootCurrent,
+		enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent].x,
+		enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent].y,
+		enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent].z);
+
+	if (rootEdit)
+	{
+		const float limitTop = 1000;
+		const float limitBottom = -1000;
+		bool getNowPos = false;	//現在位置の取得
+		ImGui::SliderInt("Enemy Root",&backUpSize, 0, 7);
+		if (EnemyListboxRootCurrent > 0)	//0番名は変更不可
+		{
+			ImGui::Checkbox("Now Pos", &getNowPos);
+			ImGui::SliderFloat3("Pos", 
+				enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent],
+				limitBottom, limitTop);
+
+			if (getNowPos)
+			{
+				enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent] = pos;
+				getNowPos = false;
+			}
+		}
+
+		if ((backUp != enemyFile.efmt[EnemyListboxCurrent].root[EnemyListboxRootCurrent]) ||
+			(backUpSize != enemyFile.efmt[EnemyListboxCurrent].rootSize))
+		{
+			enemyFile.efmt[EnemyListboxCurrent].rootSize = backUpSize;
+			for (int i = enemyFile.efmt[EnemyListboxCurrent].rootSize + 1; i < 7; i++)
+			{
+				enemyFile.efmt[EnemyListboxCurrent].root[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			}
+
+			//ファイルの書き出し
+			OutputEnemyFile();
+
+			//レンダラーのリセット処理
+			ResetRenderer();
+
+			if (EnemyListboxRootCurrent > backUpSize)
+			{
+				EnemyListboxRootCurrent = backUpSize;
+			}
 		}
 	}
 }
@@ -400,6 +474,11 @@ void ENEMY_TOOLS::SetEnemyPos(short enemyId, const D3DXVECTOR3 pos)
 	enemyFile.efmt[enemyId].posX = pos.x;
 	enemyFile.efmt[enemyId].posY = pos.y;
 	enemyFile.efmt[enemyId].posZ = pos.z;
+
+	//ルートの先頭
+	memset(enemyFile.efmt[enemyId].root, 0, sizeof(enemyFile.efmt[enemyId].root));
+	enemyFile.efmt[enemyId].rootSize = 0;
+	enemyFile.efmt[enemyId].root[0] = pos;
 }
 
 //===================================================================================================================================

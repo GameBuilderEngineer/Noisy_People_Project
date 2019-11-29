@@ -103,9 +103,9 @@ void Tree::update(float frameTime)
 	if (this->onGravity)
 	{
 		D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-		this->setGravity(gravityDirection, 9.8f);
-		this->speed += this->acceleration * frameTime;
-		this->position += this->speed * frameTime;
+		//this->setGravity(gravityDirection, 9.8f);
+		//this->speed += this->acceleration * frameTime;
+		//this->position += this->speed * frameTime;
 		grounding();
 	}
 
@@ -238,7 +238,7 @@ void Tree::grounding()
 
 	if (gravityRay.rayIntersect(attractorMesh, *attractorMatrix))
 	{
-		position.y -= gravityRay.distance;
+		position.y -= gravityRay.distance-0.5f;
 		leaf.position = position;
 		// d—ÍØ‚é
 		this->onGravity = false;

@@ -58,7 +58,7 @@ void Create::initialize() {
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	camera->setTarget(tmpObject->getPosition());
+	camera->setTarget(tmpObject->getPositionYeah());
 	camera->setTargetX(&tmpObject->getAxisX()->direction);
 	camera->setTargetY(&tmpObject->getAxisY()->direction);
 	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
@@ -67,6 +67,8 @@ void Create::initialize() {
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI / 18) * 9);
+	camera->setLimitRotationTop(0.3f);
+	camera->setLimitRotationBottom(0.7f);
 
 	//light
 	light = new Light;
