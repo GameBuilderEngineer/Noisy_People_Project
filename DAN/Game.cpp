@@ -818,7 +818,7 @@ void Game::collisions()
 	//プレイヤー[シフトレイ]とデジタルツリー
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		//シフト操作の無効化(初期値）
+		//シフト操作の無効化(初期値)
 		player[i].disableOperation(playerNS::ENABLE_SHIFT);
 		if (player[i].getState() != playerNS::VISION &&
 			player[i].getState() != playerNS::SKY_VISION)continue;
