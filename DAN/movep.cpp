@@ -132,7 +132,7 @@ void UpdateMoveP(float f_TimeDelta)
 {
 	Input *input = getInput();
 
-	if (input->getMouseRButton())
+	if (input->getMouseLButton())
 	{
 		MoveP.IsChange = true;
 	}
@@ -141,7 +141,7 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.IsChange = false;
 	}
 
-	if (input->isKeyDown(VK_SPACE))
+	if (input->getMouseRButtonTrigger())
 	{
 		MoveP.IsJump = true;
 	}
@@ -267,6 +267,8 @@ void DrawMoveP()
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&MoveP.WorldMatrix);
 
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	// スケールを反映
 	D3DXMatrixScaling(&mtxScl, MoveP.Scl.x, MoveP.Scl.y, MoveP.Scl.z);
 	D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxScl);
@@ -290,11 +292,15 @@ void DrawMoveP()
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);
 
+	pDevice->SetTexture(0, NULL);
+
 	// アニメーションを描画する
 	DrawAnimation(MoveP.Animation, &MoveP.WorldMatrix, false);
 
 	// マテリアルをデフォルトに戻す
 	pDevice->SetMaterial(&matDef);
+
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 }
 
