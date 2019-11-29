@@ -13,6 +13,11 @@
 #include "ImguiManager.h"
 
 //===================================================================================================================================
+//【using宣言】
+//===================================================================================================================================
+using namespace staticMeshRendererNS;
+
+//===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
@@ -21,6 +26,7 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	this->staticMesh		= _staticMesh;
 	onRender				= true;
 	onTransparent			= false;
+	onForeground			= false;
 	onLight					= true;
 	didRegister				= false;
 	didUnRegister			= false;
@@ -29,6 +35,7 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	matrixBuffer			= NULL;
 	worldMatrix				= NULL;
 	declaration				= NULL;
+	renderPass				= LAMBERT_PASS;
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[65];
@@ -141,9 +148,16 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 		//シェーダー更新
 		//effect->CommitChanges();
 		effect->Begin(0, 0);
-		if(onTransparent)	effect->BeginPass(2);
-		else if(onLight)	effect->BeginPass(0);
-		else				effect->BeginPass(1);
+
+		//描画パスの切替
+		switch (renderPass)
+		{
+		case LAMBERT_PASS:		effect->BeginPass(0);	break;
+		case TEXEL_PASS:		effect->BeginPass(1);	break;
+		case TRANSPARENT_PASS:	effect->BeginPass(2);	break;
+		case FOREGROUND_PASS:	effect->BeginPass(3);	break;
+		}
+
 		//Drawコール
 		device->DrawIndexedPrimitive(
 			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type				:描画タイプ
@@ -236,7 +250,9 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 		{
 			//unRegisterObject(i);
 			//存在時間を0にして削除可能状態にする
-			(*objectList->getValue(i))->existenceTimer = 0.0f;
+			//(*objectList->getValue(i))->existenceTimer = 0.0f;
+			objectList->remove(objectList->getNode(i));
+			didUnRegister = true;
 			//検索終了
 			return;	
 		}
@@ -316,11 +332,15 @@ void StaticMeshRenderer::outputGUI()
 //===================================================================================================================================
 //【setter】
 //===================================================================================================================================
-void StaticMeshRenderer::enableLight()	{ onLight = true; }
-void StaticMeshRenderer::disableLight()	{ onLight = false; }
+void StaticMeshRenderer::enableLight()			{ onLight = true; }
+void StaticMeshRenderer::disableLight()			{ onLight = false; }
 void StaticMeshRenderer::enableTransparent()	{ onTransparent = true; }
 void StaticMeshRenderer::disableTransparent()	{ onTransparent = false; }
-void StaticMeshRenderer::setFillMode(int mode) { fillMode = mode; }
+void StaticMeshRenderer::enableForeground()		{ onForeground = true; }
+void StaticMeshRenderer::disableForeground()	{ onForeground = false; }
+void StaticMeshRenderer::setFillMode(int mode)	{ fillMode = mode; }
+void StaticMeshRenderer::setRenderPass(int pass){ renderPass = pass; }
+
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================

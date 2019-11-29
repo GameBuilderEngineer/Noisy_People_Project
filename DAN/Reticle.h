@@ -12,6 +12,7 @@
 #include "Sprite.h"
 #include "InstancingBillboard.h"
 #include "Ray.h"
+#include "Player.h"
 
 //===================================================================================================================================
 //ÅyñºëOãÛä‘Åz
@@ -75,6 +76,6 @@ public:
 
 	void update(float frameTime);
 	void render3D(int playerType,D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void render2D();
+	void render2D(Player* player);
 };
 

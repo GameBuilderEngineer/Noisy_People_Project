@@ -130,7 +130,7 @@ namespace playerNS{
 
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
-		D3DXVECTOR3(0, 20, -220),			//1P
+		D3DXVECTOR3(0, 20, -220),				//1P
 		D3DXVECTOR3(130, 10, 230)				//2P
 	};
 
@@ -153,7 +153,7 @@ namespace playerNS{
 	const float MAX_SPEED					= 6.0f;									//ˆÚ“®’â~‘¬“x
 	const float MAX_SLIP					= 10.0f;								//ˆÚ“®’â~‘¬“x
 	const float FALL_SPEED_MAX				= 60.0f;								//—‰ºÅ‚‘¬“x
-	const float MOVE_FRICTION				= 1.3f;									//’n–Ê–€CŒW”
+	const float MOVE_FRICTION				= 1.0f;									//’n–Ê–€CŒW”
 	const float WALL_FRICTION				= 0.98;									//•Ç‚¸‚è–€CŒW”
 	const float GROUND_FRICTION				= 0.25;									//’…’n–€CŒW”
 	const float GRAVITY_FORCE				= 9.8f;									//d—Í

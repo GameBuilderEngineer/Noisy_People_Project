@@ -348,14 +348,14 @@ void Player::updatePhysics(float frameTime)
 		D3DXVec3Normalize(&frictionDirection,&speed);
 
 		dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-		if (dot > 60.0f / 90.0f) {
+		if (dot >= 1.0f - 70.0f / 90.0f) {
 			// ‘¬“x‚É–€ŽC‚Ì‰e‹¿‚ð—^‚¦‚é
 			speed -= frictionDirection * MOVE_FRICTION * GRAVITY_FORCE * frameTime;
 		}
 		else {
 			// ‘¬“x‚É–€ŽC‚Ì‰e‹¿‚ð—^‚¦‚é
 			speed -= frictionDirection * MOVE_FRICTION * GRAVITY_FORCE  * frameTime;
-
+		
 			//ŽÎ–ÊŠŠ‚èƒxƒNƒgƒ‹
 			D3DXVECTOR3 slipVector;
 			D3DXVec3Normalize(&slipVector, &slip(D3DXVECTOR3(0, -1, 0), gravityRay.normal));

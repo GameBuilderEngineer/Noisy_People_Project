@@ -11,6 +11,7 @@
 #include "Reticle.h"
 #include "TextureLoader.h"
 #include "GameMaster.h"
+#include "Player.h"
 
 //===================================================================================================================================
 //yusingéŒ¾z
@@ -80,6 +81,8 @@ Reticle::Reticle()
 	billboard = new InstancingBillboard();
 	billboard->initialize(*textureNS::reference(textureNS::UI_MAIN_RETICLE),NUM_U-1,NUM_V-1);
 	billboard->generateInstance(new Reticle3D(D3DXVECTOR3(0,0,0),D3DXVECTOR2(UNIT_U*0,UNIT_V*0)) );
+	billboard->disableZBuffer();
+
 }
 
 //===================================================================================================================================
@@ -167,15 +170,45 @@ void Reticle::render3D(int playerType,D3DXMATRIX view, D3DXMATRIX projection, D3
 //===================================================================================================================================
 //y‚Q‚cî•ñ‚Ì•`‰æz
 //===================================================================================================================================
-void Reticle::render2D()
+void Reticle::render2D(Player* player)
 {
+	//•`‰æ‚·‚éƒeƒNƒXƒ`ƒƒ‚ÌØ‚è‘Ö‚¦
+	switch (player->getState())
+	{
+	case playerNS::STATE::VISION: 
+	case playerNS::STATE::SKY_VISION:
+	case playerNS::STATE::DIGITAL_SHIFT:
+		//ƒVƒtƒg‚Å‚«‚é‚©‚Ç‚¤‚©‚ÌƒŒƒeƒBƒNƒ‹‚Ö‚Ì”½‰f
+		if (player->whetherValidOperation(playerNS::ENABLE_SHIFT))
+		{
+			reticle2D->setTexturePointer(*textureNS::reference(textureNS::UI_MAIN_DIGITAL_RETICLE));
+		}
+		else {
+			reticle2D->setTexturePointer(*textureNS::reference(textureNS::UI_SUB_DIGITAL_RETICLE));
+		}
+		break;
+
+	case playerNS::STATE::NORMAL:
+	case playerNS::STATE::DEATH:
+		reticle2D->setTexturePointer(*textureNS::reference(textureNS::UI_SUB_RETICLE));
+		break;
+	}
+
+	//•`‰æˆÊ’u
+	switch (player->getInfomation()->playerType)
+	{
 	//1P
-	reticle2D->setPosition(POSITION1);
-	reticle2D->setVertex();
-	reticle2D->render();
+	case gameMasterNS::PLAYER_1P:
+		reticle2D->setPosition(POSITION1);
+		break;
 	//2P
-	reticle2D->setPosition(POSITION2);
+	case gameMasterNS::PLAYER_2P:
+		reticle2D->setPosition(POSITION2);
+		break;
+	} 
 	reticle2D->setVertex();
+
+	//•`‰æ
 	reticle2D->render();
 }
 

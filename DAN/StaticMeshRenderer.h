@@ -28,6 +28,12 @@ namespace staticMeshRendererNS
 	{
 
 	};
+	
+	const int LAMBERT_PASS			= 0x00000001;//ランバート
+	const int TEXEL_PASS			= 0x00000002;//テクセルカラーのみの描画
+	const int TRANSPARENT_PASS		= 0x00000004;//透過処理有効描画
+	const int FOREGROUND_PASS		= 0x00000008;//最前面描画
+
 }
 
 //===================================================================================================================================
@@ -43,11 +49,13 @@ protected:
 	LPDIRECT3DVERTEXDECLARATION9		declaration;			//頂点宣言
 	bool								onRender;				//描画フラグ
 	bool								onTransparent;			//透過フラグ
+	bool								onForeground;			//最前面描画
 	bool								onLight;				//ライトフラグ
 	bool								didRegister;			//登録フラグ
 	bool								didUnRegister;			//解除フラグ
 	int									objectNum;				//オブジェクトの数
 	int									fillMode;				//描画モード
+	int									renderPass;				//描画パス
 
 	//セットストリーム用バッファ
 	LPDIRECT3DVERTEXBUFFER9				matrixBuffer;			//ワールドマトリックスバッファ
@@ -96,10 +104,14 @@ public:
 	void disableLight();
 	void enableTransparent();
 	void disableTransparent();
+	void enableForeground();
+	void disableForeground();
 	void setFillMode(int mode);
+	void setRenderPass(int pass);
 
 	//getter
 	StaticMesh* getStaticMesh();
 	int			getObjectNum();
+
 
 };

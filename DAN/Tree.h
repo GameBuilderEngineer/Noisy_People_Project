@@ -127,6 +127,7 @@ public:
 	treeNS::TreeData* getTreeData();	// ツリーデータを取得
 	LPD3DXMESH getMesh();				// 衝突用メッシュへの参照
 	bool isAroundGreening();			//周囲へ緑化中か
+	bool getTransState();				//状態遷移状態
 
 	// Setter
 	void setDataToTree(treeNS::TreeData _treeData);	

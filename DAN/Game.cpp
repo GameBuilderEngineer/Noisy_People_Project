@@ -650,7 +650,8 @@ void Game::render3D(Camera currentCamera) {
 	ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//レティクル3D描画
-	reticle->render3D(nowRenderingWindow,currentCamera.view, currentCamera.projection, currentCamera.position);
+	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
+		reticle->render3D(nowRenderingWindow,currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #if _DEBUG
 	//4分木空間分割のライン描画
@@ -714,7 +715,8 @@ void Game::renderUI() {
 	player2UI->render();
 
 	//レティクルの描画
-	reticle->render2D();
+	reticle->render2D(&player[gameMasterNS::PLAYER_1P]);
+	reticle->render2D(&player[gameMasterNS::PLAYER_2P]);
 }
 
 //===================================================================================================================================

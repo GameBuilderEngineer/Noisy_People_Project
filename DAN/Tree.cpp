@@ -194,8 +194,8 @@ LPD3DXMESH Tree::getMesh() {
 	}
 	return model.mesh;
 };
-
 bool Tree::isAroundGreening()		{ return nowAroundGreening; }
+bool Tree::getTransState()			{return onTransState;}
 
 //=============================================================================
 // Setter

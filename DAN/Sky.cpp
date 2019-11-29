@@ -16,6 +16,7 @@
 Sky::Sky() {
 	renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SKY_DOME));
 	renderer->disableLight();
+	renderer->setRenderPass(staticMeshRendererNS::TEXEL_PASS);
 	initialize();
 };
 

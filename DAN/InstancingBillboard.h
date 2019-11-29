@@ -108,6 +108,9 @@ protected:
 	InstancingBillboardNS::InstanceList*	instanceList;			//インスタンスリスト
 	int										instanceNum=0;			//インスタンスの数
 
+	//描画設定フラグ
+	bool									zBufferEnable;			//Zバッファ
+
 public:
 	//Method
 	InstancingBillboard();
@@ -142,4 +145,7 @@ public:
 	int getInstanceNum();																	//インスタンスの数を取得する
 	InstancingBillboardNS::InstanceList getList();											//リストを取得する
 
+	//描画設定切替
+	void enableZBuffer();
+	void disableZBuffer();
 };

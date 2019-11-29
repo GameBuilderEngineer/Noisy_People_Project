@@ -33,6 +33,7 @@ InstancingBillboard::InstancingBillboard()
 	color				= NULL;
 	uv					= NULL;
 	texture				= NULL;
+	zBufferEnable		= true;
 	device				= getDevice();
 	srand((unsigned int)time(NULL));
 }
@@ -171,8 +172,8 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	if (instanceNum <= 0)return;
 
 	//Z深度バッファ
-	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	//device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	//device->SetRenderState(D3DRS_ZENABLE, TRUE);
 
 	//αテスト
 	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
@@ -215,7 +216,9 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->SetTexture("planeTexture", texture);
 
 	effect->Begin(0, 0);
-	effect->BeginPass(0);
+
+	if(zBufferEnable)effect->BeginPass(0);
+	else effect->BeginPass(1);
 		
 	device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
 
@@ -428,3 +431,18 @@ void InstancingBillboard::updateArray()
 InstancingBillboardNS::InstanceList InstancingBillboard::getList() { return *instanceList; }
 int InstancingBillboard::getInstanceNum() { return instanceList->nodeNum; }
 
+//===================================================================================================================================
+//【Zバッファを有効にする】
+//===================================================================================================================================
+void InstancingBillboard::enableZBuffer()
+{
+	zBufferEnable = true;
+}
+
+//===================================================================================================================================
+//【Zバッファを無効にする】
+//===================================================================================================================================
+void InstancingBillboard::disableZBuffer()
+{
+	zBufferEnable = false;
+}
