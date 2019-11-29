@@ -40,38 +40,16 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	// ゲームシーンでの初期化処理
 	if (_sceneName == "Scene -Game-")
 	{
-#if 0	// エネミーツールのデータを読み込む
+#if 1	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-	playParameters = new PLAY_PARAMETERS[enemyTools->GetEnemyMax()*gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 	{
-		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
-		{
-			//3Dサウンド
-			switch (enemyTools->GetEnemySet(i).type)
-			{
-			case ENEMY_TYPE::WOLF:
-				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_01, true ,NULL,true,j };
-				break;
-			case ENEMY_TYPE::TIGER:
-				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_02, true ,NULL,true,j };
-				break;
-			case ENEMY_TYPE::BEAR:
-				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_03, true ,NULL,true,j };
-				break;
-			default:
-				playParameters[(i*gameMasterNS::PLAYER_NUM) + j] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, GAME_S3D_LIST::GAME_S3D_FOOTSTEP_03, true ,NULL,true,j };
-				break;
-			}
-			SoundInterface::S3D->playSound(&playParameters[(i*gameMasterNS::PLAYER_NUM) + j]);
-		}
-
-			createEnemyData(enemyTools->GetEnemySet(i));
-		}
-		SAFE_DELETE(enemyTools);
+		createEnemyData(enemyTools->GetEnemySet(i));
+	}
+	SAFE_DELETE(enemyTools);
 #endif
 
-#if 0	// エネミーオブジェクトをツールデータを元に作成する
+#if 1	// エネミーオブジェクトをツールデータを元に作成する
 		for (size_t i = 0; i < enemyDataList.nodeNum; i++)
 		{
 			if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
@@ -151,8 +129,8 @@ void EnemyManager::update(float frameTime)
 		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
 		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
 
-		if (dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2 ||	// 遠距離もしくは
-			(*itr)->getEnemyData()->isAlive == false)			// 死亡済み
+		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2 || (*itr)->getEnemyData()->isAlive == false) &&
+			(*itr)->getEnemyData()->type == enemyNS::BEAR == false)	
 		{// エネミーオブジェクトを破棄する
 			int destroyTargetEnemyData = -1;
 			if ((*itr)->getEnemyData()->isGeneratedBySpawnEvent)

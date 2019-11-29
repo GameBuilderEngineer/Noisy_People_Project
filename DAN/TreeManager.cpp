@@ -222,6 +222,8 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 //=============================================================================
 void TreeManager::switchingNormalView()
 {
+	
+
 	//アナログツリー
 	aTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);

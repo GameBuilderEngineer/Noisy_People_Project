@@ -76,7 +76,7 @@ void Create::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 

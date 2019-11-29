@@ -168,7 +168,7 @@ enemyNS::ENEMY_TYPE EventMaker::decideSpawnEnemyType()
 	float score = 0.0f;
 
 	// 最近倒した敵の数が多いほど高くなるようスコアをプロット
-	score = fuzzy.grade((float)data->numKilledRecently, 0.0f, 7.0f);
+	score = fuzzy.grade((float)data->numKilledRecently, 0.0f, 5.0f);
 
 	// プレイヤー2名のコンディションによってスコアを補正
 	int sum = (data->playerCondition[gameMasterNS::PLAYER_1P] + data->playerCondition[gameMasterNS::PLAYER_2P]);
@@ -199,17 +199,13 @@ enemyNS::ENEMY_TYPE EventMaker::decideSpawnEnemyType()
 	score += (float)((rand() % 5) - 2);
 
 	// スコアによってエネミーのタイプを変更する
-	if (score > 0.7f)
+	if (score > 0.2f)
 	{
 		ans = enemyNS::WOLF;
 	}
-	else if (score > 0.3f)
-	{
-		ans = enemyNS::TIGER;
-	}
 	else
 	{
-		ans = enemyNS::BEAR;
+		ans = enemyNS::TIGER;
 	}
 
 	return ans;
