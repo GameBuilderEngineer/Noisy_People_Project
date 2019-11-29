@@ -37,7 +37,7 @@ public://メンバー関数
 	~ElectTank();
 	void initialize(int playerType);
 	void render();
-	void update(int power);
-	void renderRestriction(int power);//タンクの描画制限関数
+	void update(int power, int playerType);
+	void renderRestriction(int power, int playerType);//タンクの描画制限関数
 private:
 };

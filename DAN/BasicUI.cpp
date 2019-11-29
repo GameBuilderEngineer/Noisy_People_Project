@@ -157,9 +157,9 @@ void BasicUI::changePostion(Sprite *sprite,int movetype)
 }
 
 //=================================
-//“§–¾“x‚Ì‘‰Á
+//“§–¾“x‚Ì•ÏX
 //=================================
-void BasicUI::increaseAlpha(Sprite *sprite,float alpha)
+void BasicUI::changeAlpha(Sprite *sprite,float alpha)
 {
 
 	alphaValue = alpha;

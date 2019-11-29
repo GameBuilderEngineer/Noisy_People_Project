@@ -43,6 +43,7 @@ public://メンバー変数
 	bool	shotFlag;		//ショットフラグ
 	bool	shiftFlag;		//シフトフラグ
 	bool	visionFlag;		//ビィジョンフラグ
+	bool	jumpFlag;		//ジャンプフラグ
 	int		hp;				//hp保存
 	int		power;			//電力保存
 private:
@@ -52,7 +53,8 @@ public://メンバー関数
 	void initialize(Player *player);
 	void render();
 	void update();
-	
+	void getFlag();
+
 private:
 
 };

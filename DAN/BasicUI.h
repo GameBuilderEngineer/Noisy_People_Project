@@ -69,7 +69,7 @@ public://メンバー関数
 	void    assingUV(D3DXVECTOR2 uvCoord1, D3DXVECTOR2 uvCoord2, D3DXVECTOR2 uvCoord3, D3DXVECTOR2 uvCoord4);//UV座標の代入
 	void	changePivot(int pivotTyp);								//中心を変更
 	void	changePostion(Sprite *sprite,int movetype);//位置変更	
-	void	increaseAlpha(Sprite *sprite,float alpha);//透明度増加
+	void	changeAlpha(Sprite *sprite,float alpha);//透明度の変更
 	void	decreaseAlpha(Sprite *sprite,float alpha);//透明度減少
 	void	expansionWidthSize(Sprite *sprite,int speed);//横サイズの拡大
 	void	expansionHeightSize(Sprite *sprite,int speed);//縦サイズの拡大

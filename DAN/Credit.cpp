@@ -79,6 +79,11 @@ void Credit::update(float frameTime)
 	}
 
 	creditTex.update();
+	nextScene = creditTex.getSceneState();
+	if (nextScene == SceneList::TITLE)
+	{
+		changeScene(nextScene);
+	}
 }
 
 //===================================================================================================================================

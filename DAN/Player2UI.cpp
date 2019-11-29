@@ -89,5 +89,5 @@ void Player2UI::update()
 
 	//“d—ÍƒQ[ƒWˆ—
 	electGuage->update(power);
-	electTank->update(power);
+	electTank->update(power, basicUiNS::P2);
 }
