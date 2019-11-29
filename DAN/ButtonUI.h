@@ -39,7 +39,7 @@ namespace uiButtonNS
 class ButtonUI :public BasicUI
 {
 public://メンバー変数
-	Sprite * button[uiButtonNS::VISION];	//スプライト
+	Sprite * button[uiButtonNS::TYPE_MAX];	//スプライト
 	float	alpha;							//α値
 
 public://メンバー関数

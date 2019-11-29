@@ -44,7 +44,7 @@ Player1UI::~Player1UI()
 void Player1UI::initialize(Player *player)
 {
 	this->player = player;
-	buttonUiP1->initialize();
+	//buttonUiP1->initialize();
 	buttonUiP2->initialize();
 	hpGuage->initialize();
 	charaIcon->initialize(basicUiNS::P1);
@@ -59,7 +59,7 @@ void Player1UI::initialize(Player *player)
 //==================================
 void Player1UI::render()
 {
-	buttonUiP1->renderP1();
+	//buttonUiP1->renderP1();
 	buttonUiP2->renderP2();
 	hpGuageEmp->render();
 	hpGuage->render();
@@ -78,11 +78,11 @@ void Player1UI::update()
 	getFlag();
 
 	//P1—p
-	buttonUiP1->update(shotFlag, 0);
-	buttonUiP1->update(jumpFlag, 1);
-	buttonUiP1->update(visionFlag, 2);
-	buttonUiP1->update(skyVisionFlag, 3);
-	buttonUiP1->update(shiftFlag, 4);
+	//buttonUiP1->update(shotFlag, 0);
+	//buttonUiP1->update(jumpFlag, 1);
+	//buttonUiP1->update(visionFlag, 2);
+	//buttonUiP1->update(skyVisionFlag, 3);
+	//buttonUiP1->update(shiftFlag, 4);
 
 	hpGuage->update(hp);
 	electGuage->update(power);
