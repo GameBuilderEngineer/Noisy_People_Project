@@ -302,7 +302,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	show = new SHOW(hWnd);
 	show->playShow();
 
-	testPic = new TestPic;
+	testPic = new TestPic(hWnd);
 
 	return S_OK;
 }
@@ -343,6 +343,8 @@ void Update(HWND hWnd)
 	{
 		// “ü—Íˆ—
 		UpdateInput();
+
+		show->update();
 
 		testPic->update();
 	}
