@@ -166,7 +166,7 @@ namespace playerNS{
 	const float CAMERA_SPEED				= 1.0f;									// カメラの速さ
 	
 	//Shooting
-	const float MAX_DISTANCE				= 100.0f;								//最大照準距離
+	const float MAX_DISTANCE				= bulletNS::SPEED*bulletNS::EXIST_TIME;	//最大照準距離
 
 	//DigitalAction
 	const float SKY_HEIGH					= 105.0f;								//スカイビジョン上昇距離

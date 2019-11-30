@@ -111,6 +111,8 @@ bool Bullet::collide(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix)
 int Bullet::getDigitalPower(){return digitalPower;}
 bool Bullet::isCollideInitial() { 
 	float initial = Base::between2VectorLength(ballisticRay.start, initialCollide);
+	if (initial >= SPEED*EXIST_TIME)return false;
+
 	float now = Base::between2VectorLength(ballisticRay.start, position);
 	return now >= initial; 
 }
