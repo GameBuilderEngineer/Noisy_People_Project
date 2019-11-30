@@ -23,7 +23,6 @@ EffectInstance::EffectInstance(D3DXVECTOR3 position) : InstancingBillboardNS::In
 {
 	//初期値の設定
 	this->position	= position + D3DXVECTOR3((float)(rand() % 6 - 3), 0.0f, (float)(rand() % 6 - 3));
-	
 	//rotation = D3DXVECTOR3((float)(rand() % 20 - 10), (float)(rand() % 20 - 10), (float)(rand() % 20 - 10));
 	rotation = D3DXVECTOR3(0, 0, 0);
 	//instance.scale				= D3DXVECTOR2((float)(rand() % 20 + 1), (float)(rand() % 20 + 1));
@@ -62,8 +61,10 @@ void EffectInstance::update(float frameTime)
 //===================================================================================================================================
 DigitalTreeEffect::DigitalTreeEffect()
 {
-	billboard = new InstancingBillboard();
-	billboard->initialize(*textureNS::reference(textureNS::LIGHT_001));
+	effectCycle = 0.0f;
+
+	//billboard = new InstancingBillboard();
+	//billboard->initialize(*textureNS::reference(textureNS::LIGHT_001));
 
 }
 
@@ -72,7 +73,7 @@ DigitalTreeEffect::DigitalTreeEffect()
 //===================================================================================================================================
 DigitalTreeEffect::~DigitalTreeEffect()
 {
-	SAFE_DELETE(billboard);
+	//SAFE_DELETE(billboard);
 }
 
 //===================================================================================================================================
@@ -80,8 +81,12 @@ DigitalTreeEffect::~DigitalTreeEffect()
 //===================================================================================================================================
 void DigitalTreeEffect::update(float frameTime)
 {
+	//エフェクトの発生
+	//effectCycle += frameTime;
 	//更新
-	billboard->update(frameTime);
+	//billboard->update(frameTime);
+
+	resetEffectCycle();
 
 }
 
@@ -90,7 +95,13 @@ void DigitalTreeEffect::update(float frameTime)
 //===================================================================================================================================
 void DigitalTreeEffect::generateInstance(D3DXVECTOR3 position)
 {
-	billboard->generateInstance(new EffectInstance(position));//インスタンスの生成
+	//if (effectCycle >= EFFECT_CYCLE)
+	//{
+	//	//エフェクトの生成
+	//	//digitalTreeEffect->generateInstance(treeList[i]->position);
+	//}
+
+	//billboard->generateInstance(new EffectInstance(position));//インスタンスの生成
 }
 
 //===================================================================================================================================
@@ -99,7 +110,21 @@ void DigitalTreeEffect::generateInstance(D3DXVECTOR3 position)
 void DigitalTreeEffect::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	//描画
-	billboard->render(view,projection,cameraPosition);
+	//billboard->render(view,projection,cameraPosition);
+
+}
+
+
+//===================================================================================================================================
+//【標準エフェクト】
+//===================================================================================================================================
+void DigitalTreeEffect::resetEffectCycle()
+{
+	//エフェクトの発生
+	if (effectCycle >= EFFECT_CYCLE)
+	{
+		effectCycle = 0.0f;
+	}
 
 }
 

@@ -19,7 +19,6 @@
 //=============================================================================
 namespace treeManagerNS
 {	
-	const float EFFECT_CYCLE = 0.1f;
 }
 
 
@@ -30,6 +29,7 @@ class TreeManager
 {
 private:
 	std::vector<Tree*> treeList;				// ツリーポインタリスト
+	//レンダラー：アナログツリー
 	StaticMeshRenderer* aTrunkRenderer;			// Aモデル幹描画オブジェクト
 	StaticMeshRenderer* aLeafRenderer;			// Aモデル葉描画オブジェクト
 	StaticMeshRenderer* bTrunkRenderer;			// Bモデル幹描画オブジェクト
@@ -37,6 +37,7 @@ private:
 	StaticMeshRenderer* cTrunkRenderer;			// Cモデル幹描画オブジェクト
 	StaticMeshRenderer* cLeafRenderer;			// Cモデル葉描画オブジェクト
 
+	//レンダラー：デジタルツリー
 	StaticMeshRenderer* aDTrunkRenderer;		// Aモデル幹描画オブジェクト
 	StaticMeshRenderer* aDLeafRenderer;			// Aモデル葉描画オブジェクト
 	StaticMeshRenderer* bDTrunkRenderer;		// Bモデル幹描画オブジェクト
@@ -45,9 +46,9 @@ private:
 	StaticMeshRenderer* cDLeafRenderer;			// Cモデル葉描画オブジェクト
 
 
-
-	float effectCycle;							//エフェクト周期
+	//エフェクト
 	DigitalTreeEffect*	digitalTreeEffect;		//デジタルツリーエフェクト
+
 	int nextID;									// 次回ツリー発行ID
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス

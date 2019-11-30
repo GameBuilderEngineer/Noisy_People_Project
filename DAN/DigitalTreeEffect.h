@@ -59,6 +59,8 @@ namespace DigitalTreeEffectNS
 			Instance::update();
 		};
 	};
+	//エフェクト発生周期
+	const float EFFECT_CYCLE = 0.1f;
 
 }
 
@@ -70,6 +72,7 @@ class DigitalTreeEffect :public Base
 {
 private:
 	InstancingBillboard* billboard;
+	float effectCycle;							//エフェクト周期
 
 public:
 	DigitalTreeEffect();
@@ -78,6 +81,7 @@ public:
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void generateInstance(D3DXVECTOR3 position);
+	void resetEffectCycle();
 	void playStandardEffect(D3DXVECTOR3* position);
 	void playRaidEffect(D3DXVECTOR3* position);
 

@@ -138,24 +138,14 @@ void TreeManager::update(float frameTime)
 			greeningTreeNum++;
 		}
 
+		//デジタルツリーの周囲にエフェクトを発生
+		//if (treeList[i]->getTreeData()->type == treeNS::DIGITAL_TREE)
+		//{
+		//	//エフェクトの生成
+		//	digitalTreeEffect->generateInstance(treeList[i]->position);
+		//}
 	}
 
-	//エフェクトの発生
-	effectCycle += frameTime;
-	if (effectCycle >= treeManagerNS::EFFECT_CYCLE)
-	{
-		effectCycle = 0.0f;
-		//各ツリーの更新
-		for (size_t i = 0; i < treeList.size(); i++)
-		{
-			//デジタルツリーの周囲にエフェクトを発生
-			if (treeList[i]->getTreeData()->type == treeNS::DIGITAL_TREE)
-			{
-				//エフェクトの生成
-				digitalTreeEffect->generateInstance(treeList[i]->position);
-			}
-		}
-	}
 
 
 	//緑化率の更新
