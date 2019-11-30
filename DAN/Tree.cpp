@@ -280,9 +280,9 @@ void DigitalState::start()
 	{
 	case treeNS::TREE_SIZE::STANDARD:
 		aroundGreenRange = AROUND_GREEN_RANGE_S; break;
-	case treeNS::TREE_SIZE::LARGE:break;
+	case treeNS::TREE_SIZE::LARGE:
 		aroundGreenRange = AROUND_GREEN_RANGE_L; break;
-	case treeNS::TREE_SIZE::VERY_LARGE:break;
+	case treeNS::TREE_SIZE::VERY_LARGE:
 		aroundGreenRange = AROUND_GREEN_RANGE_V; break;
 	}
 
@@ -313,8 +313,11 @@ void DigitalState::update(float frameTime)
 			tree->disableAroundGreening();			//ŽüˆÍ—Î‰»ƒtƒ‰ƒO‚ðØ‚é
 		}
 	}
-	float rate = aroundGreenTimer/AROUND_GREEN_TIME;
-	tree->setGreeningArea(UtilityFunction::lerp(1.0f, aroundGreenRange, rate));
+	if (tree->isAroundGreening())
+	{
+		float rate = aroundGreenTimer/AROUND_GREEN_TIME;
+		tree->setGreeningArea(UtilityFunction::lerp(1.0f, aroundGreenRange, rate));
+	}
 }
 
 //=============================================================================
