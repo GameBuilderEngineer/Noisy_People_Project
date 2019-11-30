@@ -34,9 +34,9 @@ GameMaster::GameMaster()
 	}
 	treeNum				= 0;
 	conversionOrder		= NULL;
-	input = getInput();
+	input				= getInput();
+	gameTimerStop		= false;
 #ifdef _DEBUG
-	gameTimerStop = false;
 	showGUI = true;
 #endif // _DEBUG
 }
@@ -100,7 +100,8 @@ bool GameMaster::paused()
 //===================================================================================================================================
 void GameMaster::startGame()
 {
-	gameTimer = GAME_TIME;
+	gameTimer		= GAME_TIME;
+	gameTimerStop	= false;
 	pause = false;
 	progress = 0x00000000;
 }
@@ -110,11 +111,24 @@ void GameMaster::startGame()
 //===================================================================================================================================
 void GameMaster::updateGameTime(float frameTime)
 {
-#ifdef _DEBUG
 	if (gameTimerStop)return;
-#endif // _DEBUG
+
 	gameTimer -= frameTime;
 }
+
+//===================================================================================================================================
+//yŽc‚èŽžŠÔ1•ª‚ÌXVz
+//===================================================================================================================================
+bool GameMaster::playActionRamaining1Min()
+{
+	if (gameTimer > 60)return false;
+	if (!whetherAchieved(PASSING_REMAINING_ONE_MINUTE))return false;
+
+	setProgress(PASSING_REMAINING_ONE_MINUTE);
+
+	return true;
+}
+
 
 #pragma region conversionOrderFunction
 //===================================================================================================================================

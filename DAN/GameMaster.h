@@ -51,9 +51,11 @@ namespace gameMasterNS {
 
 	const int	PLAYER_NUM				= 2;
 
-	const int	ACHIEVEMENT_GREENING_RATE_10	= 0x00000001;
-	const int	ACHIEVEMENT_GREENING_RATE_30	= 0x00000002;
-	const int	ACHIEVEMENT_GREENING_RATE_50	= 0x00000004;
+	const int	ACHIEVEMENT_GREENING_RATE_10	= 0x00000001;//緑化率10%
+	const int	ACHIEVEMENT_GREENING_RATE_30	= 0x00000002;//緑化率30%
+	const int	ACHIEVEMENT_GREENING_RATE_50	= 0x00000004;//緑化率50%
+	const int	PASSING_REMAINING_ONE_MINUTE	= 0x00000008;//残り時間1分
+
 
 }
 
@@ -105,6 +107,7 @@ private:
 	PlayerTable		playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
 	int				progress;										//達成状況
 
+
 public:
 	//基本処理
 	GameMaster();
@@ -116,6 +119,7 @@ public:
 	void startGame();												//ゲーム開始関数
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
 	bool paused();													//ポーズ処理
+	bool playActionRamaining1Min();									//残り1分経過時のアクション
 
 
 	//木の設定関数
