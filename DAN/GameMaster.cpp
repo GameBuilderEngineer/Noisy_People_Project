@@ -122,7 +122,7 @@ void GameMaster::updateGameTime(float frameTime)
 bool GameMaster::playActionRamaining1Min()
 {
 	if (gameTimer > 60)return false;
-	if (!whetherAchieved(PASSING_REMAINING_ONE_MINUTE))return false;
+	if (whetherAchieved(PASSING_REMAINING_ONE_MINUTE))return false;
 
 	setProgress(PASSING_REMAINING_ONE_MINUTE);
 
