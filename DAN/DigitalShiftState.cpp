@@ -73,7 +73,7 @@ void DigitalShiftState::update(float frameTime)
 	//ó‘Ô‘JˆÚ
 	if (shiftTimer > SHIFT_TIME)
 	{
-		player->returnTransitionCamera(0.5f);
+		player->returnTransitionCamera(0.25f);
 		player->transState(NORMAL); return;//’Êíó‘Ô‚É–ß‚é
 	}
 
