@@ -50,15 +50,6 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	bDLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cDLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
-
-	//最前面描画
-	//aDTrunkRenderer->setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	//aDLeafRenderer->setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	//bDTrunkRenderer->setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	//bDLeafRenderer->setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	//cDTrunkRenderer->setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	//cDLeafRenderer->setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-
 	//デジタルツリーエフェクト
 	digitalTreeEffect = new DigitalTreeEffect();
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_1P] = false;
@@ -304,12 +295,12 @@ void TreeManager::switchingVisionView()
 	cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
 	//デジタルツリー
-	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
-	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::FOREGROUND_PASS);
+	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 };
 
 //=============================================================================
