@@ -95,6 +95,7 @@ private:
 	float			gameTimer;										//ゲーム時間
 	float			countDownTimer;									//カウントダウン時間
 	bool			pause;											//ポーズ
+	bool			gameTimerStop;									//ゲームタイマーストップ
 
 	//木関係情報
 	int				treeNum;										//枯木・緑化木の総計

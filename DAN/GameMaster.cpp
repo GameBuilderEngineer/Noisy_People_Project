@@ -36,6 +36,7 @@ GameMaster::GameMaster()
 	conversionOrder		= NULL;
 	input = getInput();
 #ifdef _DEBUG
+	gameTimerStop = false;
 	showGUI = true;
 #endif // _DEBUG
 }
@@ -71,6 +72,18 @@ void GameMaster::update(float frameTime)
 		{
 			pause = !pause;
 		}
+#ifdef _DEBUG
+		//タッチパッド(SUB)ボタン/Qキーを入力された場合ゲームタイマーを停止。
+		if (input->wasKeyPressed('Q') ||
+			input->getController()[0]->wasButton(virtualControllerNS::SPECIAL_SUB) ||
+			input->getController()[1]->wasButton(virtualControllerNS::SPECIAL_SUB))
+		{
+			gameTimerStop = !gameTimerStop;
+		}
+
+#endif // _DEBUG
+
+
 	}
 }
 
@@ -97,6 +110,9 @@ void GameMaster::startGame()
 //===================================================================================================================================
 void GameMaster::updateGameTime(float frameTime)
 {
+#ifdef _DEBUG
+	if (gameTimerStop)return;
+#endif // _DEBUG
 	gameTimer -= frameTime;
 }
 
