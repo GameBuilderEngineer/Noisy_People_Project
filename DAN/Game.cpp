@@ -842,13 +842,10 @@ void Game::collisions()
 				camera[i].nearZ, camera[i].farZ, camera[i].aspect))continue;
 
 			//シフトレイの更新
-			//LPD3DXMESH mesh = list[num]->getMesh();
-			//D3DXMATRIX matrix = list[num]->matrixWorld;
-			//player[i].collideShiftRay(mesh,matrix);
-			//player[i].collideShiftRay(list[num]->center);
 			Cylinder treeCylinder;
 			treeCylinder.centerLine.start	= tree->position;
 			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*tree->size.y;
+			treeCylinder.height				= tree->size.y/2;
 			treeCylinder.radius				= tree->size.x;
 			player[i].collideShiftRay(treeCylinder);
 		}

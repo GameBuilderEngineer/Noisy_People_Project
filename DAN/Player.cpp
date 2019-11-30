@@ -753,22 +753,42 @@ bool Player::collideShiftRay(Cylinder target)
 
 	if (distance <= radiusDistance)
 	{
-		//デジタルシフト有効でない場合
+		D3DXVECTOR3 shiftDirection;
+		//デジタルシフト有効でない場合：初期シフト位置の設定
 		if (!whetherValidOperation(ENABLE_SHIFT))
 		{
 			//シフトを有効にする
 			enableOperation(ENABLE_SHIFT);
 			//デジタルシフトを行うラインを設定
 			shiftLine.start = this->position;
-			shiftLine.end = target.centerLine.start;// -shiftRay.direction*3.0f;
+			shiftLine.end = target.centerLine.start;
+			//デジタルシフトの方向を算出
+			Base::between2VectorDirection(&shiftDirection, shiftLine.start, shiftLine.end);//方向算出
+			shiftDirection = slip(shiftDirection, D3DXVECTOR3(0, 1, 0));//Y方向削除
+			D3DXVec3Normalize(&shiftDirection, &shiftDirection);//正規化
+			//シフト位置の決定
+			shiftPosition = shiftLine.end;
+			shiftPosition += target.height*D3DXVECTOR3(0, 1, 0);
+			shiftPosition -= shiftDirection*target.radius;
+			//最短シフト距離更新
 			shiftDistance = distance + distanceOnRay;//レイ間距離+レイ上距離
 			return true;
 		}
+		//最短シフト距離よりもより短い場合：シフト位置の再設定
 		else if (shiftDistance > distance + distanceOnRay)//レイ間距離+レイ上距離
 		{
 			//デジタルシフトを行うラインを設定
 			shiftLine.start = this->position;
-			shiftLine.end = target.centerLine.start;// -shiftRay.direction*3.0f;
+			shiftLine.end = target.centerLine.start;
+			//デジタルシフトの方向を算出
+			Base::between2VectorDirection(&shiftDirection, shiftLine.start, shiftLine.end);
+			shiftDirection = slip(shiftDirection, D3DXVECTOR3(0, 1, 0));//Y方向削除
+			D3DXVec3Normalize(&shiftDirection, &shiftDirection);//正規化
+			//シフト位置の決定
+			shiftPosition = shiftLine.end;
+			shiftPosition += target.height*D3DXVECTOR3(0, 1, 0);
+			shiftPosition -= shiftDirection * target.radius;
+			//最短シフト距離更新
 			shiftDistance = distance + distanceOnRay;//レイ間距離+レイ上距離
 			return true;
 		}
@@ -880,7 +900,7 @@ void Player::stopSelectLight()
 bool Player::executionDigitalShift()
 {
 	//デジタルシフト開始
-	position = shiftLine.end;
+	position = shiftPosition;
 
 	//センターも同時に更新
 	center = position + D3DXVECTOR3(0.0f, size.y / 2, 0.0f);

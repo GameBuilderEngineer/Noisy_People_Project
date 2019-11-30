@@ -146,6 +146,7 @@ struct Line
 struct Cylinder
 {
 	Line		centerLine;
+	float		height;
 	float		radius;
 };
 

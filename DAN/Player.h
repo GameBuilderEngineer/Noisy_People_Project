@@ -288,7 +288,7 @@ private:
 	Line						shiftLine;						//デジタルシフトライン
 	Ray							shiftRay;						//デジタルシフトレイ
 	float						shiftDistance;
-
+	D3DXVECTOR3					shiftPosition;
 
 	//再生パラメータ
 	PLAY_PARAMETERS shiftStartSE;
