@@ -41,74 +41,74 @@ namespace playerNS{
 
 	struct OperationKeyTable
 	{
-		BYTE front;
-		BYTE back;
-		BYTE right;
-		BYTE left;
-		BYTE reset;
-		BYTE dash;
-		BYTE jump;
-		BYTE vision;
-		BYTE cancelVision;
-		BYTE skyVision;
-		BYTE cancelSkyVision;
-		BYTE digitalShift;
-		BYTE reverseCameraX;
-		BYTE reverseCameraY;
+		BYTE front;					//(01)
+		BYTE back;					//(02)
+		BYTE right;					//(03)
+		BYTE left;					//(04)
+		BYTE reset;					//(05)
+		BYTE dash;					//(06)
+		BYTE jump;					//(07)
+		BYTE vision;				//(08)
+		BYTE cancelVision;			//(09)
+		BYTE skyVision;				//(11)
+		BYTE cancelSkyVision;		//(12)
+		BYTE digitalShift;			//(13)
+		BYTE reverseCameraX;		//(14)
+		BYTE reverseCameraY;		//(15)
 	};
 
 	const OperationKeyTable KEY_TABLE[gameMasterNS::PLAYER_NUM] = {
 		//1P
 		{
-			'W',					//FRONT
-			'S',					//BACK
-			'D',					//RIGHT
-			'A',					//LEFT
-			'R',					//RESET
-			VK_ESCAPE,				//DASH:廃止
-			VK_ESCAPE,				//JUMP:右クリック
-			VK_LSHIFT,				//VISION
-			VK_LSHIFT,				//CANCEL_VISION
-			VK_SPACE,				//SKY_VISION
-			VK_SPACE,				//CANCEL_SKY_VISION
-			VK_ESCAPE,				//DIGITAL_SHIFT:左クリック
-			VK_F7,					//ReverseCameraAxisX
-			VK_F8,					//ReverseCameraAxisY
+			'W',					//(01)FRONT
+			'S',					//(02)BACK
+			'D',					//(03)RIGHT
+			'A',					//(04)LEFT
+			'R',					//(05)RESET
+			VK_ESCAPE,				//(06)DASH:廃止
+			VK_ESCAPE,				//(07)JUMP:右クリック
+			VK_LSHIFT,				//(08)VISION
+			VK_LSHIFT,				//(09)CANCEL_VISION
+			VK_SPACE,				//(11)SKY_VISION
+			VK_SPACE,				//(12)CANCEL_SKY_VISION
+			VK_ESCAPE,				//(13)DIGITAL_SHIFT:左クリック
+			VK_F7,					//(14)ReverseCameraAxisX
+			VK_F8,					//(15)ReverseCameraAxisY
 		},
 		//2P
 		{
-			VK_UP,					//FRONT
-			VK_DOWN,				//BACK
-			VK_RIGHT,				//RIGHT
-			VK_LEFT,				//LEFT
-			'R',					//RESET
-			VK_ESCAPE,				//DASH
-			VK_ESCAPE,				//JUMP:右クリック
-			VK_RSHIFT,				//VISION
-			VK_RSHIFT,				//CANCEL_VISION
-			VK_BACK,				//SKY_VISION
-			VK_BACK,				//CANCEL_SKY_VISION
-			VK_ESCAPE,				//DIGITAL_SHIFT:左クリック
-			VK_F9,					//ReverseCameraAxisX
-			VK_F10,					//ReverseCameraAxisY
+			VK_UP,					//(01)FRONT
+			VK_DOWN,				//(02)BACK
+			VK_RIGHT,				//(03)RIGHT
+			VK_LEFT,				//(04)LEFT
+			'R',					//(05)RESET
+			VK_ESCAPE,				//(06)DASH
+			VK_ESCAPE,				//(07)JUMP:右クリック
+			VK_RSHIFT,				//(08)VISION
+			VK_RSHIFT,				//(09)CANCEL_VISION
+			VK_BACK,				//(11)SKY_VISION
+			VK_BACK,				//(12)CANCEL_SKY_VISION
+			VK_ESCAPE,				//(13)DIGITAL_SHIFT:左クリック
+			VK_F9,					//(14)ReverseCameraAxisX
+			VK_F10,					//(15)ReverseCameraAxisY
 		}
 	};
 
 	const OperationKeyTable NON_CONTOROL = {
-		VK_ESCAPE,					//FRONT
-		VK_ESCAPE,					//BACK
-		VK_ESCAPE,					//RIGHT
-		VK_ESCAPE,					//LEFT
-		VK_ESCAPE,					//RESET
-		VK_ESCAPE,					//DASH
-		VK_ESCAPE,					//JUMP:右クリック
-		VK_ESCAPE,					//VISION
-		VK_ESCAPE,					//CANCEL_VISION
-		VK_ESCAPE,					//SKY_VISION
-		VK_ESCAPE,					//CANCEL_SKY_VISION
-		VK_ESCAPE,					//DIGITAL_SHIFT:左クリック
-		VK_ESCAPE,					//ReverseCameraAxisX
-		VK_ESCAPE,					//ReverseCameraAxisY
+		VK_ESCAPE,					//(01)FRONT
+		VK_ESCAPE,					//(02)BACK
+		VK_ESCAPE,					//(03)RIGHT
+		VK_ESCAPE,					//(04)LEFT
+		VK_ESCAPE,					//(05)RESET
+		VK_ESCAPE,					//(06)DASH
+		VK_ESCAPE,					//(07)JUMP:右クリック
+		VK_ESCAPE,					//(08)VISION
+		VK_ESCAPE,					//(09)CANCEL_VISION
+		VK_ESCAPE,					//(11)SKY_VISION
+		VK_ESCAPE,					//(12)CANCEL_SKY_VISION
+		VK_ESCAPE,					//(13)DIGITAL_SHIFT:左クリック
+		VK_ESCAPE,					//(14)ReverseCameraAxisX
+		VK_ESCAPE,					//(15)ReverseCameraAxisY
 	};
 
 	const BYTE BUTTON_VISION		= virtualControllerNS::Y;

@@ -11,6 +11,7 @@
 #include "VisionState.h"
 #include "NormalState.h"
 #include "DigitalShiftState.h"
+#include "SkyVisionState.h"
 
 //===================================================================================================================================
 //ÅyusingêÈåæÅz
@@ -120,6 +121,9 @@ AbstractState* VisionState::transition()
 	{
 	case DIGITAL_SHIFT:
 		return new digitalShiftNS::DigitalShiftState(player);
+		break;
+	case SKY_VISION:
+		return new skyVisionNS::SkyVisionState(player);
 		break;
 	case NORMAL:default:
 		return new normalNS::NormalState(player);
