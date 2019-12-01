@@ -294,10 +294,12 @@ void Enemy::searchPath()
 	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	destination = *movingTarget;
 
+#ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)
 	{
 		naviMesh->debugEdgeList = edgeList;
 	}
+#endif
 }
 
 

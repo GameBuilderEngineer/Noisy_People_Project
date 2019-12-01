@@ -56,7 +56,7 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_1P] = false;
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_2P] = false;
 
-#if 1	// ツリーツールのデータを読み込む
+#if 0	// ツリーツールのデータを読み込む
 	TREE_TOOLS* treeTools = new TREE_TOOLS;
 	for (int i = 0; i < treeTools->GetTreeMax(); i++)
 	{

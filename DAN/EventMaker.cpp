@@ -285,7 +285,9 @@ int EventMaker::decideAttackTargetTree()
 
 	// 選択リストからランダムで候補リストのインデックスを選びツリーを選定する
 	// 決まったツリーのIDを返却する
-	int resultIndex = rand() % cntSelectIndex;
+
+	int resultIndex = rand() % cntSelectIndex;// ●リリース版でゼロ除算が起きてバグった12/1エネミーを通り過ぎたとき？
+
 	int resultCandidate = selectIndexList[resultIndex];
 	int treeID = candidateList[resultCandidate].treeID;
 	SAFE_DELETE_ARRAY(selectIndexList);

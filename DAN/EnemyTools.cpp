@@ -58,9 +58,10 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 		initObject();
 #endif
 	}
-
+#ifdef _DEBUG //中込が追加　リリース版でコンパイル通らないため
 	rootEdit = false;
 	EnemyListboxRootCurrent = 0;
+#endif
 
 #ifdef _DEBUG
 	//エネミー情報

@@ -269,47 +269,47 @@ void Game::initialize() {
 	//	enemyManager->createEnemy(p);
 	//}
 
-	//// ツリーをランダムに設置する
-	//treeNS::TreeData treeData;
-	//treeData.hp = 0;
-	//treeData.type = treeNS::ANALOG_TREE;
-	//treeData.greenState = treeNS::DEAD;
-	//treeData.isAttaked = false;
+	// ツリーをランダムに設置する
+	treeNS::TreeData treeData;
+	treeData.hp = 0;
+	treeData.type = treeNS::ANALOG_TREE;
+	treeData.greenState = treeNS::DEAD;
+	treeData.isAttaked = false;
 
-	//treeData.size = treeNS::STANDARD;
-	//treeData.model = treeNS::B_MODEL;
-	//for (int i = 0; i < 250; i++)
-	//{
-	//	treeData.initialPosition =
-	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-	//	treeData.treeID = treeManager->issueNewTreeID();
-	//	treeManager->createTree(treeData);
-	//}
+	treeData.size = treeNS::STANDARD;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 250; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		treeData.treeID = treeManager->issueNewTreeID();
+		treeManager->createTree(treeData);
+	}
 
-	//treeData.size = treeNS::LARGE;
-	//treeData.model = treeNS::B_MODEL;
-	//for (int i = 0; i < 30; i++)
-	//{
-	//	treeData.initialPosition =
-	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-	//	treeData.treeID = treeManager->issueNewTreeID();
-	//	
-	//	treeManager->createTree(treeData);
-	//}
+	treeData.size = treeNS::LARGE;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 30; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		treeData.treeID = treeManager->issueNewTreeID();
+		
+		treeManager->createTree(treeData);
+	}
 
-	//treeData.size = treeNS::VERY_LARGE;
-	//treeData.model = treeNS::B_MODEL;
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	treeData.initialPosition =
-	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-	//	treeData.treeID = treeManager->issueNewTreeID();
+	treeData.size = treeNS::VERY_LARGE;
+	treeData.model = treeNS::B_MODEL;
+	for (int i = 0; i < 5; i++)
+	{
+		treeData.initialPosition =
+			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+		treeData.treeID = treeManager->issueNewTreeID();
 
-	//	treeManager->createTree(treeData);
-	//}
+		treeManager->createTree(treeData);
+	}
 
 	//ツリーの最大数を取得
 	gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
