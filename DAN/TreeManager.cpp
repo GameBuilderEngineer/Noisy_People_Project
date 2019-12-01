@@ -7,6 +7,7 @@
 //-----------------------------------------------------------------------------
 #include "TreeManager.h"
 #include "ImguiManager.h"
+#include "TreeTools.h"
 using namespace treeNS;
 
 
@@ -54,8 +55,14 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	digitalTreeEffect = new DigitalTreeEffect();
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_1P] = false;
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_2P] = false;
-#if 0	// ツリーツールのデータを読み込む
 
+#if 1	// ツリーツールのデータを読み込む
+	TREE_TOOLS* treeTools = new TREE_TOOLS;
+	for (int i = 0; i < treeTools->GetTreeMax(); i++)
+	{
+		createTree(treeTools->GetTreeSet(i));
+	}
+	SAFE_DELETE(treeTools);
 #endif
 }
 

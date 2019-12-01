@@ -19,7 +19,7 @@ void ItemManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 	exampleItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
 
-#if 0	// アイテムツールのデータを読み込む
+#if 1	// アイテムツールのデータを読み込む
 	ITEM_TOOLS* itemTools = new ITEM_TOOLS;
 	for (int i = 0; i < itemTools->GetItemMax(); i++)
 	{

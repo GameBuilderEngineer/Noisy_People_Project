@@ -115,17 +115,17 @@ void Create::initialize() {
 		tmpObjRenderer[i]->registerObject(tmpObject);
 	}
 
-	//枯木の初期化
-	deadTree = new DeadTree();
-	//木Aの初期化
-	treeA = new TreeTypeA();
-	//木Bの初期化
-	treeB = new TreeTypeB();
-	//石の初期化
-	stone = new Stone();
+	////枯木の初期化
+	//deadTree = new DeadTree();
+	////木Aの初期化
+	//treeA = new TreeTypeA();
+	////木Bの初期化
+	//treeB = new TreeTypeB();
+	////石の初期化
+	//stone = new Stone();
 
-	//エフェクト（インスタンシング）テスト
-	testEffect = new TestEffect();
+	////エフェクト（インスタンシング）テスト
+	//testEffect = new TestEffect();
 
 	//ツール
 	ToolsListboxType = TOOLS_TYPE::TOOLS_NONE;
@@ -146,11 +146,11 @@ void Create::uninitialize() {
 	}
 	ES_SAFE_DELETE_ARRAY(tmpObjRenderer);
 
-	SAFE_DELETE(deadTree);
-	SAFE_DELETE(treeA);
-	SAFE_DELETE(treeB);
-	SAFE_DELETE(stone);
-	SAFE_DELETE(testEffect);
+//	SAFE_DELETE(deadTree);
+//	SAFE_DELETE(treeA);
+//	SAFE_DELETE(treeB);
+//	SAFE_DELETE(stone);
+//	SAFE_DELETE(testEffect);
 }
 
 //===================================================================================================================================
@@ -166,8 +166,8 @@ void Create::update(float _frameTime) {
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 0.10)return;
 
-	//エフェクト（インスタンシング）テスト
-	testEffect->update(frameTime);
+	////エフェクト（インスタンシング）テスト
+	//testEffect->update(frameTime);
 
 	//テストフィールドの更新
 	testField->update();
@@ -197,14 +197,14 @@ void Create::update(float _frameTime) {
 		tmpObjRenderer[i]->update();
 	}
 
-	//枯木の更新
-	deadTree->update();
-	//木Aの更新
-	treeA->update();
-	//木Bの更新
-	treeB->update();
-	//石の更新
-	stone->update();
+	////枯木の更新
+	//deadTree->update();
+	////木Aの更新
+	//treeA->update();
+	////木Bの更新
+	//treeB->update();
+	////石の更新
+	//stone->update();
 
 	//カメラの更新
 	camera->update();
@@ -247,22 +247,22 @@ void Create::render3D(Camera currentCamera) {
 	testField->setAlpha(0.1f);
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//エフェクト（インスタンシング）テスト
-	testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////エフェクト（インスタンシング）テスト
+	//testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
 	tmpObjRenderer[getBufferID(meshId)]->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
 	tmpObject->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//枯木の描画
-	deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//木Aの描画
-	treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//木Bの描画
-	treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//石の描画
-	stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////枯木の描画
+	//deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////木Aの描画
+	//treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////木Bの描画
+	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	////石の描画
+	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//ツールの描画
 	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	itemTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -308,7 +308,7 @@ void Create::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Text("node:%d", testEffect->getList().nodeNum);
+	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	tmpObject->outputGUI();			//プレイヤー
