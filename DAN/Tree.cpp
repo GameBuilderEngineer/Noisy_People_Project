@@ -81,6 +81,12 @@ Tree::Tree(treeNS::TreeData _treeData)
 	state = new AnalogState(this);
 	onTransState = false;
 	numOfTree++;
+
+	//シフト先として選択されていない
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		selectShift[i] = false;
+	}
 }
 
 
@@ -166,6 +172,54 @@ void Tree::transState()
 }
 
 //=============================================================================
+//【デジタルエフェクトの再生】
+//=============================================================================
+void Tree::playDigitalEffect()
+{	
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		//通常時
+		digitalEffect[i] = new treeNS::DigitTree(&position);
+		effekseerNS::play(digitalEffect[i]);
+
+		//デジタルVISIONorSKY_VISION
+		//frontDigitalEffect[i] = new treeNS::DigitFront(&position);
+		//effekseerNS::play(frontDigitalEffect[i]);
+	}
+}
+
+//=============================================================================
+//【デジタルエフェクトの停止】
+//=============================================================================
+void Tree::stopDigitalEffect()
+{
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		effekseerNS::stop(digitalEffect[i]);
+		//effekseerNS::stop(frontDigitalEffect[i]);
+	}
+}
+
+//=============================================================================
+//【デジタルエフェクトの表示/非表示】
+//=============================================================================
+void Tree::switchingShownDigitalEffect(bool shown,int playerNo) 
+{
+	if(digitalEffect[playerNo])
+		digitalEffect[playerNo]->setShown(shown);
+	//if(frontDigitalEffect[playerNo])
+	//	frontDigitalEffect[playerNo]->setShown(!shown);
+}
+
+//=============================================================================
+//【シフト先として選択されたかどうかを切り替える】
+//=============================================================================
+void Tree::switchingSelected(bool selected,int playerNo) 
+{
+	selectShift[playerNo] = selected;
+}
+
+//=============================================================================
 // 重力発生メッシュ（接地メッシュ）の設定
 //=============================================================================
 void Tree::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
@@ -196,6 +250,7 @@ LPD3DXMESH Tree::getMesh() {
 };
 bool Tree::isAroundGreening()		{ return nowAroundGreening; }
 bool Tree::getTransState()			{return onTransState;}
+bool Tree::getSelected(int playerNo) { return selectShift[playerNo]; }
 
 //=============================================================================
 // Setter
@@ -212,7 +267,12 @@ void Tree::addHp(int value) {
 		instance->effectNo = effekseerNS::DAC;
 		instance->position = position;
 		effekseerNS::play(instance);
-		transState();//状態遷移
+
+		//デジタルツリーエフェクトの再生
+		playDigitalEffect();
+
+		//状態遷移
+		transState();
 	}
 }
 //緑化エリアのスケールを設定
@@ -225,7 +285,6 @@ void Tree::disableAroundGreening()	{
 	nowAroundGreening = false; 
 	greeningArea.treeCell.remove();//衝突空間から離脱
 }
-
 
 //=============================================================================
 // 接地処理

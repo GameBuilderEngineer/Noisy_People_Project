@@ -81,13 +81,13 @@ namespace effekseerNS
 	public:
 		int	effectNo;
 		::Effekseer::Handle		handle;
+		Node<Instance*>*		nodePointer;
 		D3DXVECTOR3 position;
 		D3DXVECTOR3 speed;
 		D3DXVECTOR3 rotation;
 		D3DXVECTOR3 deltaRadian;
 		D3DXVECTOR3 scale;
 		D3DXVECTOR3 deltaScale;
-
 
 		Instance(int effectNo = BLOW)
 		{
@@ -102,14 +102,16 @@ namespace effekseerNS
 		}
 
 		virtual void update();
+		void setShown(bool flag);
 	};
 
 	//===================================================================================================================================
 	//ÅyäOïîéQè∆Åz
 	//===================================================================================================================================
-	::Effekseer::Handle play(Instance*);
+	effekseerNS::Instance* play(Instance*);
 	void stop();
 	void stop(::Effekseer::Handle handle);
+	void stop(::effekseerNS::Instance* instance);
 	void setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf);
 	void setCameraMatrix(D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up);
 	void render();
@@ -158,9 +160,10 @@ public:
 
 	void setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf);
 	void setCameraMatrix(D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up);
-	::Effekseer::Handle play(effekseerNS::Instance* instance);
+	effekseerNS::Instance* play(effekseerNS::Instance* instance);
 	void stop();
 	void stop(::Effekseer::Handle handle);
+	void stop(::effekseerNS::Instance* instance);
 	void pause(bool flag);
 	void pause(::Effekseer::Handle handle, bool flag);
 

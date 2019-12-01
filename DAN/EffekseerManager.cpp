@@ -68,10 +68,10 @@ void EffekseerManager::initialize()
 #endif
 
 	// 描画用インスタンスの生成
-	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 2000);
+	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 20000);
 
 	// エフェクト管理用インスタンスの生成
-	manager = ::Effekseer::Manager::Create(2000);
+	manager = ::Effekseer::Manager::Create(20000);
 
 	// 描画用インスタンスから描画機能を設定
 	manager->SetSpriteRenderer(renderer->CreateSpriteRenderer());
@@ -141,7 +141,7 @@ void EffekseerManager::setCameraMatrix(D3DXVECTOR3 position,D3DXVECTOR3 eye,D3DX
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-::Effekseer::Handle EffekseerManager::play(effekseerNS::Instance* instance)
+effekseerNS::Instance* EffekseerManager::play(effekseerNS::Instance* instance)
 {
 	instance->handle = manager->Play(
 		effect[instance->effectNo], 
@@ -149,7 +149,8 @@ void EffekseerManager::setCameraMatrix(D3DXVECTOR3 position,D3DXVECTOR3 eye,D3DX
 		instance->position.y,
 		instance->position.z);
 	instanceList->insertFront(instance);
-	return instance->handle;
+	instance->nodePointer = instanceList->getFrontNode();
+	return instance;
 }
 
 //===================================================================================================================================
@@ -182,6 +183,15 @@ void EffekseerManager::stop()
 void EffekseerManager::stop(::Effekseer::Handle handle)
 {
 	manager->StopEffect(handle);
+}
+
+//===================================================================================================================================
+//【停止：１インスタンス】
+//===================================================================================================================================
+void EffekseerManager::stop(::effekseerNS::Instance* instance)
+{
+	manager->StopEffect(instance->handle);
+	instanceList->remove(instance->nodePointer);
 }
 
 //===================================================================================================================================
@@ -287,7 +297,7 @@ void EffekseerManager::render()
 //===================================================================================================================================
 //【外部参照：再生】
 //===================================================================================================================================
-::Effekseer::Handle effekseerNS::play(effekseerNS::Instance* instance)
+effekseerNS::Instance*  effekseerNS::play(effekseerNS::Instance* instance)
 {
 	return pointerEffekseerManager->play(instance);
 }
@@ -301,11 +311,19 @@ void effekseerNS::stop()
 }
 
 //===================================================================================================================================
-//【外部参照：停止】
+//【外部参照：ハンドル別停止】
 //===================================================================================================================================
 void effekseerNS::stop(::Effekseer::Handle handle)
 {
 	pointerEffekseerManager->stop(handle);
+}
+
+//===================================================================================================================================
+//【外部参照：インスタンス別停止】
+//===================================================================================================================================
+void effekseerNS::stop(::effekseerNS::Instance* instance)
+{
+	pointerEffekseerManager->stop(instance);
 }
 
 //===================================================================================================================================
@@ -368,4 +386,13 @@ void effekseerNS::Instance::update()
 	manager->SetLocation(handle, position.x,position.y,position.z);
 	manager->SetRotation(handle,rotation.x,rotation.y,rotation.z);
 	manager->SetScale(handle,scale.x,scale.y,scale.z);
+}
+
+//===================================================================================================================================
+//【インスタンス：更新】
+//===================================================================================================================================
+void effekseerNS::Instance::setShown(bool shown)
+{
+	::Effekseer::Manager*	manager = pointerEffekseerManager->manager;
+	manager->SetShown(handle, shown);
 }

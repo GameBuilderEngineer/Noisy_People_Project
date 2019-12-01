@@ -100,9 +100,12 @@ void Player::initialize(PlayerTable info)
 
 	//デジタルアクション
 	//デジタルシフト
-	digitalShiftEffect	= new DigitalShiftEffect;
 	shiftLine.start		= position;
 	shiftLine.end		= position+axisZ.direction;
+	//選択ライトを再生状態にしておく。
+	digitalShiftEffect	= new DigitalShiftEffect;
+	playSelectLight();
+	
 
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
@@ -880,8 +883,15 @@ void Player::playSelectLight()
 {
 	//選択エフェクトライト表示
 	digitalShiftEffect->playSelectLight(&shiftLine.end);
+}
 
-
+//===================================================================================================================================
+//【デジタルシフト先選択表示エフェクト再生】
+//===================================================================================================================================
+void Player::shownSelectLight(bool shown)
+{
+	//選択エフェクトライト表示
+	digitalShiftEffect->shownSelectLigth(shown);
 }
 
 //===================================================================================================================================
@@ -890,6 +900,7 @@ void Player::playSelectLight()
 void Player::stopSelectLight()
 {
 	//選択エフェクトライト表示
+
 	digitalShiftEffect->stopSelectLight();
 }
 

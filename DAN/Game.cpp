@@ -479,7 +479,6 @@ void Game::update(float _frameTime) {
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
 	}
-
 	//緑化状況30%
 	if (treeManager->getGreeningRate() >= 0.3 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30))
@@ -627,12 +626,10 @@ void Game::render3D(Camera currentCamera) {
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
 	{
-		treeManager->switchingVisionView();
-		treeManager->playDigitalTreeEffect(nowRenderingWindow);
+		treeManager->switchingVisionView(nowRenderingWindow);
 	}
 	else {
-		treeManager->switchingNormalView();
-		//treeManager->stpoDigitalTreeEffect(nowRenderingWindow);
+		treeManager->switchingNormalView(nowRenderingWindow);
 	}
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -825,15 +822,28 @@ void Game::collisions()
 	{
 		//シフト操作の無効化(初期値)
 		player[i].disableOperation(playerNS::ENABLE_SHIFT);
-		if (player[i].getState() != playerNS::VISION &&
-			player[i].getState() != playerNS::SKY_VISION)continue;
 		
+		//ビジョン時スルー&選択ライトエフェクトをOFFにする
+		if (player[i].getState() != playerNS::VISION &&
+			player[i].getState() != playerNS::SKY_VISION)
+		{
+			player[i].shownSelectLight(false);
+			continue;
+		}
+
+		//選択されたデジタルツリー
+		Tree* selectTree = NULL;
+
 		std::vector<Tree*> list = treeManager->getTreeList();
 		for (int num = 0; num < list.size(); num++)
 		{
 			Tree* tree = list[num];
+
 			//デジタルツリーの場合
 			if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+
+			//選択されていない状態にする
+			tree->switchingSelected(false, i);
 
 			//カリング処理
 			//カメラ視野角内の場合
@@ -849,15 +859,19 @@ void Game::collisions()
 			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*tree->size.y;
 			treeCylinder.height				= tree->size.y/2;
 			treeCylinder.radius				= tree->size.x;
-			player[i].collideShiftRay(treeCylinder);
+			if (player[i].collideShiftRay(treeCylinder))
+			{
+				//選択候補として保存する。
+				selectTree = tree;
+			}
 		}
-		//エフェクトの再生/停止
-		if (player[i].whetherValidOperation(playerNS::ENABLE_SHIFT))
+
+		//選択されたデジタルツリーへの処理を行う
+		if (selectTree)
 		{
-			player[i].playSelectLight();
-		}
-		else {
-			player[i].stopSelectLight();
+			selectTree->switchingSelected(true, i);
+			
+			player[i].shownSelectLight(true);
 		}
 
 	}

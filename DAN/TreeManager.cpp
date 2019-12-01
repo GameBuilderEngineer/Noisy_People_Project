@@ -236,16 +236,13 @@ void TreeManager::stopDigitalTreeEffect(int playerNo)
 			digitalTreeEffect->playStandardEffect(&tree->position);
 		}
 	}
-
-
-
 }
 
 
 //=============================================================================
 //【通常ビューに切り替える】
 //=============================================================================
-void TreeManager::switchingNormalView()
+void TreeManager::switchingNormalView(int playerNo)
 {
 	//アナログツリーの透過値の設定
 	aTrunkRenderer->setAlpha(1.0f);
@@ -271,12 +268,26 @@ void TreeManager::switchingNormalView()
 	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
+	//デジタルツリーエフェクトの非表示
+	//for (size_t i = 0; i < treeList.size(); i++)
+	//{
+	//	Tree* tree = treeList[i];
+	//	if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+	//	{
+	//		//本来は、近い場合のみデジタルツリーエフェクトを表示する
+	//
+	//		//通常描画時は描画しない
+	//		tree->switchingShownDigitalEffect(true, playerNo);
+	//
+	//
+	//	}
+	//}
 };
 
 //=============================================================================
 //【ビジョンビューに切り替える】
 //=============================================================================
-void TreeManager::switchingVisionView()
+void TreeManager::switchingVisionView(int playerNo)
 {
 
 	//アナログツリーの透過値の設定
@@ -301,6 +312,25 @@ void TreeManager::switchingVisionView()
 	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	//デジタルツリーエフェクトの表示
+	//for (size_t i = 0; i < treeList.size(); i++)
+	//{
+	//	Tree* tree = treeList[i];
+	//	if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+	//	{
+	//		if (tree->getSelected(playerNo))
+	//		{
+	//			//選択されている場合は、ライトを表示しない
+	//			tree->switchingShownDigitalEffect(true,playerNo);
+	//		}
+	//		else {
+	//			//選択されていなければデジタルツリーエフェクトを表示する
+	//			tree->switchingShownDigitalEffect(false,playerNo);//falseで最前面ライト
+	//		}
+	//	}
+	//}
+
 };
 
 //=============================================================================

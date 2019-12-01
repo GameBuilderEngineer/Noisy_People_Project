@@ -147,11 +147,8 @@ void DigitalShiftEffect::playEndShift(D3DXVECTOR3 position)
 //===================================================================================================================================
 void DigitalShiftEffect::playSelectLight(D3DXVECTOR3* position)
 {
-	if (onPlayedSelectLight)
+	if (!onPlayedSelectLight)
 	{
-
-	}
-	else {
 		createSelectLight(position);
 		onPlayedSelectLight = true;
 	}
@@ -167,6 +164,14 @@ void DigitalShiftEffect::stopSelectLight()
 		deleteSelectLight();
 		onPlayedSelectLight = false;
 	}
+}
+
+//===================================================================================================================================
+//【表示/非表示：選択ライトエフェクト】
+//===================================================================================================================================
+void DigitalShiftEffect::shownSelectLigth(bool shown)
+{
+	selectLight->setShown(shown);
 }
 
 //===================================================================================================================================
@@ -232,7 +237,7 @@ void DigitalShiftEffect::createSelectLight(D3DXVECTOR3* position)
 void DigitalShiftEffect::deleteSelectLight()
 {
 	//エフェクトの停止
-	effekseerNS::stop(selectLight->handle);
+	effekseerNS::stop(selectLight);
 }
 
 

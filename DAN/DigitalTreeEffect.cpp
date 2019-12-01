@@ -133,8 +133,8 @@ void DigitalTreeEffect::resetEffectCycle()
 //===================================================================================================================================
 void DigitalTreeEffect::playStandardEffect(D3DXVECTOR3* position)
 {
-	DigitalTreeEffectNS::DigitTree* instance = new DigitalTreeEffectNS::DigitTree(position);
-	effekseerNS::play(instance);
+	//DigitalTreeEffectNS::DigitTree* instance = new DigitalTreeEffectNS::DigitTree(position);
+	//effekseerNS::play(instance);
 }
 
 //===================================================================================================================================

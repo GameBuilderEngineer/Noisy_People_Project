@@ -93,6 +93,7 @@ public:
 	void playEndShift(D3DXVECTOR3 position);
 	void playSelectLight(D3DXVECTOR3* position);
 	void stopSelectLight();
+	void shownSelectLigth(bool shown);
 
 	//オブジェクト生成
 	void createDigitalSphere(D3DXVECTOR3 position, float runTime);
