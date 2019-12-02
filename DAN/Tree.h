@@ -124,6 +124,8 @@ public:
 	Object* getTrunk();
 	Object* getGreeningArea();
 	static int getNumOfTree();			// ツリーの数を取得
+	static void resetNumOfTree();		// ツリーの数をリセット
+
 	treeNS::TreeData* getTreeData();	// ツリーデータを取得
 	LPD3DXMESH getMesh();				// 衝突用メッシュへの参照
 	bool isAroundGreening();			//周囲へ緑化中か

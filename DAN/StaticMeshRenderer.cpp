@@ -322,13 +322,6 @@ void StaticMeshRenderer::updateArray()
 #ifdef _DEBUG
 void StaticMeshRenderer::outputGUI()
 {
-	Object* obj;
-	for (int i = 0; i < objectNum; i++)
-	{
-		obj = *objectList->getValue(i);
-		ImGui::SliderFloat("alpha", &alpha, 0, 255.0f);			
-
-	}
 
 }
 #endif // _DEBUG

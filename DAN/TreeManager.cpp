@@ -17,7 +17,7 @@ using namespace treeNS;
 void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
 	nextID = 0;			// 次回発行IDを0に初期化
-
+	Tree::resetNumOfTree();//ツリーのカウントをリセット
 	// 接地フィールドをセット
 	attractorMesh = _attractorMesh;
 	attractorMatrix = _attractorMatrix;
@@ -356,8 +356,16 @@ void TreeManager::createTree(TreeData treeData)
 {
 	Tree* tree = new Tree(treeData);	// ツリー作成
 	
-	//アナログツリーレンダラーへ登録
-	registerAnalog(tree);
+	//アナログ/デジタル ツリーレンダラーへ登録
+	switch (tree->getTreeData()->type)
+	{
+	case ANALOG_TREE:
+		registerAnalog(tree);
+		break;
+	case DIGITAL_TREE:
+		registerDigital(tree);
+		break;
+	}
 
 	tree->setAttractor(attractorMesh, attractorMatrix);
 	treeList.push_back(tree);
@@ -586,8 +594,6 @@ void TreeManager::outputGUI()
 		ImGui::Text("DigitalLeafA[Num:%d]", aDLeafRenderer->getObjectNum());
 		ImGui::Text("DigitalLeafB[Num:%d]", bDLeafRenderer->getObjectNum());
 		ImGui::Text("DigitalLeafC[Num:%d]", cDLeafRenderer->getObjectNum());
-
-		bTrunkRenderer->outputGUI();
 
 	}
 #endif
