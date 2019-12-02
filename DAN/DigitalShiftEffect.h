@@ -37,8 +37,9 @@ namespace DigitalShiftEffectNS
 	{
 	public:
 		D3DXVECTOR3* syncPosition;
-		SelectLight(D3DXVECTOR3* sync) {
+		SelectLight(int no,D3DXVECTOR3* sync) {
 			syncPosition = sync;
+			managerNo = no;
 			effectNo = effekseerNS::DIGIT_TREE_SELECT;
 		}
 		virtual void update() {
@@ -91,8 +92,8 @@ public:
 	void playStartShift(D3DXVECTOR3 position);
 	void playRunningShift(D3DXVECTOR3 position);
 	void playEndShift(D3DXVECTOR3 position);
-	void playSelectLight(D3DXVECTOR3* position);
-	void stopSelectLight();
+	void playSelectLight(int no,D3DXVECTOR3* position);
+	void stopSelectLight(int no);
 	void shownSelectLigth(bool shown);
 
 	//オブジェクト生成

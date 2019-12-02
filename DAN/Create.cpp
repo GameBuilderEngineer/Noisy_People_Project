@@ -229,8 +229,8 @@ void Create::render() {
 	camera->renderReady();
 	direct3D9->changeViewportFullWindow();
 	render3D(*camera);
-	effekseerNS::setCameraMatrix(camera->position, camera->gazePosition, camera->upVector);
-	effekseerNS::render();
+	effekseerNS::setCameraMatrix(0,camera->position, camera->gazePosition, camera->upVector);
+	effekseerNS::render(0);
 
 	//UI
 	direct3D9->changeViewportFullWindow();

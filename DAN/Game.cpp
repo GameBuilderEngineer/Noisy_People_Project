@@ -121,10 +121,17 @@ void Game::initialize() {
 			break;
 		}
 
+		//エフェクシアーの設定
+		effekseerNS::setProjectionMatrix(i+1,
+			camera[i].fieldOfView,
+			(float)camera[i].windowWidth,
+			(float)camera[i].windowHeight,
+			camera[i].nearZ,
+			camera[i].farZ);
 	}
 
 	//エフェクシアーの設定
-	effekseerNS::setProjectionMatrix(
+	effekseerNS::setProjectionMatrix(0,
 		camera[0].fieldOfView,
 		(float)camera[0].windowWidth,
 		(float)camera[0].windowHeight,
@@ -428,7 +435,7 @@ void Game::update(float _frameTime) {
 	{
 		effekseerNS::Instance* instance = new effekseerNS::Instance();
 		instance->position = *player[gameMasterNS::PLAYER_1P].getPosition();
-		effekseerNS::play(instance);
+		effekseerNS::play(0,instance);
 	}
 	if (input->wasKeyPressed('2'))
 	{
@@ -449,17 +456,17 @@ void Game::update(float _frameTime) {
 		Fire* instance = new Fire;
 		instance->position = *player[gameMasterNS::PLAYER_1P].getPosition();
 		instance->syncPosition = player[gameMasterNS::PLAYER_1P].getPosition();
-		effekseerNS::play(instance);
+		effekseerNS::play(0,instance);
 	}
 	//エフェクトの一時停止：再生
 	if (input->wasKeyPressed('3'))
 	{
-		effekseerNS::pause(false);
+		effekseerNS::pause(0,false);
 	}
 	//エフェクトの一時停止：停止
 	if (input->isKeyDown('4'))
 	{
-		effekseerNS::pause(true);
+		effekseerNS::pause(0,true);
 	}
 	//エフェクトの停止
 	if (input->wasKeyPressed('G'))
@@ -566,10 +573,17 @@ void Game::render() {
 	direct3D9->changeViewport1PWindow();
 	render3D(camera[gameMasterNS::PLAYER_1P]);
 	effekseerNS::setCameraMatrix(
+		0,
 		camera[gameMasterNS::PLAYER_1P].position, 
 		camera[gameMasterNS::PLAYER_1P].gazePosition, 
 		camera[gameMasterNS::PLAYER_1P].upVector);
-	effekseerNS::render();
+	effekseerNS::render(0);
+	effekseerNS::setCameraMatrix(
+		1,
+		camera[gameMasterNS::PLAYER_1P].position, 
+		camera[gameMasterNS::PLAYER_1P].gazePosition, 
+		camera[gameMasterNS::PLAYER_1P].upVector);
+	effekseerNS::render(1);
 
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_2P;
@@ -577,10 +591,18 @@ void Game::render() {
 	direct3D9->changeViewport2PWindow();
 	render3D(camera[gameMasterNS::PLAYER_2P]);
 	effekseerNS::setCameraMatrix(
+		0,
 		camera[gameMasterNS::PLAYER_2P].position,
 		camera[gameMasterNS::PLAYER_2P].gazePosition,
 		camera[gameMasterNS::PLAYER_2P].upVector);
-	effekseerNS::render();
+	effekseerNS::render(0);
+
+	effekseerNS::setCameraMatrix(
+		2,
+		camera[gameMasterNS::PLAYER_2P].position,
+		camera[gameMasterNS::PLAYER_2P].gazePosition,
+		camera[gameMasterNS::PLAYER_2P].upVector);
+	effekseerNS::render(2);
 
 	//UI
 	direct3D9->changeViewportFullWindow();

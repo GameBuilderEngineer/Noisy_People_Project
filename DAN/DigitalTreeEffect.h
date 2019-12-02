@@ -73,7 +73,7 @@ public:
 	void generateInstance(D3DXVECTOR3 position);
 	void resetEffectCycle();
 	void playStandardEffect(D3DXVECTOR3* position);
-	void playRaidEffect(D3DXVECTOR3* position);
+	void playRaidEffect(int no,D3DXVECTOR3* position);
 
 };
 

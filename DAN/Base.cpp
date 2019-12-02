@@ -178,6 +178,31 @@ void Base::anyAxisRotation(D3DXQUATERNION* quaternion, D3DXVECTOR3 axis, float d
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------
+//任意軸回転
+//-----------------------------------------------------------------------------------------------------------------------------------
+void Base::anyAxisRotation(D3DXVECTOR3* vector,D3DXVECTOR3 axis, float degree)
+{
+	//ベクトルをクォータニオンに置き換える
+	D3DXQUATERNION vectorQuaternion;
+	vectorQuaternion.x = vector->x;
+	vectorQuaternion.y = vector->y;
+	vectorQuaternion.z = vector->z;
+	vectorQuaternion.w = 1.0f;
+
+	D3DXQUATERNION conjugateQ;
+	D3DXQUATERNION rotationQ(0, 0, 0, 1);
+	float radian = D3DXToRadian(degree);
+	D3DXQuaternionRotationAxis(&rotationQ, &axis, radian);
+	D3DXQuaternionConjugate(&conjugateQ, &rotationQ);
+	
+	D3DXQUATERNION temporaryQ;
+	//共役*回転対象*回転クォータニオン
+	temporaryQ = conjugateQ * vectorQuaternion * rotationQ;
+
+	*vector = (D3DXVECTOR3)temporaryQ;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------
 //二つのベクトルのなす角を計算
 //-----------------------------------------------------------------------------------------------------------------------------------
 bool Base::formedRadianAngle(float* out, D3DXVECTOR3 v1, D3DXVECTOR3 v2) {

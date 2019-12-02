@@ -10,6 +10,33 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Object.h"
+#include "EffekseerManager.h"
+
+//===================================================================================================================================
+//【名前空間】
+//===================================================================================================================================
+namespace GreeningAreaNS
+{
+	//緑化エフェクト
+	class GreeningEffect :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3* syncPosition;
+		D3DXVECTOR3* syncScale;
+		GreeningEffect(D3DXVECTOR3* syncPosition,D3DXVECTOR3* syncScale) {
+			this->syncPosition = syncPosition;
+			this->syncScale = syncScale;
+			effectNo = effekseerNS::GREENING;
+		}
+		virtual void update() {
+			position = *syncPosition;
+			scale = *syncScale;
+			Instance::update();
+		};
+	};
+}
+
+
 
 //===================================================================================================================================
 //【緑化範囲クラス：衝突判定を行うために作成】

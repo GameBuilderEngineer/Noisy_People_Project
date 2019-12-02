@@ -71,7 +71,7 @@ void Title::initialize()
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 10);
 	//エフェクシアーの設定
-	effekseerNS::setProjectionMatrix(
+	effekseerNS::setProjectionMatrix(0,
 		camera->fieldOfView,
 		camera->windowWidth,
 		camera->windowHeight,
@@ -148,11 +148,7 @@ void Title::update(float _frameTime)
 	//バーの移動
 	//if(input->wasKeyPressed()
 
-	//エフェクトの再生
-	if (input->wasKeyPressed('1'))
-	{
-		effekseerNS::play(new effekseerNS::Instance);
-	}
+
 	//ミュート
 	if (input->isKeyDown('M'))
 	{
@@ -263,8 +259,8 @@ void Title::render()
 	direct3D9->changeViewportFullWindow();
 
 	//エフェクシアーテスト描画
-	effekseerNS::setCameraMatrix(camera->position, camera->gazePosition, camera->upVector);
-	effekseerNS::render();
+	effekseerNS::setCameraMatrix(0,camera->position, camera->gazePosition, camera->upVector);
+	effekseerNS::render(0);
 
 	// 3D
 	render3D(*camera);

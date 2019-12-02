@@ -159,6 +159,7 @@ public:
 	static void postureControl(D3DXQUATERNION* quaternion, D3DXVECTOR3 currentDirection, D3DXVECTOR3 nextDirection, float time);	//姿勢制御
 	static void anyAxisRotationSlerp(D3DXQUATERNION* quaternion, D3DXVECTOR3 axis, float radian, float time);						//任意軸線型補間回転
 	static void anyAxisRotation(D3DXQUATERNION* quaternion, D3DXVECTOR3 axis, float degree);										//任意軸回転
+	static void anyAxisRotation(D3DXVECTOR3* vector, D3DXVECTOR3 axis, float degree);										//任意軸回転
 	static bool formedRadianAngle(float* out, D3DXVECTOR3 v1, D3DXVECTOR3 v2);														//二つのベクトルのなす角を計算
 	D3DXVECTOR3 slip(D3DXVECTOR3 L, D3DXVECTOR3 N);																					//スリップ関数(入射ベクトルLのベクトルNに反するベクトル成分を打ち消す。）
 	static float between2VectorLength(D3DXVECTOR3 position1, D3DXVECTOR3 position2);												//２つの位置ベクトル間の距離を計算する

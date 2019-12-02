@@ -19,14 +19,18 @@ using namespace effekseerNS;
 //===================================================================================================================================
 //yƒOƒ[ƒoƒ‹•Ï”z
 //===================================================================================================================================
-static EffekseerManager* pointerEffekseerManager;
+static EffekseerManager* pointerEffekseerManager[MANAGER_NUM];
+
+static int count = 0;
 
 //===================================================================================================================================
 //yƒRƒ“ƒXƒgƒ‰ƒNƒ^z
 //===================================================================================================================================
 EffekseerManager::EffekseerManager()
 {
-	pointerEffekseerManager = this;
+	pointerEffekseerManager[count] = this;
+	count++;
+
 	manager		= NULL;
 	renderer	= NULL;
 #if(XADUIO2_STATE)
@@ -38,7 +42,7 @@ EffekseerManager::EffekseerManager()
 	fileName[BLOW]				= { L"blow.efk" };
 	fileName[MUZZLE]			= { L"muzzle.efk" };
 	fileName[DIGIT_TREE]		= { L"Digit_Tree.efk" };
-	fileName[DIGIT_TREE_SELECT]	= { L"Digit_Tree_Select.efk" };
+	fileName[DIGIT_TREE_SELECT]	= { L"Digit_Tree_Select_Zoffset+1.efk" };
 	fileName[DIGIT_TREE_RAID]	= { L"Digit_Tree_Select.efk" };
 	fileName[DAC]				= { L"DAC.efk" };
 	fileName[GREENING]			= { L"Greening.efk" };
@@ -297,81 +301,81 @@ void EffekseerManager::render()
 //===================================================================================================================================
 //yŠO•”ŽQÆFÄ¶z
 //===================================================================================================================================
-effekseerNS::Instance*  effekseerNS::play(effekseerNS::Instance* instance)
+effekseerNS::Instance*  effekseerNS::play(int no, effekseerNS::Instance* instance)
 {
-	return pointerEffekseerManager->play(instance);
+	return pointerEffekseerManager[no]->play(instance);
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆF‘S’âŽ~z
 //===================================================================================================================================
-void effekseerNS::stop()
+void effekseerNS::stop(int no)
 {
-	pointerEffekseerManager->stop();
+	pointerEffekseerManager[no]->stop();
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆFƒnƒ“ƒhƒ‹•Ê’âŽ~z
 //===================================================================================================================================
-void effekseerNS::stop(::Effekseer::Handle handle)
+void effekseerNS::stop(int no, ::Effekseer::Handle handle)
 {
-	pointerEffekseerManager->stop(handle);
+	pointerEffekseerManager[no]->stop(handle);
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆFƒCƒ“ƒXƒ^ƒ“ƒX•Ê’âŽ~z
 //===================================================================================================================================
-void effekseerNS::stop(::effekseerNS::Instance* instance)
+void effekseerNS::stop(int no, ::effekseerNS::Instance* instance)
 {
-	pointerEffekseerManager->stop(instance);
+	pointerEffekseerManager[no]->stop(instance);
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆFƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñÝ’èz
 //===================================================================================================================================
-void effekseerNS::setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf)
+void effekseerNS::setProjectionMatrix(int no, float fov, float windowWidth, float windowHeight, float zn, float zf)
 {
-	pointerEffekseerManager->setProjectionMatrix(fov, windowWidth, windowHeight, zn, zf);
+	pointerEffekseerManager[no]->setProjectionMatrix(fov, windowWidth, windowHeight, zn, zf);
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆFƒJƒƒ‰(ƒrƒ…[)s—ñÝ’èz
 //===================================================================================================================================
-void effekseerNS::setCameraMatrix(D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up)
+void effekseerNS::setCameraMatrix(int no, D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up)
 {
-	pointerEffekseerManager->setCameraMatrix(position, eye, up);
+	pointerEffekseerManager[no]->setCameraMatrix(position, eye, up);
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆF•`‰æz
 //===================================================================================================================================
-void effekseerNS::render()
+void effekseerNS::render(int no)
 {
-	pointerEffekseerManager->render();
+	pointerEffekseerManager[no]->render();
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆFˆêŽž’âŽ~z
 //===================================================================================================================================
-void effekseerNS::pause(bool flag)
+void effekseerNS::pause(int no, bool flag)
 {
-	pointerEffekseerManager->pause(flag);
+	pointerEffekseerManager[no]->pause(flag);
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆFˆêŽž’âŽ~z
 //===================================================================================================================================
-void effekseerNS::pause(::Effekseer::Handle handle, bool flag)
+void effekseerNS::pause(int no, ::Effekseer::Handle handle, bool flag)
 {
-	pointerEffekseerManager->pause(handle, flag);
+	pointerEffekseerManager[no]->pause(handle, flag);
 }
 
 //===================================================================================================================================
 //yŠO•”ŽQÆFƒ}ƒl[ƒWƒƒ[Žæ“¾z
 //===================================================================================================================================
-EffekseerManager* getEffekseerManager()
+EffekseerManager* getEffekseerManager(int no)
 {
-	return pointerEffekseerManager;
+	return pointerEffekseerManager[no];
 }
 
 //===================================================================================================================================
@@ -379,7 +383,7 @@ EffekseerManager* getEffekseerManager()
 //===================================================================================================================================
 void effekseerNS::Instance::update()
 {
-	::Effekseer::Manager*	manager = pointerEffekseerManager->manager;
+	::Effekseer::Manager*	manager	= pointerEffekseerManager[managerNo]->manager;
 	position	 += speed;
 	rotation	 += deltaRadian;
 	scale		 += deltaScale;
@@ -393,6 +397,6 @@ void effekseerNS::Instance::update()
 //===================================================================================================================================
 void effekseerNS::Instance::setShown(bool shown)
 {
-	::Effekseer::Manager*	manager = pointerEffekseerManager->manager;
+	::Effekseer::Manager*	manager = pointerEffekseerManager[managerNo]->manager;
 	manager->SetShown(handle, shown);
 }

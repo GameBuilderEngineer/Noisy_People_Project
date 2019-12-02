@@ -96,8 +96,9 @@ namespace treeNS
 	{
 	public:
 		D3DXVECTOR3 * syncPosition;
-		DigitTree(D3DXVECTOR3* sync) {
+		DigitTree(int no,D3DXVECTOR3* sync){
 			syncPosition = sync;
+			managerNo = no;
 			effectNo = effekseerNS::DIGIT_TREE;
 		}
 		virtual void update() {

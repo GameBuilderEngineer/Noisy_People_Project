@@ -63,7 +63,9 @@ Director::~Director() {
 	SAFE_DELETE(soundInterface);
 	SAFE_DELETE(textManager);
 	SAFE_DELETE(fader);
-	SAFE_DELETE(effekseerManager);
+	SAFE_DELETE(effekseerManager[0]);
+	SAFE_DELETE(effekseerManager[1]);
+	SAFE_DELETE(effekseerManager[2]);
 	SAFE_DELETE(gameMaster);
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
@@ -100,8 +102,12 @@ HRESULT Director::initialize() {
 #endif // _DEBUG
 
 	//エフェクシアー
-	effekseerManager = new EffekseerManager();
-	effekseerManager->initialize();
+	effekseerManager[0] = new EffekseerManager();
+	effekseerManager[0]->initialize();
+	effekseerManager[1] = new EffekseerManager();
+	effekseerManager[1]->initialize();
+	effekseerManager[2] = new EffekseerManager();
+	effekseerManager[2]->initialize();
 
 	//sound
 	soundInterface = new SoundInterface();
@@ -309,7 +315,9 @@ void Director::update() {
 		}
 	}
 #endif // _DEBUG
-	effekseerManager->update();
+	effekseerManager[0]->update();
+	effekseerManager[1]->update();
+	effekseerManager[2]->update();
 	fader->update(frameTime);
 	scene->update(frameTime);
 	scene->collisions();
@@ -505,7 +513,9 @@ void Director::displayFPS() {
 //===================================================================================================================================
 void Director::changeNextScene() {
 	int nextScene = scene->checkNextScene();		//次のシーンIDを取得	
-	effekseerNS::stop();							//全エフェクト停止
+	effekseerNS::stop(0);							//全エフェクト停止
+	effekseerNS::stop(1);							//全エフェクト停止
+	effekseerNS::stop(2);							//全エフェクト停止
 	scene->uninitialize();							//シーン終了処理
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移

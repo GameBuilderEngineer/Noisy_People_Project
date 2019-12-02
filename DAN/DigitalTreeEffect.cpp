@@ -140,8 +140,8 @@ void DigitalTreeEffect::playStandardEffect(D3DXVECTOR3* position)
 //===================================================================================================================================
 //ÅyîÌèPåÇÉGÉtÉFÉNÉgÅz
 //===================================================================================================================================
-void DigitalTreeEffect::playRaidEffect(D3DXVECTOR3* position)
+void DigitalTreeEffect::playRaidEffect(int no,D3DXVECTOR3* position)
 {
 	DigitalTreeEffectNS::DigitTreeRaid* instance = new DigitalTreeEffectNS::DigitTreeRaid(position);
-	effekseerNS::play(instance);
+	effekseerNS::play(no,instance);
 }

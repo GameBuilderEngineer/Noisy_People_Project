@@ -269,19 +269,15 @@ void TreeManager::switchingNormalView(int playerNo)
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
 	//デジタルツリーエフェクトの非表示
-	//for (size_t i = 0; i < treeList.size(); i++)
-	//{
-	//	Tree* tree = treeList[i];
-	//	if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
-	//	{
-	//		//本来は、近い場合のみデジタルツリーエフェクトを表示する
-	//
-	//		//通常描画時は描画しない
-	//		tree->switchingShownDigitalEffect(true, playerNo);
-	//
-	//
-	//	}
-	//}
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+		{
+			//通常描画時は描画しない
+			tree->switchingShownDigitalEffect(false, playerNo);
+		}
+	}
 };
 
 //=============================================================================
@@ -314,22 +310,22 @@ void TreeManager::switchingVisionView(int playerNo)
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
 	//デジタルツリーエフェクトの表示
-	//for (size_t i = 0; i < treeList.size(); i++)
-	//{
-	//	Tree* tree = treeList[i];
-	//	if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
-	//	{
-	//		if (tree->getSelected(playerNo))
-	//		{
-	//			//選択されている場合は、ライトを表示しない
-	//			tree->switchingShownDigitalEffect(true,playerNo);
-	//		}
-	//		else {
-	//			//選択されていなければデジタルツリーエフェクトを表示する
-	//			tree->switchingShownDigitalEffect(false,playerNo);//falseで最前面ライト
-	//		}
-	//	}
-	//}
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+		{
+			if (tree->getSelected(playerNo))
+			{
+				//選択されている場合は、ライトを表示しない
+				tree->switchingShownDigitalEffect(false,playerNo);
+			}
+			else {
+				//選択されていなければデジタルツリーエフェクトを表示する
+				tree->switchingShownDigitalEffect(true,playerNo);
+			}
+		}
+	}
 
 };
 

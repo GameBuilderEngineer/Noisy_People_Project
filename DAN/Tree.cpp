@@ -3,7 +3,7 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
-// 更新日 : 2019/11/17 【菅野 樹】
+// 更新日 : 2019/12/01 【菅野 樹】
 //-----------------------------------------------------------------------------
 
 //=============================================================================
@@ -160,6 +160,10 @@ void Tree::greeningAround()
 {	
 	greeningArea.initialize(&center);
 	greeningArea.setRadius(1.0f);
+	//エフェクトの再生
+	GreeningAreaNS::GreeningEffect* greeningEffect 
+		= new GreeningAreaNS::GreeningEffect(&greeningArea.position,&greeningArea.scale);
+	effekseerNS::play(0, greeningEffect);
 	nowAroundGreening = true;
 }
 
@@ -179,8 +183,8 @@ void Tree::playDigitalEffect()
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//通常時
-		digitalEffect[i] = new treeNS::DigitTree(&position);
-		effekseerNS::play(digitalEffect[i]);
+		digitalEffect[i] = new treeNS::DigitTree(i+1,&position);
+		effekseerNS::play(i+1,digitalEffect[i]);
 
 		//デジタルVISIONorSKY_VISION
 		//frontDigitalEffect[i] = new treeNS::DigitFront(&position);
@@ -195,7 +199,7 @@ void Tree::stopDigitalEffect()
 {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		effekseerNS::stop(digitalEffect[i]);
+		effekseerNS::stop(i+1,digitalEffect[i]);
 		//effekseerNS::stop(frontDigitalEffect[i]);
 	}
 }
@@ -266,7 +270,7 @@ void Tree::addHp(int value) {
 		effekseerNS::Instance* instance = new effekseerNS::Instance();
 		instance->effectNo = effekseerNS::DAC;
 		instance->position = position;
-		effekseerNS::play(instance);
+		effekseerNS::play(0,instance);
 
 		//デジタルツリーエフェクトの再生
 		playDigitalEffect();

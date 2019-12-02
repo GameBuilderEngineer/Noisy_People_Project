@@ -14,6 +14,7 @@
 #include "LinkedList.h"
 #include "Ray.h"
 #include "Sound.h"
+#include "EffekseerManager.h"
 
 namespace bulletNS{
 	const float		SPEED			= 100.0f;	//弾速
@@ -23,6 +24,33 @@ namespace bulletNS{
 	const float		EXIST_TIME		= 30.0f;	//存在時間
 	const int		DIGITAL_POWER	= 20;		//デジタルパワー
 	const float		LAUNCH_FACT_TIME = 0.333f;	//発射事実残存時間
+
+
+	//銃口エフェクト
+	class Muzzle :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3* syncPosition;
+		D3DXMATRIX* syncMatrixRotation;
+		Muzzle(D3DXVECTOR3* syncPosition, D3DXMATRIX* syncMatrixRotation) {
+			this->syncPosition = syncPosition;
+			this->syncMatrixRotation = syncMatrixRotation;
+			effectNo = effekseerNS::MUZZLE;
+			scale = D3DXVECTOR3(0.1f,0.1f,0.1f);
+		}
+		virtual void update() {
+			position = *syncPosition;
+			
+			D3DXMATRIX R = *syncMatrixRotation;
+
+			rotation.x = atan2f(R._32, R._33);
+			rotation.y = asinf(-R._31);
+			rotation.z = atan2f(R._21, R._11);
+
+			Instance::update();
+		};
+	};
+
 }
 
 //===================================================================================================================================
