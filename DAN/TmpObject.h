@@ -99,12 +99,13 @@ private:
 	float						reverseValueXAxis;				//操作X軸
 	float						reverseValueYAxis;				//操作Y軸
 	bool							isExecutingMoveOperation;		// 移動操作中フラグ
-	bool							onJump;							// ジャンプフラグ
+	bool							onFly;							// 飛ぶフラグ
 	bool							jumping;							// ジャンプ中フラグ
 
 	// 衝突
 	BoundingSphere				bodyCollide;						// 球コリジョン
 	float						difference;						//フィールド補正差分
+	bool						onGround;						//接地判定
 
 	// 汎用
 	LPDIRECT3DDEVICE9			device;						// Direct3Dデバイス
@@ -115,7 +116,7 @@ private:
 
 	// その他
 	int							staticMeshNo;				// メッシュのID
-	int							ItemListboxMesh;				// メッシュの種類(リストボックス)
+	//int							ItemListboxMesh;				// メッシュの種類(リストボックス)
 	
 	D3DXVECTOR3					PositionYeah;
 
@@ -134,8 +135,9 @@ public:
 	void updatePhysics(float frameTime);							// 物理の更新
 
 	//操作
-	void moveOperation();										// 移動操作
+	void moveOperation();											// 移動操作
 	void controlCamera(float frameTime);							// カメラ操作
+	bool grounding(LPD3DXMESH mesh, D3DXMATRIX matrix);				//接地処理
 
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
