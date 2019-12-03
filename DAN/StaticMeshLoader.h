@@ -62,6 +62,9 @@ namespace staticMeshNS {
 		B_LEAF,									//11
 		OCEAN,									//12
 
+		ITEM_BRANCH,
+
+
 		YAMADA_LAND,							//01
 		NAKAGOMI_LAND,							//02
 		YAMADA_ROBOT,							//03

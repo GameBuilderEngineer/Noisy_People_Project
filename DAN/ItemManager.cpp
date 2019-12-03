@@ -16,7 +16,7 @@ void ItemManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	nextID = 0;		// 次回発行IDを0に初期化
 
 	// 描画オブジェクトを作成
-	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::ITEM_BRANCH));
 	exampleItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
 
 #if 1	// アイテムツールのデータを読み込む
@@ -83,7 +83,7 @@ void ItemManager::createItem(ItemData itemData)
 	switch (itemData.type)
 	{
 	case BATTERY:
-		item = new Battery(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS), itemData);
+		item = new Battery(staticMeshNS::reference(staticMeshNS::ITEM_BRANCH), itemData);
 		item->setAttractor(attractorMesh, attractorMatrix);
 		itemList.emplace_back(item);
 		batteryRenderer->registerObject(item);
