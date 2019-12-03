@@ -84,6 +84,11 @@ public:
 	void rotation(D3DXVECTOR3 axis, float angle);
 	void lockOn(D3DXVECTOR3 lockOnTarget,float frameTime);
 
+	void rotationX(D3DXVECTOR3 axis, D3DXVECTOR3 Y, float angle);
+	//タイトル操作 ターゲットに追従
+	void GetViewMaatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world);
+
+
 	//getter
 	D3DXVECTOR3 getDirectionX() { 
 		D3DXVECTOR3 result;

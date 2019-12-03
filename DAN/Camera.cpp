@@ -58,12 +58,12 @@ void Camera::update()
 	else {
 		position = (D3DXVECTOR3)relativeQuaternion;
 	}
-
+	
 	D3DXVECTOR3 axisY(world._21, world._22, world._23);
 	if(targetY != NULL)Base::postureControl(&posture,axisY,*targetY ,0.1f);
 
 	D3DXVECTOR3 relativePosition = (D3DXVECTOR3)relativeQuaternion;
-
+	
 	//Žp¨ƒNƒH[ƒ^ƒjƒIƒ“‚©‚çŽp¨s—ñ‚ðì¬‚·‚é
 	D3DXMatrixRotationQuaternion(&world, &posture);
 	position +=
@@ -76,6 +76,7 @@ void Camera::update()
 		relativeGaze.z*D3DXVECTOR3(world._31,world._32,world._33);
 	setViewProjection();
 }
+
 
 //===================================================================================================================================
 //yƒJƒƒ‰‚Ì•`‰æ€”õz
@@ -108,6 +109,29 @@ void Camera::rotation(D3DXVECTOR3 axis,float degree)
 		relativePosition.y > relativeLength-limitValueRotaionTop)return;
 	if (limit & ROTATION_BOTTOM_LIMIT && 
 		relativePosition.y < -relativeLength+limitValueRotaionBottom)return;
+
+	//‹¤–ð*‰ñ“]‘ÎÛ*‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
+	relativeQuaternion = temporaryQ;
+}
+
+void Camera::rotationX(D3DXVECTOR3 axis, D3DXVECTOR3 Y,float degree)
+{
+	D3DXQUATERNION conjugateQ;
+	D3DXQUATERNION rotationQ(0, 0, 0, 1);
+	float radian = D3DXToRadian(degree);
+	D3DXQuaternionRotationAxis(&rotationQ, &axis, radian);
+	D3DXQuaternionConjugate(&conjugateQ, &rotationQ);
+
+	D3DXQUATERNION temporaryQ;
+	//‹¤–ð*‰ñ“]‘ÎÛ*‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
+	temporaryQ = conjugateQ * (D3DXQUATERNION)Y * rotationQ;
+
+	D3DXVECTOR3 relativePosition = (D3DXVECTOR3)temporaryQ;
+	float relativeLength = D3DXVec3Length(&relativePosition);
+	if (limit & ROTATION_TOP_LIMIT &&
+		relativePosition.y > relativeLength - limitValueRotaionTop)return;
+	if (limit & ROTATION_BOTTOM_LIMIT &&
+		relativePosition.y < -relativeLength + limitValueRotaionBottom)return;
 
 	//‹¤–ð*‰ñ“]‘ÎÛ*‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“
 	relativeQuaternion = temporaryQ;
@@ -170,6 +194,8 @@ void Camera::lockOn(D3DXVECTOR3 lockOnTarget,float frameTime)
 
 }
 
+
+
 //===================================================================================================================================
 //yImGUI‚Ö‚Ìo—Íz
 //===================================================================================================================================
@@ -230,10 +256,29 @@ HRESULT Camera::setViewProjection()
 void Camera::setNearZ(float value) { nearZ = value; }
 void Camera::setFarZ(float value) { farZ = value; }
 
+void Camera::GetViewMaatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world)
+{
+	D3DXMATRIX CameraW;
+	//ƒJƒƒ‰‚ÌŽp¨‚ðƒ[ƒ‹ƒh•ÏŠ·iˆ»ŽqŠÖŒWˆ—j
+	D3DXMatrixMultiply(&CameraW, &view, world);
+
+	//ƒrƒ…[•ÏŠ·s—ñì¬
+	D3DXMatrixLookAtLH(
+		viewOut,
+		&D3DXVECTOR3(CameraW._11, CameraW._13, CameraW._13),
+		&D3DXVECTOR3(CameraW._31, CameraW._32, CameraW._33),
+		&D3DXVECTOR3(CameraW._21, CameraW._23, CameraW._23)
+	);
+}
+
+
 //===================================================================================================================================
 //ygetterz
 //===================================================================================================================================
-D3DXVECTOR3 Camera::getAxisZ()	{return D3DXVECTOR3(world._31, world._32, world._33);}
+D3DXVECTOR3 Camera::getAxisZ()	{
+	D3DXVECTOR3 direction;
+	Base::between2VectorDirection(&direction, position, gazePosition);
+	return direction;}
 D3DXVECTOR3 Camera::getAxisY()	{return D3DXVECTOR3(world._21, world._22, world._23);}
 D3DXVECTOR3 Camera::getHorizontalAxis()
 {

@@ -21,6 +21,7 @@
 #include "StaticMeshRenderer.h"
 
 #include "WaveBall.h"
+#include "Sky.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -35,6 +36,17 @@ namespace titleNS
 		TUTORIAL,
 		NUM_TRANSITION_SCENE
 	};
+	
+	enum PHOTOGRAPH_LIST
+	{
+		CAMERA0,
+		CAMERA1,
+		CAMERA2,
+		CAMERA3,
+		MAX_CAMERA
+	};
+
+	const float TITLE_CAMERA_SPEED = 1.0f;
 
 }
 
@@ -47,14 +59,34 @@ private:
 	TestEffect* testEffect;
 	WaveBall *waveBall;
 
-	//フィールド描画実験
+	//フィールド
 	Object*					titleField;
 	StaticMeshRenderer*		titleFieldRenderer;	
+	//スカイドーム
+	Sky* sky;
+	//ターゲットオブジェクト
+	Object* target;
 
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;
 
-	float degree = 1.0f / 10.0f;
+
+	int stateCamera;
+	float frameDegree = 1.0f / 10.0f;		//自動速度
+	float inputDegree = 2.0f;				//入力速度
+	
+	float moveTime;				//終点までの時間
+	float moveTimer;			//移動タイマー
+	D3DXVECTOR3 startPos;		//ラープ始点
+	
+	//カメラの軸取得変数
+	D3DXVECTOR3 cameraAxisZ;
+	D3DXVECTOR3 fixedAxisZ;
+	D3DXVECTOR3 cameraAxisX;
+	D3DXVECTOR3 cameraAxisY;
+	D3DXVECTOR3 fixedAxisX;
+	
+
 public:
 	Title(void);
 	~Title(void);

@@ -59,17 +59,31 @@ void Title::initialize()
 {
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_TITLE, soundNS::METHOD::LOOP);
+	
+	//ターゲットオブジェクト
+	target = new Object;
+	target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
+	
 
+	//
+	
+
+	//初期フォトグラフ
+	stateCamera = CAMERA0;
 
 	// Camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	camera->setGaze(D3DXVECTOR3(0, 100, 0));
-	//camera->setRelative(D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f));	※元の値※
-	camera->setRelative(D3DXQUATERNION(0.0f, 150.0f, -180.0f, 0.0f));
-	camera->setRelativeGaze(D3DXVECTOR3(0, 0, 0));
+	//camera->setGaze(D3DXVECTOR3(0, 100, 0));
+	//camera->setRelative(D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f));	//※元の値※
+	camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, 20.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
+	camera->setTarget(&target->position);
+
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 10);
+	camera->setViewProjection();
+	
+
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(0,
 		camera->fieldOfView,
@@ -77,6 +91,9 @@ void Title::initialize()
 		camera->windowHeight,
 		camera->nearZ,
 		camera->farZ);
+
+	//スカイドーム
+	sky = new Sky();
 
 	//WaveBall
 	waveBall = new WaveBall;
@@ -96,6 +113,14 @@ void Title::initialize()
 	titleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
 	titleFieldRenderer->registerObject(titleField);
 	titleField->initialize(&D3DXVECTOR3(0, 0, 0));
+
+	 cameraAxisZ = D3DXVECTOR3(0, 0, 0);
+	 fixedAxisZ = D3DXVECTOR3(0, 0, 0);
+	 cameraAxisX = D3DXVECTOR3(0, 0, 0);
+	 cameraAxisY = D3DXVECTOR3(0, 0, 0);
+	 fixedAxisX = D3DXVECTOR3(0, 0, 0);
+	
+
 }
 
 //============================================================================================================================================
@@ -115,7 +140,13 @@ void Title::uninitialize(void)
 	//タイトルフィールド
 	SAFE_DELETE(titleField);
 	SAFE_DELETE(titleFieldRenderer);
-			
+
+	//ターゲットオブジェクト
+	SAFE_DELETE(target);
+	
+	//スカイフィールド
+	SAFE_DELETE(sky);
+
 	//WaveBall
 	SAFE_DELETE(waveBall);
 
@@ -138,6 +169,11 @@ void Title::update(float _frameTime)
 	//タイトルフィールド（テスト）
 	titleField->update();	//オブジェクト
 	titleFieldRenderer->update();
+
+	//スカイフィールドの更新
+	sky->update();
+
+	target->update();
 
 	// カメラ
 	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
@@ -188,33 +224,151 @@ void Title::update(float _frameTime)
 		changeScene(nextScene);
 	}
 
-	//カメラ
-	camera->update();
-	//カメラ回転
-	camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
+	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
+	cameraAxisZ = camera->getAxisZ();
+	fixedAxisZ = Base::slip(cameraAxisZ, camera->upVector);	//カメラの傾きに対応
+	//カメラX軸ベクトル
+	D3DXVec3Cross(&cameraAxisX, &camera->upVector, &cameraAxisZ);
+	//カメラY軸ベクトル（上方向の更新）
+	D3DXVECTOR3 Y = D3DXVECTOR3(0, 0, 0);
+	D3DXVec3Cross(&Y, &fixedAxisZ, &cameraAxisX);
+	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
+	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
 	
-	//カメラ移動
-	/*if (input->isKeyDown('W'))
+	switch (stateCamera)
 	{
-		camera->relativeQuaternion.z += 5.0f;
-		camera->gazePosition.z += 5.0f;
+	case CAMERA0:
+		if (sceneTimer > 3.0f)
+		{
+			startPos = target->position;	//ラープ始点
+			moveTime = 3.0f;				//終点までの時間
+			moveTimer = moveTime;			//移動タイマー
+			stateCamera++;
+		}
+		break;
+	case CAMERA1:
+		if (moveTimer > 0)
+		{
+			moveTimer -= frameTime;
+			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-34.0f, 160.0f, -135.0f), 1.0f - moveTimer / moveTime);
+			
+			if (target->position.z < -135.0f)
+			{
+				target->position.z = -135.0f;
+				startPos = target->position;
+				moveTime = 3.0f;
+				moveTimer = moveTime;
+
+				stateCamera++;
+			}
+		}
+		break;
+	case CAMERA2:
+		if (moveTimer > 0)
+		{
+			moveTimer -= frameTime;
+			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-15.0f, 63.0f, -150.0), 1.0f - moveTimer / moveTime);
+			//target->initialize(&D3DXVECTOR3(-15.0f, 63.0f, -150.0));
+			//camera->setRelative(D3DXQUATERNION(13.2f, 6.0f, -13.0f, 0.0f));
+			if (moveTimer <= 0)
+			{
+				target->position = D3DXVECTOR3(-15.0f, 63.0f, -150.0);
+				stateCamera++;
+			}
+
+		}
+		break;
+		
+	case CAMERA3:
+		break; 
+		//camera->setViewProjection();
+	default:
+		break;
+	}
+
+
+
+	/*if (sceneTimer > 3.0f && moveTimer > 0)
+	{
+		moveTimer -= frameTime;
+		D3DXVec3Lerp(&target->position, &lerpPos, &D3DXVECTOR3(-34.0f, 160.0f, -135.0f), 1.0f - moveTimer/moveTime);
+		if (target->position.z < -135.0f)
+		{
+			target->position.z = -135.0f;
+		}
+	}*/
+
+	
+
+	//カメラ移動
+	if (input->isKeyDown('W'))
+	{
+		fixedAxisZ *= 1.0f;
+		target->position += fixedAxisZ;
 	}
 	if (input->isKeyDown('S'))
 	{
-		camera->relativeQuaternion.z -= 5.0f;
-		camera->gazePosition.z -= 5.0f;
+		fixedAxisZ *= -1.0f;
+		target->position += fixedAxisZ;
 	}
 	if (input->isKeyDown('A'))
 	{
-		camera->relativeQuaternion.x -= 5.0f;
-		camera->gazePosition.x -= 5.0f;
+		cameraAxisX *= -1.0f;
+		target->position += cameraAxisX;
 	}
 	if (input->isKeyDown('D'))
 	{
-		camera->relativeQuaternion.x += 5.0f;
-		camera->gazePosition.x += 5.0f;
-	}*/
+		cameraAxisX *= 1.0f;
+		target->position += cameraAxisX;
+	}
+	if (input->isKeyDown('Q'))
+	{
+		Y *= 1.0f;
+		target->position += camera->upVector;
+	}
+	if (input->isKeyDown('E'))
+	{
+		Y *= 1.0f;
+		target->position -= camera->upVector;
 
+	}
+
+	//カメラ回転
+	//camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
+	//Y軸
+	if (input->isKeyDown(VK_RIGHT))
+	{
+		camera->rotation(camera->upVector, inputDegree);
+		//target->quaternion.y += 5.0f;
+	}
+	if (input->isKeyDown(VK_LEFT))
+	{
+		camera->rotation(-camera->upVector, inputDegree);
+		//target->quaternion.y -= 5.0f;
+	}
+	//X軸
+	if (input->isKeyDown(VK_UP))
+	{
+		camera->rotation(-fixedAxisX, inputDegree);
+	}
+	if (input->isKeyDown(VK_DOWN))
+	{
+		camera->rotation(fixedAxisX, inputDegree);
+	}
+	//ズーム
+	if (input->isKeyDown('Z'))
+	{
+		camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
+	}
+	if (input->isKeyDown('X'))
+	{
+		camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
+	}
+
+	
+
+	//カメラ
+	camera->update();
 
 }
 
@@ -282,6 +436,9 @@ void Title::render3D(Camera _currentCamera)
 	//タイトルフィールド（テスト）
 	titleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
+	//スカイフィールドの描画
+	sky->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
+
 	// タイトルプレイヤー描画
 	//player[0].toonRender
 	//(
@@ -344,6 +501,10 @@ void Title::createGUI()
 {
 	bool createScene = false;
 	float backUpTmpVolume = tmpVolume;
+	float limitTop = 1000;
+	float limitBottom = -1000;
+	camera->outputGUI();
+	target->outputGUI();
 
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
@@ -351,6 +512,7 @@ void Title::createGUI()
 	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Checkbox("Create Scene", &createScene);
 	ImGui::SliderFloat("volume control", &tmpVolume, 0.0f, 1.0f);
+	
 
 	if (backUpTmpVolume != tmpVolume)
 	{
