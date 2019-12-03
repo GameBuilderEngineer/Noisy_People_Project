@@ -237,7 +237,7 @@ private:
 	bool						isExecutingMoveOperation;		// 移動操作中フラグ
 	bool						jumping;						// ジャンプ中フラグ
 	bool						onJump;
-
+	
 	// UI用操作判定フラグ
 	bool						isShotAble;
 	bool						isJumpAble;
