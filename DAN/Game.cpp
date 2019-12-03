@@ -843,26 +843,37 @@ void Game::collisions()
 	{
 		//シフト操作の無効化(初期値)
 		player[i].disableOperation(playerNS::ENABLE_SHIFT);
-		
+		//選択ライトのOFF
+		player[i].shownSelectLight(false);
+
+
+		//選択されたデジタルツリー
+		Tree* selectTree = NULL;
+		//リストの取得
+		std::vector<Tree*> list = treeManager->getTreeList();
+
 		//ビジョン時スルー&選択ライトエフェクトをOFFにする
 		if (player[i].getState() != playerNS::VISION &&
 			player[i].getState() != playerNS::SKY_VISION)
 		{
-			player[i].shownSelectLight(false);
+			//選択解除
+			for (int num = 0; num < list.size(); num++)
+			{
+				Tree* tree = list[num];
+				//デジタルツリーでない場合continue
+				if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+				//選択されていない状態にする
+				tree->switchingSelected(false, i);
+			}
 			continue;
 		}
 
-		//選択されたデジタルツリー
-		Tree* selectTree = NULL;
-
-		std::vector<Tree*> list = treeManager->getTreeList();
+		//衝突判定
 		for (int num = 0; num < list.size(); num++)
 		{
 			Tree* tree = list[num];
-
 			//デジタルツリーの場合
 			if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
-
 			//選択されていない状態にする
 			tree->switchingSelected(false, i);
 
@@ -880,6 +891,7 @@ void Game::collisions()
 			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*tree->size.y;
 			treeCylinder.height				= tree->size.y/2;
 			treeCylinder.radius				= tree->size.x;
+			//衝突時
 			if (player[i].collideShiftRay(treeCylinder))
 			{
 				//選択候補として保存する。
@@ -891,10 +903,8 @@ void Game::collisions()
 		if (selectTree)
 		{
 			selectTree->switchingSelected(true, i);
-			
 			player[i].shownSelectLight(true);
 		}
-
 	}
 
 	

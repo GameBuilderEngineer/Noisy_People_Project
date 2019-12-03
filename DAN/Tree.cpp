@@ -12,7 +12,6 @@
 #include "Tree.h"
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
-#include "EffekseerManager.h"
 
 //=============================================================================
 //ÅyusingêÈåæÅz
@@ -200,13 +199,9 @@ void Tree::playDigitalEffect()
 {	
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		//í èÌéû
+		//VISIONéû
 		digitalEffect[i] = new treeNS::DigitTree(i+1,&position);
 		effekseerNS::play(i+1,digitalEffect[i]);
-
-		//ÉfÉWÉ^ÉãVISIONorSKY_VISION
-		//frontDigitalEffect[i] = new treeNS::DigitFront(&position);
-		//effekseerNS::play(frontDigitalEffect[i]);
 	}
 }
 
@@ -218,7 +213,6 @@ void Tree::stopDigitalEffect()
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		effekseerNS::stop(i+1,digitalEffect[i]);
-		//effekseerNS::stop(frontDigitalEffect[i]);
 	}
 }
 
@@ -229,8 +223,6 @@ void Tree::switchingShownDigitalEffect(bool shown,int playerNo)
 {
 	if(digitalEffect[playerNo])
 		digitalEffect[playerNo]->setShown(shown);
-	//if(frontDigitalEffect[playerNo])
-	//	frontDigitalEffect[playerNo]->setShown(!shown);
 }
 
 //=============================================================================
