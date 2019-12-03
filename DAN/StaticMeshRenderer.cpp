@@ -336,15 +336,16 @@ void StaticMeshRenderer::outputGUI()
 //===================================================================================================================================
 //ÅysetterÅz
 //===================================================================================================================================
-void StaticMeshRenderer::enableLight()			{ onLight = true; }
-void StaticMeshRenderer::disableLight()			{ onLight = false; }
-void StaticMeshRenderer::enableTransparent()	{ onTransparent = true; }
-void StaticMeshRenderer::disableTransparent()	{ onTransparent = false; }
-void StaticMeshRenderer::enableForeground()		{ onForeground = true; }
-void StaticMeshRenderer::disableForeground()	{ onForeground = false; }
-void StaticMeshRenderer::setFillMode(int mode)	{ fillMode = mode; }
-void StaticMeshRenderer::setRenderPass(int pass){ renderPass = pass; }
-void StaticMeshRenderer::setAlpha(float value)	{ alpha = value; }
+void StaticMeshRenderer::enableLight()						{ onLight = true; }
+void StaticMeshRenderer::disableLight()						{ onLight = false; }
+void StaticMeshRenderer::enableTransparent()				{ onTransparent = true; }
+void StaticMeshRenderer::disableTransparent()				{ onTransparent = false; }
+void StaticMeshRenderer::enableForeground()					{ onForeground = true; }
+void StaticMeshRenderer::disableForeground()				{ onForeground = false; }
+void StaticMeshRenderer::setFillMode(int mode)				{ fillMode = mode; }
+void StaticMeshRenderer::setRenderPass(int pass)			{ renderPass = pass; }
+void StaticMeshRenderer::setAlpha(float value)				{ alpha = value; }
+void StaticMeshRenderer::setStaticMesh(StaticMesh* mesh)	{ staticMesh = mesh; }
 
 //===================================================================================================================================
 //ÅygetterÅz
