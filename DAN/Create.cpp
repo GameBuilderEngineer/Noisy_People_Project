@@ -180,6 +180,13 @@ void Create::update(float _frameTime) {
 
 	//プレイヤーの更新
 	tmpObject->update(frameTime);
+	LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
+	D3DXMATRIX matrix = testField->matrixWorld;
+
+	if (input->wasKeyPressed('G'))
+	{
+		tmpObject->grounding(mesh, matrix);
+	}
 
 	// アイテムの更新
 	if (input->wasKeyPressed('0'))
@@ -344,6 +351,7 @@ void Create::toolsGUI()
 			meshId = itemTools->GetStaticMeshID(itemTools->ItemListboxType);
 			break;
 		case TOOLS_TYPE::TOOLS_TREE:
+			meshId = treeTools->GetStaticTrunkMeshID(enemyTools->EnemyListboxType);
 			break;
 		case TOOLS_TYPE::TOOLS_MAP_OBJECT:
 			break;
