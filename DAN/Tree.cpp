@@ -78,7 +78,25 @@ Tree::Tree(treeNS::TreeData _treeData)
 	//現在は緑化中でない
 	nowAroundGreening = false;
 
-	state = new AnalogState(this);
+	//初期ツリー情報に応じてステートを設定する
+	if (treeData.type == ANALOG_TREE)
+	{
+		if (treeData.greenState == GREEN)
+		{
+			state = new GreenState(this);
+		}
+		else if(treeData.greenState == DEAD)
+		{
+			state = new AnalogState(this);
+		}
+	}
+	else if (treeData.type == DIGITAL_TREE) 
+	{
+		state = new DigitalState(this);
+		disableAroundGreening();//最初は緑化処理をしない
+	}
+		
+
 	onTransState = false;
 	numOfTree++;
 
@@ -239,6 +257,7 @@ Object* Tree::getLeaf() { return &leaf; }
 Object* Tree::getTrunk() { return this; }
 Object* Tree::getGreeningArea() { return &greeningArea; }
 int Tree::getNumOfTree(){ return numOfTree; }
+void Tree::resetNumOfTree(){ numOfTree = 0; }
 TreeData* Tree::getTreeData() { return &treeData; }
 LPD3DXMESH Tree::getMesh() {
 	using namespace staticMeshNS;
