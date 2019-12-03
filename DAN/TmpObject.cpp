@@ -56,9 +56,9 @@ void TmpObject::initialize(int tmpObjectType, int modelType)
 	keyTable = KEY_TABLE_1P;
 	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 
-	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);	// コライダの初期化
+	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::WOLF)->mesh);	// コライダの初期化
 	//ItemListboxMesh = 0;									// メッシュの種類(リストボックス)
-	staticMeshNo = staticMeshNS::YAMADA_ROBOT2;				// メッシュのID
+	staticMeshNo = staticMeshNS::WOLF;				// メッシュのID
 	radius = bodyCollide.getRadius();						// メッシュ半径を取得
 	centralPosition = position + bodyCollide.getCenter();	// 中心座標を設定
 	D3DXMatrixIdentity(&centralMatrixWorld);				// 中心座標ワールドマトリクスを初期化
@@ -349,6 +349,7 @@ void TmpObject::resetMesh(int meshId)
 {
 	bodyCollide.~BoundingSphere();
 	bodyCollide.initialize(&position, staticMeshNS::reference(meshId)->mesh);	// コライダの初期化
+	staticMeshNo = meshId;
 	radius = bodyCollide.getRadius();											// メッシュ半径を取得
 	centralPosition = position + bodyCollide.getCenter();						// 中心座標を設定
 }

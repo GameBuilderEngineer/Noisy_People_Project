@@ -30,7 +30,7 @@
 #include "EnemyTools.h"
 #include "ItemTools.h"
 #include "TreeTools.h"
-
+#include "MapObjectTool.h"
 
 //===================================================================================================================================
 //【列挙型定数】
@@ -54,8 +54,7 @@ private:
 
 	//仮オブジェクト
 	TmpObject *tmpObject;
-	StaticMeshRenderer** tmpObjRenderer;
-
+	StaticMeshRenderer* tmpObjRenderer;
 	//フィールド
 	Object* testField;
 	StaticMeshRenderer* testFieldRenderer;
@@ -69,6 +68,8 @@ private:
 	ITEM_TOOLS *itemTools;
 	//ツリーツール
 	TREE_TOOLS *treeTools;
+	//マップオブジェクトツール
+	MPOJ_TOOLS *mapObjTools;
 
 	//枯木
 	DeadTree* deadTree;
@@ -98,6 +99,5 @@ public:
 	virtual void createGUI() override;
 	void toolsGUI();
 	void collideGUI();
-	int  getBufferID(int meshID);
 };
 #endif

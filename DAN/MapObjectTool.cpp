@@ -63,6 +63,10 @@ MPOJ_TOOLS::MPOJ_TOOLS()
 	//マップオブジェクト情報
 	MpojListboxCurrent = 0;
 	MpojListboxType = mapObjectNS::MAPOBJECT_TYPE::STONE_01;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_01] = staticMeshNS::STONE_001;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_02] = staticMeshNS::STONE_002;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_03] = staticMeshNS::STONE_003;
+
 #endif
 }
 
@@ -180,7 +184,7 @@ void MPOJ_TOOLS::outputMpojToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		if (creatFlag)
 		{
 			//作成
-			AddMpojFormat(MpojListboxType, MpojListboxState, MpojListboxSize, MpojListboxModel, pos, dir);
+			AddMpojFormat(MpojListboxType, pos, dir);
 		}
 	}
 #endif
@@ -195,7 +199,7 @@ void MPOJ_TOOLS::initRender()
 	mapobjRenderer = new StaticMeshRenderer*[mapObjectNS::MAPOBJECT_TYPE::MAPOBJECT_MAX];
 	for (int i = 0; i < mapObjectNS::MAPOBJECT_TYPE::MAPOBJECT_MAX; i++)
 	{
-		mapobjRenderer[i] = new StaticMeshRenderer(staticMeshNS::reference(GetStaticMapobjMeshID(i)));
+		mapobjRenderer[i] = new StaticMeshRenderer(staticMeshNS::reference(Model[i]));
 	}
 
 	//更新フラグ
@@ -221,7 +225,7 @@ void MPOJ_TOOLS::initObject()
 
 		// コライダの初期化
 		bodyCollide->initialize(&D3DXVECTOR3(mpojFile.mfmt[i].posX, mpojFile.mfmt[i].posY, mpojFile.mfmt[i].posZ),
-			staticMeshNS::reference(GetStaticMapobjMeshID(mpojFile.mfmt[i].mpojType))->mesh);
+			staticMeshNS::reference(Model[mpojFile.mfmt[i].mpojType])->mesh);
 	}
 }
 
@@ -349,29 +353,6 @@ void MPOJ_TOOLS::ResetRenderer(void)
 }
 
 //===================================================================================================================================
-//【スタティックメッシュのIDを取得】描画用
-//===================================================================================================================================
-int MPOJ_TOOLS::GetStaticMapobjMeshID(short mpojType)
-{
-	int staticMeshNo = 0;
-	switch (mpojType)
-	{
-	case mapObjectNS::MAPOBJECT_TYPE::STONE_01:
-		staticMeshNo = staticMeshNS::STONE_003;
-		break;
-	case mapObjectNS::MAPOBJECT_TYPE::STONE_02:
-		staticMeshNo = staticMeshNS::STONE_003;
-		break;
-	case mapObjectNS::MAPOBJECT_TYPE::STONE_03:
-		staticMeshNo = staticMeshNS::STONE_003;
-		break;
-	default:
-		break;
-	}
-	return staticMeshNo;
-}
-
-//===================================================================================================================================
 //【マップオブジェクトの種類を設定】
 //===================================================================================================================================
 void MPOJ_TOOLS::SetMpojType(short mpojId, short mpojType)
@@ -402,8 +383,8 @@ void MPOJ_TOOLS::SetMpojDir(short mpojId, const D3DXVECTOR3 dir)
 //===================================================================================================================================
 //【マップオブジェクトの設置】
 //===================================================================================================================================
-void MPOJ_TOOLS::SetMpoj(short mpojId, short mpojType, short mpojState,
-	short mpojSize, short mpojModel, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
+void MPOJ_TOOLS::SetMpoj(short mpojId, short mpojType,
+	 const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
 {
 	//チャンク
 	memcpy(mpojFile.mfmt[mpojId].chunkId, MPOJ_CHUNK, sizeof(mpojFile.mfmt[mpojId].chunkId));
@@ -509,8 +490,7 @@ void MPOJ_TOOLS::DeleteMpojFormat(short mpojId)
 //===================================================================================================================================
 //【マップオブジェクトのフォーマット構造体を追加】
 //===================================================================================================================================
-void MPOJ_TOOLS::AddMpojFormat(short mpojType, short mpojState,
-	short mpojSize, short mpojModel, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
+void MPOJ_TOOLS::AddMpojFormat(short mpojType, const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
 {
 	//マップオブジェクトの数+1
 	mpojFile.mpoj.mpojMax++;
@@ -519,8 +499,8 @@ void MPOJ_TOOLS::AddMpojFormat(short mpojType, short mpojState,
 	UpdateMfmt(mpojFile.mpoj.mpojMax - 1);
 
 	//マップオブジェクトのフォーマット構造体の最後に追加
-	SetMpoj(mpojFile.mpoj.mpojMax - 1, mpojType, mpojState,
-		mpojSize, mpojModel, pos, dir);
+	SetMpoj(mpojFile.mpoj.mpojMax - 1, mpojType,
+	 pos, dir);
 
 	//進む
 	MpojListboxCurrent = mpojFile.mpoj.mpojMax - 1;
