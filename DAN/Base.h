@@ -7,7 +7,7 @@
 #define D3D_DEBUG_INFO
 #define XAUDIO2_ON		(true)
 #define XADUIO2_OFF		(flase)
-#define XADUIO2_STATE	(XAUDIO2_ON)
+#define XADUIO2_STATE	(XADUIO2_OFF)
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
@@ -51,8 +51,8 @@
 //Debug
 #define APP_NAME (LPSTR)"D/A:Nature"
 #if TRUE
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 #else
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720

@@ -158,41 +158,11 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 		MoveP->AttackMove2 = false;
 		AnimPointer->MotionEnd = true;
 		break;
-	case MovePIsAttackNext:
-		if (!MoveP->IsAttack1 && MoveP->IsAttack)
-		{//‘æˆê‰ñUŒ‚‚µ‚½ŒãAUŒ‚‚ð‘±‚©‚È‚¢ê‡
-			MoveP->IsAttack = false;
-			MoveP->AttackMove1 = false;
-			AnimPointer->MotionEnd = true;
-		}
-		else
-		{//‘æˆê‰ñUŒ‚‚µ‚½ŒãAUŒ‚‚ð‘±‚­ê‡
-			MoveP->AttackMove = false;
-			MoveP->AttackMove1 = true;
-		}
+	case MovePJumpFireStart:
 		break;
-	case MovePIsAttackNext1:
-		if (!MoveP->IsAttack2 && MoveP->IsAttack1)
-		{//‘æ“ñ‰ñUŒ‚‚µ‚½ŒãAUŒ‚‚ð‘±‚©‚È‚¢ê‡
-			MoveP->IsAttack1 = false;
-			MoveP->AttackMove1 = false;
-			MoveP->AttackMove2 = false;
-			AnimPointer->MotionEnd = true;
-		}
-		else
-		{//‘æ“ñ‰ñUŒ‚‚µ‚½ŒãAUŒ‚‚ð‘±‚­ê‡
-			MoveP->AttackMove1 = false;
-			MoveP->AttackMove2 = true;
-		}
-		break;
-	case MovePRollStart:
-		MoveP->IsRoll = true;
-		break;
-	case MovePRollEnd:
-		MoveP->IsRoll = false;
-		MoveP->IsNoDefendDamage = false;
-		AnimPointer->AnimController->ResetTime();
-		AnimPointer->AnimController->SetTrackPosition(0, 0.0f);
+	case MovePJumpFireEnd:
+		MoveP->IsJump = false;
+		MoveP->IsFireJump = false;
 		AnimPointer->MotionEnd = true;
 		break;
 	case MovePDeath:
