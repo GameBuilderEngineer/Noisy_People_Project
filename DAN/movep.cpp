@@ -83,6 +83,24 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 			case MoveP_Die:
 				MoveP.Animation->AnimData[Set_No] = { "Death",	NULL, 0.1f,	0.0f };
 				break;
+			case MoveP_WalkRight:
+				MoveP.Animation->AnimData[Set_No] = { "WalkRight",	NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_WalkLeft:
+				MoveP.Animation->AnimData[Set_No] = { "WalkLeft",	NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_WalkBackwards:
+				MoveP.Animation->AnimData[Set_No] = { "WalkBackwards",	NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_WalkBackward:
+				MoveP.Animation->AnimData[Set_No] = { "WalkBackward",	NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_WalkStrafeLeft:
+				MoveP.Animation->AnimData[Set_No] = { "WalkStrafeLeft",	NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_WalkStrafeRight:
+				MoveP.Animation->AnimData[Set_No] = { "WalkStrafeRight",	NULL, 0.1f,	0.0f };
+				break;
 			default:
 				break;
 			}
@@ -157,28 +175,32 @@ void UpdateMoveP(float f_TimeDelta)
 		if (input->isKeyDown('W'))
 		{
 			MoveP.IsRun = true;
+			MoveP.Animation->NextAnimID = MoveP_Run;
 		}
 		else if (input->isKeyDown('S'))
 		{
 			MoveP.IsRun = true;
+			MoveP.Animation->NextAnimID = MoveP_WalkBackward;
 		}
 		else if (input->isKeyDown('A'))
 		{
 			MoveP.IsRun = true;
+			MoveP.Animation->NextAnimID = MoveP_WalkStrafeLeft;
 		}
 		else if (input->isKeyDown('D'))
 		{
 			MoveP.IsRun = true;
+			MoveP.Animation->NextAnimID = MoveP_WalkStrafeRight;
 		}
 		else
 		{
 			MoveP.IsRun = false;
 		}
 
-		if (MoveP.IsRun)
-		{
-			MoveP.Animation->NextAnimID = MoveP_Run;
-		}
+		//if (MoveP.IsRun)
+		//{
+		//	MoveP.Animation->NextAnimID = MoveP_Run;
+		//}
 
 	}
 	if (MoveP.IsChange)
@@ -190,28 +212,32 @@ void UpdateMoveP(float f_TimeDelta)
 		if (input->isKeyDown('W'))
 		{
 			MoveP.IsChangeRun = true;
+			MoveP.Animation->NextAnimID = MoveP_FireRun;
 		}
 		else if (input->isKeyDown('S'))
 		{
 			MoveP.IsChangeRun = true;
+			MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
 		}
 		else if (input->isKeyDown('A'))
 		{
 			MoveP.IsChangeRun = true;
+			MoveP.Animation->NextAnimID = MoveP_WalkLeft;
 		}
 		else if (input->isKeyDown('D'))
 		{
 			MoveP.IsChangeRun = true;
+			MoveP.Animation->NextAnimID = MoveP_WalkRight;
 		}
 		else
 		{
 			MoveP.IsChangeRun = false;
 		}
 
-		if (MoveP.IsChangeRun)
-		{
-			MoveP.Animation->NextAnimID = MoveP_FireRun;
-		}
+		//if (MoveP.IsChangeRun)
+		//{
+		//	MoveP.Animation->NextAnimID = MoveP_FireRun;
+		//}
 	}
 
 	if (MoveP.IsJump)
@@ -547,6 +573,36 @@ void MovePAnimeNext(void)
 		case MoveP_Die:
 			ChangeAnimation(MoveP.Animation, MoveP_Die, 1.0f, false);
 			MoveP.Animation->NextAnimID = MoveP_Idle;
+			break;
+		case MoveP_WalkRight:
+			ChangeAnimation(MoveP.Animation, MoveP_WalkRight, 1.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_FireIdle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_WalkLeft:
+			ChangeAnimation(MoveP.Animation, MoveP_WalkLeft, 1.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_FireIdle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_WalkBackwards:
+			ChangeAnimation(MoveP.Animation, MoveP_WalkBackwards, 1.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_FireIdle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_WalkStrafeRight:
+			ChangeAnimation(MoveP.Animation, MoveP_WalkStrafeRight, 2.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_WalkStrafeLeft:
+			ChangeAnimation(MoveP.Animation, MoveP_WalkStrafeLeft, 2.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
+			break;
+		case MoveP_WalkBackward:
+			ChangeAnimation(MoveP.Animation, MoveP_WalkBackward, 1.0f, false);
+			MoveP.Animation->NextAnimID = MoveP_Idle;
+			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
 			break;
 		default:
 			break;
