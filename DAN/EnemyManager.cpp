@@ -49,7 +49,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	SAFE_DELETE(enemyTools);
 #endif
 
-#if 1	// エネミーオブジェクトをツールデータを元に作成する
+#if 0	// エネミーオブジェクトをツールデータを元に作成する
 		for (size_t i = 0; i < enemyDataList.nodeNum; i++)
 		{
 			if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)

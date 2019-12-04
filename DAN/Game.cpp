@@ -64,7 +64,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
@@ -267,7 +267,7 @@ void Game::initialize() {
 		enemyNS::ENEMYSET tmp =
 		{
 			enemyManager->issueNewEnemyID(),
-			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
+			rand() % (enemyNS::ENEMY_TYPE::TYPE_MAX - 1),
 			stateMachineNS::PATROL,
 			pos,
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f)

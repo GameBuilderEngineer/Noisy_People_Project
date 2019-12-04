@@ -438,6 +438,8 @@ void Player::jumpOperation()
 	if (input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP))
 	{
 		jump();
+		PLAY_PARAMETERS jumpVoice = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Man_Jump, false, NULL, false, NULL };
+		SoundInterface::SE->playSound(&jumpVoice);	//SEÄ¶
 	}
 
 	if (input->getMouseRButton() || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))

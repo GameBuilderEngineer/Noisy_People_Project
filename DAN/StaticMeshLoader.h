@@ -78,6 +78,7 @@ namespace staticMeshNS {
 		DATE_ISLAND,							//11
 		DATE_ISLAND_V2,							//12
 		DATE_ISLAND_V2_NAVI_MESH,				//13
+		DATE_ISLAND_FINAL,						//14
 		
 		DIGITAL_SPHERE,							//01
 

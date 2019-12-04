@@ -39,6 +39,7 @@ namespace DigitalShiftEffectNS
 		D3DXVECTOR3* syncPosition;
 		SelectLight(int no,D3DXVECTOR3* sync) {
 			syncPosition = sync;
+			scale = D3DXVECTOR3(1.0f, 30.0f, 1.0f);
 			managerNo = no;
 			effectNo = effekseerNS::DIGIT_TREE_SELECT;
 		}
