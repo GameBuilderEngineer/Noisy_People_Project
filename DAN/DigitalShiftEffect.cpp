@@ -145,28 +145,28 @@ void DigitalShiftEffect::playEndShift(D3DXVECTOR3 position)
 //===================================================================================================================================
 //【再生：選択ライトエフェクト】
 //===================================================================================================================================
-void DigitalShiftEffect::playSelectLight(D3DXVECTOR3* position)
+void DigitalShiftEffect::playSelectLight(int no,D3DXVECTOR3* position)
 {
-	if (onPlayedSelectLight)
-	{
-
-	}
-	else {
-		createSelectLight(position);
-		onPlayedSelectLight = true;
-	}
+	//エフェクトの生成
+	selectLight = new SelectLight(no,position);
+	effekseerNS::play(no,selectLight);
 }
 
 //===================================================================================================================================
-//【再生：選択ライトエフェクト】
+//【停止：選択ライトエフェクト】
 //===================================================================================================================================
-void DigitalShiftEffect::stopSelectLight()
+void DigitalShiftEffect::stopSelectLight(int no)
 {
-	if (onPlayedSelectLight)
-	{
-		deleteSelectLight();
-		onPlayedSelectLight = false;
-	}
+	//エフェクトの停止
+	effekseerNS::stop(no,selectLight);
+}
+
+//===================================================================================================================================
+//【表示/非表示：選択ライトエフェクト】
+//===================================================================================================================================
+void DigitalShiftEffect::shownSelectLigth(bool shown)
+{
+	selectLight->setShown(shown);
 }
 
 //===================================================================================================================================
@@ -193,49 +193,6 @@ void DigitalShiftEffect::createDigitalSphere(D3DXVECTOR3 position,float runTime)
 
 }
 
-//===================================================================================================================================
-//【オブジェクト生成：選択ライトエフェクト】
-//===================================================================================================================================
-//Object* DigitalShiftEffect::createSelectLight(D3DXVECTOR3 position)
-//{
-//	//オブジェクトを生成
-//	Object* object = new Object();
-//
-//	object->position = position;
-//
-//	//リスト先頭へ追加
-//	//selectLightList->insertFront(object);
-//
-//	//リストの更新[追加による対応]
-//	//selectLightList->listUpdate();
-//
-//	//レンダラーへ登録
-//	//selectLightRenderer->registerObject(object);
-//
-//	return object;
-//
-//}
-
-//===================================================================================================================================
-//【エフェクト生成：選択ライトエフェクト】
-//===================================================================================================================================
-void DigitalShiftEffect::createSelectLight(D3DXVECTOR3* position)
-{
-	//エフェクトの生成
-	selectLight = new SelectLight(position);
-	effekseerNS::play(selectLight);
-}
-
-//===================================================================================================================================
-//【エフェクト削除：選択ライトエフェクト】
-//===================================================================================================================================
-void DigitalShiftEffect::deleteSelectLight()
-{
-	//エフェクトの停止
-	effekseerNS::stop(selectLight->handle);
-}
-
-
 
 //===================================================================================================================================
 //【自動削除】
@@ -256,17 +213,4 @@ void DigitalShiftEffect::autoDestroy()
 	}
 	sphereList->listUpdate();
 
-	//オブジェクトの削除
-	//for (int i = 0; i < sphereList->nodeNum; i++)
-	//{
-	//	//オブジェクトのポインタ取得
-	//	Object* object = (*sphereList->getValue(i));
-	//	//残存時間があれば削除しない
-	//	if (object->existenceTimer > 0)continue;
-	//	Node<Object*>* node = sphereList->getNode(i);
-	//	//削除
-	//	SAFE_DELETE(object);
-	//	sphereList->remove(node);
-	//}
-	//sphereList->listUpdate();
 }

@@ -17,7 +17,7 @@ using namespace treeNS;
 void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
 	nextID = 0;			// 次回発行IDを0に初期化
-
+	Tree::resetNumOfTree();//ツリーのカウントをリセット
 	// 接地フィールドをセット
 	attractorMesh = _attractorMesh;
 	attractorMatrix = _attractorMatrix;
@@ -243,16 +243,13 @@ void TreeManager::stopDigitalTreeEffect(int playerNo)
 			digitalTreeEffect->playStandardEffect(&tree->position);
 		}
 	}
-
-
-
 }
 
 
 //=============================================================================
 //【通常ビューに切り替える】
 //=============================================================================
-void TreeManager::switchingNormalView()
+void TreeManager::switchingNormalView(int playerNo)
 {
 	//アナログツリーの透過値の設定
 	aTrunkRenderer->setAlpha(1.0f);
@@ -278,12 +275,22 @@ void TreeManager::switchingNormalView()
 	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
+	//デジタルツリーエフェクトの非表示
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+		{
+			//通常描画時は描画しない
+			tree->switchingShownDigitalEffect(false, playerNo);
+		}
+	}
 };
 
 //=============================================================================
 //【ビジョンビューに切り替える】
 //=============================================================================
-void TreeManager::switchingVisionView()
+void TreeManager::switchingVisionView(int playerNo)
 {
 
 	//アナログツリーの透過値の設定
@@ -308,6 +315,25 @@ void TreeManager::switchingVisionView()
 	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	//デジタルツリーエフェクトの表示
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+		{
+			if (tree->getSelected(playerNo))
+			{
+				//選択されている場合は、ライトを表示しない
+				tree->switchingShownDigitalEffect(false,playerNo);
+			}
+			else {
+				//選択されていなければデジタルツリーエフェクトを表示する
+				tree->switchingShownDigitalEffect(true,playerNo);
+			}
+		}
+	}
+
 };
 
 //=============================================================================
@@ -356,8 +382,16 @@ void TreeManager::createTree(TreeData treeData)
 {
 	Tree* tree = new Tree(treeData);	// ツリー作成
 	
-	//アナログツリーレンダラーへ登録
-	registerAnalog(tree);
+	//アナログ/デジタル ツリーレンダラーへ登録
+	switch (tree->getTreeData()->type)
+	{
+	case ANALOG_TREE:
+		registerAnalog(tree);
+		break;
+	case DIGITAL_TREE:
+		registerDigital(tree);
+		break;
+	}
 
 	tree->setAttractor(attractorMesh, attractorMatrix);
 	treeList.push_back(tree);
@@ -586,8 +620,6 @@ void TreeManager::outputGUI()
 		ImGui::Text("DigitalLeafA[Num:%d]", aDLeafRenderer->getObjectNum());
 		ImGui::Text("DigitalLeafB[Num:%d]", bDLeafRenderer->getObjectNum());
 		ImGui::Text("DigitalLeafC[Num:%d]", cDLeafRenderer->getObjectNum());
-
-		bTrunkRenderer->outputGUI();
 
 	}
 #endif

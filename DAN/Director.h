@@ -64,7 +64,7 @@ public:
 	SoundInterface*		soundInterface;			//サウンドのインターフェースクラス
 	TextManager*		textManager;			//テキストデータ読込クラス
 	Fader*				fader;					//フェーダー(イン・アウト)クラス
-	EffekseerManager*	effekseerManager;		//エフェクシアーマネージャー
+	EffekseerManager*	effekseerManager[3];	//エフェクシアーマネージャー
 	GameMaster*			gameMaster;				//ゲーム運営クラス
 	//AnimationLoader*	animationLoader;		//アニメーション読込クラス
 	std::string*		currentSceneName;		//現在のシーンの名前

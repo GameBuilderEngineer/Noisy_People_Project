@@ -100,9 +100,12 @@ void Player::initialize(PlayerTable info)
 
 	//デジタルアクション
 	//デジタルシフト
-	digitalShiftEffect	= new DigitalShiftEffect;
 	shiftLine.start		= position;
 	shiftLine.end		= position+axisZ.direction;
+	//選択ライトを再生状態にしておく。
+	digitalShiftEffect	= new DigitalShiftEffect;
+	playSelectLight();
+	
 
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
@@ -685,8 +688,15 @@ bool Player::shot()
 {
 	if (!input->getMouseLButton() &&
 		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return false;
-	bulletManager->launch(shootingRay);
-	return true;
+	if (bulletManager->launch(shootingRay))
+	{
+		//エフェクトの再生
+		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
+		effekseerNS::play(0,muzzle);
+		return true;
+	}
+
+	return false;
 }
 
 //===================================================================================================================================
@@ -879,20 +889,17 @@ void Player::collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix)
 void Player::playSelectLight()
 {
 	//選択エフェクトライト表示
-	digitalShiftEffect->playSelectLight(&shiftLine.end);
-
-
+	digitalShiftEffect->playSelectLight(infomation.playerType+1,&shiftLine.end);
 }
 
 //===================================================================================================================================
-//【デジタルシフト先選択表示エフェクト停止】
+//【デジタルシフト先選択表示エフェクト再生】
 //===================================================================================================================================
-void Player::stopSelectLight()
+void Player::shownSelectLight(bool shown)
 {
 	//選択エフェクトライト表示
-	digitalShiftEffect->stopSelectLight();
+	digitalShiftEffect->shownSelectLigth(shown);
 }
-
 
 //===================================================================================================================================
 //【デジタルシフト実行】

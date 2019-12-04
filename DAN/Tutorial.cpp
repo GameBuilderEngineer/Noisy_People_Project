@@ -124,12 +124,24 @@ void Tutorial::initialize()
 	}
 
 	//エフェクシアーの設定
-	effekseerNS::setProjectionMatrix(
+	effekseerNS::setProjectionMatrix(0,
 		camera[0].fieldOfView,
 		(float)camera[0].windowWidth,
 		(float)camera[0].windowHeight,
 		camera[0].nearZ,
 		camera[0].farZ);
+	effekseerNS::setProjectionMatrix(1,
+		camera[0].fieldOfView,
+		(float)camera[0].windowWidth,
+		(float)camera[0].windowHeight,
+		camera[0].nearZ,
+		camera[0].farZ);
+	effekseerNS::setProjectionMatrix(2,
+		camera[1].fieldOfView,
+		(float)camera[1].windowWidth,
+		(float)camera[1].windowHeight,
+		camera[1].nearZ,
+		camera[1].farZ);
 
 	//light
 	light = new Light;
@@ -365,21 +377,31 @@ void Tutorial::render()
 	camera[gameMasterNS::PLAYER_1P].renderReady();
 	direct3D9->changeViewport1PWindow();
 	render3D(camera[gameMasterNS::PLAYER_1P], gameMasterNS::PLAYER_1P);
-	effekseerNS::setCameraMatrix(
+	effekseerNS::setCameraMatrix(0,
 		camera[gameMasterNS::PLAYER_1P].position,
 		camera[gameMasterNS::PLAYER_1P].gazePosition,
 		camera[gameMasterNS::PLAYER_1P].upVector);
-	effekseerNS::render();
+	effekseerNS::render(0);
+	effekseerNS::setCameraMatrix(1,
+		camera[gameMasterNS::PLAYER_1P].position,
+		camera[gameMasterNS::PLAYER_1P].gazePosition,
+		camera[gameMasterNS::PLAYER_1P].upVector);
+	effekseerNS::render(1);
 
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	camera[gameMasterNS::PLAYER_2P].renderReady();
 	direct3D9->changeViewport2PWindow();
 	render3D(camera[gameMasterNS::PLAYER_2P], gameMasterNS::PLAYER_2P);
-	effekseerNS::setCameraMatrix(
+	effekseerNS::setCameraMatrix(0,
 		camera[gameMasterNS::PLAYER_2P].position,
 		camera[gameMasterNS::PLAYER_2P].gazePosition,
 		camera[gameMasterNS::PLAYER_2P].upVector);
-	effekseerNS::render();
+	effekseerNS::render(0);
+	effekseerNS::setCameraMatrix(1,
+		camera[gameMasterNS::PLAYER_2P].position,
+		camera[gameMasterNS::PLAYER_2P].gazePosition,
+		camera[gameMasterNS::PLAYER_2P].upVector);
+	effekseerNS::render(1);
 
 	//UI
 	direct3D9->changeViewportFullWindow();

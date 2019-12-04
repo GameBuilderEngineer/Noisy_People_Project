@@ -19,14 +19,18 @@ using namespace effekseerNS;
 //===================================================================================================================================
 //【グローバル変数】
 //===================================================================================================================================
-static EffekseerManager* pointerEffekseerManager;
+static EffekseerManager* pointerEffekseerManager[MANAGER_NUM];
+
+static int count = 0;
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 EffekseerManager::EffekseerManager()
 {
-	pointerEffekseerManager = this;
+	pointerEffekseerManager[count] = this;
+	count++;
+
 	manager		= NULL;
 	renderer	= NULL;
 #if(XADUIO2_STATE)
@@ -38,7 +42,7 @@ EffekseerManager::EffekseerManager()
 	fileName[BLOW]				= { L"blow.efk" };
 	fileName[MUZZLE]			= { L"muzzle.efk" };
 	fileName[DIGIT_TREE]		= { L"Digit_Tree.efk" };
-	fileName[DIGIT_TREE_SELECT]	= { L"Digit_Tree_Select.efk" };
+	fileName[DIGIT_TREE_SELECT]	= { L"Digit_Tree_Select_Zoffset+1.efk" };
 	fileName[DIGIT_TREE_RAID]	= { L"Digit_Tree_Select.efk" };
 	fileName[DAC]				= { L"DAC.efk" };
 	fileName[GREENING]			= { L"Greening.efk" };
@@ -68,10 +72,10 @@ void EffekseerManager::initialize()
 #endif
 
 	// 描画用インスタンスの生成
-	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 2000);
+	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 20000);
 
 	// エフェクト管理用インスタンスの生成
-	manager = ::Effekseer::Manager::Create(2000);
+	manager = ::Effekseer::Manager::Create(20000);
 
 	// 描画用インスタンスから描画機能を設定
 	manager->SetSpriteRenderer(renderer->CreateSpriteRenderer());
@@ -141,7 +145,7 @@ void EffekseerManager::setCameraMatrix(D3DXVECTOR3 position,D3DXVECTOR3 eye,D3DX
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-::Effekseer::Handle EffekseerManager::play(effekseerNS::Instance* instance)
+effekseerNS::Instance* EffekseerManager::play(effekseerNS::Instance* instance)
 {
 	instance->handle = manager->Play(
 		effect[instance->effectNo], 
@@ -149,7 +153,8 @@ void EffekseerManager::setCameraMatrix(D3DXVECTOR3 position,D3DXVECTOR3 eye,D3DX
 		instance->position.y,
 		instance->position.z);
 	instanceList->insertFront(instance);
-	return instance->handle;
+	instance->nodePointer = instanceList->getFrontNode();
+	return instance;
 }
 
 //===================================================================================================================================
@@ -182,6 +187,15 @@ void EffekseerManager::stop()
 void EffekseerManager::stop(::Effekseer::Handle handle)
 {
 	manager->StopEffect(handle);
+}
+
+//===================================================================================================================================
+//【停止：１インスタンス】
+//===================================================================================================================================
+void EffekseerManager::stop(::effekseerNS::Instance* instance)
+{
+	manager->StopEffect(instance->handle);
+	instanceList->remove(instance->nodePointer);
 }
 
 //===================================================================================================================================
@@ -287,73 +301,81 @@ void EffekseerManager::render()
 //===================================================================================================================================
 //【外部参照：再生】
 //===================================================================================================================================
-::Effekseer::Handle effekseerNS::play(effekseerNS::Instance* instance)
+effekseerNS::Instance*  effekseerNS::play(int no, effekseerNS::Instance* instance)
 {
-	return pointerEffekseerManager->play(instance);
+	return pointerEffekseerManager[no]->play(instance);
 }
 
 //===================================================================================================================================
 //【外部参照：全停止】
 //===================================================================================================================================
-void effekseerNS::stop()
+void effekseerNS::stop(int no)
 {
-	pointerEffekseerManager->stop();
+	pointerEffekseerManager[no]->stop();
 }
 
 //===================================================================================================================================
-//【外部参照：停止】
+//【外部参照：ハンドル別停止】
 //===================================================================================================================================
-void effekseerNS::stop(::Effekseer::Handle handle)
+void effekseerNS::stop(int no, ::Effekseer::Handle handle)
 {
-	pointerEffekseerManager->stop(handle);
+	pointerEffekseerManager[no]->stop(handle);
+}
+
+//===================================================================================================================================
+//【外部参照：インスタンス別停止】
+//===================================================================================================================================
+void effekseerNS::stop(int no, ::effekseerNS::Instance* instance)
+{
+	pointerEffekseerManager[no]->stop(instance);
 }
 
 //===================================================================================================================================
 //【外部参照：プロジェクション行列設定】
 //===================================================================================================================================
-void effekseerNS::setProjectionMatrix(float fov, float windowWidth, float windowHeight, float zn, float zf)
+void effekseerNS::setProjectionMatrix(int no, float fov, float windowWidth, float windowHeight, float zn, float zf)
 {
-	pointerEffekseerManager->setProjectionMatrix(fov, windowWidth, windowHeight, zn, zf);
+	pointerEffekseerManager[no]->setProjectionMatrix(fov, windowWidth, windowHeight, zn, zf);
 }
 
 //===================================================================================================================================
 //【外部参照：カメラ(ビュー)行列設定】
 //===================================================================================================================================
-void effekseerNS::setCameraMatrix(D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up)
+void effekseerNS::setCameraMatrix(int no, D3DXVECTOR3 position, D3DXVECTOR3 eye, D3DXVECTOR3 up)
 {
-	pointerEffekseerManager->setCameraMatrix(position, eye, up);
+	pointerEffekseerManager[no]->setCameraMatrix(position, eye, up);
 }
 
 //===================================================================================================================================
 //【外部参照：描画】
 //===================================================================================================================================
-void effekseerNS::render()
+void effekseerNS::render(int no)
 {
-	pointerEffekseerManager->render();
+	pointerEffekseerManager[no]->render();
 }
 
 //===================================================================================================================================
 //【外部参照：一時停止】
 //===================================================================================================================================
-void effekseerNS::pause(bool flag)
+void effekseerNS::pause(int no, bool flag)
 {
-	pointerEffekseerManager->pause(flag);
+	pointerEffekseerManager[no]->pause(flag);
 }
 
 //===================================================================================================================================
 //【外部参照：一時停止】
 //===================================================================================================================================
-void effekseerNS::pause(::Effekseer::Handle handle, bool flag)
+void effekseerNS::pause(int no, ::Effekseer::Handle handle, bool flag)
 {
-	pointerEffekseerManager->pause(handle, flag);
+	pointerEffekseerManager[no]->pause(handle, flag);
 }
 
 //===================================================================================================================================
 //【外部参照：マネージャー取得】
 //===================================================================================================================================
-EffekseerManager* getEffekseerManager()
+EffekseerManager* getEffekseerManager(int no)
 {
-	return pointerEffekseerManager;
+	return pointerEffekseerManager[no];
 }
 
 //===================================================================================================================================
@@ -361,11 +383,20 @@ EffekseerManager* getEffekseerManager()
 //===================================================================================================================================
 void effekseerNS::Instance::update()
 {
-	::Effekseer::Manager*	manager = pointerEffekseerManager->manager;
+	::Effekseer::Manager*	manager	= pointerEffekseerManager[managerNo]->manager;
 	position	 += speed;
 	rotation	 += deltaRadian;
 	scale		 += deltaScale;
 	manager->SetLocation(handle, position.x,position.y,position.z);
 	manager->SetRotation(handle,rotation.x,rotation.y,rotation.z);
 	manager->SetScale(handle,scale.x,scale.y,scale.z);
+}
+
+//===================================================================================================================================
+//【インスタンス：更新】
+//===================================================================================================================================
+void effekseerNS::Instance::setShown(bool shown)
+{
+	::Effekseer::Manager*	manager = pointerEffekseerManager[managerNo]->manager;
+	manager->SetShown(handle, shown);
 }

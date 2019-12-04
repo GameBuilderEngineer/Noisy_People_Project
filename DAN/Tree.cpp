@@ -3,7 +3,7 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
-// 更新日 : 2019/11/17 【菅野 樹】
+// 更新日 : 2019/12/01 【菅野 樹】
 //-----------------------------------------------------------------------------
 
 //=============================================================================
@@ -12,7 +12,6 @@
 #include "Tree.h"
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
-#include "EffekseerManager.h"
 
 //=============================================================================
 //【using宣言】
@@ -78,9 +77,33 @@ Tree::Tree(treeNS::TreeData _treeData)
 	//現在は緑化中でない
 	nowAroundGreening = false;
 
-	state = new AnalogState(this);
+	//初期ツリー情報に応じてステートを設定する
+	if (treeData.type == ANALOG_TREE)
+	{
+		if (treeData.greenState == GREEN)
+		{
+			state = new GreenState(this);
+		}
+		else if(treeData.greenState == DEAD)
+		{
+			state = new AnalogState(this);
+		}
+	}
+	else if (treeData.type == DIGITAL_TREE) 
+	{
+		state = new DigitalState(this);
+		disableAroundGreening();//最初は緑化処理をしない
+	}
+		
+
 	onTransState = false;
 	numOfTree++;
+
+	//シフト先として選択されていない
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		selectShift[i] = false;
+	}
 }
 
 
@@ -154,6 +177,10 @@ void Tree::greeningAround()
 {	
 	greeningArea.initialize(&center);
 	greeningArea.setRadius(1.0f);
+	//エフェクトの再生
+	GreeningAreaNS::GreeningEffect* greeningEffect 
+		= new GreeningAreaNS::GreeningEffect(&greeningArea.position,&greeningArea.scale);
+	effekseerNS::play(0, greeningEffect);
 	nowAroundGreening = true;
 }
 
@@ -163,6 +190,47 @@ void Tree::greeningAround()
 void Tree::transState()
 {	
 	onTransState = true;
+}
+
+//=============================================================================
+//【デジタルエフェクトの再生】
+//=============================================================================
+void Tree::playDigitalEffect()
+{	
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		//VISION時
+		digitalEffect[i] = new treeNS::DigitTree(i+1,&position);
+		effekseerNS::play(i+1,digitalEffect[i]);
+	}
+}
+
+//=============================================================================
+//【デジタルエフェクトの停止】
+//=============================================================================
+void Tree::stopDigitalEffect()
+{
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		effekseerNS::stop(i+1,digitalEffect[i]);
+	}
+}
+
+//=============================================================================
+//【デジタルエフェクトの表示/非表示】
+//=============================================================================
+void Tree::switchingShownDigitalEffect(bool shown,int playerNo) 
+{
+	if(digitalEffect[playerNo])
+		digitalEffect[playerNo]->setShown(shown);
+}
+
+//=============================================================================
+//【シフト先として選択されたかどうかを切り替える】
+//=============================================================================
+void Tree::switchingSelected(bool selected,int playerNo) 
+{
+	selectShift[playerNo] = selected;
 }
 
 //=============================================================================
@@ -181,6 +249,7 @@ Object* Tree::getLeaf() { return &leaf; }
 Object* Tree::getTrunk() { return this; }
 Object* Tree::getGreeningArea() { return &greeningArea; }
 int Tree::getNumOfTree(){ return numOfTree; }
+void Tree::resetNumOfTree(){ numOfTree = 0; }
 TreeData* Tree::getTreeData() { return &treeData; }
 LPD3DXMESH Tree::getMesh() {
 	using namespace staticMeshNS;
@@ -196,6 +265,7 @@ LPD3DXMESH Tree::getMesh() {
 };
 bool Tree::isAroundGreening()		{ return nowAroundGreening; }
 bool Tree::getTransState()			{return onTransState;}
+bool Tree::getSelected(int playerNo) { return selectShift[playerNo]; }
 
 //=============================================================================
 // Setter
@@ -211,8 +281,13 @@ void Tree::addHp(int value) {
 		effekseerNS::Instance* instance = new effekseerNS::Instance();
 		instance->effectNo = effekseerNS::DAC;
 		instance->position = position;
-		effekseerNS::play(instance);
-		transState();//状態遷移
+		effekseerNS::play(0,instance);
+
+		//デジタルツリーエフェクトの再生
+		playDigitalEffect();
+
+		//状態遷移
+		transState();
 	}
 }
 //緑化エリアのスケールを設定
@@ -225,7 +300,6 @@ void Tree::disableAroundGreening()	{
 	nowAroundGreening = false; 
 	greeningArea.treeCell.remove();//衝突空間から離脱
 }
-
 
 //=============================================================================
 // 接地処理

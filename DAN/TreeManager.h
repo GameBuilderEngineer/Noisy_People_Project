@@ -86,8 +86,8 @@ public:
 	int	issueNewTreeID();
 	void outputGUI();
 
-	void switchingVisionView();;
-	void switchingNormalView();;
+	void switchingVisionView(int playerNo);;
+	void switchingNormalView(int playerNo);;
 
 	void playDigitalTreeEffect(int playerNo);
 	void stopDigitalTreeEffect(int playerNo);

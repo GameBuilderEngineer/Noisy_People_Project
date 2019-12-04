@@ -33,19 +33,7 @@ namespace DigitalTreeEffectNS
 	//===================================================================================================================================
 	//【エフェクトインスタンスクラス】
 	//===================================================================================================================================
-	//デジタルツリー標準エフェクト
-	class DigitTree :public effekseerNS::Instance
-	{
-	public:
-		D3DXVECTOR3 * syncPosition;
-		DigitTree(D3DXVECTOR3* sync) {
-			syncPosition = sync;
-			effectNo = effekseerNS::DIGIT_TREE;}
-		virtual void update() {
-			position = *syncPosition;
-			Instance::update();
-		};
-	};
+
 	//デジタルツリー襲撃エフェクト
 	class DigitTreeRaid :public effekseerNS::Instance
 	{
@@ -74,6 +62,8 @@ private:
 	InstancingBillboard* billboard;
 	float effectCycle;							//エフェクト周期
 
+
+
 public:
 	DigitalTreeEffect();
 	~DigitalTreeEffect();
@@ -83,7 +73,7 @@ public:
 	void generateInstance(D3DXVECTOR3 position);
 	void resetEffectCycle();
 	void playStandardEffect(D3DXVECTOR3* position);
-	void playRaidEffect(D3DXVECTOR3* position);
+	void playRaidEffect(int no,D3DXVECTOR3* position);
 
 };
 

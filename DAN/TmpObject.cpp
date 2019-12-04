@@ -30,7 +30,7 @@ TmpObject::TmpObject()
 	//onGround = false;						//接地判定
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
-	onJump = false;							//ジャンプフラグ
+	onFly = true;							//飛ぶフラグ
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 }
 
@@ -57,7 +57,7 @@ void TmpObject::initialize(int tmpObjectType, int modelType)
 	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 
 	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2)->mesh);	// コライダの初期化
-	ItemListboxMesh = 0;									// メッシュの種類(リストボックス)
+	//ItemListboxMesh = 0;									// メッシュの種類(リストボックス)
 	staticMeshNo = staticMeshNS::YAMADA_ROBOT2;				// メッシュのID
 	radius = bodyCollide.getRadius();						// メッシュ半径を取得
 	centralPosition = position + bodyCollide.getCenter();	// 中心座標を設定
@@ -73,7 +73,7 @@ void TmpObject::update(float frameTime)
 	// 事前処理
 	//friction = 1.0f;
 	isExecutingMoveOperation = false;
-	onJump = false;
+	//onFly = false;
 	centralPosition = position + bodyCollide.getCenter();
 	acceleration *= 0.0f;
 
@@ -105,6 +105,14 @@ void TmpObject::update(float frameTime)
 	{// リセット
 		reset();
 	}
+
+	if (input->getMouseRButtonTrigger())
+	{
+		onFly = !onFly;
+
+		
+	}
+
 #endif // DEBUG
 
 	// 以下の順番入れ替え禁止（衝突より後に物理がくる）
@@ -200,6 +208,39 @@ void TmpObject::moveOperation()
 }
 
 //===================================================================================================================================
+// 対オブジェクト接地処理
+//===================================================================================================================================
+bool TmpObject::grounding(LPD3DXMESH mesh, D3DXMATRIX matrix)
+{
+	//飛ぶ時、接地処理しない
+	//if (onFly)
+	//{
+	//	onGround = false;
+	//	return false;
+	//}
+
+	//重力方向、レイを設定
+	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	gravityRay.update(center, gravityDirection);
+
+	//レイによる衝突検知
+	bool hit = gravityRay.rayIntersect(mesh, matrix);
+
+	//レイ衝突時、レイ距離が、プレイヤー高さより小さい場合食い込み状態となっているので、
+	if (hit)
+	{
+		//接地状態とみなし、
+		onGround = true;
+		//食い込んでいる距離分、位置を補正する
+		position += gravityRay.direction*(gravityRay.distance - size.y / 2);
+		return true;
+	}
+
+	onGround = false;
+	return false;
+}
+
+//===================================================================================================================================
 //【カメラの操作/更新】
 //===================================================================================================================================
 void TmpObject::controlCamera(float frameTime)
@@ -280,34 +321,6 @@ void TmpObject::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
-
-		////エネミーの状態
-		//const char* listboxMesh[] = { "PLAYER", "WOLF", "TIGER","BEAR" ,"BATTERY" };
-		//ImGui::ListBox("Mesh", &ItemListboxMesh, listboxMesh, TMPOBJ_LIST::TMPOBJ_MAX);
-		//switch (ItemListboxMesh)
-		//{
-		//case TMPOBJ_LIST::TMPOBJ_PLAYER:
-		//	staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
-		//	break;
-		//case TMPOBJ_LIST::TMPOBJ_WOLF:
-		//	staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
-		//	break;
-		//case TMPOBJ_LIST::TMPOBJ_TIGER:
-		//	staticMeshNo = staticMeshNS::SAMPLE_BUNNY;
-		//	break;
-		//case TMPOBJ_LIST::TMPOBJ_BEAR:
-		//	staticMeshNo = staticMeshNS::SAMPLE_HAT;
-		//	break;
-		//case TMPOBJ_LIST::TMPOBJ_BATTERY:
-		//	staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
-		//	break;
-		//default:
-		//	break;
-		//}
-		//if (oldMeshId != staticMeshNo)
-		//{
-		//	resetMesh(staticMeshNo);
-		//}
 	}
 #endif // _DEBUG
 }

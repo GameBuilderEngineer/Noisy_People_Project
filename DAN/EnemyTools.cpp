@@ -437,13 +437,13 @@ int ENEMY_TOOLS::GetStaticMeshID(short enemyType)
 	switch (enemyType)
 	{
 	case enemyNS::ENEMY_TYPE::WOLF:
-		staticMeshNo = staticMeshNS::ENEMY_01;
+		staticMeshNo = staticMeshNS::WOLF;
 		break;
 	case enemyNS::ENEMY_TYPE::TIGER:
-		staticMeshNo = staticMeshNS::STAR_REGULAR_POLYHEDRON;
+		staticMeshNo = staticMeshNS::TIGER;
 		break;
 	case enemyNS::ENEMY_TYPE::BEAR:
-		staticMeshNo = staticMeshNS::STAR_REGULAR_POLYHEDRON_X10;
+		staticMeshNo = staticMeshNS::BEAR;
 		break;
 	default:
 		break;

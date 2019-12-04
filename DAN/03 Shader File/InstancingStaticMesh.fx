@@ -152,7 +152,7 @@ technique mainTechnique {
 	pass p2 {
 		//ステート設定
 		Zenable					= TRUE;			//Zバッファ有効
-		ZWriteEnable			= TRUE;			//Zバッファへの書き込み有効
+		ZWriteEnable			= FALSE;			//Zバッファへの書き込み有効
 		ShadeMode				= GOURAUD;		//グーロー・シェーディング
 		CullMode				= NONE;			//背面をカリング
 		MultiSampleAntialias	= FALSE;		//アンチエイリアシングを有効

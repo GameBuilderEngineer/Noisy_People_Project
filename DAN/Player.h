@@ -367,6 +367,7 @@ public:
 	bool collideShiftRay(Cylinder target);						//シフトレイとの衝突
 	void stopSelectLight();
 	void playSelectLight();
+	void shownSelectLight(bool shown);
 
 	//シューティング
 	void updateAiming(LPD3DXMESH mesh, D3DXMATRIX matrix);		//照準方向を更新する

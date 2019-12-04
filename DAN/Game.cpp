@@ -121,10 +121,17 @@ void Game::initialize() {
 			break;
 		}
 
+		//エフェクシアーの設定
+		effekseerNS::setProjectionMatrix(i+1,
+			camera[i].fieldOfView,
+			(float)camera[i].windowWidth,
+			(float)camera[i].windowHeight,
+			camera[i].nearZ,
+			camera[i].farZ);
 	}
 
 	//エフェクシアーの設定
-	effekseerNS::setProjectionMatrix(
+	effekseerNS::setProjectionMatrix(0,
 		camera[0].fieldOfView,
 		(float)camera[0].windowWidth,
 		(float)camera[0].windowHeight,
@@ -252,22 +259,22 @@ void Game::initialize() {
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
 
-	////エネミーをランダムに設置する
-	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	//{
-	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-	//	pos -= D3DXVECTOR3(200, 0, 240);
-	//	enemyNS::ENEMYSET tmp =
-	//	{
-	//		enemyManager->issueNewEnemyID(),
-	//		rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
-	//		stateMachineNS::PATROL,
-	//		pos,
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-	//	};
-	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-	//	enemyManager->createEnemy(p);
-	//}
+	//エネミーをランダムに設置する
+	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+		pos -= D3DXVECTOR3(200, 0, 240);
+		enemyNS::ENEMYSET tmp =
+		{
+			enemyManager->issueNewEnemyID(),
+			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
+			stateMachineNS::PATROL,
+			pos,
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+		};
+		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+		enemyManager->createEnemy(p);
+	}
 
 	// ツリーをランダムに設置する
 	treeNS::TreeData treeData;
@@ -289,7 +296,7 @@ void Game::initialize() {
 
 	treeData.size = treeNS::LARGE;
 	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
@@ -301,7 +308,7 @@ void Game::initialize() {
 
 	treeData.size = treeNS::VERY_LARGE;
 	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		treeData.initialPosition =
 			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
@@ -427,7 +434,7 @@ void Game::update(float _frameTime) {
 	{
 		effekseerNS::Instance* instance = new effekseerNS::Instance();
 		instance->position = *player[gameMasterNS::PLAYER_1P].getPosition();
-		effekseerNS::play(instance);
+		effekseerNS::play(0,instance);
 	}
 	if (input->wasKeyPressed('2'))
 	{
@@ -448,17 +455,17 @@ void Game::update(float _frameTime) {
 		Fire* instance = new Fire;
 		instance->position = *player[gameMasterNS::PLAYER_1P].getPosition();
 		instance->syncPosition = player[gameMasterNS::PLAYER_1P].getPosition();
-		effekseerNS::play(instance);
+		effekseerNS::play(0,instance);
 	}
 	//エフェクトの一時停止：再生
 	if (input->wasKeyPressed('3'))
 	{
-		effekseerNS::pause(false);
+		effekseerNS::pause(0,false);
 	}
 	//エフェクトの一時停止：停止
 	if (input->isKeyDown('4'))
 	{
-		effekseerNS::pause(true);
+		effekseerNS::pause(0,true);
 	}
 	//エフェクトの停止
 	if (input->wasKeyPressed('G'))
@@ -478,7 +485,6 @@ void Game::update(float _frameTime) {
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
 	}
-
 	//緑化状況30%
 	if (treeManager->getGreeningRate() >= 0.3 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30))
@@ -566,10 +572,17 @@ void Game::render() {
 	direct3D9->changeViewport1PWindow();
 	render3D(camera[gameMasterNS::PLAYER_1P]);
 	effekseerNS::setCameraMatrix(
+		0,
 		camera[gameMasterNS::PLAYER_1P].position, 
 		camera[gameMasterNS::PLAYER_1P].gazePosition, 
 		camera[gameMasterNS::PLAYER_1P].upVector);
-	effekseerNS::render();
+	effekseerNS::render(0);
+	effekseerNS::setCameraMatrix(
+		1,
+		camera[gameMasterNS::PLAYER_1P].position, 
+		camera[gameMasterNS::PLAYER_1P].gazePosition, 
+		camera[gameMasterNS::PLAYER_1P].upVector);
+	effekseerNS::render(1);
 
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_2P;
@@ -577,10 +590,18 @@ void Game::render() {
 	direct3D9->changeViewport2PWindow();
 	render3D(camera[gameMasterNS::PLAYER_2P]);
 	effekseerNS::setCameraMatrix(
+		0,
 		camera[gameMasterNS::PLAYER_2P].position,
 		camera[gameMasterNS::PLAYER_2P].gazePosition,
 		camera[gameMasterNS::PLAYER_2P].upVector);
-	effekseerNS::render();
+	effekseerNS::render(0);
+
+	effekseerNS::setCameraMatrix(
+		2,
+		camera[gameMasterNS::PLAYER_2P].position,
+		camera[gameMasterNS::PLAYER_2P].gazePosition,
+		camera[gameMasterNS::PLAYER_2P].upVector);
+	effekseerNS::render(2);
 
 	//UI
 	direct3D9->changeViewportFullWindow();
@@ -626,12 +647,10 @@ void Game::render3D(Camera currentCamera) {
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
 	{
-		treeManager->switchingVisionView();
-		treeManager->playDigitalTreeEffect(nowRenderingWindow);
+		treeManager->switchingVisionView(nowRenderingWindow);
 	}
 	else {
-		treeManager->switchingNormalView();
-		//treeManager->stpoDigitalTreeEffect(nowRenderingWindow);
+		treeManager->switchingNormalView(nowRenderingWindow);
 	}
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -824,15 +843,39 @@ void Game::collisions()
 	{
 		//シフト操作の無効化(初期値)
 		player[i].disableOperation(playerNS::ENABLE_SHIFT);
-		if (player[i].getState() != playerNS::VISION &&
-			player[i].getState() != playerNS::SKY_VISION)continue;
-		
+		//選択ライトのOFF
+		player[i].shownSelectLight(false);
+
+
+		//選択されたデジタルツリー
+		Tree* selectTree = NULL;
+		//リストの取得
 		std::vector<Tree*> list = treeManager->getTreeList();
+
+		//ビジョン時スルー&選択ライトエフェクトをOFFにする
+		if (player[i].getState() != playerNS::VISION &&
+			player[i].getState() != playerNS::SKY_VISION)
+		{
+			//選択解除
+			for (int num = 0; num < list.size(); num++)
+			{
+				Tree* tree = list[num];
+				//デジタルツリーでない場合continue
+				if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+				//選択されていない状態にする
+				tree->switchingSelected(false, i);
+			}
+			continue;
+		}
+
+		//衝突判定
 		for (int num = 0; num < list.size(); num++)
 		{
 			Tree* tree = list[num];
 			//デジタルツリーの場合
 			if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+			//選択されていない状態にする
+			tree->switchingSelected(false, i);
 
 			//カリング処理
 			//カメラ視野角内の場合
@@ -848,17 +891,20 @@ void Game::collisions()
 			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*tree->size.y;
 			treeCylinder.height				= tree->size.y/2;
 			treeCylinder.radius				= tree->size.x;
-			player[i].collideShiftRay(treeCylinder);
-		}
-		//エフェクトの再生/停止
-		if (player[i].whetherValidOperation(playerNS::ENABLE_SHIFT))
-		{
-			player[i].playSelectLight();
-		}
-		else {
-			player[i].stopSelectLight();
+			//衝突時
+			if (player[i].collideShiftRay(treeCylinder))
+			{
+				//選択候補として保存する。
+				selectTree = tree;
+			}
 		}
 
+		//選択されたデジタルツリーへの処理を行う
+		if (selectTree)
+		{
+			selectTree->switchingSelected(true, i);
+			player[i].shownSelectLight(true);
+		}
 	}
 
 	

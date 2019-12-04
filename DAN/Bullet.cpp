@@ -132,7 +132,7 @@ void Bullet::destroy()
 	//エフェクトの再生
 	effekseerNS::Instance* instance = new effekseerNS::Instance();
 	instance->position = position;
-	effekseerNS::play(instance);
+	effekseerNS::play(0,instance);
 
 }
 #pragma endregion
@@ -295,6 +295,7 @@ bool BulletManager::launch(Ray shootingRay)
 
 	//サウンドの再生
 	SoundInterface::SE->playSound(&shotSE);
+	
 
 	//ゲーム中に発射事実を残す
 	isLaunched = true;

@@ -3,12 +3,14 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/13
 //-----------------------------------------------------------------------------
-// 更新日 : 2019/11/12 【菅野 樹】
+// 更新日 : 2019/12/01 【菅野 樹】
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Object.h"
 #include "BoundingSphere.h"
 #include "GreeningArea.h"
+#include "EffekseerManager.h"
+#include "GameMaster.h"
 
 //=============================================================================
 // 名前空間
@@ -86,6 +88,40 @@ namespace treeNS
 		virtual void end() = 0;
 		virtual AbstractState* transition() = 0;
 	};
+
+	//=============================================================================
+	//【デジタルツリー標準エフェクト】
+	//=============================================================================
+	class DigitTree :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3 * syncPosition;
+		DigitTree(int no,D3DXVECTOR3* sync){
+			syncPosition = sync;
+			managerNo = no;
+			effectNo = effekseerNS::DIGIT_TREE;
+		}
+		virtual void update() {
+			position = *syncPosition;
+			Instance::update();
+		};
+	};
+	//=============================================================================
+	//【デジタル前面エフェクト】
+	//=============================================================================
+	class DigitFront :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3 * syncPosition;
+		DigitFront(D3DXVECTOR3* sync) {
+			syncPosition = sync;
+			effectNo = effekseerNS::DIGIT_TREE_RAID;
+		}
+		virtual void update() {
+			position = *syncPosition;
+			Instance::update();
+		};
+	};
 }
 
 
@@ -95,18 +131,21 @@ namespace treeNS
 class Tree:public Object
 {
 private:
-	treeNS::TreeData		treeData;			// ツリーデータ
-	Object					leaf;				// 葉オブジェクト
-	GreeningArea			greeningArea;		// 緑化範囲
+	treeNS::TreeData				treeData;										// ツリーデータ
+	Object							leaf;											// 葉オブジェクト
+	GreeningArea					greeningArea;									// 緑化範囲
 
+	LPD3DXMESH						attractorMesh;									// 重力（引力）発生メッシュ
+	D3DXMATRIX*						attractorMatrix;								// 重力（引力）発生オブジェクトマトリックス
+	static int						numOfTree;										// ツリーオブジェクトの総数
+	treeNS::AbstractState*			state;											//状態クラス
+	bool							onTransState;									//状態遷移開始フラグ
+	bool							nowAroundGreening;								//現在周囲を緑化中
+	treeNS::DigitTree*				digitalEffect[gameMasterNS::PLAYER_NUM];		//デジタルシフトエフェクト
+	treeNS::DigitFront*				frontDigitalEffect[gameMasterNS::PLAYER_NUM];	//デジタルシフトエフェクト
 
+	bool							selectShift[gameMasterNS::PLAYER_NUM];			//シフト先として選択されている
 
-	LPD3DXMESH				attractorMesh;		// 重力（引力）発生メッシュ
-	D3DXMATRIX*				attractorMatrix;	// 重力（引力）発生オブジェクトマトリックス
-	static int				numOfTree;			// ツリーオブジェクトの総数
-	treeNS::AbstractState*	state;				//状態クラス
-	bool					onTransState;		//状態遷移開始フラグ
-	bool					nowAroundGreening;	//現在周囲を緑化中
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();
@@ -115,19 +154,27 @@ public:
 	void render();
 
 	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
-	void grounding();					// 接地処理
-	void greeningAround();				//周辺の緑化(デジタル化時)
-	void transState();					//状態遷移
+	void grounding();																// 接地処理
+	void greeningAround();															//周辺の緑化(デジタル化時)
+	void transState();																//状態遷移
+	void playDigitalEffect();														//デジタルエフェクトの再生
+	void stopDigitalEffect();														//デジタルエフェクトの停止
+	void switchingShownDigitalEffect(bool shown,int playerNo);						//デジタルエフェクトの表示/非表示
+	void switchingSelected(bool selected,int playerNo);
+
 
 	// Getter
 	Object* getLeaf();
 	Object* getTrunk();
 	Object* getGreeningArea();
 	static int getNumOfTree();			// ツリーの数を取得
+	static void resetNumOfTree();		// ツリーの数をリセット
+
 	treeNS::TreeData* getTreeData();	// ツリーデータを取得
 	LPD3DXMESH getMesh();				// 衝突用メッシュへの参照
 	bool isAroundGreening();			//周囲へ緑化中か
 	bool getTransState();				//状態遷移状態
+	bool getSelected(int playerNo);		//選択状況
 
 	// Setter
 	void setDataToTree(treeNS::TreeData _treeData);	

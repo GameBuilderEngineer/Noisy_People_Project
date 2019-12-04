@@ -22,7 +22,7 @@ Splash::Splash()
 	nextScene = SceneList::TITLE;
 
 	//エフェクシアーテスト
-	effekseerNS::setProjectionMatrix(90.0f / 180.0f * 3.14f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 10000.0f);
+	effekseerNS::setProjectionMatrix(0,90.0f / 180.0f * 3.14f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 10000.0f);
 
 }
 
@@ -77,7 +77,7 @@ void Splash::update(float _frameTime)
 	//エフェクトの再生
 	if (input->wasKeyPressed('1'))
 	{
-		effekseerNS::play(new effekseerNS::Instance);
+		effekseerNS::play(0,new effekseerNS::Instance);
 	}
 
 	//Enter,Spaceまたは〇ボタン,Optionsでタイトルへ
@@ -105,8 +105,8 @@ void Splash::render()
 	direct3D9->changeViewportFullWindow();
 
 	//エフェクシアーテスト
-	effekseerNS::setCameraMatrix(D3DXVECTOR3(10.0f, 5.0f, 20.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-	effekseerNS::render();
+	effekseerNS::setCameraMatrix(0,D3DXVECTOR3(10.0f, 5.0f, 20.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	effekseerNS::render(0);
 
 	//UI
 	renderUI();
