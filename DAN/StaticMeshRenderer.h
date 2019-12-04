@@ -101,6 +101,8 @@ public:
 #endif // _DEBUG
 
 	//setter
+	void enableRender();
+	void disableRender();
 	void enableLight();
 	void disableLight();
 	void enableTransparent();

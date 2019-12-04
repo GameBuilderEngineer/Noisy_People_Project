@@ -2,7 +2,7 @@
 //yInstancingBillboard.cppz
 // [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
 // [ì¬“ú]2019/09/27
-// [XV“ú]2019/10/23
+// [XV“ú]2019/12/04
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -13,6 +13,11 @@
 #include "ShaderLoader.h"
 #include "Input.h"
 #include <time.h>
+
+//===================================================================================================================================
+//yusingéŒ¾z
+//===================================================================================================================================
+using namespace InstancingBillboardNS;
 
 //===================================================================================================================================
 //yƒRƒ“ƒXƒgƒ‰ƒNƒ^z
@@ -33,6 +38,7 @@ InstancingBillboard::InstancingBillboard()
 	color				= NULL;
 	uv					= NULL;
 	texture				= NULL;
+	renderType			= TRANSPARENT_PASS;
 	zBufferEnable		= true;
 	device				= getDevice();
 	srand((unsigned int)time(NULL));
@@ -217,8 +223,14 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 
 	effect->Begin(0, 0);
 
-	if(zBufferEnable)effect->BeginPass(0);
-	else effect->BeginPass(1);
+	int billboardY = 0;
+	if (renderType & Y_BILLBOARD_PASS)billboardY = 3;
+	switch (renderType & ~Y_BILLBOARD_PASS)
+	{
+	case NORMAL_PASS:		effect->BeginPass(0+billboardY);break;
+	case TRANSPARENT_PASS:	effect->BeginPass(1+billboardY);break;
+	case FOREGROUND_PASS:	effect->BeginPass(2+billboardY);break;
+	}
 		
 	device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
 
@@ -349,9 +361,17 @@ void InstancingBillboard::updateAccessList()
 }
 
 //===================================================================================================================================
+//y•`‰æ‚ğ—LŒø‰»z
+//===================================================================================================================================
+void InstancingBillboard::enableRender()
+{
+	onRender = true;
+}
+
+//===================================================================================================================================
 //y•`‰æ‚ğ‚µ‚È‚¢z
 //===================================================================================================================================
-void InstancingBillboard::offRender()
+void InstancingBillboard::disableRender()
 {
 	onRender = false;
 }
@@ -431,6 +451,13 @@ void InstancingBillboard::updateArray()
 InstancingBillboardNS::InstanceList InstancingBillboard::getList() { return *instanceList; }
 int InstancingBillboard::getInstanceNum() { return instanceList->nodeNum; }
 
+//===================================================================================================================================
+//yZƒoƒbƒtƒ@‚ğ—LŒø‚É‚·‚éz
+//===================================================================================================================================
+void InstancingBillboard::setRenderType(int type)
+{
+	renderType = type;
+}
 //===================================================================================================================================
 //yZƒoƒbƒtƒ@‚ğ—LŒø‚É‚·‚éz
 //===================================================================================================================================

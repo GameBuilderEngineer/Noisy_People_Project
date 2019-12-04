@@ -99,17 +99,15 @@ VS_OUT vsMain(
 	//ビルボード処理
 	float4x4 cancelRotation = matrixView;
 	cancelRotation._41_42_43 = 0.0f;
-	//cancelRotation._11_12_13 = 0.0f;//Y軸回転削除
-	//cancelRotation._21_22_23 = 0.0f;//Y軸回転削除
-	//cancelRotation._31_32_33 = 0.0f;//Y軸回転削除
 	cancelRotation = transpose(cancelRotation);
+
 
 	//行列の演算
 	matrixWorld = mul(matrixWorld,scaleMatrix);				//*スケール
-	matrixWorld = mul(matrixWorld,xRotationMatrix);		//*x軸回転
-	matrixWorld = mul(matrixWorld,yRotationMatrix);		//*y軸回転
-	matrixWorld = mul(matrixWorld,zRotationMatrix);		//*z軸回転
-	matrixWorld = mul(matrixWorld ,cancelRotation);			//*ビルボード
+	matrixWorld = mul(matrixWorld,xRotationMatrix);			//*x軸回転
+	matrixWorld = mul(matrixWorld,yRotationMatrix);			//*y軸回転
+	matrixWorld = mul(matrixWorld,zRotationMatrix);			//*z軸回転
+	matrixWorld = mul(matrixWorld,cancelRotation);			//*ビルボード
 	matrixWorld = mul(matrixWorld,positionMatrix);			//*移動
 
 	//ビュー行列
@@ -188,17 +186,17 @@ VS_OUT vsMainY(
 		sinZ,cosZ,0.0f,0.0f,
 		0.0f,0.0f,1.0f,0.0f,
 		0.0f,0.0f,0.0f,1.0f);
-	//ビルボード処理
+	//ビルボード処理（Ｙ軸）
 	float4x4 cancelRotation = matrixView;
 	cancelRotation._41_42_43 = 0.0f;
-	cancelRotation._11_12_13 = 0.0f;//Y軸回転削除
+	cancelRotation._12_22_32 = float3(0.0f,1.0f,0.0f);//Y軸回転はｷｬﾝｾﾙしない
 	cancelRotation = transpose(cancelRotation);
 
 	//行列の演算
 	matrixWorld = mul(matrixWorld,scaleMatrix);				//*スケール
-	matrixWorld = mul(matrixWorld,xRotationMatrix);		//*x軸回転
-	matrixWorld = mul(matrixWorld,yRotationMatrix);		//*y軸回転
-	matrixWorld = mul(matrixWorld,zRotationMatrix);		//*z軸回転
+	matrixWorld = mul(matrixWorld,xRotationMatrix);			//*x軸回転
+	matrixWorld = mul(matrixWorld,yRotationMatrix);			//*y軸回転
+	matrixWorld = mul(matrixWorld,zRotationMatrix);			//*z軸回転
 	matrixWorld = mul(matrixWorld ,cancelRotation);			//*ビルボード
 	matrixWorld = mul(matrixWorld,positionMatrix);			//*移動
 
@@ -228,21 +226,75 @@ float4 psMain(VS_OUT In) : COLOR0
 // テクニック
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 technique mainTechnique {
+
+
+	//通常ビルボード
 	pass p0 {
 		//ステート設定
 		Zenable					= TRUE;				//Zバッファ
-		ZWriteEnable			= FALSE;			//Zバッファへの書き込み
+		ZWriteEnable			= TRUE;				//Zバッファへの書き込み
+		CullMode				= CCW;				//背面をカリング
 		VertexShader = compile vs_2_0 vsMain();
 		PixelShader = compile ps_2_0 psMain();
 	}
 
+	//通常ビルボード（透過）
 	pass p1 {
+
+		//ステート設定
+		Zenable					= TRUE;			//Zバッファ
+		ZWriteEnable			= FALSE;		//Zバッファへの書き込み
+		CullMode				= CCW;			//背面をカリング
+
+		VertexShader = compile vs_2_0 vsMain();
+		PixelShader = compile ps_2_0 psMain();
+	}
+
+	//通常ビルボード（最前面）
+	pass p2 {
 
 		//ステート設定
 		Zenable					= FALSE;		//Zバッファ
 		ZWriteEnable			= FALSE;		//Zバッファへの書き込み
+		CullMode				= CCW;			//背面をカリング
 
 		VertexShader = compile vs_2_0 vsMain();
 		PixelShader = compile ps_2_0 psMain();
 	}
+
+	//Y軸ビルボード
+	pass p3 {
+		//ステート設定
+		Zenable					= TRUE;				//Zバッファ
+		ZWriteEnable			= TRUE;				//Zバッファへの書き込み
+		CullMode				= CCW;				//背面をカリング
+		VertexShader = compile vs_2_0 vsMainY();
+		PixelShader = compile ps_2_0 psMain();
+	}
+
+
+	//Y軸ビルボード（透過）
+	pass p4 {
+
+		//ステート設定
+		Zenable					= TRUE;			//Zバッファ
+		ZWriteEnable			= FALSE;		//Zバッファへの書き込み
+		CullMode				= CCW;			//背面をカリング
+
+		VertexShader = compile vs_2_0 vsMainY();
+		PixelShader = compile ps_2_0 psMain();
+	}
+
+	//Y軸ビルボード（最前面）
+	pass p5 {
+
+		//ステート設定
+		Zenable					= FALSE;		//Zバッファ
+		ZWriteEnable			= FALSE;		//Zバッファへの書き込み
+		CullMode				= CCW;			//背面をカリング
+
+		VertexShader = compile vs_2_0 vsMainY();
+		PixelShader = compile ps_2_0 psMain();
+	}
+
 }

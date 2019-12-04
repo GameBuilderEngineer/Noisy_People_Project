@@ -50,7 +50,16 @@ TestPlane::TestPlane() :InstancingBillboard::InstancingBillboard()
 
 	generateInstance(new TestPlaneInstance(D3DXVECTOR3(0, 10, 30)));
 	generateInstance(new TestPlaneInstance(D3DXVECTOR3(0, 20, -220)));
-	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 10, 10)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -210)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-10, 15, -210)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-5,  15, -210)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(0,   15,  -210)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(5,   15,  -210)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -220)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -215)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -210)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -205)));
+	generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -200)));
 
 }
 

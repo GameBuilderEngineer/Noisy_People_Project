@@ -681,21 +681,21 @@ void Game::render3D(Camera currentCamera) {
 	//linear4TreeManager->render();
 	//8•ª–Ø‹óŠÔ•ªŠ„‚Ìƒ‰ƒCƒ“•`‰æ
 	//linear8TreeManager->render();
-	Ray ray;
-	ray.color = D3DXCOLOR(150, 150, 0, 255);
-	Object** root = collisionList->getRoot();
-	Object* tmp1 = NULL;
-	Object* tmp2 = NULL;
-	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
-	float length = 0;
-	for (int i = 0; i < collisionNum; i++)
-	{
-		tmp1 = root[i * 2];
-		tmp2 = root[i * 2 + 1];
-		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
-		ray.initialize(tmp1->position, direction);
-		ray.render(length);
-	}
+	//Ray ray;
+	//ray.color = D3DXCOLOR(150, 150, 0, 255);
+	//Object** root = collisionList->getRoot();
+	//Object* tmp1 = NULL;
+	//Object* tmp2 = NULL;
+	//D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	//float length = 0;
+	//for (int i = 0; i < collisionNum; i++)
+	//{
+	//	tmp1 = root[i * 2];
+	//	tmp2 = root[i * 2 + 1];
+	//	length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+	//	ray.initialize(tmp1->position, direction);
+	//	ray.render(length);
+	//}
 #endif
 
 #ifdef _DEBUG

@@ -329,6 +329,8 @@ void StaticMeshRenderer::outputGUI()
 //===================================================================================================================================
 //ÅysetterÅz
 //===================================================================================================================================
+void StaticMeshRenderer::enableRender()			{ onRender = true; }
+void StaticMeshRenderer::disableRender()		{ onRender = false; }
 void StaticMeshRenderer::enableLight()			{ onLight = true; }
 void StaticMeshRenderer::disableLight()			{ onLight = false; }
 void StaticMeshRenderer::enableTransparent()	{ onTransparent = true; }

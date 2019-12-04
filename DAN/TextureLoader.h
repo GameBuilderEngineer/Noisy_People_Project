@@ -79,6 +79,8 @@ namespace textureNS
 		UI_EN_GUAGE_P1,
 		UI_EN_GUAGE_P2,
 		UI_EN_TANK,
+		UI_TREE_MARKER,
+		UI_TREE_SIGN,
 
 		// Result
 		RESULT,

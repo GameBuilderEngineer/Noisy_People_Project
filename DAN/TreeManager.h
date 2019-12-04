@@ -11,7 +11,7 @@
 #include "Tree.h"
 #include "AnalogTree.h"
 #include "DigitalTree.h"
-#include "DigitalTreeEffect.h"
+#include "TreeEffect.h"
 #include "GameMaster.h"
 
 //=============================================================================
@@ -47,7 +47,7 @@ private:
 
 
 	//エフェクト
-	DigitalTreeEffect*	digitalTreeEffect;		//デジタルツリーエフェクト
+	TreeEffect*	treeEffect;		//デジタルツリーエフェクト
 
 	int nextID;									// 次回ツリー発行ID
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ

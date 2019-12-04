@@ -2,7 +2,7 @@
 //【InstancingBillboard.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/27
-// [更新日]2019/10/28
+// [更新日]2019/12/04
 //===================================================================================================================================
 #pragma once
 
@@ -39,7 +39,7 @@ namespace InstancingBillboardNS {
 		D3DXCOLOR		color;		//カラー
 		float			lifeTimer;	//生存時間
 		float			limitTime;	//生存限界時間
-
+		
 		Instance() {
 			position				= D3DXVECTOR3(0.0f,0.0f,0.0f);
 			rotation				= D3DXVECTOR3(0.0f,0.0f,0.0f);
@@ -64,6 +64,13 @@ namespace InstancingBillboardNS {
 	class InstanceList:public LinkedList<InstancingBillboardNS::Instance*>
 	{
 	};
+
+	//描画タイプ(renderType)
+	const int NORMAL_PASS		= 0x00000001;//通常ビルボード
+	const int TRANSPARENT_PASS	= 0x00000002;//透過処理有効描画
+	const int FOREGROUND_PASS	= 0x00000004;//最前面描画
+	const int Y_BILLBOARD_PASS	= 0x00000008;//Y軸ビルボード
+
 }
 
 
@@ -109,7 +116,9 @@ protected:
 	int										instanceNum=0;			//インスタンスの数
 
 	//描画設定フラグ
+	int										renderType;				//描画タイプ
 	bool									zBufferEnable;			//Zバッファ
+
 
 public:
 	//Method
@@ -122,7 +131,8 @@ public:
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);	//描画
 
 	//描画をオフにする
-	void offRender();
+	void enableRender();
+	void disableRender();
 
 	//リスト操作
 	void generateInstance(InstancingBillboardNS::Instance* newInstance);					//描画するインスタンスを生成
@@ -146,6 +156,7 @@ public:
 	InstancingBillboardNS::InstanceList getList();											//リストを取得する
 
 	//描画設定切替
+	void setRenderType(int type);
 	void enableZBuffer();
 	void disableZBuffer();
 };
