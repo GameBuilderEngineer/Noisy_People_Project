@@ -241,7 +241,7 @@ void Director::mainLoop() {
 	//ƒŠƒZƒbƒg
 	if (input->wasKeyPressed(VK_F5))
 	{
-		scene->changeScene(SceneList::DEBUG);
+		scene->changeScene(SceneList::SPLASH);
 		changeNextScene();
 	}
 

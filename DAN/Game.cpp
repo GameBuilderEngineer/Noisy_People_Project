@@ -614,7 +614,16 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
+	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
+		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
+	{
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_BLACK));
+	}
+	else {
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	}
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	// プレイヤーの描画
 	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
