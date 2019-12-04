@@ -69,7 +69,7 @@ protected:
 	D3DXVECTOR2*						uv;						//カラー配列
 
 	//オブジェクトリスト
-	staticMeshRendererNS::ObjectList*		objectList;
+	staticMeshRendererNS::ObjectList*	objectList;
 
 public:
 	//Method
@@ -112,6 +112,7 @@ public:
 	void setFillMode(int mode);
 	void setRenderPass(int pass);
 	void setAlpha(float value);
+	void setStaticMesh(StaticMesh* mesh);
 
 	//getter
 	StaticMesh* getStaticMesh();

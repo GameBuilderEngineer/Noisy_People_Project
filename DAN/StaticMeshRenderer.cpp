@@ -340,6 +340,7 @@ void StaticMeshRenderer::disableForeground()	{ onForeground = false; }
 void StaticMeshRenderer::setFillMode(int mode)	{ fillMode = mode; }
 void StaticMeshRenderer::setRenderPass(int pass){ renderPass = pass; }
 void StaticMeshRenderer::setAlpha(float value)	{ alpha = value; }
+void StaticMeshRenderer::setStaticMesh(StaticMesh* mesh) { staticMesh = mesh; }
 
 //===================================================================================================================================
 //ÅygetterÅz
