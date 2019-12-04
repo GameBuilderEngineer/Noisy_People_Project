@@ -85,6 +85,8 @@ TextureLoader::TextureLoader()
 	textureName[UI_EN_GUAGE_P1] = { "EnGuage1.png" };
 	textureName[UI_EN_GUAGE_P2] = { "EnGuage2.png" };
 	textureName[UI_EN_TANK] = { "EnGuage_Stock.png" };
+	textureName[UI_TREE_MARKER] = { "Dot.png" };
+	textureName[UI_TREE_SIGN] = { "Digit_Tree.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };

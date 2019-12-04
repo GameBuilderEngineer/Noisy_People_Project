@@ -73,15 +73,15 @@ struct PlayerTable
 //ツリー情報
 struct TreeTable
 {
+	int				id;					//ツリーID
 	int				treeType;			//ANALOG|DIGITAL
 	int				modelType;			//モデルタイプ
 	int				player;				//緑化したプレイヤー
-	int				greeningOrder;		//緑化された順位
 	float			greeningTime;		//緑化された時間
 	D3DXVECTOR3		position;			//位置
 	D3DXQUATERNION	rotation;			//回転
 	D3DXVECTOR3		scale;				//スケール
-
+	
 };
 
 //===================================================================================================================================

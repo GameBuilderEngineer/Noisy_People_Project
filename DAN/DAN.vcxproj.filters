@@ -769,11 +769,11 @@
     <ClCompile Include="DigitalShiftEffect.cpp">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="DigitalTreeEffect.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="TreeEffect.cpp">
+      <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1223,11 +1223,11 @@
     <ClInclude Include="DigitalShiftEffect.h">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="DigitalTreeEffect.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="TreeEffect.h">
+      <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

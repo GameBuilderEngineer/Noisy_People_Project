@@ -1,8 +1,8 @@
 //===================================================================================================================================
-//【DigitalTreeEffect.h】
+//【TreeEffect.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/25
-// [更新日]2019/11/25
+// [更新日]2019/12/04
 //===================================================================================================================================
 #pragma once
 
@@ -12,22 +12,46 @@
 #include "Base.h"
 #include "InstancingBillboard.h"
 #include "EffekseerManager.h"
+#include "Tree.h"
 
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
-namespace DigitalTreeEffectNS
+namespace TreeEffectNS
 {
 	//===================================================================================================================================
-	//【エフェクトインスタンスクラス】
+	//【ツリー状態マーカーインスタンスクラス】
 	//===================================================================================================================================
-	class EffectInstance :public InstancingBillboardNS::Instance
+	class MarkerInstance :public InstancingBillboardNS::Instance
 	{
 	public:
+		Tree* tree;
+	public:
 		//コンストラクタ
-		EffectInstance(D3DXVECTOR3 position);
+		MarkerInstance(Tree* owner);
 		//更新
 		virtual void update(float frameTime) override;
+		void changeColor();
+	};
+
+	//===================================================================================================================================
+	//【ツリー標識インスタンスクラス】
+	//===================================================================================================================================
+	class SignInstance :public InstancingBillboardNS::Instance
+	{
+	public:
+		Tree* tree;
+	public:
+		//コンストラクタ
+		SignInstance(Tree* owner);
+		//更新
+		virtual void update(float frameTime) override;
+		void changeColor();
+	};
+
+	enum {
+		INSTANCE_MARKER,
+		INSTANCE_SIGN,
 	};
 
 	//===================================================================================================================================
@@ -56,24 +80,28 @@ namespace DigitalTreeEffectNS
 //===================================================================================================================================
 //【デジタルツリーエフェクトクラス】
 //===================================================================================================================================
-class DigitalTreeEffect :public Base
+class TreeEffect :public Base
 {
 private:
-	InstancingBillboard* billboard;
+	InstancingBillboard* marker;	//状態マーカー
+	InstancingBillboard* sign;		//
 	float effectCycle;							//エフェクト周期
 
 
 
 public:
-	DigitalTreeEffect();
-	~DigitalTreeEffect();
+	TreeEffect();
+	~TreeEffect();
 
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	void generateInstance(D3DXVECTOR3 position);
+	void generateInstance(int type,Tree* position);
 	void resetEffectCycle();
 	void playStandardEffect(D3DXVECTOR3* position);
 	void playRaidEffect(int no,D3DXVECTOR3* position);
+
+	void enableRender();
+	void disableRender();
 
 };
 

@@ -614,7 +614,16 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
+	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
+		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
+	{
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_BLACK));
+	}
+	else {
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	}
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	// プレイヤーの描画
 	//maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -681,21 +690,21 @@ void Game::render3D(Camera currentCamera) {
 	//linear4TreeManager->render();
 	//8分木空間分割のライン描画
 	//linear8TreeManager->render();
-	Ray ray;
-	ray.color = D3DXCOLOR(150, 150, 0, 255);
-	Object** root = collisionList->getRoot();
-	Object* tmp1 = NULL;
-	Object* tmp2 = NULL;
-	D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
-	float length = 0;
-	for (int i = 0; i < collisionNum; i++)
-	{
-		tmp1 = root[i * 2];
-		tmp2 = root[i * 2 + 1];
-		length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
-		ray.initialize(tmp1->position, direction);
-		ray.render(length);
-	}
+	//Ray ray;
+	//ray.color = D3DXCOLOR(150, 150, 0, 255);
+	//Object** root = collisionList->getRoot();
+	//Object* tmp1 = NULL;
+	//Object* tmp2 = NULL;
+	//D3DXVECTOR3 direction = D3DXVECTOR3(0, 0, 0);
+	//float length = 0;
+	//for (int i = 0; i < collisionNum; i++)
+	//{
+	//	tmp1 = root[i * 2];
+	//	tmp2 = root[i * 2 + 1];
+	//	length = Base::between2VectorDirection(&direction, tmp1->position, tmp2->position);
+	//	ray.initialize(tmp1->position, direction);
+	//	ray.render(length);
+	//}
 #endif
 
 #ifdef _DEBUG

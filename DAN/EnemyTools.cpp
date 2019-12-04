@@ -59,10 +59,10 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 #endif
 	}
 
-	rootEdit = false;
-	EnemyListboxRootCurrent = 0;
 
 #ifdef _DEBUG
+	rootEdit = false;
+	EnemyListboxRootCurrent = 0;
 	//エネミー情報
 	EnemyListboxCurrent = 0;
 	EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
