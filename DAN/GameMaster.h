@@ -11,6 +11,7 @@
 //===================================================================================================================================
 #include "Base.h"
 #include "StaticMeshLoader.h"
+#include "LinkedList.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -77,7 +78,7 @@ struct TreeTable
 	int				treeType;			//ANALOG|DIGITAL
 	int				modelType;			//モデルタイプ
 	int				player;				//緑化したプレイヤー
-	float			greeningTime;		//緑化された時間
+	float			eventTime;			//緑化された時間
 	D3DXVECTOR3		position;			//位置
 	D3DXQUATERNION	rotation;			//回転
 	D3DXVECTOR3		scale;				//スケール
@@ -94,18 +95,18 @@ class GameMaster :public Base
 private:
 	//Data
 	//ゲーム
-	float			gameTimer;										//ゲーム時間
-	float			countDownTimer;									//カウントダウン時間
-	bool			pause;											//ポーズ
-	bool			gameTimerStop;									//ゲームタイマーストップ
+	float					gameTimer;										//ゲーム時間
+	float					countDownTimer;									//カウントダウン時間
+	bool					pause;											//ポーズ
+	bool					gameTimerStop;									//ゲームタイマーストップ
 
 	//木関係情報
-	int				treeNum;										//枯木・緑化木の総計
-	int*			conversionOrder;								//変換順番：緑化された順番
+	int						treeNum;										//枯木・緑化木の総計
+	LinkedList<TreeTable>	treeTableList;										//変換順番：緑化された順番
 	
 	//プレイヤー
-	PlayerTable		playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
-	int				progress;										//達成状況
+	PlayerTable				playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
+	int						progress;										//達成状況
 
 
 public:
@@ -121,11 +122,10 @@ public:
 	bool paused();													//ポーズ処理
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
 
-
 	//木の設定関数
-	void readyConversionOrder(int treeNum);							//変換順番変数を準備する
+	void readyTreeTable(int treeNum);							//変換順番変数を準備する
 	void discardConversionOrder();									//変換順番変数を破棄する
-	void recordGreeningTree(int treeNo,int orderNo);				//緑化した木の本数を記録
+	void recordTreeTable(TreeTable treeTable);				//緑化した木の本数を記録
 
 
 	//setter

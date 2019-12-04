@@ -20,7 +20,7 @@ struct Node
 	T value;
 	Node<T>* prev;
 	Node<T>* next;
-	Node()			{ prev = NULL; next = NULL; }
+	Node()		{ prev = NULL; next = NULL; }
 	~Node()		{ prev = NULL; next = NULL; }
 };
 

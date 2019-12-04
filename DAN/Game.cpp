@@ -319,7 +319,7 @@ void Game::initialize() {
 	}
 
 	//ツリーの最大数を取得
-	gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
+	//gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）
 	aiDirector = new AIDirector;
