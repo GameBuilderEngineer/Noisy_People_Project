@@ -33,7 +33,7 @@ GameMaster::GameMaster()
 		ZeroMemory(&playerInformation[i], sizeof(PlayerTable));
 	}
 	treeNum				= 0;
-	conversionOrder		= NULL;
+	//conversionOrder		= NULL;
 	input				= getInput();
 	gameTimerStop		= false;
 #ifdef _DEBUG
@@ -46,7 +46,7 @@ GameMaster::GameMaster()
 //===================================================================================================================================
 GameMaster::~GameMaster()
 {
-	SAFE_DELETE_ARRAY(conversionOrder);
+	//SAFE_DELETE_ARRAY(conversionOrder);
 }
 
 //===================================================================================================================================
@@ -134,21 +134,18 @@ bool GameMaster::playActionRamaining1Min()
 //===================================================================================================================================
 //ÅyóŒâªÇµÇΩñÿÇÃñ{êîÇãLò^Åz
 //===================================================================================================================================
-void GameMaster::recordGreeningTree(int treeNo, int orderNo)
+void GameMaster::recordTreeTable(TreeTable treeTable)
 {
-	conversionOrder[treeNo] = orderNo;
+	treeTableList.insertFront(treeTable);
+
 }
 
 //===================================================================================================================================
 //Åyïœä∑èáî‘ïœêîÇèÄîıÇ∑ÇÈÅz
 //===================================================================================================================================
-void GameMaster::readyConversionOrder(int treeNum) {
-	this->treeNum = treeNum;								//åÕñÿÅEóŒâªñÿÇÃëçåv
-	conversionOrder = new int[this->treeNum];
-	for (int i = 0; i < this->treeNum; i++)
-	{
-		conversionOrder[i] = 0;
-	}
+void GameMaster::readyTreeTable(int treeNum) {
+
+
 }
 
 //===================================================================================================================================
@@ -156,14 +153,14 @@ void GameMaster::readyConversionOrder(int treeNum) {
 //===================================================================================================================================
 void GameMaster::discardConversionOrder() {
 	this->treeNum = 0;
-	SAFE_DELETE_ARRAY(conversionOrder);
+	//SAFE_DELETE_ARRAY(conversionOrder);
 }
 #pragma endregion
 
 //===================================================================================================================================
 //ÅysetterÅz
 //===================================================================================================================================
-void GameMaster::setConversionOrder(int* newValue) {conversionOrder = newValue;};
+void GameMaster::setConversionOrder(int* newValue) {} // conversionOrder = newValue; };
 void GameMaster::setProgress(int achievement) { progress |= achievement; }
 
 //===================================================================================================================================
@@ -187,7 +184,7 @@ void GameMaster::createGUI()
 	{
 		for (int i = 0; i < treeNum; i++)
 		{
-			ImGui::Text("conversionOrder[%d] = %d",i, conversionOrder[i]);
+			//ImGui::Text("conversionOrder[%d] = %d",i, conversionOrder[i]);
 		}
 	}
 }

@@ -19,8 +19,13 @@ class Ocean :public Base
 {
 private:
 	Object* object;
-	StaticMeshRenderer* renderer;
+	LPDIRECT3DVERTEXDECLARATION9		declaration;			//í∏ì_êÈåæ
+	LPDIRECT3DDEVICE9	device;
+	LPD3DXEFFECT		effect;
+	StaticMesh*	staticMesh;
+
 	bool needUpdate;
+
 public:
 	Ocean();
 	~Ocean();

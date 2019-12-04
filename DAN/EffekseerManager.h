@@ -70,6 +70,7 @@ namespace effekseerNS
 		BLOW,
 		MUZZLE,
 		DIGIT_TREE,
+		DIGIT_TREE_BASE,
 		DIGIT_TREE_SELECT,
 		DIGIT_TREE_RAID,
 		DAC,

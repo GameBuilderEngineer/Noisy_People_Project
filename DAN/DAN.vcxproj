@@ -155,7 +155,7 @@
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
-    <ClInclude Include="DigitalTreeEffect.h" />
+    <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
     <ClInclude Include="ElectTank.h" />
@@ -307,7 +307,7 @@
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
-    <ClCompile Include="DigitalTreeEffect.cpp" />
+    <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
     <ClCompile Include="ElectTank.cpp" />

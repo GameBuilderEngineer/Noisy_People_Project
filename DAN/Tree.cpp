@@ -104,6 +104,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 	{
 		selectShift[i] = false;
 	}
+
 }
 
 

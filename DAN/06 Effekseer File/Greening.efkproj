@@ -6,31 +6,6 @@
       <Node>
         <CommonValues>
           <Life>
-            <Center>500</Center>
-            <Max>500</Max>
-            <Min>500</Min>
-          </Life>
-        </CommonValues>
-        <RotationValues>
-          <Fixed>
-            <Rotation>
-              <X>-90</X>
-            </Rotation>
-          </Fixed>
-        </RotationValues>
-        <DrawingValues>
-          <Type>5</Type>
-          <Model>
-            <Model>../../../../Desktop/Tree/tree.fbx</Model>
-          </Model>
-        </DrawingValues>
-        <IsRendered>False</IsRendered>
-        <Name>Node</Name>
-        <Children />
-      </Node>
-      <Node>
-        <CommonValues>
-          <Life>
             <Center>90</Center>
             <Max>90</Max>
             <Min>90</Min>
@@ -66,7 +41,7 @@
           </SingleEasing>
         </ScalingValues>
         <RendererCommonValues>
-          <ColorTexture>Texture/Aurora.png</ColorTexture>
+          <ColorTexture>Texture/Aurora_BG.png</ColorTexture>
           <AlphaBlend>2</AlphaBlend>
           <FadeInType>1</FadeInType>
           <FadeIn>
@@ -104,99 +79,10 @@
         <DrawingValues>
           <Type>5</Type>
           <Model>
-            <Model>mqo/ball2.mqo</Model>
+            <Model>Mod/ball2.mqo</Model>
             <Lighting>False</Lighting>
             <Color_Fixed>
-              <R>0</R>
-              <G>249</G>
-              <A>190</A>
-            </Color_Fixed>
-          </Model>
-        </DrawingValues>
-        <Name>Node</Name>
-        <Children />
-      </Node>
-      <Node>
-        <CommonValues>
-          <Life>
-            <Center>90</Center>
-            <Max>90</Max>
-            <Min>90</Min>
-          </Life>
-        </CommonValues>
-        <RotationValues>
-          <Type>1</Type>
-          <PVA>
-            <Rotation>
-              <Y>
-                <Center>90</Center>
-                <Max>90</Max>
-                <Min>90</Min>
-              </Y>
-            </Rotation>
-          </PVA>
-        </RotationValues>
-        <ScalingValues>
-          <Type>4</Type>
-          <SingleEasing>
-            <Start>
-              <Center>5</Center>
-              <Max>5</Max>
-              <Min>5</Min>
-            </Start>
-            <End>
-              <Center>50</Center>
-              <Max>50</Max>
-              <Min>50</Min>
-            </End>
-            <StartSpeed>-30</StartSpeed>
-            <EndSpeed>30</EndSpeed>
-          </SingleEasing>
-        </ScalingValues>
-        <RendererCommonValues>
-          <AlphaBlend>2</AlphaBlend>
-          <FadeInType>1</FadeInType>
-          <FadeIn>
-            <Frame>25</Frame>
-            <StartSpeed>-30</StartSpeed>
-            <EndSpeed>30</EndSpeed>
-          </FadeIn>
-          <FadeOutType>1</FadeOutType>
-          <FadeOut>
-            <Frame>10</Frame>
-          </FadeOut>
-          <UV>3</UV>
-          <UVScroll>
-            <Size>
-              <X>
-                <Center>512</Center>
-                <Max>512</Max>
-                <Min>512</Min>
-              </X>
-              <Y>
-                <Center>256</Center>
-                <Max>256</Max>
-                <Min>256</Min>
-              </Y>
-            </Size>
-            <Speed>
-              <Y>
-                <Center>4</Center>
-                <Max>4</Max>
-                <Min>4</Min>
-              </Y>
-            </Speed>
-          </UVScroll>
-        </RendererCommonValues>
-        <DrawingValues>
-          <Type>5</Type>
-          <Model>
-            <Model>mqo/ball2.mqo</Model>
-            <Lighting>False</Lighting>
-            <Color_Fixed>
-              <R>0</R>
-              <G>249</G>
-              <A>64</A>
+              <A>128</A>
             </Color_Fixed>
           </Model>
         </DrawingValues>

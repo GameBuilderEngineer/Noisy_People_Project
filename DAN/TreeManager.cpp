@@ -52,7 +52,7 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	cDLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
 	//デジタルツリーエフェクト
-	digitalTreeEffect = new DigitalTreeEffect();
+	treeEffect = new TreeEffect();
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_1P] = false;
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_2P] = false;
 
@@ -96,7 +96,7 @@ void TreeManager::uninitialize()
 	SAFE_DELETE(aDTrunkRenderer);
 
 	//デジタルツリーエフェクト
-	SAFE_DELETE(digitalTreeEffect);
+	SAFE_DELETE(treeEffect);
 }
 
 
@@ -140,7 +140,7 @@ void TreeManager::update(float frameTime)
 		//if (treeList[i]->getTreeData()->type == treeNS::DIGITAL_TREE)
 		//{
 		//	//エフェクトの生成
-		//	digitalTreeEffect->generateInstance(treeList[i]->position);
+		//	treeEffect->generateInstance(treeList[i]->position);
 		//}
 	}
 
@@ -169,7 +169,7 @@ void TreeManager::update(float frameTime)
 	cDLeafRenderer->update();
 
 	//デジタルツリーエフェクトの更新
-	digitalTreeEffect->update(frameTime);
+	treeEffect->update(frameTime);
 
 }
 
@@ -203,7 +203,7 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 	cDLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 	//デジタルツリーエフェクトの描画
-	digitalTreeEffect->render(view, projection, cameraPosition);
+	treeEffect->render(view, projection, cameraPosition);
 }
 
 //=============================================================================
@@ -220,7 +220,7 @@ void TreeManager::playDigitalTreeEffect(int playerNo)
 		Tree* tree = treeList[i];
 		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
 		{
-			digitalTreeEffect->playStandardEffect(&tree->position);
+			treeEffect->playStandardEffect(&tree->position);
 		}
 	}
 
@@ -240,7 +240,7 @@ void TreeManager::stopDigitalTreeEffect(int playerNo)
 		Tree* tree = treeList[i];
 		if (tree->getTreeData()->type = treeNS::DIGITAL_TREE)
 		{
-			digitalTreeEffect->playStandardEffect(&tree->position);
+			treeEffect->playStandardEffect(&tree->position);
 		}
 	}
 }
@@ -267,6 +267,14 @@ void TreeManager::switchingNormalView(int playerNo)
 	cTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
+	aTrunkRenderer->	enableRender();
+	aLeafRenderer->		enableRender();
+	bTrunkRenderer->	enableRender();
+	bLeafRenderer->		enableRender();
+	cTrunkRenderer->	enableRender();
+	cLeafRenderer->		enableRender();
+
+
 	//デジタルツリー
 	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
@@ -274,6 +282,9 @@ void TreeManager::switchingNormalView(int playerNo)
 	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	//ツリーエフェクト
+	treeEffect->disableRender();
 
 	//デジタルツリーエフェクトの非表示
 	for (size_t i = 0; i < treeList.size(); i++)
@@ -308,13 +319,23 @@ void TreeManager::switchingVisionView(int playerNo)
 	cTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
+	aTrunkRenderer->	disableRender();
+	aLeafRenderer->		disableRender();
+	bTrunkRenderer->	disableRender();
+	bLeafRenderer->		disableRender();
+	cTrunkRenderer->	disableRender();
+	cLeafRenderer->		disableRender();
+
 	//デジタルツリー
-	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	//ツリーエフェクト
+	treeEffect->enableRender();
 
 	//デジタルツリーエフェクトの表示
 	for (size_t i = 0; i < treeList.size(); i++)
@@ -392,6 +413,9 @@ void TreeManager::createTree(TreeData treeData)
 		registerDigital(tree);
 		break;
 	}
+
+	treeEffect->generateInstance(TreeEffectNS::INSTANCE_MARKER,tree);
+	treeEffect->generateInstance(TreeEffectNS::INSTANCE_SIGN,tree);
 
 	tree->setAttractor(attractorMesh, attractorMatrix);
 	treeList.push_back(tree);

@@ -12,7 +12,7 @@
 #include "D3DXAnimation.h"
 
 
-#define	MOVEP_MODEL		"07 Model File/Male.X"
+#define	MOVEP_MODEL		"07 Model File/male.X"
 
 #define TimePerFrame		(0.0167f)				// 1 / 60ïb
 
@@ -20,8 +20,17 @@ enum MovePAction
 {
 	MoveP_Idle,
 	MoveP_Run,
+	MoveP_FireIdle,
+	MoveP_FireRun,
 	MoveP_Jump,
-	MoveP_Shooting,
+	MoveP_JumpFire,
+	MoveP_Die,
+	MoveP_WalkRight,
+	MoveP_WalkLeft,
+	MoveP_WalkBackwards,
+	MoveP_WalkBackward,
+	MoveP_WalkStrafeLeft,
+	MoveP_WalkStrafeRight,
 	MoveP_Max
 };
 
@@ -56,8 +65,13 @@ bool				IsRun = false;
 bool				IsIdle = true;
 bool				IsWalk = false;
 bool				IsRoll = false;
+bool				IsJump = false;
+bool				IsFireJump = false;
 bool				IsDefend = false;
 bool				AnimeChange = true;
+bool				IsChange = false;
+bool				IsChangeRun = false;
+
 
 //éÄñSÇÃìÆçÏîªíf
 bool				IsDie = false;

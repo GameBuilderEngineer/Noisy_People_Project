@@ -41,8 +41,9 @@ EffekseerManager::EffekseerManager()
 
 	fileName[BLOW]				= { L"blow.efk" };
 	fileName[MUZZLE]			= { L"muzzle.efk" };
-	fileName[DIGIT_TREE]		= { L"Digit_Tree.efk" };
-	fileName[DIGIT_TREE_SELECT]	= { L"Digit_Tree_Select_Zoffset+1.efk" };
+	fileName[DIGIT_TREE]		= { L"Digit_Tree_Lightver.efk" };
+	fileName[DIGIT_TREE_BASE]	= { L"Digit_Tree_Base.efk" };
+	fileName[DIGIT_TREE_SELECT]	= { L"Digit_Tree_Sel_Lightver.efk" };
 	fileName[DIGIT_TREE_RAID]	= { L"Digit_Tree_Select.efk" };
 	fileName[DAC]				= { L"DAC.efk" };
 	fileName[GREENING]			= { L"Greening.efk" };
