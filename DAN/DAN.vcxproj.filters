@@ -343,6 +343,9 @@
     <Filter Include="Constant Layer\Collision\Cylinder">
       <UniqueIdentifier>{4e7b6768-8cad-46b1-85f4-0ca83835b231}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Result\ResultUI\Character">
+      <UniqueIdentifier>{7f82b514-6794-4903-92f0-a684eb0cf356}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -658,9 +661,6 @@
     <ClCompile Include="FixedUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
-    <ClCompile Include="UIcharacter.cpp">
-      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
-    </ClCompile>
     <ClCompile Include="ResultUI.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClCompile>
@@ -776,6 +776,27 @@
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="ResultBG.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIcharacter.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Result_chara.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Player_Chara.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Greenig_Chara.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Defeat_Chara.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Greening_Moji.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Defeat_Moji.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -990,9 +1011,6 @@
       <Filter>Game Layer\TestEffect</Filter>
     </ClInclude>
     <ClInclude Include="ResultUI.h">
-      <Filter>Game Layer\Scene\Result\ResultUI</Filter>
-    </ClInclude>
-    <ClInclude Include="UIcharacter.h">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClInclude>
     <ClInclude Include="UItex.h">
@@ -1233,6 +1251,27 @@
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="ResultBG.h">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIcharacter.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Result_chara.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Player_Chara.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Greenig_Chara.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Defeat_Chara.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Greening_Moji.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Defeat_Moji.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

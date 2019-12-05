@@ -20,6 +20,8 @@ using namespace resultUiNS;
 ResultUI::ResultUI()
 {
 	resultBG = new ResultBG;
+	uiCharacter01 = new UIcharacter;//プレイヤー1
+	uiCharacter02 = new UIcharacter;;//プレイヤー2
 }
 
 //============================
@@ -28,15 +30,15 @@ ResultUI::ResultUI()
 ResultUI::~ResultUI()
 {
 	delete resultBG;
+	delete uiCharacter01;
+	delete uiCharacter02;
 }
 
 //============================
 //初期化
 //============================
-void ResultUI::initialize(/*Player *player*/)
+void ResultUI::initialize()
 {
-	//プレイヤーの情報
-	/*this->player = player;*/
 
 	//BGM再生フラグをtrueで初期化
 	playedBGM = true;
@@ -88,8 +90,8 @@ void ResultUI::initialize(/*Player *player*/)
 	}
 
 	//文字UIの初期化
-	uiCharacter01.initialize(PLAYER_01);//プレイヤー1
-	uiCharacter02.initialize(PLAYER_02);//プレイヤー2
+	uiCharacter01->initialize(PLAYER_01);//プレイヤー1
+	uiCharacter02->initialize(PLAYER_02);//プレイヤー2
 
 	//テクスチャUIの初期化
 	uiTexture.initialize();
@@ -117,8 +119,8 @@ void ResultUI::render()
 {
 	resultBG->render();					//リザルト背景の描画
 	uiTexture.render(resultPhase);		//テクスチャの描画
-	uiCharacter01.render(resultPhase);	//プレイヤー１の文字描画
-	uiCharacter02.render(resultPhase);	//プレイヤー2の文字描画
+	uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
+	uiCharacter02->render(resultPhase);	//プレイヤー2の文字描画
 
 	//数字表示はフェイズ４のみ描画
 	if (resultPhase == PHASE_04)
@@ -184,8 +186,8 @@ void ResultUI::update(float flameTime)
 		}
 	}
 	
-	uiCharacter01.update(resultPhase);	//プレイヤー１の文字更新
-	uiCharacter02.update(resultPhase);	//プレイヤー１の文字更新
+	uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
+	uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
 	uiTexture.update(resultPhase);		//テクスチャの更新
 }
 
@@ -194,8 +196,7 @@ void ResultUI::update(float flameTime)
 //============================
 void ResultUI::uninitialize()
 {
-	uiCharacter01.uninitialize();
-	uiCharacter02.uninitialize();
+
 	uiTexture.uninitialize();
 	uiRank01.uninitialize(rank01);
 	uiRank02.uninitialize(rank02);

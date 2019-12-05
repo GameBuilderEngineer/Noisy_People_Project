@@ -48,8 +48,8 @@ namespace resultUiNS
 class ResultUI
 {
 public: //メンバー変数
-	UIcharacter uiCharacter01;		//プレイヤー１用文字のUI
-	UIcharacter uiCharacter02;		//プレイヤー2用文字のUI
+	UIcharacter* uiCharacter01;		//プレイヤー１用文字のUI
+	UIcharacter* uiCharacter02;		//プレイヤー2用文字のUI
 	UItexture	uiTexture;			//テクスチャのUI
 	UIrank      uiRank01;			//プレイヤー１のランクのUI
 	UIrank      uiRank02;			//プレイヤー2のランクのUI

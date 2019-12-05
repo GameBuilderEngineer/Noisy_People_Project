@@ -138,7 +138,8 @@ HRESULT Director::initialize() {
 	//animationLoader->initialize(d3d->device);
 
 	//scene
-	scene = new Splash();
+	/*scene = new Splash();*/
+	scene = new Result();
 	scene->setGameMaster(gameMaster);
 	scene->initialize();
 

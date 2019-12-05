@@ -95,10 +95,13 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_PERSENT] = { "Percent.png" };
 	textureName[RESULT_DEFEAT] = { "Defeated_Counts.png" };
 	textureName[RESULT_GEKITAI] = { "Gekitai_Su.png" };
+	textureName[RESULT_GREEN_NUM] = { "Greening_Num.png" };
+	textureName[RESULT_RYOKUKA_KAZU] = { "Ryokuka_Honsuu.png" };
 
 	//ResultUIのテクスチャ
 	textureName[RESULT_LINE] = { "Line.png" };
-	textureName[RESULT_FLAME] = { "Flame.png" };
+	textureName[RESULT_FLAME] = { "Flame_1.png" };
+	textureName[RESULT_FLAME02] = { "Flame_2.png" };
 	textureName[RESULT_CHARA_A] = { "Chara_A.png" };
 	textureName[RESULT_CHARA_B] = { "Chara_B.png" };
 	textureName[RESULT_NEXT] = { "Next.png" };

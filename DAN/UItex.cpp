@@ -52,7 +52,7 @@ void UItexture::initialize()
 
 	//フレームの初期化
 	uiTexture[FLAME02]->initialize(
-		*textureNS::reference(textureNS::RESULT_FLAME)//テクスチャ
+		*textureNS::reference(textureNS::RESULT_FLAME02)//テクスチャ
 		, SpriteNS::CENTER							//中心
 		, WIDTH_FLAME								//横幅
 		, HEIGHT_FLAME								//縦幅
