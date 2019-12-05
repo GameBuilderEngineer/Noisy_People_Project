@@ -58,6 +58,11 @@ public: //メンバー変数
 	Player*		player;				//プレイヤーの情報
 	int			score01;			//プレイヤー１のスコア保存用
 	int			score02;			//プレイヤー２のスコア保存用
+	int			greenigPersent;		//全体緑化率
+	int         defeat01;			//撃破数
+	int         defeat02;			//撃破数
+	int			greeningNum01;		//緑化本数
+	int			greeningNum02;		//緑化本数
 	int			resultPhase;		//フェイズ管理用
 	float		time;				//フェイズ移行する時間
 	int			rank01;				//プレイヤー１のランク管理用

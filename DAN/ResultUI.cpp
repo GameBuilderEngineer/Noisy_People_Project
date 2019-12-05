@@ -49,9 +49,20 @@ void ResultUI::initialize()
 	//フェイズの初期化(第一フェイズで)
 	resultPhase = PHASE_01;
 
+	//全体緑化率
+	greenigPersent = 0;
+
+	//緑化本数
+	greeningNum01 = 0;
+	greeningNum02 = 0;
+
+	//撃破数
+	defeat01 = 0;
+	defeat02 = 0;
+
 	//ランクの確定(仮)
-	score01 = 70;//マジックナンバーの部分はゲーム部分のスコアのシステムが出来次第変更
-	score02 = 80;//マジックナンバーの部分はゲーム部分のスコアのシステムが出来次第変更
+	score01 = greenigPersent + greeningNum01/10 + defeat01;//全体緑化率+緑化本数割る１０+撃破数(仮）
+	score02 = greenigPersent + greeningNum02/10 + defeat02;//全体緑化率+緑化本数割る１０+撃破数(仮）
 
 	//プレイヤー１のランクの確定
 	if (score01 < 70)
@@ -113,7 +124,7 @@ void ResultUI::initialize()
 
 //============================
 //描画
-//初期化同様の処理
+//ここもめっちゃk持ち悪い
 //============================
 void ResultUI::render()
 {
@@ -122,7 +133,17 @@ void ResultUI::render()
 	uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
 	uiCharacter02->render(resultPhase);	//プレイヤー2の文字描画
 
-	//数字表示はフェイズ４のみ描画
+	//全体緑化率の描画
+	if (resultPhase == PHASE_02)
+	{
+		uiNumber[uiNumberNS::GREENIG_PERSENT].render();
+	}
+
+	if (resultPhase == PHASE_03)
+	{
+		uiNumber[uiNumberNS::GREENIG_PERSENT].render();
+	}
+	//数字表示はフェイズ４から描画
 	if (resultPhase == PHASE_04)
 	{
 		//数字の表示
@@ -156,7 +177,8 @@ void ResultUI::update(float flameTime)
 	//フェイズの更新
 	if (time > 2.0f)
 	{
-		resultPhase=PHASE_02;
+		resultPhase = PHASE_02;
+		uiNumber[uiNumberNS::GREENIG_PERSENT].update(greenigPersent);
 	}
 	if (time > 5.0f)
 	{
@@ -166,8 +188,8 @@ void ResultUI::update(float flameTime)
 	{
 		resultPhase = PHASE_04;
 		//数字
-		const int score[uiNumberNS::NUMBER_TYPE_MAX] = { score01,score02,111,101 };	
-		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+		int score[uiNumberNS::GREENIG_PERSENT] = { greeningNum01,greeningNum02,defeat01,defeat02 };
+		for (int i = 0; i < uiNumberNS::GREENIG_PERSENT; i++)
 		{
 			uiNumber[i].update(score[i]);
 		}

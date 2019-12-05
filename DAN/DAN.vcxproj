@@ -294,6 +294,7 @@
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="VisionState.h" />
     <ClInclude Include="WaveBall.h" />
+    <ClInclude Include="WholeGreening.h" />
     <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Wolf.h" />
@@ -446,6 +447,7 @@
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="VisionState.cpp" />
+    <ClCompile Include="WholeGreening.cpp" />
     <ClCompile Include="Wind.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Wolf.cpp" />

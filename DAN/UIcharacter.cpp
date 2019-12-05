@@ -24,6 +24,7 @@ UIcharacter::UIcharacter()
 	greenMoji = new Greening_Moji;
 	defeatChara = new Defeat_Chara;
 	defeatMoji = new Defeat_Moji;
+	greening = new WholeGreening;
 }
 
 //============================
@@ -37,6 +38,7 @@ UIcharacter::~UIcharacter()
 	delete greenMoji;
 	delete defeatChara;
 	delete defeatMoji;
+	delete greening;
 }
 
 //============================
@@ -50,6 +52,7 @@ void UIcharacter::initialize(int playerType)
 	greenMoji->initialize(playerType);
 	defeatChara->initialize(playerType);
 	defeatMoji->initialize(playerType);
+	greening->initialize();
 }
 
 //============================
@@ -65,9 +68,11 @@ void UIcharacter::render(int resultPhase)
 		break;
 	case PHASE_02:
 		result->render();
+		greening->render();
 		break;
 	case PHASE_03:
 		result->render();
+		greening->render();
 		player->render();
 		greenChara->render();
 		greenMoji->render();
@@ -76,6 +81,7 @@ void UIcharacter::render(int resultPhase)
 		break;
 	case PHASE_04:
 		result->render();
+		greening->render();
 		player->render();
 		greenChara->render();
 		greenMoji->render();
@@ -84,6 +90,7 @@ void UIcharacter::render(int resultPhase)
 		break;
 	case PHASE_05:
 		result->render();
+		greening->render();
 		player->render();
 		greenChara->render();
 		greenMoji->render();
@@ -109,8 +116,10 @@ void UIcharacter::update(int resultPhase,int playerType)
 		result->update();
 		break;
 	case PHASE_02:
+		greening->update();
 		break;
 	case PHASE_03:
+		greening->update();
 		player->update(playerType);
 		greenChara->update(playerType);
 		greenMoji->update(playerType);
