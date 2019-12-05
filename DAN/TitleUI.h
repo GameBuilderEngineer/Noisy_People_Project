@@ -90,5 +90,7 @@ public: //メンバー関数
 	void update(Input *input);			//更新
 	int getSelectState();	//選択肢状態の取得
 	void moveBar();			//バーの移動
-	void ringSE(Input *input);
+	void ringSE(Input *input);//SEを鳴らす処理
+
+private:
 };

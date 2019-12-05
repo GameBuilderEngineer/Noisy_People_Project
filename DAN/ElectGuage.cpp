@@ -82,7 +82,7 @@ void ElectGuage::changeGuage(int power)
 	//“d—Í‚Ì‰º2Œ…‚ğæ‚èo‚µ‚ÄŠ„‡‚ğo‚·
 	if (power == 100 || power == 200 || power == 300)
 	{
-		BasicUI::changeWhidthSize(electGuage,width);
+		BasicUI::changeWhidthSize(electGuage, WIDTH_EN_GUAGE);
 		/*uvCoord01 = D3DXVECTOR2(0.0f, 0.0f);
 		uvCoord02 = D3DXVECTOR2(1.0f, 0.0f);
 		uvCoord03 = D3DXVECTOR2(0.0f, 1.0f);
