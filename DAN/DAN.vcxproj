@@ -172,6 +172,7 @@
     <ClInclude Include="Player1UI.h" />
     <ClInclude Include="Player2UI.h" />
     <ClInclude Include="NormalState.h" />
+    <ClInclude Include="ResultBG.h" />
     <ClInclude Include="SkyVisionState.h" />
     <ClInclude Include="DebugScene.h" />
     <ClInclude Include="StatusFrame.h" />
@@ -324,6 +325,7 @@
     <ClCompile Include="Player1UI.cpp" />
     <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="NormalState.cpp" />
+    <ClCompile Include="ResultBG.cpp" />
     <ClCompile Include="SkyVisionState.cpp" />
     <ClCompile Include="DebugScene.cpp" />
     <ClCompile Include="WaveBall.cpp" />

@@ -13,6 +13,8 @@
 #include "UItex.h"
 #include "UIrank.h"
 #include "UInumber.h"
+#include "ResultBG.h"
+#include "Player.h"
 
 //============================
 //名前空間 定数
@@ -52,6 +54,8 @@ public: //メンバー変数
 	UIrank      uiRank01;			//プレイヤー１のランクのUI
 	UIrank      uiRank02;			//プレイヤー2のランクのUI
 	UInumber	uiNumber[uiNumberNS::NUMBER_TYPE_MAX];//数字
+	ResultBG*   resultBG;			//リザルト背景
+	Player*		player;				//プレイヤーの情報
 	int			score01;			//プレイヤー１のスコア保存用
 	int			score02;			//プレイヤー２のスコア保存用
 	int			resultPhase;		//フェイズ管理用
@@ -60,7 +64,9 @@ public: //メンバー変数
 	int         rank02;				//プレイヤー2のランク管理用
 	bool		playedBGM;			//BGM再生用フラグ
 public: //メンバー関数
-	void initialize();				//初期化
+	ResultUI();						//コンストラクタ
+	~ResultUI();					//デストラクタ
+	void initialize(/*Player *player*/);//初期化
 	void render();					//描画
 	void update(float flameTime);	//更新
 	void uninitialize();			//終了

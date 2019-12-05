@@ -15,15 +15,28 @@
 using namespace resultUiNS;
 
 //============================
-//グローバル変数
+//コンストラクタ
 //============================
+ResultUI::ResultUI()
+{
+	resultBG = new ResultBG;
+}
+
+//============================
+//デストラクタ
+//============================
+ResultUI::~ResultUI()
+{
+	delete resultBG;
+}
 
 //============================
 //初期化
-//ゲームシーンのスコアを引数にもらいランクを確定？
 //============================
-void ResultUI::initialize()
+void ResultUI::initialize(/*Player *player*/)
 {
+	//プレイヤーの情報
+	/*this->player = player;*/
 
 	//BGM再生フラグをtrueで初期化
 	playedBGM = true;
@@ -92,7 +105,8 @@ void ResultUI::initialize()
 
 	}
 
-	
+	//リザルト背景の初期化
+	resultBG->initialize();
 }
 
 //============================
@@ -101,6 +115,7 @@ void ResultUI::initialize()
 //============================
 void ResultUI::render()
 {
+	resultBG->render();					//リザルト背景の描画
 	uiTexture.render(resultPhase);		//テクスチャの描画
 	uiCharacter01.render(resultPhase);	//プレイヤー１の文字描画
 	uiCharacter02.render(resultPhase);	//プレイヤー2の文字描画

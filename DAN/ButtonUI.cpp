@@ -52,7 +52,7 @@ void ButtonUI::initialize()
 	//テクスチャの初期化
 	BasicUI::initialize(button[SHOT], textureNS::reference(textureNS::UI_BUTTON_SHOT));
 	BasicUI::initialize(button[JUMP], textureNS::reference(textureNS::UI_BUTTON_JUMP));
-	BasicUI::initialize(button[VISION], textureNS::reference(textureNS::UI_BUTTON_VISION));
+	BasicUI::initialize(button[VS], textureNS::reference(textureNS::UI_BUTTON_VISION));
 	BasicUI::initialize(button[SV], textureNS::reference(textureNS::UI_BUTTON_SV));
 	BasicUI::initialize(button[SHIFT], textureNS::reference(textureNS::UI_BUTTON_SHIFT));
 
@@ -61,33 +61,17 @@ void ButtonUI::initialize()
 //==================================
 //P1描画
 //==================================
-void ButtonUI::renderP1()
+void ButtonUI::renderP1(int state)
 {
-	//1P用の表示
-	for (int i = 0; i < SHIFT; i++)
-	{
-		position.y = HEIGHT_BUTTON * i + POSITION_BUTTON.y;
-		button[i]->setPosition(position);
-		button[i]->setVertex();
-		button[i]->render();
-	}
-	
+	changeRenderP1(state);
 }
 
 //==================================
 //P2描画
 //==================================
-void ButtonUI::renderP2()
+void ButtonUI::renderP2(int state)
 {
-	//2P用の表示
-	for (int i = 0; i < SHIFT; i++)
-	{
-		position.x = POSITION_BUTTON2.x;
-		position.y = HEIGHT_BUTTON * i + POSITION_BUTTON.y;
-		button[i]->setPosition(position);
-		button[i]->setVertex();
-		button[i]->render();
-	}
+	changeRenderP2(state);
 }
 
 //==================================
@@ -98,10 +82,10 @@ void ButtonUI::renderP2()
 void ButtonUI::update(bool flag,int buttontype)
 {
 	changeAlpha(flag,buttontype);
-	if (buttontype == SHIFT)
+	/*if (buttontype == SHIFT)
 	{
 		changeRender(flag);
-	}
+	}*/
 }
 
 //==================================
@@ -123,13 +107,60 @@ void  ButtonUI::changeAlpha(bool flag,int buttontype)
 //===================================
 //表示ボタンの変更
 //===================================
-void ButtonUI::changeRender(bool visionFlag)
+void ButtonUI::changeRenderP1(int state)
 {
-	if (visionFlag == true)
+	switch (state)
 	{
-		//ショットUIを透明化してシフトUIの描画
-		button[SHOT]->setAlphaAllVertex(0);
-		button[SHOT]->render();
+	case STATE::VISION:
 		button[SHIFT]->render();
+		break;
+
+	case STATE::SKY_VISION:
+		button[SHIFT]->render();
+		break;
+
+	default:
+		for (int i = 0; i < SHIFT; i++)
+		{
+			position.y = HEIGHT_BUTTON * i + POSITION_BUTTON.y;
+			button[i]->setPosition(position);
+			button[i]->setVertex();
+			button[i]->render();
+		}
+		break;
+	}
+}
+
+//===================================
+//表示ボタンの変更
+//===================================
+void ButtonUI::changeRenderP2(int state)
+{
+	switch (state)
+	{
+	case STATE::VISION:
+		position.x = POSITION_BUTTON2.x;
+		button[SHIFT]->setPosition(position);
+		button[SHIFT]->setVertex();
+		button[SHIFT]->render();
+		break;
+
+	case STATE::SKY_VISION:
+		position.x = POSITION_BUTTON2.x;
+		button[SHIFT]->setPosition(position);
+		button[SHIFT]->setVertex();
+		button[SHIFT]->render();
+		break;
+
+	default:
+		for (int i = 0; i < SHIFT; i++)
+		{
+			position.x = POSITION_BUTTON2.x;
+			position.y = HEIGHT_BUTTON * i + POSITION_BUTTON.y;
+			button[i]->setPosition(position);
+			button[i]->setVertex();
+			button[i]->render();
+		}
+		break;
 	}
 }

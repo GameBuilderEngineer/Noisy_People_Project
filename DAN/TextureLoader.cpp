@@ -85,6 +85,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_EN_GUAGE_P1] = { "EnGuage1.png" };
 	textureName[UI_EN_GUAGE_P2] = { "EnGuage2.png" };
 	textureName[UI_EN_TANK] = { "EnGuage_Stock.png" };
+	textureName[UI_TIMER_NUMBER] = { "num_white.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };
@@ -107,6 +108,9 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_GREAT] = { "Great.png" };
 	textureName[RESULT_CLEARE] = { "Cleared.png" };
 	textureName[RESULT_FAILED] = { "Failed.png" };
+
+	//ResultBG
+	textureName[RESULT_BG] = { "Result_BG.png" };
 
 	// etc
 	textureName[NUMBER] = { "num.png" };

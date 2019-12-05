@@ -9,6 +9,11 @@
 #include "Player1UI.h"
 
 //================================
+//using宣言
+//================================
+using namespace playerUiNS;
+
+//================================
 //コンストラクタ
 //================================
 Player1UI::Player1UI()
@@ -44,8 +49,7 @@ Player1UI::~Player1UI()
 void Player1UI::initialize(Player *player)
 {
 	this->player = player;
-	//buttonUiP1->initialize();
-	buttonUiP2->initialize();
+	buttonUiP1->initialize();
 	hpGuage->initialize();
 	charaIcon->initialize(basicUiNS::P1);
 	hpGuageEmp->initialize(basicUiNS::P1);
@@ -59,8 +63,8 @@ void Player1UI::initialize(Player *player)
 //==================================
 void Player1UI::render()
 {
-	//buttonUiP1->renderP1();
-	buttonUiP2->renderP2();
+	state = player->getState();
+	buttonUiP1->renderP1(state);
 	hpGuageEmp->render();
 	hpGuage->render();
 	charaIcon->render();
@@ -78,11 +82,11 @@ void Player1UI::update()
 	getFlag();
 
 	//P1用
-	//buttonUiP1->update(shotFlag, 0);
-	//buttonUiP1->update(jumpFlag, 1);
-	//buttonUiP1->update(visionFlag, 2);
-	//buttonUiP1->update(skyVisionFlag, 3);
-	//buttonUiP1->update(shiftFlag, 4);
+	buttonUiP1->update(shotFlag, 0);
+	buttonUiP1->update(jumpFlag, 1);
+	buttonUiP1->update(visionFlag, 2);
+	buttonUiP1->update(skyVisionFlag, 3);
+	buttonUiP1->update(shiftFlag, 4);
 
 	hpGuage->update(hp);
 	electGuage->update(power);
@@ -102,4 +106,5 @@ void Player1UI::getFlag()
 	jumpFlag = player->canJump();
 	hp = player->getHp();
 	power = player->getPower();
+	state = player->getState();
 }

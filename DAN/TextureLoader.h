@@ -79,6 +79,7 @@ namespace textureNS
 		UI_EN_GUAGE_P1,
 		UI_EN_GUAGE_P2,
 		UI_EN_TANK,
+		UI_TIMER_NUMBER,
 
 		// Result
 		RESULT,
@@ -91,6 +92,7 @@ namespace textureNS
 		RESULT_RYOKUKA,
 		RESULT_PERSENT,
 		RESULT_NEXT,
+		RESULT_BG,
 		//RESULT_NUMBER,
 		RESULT_DEFEAT,
 		RESULT_GEKITAI,
