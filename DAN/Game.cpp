@@ -188,6 +188,7 @@ void Game::initialize() {
 	// ツリー
 	treeManager = new TreeManager;
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	treeManager->setGameMaster(gameMaster);
 
 	// アイテム
 	itemManager = new ItemManager;
@@ -318,8 +319,6 @@ void Game::initialize() {
 		treeManager->createTree(treeData);
 	}
 
-	//ツリーの最大数を取得
-	//gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）
 	aiDirector = new AIDirector;

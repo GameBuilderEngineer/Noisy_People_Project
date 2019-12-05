@@ -145,6 +145,7 @@ HRESULT Director::initialize() {
 
 	//scene
 	scene = new Splash();
+	//scene = new Result();
 	scene->setGameMaster(gameMaster);
 	scene->initialize();
 
@@ -250,7 +251,7 @@ void Director::mainLoop() {
 	{
 		//fader->start();
 		//if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
-			changeNextScene();
+		changeNextScene();
 	}
 	setFrameTime();				//フレーム時間の初期化処理
 	update();					//メイン更新処理

@@ -58,6 +58,12 @@ namespace gameMasterNS {
 	const int	PASSING_REMAINING_ONE_MINUTE	= 0x00000008;//残り時間1分
 
 
+	enum EVENT_TYPE
+	{
+		TO_DEAD,				//枯木へ戻る
+		TO_GREEN_WITH_DIGITAL,	//緑化(デジタル)
+		TO_GREEN_WITH_ANALOG,	//緑化(アナログ)
+	};
 }
 
 //===================================================================================================================================
@@ -74,14 +80,14 @@ struct PlayerTable
 //ツリー情報
 struct TreeTable
 {
-	int				id;					//ツリーID
-	int				treeType;			//ANALOG|DIGITAL
-	int				modelType;			//モデルタイプ
-	int				player;				//緑化したプレイヤー
-	float			eventTime;			//緑化された時間
-	D3DXVECTOR3		position;			//位置
-	D3DXQUATERNION	rotation;			//回転
-	D3DXVECTOR3		scale;				//スケール
+	int							id;					//ツリーID
+	gameMasterNS::EVENT_TYPE	eventType;			//ANALOG|DIGITAL
+	int							modelType;			//モデルタイプ
+	int							player;				//緑化したプレイヤー
+	float						eventTime;			//緑化された時間
+	D3DXVECTOR3					position;			//位置
+	D3DXQUATERNION				rotation;			//回転
+	D3DXVECTOR3					scale;				//スケール
 	
 };
 
@@ -102,7 +108,7 @@ private:
 
 	//木関係情報
 	int						treeNum;										//枯木・緑化木の総計
-	LinkedList<TreeTable>	treeTableList;										//変換順番：緑化された順番
+	LinkedList<TreeTable>	treeTableList;									//変換順番：緑化された順番
 	
 	//プレイヤー
 	PlayerTable				playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
@@ -123,9 +129,9 @@ public:
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
 
 	//木の設定関数
-	void readyTreeTable(int treeNum);							//変換順番変数を準備する
+	void readyTreeTable();											//変換順番変数を準備する
 	void discardConversionOrder();									//変換順番変数を破棄する
-	void recordTreeTable(TreeTable treeTable);				//緑化した木の本数を記録
+	void recordTreeTable(TreeTable treeTable);						//緑化した木の本数を記録
 
 
 	//setter

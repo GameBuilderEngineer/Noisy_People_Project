@@ -57,6 +57,8 @@ private:
 	float greeningRate;							//緑化率
 	bool playedDigitalTreeEffect[gameMasterNS::PLAYER_NUM];
 
+	GameMaster*			gameMaster;				//ゲームマスターへのポインタ
+
 public:
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
@@ -94,6 +96,9 @@ public:
 
 	void changeWireFrame();
 	void changeSolid();
+
+	//Setter
+	void setGameMaster(GameMaster* gameMaster);
 
 	// Getter
 	std::vector<Tree*>& getTreeList();

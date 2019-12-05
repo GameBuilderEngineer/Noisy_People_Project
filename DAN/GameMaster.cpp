@@ -104,6 +104,7 @@ void GameMaster::startGame()
 	gameTimerStop	= false;
 	pause = false;
 	progress = 0x00000000;
+	discardConversionOrder();
 }
 
 //===================================================================================================================================
@@ -136,15 +137,17 @@ bool GameMaster::playActionRamaining1Min()
 //===================================================================================================================================
 void GameMaster::recordTreeTable(TreeTable treeTable)
 {
-	treeTableList.insertFront(treeTable);
-
+	TreeTable data = treeTable;
+	data.eventTime = GAME_TIME - gameTimer;
+	treeTableList.insertFront(data);
+	treeTableList.listUpdate();
 }
 
 //===================================================================================================================================
 //y•ÏŠ·‡”Ô•Ï”‚ð€”õ‚·‚éz
 //===================================================================================================================================
-void GameMaster::readyTreeTable(int treeNum) {
-
+void GameMaster::readyTreeTable() 
+{
 
 }
 
@@ -153,7 +156,7 @@ void GameMaster::readyTreeTable(int treeNum) {
 //===================================================================================================================================
 void GameMaster::discardConversionOrder() {
 	this->treeNum = 0;
-	//SAFE_DELETE_ARRAY(conversionOrder);
+	treeTableList.allClear();
 }
 #pragma endregion
 
@@ -180,11 +183,30 @@ void GameMaster::createGUI()
 	ImGui::Text("gameTime = %f",		gameTimer);
 	ImGui::Text("countDownTimer = %f",	countDownTimer);
 	ImGui::Text("TreeNum = %d",	treeNum);
-	if (ImGui::CollapsingHeader("TreeOrderList"))
+	if (ImGui::CollapsingHeader("TreeTableList"))
 	{
-		for (int i = 0; i < treeNum; i++)
+		ImGui::Text("listNum: %d ", treeTableList.nodeNum);
+		
+		for (int i = 0; i < treeTableList.nodeNum; i++)
 		{
-			//ImGui::Text("conversionOrder[%d] = %d",i, conversionOrder[i]);
+			if (ImGui::CollapsingHeader("TreeTable"))
+			{
+				TreeTable table = *treeTableList.getValue(i);
+				ImGui::Text("No:[%d]",i);				
+				ImGui::Text("TreeId = %d",table.id);
+				ImGui::Text("PlayerNo:%d",table.player+1);
+				ImGui::Text("EventTime = %.02f",table.eventTime);
+				ImGui::Text("model = %d",table.modelType);
+				ImGui::Text("position(%.02f,%.02f,%.02f)",table.position.x,table.position.y,table.position.z);
+				ImGui::Text("rotation(%.02f,%.02f,%.02f,%.02f)",table.rotation.x,table.rotation.y,table.rotation.z,table.rotation.w);
+				ImGui::Text("scale(%.02f,%.02f,%.02f)",table.scale.x,table.scale.y,table.scale.z);
+				switch (table.eventType)
+				{
+				case EVENT_TYPE::TO_DEAD:				ImGui::Text("EVENT:TO_DEAD");					break;
+				case EVENT_TYPE::TO_GREEN_WITH_ANALOG:	ImGui::Text("EVENT:TO_GREEN_WITH_ANALOG");		break;
+				case EVENT_TYPE::TO_GREEN_WITH_DIGITAL:	ImGui::Text("EVENT:TO_GREEN_WITH_DIGITAL");		break;
+				}
+			}
 		}
 	}
 }
