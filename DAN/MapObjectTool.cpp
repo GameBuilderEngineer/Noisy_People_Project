@@ -141,7 +141,7 @@ void MPOJ_TOOLS::outputMpojToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		ImGui::Checkbox("Delete", &deleteFlag);
 
 		//マップオブジェクトの種類
-		const char* listboxMpojType[] = { "STONE_003" ,"STONE_003" "STONE_003"};
+		const char* listboxMpojType[] = { "STONE_003" ,"STONE_003", "STONE_003"};
 		ImGui::ListBox("Mpoj Type", &MpojListboxType, listboxMpojType, mapObjectNS::MAPOBJECT_TYPE::MAPOBJECT_MAX);
 
 		//マップオブジェクトの情報

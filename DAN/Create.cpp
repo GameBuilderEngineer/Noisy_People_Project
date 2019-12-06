@@ -10,6 +10,7 @@
 //===================================================================================================================================
 #include "Create.h"
 #include "Game.h"
+#include "network.h"
 
 //===================================================================================================================================
 //yusingéŒ¾z
@@ -320,8 +321,10 @@ void Create::toolsGUI()
 			meshId = enemyTools->Model[enemyTools->EnemyListboxType];
 			break;
 		case TOOLS_TYPE::TOOLS_ITEM:
+			meshId = itemTools->Model[itemTools->ItemListboxType];
 			break;
 		case TOOLS_TYPE::TOOLS_TREE:
+			meshId = treeTools->Model[treeTools->TreeListboxType];
 			break;
 		case TOOLS_TYPE::TOOLS_MAP_OBJECT:
 			meshId = mapObjTools->Model[mapObjTools->MpojListboxType];
@@ -331,6 +334,7 @@ void Create::toolsGUI()
 		}
 		if (backupMeshId != meshId)
 		{
+			tmpObjRenderer->setStaticMesh(staticMeshNS::reference(meshId));
 			tmpObject->resetMesh(meshId);
 		}
 	}
@@ -341,6 +345,15 @@ void Create::toolsGUI()
 //===================================================================================================================================
 void Create::collideGUI()
 {
+	bool tmpButton = false;
+	ImGui::Checkbox("Test Network", &tmpButton);
+	if (tmpButton)
+	{
+		NETWORK_CLIENT *client = new NETWORK_CLIENT;
+		client->send();
+		SAFE_DELETE(client);
+	}
+
 	//“–‚½‚è”»’è
 	ImGui::Text("Enemy:");
 	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
@@ -369,6 +382,14 @@ void Create::collideGUI()
 			ImGui::Text("%d", i);
 		}
 	}
-
+	ImGui::Text("MapObj:");
+	for (int i = 0; i < mapObjTools->GetMpojMax(); i++)
+	{
+		if (mapObjTools->bodyCollide[i].collide(tmpObject->getBodyCollide()->getCenter(),
+			tmpObject->getRadius(), *mapObjTools->object[i]->getMatrixWorld(), *tmpObject->getMatrixWorld()))
+		{
+			ImGui::Text("%d", i);
+		}
+	}
 }
 #endif

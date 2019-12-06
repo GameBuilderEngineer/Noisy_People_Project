@@ -150,6 +150,9 @@ void BGMManager::outputGUI(void)
 				if (backUpSpeed != tmpSoundParameters->playParameters.speed)
 				{
 					tmpSoundParameters->isSpeed = true;
+				}
+				if (tmpSoundParameters->isSpeed)
+				{
 					SetSpeed();
 				}
 			}

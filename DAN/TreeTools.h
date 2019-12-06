@@ -78,7 +78,7 @@ public:
 	int TreeListboxModel;									//ツリーのモデル(リストボックス)
 	BoundingSphere *bodyCollide;							//当たり判定
 	Object** object;										//オブジェクト
-
+	int Model[treeNS::TREE_TYPE::TREE_TYPE_MAX];
 	//GUI
 	void outputTreeToolsGUI(int GUIid,						//GUI
 		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);

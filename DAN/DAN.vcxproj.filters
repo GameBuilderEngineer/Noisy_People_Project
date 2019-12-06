@@ -343,6 +343,9 @@
     <Filter Include="Constant Layer\Collision\Cylinder">
       <UniqueIdentifier>{4e7b6768-8cad-46b1-85f4-0ca83835b231}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Network">
+      <UniqueIdentifier>{a4c35686-eed5-4a24-81e5-9399c4fbad0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -774,6 +777,9 @@
     </ClCompile>
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="network.cpp">
+      <Filter>Game Layer\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1228,6 +1234,9 @@
     </ClInclude>
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="network.h">
+      <Filter>Game Layer\Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

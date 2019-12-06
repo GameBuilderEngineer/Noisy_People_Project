@@ -72,13 +72,13 @@ public:
 	int ItemListboxType;									//アイテムの種類(リストボックス)
 	BoundingSphere *bodyCollide;							//当たり判定
 	Object** object;										//オブジェクト
+	int Model[itemNS::ITEM_TYPE::ITEM_TYPE_MAX];
 
 	//GUI
 	void outputItemToolsGUI(int GUIid,						//GUI
 		const D3DXVECTOR3 pos,const D3DXVECTOR3 dir);
 
 	//レンダラー
-	int  GetStaticMeshID(short itemType);					//メッシュIDを取得
 	void initRender();										//レンダラーの初期化
 	void initObject();										//オブジェクトの初期化
 	void update();											//更新

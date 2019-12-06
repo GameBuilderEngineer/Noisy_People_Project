@@ -134,6 +134,7 @@
     <ClCompile Include="fastDraw2D.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="network.cpp" />
     <ClCompile Include="show.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
@@ -142,6 +143,7 @@
     <ClInclude Include="fastDraw2D.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="network.h" />
     <ClInclude Include="show.h" />
     <ClInclude Include="test.h" />
   </ItemGroup>
