@@ -10,6 +10,7 @@
 #include "TextureLoader.h"
 #include "Input.h"
 #include "VirtualController.h"
+#include "BasicUI.h"
 
 //============================
 //名前空間 定数
@@ -42,17 +43,17 @@ namespace uiRankNS
 //============================
 //クラス定義
 //============================
-class UIrank
+class UIrank:public BasicUI
 {
 public: //メンバー変数
-	Sprite * rank[uiRankNS::RANK_MAX];			//スプライトの作成
+	Sprite * rank[basicUiNS::PLAYER_TYPE_MAX][uiRankNS::RANK_MAX];//スプライトの作成
 	int widthSize;								//幅のサイズ管理用
 	int heightSize;								//高さサイズ管理用
 	bool playedSE;								//SE再生フラグ
 public: //メンバー関数
-	void initialize(int rankType, int playerType);
-	void render(int rankType);
-	void update(int rankType);
-	void uninitialize(int rankType);
-	void changeSize(int rankType);		//拡大縮小関数
+	UIrank();//コンストラクタ
+	~UIrank();//デストラクタ
+	void initialize();//初期化
+	void render(int rankType,int rankType2);//描画
+	void update(int rankType1, int rankType2);//更新
 };
