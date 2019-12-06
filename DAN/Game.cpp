@@ -445,7 +445,6 @@ void Game::update(float _frameTime) {
 			}
 			virtual void update() {
 				position = *syncPosition;
-
 				Instance::update();
 			};
 		};
@@ -476,8 +475,8 @@ void Game::update(float _frameTime) {
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
 	//緑化状況10%
-	if (treeManager->getGreeningRate() >= 0.1 && 
-		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10))
+	if ((input->wasKeyPressed('M')) || treeManager->getGreeningRate() >= 0.1 &&
+		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
@@ -984,7 +983,7 @@ void Game::test()
 		itemManager->createItem(unko);
 	}
 	// 3Dモデル表示確認用（アイテムの更新）
-	if (input->wasKeyPressed('P'))
+	if (input->wasKeyPressed('N'))
 	{
 		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
 		itemManager->createItem(abc);

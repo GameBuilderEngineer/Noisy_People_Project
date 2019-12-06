@@ -10,6 +10,8 @@ using namespace telopManagerNS;
 
 TelopManager::TelopManager()
 {
+	//ƒTƒEƒ“ƒhÄ¶
+	announceTelop = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop,false,NULL,false,NULL };
 }
 
 
@@ -164,6 +166,7 @@ void TelopManager::play(int type)
 {
 	if (playFlag == false)
 	{
+		SoundInterface::SE->playSound(&announceTelop);
 		telop[type]->playTelop();
 		telop[TELOP_INFO_BAR]->playTelopBar();
 		playFlag = true;

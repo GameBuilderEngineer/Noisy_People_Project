@@ -6,7 +6,8 @@
 #pragma once
 #include "Telop.h"
 #include "Sprite.h"
-
+#include "Sound.h"
+#include "SoundBase.h"
 
 //=============================================================================
 // –¼‘O‹óŠÔ
@@ -35,6 +36,9 @@ private:
 	Telop* telop[telopManagerNS::MAX_TELOP];
 
 	bool playFlag;
+
+	
+	PLAY_PARAMETERS announceTelop;
 
 public:
 	TelopManager();
