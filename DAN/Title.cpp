@@ -110,7 +110,7 @@ void Title::initialize()
 	
 	//タイトルフィールド（テスト）
 	titleField = new Object();
-	titleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	titleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 	titleFieldRenderer->registerObject(titleField);
 	titleField->initialize(&D3DXVECTOR3(0, 0, 0));
 
