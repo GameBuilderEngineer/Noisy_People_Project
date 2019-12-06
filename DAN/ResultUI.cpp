@@ -64,6 +64,10 @@ void ResultUI::initialize()
 	score01 = greenigPersent + greeningNum01/10 + defeat01;//全体緑化率+緑化本数割る１０+撃破数(仮）
 	score02 = greenigPersent + greeningNum02/10 + defeat02;//全体緑化率+緑化本数割る１０+撃破数(仮）
 
+	//**********************************************
+	//70以下でFAILED,70以上８０以下CLEARE         //
+	//80以上90以下GREAT,90以上でEXCELLENT         //
+	//**********************************************
 	//プレイヤー１のランクの確定
 	if (score01 < 70)
 	{
