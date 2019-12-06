@@ -272,9 +272,9 @@ void UpdateMoveP(float f_TimeDelta)
 
 	// アニメーションを更新 
 	//必ず入れてください、さもないと、動画が動けない
-	UpdateAnimation(MoveP.Animation, TimePerFrame * MoveP.ActionSpeed);
+	UpdateAnimation(MoveP.Animation, f_TimeDelta * MoveP.ActionSpeed);
 
-	MoveP.fTimeDelta = f_TimeDelta;
+	//MoveP.fTimeDelta = f_TimeDelta;
 }
 
 //=============================================================================

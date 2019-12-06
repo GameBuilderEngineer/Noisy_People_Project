@@ -412,7 +412,7 @@ void Game::update(float _frameTime) {
 	// マップオブジェクトの更新
 	mapObjectManager->update(frameTime);
 
-	UpdateMoveP(0.01f);
+	UpdateMoveP(frameTime);
 
 	//キャラクターの場所と回転の連携
 	MOVEP *mp = GetMovePAdr();
