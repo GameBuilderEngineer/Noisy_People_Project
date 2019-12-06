@@ -37,7 +37,6 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	MoveP.ActionSpeed = 1.25f;
 
 
-
 	// ‰‚ß‚Ä‰Šú‰»
 	if (FirstInit == true)
 	{
@@ -128,6 +127,8 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 
 	}
 
+	MoveP.Animation->MotionEnd = true;
+
 	return S_OK;
 
 }
@@ -180,17 +181,17 @@ void UpdateMoveP(float f_TimeDelta)
 		else if (input->isKeyDown('S'))
 		{
 			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkBackward;
+			MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
 		}
 		else if (input->isKeyDown('A'))
 		{
 			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkStrafeLeft;
+			MoveP.Animation->NextAnimID = MoveP_WalkLeft;
 		}
 		else if (input->isKeyDown('D'))
 		{
 			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkStrafeRight;
+			MoveP.Animation->NextAnimID = MoveP_WalkRight;
 		}
 		else
 		{
@@ -254,8 +255,6 @@ void UpdateMoveP(float f_TimeDelta)
 	if (MoveP.IsDeath)
 	{
 		MoveP.Animation->AnimController->SetTrackPosition(0, 3.8f);
-
-
 	}
 
 
