@@ -146,9 +146,9 @@ void GameMaster::recordTreeTable(TreeTable treeTable)
 //===================================================================================================================================
 //【変換順番変数を準備する】
 //===================================================================================================================================
-void GameMaster::readyTreeTable() 
+void GameMaster::setTreeNum(int num) 
 {
-
+	treeNum = num;
 }
 
 //===================================================================================================================================
@@ -169,10 +169,94 @@ void GameMaster::setProgress(int achievement) { progress |= achievement; }
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
-PlayerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}	//プレイヤー情報の取得
-float GameMaster::getGameTime() {return gameTimer;}							//ゲーム制限時間の取得
+PlayerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}				//プレイヤー情報の取得
+float GameMaster::getGameTime() {return gameTimer;}										//ゲーム制限時間の取得
 int GameMaster::getProgress() { return progress; }
 bool GameMaster::whetherAchieved(int ahievement) { return progress & ahievement; }
+//緑化率の取得
+int	 GameMaster::getGreeningRate() {
+	int numGreening = 0;
+	for (int i = 0; i < treeTableList.nodeNum; i++)
+	{
+		TreeTable data = *treeTableList.getValue(i);
+		switch (data.eventType)
+		{
+		case TO_DEAD: numGreening--;				break;
+		case TO_GREEN_WITH_ANALOG:numGreening++;	break;
+		case TO_GREEN_WITH_DIGITAL:numGreening++;	break;
+		}
+	}
+	float rate = numGreening / treeNum;
+	return (int)(rate*100.0f);
+}													
+//緑化本数
+int  GameMaster::getGreeningTreeNum(int playerNo)
+{
+	int numGreening = 0;
+	for (int i = 0; i < treeTableList.nodeNum; i++)
+	{
+		TreeTable data = *treeTableList.getValue(i);
+		if (data.player != playerNo)continue;
+		switch (data.eventType)
+		{
+		case TO_GREEN_WITH_ANALOG:numGreening++;	break;
+		case TO_GREEN_WITH_DIGITAL:numGreening++;	break;
+		}
+	}
+	return numGreening;
+}
+//撃退エネミー数
+int  GameMaster::getKillEnemyNum(int playerNo)
+{
+	return killEnemyNum[playerNo];
+}
+//イベントリストの取得
+int GameMaster::getEventList(TreeTable* out,float time)
+{
+	int eventNum = 0;
+	
+	//取得した時間からイベントの数を取得する。
+	for (int i = 0;i< treeTableList.nodeNum;i++)
+	{
+		TreeTable table = *treeTableList.getValue(i);	//イベントを取得
+		if (table.playBacked)continue;					//既に再生済みなので、スルー
+		if (time > table.eventTime)	eventNum++;			//今再生すべきイベントなので、イベント数を加算
+	}
+
+	//リストの作成
+	//・イベントリストの取得要求有(outにポインタ有)
+	//・イベント数が0でない
+	if (out && eventNum)
+	{
+		//アウトプットするイベントリストを作成する。
+		TreeTable* list = NULL;
+		list = new TreeTable[eventNum];
+		int current = 0;
+		for (int i = 0; i < treeTableList.nodeNum; i++)
+		{
+			//現在値がカウントしたイベント数を超えたらスルー[メモリガード]
+			if (current >= eventNum)continue;
+			
+			//イベントを取得
+			TreeTable table = *treeTableList.getValue(i);
+
+			//既に再生済みならスルー
+			if (table.playBacked)continue;
+
+			//今再生すべきイベントなので、リストへ登録する
+			if (time >= table.eventTime)		
+			{
+				//リストへ登録
+				list[current] = table;
+				current++;
+			}
+		}
+
+		out = list;
+	}
+
+	return eventNum;
+}
 
 //===================================================================================================================================
 //【GUI】

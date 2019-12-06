@@ -59,12 +59,7 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	gameMaster = NULL;
 
 #if 0	// ツリーツールのデータを読み込む
-	TREE_TOOLS* treeTools = new TREE_TOOLS;
-	for (int i = 0; i < treeTools->GetTreeMax(); i++)
-	{
-		createTree(treeTools->GetTreeSet(i));
-	}
-	SAFE_DELETE(treeTools);
+
 #endif
 }
 
@@ -431,6 +426,19 @@ void TreeManager::changeSolid()
 	cTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
 	cLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
 };
+
+//=============================================================================
+//【ツールデータを使用してツリーを作成】
+//=============================================================================
+void TreeManager::createUsingTool()
+{
+	TREE_TOOLS* treeTools = new TREE_TOOLS;
+	for (int i = 0; i < treeTools->GetTreeMax(); i++)
+	{
+		createTree(treeTools->GetTreeSet(i));
+	}
+	SAFE_DELETE(treeTools);
+}
 
 //=============================================================================
 // ツリーオブジェクトの作成

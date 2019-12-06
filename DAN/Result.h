@@ -12,6 +12,7 @@
 #include "AbstractScene.h"
 #include "ResultUI.h"
 #include "StaticMeshRenderer.h"
+#include "TreeManager.h"
 //#include "Sprite.h"
 //#include "UIResult.h"
 //#include "SceneEffect.h"
@@ -21,8 +22,12 @@
 //===================================================================================================================================
 namespace resultNS
 {
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION =	D3DXQUATERNION(0.0f, 300.0f, -300.0f, 0.0f);
-	const float			 CAMERA_SPEED				= 30.0f;
+	const D3DXQUATERNION	CAMERA_RELATIVE_QUATERNION	= D3DXQUATERNION(0.0f, 300.0f, -300.0f, 0.0f);
+	const float				CAMERA_SPEED				= 30.0f;
+
+	//再生速度
+	const float				PLAYBACK_SPEED				= 10.0f;
+
 }
 
 //===================================================================================================================================
@@ -37,6 +42,9 @@ private:
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 
+	TreeManager*					treeManager;		//ツリー
+
+	float							playbackTimer;		//再生タイマー
 
 public:
 	Result(void);

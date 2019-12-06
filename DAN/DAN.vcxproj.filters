@@ -769,10 +769,14 @@
     <ClCompile Include="DigitalShiftEffect.cpp">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="DeathState.cpp" />
-    <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="TreeEffect.cpp">
       <Filter>Game Layer\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>Constant Layer\Collision\Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathState.cpp">
+      <Filter>Game Layer\Player\State\DeathState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1223,10 +1227,14 @@
     <ClInclude Include="DigitalShiftEffect.h">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="DeathState.h" />
-    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="TreeEffect.h">
       <Filter>Game Layer\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>Constant Layer\Collision\Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathState.h">
+      <Filter>Game Layer\Player\State\DeathState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

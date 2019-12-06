@@ -28,9 +28,6 @@ Result::Result(void)
 	// 次のシーン( タイトル )
 	nextScene = SceneList::TITLE;
 
-
-
-
 }
 
 //===================================================================================================================================
@@ -40,6 +37,7 @@ Result::~Result(void)
 {
 	// サウンドの停止
 	SoundInterface::BGM->uninitSoundStop();
+
 }
 
 //===================================================================================================================================
@@ -47,6 +45,8 @@ Result::~Result(void)
 //===================================================================================================================================
 void Result::initialize()
 {
+	//リザルトUIの初期化
+	resultUI.initialize();
 
 	//テストフィールド
 	testField = new Object();
@@ -77,8 +77,14 @@ void Result::initialize()
 		camera->nearZ,
 		camera->farZ);
 
-	//リザルトUIの初期化
-	resultUI.initialize();
+	// ツリー
+	treeManager = new TreeManager;
+	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	treeManager->createUsingTool();
+	treeManager->switchingNormalView(gameMasterNS::PLAYER_1P);
+	
+	//リプレイタイマー
+	playbackTimer = 0.0f;
 
 }
 
@@ -87,10 +93,10 @@ void Result::initialize()
 //===================================================================================================================================
 void Result::uninitialize(void)
 {
+	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
-
 	resultUI.uninitialize();
 }
 
@@ -109,6 +115,59 @@ void Result::update(float _frameTime)
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
 
+	//ゲームマスターからイベントを取得し、再生
+	if (gameMaster->getEventList(NULL,playbackTimer) > 0)
+	{
+		TreeTable* eventList = NULL;	//イベントリスト
+		int eventNum;					//イベント数
+
+		//イベントを取得
+		eventNum = gameMaster->getEventList(eventList,playbackTimer);
+
+		//取得したイベントを実行する
+		for (int i = 0; i < eventNum; i++)
+		{
+			//イベント対象のツリー
+			Tree* selectTree = NULL;
+			
+			//イベント対象のツリーを選択
+			for (int i = 0; i < treeManager->getTreeList().size(); i++)
+			{
+				if (selectTree)continue;//選択済みならスルー
+				Tree* tree = treeManager->getTreeList()[i];
+				//イベント対象ツリーをIDにより検索
+				if (tree->getTreeData()->treeID == eventList[i].id)
+				{
+					selectTree = tree;
+					i = treeManager->getTreeList().size();//検索終了
+				}
+			}
+			
+			//イベントの対象ツリーが存在しない場合はスルー
+			if (selectTree == NULL)continue;
+
+			//イベント別にアクションをする
+			switch (eventList[i].eventType)
+			{
+			case gameMasterNS::TO_DEAD:
+				selectTree->transState();
+				break;
+			case gameMasterNS::TO_GREEN_WITH_ANALOG:
+				selectTree->transState();
+				break;
+			case gameMasterNS::TO_GREEN_WITH_DIGITAL:
+				selectTree->transState();
+				break;
+			}
+		}
+
+		//取得したイベントリストを削除
+		SAFE_DELETE_ARRAY(eventList);
+	}
+	//ツリーマネージャーの更新
+	treeManager->update(frameTime);
+
+
 
 	//リザルトフェイズが5の時のみ Enterまたは〇ボタンでタイトルへ
 	if (resultUI.resultPhase == resultUiNS::PHASE_05&&
@@ -122,12 +181,10 @@ void Result::update(float _frameTime)
 		changeScene(nextScene);
 	}
 
-
-
 	//カメラの更新
 	{
 		float rate = (sinf(sceneTimer*6)/2.0f) + 0.5f;
-		float fov = UtilityFunction::lerp((D3DX_PI / 180) * 70, (D3DX_PI / 180) * 90, rate);
+		float fov = UtilityFunction::lerp((D3DX_PI / 180) * 70, (D3DX_PI / 180) * 90, 0.5);
 		camera->setFieldOfView(fov);
 		camera->rotation(D3DXVECTOR3(0, 1, 0), CAMERA_SPEED*frameTime);
 		camera->update();
@@ -171,6 +228,9 @@ void Result::render3D(Camera currentCamera)
 {
 	//テストフィールドの描画
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//ツリーの描画
+	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 }
 

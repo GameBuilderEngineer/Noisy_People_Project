@@ -45,8 +45,6 @@ namespace gameMasterNS {
 		RANK_NUM
 	};
 
-
-
 	const float GAME_TIME				= 60.0f * 4.0f;			//4分
 	const float COUNT_DOWN_TIME			= 3.0f;					//3秒
 
@@ -85,6 +83,7 @@ struct TreeTable
 	int							modelType;			//モデルタイプ
 	int							player;				//緑化したプレイヤー
 	float						eventTime;			//緑化された時間
+	bool						playBacked;			//リザルト再生(完了:true)
 	D3DXVECTOR3					position;			//位置
 	D3DXQUATERNION				rotation;			//回転
 	D3DXVECTOR3					scale;				//スケール
@@ -110,6 +109,9 @@ private:
 	int						treeNum;										//枯木・緑化木の総計
 	LinkedList<TreeTable>	treeTableList;									//変換順番：緑化された順番
 	
+	//エネミー撃退数
+	int						killEnemyNum[gameMasterNS::PLAYER_NUM];			//撃退エネミー数
+
 	//プレイヤー
 	PlayerTable				playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
 	int						progress;										//達成状況
@@ -129,10 +131,18 @@ public:
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
 
 	//木の設定関数
-	void readyTreeTable();											//変換順番変数を準備する
+	void setTreeNum(int num);										//ツリーの数を保存する
 	void discardConversionOrder();									//変換順番変数を破棄する
 	void recordTreeTable(TreeTable treeTable);						//緑化した木の本数を記録
-
+	int	 getGreeningRate();											//緑化率の取得
+	int  getGreeningTreeNum(int playerNo);							//緑化本数
+	int  getKillEnemyNum(int playerNo);								//撃退エネミー数
+	
+	//再生イベントの取得
+	//※取得したリストは必ずSAFE_DELETE_ARRAYすること
+	//TreeTable* out ：ポインタを代入するとリストが格納される。
+	//float		 time：経過時間を代入する
+	int getEventList(TreeTable* out,float time);
 
 	//setter
 	void setConversionOrder(int* newValue);

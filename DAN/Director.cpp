@@ -145,7 +145,6 @@ HRESULT Director::initialize() {
 
 	//scene
 	scene = new Splash();
-	//scene = new Result();
 	scene->setGameMaster(gameMaster);
 	scene->initialize();
 
@@ -245,6 +244,13 @@ void Director::mainLoop() {
 		scene->changeScene(SceneList::SPLASH);
 		changeNextScene();
 	}
+#ifdef _DEBUG
+	else if (input->wasKeyPressed('1'))
+	{
+		scene->changeScene(SceneList::RESULT);
+		changeNextScene();
+	}
+#endif // _DEBUG
 
 	//シーン切替フラグの確認
 	if (scene->checkChangeOrder())

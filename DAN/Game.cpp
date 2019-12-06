@@ -143,14 +143,6 @@ void Game::initialize() {
 	light->initialize();
 
 
-	//枯木の初期化
-	deadTree = new DeadTree();
-	//木Aの初期化
-	treeA = new TreeTypeA();
-	//木Bの初期化
-	treeB = new TreeTypeB();
-	//石の初期化
-	stone = new Stone();
 	//スカイドームの初期化
 	sky = new Sky();
 	//海面の初期化
@@ -260,64 +252,67 @@ void Game::initialize() {
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
 
-	//エネミーをランダムに設置する
-	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	{
-		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-		pos -= D3DXVECTOR3(200, 0, 240);
-		enemyNS::ENEMYSET tmp =
-		{
-			enemyManager->issueNewEnemyID(),
-			rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
-			stateMachineNS::PATROL,
-			pos,
-			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-		};
-		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-		enemyManager->createEnemy(p);
-	}
 
-	// ツリーをランダムに設置する
-	treeNS::TreeData treeData;
-	treeData.hp = 0;
-	treeData.type = treeNS::ANALOG_TREE;
-	treeData.greenState = treeNS::DEAD;
-	treeData.isAttaked = false;
+	////エネミーをランダムに設置する
+	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	//{
+	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+	//	pos -= D3DXVECTOR3(200, 0, 240);
+	//	enemyNS::ENEMYSET tmp =
+	//	{
+	//		enemyManager->issueNewEnemyID(),
+	//		rand() % enemyNS::ENEMY_TYPE::TYPE_MAX,
+	//		stateMachineNS::PATROL,
+	//		pos,
+	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	//	};
+	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+	//	enemyManager->createEnemy(p);
+	//}
 
-	treeData.size = treeNS::STANDARD;
-	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 250; i++)
-	{
-		treeData.initialPosition =
-			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		treeData.treeID = treeManager->issueNewTreeID();
-		treeManager->createTree(treeData);
-	}
+	// ツリーをツール情報を元に設置する
+	treeManager->createUsingTool();
+	//// ツリーをランダムに設置する
+	//treeNS::TreeData treeData;
+	//treeData.hp = 0;
+	//treeData.type = treeNS::ANALOG_TREE;
+	//treeData.greenState = treeNS::DEAD;
+	//treeData.isAttaked = false;
 
-	treeData.size = treeNS::LARGE;
-	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 15; i++)
-	{
-		treeData.initialPosition =
-			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		treeData.treeID = treeManager->issueNewTreeID();
-		
-		treeManager->createTree(treeData);
-	}
+	//treeData.size = treeNS::STANDARD;
+	//treeData.model = treeNS::B_MODEL;
+	//for (int i = 0; i < 250; i++)
+	//{
+	//	treeData.initialPosition =
+	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+	//	treeData.treeID = treeManager->issueNewTreeID();
+	//	treeManager->createTree(treeData);
+	//}
 
-	treeData.size = treeNS::VERY_LARGE;
-	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 2; i++)
-	{
-		treeData.initialPosition =
-			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		treeData.treeID = treeManager->issueNewTreeID();
+	//treeData.size = treeNS::LARGE;
+	//treeData.model = treeNS::B_MODEL;
+	//for (int i = 0; i < 15; i++)
+	//{
+	//	treeData.initialPosition =
+	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+	//	treeData.treeID = treeManager->issueNewTreeID();
+	//	
+	//	treeManager->createTree(treeData);
+	//}
 
-		treeManager->createTree(treeData);
-	}
+	//treeData.size = treeNS::VERY_LARGE;
+	//treeData.model = treeNS::B_MODEL;
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	treeData.initialPosition =
+	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+	//	treeData.treeID = treeManager->issueNewTreeID();
+
+	//	treeManager->createTree(treeData);
+	//}
 
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）
@@ -343,10 +338,6 @@ void Game::uninitialize() {
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(maleRenderer);
 	SAFE_DELETE(femaleRenderer);
-	SAFE_DELETE(deadTree);
-	SAFE_DELETE(treeA);
-	SAFE_DELETE(treeB);
-	SAFE_DELETE(stone);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
 	//SAFE_DELETE(testEffect);
@@ -500,14 +491,6 @@ void Game::update(float _frameTime) {
 	}
 	
 
-	//枯木の更新
-	deadTree->update();
-	//木Aの更新
-	treeA->update();
-	//木Bの更新
-	treeB->update();
-	//石の更新
-	stone->update();
 	//スカイドームの更新
 	sky->update();
 	//海面の更新

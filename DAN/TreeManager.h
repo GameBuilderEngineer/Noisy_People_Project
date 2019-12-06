@@ -67,6 +67,7 @@ public:
 
 	//ツリーの生成
 	void createTree(treeNS::TreeData treeData);
+	void createUsingTool();
 
 	//アナログとデジタルの変換
 	void swapDA(Tree* tree,int beforeType);
