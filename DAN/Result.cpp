@@ -47,6 +47,12 @@ void Result::initialize()
 {
 	//リザルトUIの初期化
 	resultUI.initialize();
+	
+	resultUI.greenigPersent = 0;//全体緑化率
+	resultUI.greeningNum01 =0;//player1の緑化本数
+	resultUI.greeningNum02 = 0;//player2の緑化本数
+	resultUI.defeat01 = 0;//player1の撃破数
+	resultUI.defeat02 = 0;//player2の撃破数
 
 	//テストフィールド
 	testField = new Object();
@@ -98,8 +104,8 @@ void Result::uninitialize(void)
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
 	resultUI.uninitialize();
-}
 
+}
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================

@@ -153,12 +153,15 @@
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DeathState.h" />
+    <ClInclude Include="Defeat_Chara.h" />
+    <ClInclude Include="Defeat_Moji.h" />
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
     <ClInclude Include="ElectTank.h" />
+    <ClInclude Include="Greenig_Chara.h" />
     <ClInclude Include="GreeningArea.h" />
     <ClInclude Include="Battery.h" />
     <ClInclude Include="Bear.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="DebugBox.h" />
+    <ClInclude Include="Greening_Moji.h" />
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
@@ -173,6 +177,9 @@
     <ClInclude Include="Player1UI.h" />
     <ClInclude Include="Player2UI.h" />
     <ClInclude Include="NormalState.h" />
+    <ClInclude Include="Player_Chara.h" />
+    <ClInclude Include="ResultBG.h" />
+    <ClInclude Include="Result_chara.h" />
     <ClInclude Include="SkyVisionState.h" />
     <ClInclude Include="DebugScene.h" />
     <ClInclude Include="StatusFrame.h" />
@@ -288,6 +295,7 @@
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="VisionState.h" />
     <ClInclude Include="WaveBall.h" />
+    <ClInclude Include="WholeGreening.h" />
     <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Wolf.h" />
@@ -306,12 +314,15 @@
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DeathState.cpp" />
+    <ClCompile Include="Defeat_Chara.cpp" />
+    <ClCompile Include="Defeat_Moji.cpp" />
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
     <ClCompile Include="ElectTank.cpp" />
+    <ClCompile Include="Greenig_Chara.cpp" />
     <ClCompile Include="GreeningArea.cpp" />
     <ClCompile Include="Battery.cpp" />
     <ClCompile Include="Bear.cpp" />
@@ -319,6 +330,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DebugBox.cpp" />
+    <ClCompile Include="Greening_Moji.cpp" />
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
@@ -326,6 +338,9 @@
     <ClCompile Include="Player1UI.cpp" />
     <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="NormalState.cpp" />
+    <ClCompile Include="Player_Chara.cpp" />
+    <ClCompile Include="ResultBG.cpp" />
+    <ClCompile Include="Result_chara.cpp" />
     <ClCompile Include="SkyVisionState.cpp" />
     <ClCompile Include="DebugScene.cpp" />
     <ClCompile Include="WaveBall.cpp" />
@@ -434,6 +449,7 @@
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VertexAccessor.cpp" />
     <ClCompile Include="VisionState.cpp" />
+    <ClCompile Include="WholeGreening.cpp" />
     <ClCompile Include="Wind.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Wolf.cpp" />

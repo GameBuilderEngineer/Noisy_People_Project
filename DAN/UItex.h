@@ -47,21 +47,21 @@ namespace uiTexNS
 	const float END_POS_LINE = (960 * WINDOW_WIDTH / 1920);		//最終位置のx座標
 
 	//フレーム
-	const int WIDTH_FLAME = (860 * WINDOW_WIDTH / 1920);			//幅
-	const int HEIGHT_FLAME = (755 * WINDOW_HEIGHT / 1080);			//高さ
+	const int WIDTH_FLAME = (1024 * WINDOW_WIDTH / 1920);			//幅
+	const int HEIGHT_FLAME = (1024 * WINDOW_HEIGHT / 1080);			//高さ
 	const D3DXVECTOR3 POSITION_FLAME_01 = D3DXVECTOR3(480 * WINDOW_WIDTH / 1920, 2000, 0);//位置
 	const D3DXVECTOR3 POSITION_FLAME_02 = D3DXVECTOR3(1440 * WINDOW_WIDTH / 1920, 2000, 0);//位置
 	const float END_POS_FLAME = (578 * WINDOW_HEIGHT / 1080);		//最終位置のy座標
 
 	//キャラA
-	const int WIDTH_CHARA_A = (478 * WINDOW_WIDTH / 1920);		//幅
-	const int HEIGHT_CHARA_A = (624 * WINDOW_HEIGHT / 1080);		//高さ
+	const int WIDTH_CHARA_A = (512 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_CHARA_A = (1024 * WINDOW_HEIGHT / 1080);		//高さ
 	const D3DXVECTOR3 POSITION_CHARA_A = D3DXVECTOR3(480 * WINDOW_WIDTH / 1920, 2500, 0);//位置
 	const float END_POS_CHARA_A = (618 * WINDOW_HEIGHT / 1080);	//最終座標のy座標
 
 	//キャラB
-	const int WIDTH_CHARA_B = (478 * WINDOW_WIDTH / 1920);		//幅
-	const int HEIGHT_CHARA_B = (624 * WINDOW_HEIGHT / 1080);		//高さ
+	const int WIDTH_CHARA_B = (512 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_CHARA_B = (1024 * WINDOW_HEIGHT / 1080);		//高さ
 	const D3DXVECTOR3 POSITION_CHARA_B = D3DXVECTOR3(1440 * WINDOW_WIDTH / 1920,2500, 0);//位置
 	const float END_POS_CHARA_B = (628 * WINDOW_HEIGHT / 1080);	//最終座標のy座標
 

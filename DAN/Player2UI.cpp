@@ -56,7 +56,8 @@ void Player2UI::initialize(Player *player)
 //==================================
 void Player2UI::render()
 {
-	buttonUi->renderP1();
+	state = player->getState();
+	buttonUi->renderP2(state);
 	hpGuageEmp->render();
 	hpGuage->render();
 	charaIcon->render();
@@ -70,19 +71,16 @@ void Player2UI::render()
 //==================================
 void Player2UI::update()
 {
+
 	//各フラグの獲得
-	skyVisionFlag = player->canDoSkyVision();
-	shiftFlag = player->canShift();
-	shotFlag = player->canShot();
-	visionFlag = player->canDoVision();
-	hp = player->getHp();
-	power = player->getPower();
+	getFlag();
 
 	//P2用
+	buttonUi->update(shotFlag, 0);
+	buttonUi->update(jumpFlag, 1);
+	buttonUi->update(visionFlag, 2);
 	buttonUi->update(skyVisionFlag, 3);
-	buttonUi->update(shiftFlag, 2);
-	buttonUi->update(shotFlag, 1);
-	buttonUi->update(visionFlag, 0);
+	buttonUi->update(shiftFlag, 4);
 
 	//HPゲージ処理
 	hpGuage->update(hp);
@@ -90,4 +88,19 @@ void Player2UI::update()
 	//電力ゲージ処理
 	electGuage->update(power);
 	electTank->update(power, basicUiNS::P2);
+}
+
+//==================================
+//各フラグの獲得
+//==================================
+void Player2UI::getFlag()
+{
+	//各フラグの獲得
+	skyVisionFlag = player->canDoSkyVision();
+	shiftFlag = player->canShift();
+	shotFlag = player->canShot();
+	visionFlag = player->canDoVision();
+	jumpFlag = player->canJump();
+	hp = player->getHp();
+	power = player->getPower();
 }

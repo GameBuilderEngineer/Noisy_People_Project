@@ -1115,6 +1115,9 @@ void Player::outputGUI()
 		//操作有効フラグ
 		//シフト
 		ImGui::Text(whetherValidOperation(ENABLE_SHIFT) ? "ENABLE_SHIFT:ON":"ENABLE_SHIFT:OFF");
+		ImGui::Text(whetherValidOperation(ENABLE_JUMP) ? "ENABLE_JUMP:ON" : "ENABLE_JUMPT:OFF");
+		ImGui::Text(whetherValidOperation(ENABLE_VISION) ? "ENABLE_VISION:ON" : "ENABLE_VISION:OFF");
+		ImGui::Text(whetherValidOperation(ENABLE_SKY_VISION) ? "ENABLE_SKY_VISION:ON" : "ENABLE_SKY_VISION:OFF");
 
 		//接地関係
 		ImGui::Text(onGround ? "onGround:ON":"onGround:OFF");							//接地フラグ

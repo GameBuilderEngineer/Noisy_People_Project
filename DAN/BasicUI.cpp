@@ -129,24 +129,28 @@ void BasicUI::changePostion(Sprite *sprite,int movetype)
 	{
 	case slideRight:
 		position.x += SLIDE_SPEED;
+		sprite->setPosition(position);
 		sprite->setVertex();
 		sprite->render();
 		break;
 
 	case slideLeft:
 		position.x -= SLIDE_SPEED;
+		sprite->setPosition(position);
 		sprite->setVertex();
 		sprite->render();
 		break;
 
 	case slideUp:
 		position.y -= SLIDE_SPEED;
+		sprite->setPosition(position);
 		sprite->setVertex();
 		sprite->render();
 		break;
 
 	case slideDown:
 		position.y += SLIDE_SPEED;
+		sprite->setPosition(position);
 		sprite->setVertex();
 		sprite->render();
 		break;

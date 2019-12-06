@@ -42,7 +42,8 @@ void UInumber::initialize(int numType)
 	case P2_DEFEAT:
 		numberPos = P2_DEFEAT_POS;
 		break;
-
+	case GREENIG_PERSENT:
+		numberPos = GREENING_PERSENT_POS;
 	default:
 		break;
 
