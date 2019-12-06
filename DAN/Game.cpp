@@ -166,7 +166,7 @@ void Game::initialize() {
 	//ディスプレイ用プレーンサンプル
 	samplePlane = new TestPlane();
 	//開発中広告
-	ad = new Advertisement();
+	//ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
@@ -270,12 +270,12 @@ void Game::initialize() {
 	//	enemyManager->createEnemy(p);
 	//}
 
-	// ツリーをランダムに設置する
-	treeNS::TreeData treeData;
-	treeData.hp = 0;
-	treeData.type = treeNS::ANALOG_TREE;
-	treeData.greenState = treeNS::DEAD;
-	treeData.isAttaked = false;
+	//// ツリーをランダムに設置する
+	//treeNS::TreeData treeData;
+	//treeData.hp = 0;
+	//treeData.type = treeNS::ANALOG_TREE;
+	//treeData.greenState = treeNS::DEAD;
+	//treeData.isAttaked = false;
 
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
@@ -362,7 +362,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(fixedUI);
 	SAFE_DELETE(player1UI);
 	SAFE_DELETE(player2UI);
-	SAFE_DELETE(ad);
+	//SAFE_DELETE(ad);
 
 	UninitMoveP();
 
@@ -508,7 +508,7 @@ void Game::update(float _frameTime) {
 	//ディスプレイ用プレーンサンプル
 	samplePlane->update(frameTime);
 	// 開発中広告
-	ad->update(frameTime);
+	//ad->update(frameTime);
 	
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -667,7 +667,7 @@ void Game::render3D(Camera currentCamera) {
 	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// 開発中広告
-	ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
