@@ -526,10 +526,10 @@ void Game::update(float _frameTime) {
 
 
 	// Enterまたは〇ボタンでリザルトへ
-	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	//if(gameMaster->getGameTime() <= 0)
+	//if (input->wasKeyPressed(VK_RETURN) ||
+	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	if(gameMaster->getGameTime() <= 0)
 	{
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
