@@ -31,15 +31,14 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
 	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER));
 	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR));
+
 	// チュートリアルシーンでの初期化処理
 	if (_sceneName == "Scene -Tutorial-")
 	{
 
+		return;
 	}
 
-	// ゲームシーンでの初期化処理
-	if (_sceneName == "Scene -Game-")
-	{
 #if 1	// エネミーツールのデータを読み込む
 	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
 	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
@@ -49,7 +48,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	SAFE_DELETE(enemyTools);
 #endif
 
-#if 0	// エネミーオブジェクトをツールデータを元に作成する
+#if 1	// エネミーオブジェクトをツールデータを元に作成する
 		for (size_t i = 0; i < enemyDataList.nodeNum; i++)
 		{
 			if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
@@ -58,7 +57,6 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 			}
 		}
 #endif
-	}
 }
 
 
@@ -111,6 +109,7 @@ void EnemyManager::update(float frameTime)
 			float dist2 = D3DXVec3LengthSq(&(enemyDataList.getValue(i)->position - player[gameMasterNS::PLAYER_2P].position));
 			if (dist1 < NEAR_DISTANCE2 || dist2 < NEAR_DISTANCE2)
 			{
+				enemyDataList.getValue(i)->setUp();		// 初期配置エネミーのデータを初期化する
 				createEnemy(enemyDataList.getValue(i));
 			}
 		}
@@ -129,18 +128,21 @@ void EnemyManager::update(float frameTime)
 		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
 		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
 
-		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2 || (*itr)->getEnemyData()->isAlive == false) &&
-			(*itr)->getEnemyData()->type == enemyNS::BEAR == false)	
+		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2 || (*itr)->getEnemyData()->isAlive == false))
 		{// エネミーオブジェクトを破棄する
+
+			// BEARは遠距離でも例外として破棄しない
+			if ((*itr)->getEnemyData()->type == enemyNS::BEAR && (*itr)->getEnemyData()->isAlive)
+			{
+				itr++;
+				continue;
+			}
+
 			int destroyTargetEnemyData = -1;
 			if ((*itr)->getEnemyData()->isGeneratedBySpawnEvent)
 			{// 動的作成イベントで作ったエネミーを死亡させIDを記録する
 				(*itr)->getEnemyData()->isAlive = false;
 				destroyTargetEnemyData = (*itr)->getEnemyID();
-			}
-			else
-			{// 初期配置エネミーはデータを初期化する
-				(*itr)->getEnemyData()->setUp();
 			}
 
 			(*itr)->getEnemyData()->isObjectExists = false;

@@ -64,6 +64,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
+	//testField->scale *= 0.01f;
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	testFieldRenderer->registerObject(testField);
@@ -259,22 +260,22 @@ void Game::initialize() {
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
 
-	//エネミーをランダムに設置する
-	for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	{
-		D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-		pos -= D3DXVECTOR3(200, 0, 240);
-		enemyNS::ENEMYSET tmp =
-		{
-			enemyManager->issueNewEnemyID(),
-			rand() % (enemyNS::ENEMY_TYPE::TYPE_MAX - 1),
-			stateMachineNS::PATROL,
-			pos,
-			D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-		};
-		enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-		enemyManager->createEnemy(p);
-	}
+	////エネミーをランダムに設置する
+	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	//{
+	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+	//	pos -= D3DXVECTOR3(200, 0, 240);
+	//	enemyNS::ENEMYSET tmp =
+	//	{
+	//		enemyManager->issueNewEnemyID(),
+	//		rand() % (enemyNS::ENEMY_TYPE::TYPE_MAX - 1),
+	//		stateMachineNS::PATROL,
+	//		pos,
+	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	//	};
+	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+	//	enemyManager->createEnemy(p);
+	//}
 
 	// ツリーをランダムに設置する
 	treeNS::TreeData treeData;
@@ -538,10 +539,10 @@ void Game::update(float _frameTime) {
 
 
 	// Enterまたは〇ボタンでリザルトへ
-	//if (input->wasKeyPressed(VK_RETURN) ||
-	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	if(gameMaster->getGameTime() <= 0)
+	if (input->wasKeyPressed(VK_RETURN) ||
+		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	//if(gameMaster->getGameTime() <= 0)
 	{
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
@@ -617,10 +618,10 @@ void Game::render3D(Camera currentCamera) {
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
 	{
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_BLACK));
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_BLACK));
 	}
 	else {
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 	}
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 

@@ -180,17 +180,17 @@ void UpdateMoveP(float f_TimeDelta)
 		else if (input->isKeyDown('S'))
 		{
 			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkBackward;
+			MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
 		}
 		else if (input->isKeyDown('A'))
 		{
 			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkStrafeLeft;
+			MoveP.Animation->NextAnimID = MoveP_WalkLeft;
 		}
 		else if (input->isKeyDown('D'))
 		{
 			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkStrafeRight;
+			MoveP.Animation->NextAnimID = MoveP_WalkRight;
 		}
 		else
 		{

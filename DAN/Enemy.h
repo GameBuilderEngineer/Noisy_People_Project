@@ -120,9 +120,9 @@ namespace enemyNS
 	// エネミーの攻撃移動速度テーブル
 	const float ATTACK_SPEED[TYPE_MAX] =
 	{
-		10.0f,		// WOLF
-		12.0f,		// TIGER
-		12.0f,		// BEAR
+		15.0f,		// WOLF
+		15.0f,		// TIGER
+		15.0f,		// BEAR
 	};
 	const float MULTIPLICATION_TO_MAKE_ATTACK_ACC = 6.5f;//加速度化する係数
 
