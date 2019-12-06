@@ -118,7 +118,7 @@ void ItemManager::destroyItem(int _itemID)
 			}
 			SAFE_DELETE(itemList[i]);				// インスタンス破棄
 			itemList.erase(itemList.begin() + i);	// ベクター要素を消去
-			break;
+			
 		}
 	}
 }
