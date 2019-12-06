@@ -232,7 +232,7 @@ bool CollisionManager::playerAndEnemy(Player* player, Enemy* enemy)
 			player->damage(enemyNS::ATTACK_DAMAGE[enemy->getEnemyData()->type]);
 			if (player->getOnGround())
 			{// 接地時（ノックバックの強さをここで調整）
-				player->speed += enemy->speed * 0.65f;
+				player->speed += enemy->speed * 0.65;
 			}
 			else
 			{// 空中時（ノックバックの強さをここで調整）

@@ -30,7 +30,7 @@ namespace enemyNS
 	const int ENEMY_OBJECT_MAX = 30;
 
 	// オブジェクト作成基準の近距離(2乗)
-	const float NEAR_DISTANCE2 = 8100.0f;	// 90 * 90
+	const float NEAR_DISTANCE2 = 10000.0f;	// 100 * 100
 
 	// オブジェクト破棄基準の遠距離(2乗)
 	const float FAR_DISTANCE2 = 14400.0f;	// 120 * 120

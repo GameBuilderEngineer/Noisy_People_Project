@@ -55,6 +55,8 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[B_LEAF]								= { "tree_02_leaf.x" };						//11
 	fileName[OCEAN]									= { "Water4.x" };							//12
 
+	fileName[ITEM_BRANCH]							= { "Bllue_branch.x" };
+
 	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
 	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
 	fileName[YAMADA_ROBOT]							= { "SandBox_03_Robot.x" };					//03
@@ -66,10 +68,11 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[SKY_DOME]								= { "domebase.x" };							//09
 	fileName[TUTORIAL_FILED]						= { "Tutorial_Stage.x" };					//10
 	fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
-	fileName[DATE_ISLAND_V2]						= { "DateIsland_Final.x" };					//12
+	fileName[DATE_ISLAND_V2]						= { "DateIsland_v2.x" };					//12
 	fileName[DATE_ISLAND_V2_NAVI_MESH]				= { "mesh.x" };								//13
-	fileName[DATE_ISLAND_V2_BLACK]					= { "DateIsland_Final.x" };					//14
-
+	fileName[DATE_ISLAND_V2_BLACK]					= { "DateIsland_v2_Black.x" };				//14
+	fileName[DATE_ISLAND_FINAL]						= { "DateIsland_Final.x" };					//15
+	fileName[DATE_ISLAND_FINAL_BLACK]				= { "DateIsland_Final_Black.x" };			//16
 	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };					//01
 
 
