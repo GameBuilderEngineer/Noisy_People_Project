@@ -66,7 +66,7 @@ void Create::initialize() {
 	camera->setTargetX(&tmpObject->getAxisX()->direction);
 	camera->setTargetY(&tmpObject->getAxisY()->direction);
 	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
-	camera->setRelative(CAMERA_RELATIVE_QUATERNION);
+	camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -5.5f, 0.0f));
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
