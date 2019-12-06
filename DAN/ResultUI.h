@@ -51,7 +51,7 @@ public: //メンバー変数
 	UIcharacter* uiCharacter01;		//プレイヤー１用文字のUI
 	UIcharacter* uiCharacter02;		//プレイヤー2用文字のUI
 	UItexture	uiTexture;			//テクスチャのUI
-	UIrank      uiRank01;			//プレイヤー１のランクのUI
+	UIrank*     uiRank;			//プレイヤー１のランクのUI
 	UIrank      uiRank02;			//プレイヤー2のランクのUI
 	UInumber	uiNumber[uiNumberNS::NUMBER_TYPE_MAX];//数字
 	ResultBG*   resultBG;			//リザルト背景
@@ -76,7 +76,7 @@ public: //メンバー関数
 	void update(float flameTime);	//更新
 	void uninitialize();			//終了
 	void decidionBGM();
-	int decisionRank(int rank,int greening, int greenNum, int defeat);
+	int decisionRank(int greening, int greenNum, int defeat);
 	
 };
 

@@ -22,6 +22,7 @@ ResultUI::ResultUI()
 	resultBG = new ResultBG;
 	uiCharacter01 = new UIcharacter;//プレイヤー1
 	uiCharacter02 = new UIcharacter;;//プレイヤー2
+	uiRank = new UIrank;
 }
 
 //============================
@@ -32,6 +33,7 @@ ResultUI::~ResultUI()
 	delete resultBG;
 	delete uiCharacter01;
 	delete uiCharacter02;
+	delete uiRank;
 }
 
 //============================
@@ -73,6 +75,9 @@ void ResultUI::initialize()
 
 	//テクスチャUIの初期化
 	uiTexture.initialize();
+
+	//ランクの初期化
+	uiRank->initialize();
 	
 
 	//数字の種類分だけ初期化
@@ -92,11 +97,7 @@ void ResultUI::initialize()
 //============================
 void ResultUI::render()
 {
-	////ランクUIの初期化
-	//rank01 = decisionRank(rank01, greenigPersent, greeningNum01, defeat01);
-	//rank02 = decisionRank(rank02, greenigPersent, greeningNum02, defeat02);
-	//uiRank01.initialize(rank01, PLAYER_01);	//プレイヤー１
-	//uiRank02.initialize(rank02, PLAYER_02);	//プレイヤー2
+	
 	resultBG->render();					//リザルト背景の描画
 	uiTexture.render(resultPhase);		//テクスチャの描画
 	uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
@@ -121,12 +122,13 @@ void ResultUI::render()
 			uiNumber[i].render();
 		}
 	}
-	//ランク表示
+	//ランク表示フェーズ
 	if (resultPhase == PHASE_05)
 	{
-
-		//uiRank01.render(rank01);		//プレイヤー１のランク描画
-		//uiRank02.render(rank02);		//プレイヤー２のランク描画
+		//ランク描画
+		rank01 = decisionRank(greenigPersent, greeningNum01, defeat01);
+		rank02 = decisionRank(greenigPersent, greeningNum02, defeat02);
+		uiRank->render(rank01, rank02);
 		//数字の表示
 		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
 		{
@@ -169,8 +171,7 @@ void ResultUI::update(float flameTime)
 	{
 		resultPhase = PHASE_05;
 		//ランク
-		/*uiRank01.update(rank01);
-		uiRank02.update(rank02);*/
+		uiRank->update(rank01, rank02);
 		//再生
 		if (playedBGM)
 		{
@@ -191,8 +192,6 @@ void ResultUI::uninitialize()
 {
 
 	uiTexture.uninitialize();
-	uiRank01.uninitialize(rank01);
-	uiRank02.uninitialize(rank02);
 
 	//数字の種類分だけ終了処理
 	for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
@@ -230,11 +229,11 @@ void ResultUI::decidionBGM()
 //ランク計算関数
 //引数：全体緑化率、緑化本数、撃破数
 //========================================
-int ResultUI::decisionRank(int rank ,int greenigPersent, int greeningNum, int defeat)
+int ResultUI::decisionRank(int greenigPersent, int greeningNum, int defeat)
 {
 	//ランクの確定(仮)
 int  score = greenigPersent + (greeningNum / 10 )+ defeat;//全体緑化率+緑化本数割る１０+撃破数(仮）
-
+int rank;
 	//**********************************************
 	//70以下でFAILED,70以上８０以下CLEARE         //
 	//80以上90以下GREAT,90以上でEXCELLENT         //
