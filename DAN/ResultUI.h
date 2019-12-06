@@ -76,6 +76,7 @@ public: //メンバー関数
 	void update(float flameTime);	//更新
 	void uninitialize();			//終了
 	void decidionBGM();
+	int decisionRank(int rank,int greening, int greenNum, int defeat);
 	
 };
 

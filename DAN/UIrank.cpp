@@ -190,4 +190,5 @@ void UIrank::changeSize(int rankType)
 	heightSize -= SHRINK_SPEED;
 	rank[rankType]->setSize(widthSize, heightSize);
 	rank[rankType]->setVertex();
+	rank[rankType]->render();
 }

@@ -61,48 +61,11 @@ void ResultUI::initialize()
 	defeat02 = 0;
 
 	//ランクの確定(仮)
-	score01 = greenigPersent + greeningNum01/10 + defeat01;//全体緑化率+緑化本数割る１０+撃破数(仮）
-	score02 = greenigPersent + greeningNum02/10 + defeat02;//全体緑化率+緑化本数割る１０+撃破数(仮）
+	score01 = 0;//全体緑化率+緑化本数割る１０+撃破数(仮）
+	score02 = 0;//全体緑化率+緑化本数割る１０+撃破数(仮）
 
-	//**********************************************
-	//70以下でFAILED,70以上８０以下CLEARE         //
-	//80以上90以下GREAT,90以上でEXCELLENT         //
-	//**********************************************
-	//プレイヤー１のランクの確定
-	if (score01 < 70)
-	{
-		rank01 = uiRankNS::UIRANK_TYPE::FAILED;
-	}
-	else if (score01 >= 70 && score01 < 80)
-	{
-		rank01 = uiRankNS::UIRANK_TYPE::CLEARE;
-	}
-	else if (score01 >= 70 && score01 < 90)
-	{
-		rank01 = uiRankNS::UIRANK_TYPE::GREAT;
-	}
-	else if(score01 >= 90)
-	{
-		rank01 = uiRankNS::UIRANK_TYPE::EXCELLENT;
-	}
-	
-	//プレイヤー2のランクの確定
-	if (score02 < 70)
-	{
-		rank02 = uiRankNS::UIRANK_TYPE::FAILED;
-	}
-	else if (score02 >= 70 && score02 < 80)
-	{
-		rank02 = uiRankNS::UIRANK_TYPE::CLEARE;
-	}
-	else if (score02 >= 70 && score02 < 90)
-	{
-		rank02 = uiRankNS::UIRANK_TYPE::GREAT;
-	}
-	else if (score02 >= 90)
-	{
-		rank02 = uiRankNS::UIRANK_TYPE::EXCELLENT;
-	}
+	rank01 = 0;
+	rank02 = 0;
 
 	//文字UIの初期化
 	uiCharacter01->initialize(PLAYER_01);//プレイヤー1
@@ -111,9 +74,6 @@ void ResultUI::initialize()
 	//テクスチャUIの初期化
 	uiTexture.initialize();
 	
-	//ランクUIの初期化
-	uiRank01.initialize(rank01, PLAYER_01);	//プレイヤー１
-	uiRank02.initialize(rank02, PLAYER_02);	//プレイヤー2
 
 	//数字の種類分だけ初期化
 	for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX ; i++)
@@ -132,6 +92,11 @@ void ResultUI::initialize()
 //============================
 void ResultUI::render()
 {
+	////ランクUIの初期化
+	//rank01 = decisionRank(rank01, greenigPersent, greeningNum01, defeat01);
+	//rank02 = decisionRank(rank02, greenigPersent, greeningNum02, defeat02);
+	//uiRank01.initialize(rank01, PLAYER_01);	//プレイヤー１
+	//uiRank02.initialize(rank02, PLAYER_02);	//プレイヤー2
 	resultBG->render();					//リザルト背景の描画
 	uiTexture.render(resultPhase);		//テクスチャの描画
 	uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
@@ -159,9 +124,10 @@ void ResultUI::render()
 	//ランク表示
 	if (resultPhase == PHASE_05)
 	{
-		uiRank01.render(rank01);		//プレイヤー１のランク描画
-		uiRank02.render(rank02);		//プレイヤー２のランク描画
-										//数字の表示
+
+		//uiRank01.render(rank01);		//プレイヤー１のランク描画
+		//uiRank02.render(rank02);		//プレイヤー２のランク描画
+		//数字の表示
 		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
 		{
 			uiNumber[i].render();
@@ -203,8 +169,8 @@ void ResultUI::update(float flameTime)
 	{
 		resultPhase = PHASE_05;
 		//ランク
-		uiRank01.update(rank01);
-		uiRank02.update(rank02);
+		/*uiRank01.update(rank01);
+		uiRank02.update(rank02);*/
 		//再生
 		if (playedBGM)
 		{
@@ -215,6 +181,7 @@ void ResultUI::update(float flameTime)
 	uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
 	uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
 	uiTexture.update(resultPhase);		//テクスチャの更新
+	
 }
 
 //============================
@@ -240,7 +207,7 @@ void ResultUI::uninitialize()
 void ResultUI::decidionBGM()
 {
 	//どちらかが70を超えていたならクリア
-	if (score01 >=70 || score02 >= 70)
+	if (greenigPersent >=70)
 	{
 		PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
 		//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
@@ -249,7 +216,7 @@ void ResultUI::decidionBGM()
 		SoundInterface::BGM->playSound(&playParameters);
 	}
 	//どちらも70以下なら失敗
-	else if(score01<70 && score02<70)
+	else if(greenigPersent<70)
 	{
 		PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
 		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Failed, true,1.0f,false,NULL};//BGMの設定
@@ -257,4 +224,42 @@ void ResultUI::decidionBGM()
 	}
 	//1度再生したらフラグをフォルス
 	playedBGM = false;
+}
+
+//========================================
+//ランク計算関数
+//引数：全体緑化率、緑化本数、撃破数
+//========================================
+int ResultUI::decisionRank(int rank ,int greenigPersent, int greeningNum, int defeat)
+{
+	//ランクの確定(仮)
+int  score = greenigPersent + (greeningNum / 10 )+ defeat;//全体緑化率+緑化本数割る１０+撃破数(仮）
+
+	//**********************************************
+	//70以下でFAILED,70以上８０以下CLEARE         //
+	//80以上90以下GREAT,90以上でEXCELLENT         //
+	//**********************************************
+
+ //プレイヤー１のランクの確定
+  if (score < 70)
+   {
+   	rank = uiRankNS::UIRANK_TYPE::FAILED;
+	return rank;
+   }
+   else if (score >= 70 && score01 < 80)
+   {
+   	rank = uiRankNS::UIRANK_TYPE::CLEARE;
+	return rank;
+   }
+   else if (score >= 70 && score01 < 90)
+   {
+   	rank = uiRankNS::UIRANK_TYPE::GREAT;
+	return rank;
+   }
+   else if(score >= 90)
+   {
+   	rank = uiRankNS::UIRANK_TYPE::EXCELLENT;
+	return rank;
+   }
+	
 }
