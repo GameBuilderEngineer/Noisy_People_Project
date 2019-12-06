@@ -284,6 +284,10 @@ void GameMaster::createGUI()
 				ImGui::Text("position(%.02f,%.02f,%.02f)",table.position.x,table.position.y,table.position.z);
 				ImGui::Text("rotation(%.02f,%.02f,%.02f,%.02f)",table.rotation.x,table.rotation.y,table.rotation.z,table.rotation.w);
 				ImGui::Text("scale(%.02f,%.02f,%.02f)",table.scale.x,table.scale.y,table.scale.z);
+				
+				if (table.playBacked)	ImGui::Text("playBacked:true");
+				else					ImGui::Text("playBacked:false");
+
 				switch (table.eventType)
 				{
 				case EVENT_TYPE::TO_DEAD:				ImGui::Text("EVENT:TO_DEAD");					break;

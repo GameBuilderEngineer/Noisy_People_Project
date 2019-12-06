@@ -108,6 +108,9 @@ void Result::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
+	//リプレイタイマー
+	playbackTimer += frameTime*PLAYBACK_SPEED;
+
 	//UIの更新処理
 	resultUI.update(frameTime);
 
@@ -267,6 +270,7 @@ void Result::createGUI()
 {
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
+	ImGui::Text("playbackTimer = %f", playbackTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 #endif // _DEBUG
