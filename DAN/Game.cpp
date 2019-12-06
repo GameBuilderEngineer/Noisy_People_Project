@@ -174,7 +174,7 @@ void Game::initialize() {
 	//ディスプレイ用プレーンサンプル
 	samplePlane = new TestPlane();
 	//開発中広告
-	ad = new Advertisement();
+	//ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
@@ -277,47 +277,47 @@ void Game::initialize() {
 	//	enemyManager->createEnemy(p);
 	//}
 
-	// ツリーをランダムに設置する
-	treeNS::TreeData treeData;
-	treeData.hp = 0;
-	treeData.type = treeNS::ANALOG_TREE;
-	treeData.greenState = treeNS::DEAD;
-	treeData.isAttaked = false;
+	//// ツリーをランダムに設置する
+	//treeNS::TreeData treeData;
+	//treeData.hp = 0;
+	//treeData.type = treeNS::ANALOG_TREE;
+	//treeData.greenState = treeNS::DEAD;
+	//treeData.isAttaked = false;
 
-	treeData.size = treeNS::STANDARD;
-	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 250; i++)
-	{
-		treeData.initialPosition =
-			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		treeData.treeID = treeManager->issueNewTreeID();
-		treeManager->createTree(treeData);
-	}
+	//treeData.size = treeNS::STANDARD;
+	//treeData.model = treeNS::B_MODEL;
+	//for (int i = 0; i < 250; i++)
+	//{
+	//	treeData.initialPosition =
+	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+	//	treeData.treeID = treeManager->issueNewTreeID();
+	//	treeManager->createTree(treeData);
+	//}
 
-	treeData.size = treeNS::LARGE;
-	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 15; i++)
-	{
-		treeData.initialPosition =
-			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		treeData.treeID = treeManager->issueNewTreeID();
-		
-		treeManager->createTree(treeData);
-	}
+	//treeData.size = treeNS::LARGE;
+	//treeData.model = treeNS::B_MODEL;
+	//for (int i = 0; i < 15; i++)
+	//{
+	//	treeData.initialPosition =
+	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+	//	treeData.treeID = treeManager->issueNewTreeID();
+	//	
+	//	treeManager->createTree(treeData);
+	//}
 
-	treeData.size = treeNS::VERY_LARGE;
-	treeData.model = treeNS::B_MODEL;
-	for (int i = 0; i < 2; i++)
-	{
-		treeData.initialPosition =
-			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-		treeData.treeID = treeManager->issueNewTreeID();
+	//treeData.size = treeNS::VERY_LARGE;
+	//treeData.model = treeNS::B_MODEL;
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	treeData.initialPosition =
+	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
+	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
+	//	treeData.treeID = treeManager->issueNewTreeID();
 
-		treeManager->createTree(treeData);
-	}
+	//	treeManager->createTree(treeData);
+	//}
 
 	//ツリーの最大数を取得
 	//gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
@@ -366,7 +366,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(fixedUI);
 	SAFE_DELETE(player1UI);
 	SAFE_DELETE(player2UI);
-	SAFE_DELETE(ad);
+	//SAFE_DELETE(ad);
 
 	UninitMoveP();
 
@@ -521,7 +521,7 @@ void Game::update(float _frameTime) {
 	//ディスプレイ用プレーンサンプル
 	samplePlane->update(frameTime);
 	// 開発中広告
-	ad->update(frameTime);
+	//ad->update(frameTime);
 	
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -680,7 +680,7 @@ void Game::render3D(Camera currentCamera) {
 	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// 開発中広告
-	ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
