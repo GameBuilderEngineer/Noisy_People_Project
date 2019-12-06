@@ -7,6 +7,7 @@
 #include "input.h"
 #include "show.h"
 #include "test.h"
+#include "network.h"
 
 //=============================================================================
 // プロトタイプ宣言
@@ -19,12 +20,15 @@ void Draw(HWND hWnd);
 
 void InitGame(void);
 
+unsigned __stdcall ReceiveThread(LPVOID Param);
+
 #ifdef _DEBUG
 void DrawDebugFont(HWND hWnd);
 #endif
 
 SHOW *show;
 TestPic *testPic;
+NETWORK_INTERFACE *networkInterface;
 //=============================================================================
 // グローバル変数:
 //=============================================================================
@@ -42,6 +46,12 @@ bool					g_bGameLoop = true;
 int						g_nStage = NULL;			// ステージ番号
 int						g_nPauseStage = NULL;		// プーズする前のステージ
 
+unsigned __stdcall ReceiveThread(LPVOID Param)
+{
+	networkInterface->updata();
+	
+	return 0;
+}
 
 //=============================================================================
 // メイン関数
@@ -299,6 +309,11 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	show = new SHOW(hWnd);
 	show->playShow();
 
+	networkInterface = new NETWORK_INTERFACE;
+
+	// 受信スレッド開始
+	_beginthreadex(NULL, 0, ReceiveThread, NULL, 0, NULL);
+
 	testPic = new TestPic(hWnd);
 
 	return S_OK;
@@ -327,7 +342,7 @@ void Uninit(void)
 
 	show->pauseShow();
 	delete(show);
-
+	delete(networkInterface);
 	delete(testPic);
 }
 
@@ -344,6 +359,8 @@ void Update(HWND hWnd)
 		show->update(hWnd);
 
 		testPic->update();
+
+		//networkInterface->updata();
 	}
 }
 

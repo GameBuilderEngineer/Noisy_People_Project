@@ -67,6 +67,9 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 	EnemyListboxCurrent = 0;
 	EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
 	EnemyListboxState = stateMachineNS::ENEMY_STATE::CHASE;
+	Model[enemyNS::ENEMY_TYPE::WOLF] = staticMeshNS::WOLF;
+	Model[enemyNS::ENEMY_TYPE::TIGER] = staticMeshNS::TIGER;
+	Model[enemyNS::ENEMY_TYPE::BEAR] = staticMeshNS::BEAR;
 #endif
 }
 
@@ -276,7 +279,7 @@ void ENEMY_TOOLS::initRender()
 	renderer = new StaticMeshRenderer*[enemyNS::ENEMY_TYPE::TYPE_MAX];
 	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
 	{
-		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(GetStaticMeshID(i)));
+		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(Model[i]));
 	}
 
 	//更新フラグ
@@ -301,7 +304,7 @@ void ENEMY_TOOLS::initObject()
 
 		// コライダの初期化
 		bodyCollide->initialize(&D3DXVECTOR3(enemyFile.efmt[i].posX, enemyFile.efmt[i].posY, enemyFile.efmt[i].posZ),
-			staticMeshNS::reference(GetStaticMeshID(enemyFile.efmt[i].enemyType))->mesh);	
+			staticMeshNS::reference(Model[enemyFile.efmt[i].enemyType])->mesh);	
 	}
 }
 
@@ -425,29 +428,6 @@ void ENEMY_TOOLS::ResetRenderer(void)
 		//オブジェクトの初期化
 		initObject();
 	}
-}
-
-//===================================================================================================================================
-//【スタティックメッシュのIDを取得】描画用
-//===================================================================================================================================
-int ENEMY_TOOLS::GetStaticMeshID(short enemyType)
-{
-	int staticMeshNo = 0;
-	switch (enemyType)
-	{
-	case enemyNS::ENEMY_TYPE::WOLF:
-		staticMeshNo = staticMeshNS::WOLF;
-		break;
-	case enemyNS::ENEMY_TYPE::TIGER:
-		staticMeshNo = staticMeshNS::TIGER;
-		break;
-	case enemyNS::ENEMY_TYPE::BEAR:
-		staticMeshNo = staticMeshNS::BEAR;
-		break;
-	default:
-		break;
-	}
-	return staticMeshNo;
 }
 
 //===================================================================================================================================

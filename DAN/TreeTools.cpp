@@ -66,6 +66,10 @@ TREE_TOOLS::TREE_TOOLS()
 	TreeListboxState = treeNS::GREEN_STATE::GREEN;
 	TreeListboxSize = treeNS::TREE_SIZE::STANDARD;
 	TreeListboxModel = treeNS::TREE_MODEL::A_MODEL;
+
+	Model[treeNS::TREE_TYPE::ANALOG_TREE] = staticMeshNS::A_TRUNK;
+	Model[treeNS::TREE_TYPE::DIGITAL_TREE] = staticMeshNS::B_TRUNK;
+
 #endif
 }
 

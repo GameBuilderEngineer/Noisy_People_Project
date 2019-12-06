@@ -31,6 +31,9 @@
     <Filter Include="ソース ファイル\Draw">
       <UniqueIdentifier>{b30d44cb-34bb-4e40-8b53-b5f3b8ed7988}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\network">
+      <UniqueIdentifier>{cb7a9f5f-b63b-472f-a327-4f6672665456}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="show.cpp">
@@ -51,6 +54,9 @@
     <ClCompile Include="fastDraw2D.cpp">
       <Filter>ソース ファイル\Draw</Filter>
     </ClCompile>
+    <ClCompile Include="network.cpp">
+      <Filter>ソース ファイル\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="show.h">
@@ -70,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="fastDraw2D.h">
       <Filter>ソース ファイル\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="network.h">
+      <Filter>ソース ファイル\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

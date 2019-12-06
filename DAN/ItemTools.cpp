@@ -63,6 +63,8 @@ ITEM_TOOLS::ITEM_TOOLS()
 	//アイテム情報
 	ItemListboxCurrent = 0;
 	ItemListboxType = itemNS::ITEM_TYPE::BATTERY;
+	Model[itemNS::ITEM_TYPE::BATTERY] = staticMeshNS::SAMPLE_SCISSORS;
+	Model[itemNS::ITEM_TYPE::EXAMPLE] = staticMeshNS::YAMADA_ROBOT;
 #endif
 }
 
@@ -196,7 +198,7 @@ void ITEM_TOOLS::initRender()
 	renderer = new StaticMeshRenderer*[itemNS::ITEM_TYPE::ITEM_TYPE_MAX];
 	for (int i = 0; i < itemNS::ITEM_TYPE::ITEM_TYPE_MAX; i++)
 	{
-		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(GetStaticMeshID(i)));
+		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(Model[i]));
 	}
 
 	//更新フラグ
@@ -221,7 +223,7 @@ void ITEM_TOOLS::initObject()
 
 		// コライダの初期化
 		bodyCollide->initialize(&D3DXVECTOR3(itemFile.ifmt[i].posX, itemFile.ifmt[i].posY, itemFile.ifmt[i].posZ),
-			staticMeshNS::reference(GetStaticMeshID(itemFile.ifmt[i].itemType))->mesh);
+			staticMeshNS::reference(Model[itemFile.ifmt[i].itemType])->mesh);
 	}
 }
 
@@ -345,26 +347,6 @@ void ITEM_TOOLS::ResetRenderer(void)
 		//オブジェクトの初期化
 		initObject();
 	}
-}
-
-//===================================================================================================================================
-//【スタティックメッシュのIDを取得】描画用
-//===================================================================================================================================
-int ITEM_TOOLS::GetStaticMeshID(short itemType)
-{
-	int staticMeshNo = 0;
-	switch (itemType)
-	{
-	case itemNS::ITEM_TYPE::BATTERY:
-		staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
-		break;
-	case itemNS::ITEM_TYPE::EXAMPLE:
-		staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
-		break;
-	default:
-		break;
-	}
-	return staticMeshNo;
 }
 
 //===================================================================================================================================

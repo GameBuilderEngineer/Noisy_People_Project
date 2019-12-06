@@ -10,6 +10,7 @@
 //===================================================================================================================================
 #include "Create.h"
 #include "Game.h"
+#include "network.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -31,7 +32,8 @@ Create::Create()
 	itemTools = new ITEM_TOOLS;
 	//ツリーツール
 	treeTools = new TREE_TOOLS;
-
+	//マップオブジェクトツール
+	mapObjTools = new MPOJ_TOOLS;
 }
 
 //===================================================================================================================================
@@ -45,6 +47,8 @@ Create::~Create()
 	SAFE_DELETE(itemTools);
 	//ツリーツール
 	SAFE_DELETE(treeTools);
+	//マップオブジェクトツール
+	SAFE_DELETE(mapObjTools);
 }
 
 //===================================================================================================================================
@@ -83,37 +87,10 @@ void Create::initialize() {
 	//プレイヤーの初期化
 	tmpObject->initialize(inputNS::DINPUT_1P, 0);
 	tmpObject->setCamera(camera);	//カメラポインタのセット
+
 	tmpObject->configurationGravityWithRay(testField->getPosition(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());	//重力を設定
-	tmpObjRenderer = new StaticMeshRenderer *[tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX];
-	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
-	{
-		int staticMeshNo = 0;
-		switch (i)
-		{
-		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER:
-			staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
-			break;
-		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_WOLF:
-			staticMeshNo = staticMeshNS::SAMPLE_REDBULL;
-			break;
-		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_TIGER:
-			staticMeshNo = staticMeshNS::STAR_REGULAR_POLYHEDRON;
-			break;
-		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_BEAR:
-			staticMeshNo = staticMeshNS::DICE;
-			break;
-		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_BATTERY:
-			staticMeshNo = staticMeshNS::SAMPLE_SCISSORS;
-			break;
-		case tmpObjNS::TMPOBJ_LIST::TMPOBJ_EXAMPLE:
-			staticMeshNo = staticMeshNS::YAMADA_ROBOT2;
-			break;
-		default:
-			break;
-		}
-		tmpObjRenderer[i] = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNo));
-		tmpObjRenderer[i]->registerObject(tmpObject);
-	}
+	tmpObjRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
+	tmpObjRenderer->registerObject(tmpObject);
 
 	////枯木の初期化
 	//deadTree = new DeadTree();
@@ -140,11 +117,7 @@ void Create::uninitialize() {
 	SAFE_DELETE(testFieldRenderer);
 
 	//たつき待ち
-	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
-	{
-		SAFE_DELETE(tmpObjRenderer[i]);
-	}
-	ES_SAFE_DELETE_ARRAY(tmpObjRenderer);
+	SAFE_DELETE(tmpObjRenderer);
 
 //	SAFE_DELETE(deadTree);
 //	SAFE_DELETE(treeA);
@@ -177,6 +150,7 @@ void Create::update(float _frameTime) {
 	enemyTools->update();
 	itemTools->update();
 	treeTools->update();
+	mapObjTools->update();
 
 	//プレイヤーの更新
 	tmpObject->update(frameTime);
@@ -199,10 +173,7 @@ void Create::update(float _frameTime) {
 
 	////カメラの更新
 	//camera->update();
-	for (int i = 0; i < tmpObjNS::TMPOBJ_LIST::TMPOBJ_MAX; i++)
-	{
-		tmpObjRenderer[i]->update();
-	}
+	tmpObjRenderer->update();
 
 	////枯木の更新
 	//deadTree->update();
@@ -258,7 +229,7 @@ void Create::render3D(Camera currentCamera) {
 	//testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// プレイヤーの描画
-	tmpObjRenderer[getBufferID(meshId)]->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	tmpObjRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
 	tmpObject->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -274,6 +245,7 @@ void Create::render3D(Camera currentCamera) {
 	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	itemTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	treeTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	mapObjTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 }
 
 //===================================================================================================================================
@@ -336,6 +308,7 @@ void Create::toolsGUI()
 		ImGui::ListBox("Tools Type", &ToolsListboxType, listboxEnemyType, TOOLS_TYPE::TOOLS_MAX);
 
 		enemyTools->outputEnemyToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
+		mapObjTools->outputMpojToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 		itemTools->outputItemToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 		treeTools->outputTreeToolsGUI(ToolsListboxType, *tmpObject->getPosition(), tmpObject->getAxisZ()->direction);
 
@@ -345,21 +318,23 @@ void Create::toolsGUI()
 		case TOOLS_TYPE::TOOLS_NONE:
 			break;
 		case TOOLS_TYPE::TOOLS_ENEMY:
-			meshId = enemyTools->GetStaticMeshID(enemyTools->EnemyListboxType);
+			meshId = enemyTools->Model[enemyTools->EnemyListboxType];
 			break;
 		case TOOLS_TYPE::TOOLS_ITEM:
-			meshId = itemTools->GetStaticMeshID(itemTools->ItemListboxType);
+			meshId = itemTools->Model[itemTools->ItemListboxType];
 			break;
 		case TOOLS_TYPE::TOOLS_TREE:
-			meshId = treeTools->GetStaticTrunkMeshID(enemyTools->EnemyListboxType);
+			meshId = treeTools->Model[treeTools->TreeListboxType];
 			break;
 		case TOOLS_TYPE::TOOLS_MAP_OBJECT:
+			meshId = mapObjTools->Model[mapObjTools->MpojListboxType];
 			break;
 		default:
 			break;
 		}
 		if (backupMeshId != meshId)
 		{
+			tmpObjRenderer->setStaticMesh(staticMeshNS::reference(meshId));
 			tmpObject->resetMesh(meshId);
 		}
 	}
@@ -370,6 +345,15 @@ void Create::toolsGUI()
 //===================================================================================================================================
 void Create::collideGUI()
 {
+	bool tmpButton = false;
+	ImGui::Checkbox("Test Network", &tmpButton);
+	if (tmpButton)
+	{
+		NETWORK_CLIENT *client = new NETWORK_CLIENT;
+		client->send();
+		SAFE_DELETE(client);
+	}
+
 	//当たり判定
 	ImGui::Text("Enemy:");
 	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
@@ -389,38 +373,23 @@ void Create::collideGUI()
 			ImGui::Text("%d", i);
 		}
 	}
-}
-
-//===================================================================================================================================
-//【バッファIDを取得 meshID->bufferID】
-//===================================================================================================================================
-int Create::getBufferID(int meshID)
-{
-	switch (meshID)
+	ImGui::Text("Tree:");
+	for (int i = 0; i < treeTools->GetTreeMax(); i++)
 	{
-	case staticMeshNS::YAMADA_ROBOT2:
-		return  tmpObjNS::TMPOBJ_LIST::TMPOBJ_EXAMPLE;
-		break;
-	case staticMeshNS::SAMPLE_REDBULL:
-		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_WOLF;
-		break;
-	case staticMeshNS::STAR_REGULAR_POLYHEDRON:
-		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_TIGER;
-		break;
-	case staticMeshNS::DICE:
-		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_BEAR;
-		break;
-	case staticMeshNS::SAMPLE_SCISSORS:
-		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_BATTERY;
-		break;
-	//case staticMeshNS::YAMADA_ROBOT2:
-	//	return tmpObjNS::TMPOBJ_LIST::TMPOBJ_EXAMPLE;
-	//	break;
-	default:
-		return tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER;
-		break;
+		if (treeTools->bodyCollide[i].collide(tmpObject->getBodyCollide()->getCenter(),
+			tmpObject->getRadius(), *treeTools->object[i]->getMatrixWorld(), *tmpObject->getMatrixWorld()))
+		{
+			ImGui::Text("%d", i);
+		}
 	}
-
-	return tmpObjNS::TMPOBJ_LIST::TMPOBJ_PLAYER;
+	ImGui::Text("MapObj:");
+	for (int i = 0; i < mapObjTools->GetMpojMax(); i++)
+	{
+		if (mapObjTools->bodyCollide[i].collide(tmpObject->getBodyCollide()->getCenter(),
+			tmpObject->getRadius(), *mapObjTools->object[i]->getMatrixWorld(), *tmpObject->getMatrixWorld()))
+		{
+			ImGui::Text("%d", i);
+		}
+	}
 }
 #endif
