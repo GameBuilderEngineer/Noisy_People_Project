@@ -64,9 +64,7 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	//testField->scale *= 0.01f;
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
-	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -169,9 +167,8 @@ void Game::initialize() {
 	//ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_NAVI_MESH));
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
 	naviMesh->initialize();
 
 	// エネミー
@@ -402,6 +399,14 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
+
+	if (input->wasKeyPressed('6'))
+	{
+		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
+
+		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
+	}
+
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -794,6 +799,11 @@ void Game::collisions()
 			tree8Reregister(treeManager->getTreeList()[i]->getGreeningArea());
 		}
 	}
+	// マップオブジェクトの登録
+	for (size_t i = 0; i < mapObjectManager->getMapObjectList().size(); i++)
+	{
+		tree8Reregister(mapObjectManager->getMapObjectList()[i]);
+	}
 
 	//衝突対応リストを取得
 	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
@@ -930,7 +940,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	aiDirector->run();		// メタAI実行
+	//aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -996,24 +1006,24 @@ void Game::test()
 	}
 
 	// デバッグエネミーで'7','8'使用中
-	//// マップオブジェクトマネージャーのテスト
-	//if (input->wasKeyPressed('7'))	// 作成
-	//{
-	//	mapObjectNS::MapObjectData mapObjectData;
-	//	mapObjectData.zeroClear();
-	//	mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
-	//	mapObjectData.type = mapObjectNS::STONE_01;
-	//	mapObjectData.defaultPosition = *player->getPosition();
-	//	mapObjectManager->createMapObject(mapObjectData);
-	//}
-
-
-	if (input->wasKeyPressed('6'))
+	// マップオブジェクトマネージャーのテスト
+	if (input->wasKeyPressed('7'))	// 作成
 	{
-		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
-
-		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
+		mapObjectNS::MapObjectData mapObjectData;
+		mapObjectData.zeroClear();
+		mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
+		mapObjectData.type = mapObjectNS::STONE_01;
+		mapObjectData.defaultPosition = *player->getPosition();
+		mapObjectManager->createMapObject(mapObjectData);
 	}
+
+
+	//if (input->wasKeyPressed('6'))
+	//{
+	//	aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
+
+	//	//aiDirector->eventMaker.makeEventEnemyAttaksTree();
+	//}
 
 	// ツリーマネージャのテスト
 	if (input->wasKeyPressed('5'))	// 作成

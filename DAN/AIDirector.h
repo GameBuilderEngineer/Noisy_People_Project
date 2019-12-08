@@ -52,7 +52,7 @@ namespace aiNS
 	const float WEIGHT_RESPAWN = 0.7f;				// RESPAWN_ENEMY
 	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.8f;	// ENEMY_ATTACKS_TREE
 
-	const float MANDATORY_SPAWN_INTERVAL = 30.0f;	// エネミースポーンのための最低経過間隔秒
+	const float MANDATORY_SPAWN_INTERVAL = 5.0f;			// エネミースポーンのための最低経過間隔秒
 	const float MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE = 40.0f;	// ツリー襲撃イベントの最低経過間隔秒
 	const float MANDATOEY_INTERVAL_CHECKING_WEIGHT = 8.0f;		// ツリー襲撃イベントの発生評価値チェック間隔
 

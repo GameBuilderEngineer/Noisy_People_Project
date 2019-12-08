@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "ImguiManager.h"
 #include "Sound.h"
+#include "ItemManager.h"
 #include <cassert>
 using namespace enemyNS;
 using namespace stateMachineNS;
@@ -796,6 +797,17 @@ void Enemy::die(float frameTime)
 {
 	enemyData->isAlive = false;
 	enemyData->deadTime = gameMaster->getGameTime();
+
+	if (rand() % 5 == 0)
+	{
+		ItemManager* itemManager = ItemManager::get();
+		itemNS::ItemData itemData;
+		itemData.itemID = itemManager->issueNewItemID();
+		itemData.type = itemNS::BATTERY;
+		itemData.defaultPosition = position;
+		itemData.defaultDirection = axisZ.direction;
+		itemManager->createItem(itemData);
+	}
 }
 #pragma endregion
 
@@ -1187,8 +1199,8 @@ void Enemy::debugSensor()
 		if (sound)
 		{
 			// ‰¹‚ğ–Â‚ç‚·
-			playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
-			SoundInterface::SE->playSound(&playParameters);	//SEÄ¶
+			//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
+			//SoundInterface::SE->playSound(&playParameters);	//SEÄ¶
 		}
 
 	}

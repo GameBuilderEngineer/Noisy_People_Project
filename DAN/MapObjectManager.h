@@ -27,7 +27,7 @@ public:
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	void createMapObject(mapObjectNS::MapObjectData treeData);
+	void createMapObject(mapObjectNS::MapObjectData mapObjData);
 	void destroyAllMapObject();
 	int issueNewMapObjectID();
 	void outputGUI();

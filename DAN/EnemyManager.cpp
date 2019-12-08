@@ -32,30 +32,30 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER));
 	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR));
 
-	// チュートリアルシーンでの初期化処理
-	if (_sceneName == "Scene -Tutorial-")
-	{
+// チュートリアルシーンでの初期化処理
+if (_sceneName == "Scene -Tutorial-")
+{
 
-		return;
-	}
+	return;
+}
 
 #if 1	// エネミーツールのデータを読み込む
-	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-	{
-		createEnemyData(enemyTools->GetEnemySet(i));
-	}
-	SAFE_DELETE(enemyTools);
+ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+{
+	createEnemyData(enemyTools->GetEnemySet(i));
+}
+SAFE_DELETE(enemyTools);
 #endif
 
 #if 1	// エネミーオブジェクトをツールデータを元に作成する
-		for (size_t i = 0; i < enemyDataList.nodeNum; i++)
-		{
-			if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
-			{
-				createEnemy(enemyDataList.getValue(i));
-			}
-		}
+for (int i = 0; i < enemyDataList.nodeNum; i++)
+{
+	if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
+	{
+		createEnemy(enemyDataList.getValue(i));
+	}
+}
 #endif
 }
 
@@ -118,43 +118,52 @@ void EnemyManager::update(float frameTime)
 	//----------------
 	// エネミーリスト
 	//----------------
-	vector<Enemy*>::iterator itr;
-	for (itr = enemyList.begin(); itr != enemyList.end();)
+	vector<Enemy*>::iterator itr = enemyList.begin();
+	while(itr != enemyList.end())
 	{
 		// エネミーの更新
 		(*itr)->update(frameTime);
 
-		// 遠距離エネミーの計算
+		// 破棄フラグ
+		bool isDestroyTarget = false;
+
+		// 遠距離エネミーを破棄する
 		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
 		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
+		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2) && (*itr)->getEnemyData()->type != enemyNS::BEAR)
+		{
+			isDestroyTarget = true;
+		}
 
-		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2 || (*itr)->getEnemyData()->isAlive == false))
-		{// エネミーオブジェクトを破棄する
+		// 死亡済みエネミーを破棄する
+		if ((*itr)->getEnemyData()->isAlive == false)
+		{
+			isDestroyTarget = true;
+		}
 
-			// BEARは遠距離でも例外として破棄しない
-			if ((*itr)->getEnemyData()->type == enemyNS::BEAR && (*itr)->getEnemyData()->isAlive)
-			{
-				itr++;
-				continue;
-			}
-
+		// 破棄処理
+		if (isDestroyTarget)
+		{
+			// 動的作成イベントで作ったエネミーのIDを記録する
 			int destroyTargetEnemyData = -1;
 			if ((*itr)->getEnemyData()->isGeneratedBySpawnEvent)
-			{// 動的作成イベントで作ったエネミーを死亡させIDを記録する
-				(*itr)->getEnemyData()->isAlive = false;
+			{
 				destroyTargetEnemyData = (*itr)->getEnemyID();
 			}
 
+			// エネミーオブジェクトの破棄
 			(*itr)->getEnemyData()->isObjectExists = false;
-			destroyEnemy((*itr));
+			destroyEnemy(*itr);
 			itr = enemyList.erase(itr);
+
+			// 動的作成イベントで作ったエネミーのみエネミーデータも破棄する（エネミーの破棄後）
 			if (destroyTargetEnemyData != -1)
-			{// 動的作成イベントで作ったエネミーのみエネミーデータも破棄する
+			{
 				destroyEnemyData(destroyTargetEnemyData);
 			}
 		}
 		else
-		{// イテレータを進める
+		{
 			itr++;
 		}
 	}
@@ -244,18 +253,21 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::WOLF);
 		enemy = new Wolf(constructionPackage);
 		wolfRenderer->registerObject(enemy);
+		wolfRenderer->updateAccessList();
 		break;
 
 	case TIGER:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::TIGER);
 		enemy = new Tiger(constructionPackage);
 		tigerRenderer->registerObject(enemy);
+		tigerRenderer->updateAccessList();
 		break;
 
 	case BEAR:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::BEAR);
 		enemy = new Bear(constructionPackage);
 		bearRenderer->registerObject(enemy);
+		tigerRenderer->updateAccessList();
 		break;
 	}
 
@@ -326,14 +338,17 @@ void EnemyManager::destroyEnemy(Enemy* enemy)
 	switch (enemy->getEnemyData()->type)
 	{
 	case WOLF:
+		//wolfRenderer->updateAccessList();
 		wolfRenderer->unRegisterObjectByID(enemy->id);
 		break;
 
 	case TIGER:
+		//tigerRenderer->updateAccessList();
 		tigerRenderer->unRegisterObjectByID(enemy->id);
 		break;
 
 	case BEAR:
+		//bearRenderer->updateAccessList();
 		bearRenderer->unRegisterObjectByID(enemy->id);
 		break;
 	}
@@ -451,6 +466,9 @@ void EnemyManager::outputGUI()
 		ImGui::Text("enemyList.size()     :%d\n", enemyList.size());
 		ImGui::Text("numOfEnemy           :%d\n", Enemy::getNumOfEnemy());
 		ImGui::Text("nextID	:%d\n", nextID);
+		//ImGui::Text("wolfRenderer.objectNum:%d\n", wolfRenderer->objectNum);
+		//ImGui::Text("tigerRenderer.objectNum:%d\n", tigerRenderer->objectNum);
+		//ImGui::Text("bearRenderer.objectNum:%d\n", bearRenderer->objectNum);
 
 		// ボタン
 		ImGui::Checkbox("Create Enemy", &createFlag);

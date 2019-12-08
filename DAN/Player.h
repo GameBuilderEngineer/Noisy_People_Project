@@ -406,9 +406,8 @@ public:
 	Bullet*			getBullet(int i);							//発射中の弾へのポインタ
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
-	bool			getWhetherExecutingMoveOpe();							//移動操作中か取得
+	bool			getWhetherExecutingMoveOpe();				//移動操作中か取得
 	BulletManager*  getBulletManager();							//バレットマネージャを取得
-	bool			getOnGround();											//接地しているか取得
-	D3DXVECTOR3*	getGroundNormal();								//接地面法線を取得
-
+	bool			getOnGround();								//接地しているか取得
+	D3DXVECTOR3*	getGroundNormal();							//接地面法線を取得
 };
