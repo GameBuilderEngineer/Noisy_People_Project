@@ -9,7 +9,8 @@
 #include "TextureLoader.h"
 #include "Input.h"
 #include "UtilityFunction.h"
-
+#include "Sound.h"
+#include "SoundBase.h"
 
 //=============================================================================
 // 名前空間
@@ -19,6 +20,7 @@ namespace telopNS
 	
 	enum STATE
 	{
+		ANNOUNCE,
 		OPEN,			//テロップの状態
 		DISPLAY,
 		CLOSE,
@@ -36,7 +38,8 @@ namespace telopNS
 	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);
 	const float OPEN_TIME = 0.5f;
 	const float CLOSE_TIME = 0.3f;
-	const float DISPLAY_TIME = 1.0f;
+	const float DISPLAY_TIME = 2.0f;
+	const float ANNOUNCE_TIME = 1.0f;
 }
 
 
@@ -50,6 +53,7 @@ private:
 	Input*	input;
 
 	float frameTime;
+	float announceTimer;
 	float telopTimer;
 	float displayTimer;
 	int heightValue = 0;
@@ -57,11 +61,15 @@ private:
 	bool barFlag;
 	int state;
 	float rate;
-	float closeTimer;;
+	float closeTimer;
 	bool* playFlag;
 	 
+	//サウンド
+	PLAY_PARAMETERS openTelop;
 
 public:
+	Telop();
+	~Telop();
 	void initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
 		int _width, int _height, D3DXVECTOR3 _position, D3DXVECTOR3 _rotation, D3DCOLOR color);
 	void uninitialize();
@@ -74,5 +82,7 @@ public:
 	void closeBar();
 	void playTelop();
 	void playTelopBar();
+	void telopAnnounce();
 	void setManagerFlag(bool* managerFlag);
+
 };
