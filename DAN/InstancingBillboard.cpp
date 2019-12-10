@@ -223,13 +223,14 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 
 	effect->Begin(0, 0);
 
-	int billboardY = 0;
-	if (renderType & Y_BILLBOARD_PASS)billboardY = 3;
-	switch (renderType & ~Y_BILLBOARD_PASS)
+	int passValue = 0;
+	if (renderType & Y_BILLBOARD_PASS)	passValue += 3;
+	if (renderType & OFF_BILLBOARD_PASS)passValue += 3;
+	switch (renderType & ~(Y_BILLBOARD_PASS&OFF_BILLBOARD_PASS))
 	{
-	case NORMAL_PASS:		effect->BeginPass(0+billboardY);break;
-	case TRANSPARENT_PASS:	effect->BeginPass(1+billboardY);break;
-	case FOREGROUND_PASS:	effect->BeginPass(2+billboardY);break;
+	case NORMAL_PASS:		effect->BeginPass(0+passValue);break;
+	case TRANSPARENT_PASS:	effect->BeginPass(1+passValue);break;
+	case FOREGROUND_PASS:	effect->BeginPass(2+passValue);break;
 	}
 		
 	device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
