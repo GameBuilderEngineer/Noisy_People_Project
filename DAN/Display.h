@@ -40,6 +40,8 @@ private:
 
 	float							syncTimer;			//同期タイマー
 
+	int								testMode;			//テスト用モード切替
+
 public:
 	Display();
 	~Display();
