@@ -131,10 +131,10 @@ void Result::update(float _frameTime)
 		int eventNum;					//イベント数
 
 		//イベントを取得
-		eventNum = gameMaster->getEventList(eventList,playbackTimer);
+		eventNum = gameMaster->getEventList(&eventList,playbackTimer);
 
 		//取得したイベントを実行する
-		for (int i = 0; i < eventNum; i++)
+		for (int num = 0; num < eventNum; num++)
 		{
 			//イベント対象のツリー
 			Tree* selectTree = NULL;
@@ -145,7 +145,7 @@ void Result::update(float _frameTime)
 				if (selectTree)continue;//選択済みならスルー
 				Tree* tree = treeManager->getTreeList()[i];
 				//イベント対象ツリーをIDにより検索
-				if (tree->getTreeData()->treeID == eventList[i].id)
+				if (tree->getTreeData()->treeID == eventList[num].id)
 				{
 					selectTree = tree;
 					i = treeManager->getTreeList().size();//検索終了
@@ -156,7 +156,7 @@ void Result::update(float _frameTime)
 			if (selectTree == NULL)continue;
 
 			//イベント別にアクションをする
-			switch (eventList[i].eventType)
+			switch (eventList[num].eventType)
 			{
 			case gameMasterNS::TO_DEAD:
 				selectTree->transState();
@@ -168,6 +168,7 @@ void Result::update(float _frameTime)
 				selectTree->transState();
 				break;
 			}
+
 		}
 
 		//取得したイベントリストを削除
@@ -227,7 +228,7 @@ void Result::render()
 	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
 
 	//UI
-	renderUI();
+	//renderUI();
 }
 
 //===================================================================================================================================
