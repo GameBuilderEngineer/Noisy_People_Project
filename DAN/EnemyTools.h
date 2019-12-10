@@ -92,6 +92,7 @@ public:
 		D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);			
 	void generate(Object *object, short enemyType,			//çÏê¨
 		D3DXVECTOR3 position, D3DXVECTOR3 dir);
+	void collideDraw(int ID, bool use);
 #endif
 
 private:

@@ -362,6 +362,11 @@ void Create::collideGUI()
 			tmpObject->getRadius(), *enemyTools->object[i]->getMatrixWorld(), *tmpObject->getMatrixWorld()))
 		{
 			ImGui::Text("%d", i);
+			enemyTools->collideDraw(i, true);
+		}
+		else
+		{
+			enemyTools->collideDraw(i, false);
 		}
 	}
 	ImGui::Text("Item:");

@@ -21,6 +21,9 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 
 #ifdef _DEBUG
 	//レンダラーの初期化
+	Model[enemyNS::ENEMY_TYPE::WOLF] = staticMeshNS::WOLF;
+	Model[enemyNS::ENEMY_TYPE::TIGER] = staticMeshNS::TIGER;
+	Model[enemyNS::ENEMY_TYPE::BEAR] = staticMeshNS::BEAR;
 	initRender();
 #endif
 
@@ -67,15 +70,8 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 	EnemyListboxCurrent = 0;
 	EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
 	EnemyListboxState = stateMachineNS::ENEMY_STATE::CHASE;
-	Model[enemyNS::ENEMY_TYPE::WOLF] = staticMeshNS::WOLF;
-	Model[enemyNS::ENEMY_TYPE::TIGER] = staticMeshNS::TIGER;
-	Model[enemyNS::ENEMY_TYPE::BEAR] = staticMeshNS::BEAR;
 
 	input = getInput();
-
-	//レンダラーのリセット処理
-	ResetRenderer();
-
 #endif
 }
 
@@ -294,6 +290,7 @@ void ENEMY_TOOLS::initRender()
 	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
 	{
 		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(Model[i]));
+		renderer[i]->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	}
 
 	//更新フラグ
@@ -360,6 +357,21 @@ void ENEMY_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position
 	object->postureControl(object->axisZ.direction, dir, 1.0f);
 	object->existenceTimer = 1.0f;		// < 0 なら消える
 	renderer[enemyType]->registerObject(object);
+}
+
+//===================================================================================================================================
+//【生成】当たり判定描画
+//===================================================================================================================================
+void ENEMY_TOOLS::collideDraw(int ID, bool use)
+{
+	if (use)
+	{
+		/*renderer[ID]->setAlpha(0.1f);*/
+	}
+	else
+	{
+		//renderer[ID]->setAlpha(1.0f);
+	}
 }
 #endif
 

@@ -21,6 +21,8 @@ ITEM_TOOLS::ITEM_TOOLS()
 
 #ifdef _DEBUG
 	//レンダラーの初期化
+	Model[itemNS::ITEM_TYPE::BATTERY] = staticMeshNS::SAMPLE_SCISSORS;
+	Model[itemNS::ITEM_TYPE::EXAMPLE] = staticMeshNS::YAMADA_ROBOT;
 	initRender();
 #endif
 
@@ -63,14 +65,8 @@ ITEM_TOOLS::ITEM_TOOLS()
 	//アイテム情報
 	ItemListboxCurrent = 0;
 	ItemListboxType = itemNS::ITEM_TYPE::BATTERY;
-	Model[itemNS::ITEM_TYPE::BATTERY] = staticMeshNS::SAMPLE_SCISSORS;
-	Model[itemNS::ITEM_TYPE::EXAMPLE] = staticMeshNS::YAMADA_ROBOT;
 
 	input = getInput();
-
-	//レンダラーのリセット処理
-	ResetRenderer();
-
 #endif
 }
 
