@@ -51,7 +51,7 @@ public: //メンバー変数
 	UIcharacter* uiCharacter01;		//プレイヤー１用文字のUI
 	UIcharacter* uiCharacter02;		//プレイヤー2用文字のUI
 	UItexture	uiTexture;			//テクスチャのUI
-	UIrank*     uiRank;			//プレイヤー１のランクのUI
+	UIrank*     uiRank;				//プレイヤー１のランクのUI
 	UIrank      uiRank02;			//プレイヤー2のランクのUI
 	UInumber	uiNumber[uiNumberNS::NUMBER_TYPE_MAX];//数字
 	ResultBG*   resultBG;			//リザルト背景
@@ -68,6 +68,8 @@ public: //メンバー変数
 	int			rank01;				//プレイヤー１のランク管理用
 	int         rank02;				//プレイヤー2のランク管理用
 	bool		playedBGM;			//BGM再生用フラグ
+	int			score;				//スコア
+	int			rankType;			//ランク確認用
 public: //メンバー関数
 	ResultUI();						//コンストラクタ
 	~ResultUI();					//デストラクタ

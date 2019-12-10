@@ -52,7 +52,7 @@ void ResultUI::initialize()
 	resultPhase = PHASE_01;
 
 	//全体緑化率
-	greenigPersent = 0;
+	//greenigPersent = 0;
 
 	//緑化本数
 	greeningNum01 = 0;
@@ -68,6 +68,8 @@ void ResultUI::initialize()
 
 	rank01 = 0;
 	rank02 = 0;
+
+	rankType = 0;
 
 	//文字UIの初期化
 	uiCharacter01->initialize(PLAYER_01);//プレイヤー1
@@ -97,7 +99,8 @@ void ResultUI::initialize()
 //============================
 void ResultUI::render()
 {
-	
+	rank01 = decisionRank(greenigPersent, greeningNum01, defeat01);
+	rank02 = decisionRank(greenigPersent, greeningNum02, defeat02);
 	resultBG->render();					//リザルト背景の描画
 	uiTexture.render(resultPhase);		//テクスチャの描画
 	uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
@@ -126,8 +129,6 @@ void ResultUI::render()
 	if (resultPhase == PHASE_05)
 	{
 		//ランク描画
-		rank01 = decisionRank(greenigPersent, greeningNum01, defeat01);
-		rank02 = decisionRank(greenigPersent, greeningNum02, defeat02);
 		uiRank->render(rank01, rank02);
 		//数字の表示
 		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
@@ -232,33 +233,33 @@ void ResultUI::decidionBGM()
 int ResultUI::decisionRank(int greenigPersent, int greeningNum, int defeat)
 {
 	//ランクの確定(仮)
-int  score = greenigPersent + (greeningNum / 10 )+ defeat;//全体緑化率+緑化本数割る１０+撃破数(仮）
-int rank;
+	 score = greenigPersent + (greeningNum / 10 )+ defeat;//全体緑化率+緑化本数割る１０+撃破数(仮）
+	 rankType =0;
 	//**********************************************
 	//70以下でFAILED,70以上８０以下CLEARE         //
 	//80以上90以下GREAT,90以上でEXCELLENT         //
 	//**********************************************
 
- //プレイヤー１のランクの確定
+ //プレイヤー１のランクの確定 直しポイント
   if (score < 70)
    {
-   	rank = uiRankNS::UIRANK_TYPE::FAILED;
-	return rank;
+   	rankType = uiRankNS::UIRANK_TYPE::FAILED;
+	return rankType;
    }
-   else if (score >= 70 && score01 < 80)
+   else if (score >= 70 && score < 80)
    {
-   	rank = uiRankNS::UIRANK_TYPE::CLEARE;
-	return rank;
+   	rankType = uiRankNS::UIRANK_TYPE::CLEARE;
+	return rankType;
    }
-   else if (score >= 70 && score01 < 90)
+   else if (score >= 70 && score < 90)
    {
-   	rank = uiRankNS::UIRANK_TYPE::GREAT;
-	return rank;
+   	rankType = uiRankNS::UIRANK_TYPE::GREAT;
+	return rankType;
    }
    else if(score >= 90)
    {
-   	rank = uiRankNS::UIRANK_TYPE::EXCELLENT;
-	return rank;
+   	rankType = uiRankNS::UIRANK_TYPE::EXCELLENT;
+	return rankType;
    }
 	
 }

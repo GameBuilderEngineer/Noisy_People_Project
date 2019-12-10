@@ -811,6 +811,9 @@
     <ClCompile Include="WholeGreening.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Persent.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1294,6 +1297,9 @@
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClInclude>
     <ClInclude Include="WholeGreening.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Persent.h">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClInclude>
   </ItemGroup>

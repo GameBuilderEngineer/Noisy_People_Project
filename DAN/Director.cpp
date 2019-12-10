@@ -145,6 +145,7 @@ HRESULT Director::initialize() {
 
 	//scene
 	scene = new Splash();
+	//scene = new Result();
 	scene->setGameMaster(gameMaster);
 	scene->initialize();
 

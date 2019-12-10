@@ -13,6 +13,7 @@
 #include "ResultUI.h"
 #include "StaticMeshRenderer.h"
 #include "TreeManager.h"
+#include "GameMaster.h"
 //#include "Sprite.h"
 //#include "UIResult.h"
 //#include "SceneEffect.h"
@@ -45,6 +46,7 @@ private:
 	TreeManager*					treeManager;		//ツリー
 
 	float							playbackTimer;		//再生タイマー
+
 
 public:
 	Result(void);
