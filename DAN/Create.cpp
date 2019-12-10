@@ -24,7 +24,7 @@ Create::Create()
 {
 	sceneName = "Scene -Create-";
 
-	nextScene = SceneList::RESULT;
+	nextScene = SceneList::TITLE;
 
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;

@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "EnemyManager.h"
+#include "Input.h"
 
 //===================================================================================================================================
 //【マクロ】
@@ -94,9 +95,9 @@ public:
 #endif
 
 private:
-
 	//変数	
 	ENEMY_FILE enemyFile;									//エネミー構造体
+	Input *input;
 
 	//エネミーファイル
 	void OutputEnemyFile(void);								//エネミーファイルの書き出し処理

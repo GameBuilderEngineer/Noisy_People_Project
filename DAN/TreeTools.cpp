@@ -70,6 +70,10 @@ TREE_TOOLS::TREE_TOOLS()
 	Model[treeNS::TREE_TYPE::ANALOG_TREE] = staticMeshNS::A_TRUNK;
 	Model[treeNS::TREE_TYPE::DIGITAL_TREE] = staticMeshNS::B_TRUNK;
 
+	//レンダラーのリセット処理
+	ResetRenderer();
+
+	input = getInput();
 #endif
 }
 
@@ -146,6 +150,14 @@ void TREE_TOOLS::outputTreeToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		//フラグ
 		bool creatFlag = false;
 		bool deleteFlag = false;
+		if (input->wasKeyPressed('J'))
+		{
+			creatFlag = true;
+		}
+		else if (input->wasKeyPressed('K'))
+		{
+			deleteFlag = true;
+		}
 
 		//機能
 		ImGui::Checkbox("New Tree", &creatFlag);
