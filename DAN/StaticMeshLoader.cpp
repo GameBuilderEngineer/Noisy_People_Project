@@ -28,7 +28,7 @@ StaticMeshLoader::StaticMeshLoader()
 	//外部参照用ポインタへ代入
 	pointerStaticMeshLoader = this;
 
-	fileName[FIELD]									= { "testField.x" };						//01
+	fileName[FIELD]									= { "DegreeCheckField.x" };					//01
 	fileName[CUBE]									= { "cube.x" };								//02
 	fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };			//03
 	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
