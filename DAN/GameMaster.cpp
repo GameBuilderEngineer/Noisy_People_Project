@@ -211,7 +211,7 @@ int  GameMaster::getKillEnemyNum(int playerNo)
 	return killEnemyNum[playerNo];
 }
 //イベントリストの取得
-int GameMaster::getEventList(TreeTable* out,float time)
+int GameMaster::getEventList(TreeTable** out,float time)
 {
 	int eventNum = 0;
 	
@@ -226,7 +226,7 @@ int GameMaster::getEventList(TreeTable* out,float time)
 	//リストの作成
 	//・イベントリストの取得要求有(outにポインタ有)
 	//・イベント数が0でない
-	if (out && eventNum)
+	if (out != NULL && eventNum)
 	{
 		//アウトプットするイベントリストを作成する。
 		TreeTable* list = NULL;
@@ -238,21 +238,24 @@ int GameMaster::getEventList(TreeTable* out,float time)
 			if (current >= eventNum)continue;
 			
 			//イベントを取得
-			TreeTable table = *treeTableList.getValue(i);
+			TreeTable* table = treeTableList.getValue(i);
 
 			//既に再生済みならスルー
-			if (table.playBacked)continue;
+			if (table->playBacked)continue;
 
 			//今再生すべきイベントなので、リストへ登録する
-			if (time >= table.eventTime)		
+			if (time >= table->eventTime)		
 			{
 				//リストへ登録
-				list[current] = table;
+				list[current] = *table;
+				//リスト番号を進める
 				current++;
+				//イベントテーブルを再生完了状態にする
+				table->playBacked = true;
 			}
 		}
 
-		out = list;
+		*out = list;
 	}
 
 	return eventNum;

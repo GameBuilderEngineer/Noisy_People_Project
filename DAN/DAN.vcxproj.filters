@@ -814,7 +814,9 @@
     <ClCompile Include="WholeGreening.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="Display.cpp">
+      <Filter>Game Layer\Scene\Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1300,7 +1302,9 @@
     <ClInclude Include="WholeGreening.h">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Display.h" />
+    <ClInclude Include="Display.h">
+      <Filter>Game Layer\Scene\Display</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

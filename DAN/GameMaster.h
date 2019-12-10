@@ -142,7 +142,7 @@ public:
 	//※取得したリストは必ずSAFE_DELETE_ARRAYすること
 	//TreeTable* out ：ポインタを代入するとリストが格納される。
 	//float		 time：経過時間を代入する
-	int getEventList(TreeTable* out,float time);
+	int getEventList(TreeTable** out,float time);
 
 	//setter
 	void setConversionOrder(int* newValue);

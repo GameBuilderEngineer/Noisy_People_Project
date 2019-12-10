@@ -262,6 +262,7 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 			//(*objectList->getValue(i))->existenceTimer = 0.0f;
 			objectList->remove(objectList->getNode(i));
 			didUnRegister = true;
+			updateAccessList();
 			//ŒŸõI—¹
 			return;	
 		}
