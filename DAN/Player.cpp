@@ -218,7 +218,7 @@ void Player::grounding()
 		}
 		else {
 			dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-			if (dot >= MAX_SLOPE) {
+			if (dot > MAX_SLOPE) {
 				speed = slip(speed, gravityRay.normal);
 			}
 			else {
@@ -350,7 +350,7 @@ void Player::updatePhysics(float frameTime)
 		D3DXVECTOR3 frictionDirection;
 		D3DXVec3Normalize(&frictionDirection,&speed);
 		dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-		if (dot >= MAX_SLOPE) {
+		if (dot > MAX_SLOPE) {
 			// ‘¬“x‚É–€ŽC‚Ì‰e‹¿‚ð—^‚¦‚é
 			speed -= frictionDirection * MOVE_FRICTION * GRAVITY_FORCE * frameTime;
 		}
