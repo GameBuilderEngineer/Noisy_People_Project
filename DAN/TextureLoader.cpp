@@ -87,6 +87,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_EN_TANK] = { "EnGuage_Stock.png" };
 	textureName[UI_TREE_MARKER] = { "Dot.png" };
 	textureName[UI_TREE_SIGN] = { "Digit_Tree.png" };
+	textureName[UI_TIMER_NUMBER] = { "num_white.png" };
 
 	// ResultUIの文字や記号
 	textureName[RESULT] = { "Result.png" };
@@ -96,10 +97,13 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_PERSENT] = { "Percent.png" };
 	textureName[RESULT_DEFEAT] = { "Defeated_Counts.png" };
 	textureName[RESULT_GEKITAI] = { "Gekitai_Su.png" };
+	textureName[RESULT_GREEN_NUM] = { "Greening_Num.png" };
+	textureName[RESULT_RYOKUKA_KAZU] = { "Ryokuka_Honsuu.png" };
 
 	//ResultUIのテクスチャ
 	textureName[RESULT_LINE] = { "Line.png" };
-	textureName[RESULT_FLAME] = { "Flame.png" };
+	textureName[RESULT_FLAME] = { "Flame_1.png" };
+	textureName[RESULT_FLAME02] = { "Flame_2.png" };
 	textureName[RESULT_CHARA_A] = { "Chara_A.png" };
 	textureName[RESULT_CHARA_B] = { "Chara_B.png" };
 	textureName[RESULT_NEXT] = { "Next.png" };
@@ -109,6 +113,9 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_GREAT] = { "Great.png" };
 	textureName[RESULT_CLEARE] = { "Cleared.png" };
 	textureName[RESULT_FAILED] = { "Failed.png" };
+
+	//ResultBG
+	textureName[RESULT_BG] = { "Result_BG.png" };
 
 	// etc
 	textureName[NUMBER] = { "num.png" };

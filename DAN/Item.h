@@ -6,6 +6,7 @@
 #pragma once
 #include "Object.h"
 #include "BoundingSphere.h"
+#include "EffekseerManager.h"
 
 
 //=============================================================================
@@ -28,6 +29,44 @@ namespace itemNS
 		D3DXVECTOR3 defaultDirection;	// 初期正面方向
 		void zeroClear() { ZeroMemory(this, sizeof(ItemData)); }
 	}ITEMSET;
+
+	//=============================================================================
+	// アイテム標準エフェクト
+	//=============================================================================
+	class ItemEffect :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3* syncPosition;
+		ItemEffect(int no,D3DXVECTOR3* sync)
+		{
+			syncPosition = sync;
+			managerNo = no;
+			effectNo = effekseerNS::DROP_ITEM;
+		}
+		virtual void update()
+		{
+			position = *syncPosition;
+			Instance::update();
+		};
+	};
+
+	/*class ItemDestroyEffect :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3* syncPosition;
+		ItemDestroyEffect(int no, D3DXVECTOR3* sync)
+		{
+			syncPosition = sync;
+			managerNo = no;
+			effectNo = effekseerNS::DROP_ITEM;
+		}
+		virtual void update()
+		{
+			position = *syncPosition;
+			Instance::update();
+		}
+	};*/
+
 }
 
 
@@ -40,6 +79,10 @@ private:
 	itemNS::ItemData itemData;
 	LPD3DXMESH	attractorMesh;				// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;			// 重力（引力）発生オブジェクトマトリックス
+
+
+	itemNS::ItemEffect* itemEffect;
+	//itemNS::ItemDestroyEffect* itemDestroyEffect;
 
 	// Static
 	static int numOfItem;					// アイテムオブジェクトの総数

@@ -100,7 +100,7 @@ void EventMaker::makeEventSpawningEnemyAroundPlayer(int playerType)
 	enemyNS::ENEMYSET enemySet;
 	enemySet.enemyID = enemyManager->issueNewEnemyID();
 	enemySet.type = decideSpawnEnemyType();
-	enemySet.defaultPosition = createGroundedPositionFromPivot(player[playerType].position, 25.0f, 5.0f);
+	enemySet.defaultPosition = /*player[playerType].position;*/ createGroundedPositionFromPivot(player[playerType].position, 25.0f, 5.0f);
 	enemySet.defaultDirection = *player[playerType].getPosition() - enemySet.defaultPosition;
 	enemySet.defaultState = stateMachineNS::PATROL;
 	opeGenerator->spawnEnemy(enemySet);

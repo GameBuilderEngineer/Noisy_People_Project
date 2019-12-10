@@ -61,6 +61,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
 	fileName[YAMADA_ROBOT]							= { "SandBox_03_Robot.x" };					//03
 	fileName[SAMPLE_NAVMESH]						= { "SandBox_02_NavMesh.x" };				//04
+	//fileName[SAMPLE_NAVMESH]						= { "unko.x" };								//‚¢‚Á‚½‚ñ‚±‚Ì‚Ü‚Ü‚Å
 	fileName[DICE]									= { "dice.x" };								//05
 	fileName[YAMADA_PLANE]							= { "plane.x" };							//06
 	fileName[YAMADA_ROBOT2]							= { "Robot.x" };							//07
@@ -73,6 +74,8 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[DATE_ISLAND_V2_BLACK]					= { "DateIsland_v2_Black.x" };				//14
 	fileName[DATE_ISLAND_FINAL]						= { "DateIsland_Final.x" };					//15
 	fileName[DATE_ISLAND_FINAL_BLACK]				= { "DateIsland_Final_Black.x" };			//16
+	fileName[DATE_ISLAND_FINAL_NAVIMESH]			= { "DateIsland_Final_NavMesh.x" };			//17
+	//fileName[DATE_ISLAND_FINAL_NAVIMESH] = { "NavTest.x" };									//‚¢‚Á‚½‚ñ‚±‚Ì‚Ü‚Ü‚Å
 	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };					//01
 
 

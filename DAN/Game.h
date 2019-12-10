@@ -86,10 +86,6 @@ private:
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 
-	DeadTree*						deadTree;			//枯木
-	TreeTypeA*						treeA;				//木Ａ
-	TreeTypeB*						treeB;				//木B
-	Stone*							stone;				//石
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面
 

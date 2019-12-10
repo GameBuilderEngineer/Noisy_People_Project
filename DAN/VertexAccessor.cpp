@@ -16,7 +16,8 @@ void VertexAccessor::initialize(StaticMesh* staticMesh)
 	int i = 0;
 
 	// 参照対象ごとに頂点アドレスからのオフセット値を計算する
-	while (staticMesh->vertexElement[i].Type != MAXD3DDECLTYPE)
+	//while (staticMesh->vertexElement[i].Type != MAXD3DDECLTYPE)
+	while (i < 65)
 	{
 		switch (staticMesh->vertexElement[i].Usage)
 		{
@@ -34,6 +35,10 @@ void VertexAccessor::initialize(StaticMesh* staticMesh)
 
 		case D3DDECLUSAGE_TEXCOORD:
 			offset[VERTEX_ELEMENT::UV] = sumOffset;
+			break;
+
+		case D3DDECLUSAGE_BINORMAL:
+			offset[VERTEX_ELEMENT::BINORMAL] = sumOffset;
 			break;
 
 		default:
@@ -60,6 +65,10 @@ void VertexAccessor::initialize(StaticMesh* staticMesh)
 
 		case D3DDECLTYPE_D3DCOLOR:
 			sumOffset += sizeof(D3DCOLOR);
+			break;
+
+		case D3DDECLTYPE_UNUSED:// 未使用
+			sumOffset += 0;
 			break;
 
 		default:

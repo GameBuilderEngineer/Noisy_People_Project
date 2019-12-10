@@ -58,8 +58,14 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	d3dpp.BackBufferCount			= 1;
 	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
 #ifdef _DEBUG
+#if 1
 	d3dpp.Windowed					= true;
 	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
+#else
+	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
+	d3dpp.Windowed = false;
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+#endif
 #else
 	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
 	d3dpp.Windowed					= false;

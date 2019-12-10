@@ -56,13 +56,10 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_1P] = false;
 	playedDigitalTreeEffect[gameMasterNS::PLAYER_2P] = false;
 
-#if 1	// ツリーツールのデータを読み込む
-	TREE_TOOLS* treeTools = new TREE_TOOLS;
-	for (int i = 0; i < treeTools->GetTreeMax(); i++)
-	{
-		createTree(treeTools->GetTreeSet(i));
-	}
-	SAFE_DELETE(treeTools);
+	gameMaster = NULL;
+
+#if 0	// ツリーツールのデータを読み込む
+
 #endif
 }
 
@@ -127,7 +124,28 @@ void TreeManager::update(float frameTime)
 		//レンダラーの切替
 		if (needSwap)
 		{
-			swapDA(tree,beforeType);
+			//レンダラーの切替
+			swapDA(tree, beforeType);
+
+			TreeData* data = tree->getTreeData();
+			TreeTable in;
+			in.id			= data->treeID;
+			in.position		= tree->position;
+			in.rotation		= tree->quaternion;
+			in.scale		= tree->scale;
+			in.modelType	= data->model;
+
+			//あとで場合分け
+			in.player		= gameMasterNS::PLAYER_2P;
+			in.player		= gameMasterNS::PLAYER_1P;
+
+			//あとで場合分け
+			in.eventType	= gameMasterNS::TO_DEAD;
+			in.eventType	= gameMasterNS::TO_GREEN_WITH_DIGITAL;
+			in.eventType	= gameMasterNS::TO_GREEN_WITH_ANALOG;
+			//ゲームマスターへ記録
+			if(gameMaster)gameMaster->recordTreeTable(in);
+
 		}
 
 		//緑化している木をカウント
@@ -274,7 +292,6 @@ void TreeManager::switchingNormalView(int playerNo)
 	cTrunkRenderer->	enableRender();
 	cLeafRenderer->		enableRender();
 
-
 	//デジタルツリー
 	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
@@ -282,6 +299,13 @@ void TreeManager::switchingNormalView(int playerNo)
 	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
 	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	aDTrunkRenderer->	enableRender();
+	aDLeafRenderer->	enableRender();
+	bDTrunkRenderer->	enableRender();
+	bDLeafRenderer->	enableRender();
+	cDTrunkRenderer->	enableRender();
+	cDLeafRenderer->	enableRender();
 
 	//ツリーエフェクト
 	treeEffect->disableRender();
@@ -312,12 +336,12 @@ void TreeManager::switchingVisionView(int playerNo)
 	cTrunkRenderer->setAlpha(0.3f);
 	cLeafRenderer->setAlpha(0.3f);
 	//アナログツリー
-	aTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//aTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//bTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//bLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//cTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
 	aTrunkRenderer->	disableRender();
 	aLeafRenderer->		disableRender();
@@ -327,12 +351,19 @@ void TreeManager::switchingVisionView(int playerNo)
 	cLeafRenderer->		disableRender();
 
 	//デジタルツリー
-	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	//cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	aDTrunkRenderer->	disableRender();
+	aDLeafRenderer->	disableRender();
+	bDTrunkRenderer->	disableRender();
+	bDLeafRenderer->	disableRender();
+	cDTrunkRenderer->	disableRender();
+	cDLeafRenderer->	disableRender();
 
 	//ツリーエフェクト
 	treeEffect->enableRender();
@@ -395,6 +426,19 @@ void TreeManager::changeSolid()
 	cTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
 	cLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
 };
+
+//=============================================================================
+//【ツールデータを使用してツリーを作成】
+//=============================================================================
+void TreeManager::createUsingTool()
+{
+	TREE_TOOLS* treeTools = new TREE_TOOLS;
+	for (int i = 0; i < treeTools->GetTreeMax(); i++)
+	{
+		createTree(treeTools->GetTreeSet(i));
+	}
+	SAFE_DELETE(treeTools);
+}
 
 //=============================================================================
 // ツリーオブジェクトの作成
@@ -649,9 +693,13 @@ void TreeManager::outputGUI()
 #endif
 }
 
+//=============================================================================
+//【Setter】
+//=============================================================================
+void TreeManager::setGameMaster(GameMaster* gameMaster) { this->gameMaster = gameMaster; }
 
 //=============================================================================
-// Getter
+//【Getter】
 //=============================================================================
 std::vector<Tree*>& TreeManager::getTreeList(){ return treeList; }
 float TreeManager::getGreeningRate() { return greeningRate; }

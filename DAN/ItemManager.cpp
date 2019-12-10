@@ -8,6 +8,9 @@
 #include "ItemTools.h"
 using namespace itemNS;
 
+// Staticメンバ変数
+ItemManager* ItemManager::instance;
+
 //=============================================================================
 // 初期化
 //=============================================================================
@@ -118,7 +121,7 @@ void ItemManager::destroyItem(int _itemID)
 			}
 			SAFE_DELETE(itemList[i]);				// インスタンス破棄
 			itemList.erase(itemList.begin() + i);	// ベクター要素を消去
-			break;
+			
 		}
 	}
 }

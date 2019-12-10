@@ -9,6 +9,23 @@ using namespace telopNS;
 
 
 //=============================================================================
+//【コンストラクタ】
+//=============================================================================
+Telop::Telop()
+{
+	//再生パラメーター
+	openTelop = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Telop,false,NULL,false,NULL };
+}
+
+//===================================================================================================================================
+//【デストラクタ】
+//===================================================================================================================================
+Telop::~Telop()
+{
+}
+
+
+//=============================================================================
 // 初期化
 //=============================================================================
 void Telop::initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
@@ -18,6 +35,7 @@ void Telop::initialize(LPDIRECT3DTEXTURE9 _texture, int _pivot,
 	input = getInput();
 	telopFlag = false;
 	state = END;
+	announceTimer = 0.0f;
 	telopTimer = 0.0f;
 	displayTimer = 0.0f;
 	
@@ -49,6 +67,10 @@ void Telop::update(float _frameTime)
 	rate = 0.0f;
 	switch (state)
 	{
+	case ANNOUNCE:
+		announceTimer += _frameTime;
+		Telop::telopAnnounce();
+		break;
 	case OPEN://オープン
 		
 		telopTimer += _frameTime;		//シーンタイムの更新
@@ -99,13 +121,13 @@ void Telop::update(float _frameTime)
 		if (telopFlag)
 		{
 			//telopFlag = false;
-			state = OPEN;
+			state = ANNOUNCE;
 			telopTimer = 0.0f;
 		}
 		if (barFlag)
 		{
 			//telopFlag = false;
-			state = OPEN;
+			state = ANNOUNCE;
 			telopTimer = 0.0f;
 		}
 	}
@@ -137,6 +159,22 @@ void Telop::render()
 }
 
 //=============================================================================
+// アナウンス処理
+//=============================================================================
+void Telop::telopAnnounce()
+{
+	rate = announceTimer / telopNS::ANNOUNCE_TIME;
+	
+	if (announceTimer > telopNS::ANNOUNCE_TIME)
+	{
+		SoundInterface::SE->playSound(&openTelop);
+		announceTimer = 0.0f;
+		state = OPEN;
+	}
+
+}
+
+//=============================================================================
 // オープン処理
 //=============================================================================
 void Telop::open()
@@ -144,6 +182,7 @@ void Telop::open()
 	//高さの更新
 	rate = telopTimer / telopNS::OPEN_TIME;
 	heightValue = (int)((float)telopNS::MAX_HEIGHT * rate);
+	
 	if (telopTimer > telopNS::OPEN_TIME)
 	{
 		state = telopNS::DISPLAY;
@@ -233,3 +272,4 @@ void Telop::setManagerFlag(bool* managerFlag)
 {
 	playFlag = managerFlag;
 }
+

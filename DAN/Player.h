@@ -130,8 +130,8 @@ namespace playerNS{
 
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
-		D3DXVECTOR3(0, 20, -220),				//1P
-		D3DXVECTOR3(130, 10, 230)				//2P
+		D3DXVECTOR3(0, 20, -180),				//1P
+		D3DXVECTOR3(130, 20, 195)				//2P
 	};
 
 	// StatusParameter
@@ -153,7 +153,7 @@ namespace playerNS{
 	const float MAX_SPEED					= 6.0f;									//移動停止速度
 	const float MAX_SLIP					= 10.0f;								//移動停止速度
 	const float FALL_SPEED_MAX				= 60.0f;								//落下最高速度
-	const float MOVE_FRICTION				= 1.0f;									//地面摩擦係数
+	const float MOVE_FRICTION				= 1.3f;									//地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									//壁ずり摩擦係数
 	const float GROUND_FRICTION				= 0.25;									//着地摩擦係数
 	const float GRAVITY_FORCE				= 9.8f;									//重力
@@ -406,9 +406,8 @@ public:
 	Bullet*			getBullet(int i);							//発射中の弾へのポインタ
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
-	bool			getWhetherExecutingMoveOpe();							//移動操作中か取得
+	bool			getWhetherExecutingMoveOpe();				//移動操作中か取得
 	BulletManager*  getBulletManager();							//バレットマネージャを取得
-	bool			getOnGround();											//接地しているか取得
-	D3DXVECTOR3*	getGroundNormal();								//接地面法線を取得
-
+	bool			getOnGround();								//接地しているか取得
+	D3DXVECTOR3*	getGroundNormal();							//接地面法線を取得
 };

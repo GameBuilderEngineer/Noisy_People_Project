@@ -21,7 +21,15 @@
 //==================================
 namespace playerUiNS
 {
-
+	enum STATE {
+		NONE,
+		NORMAL,
+		VISION,
+		SKY_VISION,
+		DIGITAL_SHIFT,
+		DEATH,
+		STATE_NUM
+	};
 }
 
 //==================================
@@ -46,6 +54,7 @@ public://メンバー変数
 	bool	jumpFlag;		//ジャンプフラグ
 	int		hp;				//hp保存
 	int		power;			//電力保存
+	int     state;			//プレイヤーの状態
 private:
 public://メンバー関数
 	Player1UI();

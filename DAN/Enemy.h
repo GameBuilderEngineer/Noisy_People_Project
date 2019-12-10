@@ -276,6 +276,7 @@ namespace enemyNS
 class Enemy: public Object
 {
 protected:
+public:
 	enemyNS::EnemyData* enemyData;					// エネミーデータ
 	static int numOfEnemy;							// エネミーの総数
 	StaticMesh* staticMesh;							// メッシュ情報
@@ -318,6 +319,7 @@ protected:
 	// 移動
 	D3DXVECTOR3 destination;						// 目的地
 	D3DXVECTOR3 moveDirection;						// 移動ベクトル
+	D3DXQUATERNION	moveMotion;						// 移動モーション
 	bool isArraved;									// 到着フラグ
 	float movingTime;								// 計測移動時間
 	bool isDestinationLost;							// 目的地を見失った
@@ -356,7 +358,7 @@ protected:
 	// 聴覚センサー
 	bool earSensor(int playerType);
 	// ステアリング
-	void steering();
+	void steering(float frameTime);
 	// 攻撃中
 	void attacking(float frameTime);
 	//----------------
@@ -472,6 +474,7 @@ public:
 	static int debugEnemyID;			// デバッグするエネミーのID
 	Ray eyeAngleRay[4];					// 視覚レイ表示用
 	BoundingSphere hearingSphere[2];	// 聴覚距離表示用
+	DWORD faceNumber;					// デバッグ用面番号
 
 	// デバッグ環境を設定
 	void setDebugEnvironment();
@@ -485,8 +488,6 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
 	// デバッグセンサー
 	void debugSensor();
-	// ナビメッシュデバッグ描画
-	void debugNavimesh();
 	// ImGUIへの出力
 	void outputGUI();
 #endif//_DEBUG

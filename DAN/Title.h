@@ -13,7 +13,7 @@
 #include "TestEffect.h"
 #include "Sound.h"
 #include "SoundBase.h"
-
+#include "UtilityFunction.h"
 //#include "SceneEffect.h"
 #include "TitleUI.h"
 
@@ -43,6 +43,8 @@ namespace titleNS
 		CAMERA1,
 		CAMERA2,
 		CAMERA3,
+		CAMERA4,
+		CAMERA5,
 		MAX_CAMERA
 	};
 
@@ -56,9 +58,11 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
+
+
 	TestEffect* testEffect;
 	WaveBall *waveBall;
-
+	
 	//フィールド
 	Object*					titleField;
 	StaticMeshRenderer*		titleFieldRenderer;	
@@ -79,6 +83,14 @@ private:
 	float moveTimer;			//移動タイマー
 	D3DXVECTOR3 startPos;		//ラープ始点
 	
+	float rateY;
+	float rateX;
+	float degreeY;
+	float degreeX;
+	float degreeTimer = 0.0f;
+
+	
+
 	//カメラの軸取得変数
 	D3DXVECTOR3 cameraAxisZ;
 	D3DXVECTOR3 fixedAxisZ;
@@ -88,6 +100,7 @@ private:
 	
 
 public:
+
 	Title(void);
 	~Title(void);
 	virtual void initialize() override;

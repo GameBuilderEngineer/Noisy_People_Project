@@ -244,13 +244,20 @@ void Director::mainLoop() {
 		scene->changeScene(SceneList::SPLASH);
 		changeNextScene();
 	}
+#ifdef _DEBUG
+	else if (input->wasKeyPressed('1'))
+	{
+		scene->changeScene(SceneList::RESULT);
+		changeNextScene();
+	}
+#endif // _DEBUG
 
 	//シーン切替フラグの確認
 	if (scene->checkChangeOrder())
 	{
 		//fader->start();
 		//if(fader->nowPlaying())//フェードアウトが完了し、フェードアニメ再生中
-			changeNextScene();
+		changeNextScene();
 	}
 	setFrameTime();				//フレーム時間の初期化処理
 	update();					//メイン更新処理

@@ -54,7 +54,7 @@ void Timer::initialize()
 	//テクスチャの初期化
 	for (int i = 0; i < DIGIT_TIMER; i++)
 	{
-		BasicUI::initialize(timer[i], textureNS::reference(textureNS::NUMBER));
+		BasicUI::initialize(timer[i], textureNS::reference(textureNS::UI_TIMER_NUMBER));
 	}
 }
 

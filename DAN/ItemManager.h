@@ -17,6 +17,7 @@
 namespace itemNS
 {	
 	const int NUM_SURPLUS_DATA = 10;			// 初期アイテムデータ数に加えて確保する余剰分のベクター要素数
+
 }
 
 
@@ -26,6 +27,7 @@ namespace itemNS
 class ItemManager
 {
 private:
+	static ItemManager* instance;				// 外部取得用ポインタ
 	std::vector<Item*> itemList;				// アイテムポインタリスト
 	StaticMeshRenderer* batteryRenderer;		// 描画オブジェクト
 	StaticMeshRenderer* exampleItemRender;		// テスト用アイテム
@@ -34,6 +36,10 @@ private:
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
 
 public:
+	// 外部取得用
+	ItemManager() { instance = this; }	// ※シングルトンではない
+	static ItemManager* get() { return instance; }
+
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
 	void update(float frameTime);

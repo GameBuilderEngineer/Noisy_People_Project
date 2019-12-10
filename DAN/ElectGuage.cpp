@@ -82,7 +82,7 @@ void ElectGuage::changeGuage(int power)
 	//“d—Í‚Ì‰º2Œ…‚ðŽæ‚èo‚µ‚ÄŠ„‡‚ðo‚·
 	if (power == 100 || power == 200 || power == 300)
 	{
-		BasicUI::changeWhidthSize(electGuage,width);
+		BasicUI::changeWhidthSize(electGuage, WIDTH_EN_GUAGE);
 		/*uvCoord01 = D3DXVECTOR2(0.0f, 0.0f);
 		uvCoord02 = D3DXVECTOR2(1.0f, 0.0f);
 		uvCoord03 = D3DXVECTOR2(0.0f, 1.0f);
@@ -93,7 +93,10 @@ void ElectGuage::changeGuage(int power)
 	{
 		float  enPersent = (power % 100)/100.0f;
 		width= WIDTH_EN_GUAGE * enPersent;
-		BasicUI::changeWhidthSize(electGuage, width);
+		if (BasicUI::widthSize > width)
+		{
+			BasicUI::reductionWidthSize(electGuage, 1.0f);
+		}
 		/*uvCoord01 = D3DXVECTOR2(0.0f, 0.0f);
 		uvCoord02 = D3DXVECTOR2(enPersent, 0.0f);
 		uvCoord03 = D3DXVECTOR2(0.0f, 1.0f);

@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <xaudio2.h>
+#include <process.h>
 #pragma comment(lib,"xaudio2.lib")
 
 #define DIRECTINPUT_VERSION 0x0800		// Œx‘Îˆ

@@ -2,7 +2,7 @@
 //【Object.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/23
-// [更新日]2019/11/11
+// [更新日]2019/12/05
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -32,13 +32,13 @@ Object::Object()
 	treeCell.type		= ObjectType::NONE;									//オブジェクトタイプ：初期値NONE
 	treeCell.target		= ObjectType::NONE;									//オブジェクトタイプ：初期値NONE
 
-	ZeroMemory(&position, sizeof(D3DXVECTOR3));								//位置
+	position			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);					//位置
 	quaternion			= D3DXQUATERNION(0, 0, 0, 1);						//回転
 	scale				= D3DXVECTOR3(1.0f,1.0f,1.0f);						//スケール
 	radius				= 5.0f;												//半径
 	size				= D3DXVECTOR3(1.0f,1.0f,1.0f);						//サイズの設定
 	alpha				= 1.0f;												//α値の設定
-	ZeroMemory(&speed, sizeof(D3DXVECTOR3));								//速度
+	speed				= D3DXVECTOR3(0.0f, 0.0f, 0.0f);					//速度
 
 
 	onGravity			= false;											//重力フラグ
@@ -61,10 +61,11 @@ Object::Object()
 	reverseAxisZ.color	= D3DXCOLOR(0, 0, 255, 255);						//-z軸カラー
 #endif // _DEBUG
 
-	ZeroMemory(&matrixPosition, sizeof(D3DXMATRIX));						//位置行列
+	D3DXMatrixIdentity(&matrixPosition);									//位置行列
 	D3DXMatrixIdentity(&matrixRotation);									//回転行列
-	ZeroMemory(&matrixScale, sizeof(D3DXMATRIX));							//スケール行列
-	ZeroMemory(&matrixWorld, sizeof(D3DXMATRIX));							//ワールド行列
+	D3DXMatrixIdentity(&matrixScale);										//スケール行列
+	D3DXMatrixIdentity(&matrixCenter);										//センター行列
+	D3DXMatrixIdentity(&matrixWorld);										//ワールド
 
 	existenceTimer = 1.0f;													//存在時間
 

@@ -40,7 +40,7 @@ Game::Game()
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL};
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
 	
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
@@ -57,6 +57,7 @@ Game::~Game()
 	SoundInterface::BGM->uninitSoundStop();
 }
 
+//#define SAMPLE_NAVI	// ビルドスイッチ　このdefine周辺は近々で消しますが一旦残しておいてもらえると助かります中込
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
@@ -64,9 +65,12 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	//testField->scale *= 0.01f;
+#ifdef SAMPLE_NAVI
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+#else
+	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
-	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+#endif
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -144,14 +148,6 @@ void Game::initialize() {
 	light->initialize();
 
 
-	//枯木の初期化
-	deadTree = new DeadTree();
-	//木Aの初期化
-	treeA = new TreeTypeA();
-	//木Bの初期化
-	treeB = new TreeTypeB();
-	//石の初期化
-	stone = new Stone();
 	//スカイドームの初期化
 	sky = new Sky();
 	//海面の初期化
@@ -177,9 +173,11 @@ void Game::initialize() {
 	//ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2_NAVI_MESH));
+#ifdef SAMPLE_NAVI
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+#else
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+#endif
 	naviMesh->initialize();
 
 	// エネミー
@@ -189,6 +187,7 @@ void Game::initialize() {
 	// ツリー
 	treeManager = new TreeManager;
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	treeManager->setGameMaster(gameMaster);
 
 	// アイテム
 	itemManager = new ItemManager;
@@ -260,22 +259,15 @@ void Game::initialize() {
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
 
-	////エネミーをランダムに設置する
-	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	//{
-	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-	//	pos -= D3DXVECTOR3(200, 0, 240);
-	//	enemyNS::ENEMYSET tmp =
-	//	{
-	//		enemyManager->issueNewEnemyID(),
-	//		rand() % (enemyNS::ENEMY_TYPE::TYPE_MAX - 1),
-	//		stateMachineNS::PATROL,
-	//		pos,
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-	//	};
-	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-	//	enemyManager->createEnemy(p);
-	//}
+	//// ツリーをランダムに設置する
+	//treeNS::TreeData treeData;
+	//treeData.hp = 0;
+	//treeData.type = treeNS::ANALOG_TREE;
+	//treeData.greenState = treeNS::DEAD;
+	//treeData.isAttaked = false;
+
+	// ツリーをツール情報を元に設置する
+	treeManager->createUsingTool();
 
 	//// ツリーをランダムに設置する
 	//treeNS::TreeData treeData;
@@ -319,8 +311,6 @@ void Game::initialize() {
 	//	treeManager->createTree(treeData);
 	//}
 
-	//ツリーの最大数を取得
-	//gameMaster->readyConversionOrder((int)treeManager->getTreeList().size());
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）
 	aiDirector = new AIDirector;
@@ -345,10 +335,6 @@ void Game::uninitialize() {
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(maleRenderer);
 	SAFE_DELETE(femaleRenderer);
-	SAFE_DELETE(deadTree);
-	SAFE_DELETE(treeA);
-	SAFE_DELETE(treeB);
-	SAFE_DELETE(stone);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
 	//SAFE_DELETE(testEffect);
@@ -449,7 +435,6 @@ void Game::update(float _frameTime) {
 			}
 			virtual void update() {
 				position = *syncPosition;
-
 				Instance::update();
 			};
 		};
@@ -480,8 +465,8 @@ void Game::update(float _frameTime) {
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
 	//緑化状況10%
-	if (treeManager->getGreeningRate() >= 0.1 && 
-		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10))
+	if ((input->wasKeyPressed('M')) || treeManager->getGreeningRate() >= 0.1 &&
+		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
@@ -502,14 +487,6 @@ void Game::update(float _frameTime) {
 	}
 	
 
-	//枯木の更新
-	deadTree->update();
-	//木Aの更新
-	treeA->update();
-	//木Bの更新
-	treeB->update();
-	//石の更新
-	stone->update();
 	//スカイドームの更新
 	sky->update();
 	//海面の更新
@@ -539,10 +516,10 @@ void Game::update(float _frameTime) {
 
 
 	// Enterまたは〇ボタンでリザルトへ
-	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	//if(gameMaster->getGameTime() <= 0)
+	//if (input->wasKeyPressed(VK_RETURN) ||
+	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	if(gameMaster->getGameTime() <= 0)
 	{
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
@@ -807,6 +784,11 @@ void Game::collisions()
 			tree8Reregister(treeManager->getTreeList()[i]->getGreeningArea());
 		}
 	}
+	// マップオブジェクトの登録
+	for (size_t i = 0; i < mapObjectManager->getMapObjectList().size(); i++)
+	{
+		tree8Reregister(mapObjectManager->getMapObjectList()[i]);
+	}
 
 	//衝突対応リストを取得
 	collisionNum = linear8TreeManager->getAllCollisionList(&collisionList);
@@ -943,7 +925,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	aiDirector->run();		// メタAI実行
+	//aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -996,7 +978,7 @@ void Game::test()
 		itemManager->createItem(unko);
 	}
 	// 3Dモデル表示確認用（アイテムの更新）
-	if (input->wasKeyPressed('P'))
+	if (input->wasKeyPressed('N'))
 	{
 		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
 		itemManager->createItem(abc);
@@ -1021,11 +1003,22 @@ void Game::test()
 	//}
 
 
+	//if (input->wasKeyPressed('6'))
+	//{
+	//	aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
+
+	//	//aiDirector->eventMaker.makeEventEnemyAttaksTree();
+	//}
+
 	if (input->wasKeyPressed('6'))
 	{
 		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
 
 		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
+	}
+	if (input->wasKeyPressed('Z'))
+	{
+		player->position = D3DXVECTOR3(20, 5, 0);
 	}
 
 	// ツリーマネージャのテスト

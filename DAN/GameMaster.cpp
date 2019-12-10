@@ -104,6 +104,7 @@ void GameMaster::startGame()
 	gameTimerStop	= false;
 	pause = false;
 	progress = 0x00000000;
+	discardConversionOrder();
 }
 
 //===================================================================================================================================
@@ -136,16 +137,18 @@ bool GameMaster::playActionRamaining1Min()
 //===================================================================================================================================
 void GameMaster::recordTreeTable(TreeTable treeTable)
 {
-	treeTableList.insertFront(treeTable);
-
+	TreeTable data = treeTable;
+	data.eventTime = GAME_TIME - gameTimer;
+	treeTableList.insertFront(data);
+	treeTableList.listUpdate();
 }
 
 //===================================================================================================================================
 //【変換順番変数を準備する】
 //===================================================================================================================================
-void GameMaster::readyTreeTable(int treeNum) {
-
-
+void GameMaster::setTreeNum(int num) 
+{
+	treeNum = num;
 }
 
 //===================================================================================================================================
@@ -153,7 +156,7 @@ void GameMaster::readyTreeTable(int treeNum) {
 //===================================================================================================================================
 void GameMaster::discardConversionOrder() {
 	this->treeNum = 0;
-	//SAFE_DELETE_ARRAY(conversionOrder);
+	treeTableList.allClear();
 }
 #pragma endregion
 
@@ -166,10 +169,94 @@ void GameMaster::setProgress(int achievement) { progress |= achievement; }
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
-PlayerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}	//プレイヤー情報の取得
-float GameMaster::getGameTime() {return gameTimer;}							//ゲーム制限時間の取得
+PlayerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}				//プレイヤー情報の取得
+float GameMaster::getGameTime() {return gameTimer;}										//ゲーム制限時間の取得
 int GameMaster::getProgress() { return progress; }
 bool GameMaster::whetherAchieved(int ahievement) { return progress & ahievement; }
+//緑化率の取得
+int	 GameMaster::getGreeningRate() {
+	int numGreening = 0;
+	for (int i = 0; i < treeTableList.nodeNum; i++)
+	{
+		TreeTable data = *treeTableList.getValue(i);
+		switch (data.eventType)
+		{
+		case TO_DEAD: numGreening--;				break;
+		case TO_GREEN_WITH_ANALOG:numGreening++;	break;
+		case TO_GREEN_WITH_DIGITAL:numGreening++;	break;
+		}
+	}
+	float rate = numGreening / treeNum;
+	return (int)(rate*100.0f);
+}													
+//緑化本数
+int  GameMaster::getGreeningTreeNum(int playerNo)
+{
+	int numGreening = 0;
+	for (int i = 0; i < treeTableList.nodeNum; i++)
+	{
+		TreeTable data = *treeTableList.getValue(i);
+		if (data.player != playerNo)continue;
+		switch (data.eventType)
+		{
+		case TO_GREEN_WITH_ANALOG:numGreening++;	break;
+		case TO_GREEN_WITH_DIGITAL:numGreening++;	break;
+		}
+	}
+	return numGreening;
+}
+//撃退エネミー数
+int  GameMaster::getKillEnemyNum(int playerNo)
+{
+	return killEnemyNum[playerNo];
+}
+//イベントリストの取得
+int GameMaster::getEventList(TreeTable* out,float time)
+{
+	int eventNum = 0;
+	
+	//取得した時間からイベントの数を取得する。
+	for (int i = 0;i< treeTableList.nodeNum;i++)
+	{
+		TreeTable table = *treeTableList.getValue(i);	//イベントを取得
+		if (table.playBacked)continue;					//既に再生済みなので、スルー
+		if (time > table.eventTime)	eventNum++;			//今再生すべきイベントなので、イベント数を加算
+	}
+
+	//リストの作成
+	//・イベントリストの取得要求有(outにポインタ有)
+	//・イベント数が0でない
+	if (out && eventNum)
+	{
+		//アウトプットするイベントリストを作成する。
+		TreeTable* list = NULL;
+		list = new TreeTable[eventNum];
+		int current = 0;
+		for (int i = 0; i < treeTableList.nodeNum; i++)
+		{
+			//現在値がカウントしたイベント数を超えたらスルー[メモリガード]
+			if (current >= eventNum)continue;
+			
+			//イベントを取得
+			TreeTable table = *treeTableList.getValue(i);
+
+			//既に再生済みならスルー
+			if (table.playBacked)continue;
+
+			//今再生すべきイベントなので、リストへ登録する
+			if (time >= table.eventTime)		
+			{
+				//リストへ登録
+				list[current] = table;
+				current++;
+			}
+		}
+
+		out = list;
+	}
+
+	return eventNum;
+}
 
 //===================================================================================================================================
 //【GUI】
@@ -180,11 +267,34 @@ void GameMaster::createGUI()
 	ImGui::Text("gameTime = %f",		gameTimer);
 	ImGui::Text("countDownTimer = %f",	countDownTimer);
 	ImGui::Text("TreeNum = %d",	treeNum);
-	if (ImGui::CollapsingHeader("TreeOrderList"))
+	if (ImGui::CollapsingHeader("TreeTableList"))
 	{
-		for (int i = 0; i < treeNum; i++)
+		ImGui::Text("listNum: %d ", treeTableList.nodeNum);
+		
+		for (int i = 0; i < treeTableList.nodeNum; i++)
 		{
-			//ImGui::Text("conversionOrder[%d] = %d",i, conversionOrder[i]);
+			if (ImGui::CollapsingHeader("TreeTable"))
+			{
+				TreeTable table = *treeTableList.getValue(i);
+				ImGui::Text("No:[%d]",i);				
+				ImGui::Text("TreeId = %d",table.id);
+				ImGui::Text("PlayerNo:%d",table.player+1);
+				ImGui::Text("EventTime = %.02f",table.eventTime);
+				ImGui::Text("model = %d",table.modelType);
+				ImGui::Text("position(%.02f,%.02f,%.02f)",table.position.x,table.position.y,table.position.z);
+				ImGui::Text("rotation(%.02f,%.02f,%.02f,%.02f)",table.rotation.x,table.rotation.y,table.rotation.z,table.rotation.w);
+				ImGui::Text("scale(%.02f,%.02f,%.02f)",table.scale.x,table.scale.y,table.scale.z);
+				
+				if (table.playBacked)	ImGui::Text("playBacked:true");
+				else					ImGui::Text("playBacked:false");
+
+				switch (table.eventType)
+				{
+				case EVENT_TYPE::TO_DEAD:				ImGui::Text("EVENT:TO_DEAD");					break;
+				case EVENT_TYPE::TO_GREEN_WITH_ANALOG:	ImGui::Text("EVENT:TO_GREEN_WITH_ANALOG");		break;
+				case EVENT_TYPE::TO_GREEN_WITH_DIGITAL:	ImGui::Text("EVENT:TO_GREEN_WITH_DIGITAL");		break;
+				}
+			}
 		}
 	}
 }

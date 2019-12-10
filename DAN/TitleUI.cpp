@@ -8,6 +8,7 @@
 //============================
 #include "TitleUI.h"
 #include "Sound.h"
+
 //============================
 //【using宣言】
 //============================
@@ -144,28 +145,8 @@ void TitleUI::render()
 //============================
 void TitleUI::update(Input *input)
 {
-	if (input->wasKeyPressed(VK_DOWN)||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::DOWN)|| 
-		(input->getController()[inputNS::DINPUT_1P]->checkConnect() && input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().y>0))
-	{
-		//ボタンが押される度にSEのを鳴らす処理
-		PLAY_PARAMETERS playParameters = { 0 };
-		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Cursor, false,NULL,false,NULL};//SEの1曲目の設定
-		SoundInterface::SE->playSound(&playParameters);
-		selectState++;
-	}
-
-	else if (input->wasKeyPressed(VK_UP)|| 
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::UP)||
-		(input->getController()[inputNS::DINPUT_1P]->checkConnect() && input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().y<0))
-	{
-		//ボタンが押される度にSEのを鳴らす処理
-		PLAY_PARAMETERS playParameters = { 0 };
-		//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::HighPassFilter, 0.85f, 1.5f };//フィルターの設定
-		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Cursor, false,NULL,false,NULL};//SEの1曲目の設定
-		SoundInterface::SE->playSound(&playParameters);
-		selectState--;
-	}
+	
+	ringSE(input);
 
 	if (selectState > EXIT)
 	{
@@ -228,5 +209,33 @@ void TitleUI::moveBar()
 	}
 
 	UI[UI_BAR]->setVertex();
+}
 
+//===============================
+//音を鳴らす処理
+//===============================
+void TitleUI::ringSE(Input *input)
+{
+	if (input->wasKeyPressed(VK_DOWN) ||
+		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::DOWN) ||
+		(input->getController()[inputNS::DINPUT_1P]->checkConnect() && input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().y>0))
+	{
+		//ボタンが押される度にSEのを鳴らす処理
+		PLAY_PARAMETERS playParameters = { 0 };
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Cursor, false,NULL,false,NULL };//SEの1曲目の設定
+		SoundInterface::SE->playSound(&playParameters);
+		selectState++;
+	}
+
+	else if (input->wasKeyPressed(VK_UP) ||
+		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::UP) ||
+		(input->getController()[inputNS::DINPUT_1P]->checkConnect() && input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().y<0))
+	{
+		//ボタンが押される度にSEのを鳴らす処理
+		PLAY_PARAMETERS playParameters = { 0 };
+		//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::HighPassFilter, 0.85f, 1.5f };//フィルターの設定
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,SE_LIST::SE_Cursor, false,NULL,false,NULL };//SEの1曲目の設定
+		SoundInterface::SE->playSound(&playParameters);
+		selectState--;
+	}
 }

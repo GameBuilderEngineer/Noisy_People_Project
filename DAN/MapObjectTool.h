@@ -18,9 +18,9 @@
 //===================================================================================================================================
 #define MPOJ_CHUNK_ID		(4)
 #define MPOJ_CHUNK			("MPOJ")
-#define MPOJ_CHUNK			("MFMT")
+#define MFMT_CHUNK			("MFMT")
 #define MPOJ_FILE_PATH		("mpoj.mpoj")
-#define MPOJ_GUI_ID			(3)
+#define MPOJ_GUI_ID			(4)
 
 //===================================================================================================================================
 //【構造体】
@@ -70,18 +70,14 @@ public:
 #ifdef _DEBUG
 	//変数
 	int MpojListboxType;									//マップオブジェクトの種類(リストボックス)
-	int MpojListboxState;									//マップオブジェクトの状態(リストボックス)
-	int MpojListboxSize;									//マップオブジェクトのサイズ(リストボックス)
-	int MpojListboxModel;									//マップオブジェクトのモデル(リストボックス)
 	BoundingSphere *bodyCollide;							//当たり判定
 	Object** object;										//オブジェクト
-
+	int Model[mapObjectNS::MAPOBJECT_TYPE::MAPOBJECT_MAX];
 	//GUI
 	void outputMpojToolsGUI(int GUIid,						//GUI
 		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
 
 	//レンダラー
-	int  GetStaticMapobjMeshID(short mpojType);				//メッシュIDを取得(木)
 	void initRender();										//レンダラーの初期化
 	void initObject();										//オブジェクトの初期化
 	void update();											//更新
@@ -113,7 +109,6 @@ private:
 	void UpdateMfmt(int oldMpojMax);						//マップオブジェクトのフォーマット構造体を整理
 	void DeleteMpojFormat(short mpojId);					//マップオブジェクトのフォーマット構造体を消す
 	void AddMpojFormat(short mpojType,
-		short mpojState, short mpojSize, short mpojModel,
 		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
 
 	//マップオブジェクトの設置
@@ -121,7 +116,6 @@ private:
 	void SetMpojPos(short mpojId, const D3DXVECTOR3 pos);	//マップオブジェクトの位置を設定
 	void SetMpojDir(short mpojId, const D3DXVECTOR3 dir);	//マップオブジェクトの向きを設定
 	void SetMpoj(short mpojId, short mpojType,				//マップオブジェクトの設置
-		short mpojState, short mpojSize, short mpojModel,
 		const D3DXVECTOR3 pos, const D3DXVECTOR3 dir);
 
 #endif

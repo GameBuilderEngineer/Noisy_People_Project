@@ -19,17 +19,6 @@
 //===================================================================================================================================
 namespace tmpObjNS {
 
-	enum TMPOBJ_LIST
-	{
-		TMPOBJ_PLAYER,
-		TMPOBJ_WOLF,
-		TMPOBJ_TIGER,
-		TMPOBJ_BEAR,
-		TMPOBJ_BATTERY,
-		TMPOBJ_EXAMPLE,
-		TMPOBJ_MAX
-	};
-
 	struct OperationKeyTable
 	{
 		BYTE front;
@@ -115,9 +104,7 @@ private:
 	D3DXMATRIX					centralMatrixWorld;			// 中心座標ワールドマトリクス
 
 	// その他
-	int							staticMeshNo;				// メッシュのID
-	//int							ItemListboxMesh;				// メッシュの種類(リストボックス)
-	
+
 	D3DXVECTOR3					PositionYeah;
 
 public:
@@ -146,6 +133,7 @@ public:
 	virtual void outputGUI() override;							// ImGUI
 	void reset();												// リセット
 	void resetMesh(int meshId);									// メッシュのリセット
+	int	 staticMeshNo;				// メッシュのID
 
 	//setter
 	void setCamera(Camera* _camera);							//操作対象カメラのセット

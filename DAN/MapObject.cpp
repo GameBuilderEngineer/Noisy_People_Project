@@ -5,43 +5,45 @@
 //-----------------------------------------------------------------------------
 #include "MapObject.h"
 #include "ImguiManager.h"
+#include "ObjectTypeList.h"
 using namespace mapObjectNS;
 
 
+// Staticメンバ変数
 int MapObject::numOfMapObject = 0;
 
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-MapObject::MapObject(StaticMesh* _staticMesh, MapObjectData _itemData)
+MapObject::MapObject(StaticMesh* _staticMesh, MapObjectData _mapObjData)
 {
 	numOfMapObject++;
+	staticMesh = _staticMesh;
 
-	onGravity = true;
-	mapObjectData = _itemData;
+	// マップオブジェクトデータをセット
+	mapObjectData = _mapObjData;
 	position = mapObjectData.defaultPosition;
+	axisZ.direction = mapObjectData.defaultDirection;
 
-	if (CAN_COLLISION[mapObjectData.type])
-	{
-		treeCell.type = OBJECT_TYPE[mapObjectData.type];
-		treeCell.target = COLLISION_TARGET[mapObjectData.type];
-		setSize(SETTING_SIZE[mapObjectData.type]);
-	}
-	else
-	{
-		treeCell.type = ObjectType::NONE;
+	{// 衝突判定の設定
+		using namespace ObjectType;
+		treeCell.type = MAPOBJECT;
+		treeCell.target = PLAYER | ENEMY;
 	}
 
-
-
+	// オブジェクトの初期化
+	onGravity = true;
+	setSize(SETTING_SIZE[mapObjectData.type]);
 	Object::initialize(&position);
 
+	// メッシュ半径を取得
+	BoundingSphere radiusCheck;
+	radiusCheck.initialize(&position, _staticMesh->mesh);
+	setRadius(radiusCheck.getRadius());
 
-
-	//setRadius(1.0f);
-
-
+	// 向き変更
+	postureControl(axisZ.direction, mapObjectData.defaultDirection, 1);
 }
 
 
@@ -78,7 +80,7 @@ void MapObject::setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 //=============================================================================
 int MapObject::getNumOfMapObject(){ return numOfMapObject; }
 MapObjectData* MapObject::getMapObjectData() { return &mapObjectData; }
-
+StaticMesh* MapObject::getStaticMesh() { return staticMesh; }
 
 //=============================================================================
 // Setter

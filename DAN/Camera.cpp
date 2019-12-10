@@ -114,28 +114,6 @@ void Camera::rotation(D3DXVECTOR3 axis,float degree)
 	relativeQuaternion = temporaryQ;
 }
 
-void Camera::rotationX(D3DXVECTOR3 axis, D3DXVECTOR3 Y,float degree)
-{
-	D3DXQUATERNION conjugateQ;
-	D3DXQUATERNION rotationQ(0, 0, 0, 1);
-	float radian = D3DXToRadian(degree);
-	D3DXQuaternionRotationAxis(&rotationQ, &axis, radian);
-	D3DXQuaternionConjugate(&conjugateQ, &rotationQ);
-
-	D3DXQUATERNION temporaryQ;
-	//共役*回転対象*回転クォータニオン
-	temporaryQ = conjugateQ * (D3DXQUATERNION)Y * rotationQ;
-
-	D3DXVECTOR3 relativePosition = (D3DXVECTOR3)temporaryQ;
-	float relativeLength = D3DXVec3Length(&relativePosition);
-	if (limit & ROTATION_TOP_LIMIT &&
-		relativePosition.y > relativeLength - limitValueRotaionTop)return;
-	if (limit & ROTATION_BOTTOM_LIMIT &&
-		relativePosition.y < -relativeLength + limitValueRotaionBottom)return;
-
-	//共役*回転対象*回転クォータニオン
-	relativeQuaternion = temporaryQ;
-}
 
 //===================================================================================================================================
 //【回転時、相対位置ベクトルに高さ（上方向）制限をセットする】

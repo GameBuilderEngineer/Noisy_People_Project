@@ -2,7 +2,7 @@
 //【Result.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/09/23
+// [更新日]2019/12/05
 //===================================================================================================================================
 #pragma once
 
@@ -11,6 +11,8 @@
 //===================================================================================================================================
 #include "AbstractScene.h"
 #include "ResultUI.h"
+#include "StaticMeshRenderer.h"
+#include "TreeManager.h"
 //#include "Sprite.h"
 //#include "UIResult.h"
 //#include "SceneEffect.h"
@@ -20,7 +22,12 @@
 //===================================================================================================================================
 namespace resultNS
 {
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION =	D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f);
+	const D3DXQUATERNION	CAMERA_RELATIVE_QUATERNION	= D3DXQUATERNION(0.0f, 300.0f, -300.0f, 0.0f);
+	const float				CAMERA_SPEED				= 30.0f;
+
+	//再生速度
+	const float				PLAYBACK_SPEED				= 10.0f;
+
 }
 
 //===================================================================================================================================
@@ -30,6 +37,14 @@ class Result :public AbstractScene
 {
 private:
 	ResultUI resultUI;
+
+	//フィールド
+	Object*							testField;			//フィールド
+	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
+
+	TreeManager*					treeManager;		//ツリー
+
+	float							playbackTimer;		//再生タイマー
 
 public:
 	Result(void);
@@ -41,7 +56,7 @@ public:
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
 
-	//void render3D(Camera _currentCamera);
+	void render3D(Camera currentCamera);
 	void renderUI();
 
 #ifdef _DEBUG
