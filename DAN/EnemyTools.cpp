@@ -7,7 +7,6 @@
 #include "EnemyTools.h"
 #include "ImguiManager.h"
 
-
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -71,6 +70,12 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 	Model[enemyNS::ENEMY_TYPE::WOLF] = staticMeshNS::WOLF;
 	Model[enemyNS::ENEMY_TYPE::TIGER] = staticMeshNS::TIGER;
 	Model[enemyNS::ENEMY_TYPE::BEAR] = staticMeshNS::BEAR;
+
+	input = getInput();
+
+	//レンダラーのリセット処理
+	ResetRenderer();
+
 #endif
 }
 
@@ -144,6 +149,14 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 		//機能
 		ImGui::Checkbox("New Enemy", &creatFlag);
 		ImGui::Checkbox("Delete", &deleteFlag);
+		if (input->wasKeyPressed('J'))
+		{
+			creatFlag = true;
+		}
+		else if (input->wasKeyPressed('K'))
+		{
+			deleteFlag = true;
+		}
 
 		//エネミーの種類
 		const char* listboxEnemyType[] = { "WOLF", "TIGER", "BEAR" };

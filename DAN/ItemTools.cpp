@@ -65,6 +65,12 @@ ITEM_TOOLS::ITEM_TOOLS()
 	ItemListboxType = itemNS::ITEM_TYPE::BATTERY;
 	Model[itemNS::ITEM_TYPE::BATTERY] = staticMeshNS::SAMPLE_SCISSORS;
 	Model[itemNS::ITEM_TYPE::EXAMPLE] = staticMeshNS::YAMADA_ROBOT;
+
+	input = getInput();
+
+	//レンダラーのリセット処理
+	ResetRenderer();
+
 #endif
 }
 
@@ -133,6 +139,14 @@ void ITEM_TOOLS::outputItemToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		//フラグ
 		bool creatFlag = false;
 		bool deleteFlag = false;
+		if (input->wasKeyPressed('J'))
+		{
+			creatFlag = true;
+		}
+		else if (input->wasKeyPressed('K'))
+		{
+			deleteFlag = true;
+		}
 
 		//機能
 		ImGui::Checkbox("New Item", &creatFlag);
