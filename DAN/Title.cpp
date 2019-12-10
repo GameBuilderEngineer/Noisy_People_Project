@@ -35,9 +35,9 @@ Title::Title(void)
 	//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Cancel, false,1.0f,false,NULL };//SEの設定
 	playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
-
 	//再生
 	SoundInterface::BGM->playSound(&playParameters[1]);
+	
 
 	//初期化
 	tmpVolume = 1.0f;
@@ -110,7 +110,7 @@ void Title::initialize()
 	
 	//タイトルフィールド（テスト）
 	titleField = new Object();
-	titleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
+	titleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 	titleFieldRenderer->registerObject(titleField);
 	titleField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -235,13 +235,15 @@ void Title::update(float _frameTime)
 	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
 	
+	D3DXQUATERNION cameraQ;
+
 	switch (stateCamera)
 	{
 	case CAMERA0:
-		if (sceneTimer > 3.0f)
+		if (sceneTimer > 0.0f)
 		{
 			startPos = target->position;	//ラープ始点
-			moveTime = 3.0f;				//終点までの時間
+			moveTime = 6.0f;				//終点までの時間
 			moveTimer = moveTime;			//移動タイマー
 			stateCamera++;
 		}
@@ -258,7 +260,7 @@ void Title::update(float _frameTime)
 				startPos = target->position;
 				moveTime = 3.0f;
 				moveTimer = moveTime;
-
+				degreeTimer = 2.0f;
 				stateCamera++;
 			}
 		}
@@ -267,12 +269,21 @@ void Title::update(float _frameTime)
 		if (moveTimer > 0)
 		{
 			moveTimer -= frameTime;
+			degreeTimer -= frameTime;
 			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-15.0f, 63.0f, -150.0), 1.0f - moveTimer / moveTime);
-			//target->initialize(&D3DXVECTOR3(-15.0f, 63.0f, -150.0));
-			//camera->setRelative(D3DXQUATERNION(13.2f, 6.0f, -13.0f, 0.0f));
+			rateY = degreeTimer / 2.0f;
+			rateX = degreeTimer / 2.0f;
+			degreeY = UtilityFunction::lerp(0, D3DXToRadian(50.0f), 1.0f - rateY);
+			degreeX = UtilityFunction::lerp(0, D3DXToRadian(15.0f), 1.0f - rateX);
+			camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+			camera->rotation(fixedAxisX, degreeX);
 			if (moveTimer <= 0)
 			{
 				target->position = D3DXVECTOR3(-15.0f, 63.0f, -150.0);
+				startPos = target->position;
+				moveTime = 3.0f;
+				moveTimer = moveTime;
+				//degreeTime =
 				stateCamera++;
 			}
 
@@ -280,90 +291,118 @@ void Title::update(float _frameTime)
 		break;
 		
 	case CAMERA3:
+		if (moveTime > 0.0f)
+		{
+			moveTimer -= frameTime;
+			//degreeTimer -= frameTimer;
+			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-150.0f, 63.0f, -76.0), 1.0f - moveTimer / moveTime);
+
+		}
+		if (moveTimer <= 0)
+		{
+			target->position = D3DXVECTOR3(-150.0f, 63.0f, -76.0);
+			startPos = target->position;
+			moveTime = 3.0f;
+			moveTimer = moveTime;
+
+
+			stateCamera++;
+		}
+
 		break; 
-		//camera->setViewProjection();
+	case CAMERA4:
+		moveTimer -= frameTime;
+		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(0.0f, 50.0f, 0.0), 1.0f - moveTimer / moveTime);
+		camera->relativeQuaternion += camera->relativeQuaternion * 0.018f;
+		camera->rotation(camera->upVector, 0.3f);
+		if (moveTimer <= 0)
+		{
+			target->position = D3DXVECTOR3(0.0f, 50.0f, 0.0);
+			startPos = target->position;
+			stateCamera++;
+		}
+		break;
+
+	case CAMERA5:
+
+		camera->rotation(camera->upVector, 0.3f);
+		break;
+		
 	default:
 		break;
 	}
 
 
+	//Base::anyAxisRotationSlerp(&cameraQ,D3DXVECTOR3(13.2f, 6.0f, -13.0f),);
 
-	/*if (sceneTimer > 3.0f && moveTimer > 0)
-	{
-		moveTimer -= frameTime;
-		D3DXVec3Lerp(&target->position, &lerpPos, &D3DXVECTOR3(-34.0f, 160.0f, -135.0f), 1.0f - moveTimer/moveTime);
-		if (target->position.z < -135.0f)
-		{
-			target->position.z = -135.0f;
-		}
-	}*/
 
 	
 
-	//カメラ移動
-	if (input->isKeyDown('W'))
-	{
-		fixedAxisZ *= 1.0f;
-		target->position += fixedAxisZ;
-	}
-	if (input->isKeyDown('S'))
-	{
-		fixedAxisZ *= -1.0f;
-		target->position += fixedAxisZ;
-	}
-	if (input->isKeyDown('A'))
-	{
-		cameraAxisX *= -1.0f;
-		target->position += cameraAxisX;
-	}
-	if (input->isKeyDown('D'))
-	{
-		cameraAxisX *= 1.0f;
-		target->position += cameraAxisX;
-	}
-	if (input->isKeyDown('Q'))
-	{
-		Y *= 1.0f;
-		target->position += camera->upVector;
-	}
-	if (input->isKeyDown('E'))
-	{
-		Y *= 1.0f;
-		target->position -= camera->upVector;
+	////カメラ移動
+	//if (input->isKeyDown('W'))
+	//{
+	//	fixedAxisZ *= 1.0f;
+	//	target->position += fixedAxisZ;
+	//}
+	//if (input->isKeyDown('S'))
+	//{
+	//	fixedAxisZ *= -1.0f;
+	//	target->position += fixedAxisZ;
+	//}
+	//if (input->isKeyDown('A'))
+	//{
+	//	cameraAxisX *= -1.0f;
+	//	target->position += cameraAxisX;
+	//}
+	//if (input->isKeyDown('D'))
+	//{
+	//	cameraAxisX *= 1.0f;
+	//	target->position += cameraAxisX;
+	//}
+	//if (input->isKeyDown('Q'))
+	//{
+	//	Y *= 1.0f;
+	//	target->position += camera->upVector;
+	//}
+	//if (input->isKeyDown('E'))
+	//{
+	//	Y *= 1.0f;
+	//	target->position -= camera->upVector;
 
-	}
+	//}
 
-	//カメラ回転
-	//camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
-	//Y軸
-	if (input->isKeyDown(VK_RIGHT))
-	{
-		camera->rotation(camera->upVector, inputDegree);
-		//target->quaternion.y += 5.0f;
-	}
-	if (input->isKeyDown(VK_LEFT))
-	{
-		camera->rotation(-camera->upVector, inputDegree);
-		//target->quaternion.y -= 5.0f;
-	}
-	//X軸
-	if (input->isKeyDown(VK_UP))
-	{
-		camera->rotation(-fixedAxisX, inputDegree);
-	}
-	if (input->isKeyDown(VK_DOWN))
-	{
-		camera->rotation(fixedAxisX, inputDegree);
-	}
-	//ズーム
-	if (input->isKeyDown('Z'))
-	{
-		camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
-	}
-	if (input->isKeyDown('X'))
-	{
-		camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
-	}
+	////カメラ回転
+	////camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
+	////Y軸
+	//if (input->isKeyDown(VK_RIGHT))
+	//{
+	//	
+	//	camera->rotation(camera->upVector, inputDegree);
+	//	//target->quaternion.y += 5.0f;
+	//}
+	//if (input->isKeyDown(VK_LEFT))
+	//{
+	//	camera->rotation(-camera->upVector, inputDegree);
+	//	//target->quaternion.y -= 5.0f;
+	//}
+	////X軸
+	//if (input->isKeyDown(VK_UP))
+	//{
+	//	camera->rotation(-fixedAxisX, inputDegree);
+	//}
+	//if (input->isKeyDown(VK_DOWN))
+	//{
+	//	camera->rotation(fixedAxisX, inputDegree);
+	//}
+	////ズーム
+	//if (input->isKeyDown('Z'))
+	//{
+	//	camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
+	//}
+	//if (input->isKeyDown('X'))
+	//{
+	//	camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
+	//}
 
 	
 

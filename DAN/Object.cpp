@@ -39,7 +39,7 @@ Object::Object()
 	size				= D3DXVECTOR3(1.0f,1.0f,1.0f);						//サイズの設定
 	alpha				= 1.0f;												//α値の設定
 	speed				= D3DXVECTOR3(0.0f, 0.0f, 0.0f);					//速度
-
+	color				= D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 
 	onGravity			= false;											//重力フラグ
 	onActive			= true;												//アクティブフラグ

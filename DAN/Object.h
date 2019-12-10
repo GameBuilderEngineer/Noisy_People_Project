@@ -60,6 +60,7 @@ public:
 	float				radius;					//衝突半径
 	D3DXVECTOR3			size;					//衝突サイズ(幅/高さ/奥行き)
 	float				alpha;					//透過値
+	D3DXCOLOR			color;					//カラー
 
 	//移動系変数
 	D3DXVECTOR3			speed;					//速度

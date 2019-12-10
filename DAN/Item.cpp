@@ -22,6 +22,9 @@ Item::Item(StaticMesh* _staticMesh, ItemData _itemData)
 	position = itemData.defaultPosition;
 	Object::initialize(&position);
 	sphereCollider.initialize(&position, _staticMesh->mesh);
+	itemEffect = new itemNS::ItemEffect(0, &position);
+	effekseerNS::play(0, itemEffect);
+	//itemDestroyEffect = new itemNS::ItemDestroyEffect(0, &position);
 }
 
 
@@ -30,6 +33,8 @@ Item::Item(StaticMesh* _staticMesh, ItemData _itemData)
 //=============================================================================
 Item::~Item()
 {
+	effekseerNS::stop(0);
+	//effekseerNS::play(0, itemDestroyEffect);
 	numOfItem--;
 }
 
@@ -40,6 +45,7 @@ Item::~Item()
 void Item::update(float frameTime)
 {
 	Object::update();
+	
 }
 
 

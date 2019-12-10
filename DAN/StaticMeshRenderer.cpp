@@ -33,6 +33,7 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	objectNum				= 0;
 	fillMode				= staticMeshRendererNS::FILLMODE::SOLID;
 	matrixBuffer			= NULL;
+	colorBuffer				= NULL;
 	worldMatrix				= NULL;
 	declaration				= NULL;
 	renderPass				= LAMBERT_PASS;
@@ -53,6 +54,8 @@ StaticMeshRenderer::StaticMeshRenderer(StaticMesh* _staticMesh)
 	vertexElement[i] = { 1, sizeof(float)*4*2,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 3 };
 	i++;
 	vertexElement[i] = { 1, sizeof(float)*4*3,	D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 4 };
+	i++;
+	vertexElement[i] = { 2, 0,					D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 5 };
 	i++;
 	vertexElement[i] = D3DDECL_END();
 	i++;
@@ -105,6 +108,7 @@ void StaticMeshRenderer::update()
 
 	//値の更新
 	updateWorldMatrix();
+	updateColor();
 }
 
 //===================================================================================================================================
@@ -128,8 +132,9 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 	device->SetVertexDeclaration(declaration);
 
 	//ストリームにメッシュの頂点バッファをバインド
-	device->SetStreamSource(0, staticMesh->vertexBuffer,	0, staticMesh->numBytesPerVertex);
-	device->SetStreamSource(1, matrixBuffer,				0, sizeof(D3DXMATRIX));
+	device->SetStreamSource(0, staticMesh->vertexBuffer,	0,						staticMesh->numBytesPerVertex);
+	device->SetStreamSource(1, matrixBuffer,				0,						sizeof(D3DXMATRIX));
+	device->SetStreamSource(2, colorBuffer,					0,						sizeof(D3DXCOLOR));
 
 	//インデックスバッファをセット
 	device->SetIndices(staticMesh->indexBuffer);
@@ -175,10 +180,12 @@ void StaticMeshRenderer::render(LPD3DXEFFECT effect, D3DXMATRIX view, D3DXMATRIX
 
 	device->SetStreamSource(0, NULL, 0, NULL);
 	device->SetStreamSource(1, NULL, 0, NULL);
+	device->SetStreamSource(2, NULL, 0, NULL);
 
 	//後始末
 	device->SetStreamSourceFreq(0, 0);
 	device->SetStreamSourceFreq(1, 0);
+	device->SetStreamSourceFreq(2, 0);
 
 }
 
@@ -210,7 +217,7 @@ void StaticMeshRenderer::updateColor()
 
 	for (int i = 0; i < objectNum; i++)
 	{
-		//color[i] = (*objectList->getValue(i))->color;
+		color[i] = (*objectList->getValue(i))->color;
 	}
 	copyVertexBuffer(sizeof(D3DXCOLOR)*objectNum, color, colorBuffer);
 }
@@ -300,6 +307,10 @@ void StaticMeshRenderer::updateBuffer()
 	//ワールドマトリックス情報バッファの再作成
 	SAFE_RELEASE(matrixBuffer);
 	device->CreateVertexBuffer(sizeof(D3DXMATRIX)*objectNum, 0, 0, D3DPOOL_MANAGED, &matrixBuffer, 0);
+
+	//カラー情報バッファの再作成
+	SAFE_RELEASE(colorBuffer);
+	device->CreateVertexBuffer(sizeof(D3DXCOLOR)*objectNum, 0, 0, D3DPOOL_MANAGED, &colorBuffer, 0);
 }
 
 //===================================================================================================================================
@@ -313,6 +324,10 @@ void StaticMeshRenderer::updateArray()
 	//ワールドマトリックスバッファ用配列の再作成
 	SAFE_DELETE_ARRAY(worldMatrix);
 	worldMatrix = new D3DXMATRIX[objectNum];
+
+	//カラーバッファ用配列の再作成
+	SAFE_DELETE_ARRAY(color);
+	color = new D3DXCOLOR[objectNum];
 
 }
 

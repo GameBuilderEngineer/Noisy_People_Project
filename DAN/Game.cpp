@@ -166,7 +166,7 @@ void Game::initialize() {
 	//ディスプレイ用プレーンサンプル
 	samplePlane = new TestPlane();
 	//開発中広告
-	ad = new Advertisement();
+	//ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_V2));
@@ -270,12 +270,12 @@ void Game::initialize() {
 	//	enemyManager->createEnemy(p);
 	//}
 
-	// ツリーをランダムに設置する
-	treeNS::TreeData treeData;
-	treeData.hp = 0;
-	treeData.type = treeNS::ANALOG_TREE;
-	treeData.greenState = treeNS::DEAD;
-	treeData.isAttaked = false;
+	//// ツリーをランダムに設置する
+	//treeNS::TreeData treeData;
+	//treeData.hp = 0;
+	//treeData.type = treeNS::ANALOG_TREE;
+	//treeData.greenState = treeNS::DEAD;
+	//treeData.isAttaked = false;
 
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
@@ -362,7 +362,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(fixedUI);
 	SAFE_DELETE(player1UI);
 	SAFE_DELETE(player2UI);
-	SAFE_DELETE(ad);
+	//SAFE_DELETE(ad);
 
 	UninitMoveP();
 
@@ -445,7 +445,6 @@ void Game::update(float _frameTime) {
 			}
 			virtual void update() {
 				position = *syncPosition;
-
 				Instance::update();
 			};
 		};
@@ -476,8 +475,8 @@ void Game::update(float _frameTime) {
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
 	//緑化状況10%
-	if (treeManager->getGreeningRate() >= 0.1 && 
-		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10))
+	if ((input->wasKeyPressed('M')) || treeManager->getGreeningRate() >= 0.1 &&
+		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
@@ -509,7 +508,7 @@ void Game::update(float _frameTime) {
 	//ディスプレイ用プレーンサンプル
 	samplePlane->update(frameTime);
 	// 開発中広告
-	ad->update(frameTime);
+	//ad->update(frameTime);
 	
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -527,10 +526,10 @@ void Game::update(float _frameTime) {
 
 
 	// Enterまたは〇ボタンでリザルトへ
-	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	//if(gameMaster->getGameTime() <= 0)
+	//if (input->wasKeyPressed(VK_RETURN) ||
+	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	if(gameMaster->getGameTime() <= 0)
 	{
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
@@ -668,7 +667,7 @@ void Game::render3D(Camera currentCamera) {
 	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	// 開発中広告
-	ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
@@ -984,7 +983,7 @@ void Game::test()
 		itemManager->createItem(unko);
 	}
 	// 3Dモデル表示確認用（アイテムの更新）
-	if (input->wasKeyPressed('P'))
+	if (input->wasKeyPressed('N'))
 	{
 		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
 		itemManager->createItem(abc);

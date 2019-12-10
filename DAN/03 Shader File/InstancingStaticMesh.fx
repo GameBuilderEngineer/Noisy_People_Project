@@ -46,7 +46,8 @@ VS_OUT VS(
 	float4 matrix1		: TEXCOORD1,
 	float4 matrix2		: TEXCOORD2,
 	float4 matrix3		: TEXCOORD3,
-	float4 matrix4		: TEXCOORD4)
+	float4 matrix4		: TEXCOORD4,
+	float4 color		: TEXCOORD5)
 {
 	VS_OUT Out;
 	
@@ -87,7 +88,7 @@ VS_OUT VS(
 
 	//ランバート演算カラー
 	float4 lambert = max(ambient,saturate(dot(normal, lightDirection)));
-	Out.color = lambert*diffuse;
+	Out.color = lambert*diffuse*color;
 
 	return Out;
 }
