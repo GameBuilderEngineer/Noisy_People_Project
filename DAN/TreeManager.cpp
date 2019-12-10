@@ -463,6 +463,7 @@ void TreeManager::createTree(TreeData treeData)
 
 	tree->setAttractor(attractorMesh, attractorMatrix);
 	treeList.push_back(tree);
+	treeNum = tree->getNumOfTree();
 }
 
 //=============================================================================
@@ -703,3 +704,4 @@ void TreeManager::setGameMaster(GameMaster* gameMaster) { this->gameMaster = gam
 //=============================================================================
 std::vector<Tree*>& TreeManager::getTreeList(){ return treeList; }
 float TreeManager::getGreeningRate() { return greeningRate; }
+int TreeManager::getTreeNum() { return treeNum; }
