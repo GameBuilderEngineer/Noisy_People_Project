@@ -312,7 +312,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	networkInterface = new NETWORK_INTERFACE;
 
 	// 受信スレッド開始
-	_beginthreadex(NULL, 0, ReceiveThread, NULL, 0, NULL);
+	//_beginthreadex(NULL, 0, ReceiveThread, NULL, 0, NULL);
 
 	testPic = new TestPic(hWnd);
 
@@ -344,6 +344,8 @@ void Uninit(void)
 	delete(show);
 	delete(networkInterface);
 	delete(testPic);
+	
+	//_endthreadex(;
 }
 
 //=============================================================================
@@ -360,7 +362,7 @@ void Update(HWND hWnd)
 
 		testPic->update();
 
-		//networkInterface->updata();
+		networkInterface->updata();
 	}
 }
 

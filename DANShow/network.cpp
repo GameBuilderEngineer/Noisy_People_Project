@@ -29,6 +29,11 @@ NETWORK_INTERFACE::NETWORK_INTERFACE()
 	}
 
 	loop = true;
+
+	// 
+	u_long val = 1;
+	ioctlsocket(s, FIONBIO, &val);
+
 }
 
 NETWORK_INTERFACE::~NETWORK_INTERFACE()
@@ -41,8 +46,8 @@ NETWORK_INTERFACE::~NETWORK_INTERFACE()
 
 void NETWORK_INTERFACE::updata()
 {
-	while (loop)
-	{
+	//while (loop)
+	//{
 		// buf
 		char *buf;
 		buf = (char *)malloc(sizeof(PACKAGE));
@@ -59,5 +64,5 @@ void NETWORK_INTERFACE::updata()
 		memcpy(&tmp, buf, sizeof(PACKAGE));
 
 		free(buf);
-	}
+	//}
 }

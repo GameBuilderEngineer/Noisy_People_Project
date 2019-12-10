@@ -21,6 +21,9 @@ MPOJ_TOOLS::MPOJ_TOOLS()
 
 #ifdef _DEBUG
 	//レンダラーの初期化
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_01] = staticMeshNS::STONE_003;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_02] = staticMeshNS::STONE_003;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_03] = staticMeshNS::STONE_003;
 	initRender();
 #endif
 
@@ -63,15 +66,8 @@ MPOJ_TOOLS::MPOJ_TOOLS()
 	//マップオブジェクト情報
 	MpojListboxCurrent = 0;
 	MpojListboxType = mapObjectNS::MAPOBJECT_TYPE::STONE_01;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_01] = staticMeshNS::STONE_003;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_02] = staticMeshNS::STONE_003;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_03] = staticMeshNS::STONE_003;
 
 	input = getInput();
-
-	//レンダラーのリセット処理
-	ResetRenderer();
-
 #endif
 }
 
