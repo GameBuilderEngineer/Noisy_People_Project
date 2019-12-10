@@ -811,6 +811,9 @@
     <ClCompile Include="WholeGreening.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClCompile>
+    <ClCompile Include="TigerBullet.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1295,6 +1298,9 @@
     </ClInclude>
     <ClInclude Include="WholeGreening.h">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="TigerBullet.h">
+      <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
