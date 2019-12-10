@@ -39,7 +39,7 @@ if (_sceneName == "Scene -Tutorial-")
 	return;
 }
 
-#if 1	// エネミーツールのデータを読み込む
+#if 0	// エネミーツールのデータを読み込む
 ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
 for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 {
@@ -48,7 +48,7 @@ for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 SAFE_DELETE(enemyTools);
 #endif
 
-#if 1	// エネミーオブジェクトをツールデータを元に作成する
+#if 0	// エネミーオブジェクトをツールデータを元に作成する
 for (int i = 0; i < enemyDataList.nodeNum; i++)
 {
 	if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
@@ -432,6 +432,8 @@ Enemy* EnemyManager::findEnemy(int _enemyID)
 			return enemyList[i];
 		}
 	}
+
+	return NULL;
 }
 
 
@@ -481,7 +483,15 @@ void EnemyManager::outputGUI()
 		{
 			if (enemyList[i]->getEnemyID() == Enemy::debugEnemyID)
 			{
-				//ImGui::Text("horizontalAngle:%f\n", enemyList[i]->horizontalAngle);
+				ImGui::Text("state:%d\n", enemyList[i]->getEnemyData()->state);
+				ImGui::Text("[U]faceNumber:%d\n", enemyList[i]->faceNumber);
+
+				if (enemyList[i]->edgeList == NULL) { continue; }
+				for (int cnt = 0; cnt < enemyList[i]->edgeList->nodeNum; cnt++)
+				{
+					ImGui::Text("index(%d, %d)\n", enemyList[i]->edgeList->getValue(cnt)->index[0],
+						enemyList[i]->edgeList->getValue(cnt)->index[1]);
+				}	
 			}
 		}
 	}
@@ -491,7 +501,7 @@ void EnemyManager::outputGUI()
 		enemyNS::ENEMYSET tmp =
 		{
 			issueNewEnemyID(),
-			enemyNS::TIGER,
+			enemyNS::WOLF,
 			stateMachineNS::PATROL,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f),
@@ -501,23 +511,22 @@ void EnemyManager::outputGUI()
 		createEnemy(p);
 	}
 
+	static D3DXQUATERNION playerRelativeQuaternion;	// プレイヤー注視カメラの相対位置ベクトル
 	if (createDebugEnemy)
 	{
 		if (getEnemyList().empty() == false)
 		{
 			Enemy* debugEnemy = getEnemyList().back();
 			debugEnemy->debugEnemyID = debugEnemy->getEnemyID();
-			camera->setTarget(debugEnemy->getPosition());
+			camera->setTarget(&debugEnemy->center);
 			camera->setTargetX(&debugEnemy->getAxisX()->direction);
 			camera->setTargetY(&debugEnemy->getAxisY()->direction);
 			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
-			camera->setRelative(D3DXQUATERNION(0.0f, 6.0f, -4.5f, 0.0f));
-			debugEnemy->setDebugEnvironment();
+			playerRelativeQuaternion = camera->relativeQuaternion;
+			camera->setRelative(D3DXQUATERNION(0.0f, 30.0f, -10.5f, 0.0f));
 			debugEnemy->setCamera(&camera[0]);
 			debugEnemy->setDebugEnvironment();
 		}
-
-		
 	}
 
 	if (returnPlayer)
@@ -526,7 +535,7 @@ void EnemyManager::outputGUI()
 		camera->setTargetX(&player->getAxisX()->direction);
 		camera->setTargetY(&player->getAxisY()->direction);
 		camera->setTargetZ(&player->getAxisZ()->direction);
-		//camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -1.5f, 0.0f));
+		camera->setRelative(playerRelativeQuaternion = camera->relativeQuaternion);
 	}
 
 	if (destroyAllFlag)

@@ -70,7 +70,8 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 
 	// 移動の初期化
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	moveDirection = axisZ.direction;
+	D3DXQuaternionIdentity(&moveMotion);
 	isArraved = false;
 	movingTime = 0.0f;
 	isDestinationLost = false;
@@ -202,7 +203,7 @@ void Enemy::preprocess(float frameTime)
 
 		if (input->wasKeyPressed('8'))
 		{
-			destination = player->position;
+			destination = player->center;
 			movingTarget = &destination;
 		}
 		if (input->wasKeyPressed('7'))
@@ -212,6 +213,10 @@ void Enemy::preprocess(float frameTime)
 		if (input->isKeyDown('M'))
 		{
 			move(frameTime);
+		}
+		if (input->wasKeyPressed('U'))
+		{
+			naviMesh->isHitGrounding(NULL, &faceNumber, center);
 		}
 	}
 #endif// _DEBUG
@@ -285,12 +290,12 @@ void Enemy::searchPath()
 	canSearch = false;
 	isArraved = false;
 
-	if (edgeList != NULL)
-	{
-		// エッジリストの破棄
-		edgeList->terminate();
-		SAFE_DELETE(edgeList);
-	}
+	//if (edgeList != NULL)
+	//{
+	//	// エッジリストの破棄
+	//	edgeList->terminate();
+	//	SAFE_DELETE(edgeList);
+	//}
 
 	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	destination = *movingTarget;
@@ -298,7 +303,12 @@ void Enemy::searchPath()
 #ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)
 	{
-		naviMesh->debugEdgeList = edgeList;
+		// 移動ターゲットの現在位置までのエッジリストを取得
+		naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+		// 移動ターゲットの現在位置を目的地に設定
+		destination = *movingTarget;
+
+		naviMesh->debugEdgeList = &edgeList;
 	}
 #endif
 }
@@ -322,11 +332,11 @@ void Enemy::move(float frameTime)
 {
 	if (isAttacking)
 	{
-		attacking( frameTime);
+		attacking(frameTime);
 	}
 	else
 	{
-		steering();
+		steering(frameTime);
 	}
 }
 #pragma endregion
@@ -438,36 +448,44 @@ void Enemy::attacking(float frameTime)
 //=============================================================================
 // ステアリング
 //=============================================================================
-void Enemy::steering()
+void Enemy::steering(float frameTime)
 {
-	moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 newMoveDirection;
+	D3DXVECTOR3 tempDirection;
 
-	if (edgeList != NULL && edgeList->isEnpty())
-	{
-		// エッジリストの破棄
-		edgeList->terminate();
-		SAFE_DELETE(edgeList);
-	}
 
-	if (edgeList == NULL)
-	{
-		// 目的地に直線移動
-		moveDirection = destination - position;
-		D3DXVec3Normalize(&moveDirection, &moveDirection);
-	}
-	else
-	{
-		// ナビメッシュによる移動ベクトル生成（ステアリング）
-		naviMesh->steering(&moveDirection, &naviFaceIndex, center, edgeList);
-	}
+	// ナビメッシュによる移動ベクトル生成（ステアリング）
+	naviMesh->steering(&newMoveDirection, &naviFaceIndex, center, destination, &edgeList);
 
-#ifdef _DEBUG
-	if (enemyData->enemyID == debugEnemyID)
-	{
-		naviMesh->debugEdgeList = edgeList;
-	}
-#endif//_DEBUG
+	////moveDirection += newMoveDirection;
 
+	////if (oldMoveDirection == D3DXVECTOR3(0, 0, 0))
+	////{
+	////	oldMoveDirection = axisZ.direction;
+	////}
+	//if (moveDirection == D3DXVECTOR3(0, 0, 0))
+	//{
+	//	tempDirection = axisZ.direction;
+	//}
+	//else
+	//{
+	//	tempDirection = moveDirection;
+	//}
+
+	////カーブモーション
+	//float rotationRadian;
+	//if (formedRadianAngle(&rotationRadian, tempDirection, newMoveDirection))
+	//{
+	//	Base::anyAxisRotationSlerp(&moveMotion, groundNormal, rotationRadian, 1);
+	//}
+	//D3DXMATRIX matrix;
+	//D3DXMatrixIdentity(&matrix);
+	//D3DXMatrixRotationQuaternion(&matrix, &moveMotion);
+	//D3DXVec3TransformCoord(&moveDirection, &tempDirection, &matrix);
+
+	moveDirection = newMoveDirection;
+	
+	// 加速度に加算
 	acceleration += moveDirection * MOVE_ACC[enemyData->type];
 }
 #pragma endregion
@@ -720,18 +738,18 @@ void Enemy::prepareDie()
 //=============================================================================
 void Enemy::chase(float frameTime)
 {
-	if (canSense)
-	{
-		sensor();
-	}
+	//if (canSense)
+	//{
+	//	sensor();
+	//}
 
-	if (canSearch)
-	{
-		setPlayerChaseTarget();
-		searchPath();
-	}
+	//if (canSearch)
+	//{
+	//	setPlayerChaseTarget();
+	//	searchPath();
+	//}
 
-	move(frameTime);
+	//move(frameTime);
 }
 
 
@@ -740,23 +758,23 @@ void Enemy::chase(float frameTime)
 //=============================================================================
 void Enemy::patrol(float frameTime)
 {
-	if (canSense)
-	{
-		sensor();
-	}
+	//if (canSense)
+	//{
+	//	sensor();
+	//}
 
-	if (isPayingNewAttention)
-	{
-		static const float TEMP_DISTANCE = 20.0f;
-		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
-		destination = position + attentionDirection * TEMP_DISTANCE;
+	//if (isPayingNewAttention)
+	//{
+	//	static const float TEMP_DISTANCE = 20.0f;
+	//	D3DXVec3Normalize(&attentionDirection, &attentionDirection);
+	//	destination = position + attentionDirection * TEMP_DISTANCE;
 
-		isDestinationLost = false;
-		setMovingTarget(&destination);
-		searchPath();
-	}
+	//	isDestinationLost = false;
+	//	setMovingTarget(&destination);
+	//	searchPath();
+	//}
 
-	move(frameTime);
+	//move(frameTime);
 }
 
 
@@ -1128,7 +1146,7 @@ void Enemy::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVE
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	if (onGround)
 	{
-		acceleration += moveDirection * MOVE_ACC[enemyData->type];
+		acceleration += moveDirection * MOVE_ACC[enemyData->type] * 3; 
 	}
 	else
 	{
@@ -1204,16 +1222,6 @@ void Enemy::debugSensor()
 		}
 
 	}
-}
-
-
-//=============================================================================
-// ナビメッシュデバッグ描画
-//=============================================================================
-void Enemy::debugNavimesh()
-{
-	naviMesh->affectToEdgeVertex(edgeList);
-	naviMesh->debugRenderEdge(edgeList);
 }
 
 

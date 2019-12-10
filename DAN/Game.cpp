@@ -57,6 +57,7 @@ Game::~Game()
 	SoundInterface::BGM->uninitSoundStop();
 }
 
+#define SAMPLE_NAVI
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
@@ -64,7 +65,11 @@ void Game::initialize() {
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+#ifdef SAMPLE_NAVI
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+#else
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+#endif
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -167,8 +172,11 @@ void Game::initialize() {
 	//ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+#ifdef SAMPLE_NAVI
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+#else
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+#endif
 	naviMesh->initialize();
 
 	// エネミー
@@ -275,7 +283,8 @@ void Game::initialize() {
 	//treeData.isAttaked = false;
 
 	// ツリーをツール情報を元に設置する
-	treeManager->createUsingTool();
+	//treeManager->createUsingTool();
+
 	//// ツリーをランダムに設置する
 	//treeNS::TreeData treeData;
 	//treeData.hp = 0;
@@ -406,7 +415,10 @@ void Game::update(float _frameTime) {
 
 		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
 	}
-
+	if (input->wasKeyPressed('Z'))
+	{
+		player->position = D3DXVECTOR3(20, 5, 0);
+	}
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -607,15 +619,15 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
-		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
-	{
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_BLACK));
-	}
-	else {
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
-	}
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	//if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
+	//	player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
+	//{
+	//	testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+	//}
+	//else {
+	//	testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_BLACK));
+	//}
+	//testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 
 	// プレイヤーの描画
@@ -701,7 +713,7 @@ void Game::render3D(Camera currentCamera) {
 #endif
 
 #ifdef _DEBUG
-#if 0	// ナビゲーションメッシュのデバッグ描画
+#if 1	// ナビゲーションメッシュのデバッグ描画
 	naviMesh->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
 #endif //_DEBUG
@@ -1006,16 +1018,16 @@ void Game::test()
 	}
 
 	// デバッグエネミーで'7','8'使用中
-	// マップオブジェクトマネージャーのテスト
-	if (input->wasKeyPressed('7'))	// 作成
-	{
-		mapObjectNS::MapObjectData mapObjectData;
-		mapObjectData.zeroClear();
-		mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
-		mapObjectData.type = mapObjectNS::STONE_01;
-		mapObjectData.defaultPosition = *player->getPosition();
-		mapObjectManager->createMapObject(mapObjectData);
-	}
+	//// マップオブジェクトマネージャーのテスト
+	//if (input->wasKeyPressed('7'))	// 作成
+	//{
+	//	mapObjectNS::MapObjectData mapObjectData;
+	//	mapObjectData.zeroClear();
+	//	mapObjectData.mapObjectID = mapObjectManager->issueNewMapObjectID();
+	//	mapObjectData.type = mapObjectNS::STONE_01;
+	//	mapObjectData.defaultPosition = *player->getPosition();
+	//	mapObjectManager->createMapObject(mapObjectData);
+	//}
 
 
 	//if (input->wasKeyPressed('6'))

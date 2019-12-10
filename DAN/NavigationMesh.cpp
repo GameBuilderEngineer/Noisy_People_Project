@@ -36,7 +36,7 @@ void NavigationMesh::initialize()
 	position = D3DXVECTOR3(0.0f, FLOATING_HEIGHT, 0.0f);// 少し浮かせる
 	renderer = new StaticMeshRenderer(staticMesh);		// 描画オブジェクトを作成
 	renderer->registerObject(this);						// 描画オブジェクトに登録する
-	changeColor();										// メッシュの色を変える
+	//changeColor();										// メッシュの色を変える
 #endif //_DEBUG
 }
 
@@ -46,9 +46,6 @@ void NavigationMesh::initialize()
 //=============================================================================
 void NavigationMesh::uninitialize()
 {
-	// edgeListはNavigationMeshクラスではなく
-	// pathSearch()を呼んだクラスが破棄を行う
-
 #ifdef _DEBUG
 	renderer->allUnRegister();
 	SAFE_DELETE(renderer);
@@ -67,29 +64,22 @@ void NavigationMesh::update()
 
 //=============================================================================
 // 経路探索
-// [引数1] D3DXVECTOR3 from　現在地座標
-// [引数2] D3DXVECTOR3 dest　目的地座標
+// [引数1] LinkedList<meshDataNS::Index2>** edgeList　エッジリストダブルポインタ
+// ※エッジリストにここで加える変更内容を呼び出し元に反映するため
+// [引数2] DWORD* faceIndex　面インデックス
+// [引数3] D3DXVECTOR3 from　現在地座標
+// [引数4] D3DXVECTOR3 dest　目的地座標
 //=============================================================================
-NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** pOut,
-	DWORD* faceIndex, D3DXVECTOR3 _from, D3DXVECTOR3 _dest)
+NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** edgeList,
+	DWORD* faceIndex, D3DXVECTOR3 from, D3DXVECTOR3 dest)
 {
-	// 経路情報を更新
-	from = _from;
-	dest = _dest;
-	startIndex = -1;
-	destIndex = -1;
-	LinkedList<meshDataNS::Index2>* edgeList = NULL;
-
-	// レイの準備（逆マトリクスでメッシュの位置・回転をレイに適用）
-	D3DXMATRIX Inv;
-	D3DXVECTOR3 rayPos;
-	BOOL hit;
-	D3DXMatrixInverse(&Inv, NULL, &matrixWorld);
+	DWORD startFaceIndex = -1;			// Aスター開始面インデックス
+	DWORD destinationFaceIndex = -1;	// Aスター目的地面インデックス
 
 	// 現在地がナビメッシュに接地するかチェック
-	if (isHitGrounding(NULL, &startIndex, from))
+	if (isHitGrounding(NULL, &startFaceIndex, from))
 	{
-		*faceIndex = startIndex;		// 呼び出し側のインデックスを更新
+		*faceIndex = startFaceIndex;	// 呼び出し側のインデックスを更新
 	}
 	else
 	{
@@ -97,21 +87,29 @@ NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** pOut,
 	}
 
 	// 目的地がナビメッシュに接地するかチェック
-	if (isHitGrounding(NULL, &destIndex, dest) == false)
+	if (isHitGrounding(NULL, &destinationFaceIndex, dest) == false)
 	{
 		return DESTINATION_NOT_ON_MESH;	// 目的地がナビメッシュ上ではない
 	}
 
 	// A*アルゴリズムによる経路探索でエッジリストを取得する
-	edgeList = aStar.pathSearch(startIndex, destIndex, from, dest);
-	if (edgeList == NULL)
+	LinkedList<meshDataNS::Index2>* temp = NULL;
+	temp = aStar.pathSearch(startFaceIndex, destinationFaceIndex, from, dest);
+	if (temp == NULL)
 	{
 		return IMPASSE;					// 袋小路のためパス検索失敗
 	}
 
-	// エッジリストを更新し返却する
-	edgeList->listUpdate();
-	*pOut = edgeList;
+	// NULLで引数に渡されていなけば古いエッジリストを破棄
+	if(*edgeList != NULL)
+	{
+		(*edgeList)->terminate();
+		SAFE_DELETE(*edgeList);
+	}
+
+	// エッジリストを更新（コピー）し返却する
+	*edgeList = temp;
+	(*edgeList)->listUpdate();
 
 	return NAVI_OK;
 }
@@ -120,19 +118,31 @@ NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** pOut,
 //=============================================================================
 // ステアリング（移動ベクトルの作成）
 //=============================================================================
-NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECTOR3 _position,
-	LinkedList<meshDataNS::Index2>* _edgeList)
+NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECTOR3 from, D3DXVECTOR3 dest,
+	LinkedList<meshDataNS::Index2>** edgeList)
 {
-	// レイの準備（逆マトリクスでメッシュの位置・回転をレイに適用）
-	D3DXMATRIX Inv;
-	D3DXVECTOR3 rayPos;
-	BOOL hit;
+	//--------------------------------------------------------------------
+	// エッジリストが空(= 同一面に目的地がある)場合に目的地に直線移動する
+	// 面に平行にスリップした正規化ベクトルを返却する
+	//--------------------------------------------------------------------
+	if (*edgeList != NULL && (*edgeList)->isEnpty())
+	{
+		(*edgeList)->terminate();
+		SAFE_DELETE(*edgeList);
+	}
+	if (*edgeList == NULL)
+	{
+		D3DXVECTOR3 straightDirection = dest - from;
+		slip(straightDirection, meshData.getFaceArray()->nor);
+		D3DXVec3Normalize(&straightDirection, &straightDirection);
+		*out = straightDirection;
+		return NAVI_OK;
+	}
+
+	// 現在地の面インデックスと面までの距離を取得する
 	DWORD currentIndex;
 	float distance;
-	D3DXMatrixInverse(&Inv, NULL, &matrixWorld);
-
-	// 現在地がナビメッシュに接地するかチェック
-	if (isHitGrounding(&distance, &currentIndex, _position) == false)
+	if (isHitGrounding(&distance, &currentIndex, from) == false)
 	{
 		return CURRENT_NOT_ON_MESH;			// 現在地がナビメッシュ上ではない
 	}
@@ -141,8 +151,8 @@ NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECT
 	if (currentIndex != *faceIndex)
 	{
 		*faceIndex = currentIndex;
-		_edgeList->removeFront();
-		_edgeList->listUpdate();
+		(*edgeList)->removeFront();
+		(*edgeList)->listUpdate();
 	}
 
 	// ポリゴン面インデックスがおかしくなったら再度経路探索して再実行
@@ -150,16 +160,10 @@ NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECT
 	// A*の経路確認
 	  
 	// 接地座標をもとにパスフォローイングを実行
-	D3DXVECTOR3 surfaceIntersection = _position + gravityDirection * distance;
-	pathFollowing.createVector(out, surfaceIntersection, faceIndex, _edgeList);
-	if (_edgeList->nodeNum == 0)
-	{
-		int unko = 99;
-	}
-	if (_edgeList->nodeNum > 0)
-	{
-		int tinko = 1;
-	}
+	D3DXVECTOR3 surfaceIntersection = from + gravityDirection * distance;
+	pathFollowing.createVector(out, surfaceIntersection, faceIndex, *edgeList);
+	
+
 	return NAVI_OK;
 }
 
@@ -216,8 +220,11 @@ void NavigationMesh::debugRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 #endif
 
 #if 1	// エッジ関係を描画する
-	affectToEdgeVertex(debugEdgeList);
-	debugRenderEdge(debugEdgeList);
+	if (debugEdgeList != NULL)
+	{
+		affectToEdgeVertex(debugEdgeList);
+		debugRenderEdge(debugEdgeList);
+	}
 #endif
 }
 
@@ -293,20 +300,20 @@ void NavigationMesh::debugRenderMesh(D3DXMATRIX view, D3DXMATRIX projection, D3D
 //=============================================================================
 // エッジを描画
 //=============================================================================
-void NavigationMesh::debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList)
+void NavigationMesh::debugRenderEdge(LinkedList<meshDataNS::Index2>** edgeList)
 {
-	if (_edgeList == NULL) return;
+	if ((*edgeList) == NULL) return;
 
-	_edgeList->listUpdate();
+	(*edgeList)->listUpdate();
 
 	// レイの配列を作成
-	Ray* line = new Ray[_edgeList->nodeNum];
+	Ray* line = new Ray[(*edgeList)->nodeNum];
 
-	for (int i = 0; i < _edgeList->nodeNum; i++)
+	for (int i = 0; i < (*edgeList)->nodeNum; i++)
 	{
 		// インデックスの頂点座標を取得
-		BYTE* p1 = meshData.getVertexPointerFromVertexIndex(_edgeList->getValue(i)->index[0]);
-		BYTE* p2 = meshData.getVertexPointerFromVertexIndex(_edgeList->getValue(i)->index[1]);
+		BYTE* p1 = meshData.getVertexPointerFromVertexIndex((*edgeList)->getValue(i)->index[0]);
+		BYTE* p2 = meshData.getVertexPointerFromVertexIndex((*edgeList)->getValue(i)->index[1]);
 		D3DXVECTOR3 tempPos1 = *(D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, p1);
 		D3DXVECTOR3 tempPos2 = *(D3DXVECTOR3*)vtxAccessor.getPointer(vtxAccess::POSITION, p2);
 		tempPos1 += D3DXVECTOR3(0.0f, FLOATING_HEIGHT + 0.1f, 0.0f);	
@@ -331,7 +338,7 @@ void NavigationMesh::debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList)
 //=============================================================================
 void NavigationMesh::changeColor()
 {
-	D3DCOLOR setting = D3DCOLOR_RGBA(2, 255, 255, 155);
+	D3DCOLOR setting = D3DCOLOR_RGBA(255, 255, 255, 255);
 
 	// 頂点バッファの準備
 	LPDIRECT3DVERTEXBUFFER9	vertexBuffer;
@@ -359,10 +366,10 @@ void NavigationMesh::changeColor()
 //=============================================================================
 // エッジの頂点に影響を与える
 //=============================================================================
-void NavigationMesh::affectToEdgeVertex(LinkedList<meshDataNS::Index2>* _edgeList)
+void NavigationMesh::affectToEdgeVertex(LinkedList<meshDataNS::Index2>** edgeList)
 {
-	if (_edgeList == NULL) return;
-	_edgeList->listUpdate();
+	if ((*edgeList) == NULL) return;
+	(*edgeList)->listUpdate();
 	D3DCOLOR red = D3DCOLOR_RGBA(255, 0, 0, 255);
 
 	// 頂点バッファの準備
@@ -372,11 +379,11 @@ void NavigationMesh::affectToEdgeVertex(LinkedList<meshDataNS::Index2>* _edgeLis
 
 	if (SUCCEEDED(vertexBuffer->Lock(0, 0, (void**)&pVtx, 0)))
 	{
-		for (int i = 0; i < _edgeList->nodeNum; i++)
+		for (int i = 0; i < (*edgeList)->nodeNum; i++)
 		{
 			// インデックスから頂点を取得
-			WORD index1 = _edgeList->getValue(i)->index[0];
-			WORD index2 = _edgeList->getValue(i)->index[1];
+			WORD index1 = (*edgeList)->getValue(i)->index[0];
+			WORD index2 = (*edgeList)->getValue(i)->index[1];
 			BYTE* p1 = meshData.getVertexPointerFromVertexIndex(index1, pVtx);
 			BYTE* p2 = meshData.getVertexPointerFromVertexIndex(index2, pVtx);
 
@@ -416,11 +423,6 @@ void NavigationMesh::outputGUI()
 	if (ImGui::CollapsingHeader("NaviAIInformation"))
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		ImGui::Text("from(%.3f, %.3f, %.3f)\n", from.x, from.y, from.z);
-		ImGui::Text("from-->faceIndex:%d\n", startIndex);
-		ImGui::Text("dest(%.3f, %.3f, %.3f)\n", dest.x, dest.y, dest.z);
-		ImGui::Text("dest-->faceIndex:%d\n", destIndex);
-		//if(edgeList) ImGui::Text("edgeList->nodeNum:%d\n", edgeList->nodeNum);
 	}
 }
 #endif // _DEBUG
