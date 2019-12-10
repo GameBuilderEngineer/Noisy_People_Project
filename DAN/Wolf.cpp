@@ -52,12 +52,12 @@ void Wolf::update(float frameTime)
 //=============================================================================
 void::Wolf::chase(float frameTime)
 {
-	//float distance = between2VectorLength(position, *movingTarget);
+	float distance = between2VectorLength(position, *movingTarget);
 
-	//if (distance < 7.0f && canAttack)
-	//{
-	//	attack();
-	//}
+	if (distance < 7.0f && canAttack)
+	{
+		attack();
+	}
 
 	Enemy::chase(frameTime);
 }
@@ -68,12 +68,12 @@ void::Wolf::chase(float frameTime)
 //=============================================================================
 void::Wolf::patrol(float frameTime)
 {
-	//if (onGround && isArraved || isDestinationLost)
-	//{
-	//	setDebugDestination();		// デバッグ用目的地を設定
-	//	isDestinationLost = false;	// 目的地はロストしていない
-	//	searchPath();
-	//}
+	if (onGround && isArraved || isDestinationLost)
+	{
+		setDebugDestination();		// デバッグ用目的地を設定
+		isDestinationLost = false;	// 目的地はロストしていない
+		searchPath();
+	}
 
 	Enemy::patrol(frameTime);
 }

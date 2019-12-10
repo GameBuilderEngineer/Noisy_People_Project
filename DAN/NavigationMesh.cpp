@@ -33,9 +33,9 @@ void NavigationMesh::initialize()
 	gravityDirection = D3DXVECTOR3(0.0f, -1.0f, 0.0f);	// 重力方向を設定
 
 #ifdef _DEBUG
-	position = D3DXVECTOR3(0.0f, FLOATING_HEIGHT, 0.0f);// 少し浮かせる
-	renderer = new StaticMeshRenderer(staticMesh);		// 描画オブジェクトを作成
-	renderer->registerObject(this);						// 描画オブジェクトに登録する
+	//position = D3DXVECTOR3(0.0f, FLOATING_HEIGHT, 0.0f);// 少し浮かせる
+	//renderer = new StaticMeshRenderer(staticMesh);		// 描画オブジェクトを作成
+	//renderer->registerObject(this);						// 描画オブジェクトに登録する
 	//changeColor();										// メッシュの色を変える
 #endif //_DEBUG
 }

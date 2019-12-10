@@ -43,17 +43,16 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 	// インデックスバッファを配列にコピーする
 	WORD* pIndex;
 	staticMesh->mesh->LockIndexBuffer(D3DLOCK_READONLY, (void**)&pIndex);
-	//memcpy(indexArray, pIndex, sizeof(WORD) * numFaces * 3);
+	memcpy(indexArray, pIndex, sizeof(WORD) * numFaces * 3);
 	//memcpy(indexArray, pIndex, sizeof(WORD) * numVertices);
-
-	for (int i = 0; i < numFaces; i++)
-	{
-		for (int k = 0; k < 3; k++)
-		{
-			WORD temp = pIndex[i * 3 + k];
-			indexArray[i * 3 + k] = temp;
-		}
-	}
+	//for (int i = 0; i < numFaces; i++)
+	//{
+	//	for (int k = 0; k < 3; k++)
+	//	{
+	//		WORD temp = pIndex[i * 3 + k];
+	//		indexArray[i * 3 + k] = temp;
+	//	}
+	//}
 	staticMesh->mesh->UnlockIndexBuffer();
 
 	// 隣接性情報を配列にコピーする

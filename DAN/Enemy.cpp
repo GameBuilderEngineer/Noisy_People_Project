@@ -70,7 +70,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 
 	// 移動の初期化
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	moveDirection = axisZ.direction;
+	moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	D3DXQuaternionIdentity(&moveMotion);
 	isArraved = false;
 	movingTime = 0.0f;
@@ -290,14 +290,9 @@ void Enemy::searchPath()
 	canSearch = false;
 	isArraved = false;
 
-	//if (edgeList != NULL)
-	//{
-	//	// エッジリストの破棄
-	//	edgeList->terminate();
-	//	SAFE_DELETE(edgeList);
-	//}
-
+	// 移動ターゲットの現在位置までのエッジリストを取得
 	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+	// 移動ターゲットの現在位置を目的地に設定
 	destination = *movingTarget;
 
 #ifdef _DEBUG
@@ -455,7 +450,7 @@ void Enemy::steering(float frameTime)
 
 
 	// ナビメッシュによる移動ベクトル生成（ステアリング）
-	naviMesh->steering(&newMoveDirection, &naviFaceIndex, center, destination, &edgeList);
+	naviMesh->steering(&moveDirection, &naviFaceIndex, center, destination, &edgeList);
 
 	////moveDirection += newMoveDirection;
 
@@ -483,7 +478,7 @@ void Enemy::steering(float frameTime)
 	//D3DXMatrixRotationQuaternion(&matrix, &moveMotion);
 	//D3DXVec3TransformCoord(&moveDirection, &tempDirection, &matrix);
 
-	moveDirection = newMoveDirection;
+	//moveDirection = newMoveDirection;
 	
 	// 加速度に加算
 	acceleration += moveDirection * MOVE_ACC[enemyData->type];
@@ -738,18 +733,18 @@ void Enemy::prepareDie()
 //=============================================================================
 void Enemy::chase(float frameTime)
 {
-	//if (canSense)
-	//{
-	//	sensor();
-	//}
+	if (canSense)
+	{
+		sensor();
+	}
 
-	//if (canSearch)
-	//{
-	//	setPlayerChaseTarget();
-	//	searchPath();
-	//}
+	if (canSearch)
+	{
+		setPlayerChaseTarget();
+		searchPath();
+	}
 
-	//move(frameTime);
+	move(frameTime);
 }
 
 
@@ -758,23 +753,23 @@ void Enemy::chase(float frameTime)
 //=============================================================================
 void Enemy::patrol(float frameTime)
 {
-	//if (canSense)
-	//{
-	//	sensor();
-	//}
+	if (canSense)
+	{
+		sensor();
+	}
 
-	//if (isPayingNewAttention)
-	//{
-	//	static const float TEMP_DISTANCE = 20.0f;
-	//	D3DXVec3Normalize(&attentionDirection, &attentionDirection);
-	//	destination = position + attentionDirection * TEMP_DISTANCE;
+	if (isPayingNewAttention)
+	{
+		static const float TEMP_DISTANCE = 20.0f;
+		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
+		destination = position + attentionDirection * TEMP_DISTANCE;
 
-	//	isDestinationLost = false;
-	//	setMovingTarget(&destination);
-	//	searchPath();
-	//}
+		isDestinationLost = false;
+		setMovingTarget(&destination);
+		searchPath();
+	}
 
-	//move(frameTime);
+	move(frameTime);
 }
 
 

@@ -57,7 +57,7 @@ Game::~Game()
 	SoundInterface::BGM->uninitSoundStop();
 }
 
-#define SAMPLE_NAVI
+//#define SAMPLE_NAVI	// ビルドスイッチ　このdefine周辺は近々で消しますが一旦残しておいてもらえると助かります中込
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
@@ -68,7 +68,8 @@ void Game::initialize() {
 #ifdef SAMPLE_NAVI
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 #else
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 #endif
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
@@ -258,23 +259,6 @@ void Game::initialize() {
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
 
-	////エネミーをランダムに設置する
-	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	//{
-	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-	//	pos -= D3DXVECTOR3(200, 0, 240);
-	//	enemyNS::ENEMYSET tmp =
-	//	{
-	//		enemyManager->issueNewEnemyID(),
-	//		rand() % (enemyNS::ENEMY_TYPE::TYPE_MAX - 1),
-	//		stateMachineNS::PATROL,
-	//		pos,
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-	//	};
-	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-	//	enemyManager->createEnemy(p);
-	//}
-
 	//// ツリーをランダムに設置する
 	//treeNS::TreeData treeData;
 	//treeData.hp = 0;
@@ -283,7 +267,7 @@ void Game::initialize() {
 	//treeData.isAttaked = false;
 
 	// ツリーをツール情報を元に設置する
-	//treeManager->createUsingTool();
+	treeManager->createUsingTool();
 
 	//// ツリーをランダムに設置する
 	//treeNS::TreeData treeData;
@@ -408,17 +392,6 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-
-	if (input->wasKeyPressed('6'))
-	{
-		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
-
-		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
-	}
-	if (input->wasKeyPressed('Z'))
-	{
-		player->position = D3DXVECTOR3(20, 5, 0);
-	}
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -619,15 +592,15 @@ void Game::render() {
 void Game::render3D(Camera currentCamera) {
 
 	//テストフィールドの描画
-	//if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
-	//	player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
-	//{
-	//	testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
-	//}
-	//else {
-	//	testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_BLACK));
-	//}
-	//testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
+		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
+	{
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_BLACK));
+	}
+	else {
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+	}
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
 
 	// プレイヤーの描画
@@ -713,7 +686,7 @@ void Game::render3D(Camera currentCamera) {
 #endif
 
 #ifdef _DEBUG
-#if 1	// ナビゲーションメッシュのデバッグ描画
+#if 0	// ナビゲーションメッシュのデバッグ描画
 	naviMesh->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 #endif
 #endif //_DEBUG
@@ -1036,6 +1009,17 @@ void Game::test()
 
 	//	//aiDirector->eventMaker.makeEventEnemyAttaksTree();
 	//}
+
+	if (input->wasKeyPressed('6'))
+	{
+		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
+
+		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
+	}
+	if (input->wasKeyPressed('Z'))
+	{
+		player->position = D3DXVECTOR3(20, 5, 0);
+	}
 
 	// ツリーマネージャのテスト
 	if (input->wasKeyPressed('5'))	// 作成

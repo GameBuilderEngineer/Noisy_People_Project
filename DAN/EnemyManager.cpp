@@ -39,7 +39,7 @@ if (_sceneName == "Scene -Tutorial-")
 	return;
 }
 
-#if 0	// エネミーツールのデータを読み込む
+#if 1	// エネミーツールのデータを読み込む
 ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
 for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 {
@@ -48,7 +48,7 @@ for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 SAFE_DELETE(enemyTools);
 #endif
 
-#if 0	// エネミーオブジェクトをツールデータを元に作成する
+#if 1	// エネミーオブジェクトをツールデータを元に作成する
 for (int i = 0; i < enemyDataList.nodeNum; i++)
 {
 	if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)

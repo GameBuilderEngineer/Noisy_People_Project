@@ -319,7 +319,6 @@ public:
 	// 移動
 	D3DXVECTOR3 destination;						// 目的地
 	D3DXVECTOR3 moveDirection;						// 移動ベクトル
-	D3DXVECTOR3 oldMoveDirection;
 	D3DXQUATERNION	moveMotion;						// 移動モーション
 	bool isArraved;									// 到着フラグ
 	float movingTime;								// 計測移動時間
