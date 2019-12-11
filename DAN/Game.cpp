@@ -68,6 +68,7 @@ void Game::initialize() {
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	testFieldRenderer->registerObject(testField);
+	testFieldRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
@@ -601,6 +602,9 @@ void Game::render() {
 //===================================================================================================================================
 void Game::render3D(Camera currentCamera) {
 
+	//スカイドームの描画
+	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//テストフィールドの描画
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
@@ -632,8 +636,6 @@ void Game::render3D(Camera currentCamera) {
 	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	////石の描画
 	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//スカイドームの描画
-	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//海面の描画
 	//ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -668,6 +670,7 @@ void Game::render3D(Camera currentCamera) {
 
 	// 開発中広告
 	//ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)

@@ -149,10 +149,6 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 		{
 			creatFlag = true;
 		}
-		else if (input->wasKeyPressed('K'))
-		{
-			deleteFlag = true;
-		}
 
 		//エネミーの種類
 		const char* listboxEnemyType[] = { "WOLF", "TIGER", "BEAR" };
@@ -366,12 +362,21 @@ void ENEMY_TOOLS::collideDraw(int ID, bool use)
 {
 	if (use)
 	{
-		/*renderer[ID]->setAlpha(0.1f);*/
+		//object[ID]->setAlpha(0.1f);
+		object[ID]->color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f);
+
+		if (input->wasKeyPressed('K'))
+		{
+			//削除
+			DeleteEnemyFormat(ID);
+		}
 	}
 	else
 	{
-		//renderer[ID]->setAlpha(1.0f);
+		//object[ID]->setAlpha(1.0f);
+		object[ID]->color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	}
+	needUpdate = true;
 }
 #endif
 

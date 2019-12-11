@@ -363,6 +363,7 @@ void Create::collideGUI()
 		{
 			ImGui::Text("%d", i);
 			enemyTools->collideDraw(i, true);
+			break;
 		}
 		else
 		{

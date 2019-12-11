@@ -1,6 +1,6 @@
 //network.cpp
 
-#include "network.h"
+#include "networkServer.h"
 
 NETWORK_INTERFACE::NETWORK_INTERFACE()
 {
@@ -61,7 +61,12 @@ void NETWORK_INTERFACE::updata()
 			&fromlen);
 
 		PACKAGE tmp;
+		tmp.mun = 0;
 		memcpy(&tmp, buf, sizeof(PACKAGE));
+		if(tmp.mun > 0)
+		{
+			int x = 0;
+		}
 
 		free(buf);
 	//}

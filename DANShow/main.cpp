@@ -7,7 +7,7 @@
 #include "input.h"
 #include "show.h"
 #include "test.h"
-#include "network.h"
+#include "networkServer.h"
 
 //=============================================================================
 // プロトタイプ宣言
