@@ -480,6 +480,7 @@ void Player::controlCamera(float frameTime)
 	cameraGaze = position
 		+ cameraGazeRelative * CAMERA_GAZE.x
 		+ axisY.direction*CAMERA_GAZE.y;
+
 	//ƒJƒƒ‰‚ÌXV
 	camera->update();
 	aimingRay.update(camera->position + camera->getDirectionZ(), camera->getDirectionZ());

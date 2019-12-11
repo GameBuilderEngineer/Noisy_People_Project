@@ -127,7 +127,7 @@ public:
 	virtual void AI() override;
 	virtual void uninitialize() override;
 
-	void render3D(Camera currentCamera);
+	void render3D(Camera* currentCamera);
 	void renderUI();
 	void test();
 	//void tree4Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理

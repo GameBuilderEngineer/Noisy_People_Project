@@ -27,6 +27,7 @@ ShaderLoader::ShaderLoader()
 {
 	pointerShaderLoader					= this;
 	shaderName[TOON]					= { "ToonShader.fx" };
+	shaderName[NORMAL_FADE]				= { "NormalFadeShader.fx" };
 	shaderName[BLUR]					= { "BlurShader.fx" };
 	shaderName[OCEAN]					= { "Ocean.fx" };
 	shaderName[INSTANCE_BILLBOARD]		= { "InstancingBillboard.fx" };
