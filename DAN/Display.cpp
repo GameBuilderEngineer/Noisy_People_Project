@@ -1,66 +1,73 @@
 //===================================================================================================================================
-//【Result.cpp】
+//【Display.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
-// [更新日]2019/12/05
+// [作成日]2019/12/10
+// [更新日]2019/12/10
 //===================================================================================================================================
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//！蔡へ：まずはここを読んで～！
+//サーバー		：中央のモニター側→アプリ起動時ディスプレイモードを選択しdisplayシーンを更新。
+//クライアント	：ゲームプレイ側→アプリ起動時にゲームモードを選択し、splashシーンから開始し、サーバーへ情報を送信し続ける。
+//上記について逆の方が良い場合は、それでもいいです。
+//
+//【通信確認達成目標】
+//①通信の確立		：通信ができる状態であることを確認するために、シーン遷移を行う。
+//②通信のずれ確認	：どれほどラグがあるか視認するために、タイマーの同期テストを行う。
+//③通信量の確認	：どれくらいのデータを送れるかテストする。
+//④実際に木を生やす：ゲームの進行に合わせて、実際に木をはやす。
+//
+//【絶対に必要な機能】
+//①IPアドレスの入力機能
+//②ゲームプレイ中は、絶対に通信状況の影響を受けない
+//　→例）通信ができていなくてもゲームはプレイできる。
+//　→例）通信が切断されてもゲームはプレイできる。
+//　→例）通信が途中から開始されてもゲームはプレイできる。などなど
+//③ゲームプレイ中に接続ができるようにする。→アプリケーション起動時だけでなく、プレイ中も接続できるようにする。
+//④通信プレイのエラーが起きた場合に、ゲームを妨げない。
+//⑤アプリケーション開始時に、モード選択ができる。
+//
+//思いつきで書いてるんで、絶対ではないし、疑問点や問題点がある場合は必ず相談してください。
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "Result.h"
-#include "Sound.h"
+#include "Display.h"
 #include "UtilityFunction.h"
 
 //===================================================================================================================================
 //【using宣言】
 //===================================================================================================================================
-using namespace resultNS;
+using namespace DisplayNS;
+
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Result::Result(void)
+Display::Display()
 {
 	// 今のシーン( リザルト )
-	sceneName = ("Scene -Result-");
+	sceneName = ("Scene -Display-");
 
 	// 次のシーン( タイトル )
-	nextScene = SceneList::TITLE;
-
+	nextScene = SceneList::SPLASH;
 }
 
 //===================================================================================================================================
 //【デストラクタ】
 //===================================================================================================================================
-Result::~Result(void)
+Display::~Display()
 {
-	// サウンドの停止
-	SoundInterface::BGM->uninitSoundStop();
-
 }
+
 
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
-void Result::initialize()
+void Display::initialize()
 {
-	//リザルトUIの初期化
-	resultUI.initialize();
-	
-	//こんな感じ？
-	resultUI.greenigPersent =gameMaster->getGreeningRate();//全体緑化率
-	resultUI.greeningNum01 =gameMaster->getGreeningTreeNum(basicUiNS::P1);//player1の緑化本数
-	resultUI.greeningNum02 = gameMaster->getGreeningTreeNum(basicUiNS::P2);//player2の緑化本数
-	resultUI.defeat01 = gameMaster->getKillEnemyNum(basicUiNS::P1);//player1の撃破数
-	resultUI.defeat02 = gameMaster->getKillEnemyNum(basicUiNS::P2);//player2の撃破数
-
-	//確認用
-	//resultUI.greenigPersent =60;//全体緑化率
-	//resultUI.greeningNum01 =10;//player1の緑化本数
-	//resultUI.greeningNum02 = 0;//player2の緑化本数
-	//resultUI.defeat01 = 70;//player1の撃破数
-	//resultUI.defeat02 = 0;//player2の撃破数
 
 	//テストフィールド
 	testField = new Object();
@@ -96,112 +103,59 @@ void Result::initialize()
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 	treeManager->createUsingTool();
 	treeManager->switchingNormalView(gameMasterNS::PLAYER_1P);
-	
-	//リプレイタイマー
-	playbackTimer = 0.0f;
+
 
 }
 
 //===================================================================================================================================
 //【終了処理】
 //===================================================================================================================================
-void Result::uninitialize(void)
+void Display::uninitialize(void)
 {
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
-	resultUI.uninitialize();
-
 }
+
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
-void Result::update(float _frameTime)
+void Display::update(float _frameTime)
 {
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	//リプレイタイマー
-	playbackTimer += frameTime*PLAYBACK_SPEED;
+	//同期タイマー：ゲームプレイ（クライアント）時更新
+	if(testMode == CLIENT_MODE) syncTimer += frameTime;
 
-	//UIの更新処理
-	resultUI.update(frameTime);
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
 
-	//ゲームマスターからイベントを取得し、再生
-	if (gameMaster->getEventList(NULL,playbackTimer) > 0)
-	{
-		TreeTable* eventList = NULL;	//イベントリスト
-		int eventNum;					//イベント数
 
-		//イベントを取得
-		eventNum = gameMaster->getEventList(&eventList,playbackTimer);
-
-		//取得したイベントを実行する
-		for (int num = 0; num < eventNum; num++)
-		{
-			//イベント対象のツリー
-			Tree* selectTree = NULL;
-			
-			//イベント対象のツリーを選択
-			for (int i = 0; i < treeManager->getTreeList().size(); i++)
-			{
-				if (selectTree)continue;//選択済みならスルー
-				Tree* tree = treeManager->getTreeList()[i];
-				//イベント対象ツリーをIDにより検索
-				if (tree->getTreeData()->treeID == eventList[num].id)
-				{
-					selectTree = tree;
-					i = treeManager->getTreeList().size();//検索終了
-				}
-			}
-			
-			//イベントの対象ツリーが存在しない場合はスルー
-			if (selectTree == NULL)continue;
-
-			//イベント別にアクションをする
-			switch (eventList[num].eventType)
-			{
-			case gameMasterNS::TO_DEAD:
-				selectTree->transState();
-				break;
-			case gameMasterNS::TO_GREEN_WITH_ANALOG:
-				selectTree->transState();
-				break;
-			case gameMasterNS::TO_GREEN_WITH_DIGITAL:
-				selectTree->transState();
-				break;
-			}
-
-		}
-
-		//取得したイベントリストを削除
-		SAFE_DELETE_ARRAY(eventList);
-	}
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
 
 
 
-	//リザルトフェイズが5の時のみ Enterまたは〇ボタンでタイトルへ
-	if (resultUI.resultPhase == resultUiNS::PHASE_05&&
-		input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	//if (input->wasKeyPressed(VK_RETURN) ||
+	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+
+	//蔡へ
+	//通信プログラムでtarnsitionをtrueにしてシーン遷移を行う。
+	bool transition = false;
+	if(transition)
 	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		// シーン遷移
 		changeScene(nextScene);
 	}
 
 	//カメラの更新
 	{
-		float rate = (sinf(sceneTimer*6)/2.0f) + 0.5f;
+		float rate = (sinf(sceneTimer * 6) / 2.0f) + 0.5f;
 		float fov = UtilityFunction::lerp((D3DX_PI / 180) * 70, (D3DX_PI / 180) * 90, 0.5);
 		camera->setFieldOfView(fov);
 		camera->rotation(D3DXVECTOR3(0, 1, 0), CAMERA_SPEED*frameTime);
@@ -212,7 +166,7 @@ void Result::update(float _frameTime)
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Result::render()
+void Display::render()
 {
 	//描画対象をウィンドウ全体に切替
 	direct3D9->changeViewportFullWindow();
@@ -242,7 +196,7 @@ void Result::render()
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Result::render3D(Camera currentCamera)
+void Display::render3D(Camera currentCamera)
 {
 	//テストフィールドの描画
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -255,16 +209,16 @@ void Result::render3D(Camera currentCamera)
 //===================================================================================================================================
 //【2D[UI]描画】
 //===================================================================================================================================
-void Result::renderUI()
-{
-	// リザルトUI
-	resultUI.render();
-}
+//void Display::renderUI()
+//{
+//	// リザルトUI
+//	resultUI.render();
+//}
 
 //===================================================================================================================================
 //【衝突処理】
 //===================================================================================================================================
-void Result::collisions(void)
+void Display::collisions(void)
 {
 	// None
 }
@@ -272,7 +226,7 @@ void Result::collisions(void)
 //===================================================================================================================================
 //【AI処理】
 //===================================================================================================================================
-void Result::AI(void)
+void Display::AI(void)
 {
 	// None
 }
@@ -281,11 +235,11 @@ void Result::AI(void)
 //【GUI作成処理】
 //===================================================================================================================================
 #ifdef _DEBUG
-void Result::createGUI()
+void Display::createGUI()
 {
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
-	ImGui::Text("playbackTimer = %f", playbackTimer);
+	ImGui::Text("playbackTimer = %f", syncTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 #endif // _DEBUG

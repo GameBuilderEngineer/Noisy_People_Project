@@ -157,6 +157,7 @@
     <ClInclude Include="Defeat_Moji.h" />
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
+    <ClInclude Include="Display.h" />
     <ClInclude Include="Persent.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
@@ -320,6 +321,7 @@
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
     <ClCompile Include="Persent.cpp" />
+    <ClCompile Include="Display.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />

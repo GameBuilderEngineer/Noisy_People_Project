@@ -218,7 +218,7 @@ void Player::grounding()
 		}
 		else {
 			dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-			if (dot >= 1.0f - 70.0f / 90.0f) {
+			if (dot > MAX_SLOPE) {
 				speed = slip(speed, gravityRay.normal);
 			}
 			else {
@@ -349,9 +349,8 @@ void Player::updatePhysics(float frameTime)
 		//–€ŽC•ûŒü‚ðŽZo
 		D3DXVECTOR3 frictionDirection;
 		D3DXVec3Normalize(&frictionDirection,&speed);
-
 		dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
-		if (dot >= 1.0f - 70.0f / 90.0f) {
+		if (dot > MAX_SLOPE) {
 			// ‘¬“x‚É–€ŽC‚Ì‰e‹¿‚ð—^‚¦‚é
 			speed -= frictionDirection * MOVE_FRICTION * GRAVITY_FORCE * frameTime;
 		}
@@ -362,9 +361,9 @@ void Player::updatePhysics(float frameTime)
 			//ŽÎ–ÊŠŠ‚èƒxƒNƒgƒ‹
 			D3DXVECTOR3 slipVector;
 			D3DXVec3Normalize(&slipVector, &slip(D3DXVECTOR3(0, -1, 0), gravityRay.normal));
-			if (D3DXVec3Length(&speed) < MAX_SLIP * dot)
+			if (D3DXVec3Length(&speed) < MAX_SLIP)
 			{
-				speed += slipVector * MOVE_ACC * frameTime;
+				speed += slipVector * MOVE_ACC * 2 * frameTime;
 			}
 		}
 	}

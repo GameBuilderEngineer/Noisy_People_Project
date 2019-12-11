@@ -349,6 +349,9 @@
     <Filter Include="Game Layer\Scene\Result\ResultUI\Character">
       <UniqueIdentifier>{7f82b514-6794-4903-92f0-a684eb0cf356}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Display">
+      <UniqueIdentifier>{9d1dd45d-9c58-4c71-ab0c-eaf56df266b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -810,6 +813,9 @@
     </ClCompile>
     <ClCompile Include="WholeGreening.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Display.cpp">
+      <Filter>Game Layer\Scene\Display</Filter>
     </ClCompile>
     <ClCompile Include="Persent.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
@@ -1301,6 +1307,9 @@
     </ClInclude>
     <ClInclude Include="Persent.h">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>Game Layer\Scene\Display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

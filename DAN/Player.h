@@ -151,9 +151,10 @@ namespace playerNS{
 	const float MOVE_ACC_WHEN_NOT_GROUND	= MOVE_ACC / 8.5f;						//‹ó’†ˆÚ“®‰Á‘¬“x
 	const float STOP_SPEED					= 0.5f;									//ˆÚ“®’â~‘¬“x
 	const float MAX_SPEED					= 6.0f;									//ˆÚ“®’â~‘¬“x
-	const float MAX_SLIP					= 10.0f;								//ˆÚ“®’â~‘¬“x
+	const float MAX_SLIP					= 8.0f;									//ˆÚ“®’â~‘¬“x
+	const float MAX_SLOPE					= cosf(D3DXToRadian(69.0f));			//“o‚ê‚éŒXÎŠp“x
 	const float FALL_SPEED_MAX				= 60.0f;								//—‰ºÅ‚‘¬“x
-	const float MOVE_FRICTION				= 1.0f;									//’n–Ê–€CŒW”
+	const float MOVE_FRICTION				= 1.3f;									//’n–Ê–€CŒW”
 	const float WALL_FRICTION				= 0.98;									//•Ç‚¸‚è–€CŒW”
 	const float GROUND_FRICTION				= 0.25;									//’…’n–€CŒW”
 	const float GRAVITY_FORCE				= 9.8f;									//d—Í
