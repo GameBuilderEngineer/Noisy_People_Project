@@ -222,6 +222,9 @@ void Game::initialize() {
 	spriteGauge = new SpriteGauge;
 	spriteGauge->initialize();
 
+	//Network
+	networkClient = new NETWORK_CLIENT;
+
 #pragma region Memory Test
 	////ƒƒ‚ƒŠƒeƒXƒg
 
@@ -364,7 +367,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(player1UI);
 	SAFE_DELETE(player2UI);
 	//SAFE_DELETE(ad);
-
+	SAFE_DELETE(networkClient);
 	UninitMoveP();
 
 }
@@ -544,6 +547,8 @@ void Game::update(float _frameTime) {
 		telopManager->play(telopManagerNS::TELOP_TYPE4);
 		SoundInterface::BGM->SetSpeed();
 	}
+
+	networkClient->send(gameMaster->getGameTime());
 
 #ifdef _DEBUG
 	test();

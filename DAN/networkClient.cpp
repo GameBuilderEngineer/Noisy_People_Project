@@ -48,13 +48,13 @@ NETWORK_CLIENT::~NETWORK_CLIENT()
 //===================================================================================================================================
 //ÅyëóêMÅz
 //===================================================================================================================================
-void NETWORK_CLIENT::send()
+void NETWORK_CLIENT::send(float time)
 {
 	// buf
 	PACKAGE tmpPackage;
 	tmpPackage.mun = 10;
 	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
-
+	tmpPackage.timer = time;
 	char *buf;
 	buf = (char *)malloc(sizeof(PACKAGE));
 	memcpy(buf, &tmpPackage, sizeof(PACKAGE));
