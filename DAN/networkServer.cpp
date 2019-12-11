@@ -44,7 +44,7 @@ NETWORK_INTERFACE::~NETWORK_INTERFACE()
 	WSACleanup();
 }
 
-bool NETWORK_INTERFACE::updata()
+PACKAGE NETWORK_INTERFACE::updata()
 {
 	//while (loop)
 	//{
@@ -62,14 +62,13 @@ bool NETWORK_INTERFACE::updata()
 
 	PACKAGE tmp;
 	memset(&tmp, 0, sizeof(PACKAGE));
-	memcpy(&tmp, buf, sizeof(PACKAGE));
-
-	free(buf);
-
-	if (tmp.mun > 0)
+	if (nRtn != 0)
 	{
-		return true;
+		return tmp;
 	}
-	return false;
+
+	memcpy(&tmp, buf, sizeof(PACKAGE));
+	free(buf);
+	return tmp;
 	//}
 }

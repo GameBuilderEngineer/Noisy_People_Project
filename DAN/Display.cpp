@@ -127,9 +127,13 @@ void Display::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
+	PACKAGE package = networkServer->updata();
+	
 	//同期タイマー：ゲームプレイ（クライアント）時更新
-	if(testMode == CLIENT_MODE) syncTimer += frameTime;
-
+	if (package.networkTester == true)
+	{
+		syncTimer = package.timer;
+	}
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -147,7 +151,7 @@ void Display::update(float _frameTime)
 	
 	//蔡へ
 	//通信プログラムでtarnsitionをtrueにしてシーン遷移を行う。
-	bool transition = networkServer->updata();
+	bool transition = false;
 	
 	if(transition)
 	{

@@ -15,9 +15,10 @@ const u_short port = 12345;
 //===================================================================================================================================
 typedef struct
 {
+	bool networkTester;
+	int mun;
 	D3DXVECTOR3 tmpPos;
 	float timer;
-	int mun;
 }PACKAGE;
 
 //ƒNƒ‰ƒX
@@ -27,7 +28,7 @@ public:
 	NETWORK_INTERFACE();
 	~NETWORK_INTERFACE();
 
-	bool updata();
+	PACKAGE updata();
 
 private:
 	WSADATA wsaData;

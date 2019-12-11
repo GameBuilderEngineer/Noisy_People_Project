@@ -54,6 +54,7 @@ void NETWORK_CLIENT::send(float time)
 	PACKAGE tmpPackage;
 	tmpPackage.mun = 10;
 	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
+	tmpPackage.networkTester = true;
 	tmpPackage.timer = time;
 	char *buf;
 	buf = (char *)malloc(sizeof(PACKAGE));
