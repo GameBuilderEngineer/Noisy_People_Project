@@ -347,12 +347,12 @@ void Create::collideGUI()
 {
 	bool tmpButton = false;
 	ImGui::Checkbox("Test Network", &tmpButton);
-	if (tmpButton)
-	{
-		NETWORK_CLIENT *client = new NETWORK_CLIENT;
-		client->send();
-		SAFE_DELETE(client);
-	}
+	//if (tmpButton)
+	//{
+	//	NETWORK_CLIENT *client = new NETWORK_CLIENT;
+	//	client->send();
+	//	SAFE_DELETE(client);
+	//}
 
 	//“–‚½‚è”»’è
 	ImGui::Text("Enemy:");
