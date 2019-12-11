@@ -329,6 +329,7 @@ void Game::initialize() {
 	
 	//ƒQ[ƒ€ŠJŽnŽžˆ—
 	gameMaster->startGame();
+	gameMaster->setTreeNum(treeManager->getTreeNum());
 }
 
 //===================================================================================================================================
