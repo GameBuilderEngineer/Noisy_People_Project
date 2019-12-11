@@ -68,7 +68,7 @@ Display::~Display()
 //===================================================================================================================================
 void Display::initialize()
 {
-
+	syncTimer = 0.0f;
 	//テストフィールド
 	testField = new Object();
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
@@ -245,7 +245,7 @@ void Display::createGUI()
 {
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
-	ImGui::Text("playbackTimer = %f", syncTimer);
+	ImGui::Text("syncTimer = %f", syncTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 #endif // _DEBUG
