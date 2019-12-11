@@ -104,7 +104,7 @@ void Display::initialize()
 	treeManager->createUsingTool();
 	treeManager->switchingNormalView(gameMasterNS::PLAYER_1P);
 
-
+	networkServer = new NETWORK_INTERFACE;
 }
 
 //===================================================================================================================================
@@ -116,6 +116,7 @@ void Display::uninitialize(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
+	SAFE_DELETE(networkServer);
 }
 
 //===================================================================================================================================
@@ -143,10 +144,11 @@ void Display::update(float _frameTime)
 	//if (input->wasKeyPressed(VK_RETURN) ||
 	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-
+	
 	//蔡へ
 	//通信プログラムでtarnsitionをtrueにしてシーン遷移を行う。
-	bool transition = false;
+	bool transition = networkServer->updata();
+	
 	if(transition)
 	{
 		// シーン遷移

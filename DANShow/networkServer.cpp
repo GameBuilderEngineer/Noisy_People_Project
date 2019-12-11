@@ -49,25 +49,25 @@ void NETWORK_INTERFACE::updata()
 	//while (loop)
 	//{
 		// buf
-		char *buf;
-		buf = (char *)malloc(sizeof(PACKAGE));
+	char *buf;
+	buf = (char *)malloc(sizeof(PACKAGE));
 
-		fromlen = (int)sizeof(from);
-		nRtn = recvfrom(s,
-			buf,
-			(int)sizeof(PACKAGE),
-			0,
-			(SOCKADDR *)&from,
-			&fromlen);
+	fromlen = (int)sizeof(from);
+	nRtn = recvfrom(s,
+		buf,
+		(int)sizeof(PACKAGE),
+		0,
+		(SOCKADDR *)&from,
+		&fromlen);
 
-		PACKAGE tmp;
-		tmp.mun = 0;
-		memcpy(&tmp, buf, sizeof(PACKAGE));
-		if(tmp.mun > 0)
-		{
-			int x = 0;
-		}
+	PACKAGE tmp;
+	tmp.mun = 0;
+	memcpy(&tmp, buf, sizeof(PACKAGE));
+	if (tmp.mun > 0)
+	{
+		int x = 0;
+	}
 
-		free(buf);
+	free(buf);
 	//}
 }

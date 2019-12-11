@@ -22,7 +22,7 @@ public:
 	NETWORK_INTERFACE();
 	~NETWORK_INTERFACE();
 
-	void updata();
+	bool updata();
 
 private:
 	WSADATA wsaData;

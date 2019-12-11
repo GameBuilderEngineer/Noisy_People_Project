@@ -175,7 +175,7 @@
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
-    <ClInclude Include="network.h" />
+    <ClInclude Include="networkClient.h" />
     <ClInclude Include="Player1UI.h" />
     <ClInclude Include="Player2UI.h" />
     <ClInclude Include="NormalState.h" />
@@ -338,7 +338,7 @@
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
-    <ClCompile Include="network.cpp" />
+    <ClCompile Include="networkClient.cpp" />
     <ClCompile Include="Player1UI.cpp" />
     <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="NormalState.cpp" />

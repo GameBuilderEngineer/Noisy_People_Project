@@ -787,9 +787,6 @@
     <ClCompile Include="DeathState.cpp">
       <Filter>Game Layer\Player\State\DeathState</Filter>
     </ClCompile>
-    <ClCompile Include="network.cpp">
-      <Filter>Game Layer\Network</Filter>
-    </ClCompile>
     <ClCompile Include="ResultBG.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClCompile>
@@ -822,6 +819,9 @@
     </ClCompile>
     <ClCompile Include="networkServer.cpp">
       <Filter>Game Layer\Scene\Display\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="networkClient.cpp">
+      <Filter>Game Layer\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1278,9 +1278,6 @@
     <ClInclude Include="DeathState.h">
       <Filter>Game Layer\Player\State\DeathState</Filter>
     </ClInclude>
-    <ClInclude Include="network.h">
-      <Filter>Game Layer\Network</Filter>
-    </ClInclude>
     <ClInclude Include="ResultBG.h">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClInclude>
@@ -1313,6 +1310,9 @@
     </ClInclude>
     <ClInclude Include="networkServer.h">
       <Filter>Game Layer\Scene\Display\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="networkClient.h">
+      <Filter>Game Layer\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

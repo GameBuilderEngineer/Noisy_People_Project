@@ -44,25 +44,32 @@ NETWORK_INTERFACE::~NETWORK_INTERFACE()
 	WSACleanup();
 }
 
-void NETWORK_INTERFACE::updata()
+bool NETWORK_INTERFACE::updata()
 {
 	//while (loop)
 	//{
 		// buf
-		char *buf;
-		buf = (char *)malloc(sizeof(PACKAGE));
+	char *buf;
+	buf = (char *)malloc(sizeof(PACKAGE));
 
-		fromlen = (int)sizeof(from);
-		nRtn = recvfrom(s,
-			buf,
-			(int)sizeof(PACKAGE),
-			0,
-			(SOCKADDR *)&from,
-			&fromlen);
+	fromlen = (int)sizeof(from);
+	nRtn = recvfrom(s,
+		buf,
+		(int)sizeof(PACKAGE),
+		0,
+		(SOCKADDR *)&from,
+		&fromlen);
 
-		PACKAGE tmp;
-		memcpy(&tmp, buf, sizeof(PACKAGE));
+	PACKAGE tmp;
+	memset(&tmp, 0, sizeof(PACKAGE));
+	memcpy(&tmp, buf, sizeof(PACKAGE));
 
-		free(buf);
+	free(buf);
+
+	if (tmp.mun > 0)
+	{
+		return true;
+	}
+	return false;
 	//}
 }
