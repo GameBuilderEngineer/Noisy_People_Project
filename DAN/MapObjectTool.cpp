@@ -63,9 +63,12 @@ MPOJ_TOOLS::MPOJ_TOOLS()
 	//マップオブジェクト情報
 	MpojListboxCurrent = 0;
 	MpojListboxType = mapObjectNS::MAPOBJECT_TYPE::STONE_01;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_01] = staticMeshNS::STONE_001;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_02] = staticMeshNS::STONE_002;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_01] = staticMeshNS::STONE_003;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_02] = staticMeshNS::STONE_003;
 	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_03] = staticMeshNS::STONE_003;
+
+	//レンダラーのリセット処理
+	ResetRenderer();
 
 #endif
 }
@@ -387,7 +390,7 @@ void MPOJ_TOOLS::SetMpoj(short mpojId, short mpojType,
 	 const D3DXVECTOR3 pos, const D3DXVECTOR3 dir)
 {
 	//チャンク
-	memcpy(mpojFile.mfmt[mpojId].chunkId, MPOJ_CHUNK, sizeof(mpojFile.mfmt[mpojId].chunkId));
+	memcpy(mpojFile.mfmt[mpojId].chunkId, MFMT_CHUNK, sizeof(mpojFile.mfmt[mpojId].chunkId));
 
 	//マップオブジェクト情報
 	SetMpojType(mpojId, mpojType);

@@ -349,6 +349,9 @@
     <Filter Include="Game Layer\Scene\Result\ResultUI\Character">
       <UniqueIdentifier>{7f82b514-6794-4903-92f0-a684eb0cf356}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Display">
+      <UniqueIdentifier>{9d1dd45d-9c58-4c71-ab0c-eaf56df266b5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game Layer\Enemy\Wolf">
       <UniqueIdentifier>{a00de235-f42d-4b26-8e47-054820349a1b}</UniqueIdentifier>
     </Filter>
@@ -838,6 +841,9 @@
     <ClCompile Include="PartsAnimationManager.cpp">
       <Filter>Game Layer\Enemy\PartsAnimation</Filter>
     </ClCompile>
+    <ClCompile Include="Display.cpp">
+      <Filter>Game Layer\Scene\Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1313,6 +1319,9 @@
     </ClInclude>
     <ClInclude Include="WholeGreening.h">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>Game Layer\Scene\Display</Filter>
     </ClInclude>
     <ClInclude Include="EnemyChaseMark.h">
       <Filter>Game Layer\Enemy</Filter>
