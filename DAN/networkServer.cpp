@@ -70,6 +70,7 @@ PACKAGE NETWORK_INTERFACE::updata()
 		return tmp;
 	}
 	memcpy(&tmp, buf1, sizeof(PACKAGE));
+	free(buf1);
 
 
 	int sizeOfTreeTable = sizeof(TreeTable)*tmp.treeMax;
@@ -88,9 +89,7 @@ PACKAGE NETWORK_INTERFACE::updata()
 		return tmp;
 	}
 	tmp.treeTable = (TreeTable*)malloc(sizeOfTreeTable);
-	memcpy(&tmp, buf2, sizeof(sizeOfTreeTable));
-
-	free(buf1);
+	memcpy(tmp.treeTable, buf2, sizeof(sizeOfTreeTable));
 	free(buf2);
 
 	return tmp;

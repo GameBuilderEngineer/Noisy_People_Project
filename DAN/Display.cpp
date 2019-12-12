@@ -138,6 +138,7 @@ void Display::update(float _frameTime)
 	{
 		int x = 0;
 	}
+	free(package.treeTable);
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
