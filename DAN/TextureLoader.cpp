@@ -88,6 +88,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_TREE_MARKER] = { "Dot.png" };
 	textureName[UI_TREE_SIGN] = { "Digit_Tree.png" };
 	textureName[UI_TIMER_NUMBER] = { "num_white.png" };
+	textureName[UI_CAHSE_MARK] = { "ChaseMark.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };

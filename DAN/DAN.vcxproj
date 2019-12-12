@@ -157,6 +157,10 @@
     <ClInclude Include="Defeat_Moji.h" />
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
+    <ClInclude Include="EnemyChaseMark.h" />
+    <ClInclude Include="PartsAnimation.h" />
+    <ClInclude Include="PartsAnimationManager.h" />
+    <ClInclude Include="TigerAnimation.h" />
     <ClInclude Include="TigerBullet.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
@@ -319,6 +323,10 @@
     <ClCompile Include="Defeat_Moji.cpp" />
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
+    <ClCompile Include="EnemyChaseMark.cpp" />
+    <ClCompile Include="PartsAnimation.cpp" />
+    <ClCompile Include="PartsAnimationManager.cpp" />
+    <ClCompile Include="TigerAnimation.cpp" />
     <ClCompile Include="TigerBullet.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />

@@ -6,6 +6,7 @@
 #include "Tiger.h"
 using namespace enemyNS;
 using namespace stateMachineNS;
+using namespace tigerNS;
 
 //=============================================================================
 // コンストラクタ
@@ -18,6 +19,19 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 	Object::initialize(&position);
 	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
+
+	// パーツの作成
+	for (int i = 0; i < PARTS_MAX; i++)
+	{
+		parts[i] = new Object;
+	}
+
+	// アニメーションマネージャを初期化
+	animationManager = new TigerAnimationManager(PARTS_MAX, this, &parts[0]);
+	animationManager->culcPartsWorldMatrix();
+
+	// バレットマネージャにレンダラーを設定
+	bulletManager = new TigerBulletManager(constructionPackage.tigerBulletRender);
 }
 
 
@@ -26,7 +40,14 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 //=============================================================================
 Tiger::~Tiger()
 {
+	// パーツの破棄
+	for (int i = 0; i < PARTS_MAX; i++)
+	{
+		SAFE_DELETE(parts[i]);
+	}
 
+	// バレットマネージャの破棄
+	SAFE_DELETE(bulletManager);
 }
 
 
@@ -42,6 +63,16 @@ void Tiger::update(float frameTime)
 	case PATROL: patrol(frameTime); break;
 	case REST:   rest(frameTime);   break;
 	case DIE:    die(frameTime);    break;
+	}
+	muzzlePosition = center;// ●仮
+	bulletManager->update(frameTime);
+
+	if (enemyData->enemyID == debugEnemyID)
+	{
+		if (input->wasKeyPressed('N'))
+		{
+			shot(&player[0]);
+		}
 	}
 	Enemy::postprocess(frameTime);
 }
@@ -75,6 +106,7 @@ void::Tiger::patrol(float frameTime)
 		searchPath();
 	}
 	Enemy::patrol(frameTime);
+
 }
 
 
@@ -97,6 +129,19 @@ void Tiger::attackTree(float frameTime)
 
 
 //=============================================================================
+// ショット
+//=============================================================================
+void Tiger::shot(Player* target)
+{
+	Ray temp;
+	temp.start = muzzlePosition;
+	temp.direction = target->center - muzzlePosition;
+	D3DXVec3Normalize(&temp.direction, &temp.direction);
+	bulletManager->shoot(temp);
+}
+
+
+//=============================================================================
 // 死亡ステート
 //=============================================================================
 void::Tiger::die(float frameTime)
@@ -108,6 +153,10 @@ void::Tiger::die(float frameTime)
 //=============================================================================
 // Getter
 //=============================================================================
+Object* Tiger::getParts(int type)
+{
+	return parts[type];
+}
 
 
 //=============================================================================

@@ -32,6 +32,11 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER));
 	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR));
 
+	tigerBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
+
+	markRenderer = new EnemyChaseMark;
+	tigerBulletRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+
 // チュートリアルシーンでの初期化処理
 if (_sceneName == "Scene -Tutorial-")
 {
@@ -79,6 +84,9 @@ void EnemyManager::uninitialize()
 	SAFE_DELETE(wolfRenderer);
 	SAFE_DELETE(tigerRenderer);
 	SAFE_DELETE(bearRenderer);
+	SAFE_DELETE(tigerBodyRenderer);
+	SAFE_DELETE(markRenderer);
+	SAFE_DELETE(tigerBulletRenderer);
 }
 
 
@@ -171,6 +179,9 @@ void EnemyManager::update(float frameTime)
 	wolfRenderer->update();
 	tigerRenderer->update();
 	bearRenderer->update();
+	tigerBodyRenderer->update();
+	markRenderer->update(frameTime);
+	tigerBulletRenderer->update();
 }
 
 
@@ -182,6 +193,9 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	wolfRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	tigerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	bearRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tigerBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	markRenderer->render(view, projection, cameraPosition);
+	tigerBulletRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 #ifdef _DEBUG
 
@@ -237,8 +251,6 @@ enemyNS::EnemyData* EnemyManager::createEnemyData(enemyNS::ENEMYSET enemySetting
 //=============================================================================
 void EnemyManager::createEnemy(EnemyData* enemyData)
 {
-	Enemy* enemy = NULL;
-
 	enemyNS::ConstructionPackage constructionPackage;
 	constructionPackage.enemyData = enemyData;
 	constructionPackage.gameMaster = gameMaster;
@@ -246,32 +258,40 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	constructionPackage.attractorMesh = attractorMesh;
 	constructionPackage.attractorMatrix = attractorMatrix;
 	constructionPackage.enemyData->isObjectExists = true;
+	constructionPackage.markRenderer = markRenderer;
+	constructionPackage.tigerBulletRender = tigerBulletRenderer;
+
+	Wolf* wolf = NULL;
+	Tiger* tiger = NULL;
+	Bear* bear = NULL;
 
 	switch (enemyData->type)
 	{
 	case WOLF:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::WOLF);
-		enemy = new Wolf(constructionPackage);
-		wolfRenderer->registerObject(enemy);
+		wolf = new Wolf(constructionPackage);
+		wolfRenderer->registerObject(wolf);
 		wolfRenderer->updateAccessList();
+		enemyList.emplace_back(wolf);
 		break;
 
 	case TIGER:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::TIGER);
-		enemy = new Tiger(constructionPackage);
-		tigerRenderer->registerObject(enemy);
+		tiger = new Tiger(constructionPackage);
+		tigerRenderer->registerObject(tiger);
 		tigerRenderer->updateAccessList();
+		tigerBodyRenderer->registerObject(tiger->getParts(tigerNS::BODY));
+		enemyList.emplace_back(tiger);
 		break;
 
 	case BEAR:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::BEAR);
-		enemy = new Bear(constructionPackage);
-		bearRenderer->registerObject(enemy);
+		bear = new Bear(constructionPackage);
+		bearRenderer->registerObject(bear);
 		tigerRenderer->updateAccessList();
+		enemyList.emplace_back(bear);
 		break;
 	}
-
-	enemyList.emplace_back(enemy);
 }
 
 
@@ -334,21 +354,26 @@ void EnemyManager::destroyEnemy(int _enemyID)
 //=============================================================================
 void EnemyManager::destroyEnemy(Enemy* enemy)
 {
+	Tiger* tiger = NULL;
+
 	// 描画の解除
 	switch (enemy->getEnemyData()->type)
 	{
 	case WOLF:
-		//wolfRenderer->updateAccessList();
+		wolfRenderer->updateAccessList();
 		wolfRenderer->unRegisterObjectByID(enemy->id);
 		break;
 
 	case TIGER:
-		//tigerRenderer->updateAccessList();
-		tigerRenderer->unRegisterObjectByID(enemy->id);
+		tiger = (Tiger*)enemy;
+		tigerBodyRenderer->updateAccessList();
+		tigerBodyRenderer->unRegisterObjectByID(tiger->getParts(tigerNS::BODY)->id);
+		tigerRenderer->updateAccessList();
+		tigerRenderer->unRegisterObjectByID(tiger->id);
 		break;
 
 	case BEAR:
-		//bearRenderer->updateAccessList();
+		bearRenderer->updateAccessList();
 		bearRenderer->unRegisterObjectByID(enemy->id);
 		break;
 	}
@@ -366,6 +391,8 @@ void EnemyManager::destroyAllEnemy()
 	wolfRenderer->allUnRegister();
 	tigerRenderer->allUnRegister();
 	bearRenderer->allUnRegister();
+
+	tigerBodyRenderer->allUnRegister();
 
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
@@ -501,7 +528,7 @@ void EnemyManager::outputGUI()
 		enemyNS::ENEMYSET tmp =
 		{
 			issueNewEnemyID(),
-			enemyNS::WOLF,
+			enemyNS::TIGER,
 			stateMachineNS::PATROL,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f),

@@ -4,7 +4,25 @@
 // 作成開始日 : 2019/10/21
 //-----------------------------------------------------------------------------
 #pragma once
-#include"Enemy.h"
+#include "Enemy.h"
+#include "TigerAnimation.h"
+#include "TigerBullet.h"
+
+//=============================================================================
+// 名前空間
+//=============================================================================
+namespace tigerNS
+{
+	enum PARTS_TYPE
+	{
+		BODY,		// 胴体
+		LEG_L,		// 左足
+		LEG_R,		// 右足
+		GUN,		// 銃口
+		PARTS_MAX	// パーツの数
+	};	
+}
+
 
 //=============================================================================
 //クラス定義
@@ -12,6 +30,10 @@
 class Tiger: public Enemy
 {
 private:
+	Object* parts[tigerNS::PARTS_MAX];			// パーツオブジェクト
+	TigerAnimationManager* animationManager;	// アニメーションマネージャ
+	TigerBulletManager* bulletManager;			// バレットマネージャ
+	D3DXVECTOR3 muzzlePosition;					// ●銃口ポジション
 
 public:
 	Tiger(enemyNS::ConstructionPackage constructionPackage);
@@ -24,7 +46,10 @@ public:
 	void attackTree(float frameTime) override;	// ツリー攻撃ステート
 	void die(float frameTime) override;			// 死亡ステート
 
+	void shot(Player* target);
+
 	// Getter
+	Object* getParts(int type);
 
 	// Setter
 };

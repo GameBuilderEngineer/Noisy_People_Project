@@ -31,6 +31,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	player = constructionPackage.player;
 	attractorMesh = constructionPackage.attractorMesh;
 	attractorMatrix = constructionPackage.attractorMatrix;
+	markRenderer = constructionPackage.markRenderer;
 
 	// エネミーデータをオブジェクトにセット
 	position = enemyData->position;
@@ -133,6 +134,9 @@ Enemy::~Enemy()
 		edgeList->terminate();
 		SAFE_DELETE(edgeList);
 	}
+
+	// 追跡マークの削除
+	deleteMark();
 
 	numOfEnemy--;
 }
@@ -683,9 +687,15 @@ void Enemy::updataBlackBoard(float frameTime)
 //=============================================================================
 void Enemy::prepareChase()
 {
+	// 最初から追跡ステートであるエネミーを作るとこの関数を経由しない
+	// 様々な問題が出てくるので注意されたし
+
 	cntPathSearchInterval = 0.0f;
 	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyActive, false, NULL, false, NULL };
 	SoundInterface::SE->playSound(&playParameters);
+
+	// 追跡マークの作成
+	createMark();
 }
 
 
@@ -695,6 +705,9 @@ void Enemy::prepareChase()
 void Enemy::preparePatrol()
 {
 	isDestinationLost = true;
+
+	// 追跡マークの削除
+	deleteMark();
 }
 
 
@@ -703,7 +716,8 @@ void Enemy::preparePatrol()
 //=============================================================================
 void Enemy::prepareRest()
 {
-
+	// 追跡マークの削除
+	deleteMark();
 }
 
 
@@ -714,6 +728,9 @@ void Enemy::prepareAttackTree()
 {
 	setAttackTarget(enemyData->targetTree);
 	setMovingTarget(enemyData->targetTree->getPosition());
+
+	// 追跡マークの削除
+	deleteMark();
 }
 
 
@@ -722,7 +739,8 @@ void Enemy::prepareAttackTree()
 //=============================================================================
 void Enemy::prepareDie()
 {
-
+	// 追跡マークの削除
+	deleteMark();
 }
 #pragma endregion
 
@@ -744,6 +762,33 @@ void Enemy::chase(float frameTime)
 		searchPath();
 	}
 
+	//D3DXQUATERNION quaternion;
+	//D3DXQuaternionIdentity(&quaternion);
+	//Base::postureControl(&quaternion, D3DXVECTOR3(0, 0, 0), player[chasingPlayer].position - position, 1.0f);
+	//D3DXMATRIX matrix;
+	//D3DXMatrixIdentity(&matrix);
+	//D3DXMatrixRotationQuaternion(&matrix, &quaternion);
+	////D3DXVec3TransformCoord(&markDirection, &markDirection, &matrix);
+	//markFront->rotation.x = 
+	
+
+	// 追跡マーク（表）の更新
+	markFront->position = position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f);
+	formedRadianAngle(&markFront->rotation.y, D3DXVECTOR3(0.0f, 0.0f, 1.0f), player[chasingPlayer].position - position);
+	if (position.x < player[chasingPlayer].position.x) { markFront->rotation.y = -markFront->rotation.y; }
+	// 追跡マーク（裏）の更新
+	markBack->position = position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f);
+	formedRadianAngle(&markBack->rotation.y, D3DXVECTOR3(0.0f, 0.0f, 1.0f), player[chasingPlayer].position - position);
+	if (position.x < player[chasingPlayer].position.x)
+	{
+		markBack->rotation.y = D3DX_PI - markBack->rotation.y;
+	}
+	else
+	{
+		markBack->rotation.y = -(D3DX_PI - markBack->rotation.y);
+	}
+
+	// 移動
 	move(frameTime);
 }
 
@@ -798,7 +843,6 @@ void Enemy::attackTree(float frameTime)
 		searchPath();
 	}
 
-
 	move(frameTime);
 }
 
@@ -808,18 +852,31 @@ void Enemy::attackTree(float frameTime)
 //=============================================================================
 void Enemy::die(float frameTime)
 {
-	enemyData->isAlive = false;
-	enemyData->deadTime = gameMaster->getGameTime();
+	cntTimeDie += frameTime;
 
-	if (rand() % 5 == 0)
+	// 死ぬ寸前の振動
+	speed.x += (rand() % 8) / 10.0f;
+	speed.x -= 0.4f;
+	speed.z += (rand() % 8) / 10.0f;
+	speed.z -= 0.4f;
+
+	// 死亡時
+	if (cntTimeDie > DIE_STATE_TIME)
 	{
-		ItemManager* itemManager = ItemManager::get();
-		itemNS::ItemData itemData;
-		itemData.itemID = itemManager->issueNewItemID();
-		itemData.type = itemNS::BATTERY;
-		itemData.defaultPosition = position;
-		itemData.defaultDirection = axisZ.direction;
-		itemManager->createItem(itemData);
+		enemyData->isAlive = false;
+		enemyData->deadTime = gameMaster->getGameTime();
+
+		// アイテムドロップ
+		if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
+		{
+			ItemManager* itemManager = ItemManager::get();
+			itemNS::ItemData itemData;
+			itemData.itemID = itemManager->issueNewItemID();
+			itemData.type = itemNS::BATTERY;
+			itemData.defaultPosition = position;
+			itemData.defaultDirection = axisZ.direction;
+			itemManager->createItem(itemData);
+		}
 	}
 }
 #pragma endregion
@@ -1005,6 +1062,42 @@ void Enemy::updatePatrolRoute()
 	if (isDestinationLost)
 	{//●
 
+	}
+}
+
+
+//=============================================================================
+// 追跡マークの作成
+//=============================================================================
+void Enemy::createMark()
+{
+	// 表
+	markFront = new enemyChaseMarkNS::StandardChaseMark(position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f));
+	markFront->scale = MARK_SCALE[enemyData->type];
+	markRenderer->generateMark(markFront);
+	// 裏
+	markBack = new enemyChaseMarkNS::StandardChaseMark(position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f));
+	markBack->scale = MARK_SCALE[enemyData->type];
+	markBack->rotation = D3DXVECTOR3(D3DX_PI / 2.0f, 0, 0);
+	markRenderer->generateMark(markBack);
+}
+
+
+//=============================================================================
+// 追跡マークの破棄
+//=============================================================================
+void Enemy::deleteMark()
+{
+	if (markFront != NULL)
+	{
+		markRenderer->deleteMark(markFront);
+		markFront = NULL;	// ダングリングポインタにならないはずだが仕様変更等に備えて
+	}
+
+	if (markBack != NULL)
+	{
+		markRenderer->deleteMark(markBack);
+		markBack = NULL;	// ダングリングポインタにならないはずだが仕様変更等に備えて
 	}
 }
 #pragma endregion

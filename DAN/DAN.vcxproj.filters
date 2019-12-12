@@ -349,6 +349,18 @@
     <Filter Include="Game Layer\Scene\Result\ResultUI\Character">
       <UniqueIdentifier>{7f82b514-6794-4903-92f0-a684eb0cf356}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Enemy\Wolf">
+      <UniqueIdentifier>{a00de235-f42d-4b26-8e47-054820349a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\Tiger">
+      <UniqueIdentifier>{b831f9c0-6125-43b1-9c49-e75aac2dc750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\Bear">
+      <UniqueIdentifier>{27f8d238-8367-4f3b-aa29-5c2cdfe54ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\PartsAnimation">
+      <UniqueIdentifier>{e26a7ebf-ba18-4968-87ed-2668cf10827d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -580,9 +592,6 @@
     <ClCompile Include="MeshData.cpp">
       <Filter>Game Layer\NaviAI</Filter>
     </ClCompile>
-    <ClCompile Include="Wolf.cpp">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="TmpObject.cpp">
       <Filter>Game Layer\Scene\Create</Filter>
     </ClCompile>
@@ -597,12 +606,6 @@
     </ClCompile>
     <ClCompile Include="StaticMeshRenderer.cpp">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Bear.cpp">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiger.cpp">
-      <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="MemoryDebug.cpp">
       <Filter>Game Layer</Filter>
@@ -811,8 +814,29 @@
     <ClCompile Include="WholeGreening.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClCompile>
-    <ClCompile Include="TigerBullet.cpp">
+    <ClCompile Include="EnemyChaseMark.cpp">
       <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiger.cpp">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClCompile>
+    <ClCompile Include="TigerAnimation.cpp">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClCompile>
+    <ClCompile Include="TigerBullet.cpp">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClCompile>
+    <ClCompile Include="Bear.cpp">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClCompile>
+    <ClCompile Include="PartsAnimation.cpp">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="PartsAnimationManager.cpp">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1068,17 +1092,8 @@
     <ClInclude Include="Create.h">
       <Filter>Game Layer\Scene\Create</Filter>
     </ClInclude>
-    <ClInclude Include="Wolf.h">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiger.h">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="StaticMeshRenderer.h">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Bear.h">
-      <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="TmpObject.h">
       <Filter>Game Layer\Scene\Create</Filter>
@@ -1299,8 +1314,29 @@
     <ClInclude Include="WholeGreening.h">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClInclude>
-    <ClInclude Include="TigerBullet.h">
+    <ClInclude Include="EnemyChaseMark.h">
       <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiger.h">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClInclude>
+    <ClInclude Include="TigerAnimation.h">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClInclude>
+    <ClInclude Include="TigerBullet.h">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClInclude>
+    <ClInclude Include="PartsAnimation.h">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="PartsAnimationManager.h">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

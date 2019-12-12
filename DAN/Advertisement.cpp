@@ -19,6 +19,7 @@ alphaVer::alphaVer(D3DXVECTOR3 position) : InstancingBillboardNS::Instance()
 	this->limitTime	= 1.0f;
 	//this->uv.x		= 0.125f*7;
 	//this->uv.y		= 0.125f*7;
+
 }
 
 void alphaVer::update(float frameTime)
@@ -27,15 +28,15 @@ void alphaVer::update(float frameTime)
 	if (lifeTimer >= limitTime)return;
 }
 
-
+using namespace InstancingBillboardNS;
 //=============================================================================
 // レンダラークラス
 //=============================================================================
 Advertisement::Advertisement() :InstancingBillboard::InstancingBillboard()
 {
-	InstancingBillboard::initialize(*textureNS::reference(textureNS::DATE_ALPHA),0,0);
-
-	generateInstance(new alphaVer(D3DXVECTOR3(-30, 158, 35)));
+	InstancingBillboard::initialize(*textureNS::reference(textureNS::DATE_ALPHA), 0, 0);
+	generateInstance(new alphaVer(D3DXVECTOR3(-16, 20, -185)));
+	//setRenderType(NORMAL_PASS | Y_BILLBOARD_PASS);
 }
 
 Advertisement::~Advertisement()
@@ -44,5 +45,6 @@ Advertisement::~Advertisement()
 
 void Advertisement::update(float frameTime)
 {
+
 	InstancingBillboard::update(frameTime);
 }

@@ -19,6 +19,7 @@
 #include "GameMaster.h"
 #include "Sound.h"
 #include "SoundBase.h"
+#include "EnemyChaseMark.h"
 
 
 //=============================================================================
@@ -48,15 +49,21 @@ class EnemyManager :public Base
 private:
 	LinkedList<enemyNS::EnemyData> enemyDataList;		// エネミーデータリスト
 	std::vector<Enemy*> enemyList;						// エネミーポインタリスト
-	StaticMeshRenderer* wolfRenderer;					// 描画オブジェクト
-	StaticMeshRenderer* tigerRenderer;					// 描画オブジェクト
-	StaticMeshRenderer* bearRenderer;					// 描画オブジェクト
 	int nextID;											// 次回エネミー発行ID
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
 	GameMaster* gameMaster;								// ゲーム管理オブジェクト
 	Player* player;										// プレイヤー
 	float cntTimeDataList;								// エネミーデータリストのチェック時間カウンタ
+	EnemyChaseMark* markRenderer;						// 追跡マーク描画
+
+	// 描画オブジェクト
+	StaticMeshRenderer* wolfRenderer;					// 描画オブジェクト
+	StaticMeshRenderer* tigerRenderer;					// 描画オブジェクト
+	StaticMeshRenderer* bearRenderer;					// 描画オブジェクト
+	StaticMeshRenderer* tigerBodyRenderer;				// 描画オブジェクト
+	StaticMeshRenderer* tigerBulletRenderer;
+
 
 public:
 	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player);
