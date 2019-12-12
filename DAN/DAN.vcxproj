@@ -159,6 +159,7 @@
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
     <ClInclude Include="ElectTank.h" />
+    <ClInclude Include="Finale.h" />
     <ClInclude Include="GreeningArea.h" />
     <ClInclude Include="Battery.h" />
     <ClInclude Include="Bear.h" />
@@ -311,6 +312,7 @@
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
     <ClCompile Include="ElectTank.cpp" />
+    <ClCompile Include="Finale.cpp" />
     <ClCompile Include="GreeningArea.cpp" />
     <ClCompile Include="Battery.cpp" />
     <ClCompile Include="Bear.cpp" />
