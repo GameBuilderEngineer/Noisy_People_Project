@@ -152,7 +152,7 @@ namespace playerNS{
 	const float STOP_SPEED					= 0.5f;									//ˆÚ“®’â~‘¬“x
 	const float MAX_SPEED					= 6.0f;									//ˆÚ“®’â~‘¬“x
 	const float MAX_SLIP					= 8.0f;									//ˆÚ“®’â~‘¬“x
-	const float MAX_SLOPE					= cosf(D3DXToRadian(69.0f));			//“o‚ê‚éŒXÎŠp“x
+	const float MAX_SLOPE					= cosf(D3DXToRadian(60.0f));			//“o‚ê‚éŒXÎŠp“x
 	const float FALL_SPEED_MAX				= 60.0f;								//—‰ºÅ‚‘¬“x
 	const float MOVE_FRICTION				= 1.3f;									//’n–Ê–€CŒW”
 	const float WALL_FRICTION				= 0.98;									//•Ç‚¸‚è–€CŒW”
