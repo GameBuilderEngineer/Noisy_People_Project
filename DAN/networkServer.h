@@ -5,6 +5,7 @@
 
 #include "base.h"
 #include <winsock.h>
+#include "GameMaster.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -15,8 +16,10 @@ const u_short port = 12345;
 //===================================================================================================================================
 typedef struct
 {
+	int treeMax;
+	TreeTable *treeTable;
 	bool networkTester;
-	int mun;
+	int num;
 	D3DXVECTOR3 tmpPos;
 	float timer;
 }PACKAGE;

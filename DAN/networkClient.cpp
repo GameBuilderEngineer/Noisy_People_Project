@@ -7,6 +7,9 @@
 #include "networkClient.h"
 #include "ImguiManager.h"
 
+TreeTable *NETWORK_CLIENT::treeTable = nullptr;
+int NETWORK_CLIENT::treeNum = 0;
+
 //===================================================================================================================================
 //ÅyÉRÉìÉXÉgÉâÉNÉ^Åz
 //===================================================================================================================================
@@ -35,6 +38,8 @@ NETWORK_CLIENT::NETWORK_CLIENT()
 	addrin.sin_port = htons(port);
 	addrin.sin_family = AF_INET;
 	addrin.sin_addr.s_addr = *((unsigned long *)lpHostEnt->h_addr);
+
+	packageID = 0;
 }
 
 //===================================================================================================================================
@@ -44,6 +49,10 @@ NETWORK_CLIENT::~NETWORK_CLIENT()
 {
 	closesocket(s);
 	WSACleanup();
+	if (treeNum != 0)
+	{
+		SAFE_DELETE_ARRAY(treeTable);
+	}
 }
 
 //===================================================================================================================================
@@ -52,10 +61,14 @@ NETWORK_CLIENT::~NETWORK_CLIENT()
 void NETWORK_CLIENT::send(float time)
 {
 	// buf
+	packageID++;
 	PACKAGE tmpPackage;
-	tmpPackage.mun = 10;
+	memset(&tmpPackage, 0, sizeof(tmpPackage));
+	tmpPackage.num = 10;
 	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
 	tmpPackage.networkTester = true;
+	tmpPackage.treeMax = treeNum;
+	tmpPackage.treeTable = treeTable;
 	tmpPackage.timer = time;
 	char *buf;
 	buf = (char *)malloc(sizeof(PACKAGE));
@@ -65,6 +78,8 @@ void NETWORK_CLIENT::send(float time)
 		(LPSOCKADDR)&addrin, sizeof(addrin));
 
 	free(buf);
+	SAFE_DELETE_ARRAY(treeTable);
+	treeNum = 0;
 }
 
 //===================================================================================================================================
@@ -78,4 +93,29 @@ void NETWORK_CLIENT::outputGUI()
 		ImGui::Text("Server Name = %s", szServer);
 	}
 #endif
+}
+
+//===================================================================================================================================
+//ÅyëóêMÅz
+//===================================================================================================================================
+void NETWORK_CLIENT::setSendTreeTable(const TreeTable inTreeTable)
+{
+	if (treeNum == NULL)
+	{
+		treeTable = new TreeTable;
+		memcpy(treeTable, &inTreeTable, sizeof(TreeTable));
+	}
+	else
+	{
+		TreeTable *tmpTreeTable;
+		tmpTreeTable = new TreeTable[treeNum];
+		memcpy(tmpTreeTable, treeTable, sizeof(TreeTable)*treeNum);
+		SAFE_DELETE_ARRAY(treeTable);
+		treeTable = new TreeTable[treeNum + 1];
+		memcpy(treeTable, tmpTreeTable, sizeof(TreeTable)*treeNum);
+		SAFE_DELETE_ARRAY(tmpTreeTable);
+		memcpy(&treeTable[treeNum], &inTreeTable, sizeof(TreeTable));
+	}
+
+	treeNum++;
 }

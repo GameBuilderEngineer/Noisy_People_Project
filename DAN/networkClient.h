@@ -33,11 +33,16 @@ public:
 
 	void send(float time);
 	void outputGUI();
+	static void setSendTreeTable(const TreeTable inTreeTable);
 private:
+	int packageID;
 	WSADATA wsaData;
 	SOCKET s;
 	SOCKADDR_IN addrin;
 	HOSTENT *lpHostEnt;
 	unsigned int addr;
 	int nRtn, nNo = 5;
+
+	static TreeTable *treeTable;
+	static int treeNum;
 };

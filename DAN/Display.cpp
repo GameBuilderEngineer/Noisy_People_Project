@@ -134,6 +134,10 @@ void Display::update(float _frameTime)
 	{
 		syncTimer = package.timer;
 	}
+	if (package.num != 0)
+	{
+		int x = 0;
+	}
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
