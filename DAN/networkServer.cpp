@@ -46,16 +46,12 @@ NETWORK_INTERFACE::~NETWORK_INTERFACE()
 
 PACKAGE NETWORK_INTERFACE::updata()
 {
-	//while (loop)
-	//{
-		// buf
+	//PACKAGE‚Ìî•ñ‚Ì‚İ
+	const int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
 	char *buf1;
-	char *buf2;
-	//buf = (char *)malloc();
-
-	fromlen = (int)sizeof(from);
-
-	int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
+	buf1 = (char *)malloc(sizeOfPackage);
+	fromlen = (int)sizeof(from);	
+	//TreeTable‚ÌÀ‘Ì(óM)
 	nRtn = recvfrom(s,
 		buf1,
 		(int)sizeof(sizeOfPackage),
@@ -72,8 +68,9 @@ PACKAGE NETWORK_INTERFACE::updata()
 	memcpy(&tmp, buf1, sizeof(PACKAGE));
 	free(buf1);
 
-
 	int sizeOfTreeTable = sizeof(TreeTable)*tmp.treeMax;
+	char *buf2;
+	buf2 = (char *)malloc(sizeOfTreeTable);
 	if (tmp.treeMax > 0)
 	{
 		int x = 0;
