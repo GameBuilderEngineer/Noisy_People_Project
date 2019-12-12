@@ -163,6 +163,8 @@ void Title::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
+	if (frameTime > 10.0f / 60.0f)return;
+
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
 	
@@ -344,8 +346,8 @@ void Title::update(float _frameTime)
 	
 		rateY = degreeTimer / 6.0f;
 		rateX = degreeTimer / 6.0f;
-		degreeY = UtilityFunction::lerp(0, D3DXToRadian(100.0f), 1.0f - rateY);
-		degreeX = UtilityFunction::lerp(0, D3DXToRadian(45.0f), 1.0f - rateX);
+		degreeY = UtilityFunction::lerp(0, D3DXToDegree(100.0f), 1.0f - rateY);
+		degreeX = UtilityFunction::lerp(0, D3DXToDegree(45.0f), 1.0f - rateX);
 		if (degreeTimer > 0)
 		{
 			camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
