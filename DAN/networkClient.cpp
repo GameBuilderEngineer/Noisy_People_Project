@@ -75,8 +75,8 @@ void NETWORK_CLIENT::send(float time)
 	char *buf1;	//パッケージ用(PACKAGEの情報のみ)
 	int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
 	buf1 = (char *)malloc(sizeOfPackage);
-	memcpy(buf1, &tmpPackage, sizeof(sizeOfPackage));
-	nRtn = sendto(s, buf1, (int)sizeof(sizeOfPackage), 0,
+	memcpy(buf1, &tmpPackage, sizeOfPackage);
+	nRtn = sendto(s, buf1, sizeOfPackage, 0,
 		(LPSOCKADDR)&addrin, sizeof(addrin));
 	free(buf1);
 
@@ -86,8 +86,8 @@ void NETWORK_CLIENT::send(float time)
 		char *buf2; //パッケージ用(TreeTableの実体)
 		int sizeOfTreeTable = sizeof(TreeTable)*tmpPackage.treeMax;
 		buf2 = (char *)malloc(sizeOfTreeTable);
-		memcpy(buf2, tmpPackage.treeTable, sizeof(sizeOfTreeTable));
-		nRtn = sendto(s, buf2, (int)sizeof(sizeOfTreeTable), 0,
+		memcpy(buf2, tmpPackage.treeTable, sizeOfTreeTable);
+		nRtn = sendto(s, buf2, sizeOfTreeTable, 0,
 			(LPSOCKADDR)&addrin, sizeof(addrin));
 		free(buf2);
 	}

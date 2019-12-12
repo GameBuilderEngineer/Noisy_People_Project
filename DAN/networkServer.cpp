@@ -54,18 +54,22 @@ PACKAGE NETWORK_INTERFACE::updata()
 	//TreeTable‚ÌŽÀ‘Ì(ŽóM)
 	nRtn = recvfrom(s,
 		buf1,
-		(int)sizeof(sizeOfPackage),
+		sizeOfPackage,
 		0,
 		(SOCKADDR *)&from,
 		&fromlen);
 	
 	PACKAGE tmp;
 	memset(&tmp, 0, sizeof(PACKAGE));
-	if (nRtn != sizeof(sizeOfPackage))
+	if (nRtn != sizeOfPackage)
 	{
 		return tmp;
 	}
-	memcpy(&tmp, buf1, sizeof(PACKAGE));
+	else
+	{
+		int x = 0;
+	}
+	memcpy(&tmp, buf1, sizeOfPackage);
 	free(buf1);
 
 	if (tmp.treeMax > 0)
@@ -79,16 +83,16 @@ PACKAGE NETWORK_INTERFACE::updata()
 		}
 		nRtn = recvfrom(s,
 			buf2,
-			(int)sizeof(sizeOfTreeTable),
+			sizeOfTreeTable,
 			0,
 			(SOCKADDR *)&from,
 			&fromlen);
-		if (nRtn != sizeof(PACKAGE))
+		if (nRtn != sizeOfTreeTable)
 		{
 			return tmp;
 		}
 		tmp.treeTable = (TreeTable*)malloc(sizeOfTreeTable);
-		memcpy(tmp.treeTable, buf2, sizeof(sizeOfTreeTable));
+		memcpy(tmp.treeTable, buf2, sizeOfTreeTable);
 		free(buf2);
 	}
 
