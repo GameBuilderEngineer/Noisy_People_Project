@@ -82,6 +82,7 @@ namespace textureNS
 		UI_TREE_MARKER,
 		UI_TREE_SIGN,
 		UI_TIMER_NUMBER,
+		UI_TIME_UP,
 
 		// Result
 		RESULT,

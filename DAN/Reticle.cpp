@@ -83,6 +83,11 @@ Reticle::Reticle()
 	billboard->generateInstance(new Reticle3D(D3DXVECTOR3(0,0,0),D3DXVECTOR2(UNIT_U*0,UNIT_V*0)) );
 	billboard->setRenderType(InstancingBillboardNS::FOREGROUND_PASS);
 
+	//残弾数
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		remainingBullet[i] = 0;
+	}
 }
 
 //===================================================================================================================================
@@ -104,6 +109,14 @@ void Reticle::setAnime()
 		uv[currentU][currentV] + D3DXVECTOR2(UNIT_U, 0.0),
 		uv[currentU][currentV] + D3DXVECTOR2(0.0, UNIT_V),
 		uv[currentU][currentV] + D3DXVECTOR2(UNIT_U, UNIT_V));
+}
+
+//===================================================================================================================================
+//【残弾数をセット】
+//===================================================================================================================================
+void Reticle::setRemainingBullet(int num,int playerNo)
+{
+	remainingBullet[playerNo] = num;
 }
 
 //===================================================================================================================================
@@ -135,17 +148,6 @@ void Reticle::setAimingPosition2(D3DXVECTOR3* position)
 //===================================================================================================================================
 void Reticle::update(float frameTime)
 {
-	//currentU++;
-	//if (currentU > NUM_U)
-	//{
-	//	currentU = 0;
-	//	currentV++;
-	//	if (currentV > NUM_V)
-	//	{
-	//		currentV = 0;
-	//	}
-	//}
-	//setAnime();
 	billboard->update(frameTime);
 }
 
@@ -172,6 +174,9 @@ void Reticle::render3D(int playerType,D3DXMATRIX view, D3DXMATRIX projection, D3
 //===================================================================================================================================
 void Reticle::render2D(Player* player)
 {
+	//プレイヤー番号
+	int playerNo = player->getInfomation()->playerType;
+
 	//描画するテクスチャの切り替え
 	switch (player->getState())
 	{
@@ -190,6 +195,11 @@ void Reticle::render2D(Player* player)
 
 	case playerNS::STATE::NORMAL:
 	case playerNS::STATE::DEATH:
+		int bulletNum = player->getBulletManager()->getRemaining();
+		setRemainingBullet(bulletNum, playerNo);
+		currentU = remainingBullet[playerNo] % NUM_U;
+		currentV = remainingBullet[playerNo] / NUM_U;
+		setAnime();
 		reticle2D->setTexturePointer(*textureNS::reference(textureNS::UI_SUB_RETICLE));
 		break;
 	}

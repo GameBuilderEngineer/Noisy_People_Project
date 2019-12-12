@@ -20,19 +20,19 @@
 namespace reticleNS
 {
 	//レティクル情報の定義
-	const int	NUM_U			= 1;
-	const int	NUM_V			= 1;
+	const int	NUM_U			= 5;
+	const int	NUM_V			= 2;
 	const float UNIT_U			= 1.0f/NUM_U;//単位U
 	const float UNIT_V			= 1.0f/NUM_V;//単位V
-	const int WIDTH				= 128;//テクスチャ全体の幅
-	const int HEIGHT			= 128;//テクスチャ全体の高さ	
+	const int WIDTH				= 640;//テクスチャ全体の幅
+	const int HEIGHT			= 256;//テクスチャ全体の高さ	
 	const int UNIT_WIDTH		= (int)(WIDTH/NUM_U);//単位幅
 	const int UNIT_HEIGHT		= (int)(HEIGHT/NUM_V);//単位高さ
 
 	const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2, 0.0f);
 	const D3DXVECTOR3 POSITION2 = D3DXVECTOR3((float)WINDOW_WIDTH / 4 *3, (float)WINDOW_HEIGHT / 2, 0.0f);
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 128);
+	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 192);
 
 	class Reticle3D :public InstancingBillboardNS::Instance
 	{
@@ -64,6 +64,7 @@ private:
 	int currentU;
 	int currentV;
 	int type;
+	int remainingBullet[gameMasterNS::PLAYER_NUM];//残弾数
 
 public:
 	Reticle();
@@ -73,6 +74,7 @@ public:
 	void setAimingPosition1(D3DXVECTOR3* position);
 	void setAimingPosition2(D3DXVECTOR3* position);
 	void setAnime();
+	void setRemainingBullet(int num, int playerNo);//残弾数
 
 	void update(float frameTime);
 	void render3D(int playerType,D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);

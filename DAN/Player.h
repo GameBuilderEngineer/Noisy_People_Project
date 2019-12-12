@@ -366,7 +366,6 @@ public:
 	void collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix);	//シフトレイとの衝突
 	void collideShiftRay(D3DXVECTOR3 position);					//シフトレイとの衝突
 	bool collideShiftRay(Cylinder target);						//シフトレイとの衝突
-	void stopSelectLight();
 	void playSelectLight();
 	void shownSelectLight(bool shown);
 

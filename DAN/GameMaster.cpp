@@ -161,6 +161,9 @@ void GameMaster::updateGameTime(float frameTime)
 //===================================================================================================================================
 bool GameMaster::playActionStartCount(int countNum)
 {
+	//ゲームオープニングが終了した場合のみ
+	if (!whetherAchieved(PASSING_GAME_OPENING))return false;
+
 	if (countDownTimer > (float)countNum)return false;
 	switch (countNum)
 	{
