@@ -49,26 +49,56 @@ PACKAGE NETWORK_INTERFACE::updata()
 	//while (loop)
 	//{
 		// buf
-	char *buf;
-	buf = (char *)malloc(sizeof(PACKAGE));
+	char *buf1;
+	char *buf2;
+	//buf = (char *)malloc();
 
 	fromlen = (int)sizeof(from);
+
+	int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
 	nRtn = recvfrom(s,
-		buf,
-		(int)sizeof(PACKAGE),
+		buf1,
+		(int)sizeof(sizeOfPackage),
 		0,
 		(SOCKADDR *)&from,
 		&fromlen);
-
+	
 	PACKAGE tmp;
 	memset(&tmp, 0, sizeof(PACKAGE));
+	if (nRtn != sizeof(sizeOfPackage))
+	{
+		return tmp;
+	}
+	memcpy(&tmp, buf1, sizeof(PACKAGE));
+
+
+	int sizeOfTreeTable = sizeof(TreeTable)*tmp.treeMax;
+	if (tmp.treeMax > 0)
+	{
+		int x = 0;
+	}
+	nRtn = recvfrom(s,
+		buf2,
+		(int)sizeof(sizeOfTreeTable),
+		0,
+		(SOCKADDR *)&from,
+		&fromlen);
 	if (nRtn != sizeof(PACKAGE))
 	{
 		return tmp;
 	}
+	tmp.treeTable = (TreeTable*)malloc(sizeOfTreeTable);
+	memcpy(&tmp, buf2, sizeof(sizeOfTreeTable));
 
-	memcpy(&tmp, buf, sizeof(PACKAGE));
-	free(buf);
+	free(buf1);
+	free(buf2);
+
 	return tmp;
+
+
+
+
+
+
 	//}
 }

@@ -70,14 +70,21 @@ void NETWORK_CLIENT::send(float time)
 	tmpPackage.treeMax = treeNum;
 	tmpPackage.treeTable = treeTable;
 	tmpPackage.timer = time;
-	char *buf;
-	buf = (char *)malloc(sizeof(PACKAGE));
-	memcpy(buf, &tmpPackage, sizeof(PACKAGE));
+	char *buf1;
+	char *buf2;
+	int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
+	int sizeOfTreeTable = sizeof(TreeTable)*tmpPackage.treeMax;
+	buf1 = (char *)malloc(sizeOfPackage);
+	memcpy(buf1, &tmpPackage, sizeof(sizeOfPackage));
+	memcpy(buf2, tmpPackage.treeTable, sizeof(sizeOfTreeTable));
 
-	nRtn = sendto(s, buf, (int)sizeof(PACKAGE), 0,
+	nRtn = sendto(s, buf1, (int)sizeof(sizeOfPackage), 0,
+		(LPSOCKADDR)&addrin, sizeof(addrin));
+	nRtn = sendto(s, buf2, (int)sizeof(sizeOfTreeTable), 0,
 		(LPSOCKADDR)&addrin, sizeof(addrin));
 
-	free(buf);
+	free(buf1);
+	free(buf2);
 	SAFE_DELETE_ARRAY(treeTable);
 	treeNum = 0;
 }

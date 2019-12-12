@@ -16,12 +16,12 @@ const u_short port = 12345;
 //===================================================================================================================================
 typedef struct
 {
-	int treeMax;
-	TreeTable *treeTable;
 	bool networkTester;
 	int num;
 	D3DXVECTOR3 tmpPos;
 	float timer;
+	int treeMax;
+	TreeTable *treeTable;
 }PACKAGE;
 
 //ƒNƒ‰ƒX
