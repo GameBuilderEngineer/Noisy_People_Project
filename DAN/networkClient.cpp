@@ -71,30 +71,33 @@ void NETWORK_CLIENT::send(float time)
 	tmpPackage.treeTable = treeTable;
 	tmpPackage.timer = time;
 	
-	
 	//PACKAGEの情報のみ
 	char *buf1;	//パッケージ用(PACKAGEの情報のみ)
 	int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
 	buf1 = (char *)malloc(sizeOfPackage);
 	memcpy(buf1, &tmpPackage, sizeof(sizeOfPackage));
-
-	//TreeTableの実体
-	char *buf2; //パッケージ用(TreeTableの実体)
-	int sizeOfTreeTable = sizeof(TreeTable)*tmpPackage.treeMax;
-	buf2 = (char *)malloc(sizeOfTreeTable);
-	memcpy(buf2, tmpPackage.treeTable, sizeof(sizeOfTreeTable));
-
-	//送信
 	nRtn = sendto(s, buf1, (int)sizeof(sizeOfPackage), 0,
 		(LPSOCKADDR)&addrin, sizeof(addrin));
-	nRtn = sendto(s, buf2, (int)sizeof(sizeOfTreeTable), 0,
-		(LPSOCKADDR)&addrin, sizeof(addrin));
+	free(buf1);
+
+	if (tmpPackage.treeMax > 0)
+	{
+		//TreeTableの実体
+		char *buf2; //パッケージ用(TreeTableの実体)
+		int sizeOfTreeTable = sizeof(TreeTable)*tmpPackage.treeMax;
+		buf2 = (char *)malloc(sizeOfTreeTable);
+		memcpy(buf2, tmpPackage.treeTable, sizeof(sizeOfTreeTable));
+		nRtn = sendto(s, buf2, (int)sizeof(sizeOfTreeTable), 0,
+			(LPSOCKADDR)&addrin, sizeof(addrin));
+		free(buf2);
+	}
 
 	//メモリ解放
-	free(buf1);
-	free(buf2);
-	SAFE_DELETE_ARRAY(treeTable);
-	treeNum = 0;	//0クリア
+	if (treeNum > 0)
+	{
+		SAFE_DELETE_ARRAY(treeTable);
+		treeNum = 0;	//0クリア
+	}
 }
 
 //===================================================================================================================================
