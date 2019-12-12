@@ -355,6 +355,9 @@
     <Filter Include="Game Layer\Scene\Display\Server">
       <UniqueIdentifier>{5a583993-1f62-4171-b644-171020321cb0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resorce Layer\08 Network File">
+      <UniqueIdentifier>{43b86670-f599-4ca4-b190-94a58eaa2609}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -1346,6 +1349,9 @@
     </Text>
     <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
+    </Text>
+    <Text Include="08 Network File\PCName.txt">
+      <Filter>Resorce Layer\08 Network File</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

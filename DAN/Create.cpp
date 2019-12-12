@@ -167,8 +167,9 @@ void Create::update(float _frameTime) {
 	{
 		itemNS::ItemData unko = { 0, itemNS::BATTERY, *tmpObject->getPosition() };
 	}
-	if (input->wasKeyPressed('9'))
+	if (input->wasKeyPressed('Y'))
 	{
+		//tmpObject->
 	}
 
 	////ƒJƒƒ‰‚ÌXV

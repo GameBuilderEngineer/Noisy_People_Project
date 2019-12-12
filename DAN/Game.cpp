@@ -966,7 +966,7 @@ void Game::createGUI()
 				tmp2->id, tmp2->position.x,tmp2->position.y,tmp2->position.z);
 		}
 	}
-
+	networkClient->outputGUI();
 	player->outputGUI();			//プレイヤー
 	enemyManager->outputGUI();		//エネミー
 	itemManager->outputGUI();		//アイテムマネージャ

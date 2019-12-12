@@ -94,7 +94,7 @@ void WaveBall::draw(void)
 	int a = 155 * (outRadius / amplitude);
 	outColor = D3DCOLOR_RGBA(0, 255, 0, a);
 
-	pLine->SetWidth(2);
+	pLine->SetWidth(6);
 	pLine->SetAntialias(false);
 	pLine->SetGLLines(false);
 	pLine->Begin();
