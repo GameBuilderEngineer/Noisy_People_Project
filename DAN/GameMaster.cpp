@@ -26,6 +26,7 @@ using namespace gameMasterNS;
 //===================================================================================================================================
 GameMaster::GameMaster()
 {
+	openingTimer		= 0.0f;								//オープニング時間
 	gameTimer			= 0.0f;								//ゲーム時間
 	countDownTimer		= 0.0f;								//カウントダウン時間
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -100,11 +101,38 @@ bool GameMaster::paused()
 //===================================================================================================================================
 void GameMaster::startGame()
 {
+	openingTimer	= OPENING_TIME;
+	countDownTimer	= COUNT_DOWN_TIME;
 	gameTimer		= GAME_TIME;
 	gameTimerStop	= false;
 	pause = false;
 	progress = 0x00000000;
 	discardConversionOrder();
+}
+
+//===================================================================================================================================
+//【ゲームオープニング時間の更新】
+//===================================================================================================================================
+void GameMaster::updateOpeningTime(float frameTime)
+{
+	if (gameTimerStop)return;
+
+	openingTimer -= frameTime;
+	if (openingTimer <= 0.0f)
+	{
+		setProgress(PASSING_GAME_OPENING);
+	}
+}
+
+//===================================================================================================================================
+//【ゲーム開始カウントダウンの更新】
+//===================================================================================================================================
+void GameMaster::updateStartCountDown(float frameTime)
+{
+	if (gameTimerStop)return;
+	//ゲームオープニングが終了していた場合
+	if(whetherAchieved(PASSING_GAME_OPENING))
+		countDownTimer -= frameTime;
 }
 
 //===================================================================================================================================
@@ -114,11 +142,50 @@ void GameMaster::updateGameTime(float frameTime)
 {
 	if (gameTimerStop)return;
 
-	gameTimer -= frameTime;
+	//ゲームが終了している場合
+	if (whetherAchieved(PASSING_GAME_FINISH))
+	{
+		gameTimer = 0.0f;
+		return;
+	}
+
+	//ゲームが開始されている場合
+	if (whetherAchieved(PASSING_GAME_START))
+	{
+		gameTimer -= frameTime;
+	}
 }
 
 //===================================================================================================================================
-//【残り時間1分の更新】
+//【開始カウントダウン時のアクション】
+//===================================================================================================================================
+bool GameMaster::playActionStartCount(int countNum)
+{
+	if (countDownTimer > (float)countNum)return false;
+	switch (countNum)
+	{
+	case 3:
+		if (whetherAchieved(PASSING_COUNT_DOWN_THREE))return false;
+		setProgress(PASSING_COUNT_DOWN_THREE);
+		return true;break;
+	case 2:
+		if (whetherAchieved(PASSING_COUNT_DOWN_TWO))return false;
+		setProgress(PASSING_COUNT_DOWN_TWO);
+		return true;break;
+	case 1:
+		if (whetherAchieved(PASSING_COUNT_DOWN_ONE))return false;
+		setProgress(PASSING_COUNT_DOWN_ONE);
+		return true;break;
+	case 0:
+		if (whetherAchieved(PASSING_GAME_START))return false;
+		setProgress(PASSING_GAME_START);
+		return true; break;
+	}
+	return false;
+}
+
+//===================================================================================================================================
+//【残り時間1分のアクション】
 //===================================================================================================================================
 bool GameMaster::playActionRamaining1Min()
 {
@@ -267,8 +334,9 @@ int GameMaster::getEventList(TreeTable** out,float time)
 #ifdef _DEBUG
 void GameMaster::createGUI()
 {
-	ImGui::Text("gameTime = %f",		gameTimer);
+	ImGui::Text("openingTimer = %f",	openingTimer);
 	ImGui::Text("countDownTimer = %f",	countDownTimer);
+	ImGui::Text("gameTime = %f",		gameTimer);
 	ImGui::Text("TreeNum = %d",	treeNum);
 	if (ImGui::CollapsingHeader("TreeTableList"))
 	{

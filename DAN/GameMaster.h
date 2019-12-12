@@ -45,8 +45,10 @@ namespace gameMasterNS {
 		RANK_NUM
 	};
 
+	const float OPENING_TIME			= 5.0f;					//5秒
 	const float GAME_TIME				= 60.0f * 4.0f;			//4分
 	const float COUNT_DOWN_TIME			= 3.0f;					//3秒
+	const float ENDING_TIME				= 3.0f;					//3秒
 
 	const int	PLAYER_NUM				= 2;
 
@@ -54,7 +56,17 @@ namespace gameMasterNS {
 	const int	ACHIEVEMENT_GREENING_RATE_30	= 0x00000002;//緑化率30%
 	const int	ACHIEVEMENT_GREENING_RATE_50	= 0x00000004;//緑化率50%
 	const int	PASSING_REMAINING_ONE_MINUTE	= 0x00000008;//残り時間1分
-
+	const int	PASSING_GAME_OPENING			= 0x00000010;//OP終了
+	const int	PASSING_COUNT_DOWN_THREE		= 0x00000020;//3カウントダウン
+	const int	PASSING_COUNT_DOWN_TWO			= 0x00000040;//2カウントダウン
+	const int	PASSING_COUNT_DOWN_ONE			= 0x00000080;//1カウントダウン
+	const int	PASSING_GAME_START				= 0x00000100;//ゲームスタート
+	const int	PASSING_REMAINING_THREE			= 0x00000200;//残り3秒
+	const int	PASSING_REMAINING_TWO			= 0x00000400;//残り2秒
+	const int	PASSING_REMAINING_ONE			= 0x00000800;//残り1秒
+	const int	PASSING_GAME_FINISH				= 0x00001000;//ゲーム終了
+	const int	PASSING_GAME_ENDING				= 0x00002000;//ED終了
+	
 
 	enum EVENT_TYPE
 	{
@@ -100,6 +112,7 @@ class GameMaster :public Base
 private:
 	//Data
 	//ゲーム
+	float					openingTimer;									//オープニング時間
 	float					gameTimer;										//ゲーム時間
 	float					countDownTimer;									//カウントダウン時間
 	bool					pause;											//ポーズ
@@ -126,9 +139,14 @@ public:
 
 	//ゲーム
 	void startGame();												//ゲーム開始関数
+
+	void updateTimer(float frameTime);								//各タイマー更新
+	void updateOpeningTime(float frameTime);						//ゲーム時間の更新
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
+	void updateStartCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
 	bool paused();													//ポーズ処理
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
+	bool playActionStartCount(int countNum);						//開始カウント3時のアクション
 
 	//木の設定関数
 	void setTreeNum(int num);										//ツリーの数を保存する

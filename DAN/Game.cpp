@@ -387,6 +387,36 @@ void Game::update(float _frameTime) {
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 10.0f/60.0f)return;
 
+	//オープニング時間の更新
+	gameMaster->updateOpeningTime(frameTime);
+
+	//カウントダウンの更新
+	gameMaster->updateStartCountDown(frameTime);
+
+	//開始カウントダウン3
+	if (gameMaster->playActionStartCount(3))
+	{
+		count = 3;
+	}
+
+	//開始カウントダウン2
+	if (gameMaster->playActionStartCount(2))
+	{
+		count = 2;
+	}
+
+	//開始カウントダウン1
+	if (gameMaster->playActionStartCount(1))
+	{
+		count = 1;
+	}
+
+	//ゲーム開始
+	if (gameMaster->playActionStartCount(0))
+	{
+		count = 0;
+	}
+
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
 
@@ -539,6 +569,8 @@ void Game::update(float _frameTime) {
 		changeScene(nextScene);
 	}
 
+	
+
 	//残り時間１分
 	if (gameMaster->playActionRamaining1Min())
 	{
@@ -560,8 +592,8 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Game::render() {
-
+void Game::render() 
+{
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
 	camera[gameMasterNS::PLAYER_1P].renderReady();
@@ -960,6 +992,7 @@ void Game::createGUI()
 	Object* tmp2;
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
+	ImGui::Text("count = %d", count);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Text("collisionNum:%d", collisionNum);
