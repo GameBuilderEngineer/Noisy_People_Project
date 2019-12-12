@@ -16,6 +16,9 @@
 
 //プレイヤー
 MOVEP MoveP;
+using namespace playerNS;
+
+float wi = 0.0f;
 
 //=============================================================================
 // プレイヤーの初期化処理
@@ -32,7 +35,7 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	//初期設定
 	MoveP.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	MoveP.Rot = Rot;
-	MoveP.Quaternion = D3DXQUATERNION(0, 0, 0, 1);	
+	MoveP.Quaternion = D3DXQUATERNION(0, 0, 0, 1);
 	MoveP.Scl = Scl;
 	MoveP.ActionSpeed = 1.25f;
 
@@ -150,8 +153,16 @@ void UninitMoveP(void)
 void UpdateMoveP(float f_TimeDelta)
 {
 	Input *input = getInput();
+	const BYTE BUTTON_JUMP = virtualControllerNS::B;
+	const BYTE BUTTON_ATTACK = virtualControllerNS::R1;
 
-	if (input->getMouseLButton())
+	AnimCallBackHandler CallBackHandler;
+
+	CallBackHandler.AnimPointer = MoveP.Animation;
+
+
+
+	if (input->getMouseLButton() || input->getController()[gameMasterNS::PLAYER_1P]->isButton(BUTTON_ATTACK))
 	{
 		MoveP.IsChange = true;
 	}
@@ -160,9 +171,10 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.IsChange = false;
 	}
 
-	if (input->getMouseRButtonTrigger())
+	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_1P]->wasButton(BUTTON_JUMP)) && !MoveP.IsJump)
 	{
 		MoveP.IsJump = true;
+		wi = 0.24f;
 	}
 
 
@@ -173,22 +185,22 @@ void UpdateMoveP(float f_TimeDelta)
 
 		MoveP.Animation->NextAnimID = MoveP_Idle;
 
-		if (input->isKeyDown('W'))
+		if (input->isKeyDown('W') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y < 0.0f)
 		{
 			MoveP.IsRun = true;
 			MoveP.Animation->NextAnimID = MoveP_Run;
 		}
-		else if (input->isKeyDown('S'))
+		else if (input->isKeyDown('S') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y > 0.0f)
 		{
 			MoveP.IsRun = true;
 			MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
 		}
-		else if (input->isKeyDown('A'))
+		else if (input->isKeyDown('A') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x < 0.0f)
 		{
 			MoveP.IsRun = true;
 			MoveP.Animation->NextAnimID = MoveP_WalkLeft;
 		}
-		else if (input->isKeyDown('D'))
+		else if (input->isKeyDown('D') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x > 0.0f)
 		{
 			MoveP.IsRun = true;
 			MoveP.Animation->NextAnimID = MoveP_WalkRight;
@@ -210,22 +222,22 @@ void UpdateMoveP(float f_TimeDelta)
 
 		MoveP.Animation->NextAnimID = MoveP_FireIdle;
 
-		if (input->isKeyDown('W'))
+		if (input->isKeyDown('W') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y < 0.0f)
 		{
 			MoveP.IsChangeRun = true;
 			MoveP.Animation->NextAnimID = MoveP_FireRun;
 		}
-		else if (input->isKeyDown('S'))
+		else if (input->isKeyDown('S') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y > 0.0f)
 		{
 			MoveP.IsChangeRun = true;
 			MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
 		}
-		else if (input->isKeyDown('A'))
+		else if (input->isKeyDown('A') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x < 0.0f)
 		{
 			MoveP.IsChangeRun = true;
 			MoveP.Animation->NextAnimID = MoveP_WalkLeft;
 		}
-		else if (input->isKeyDown('D'))
+		else if (input->isKeyDown('D') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x > 0.0f)
 		{
 			MoveP.IsChangeRun = true;
 			MoveP.Animation->NextAnimID = MoveP_WalkRight;
@@ -257,6 +269,25 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.Animation->AnimController->SetTrackPosition(0, 3.8f);
 	}
 
+	if (MoveP.IsJumpEnd)
+	{
+		if (MoveP.IsGround)
+		{
+			MoveP.IsJumpEnd = false;
+			MoveP.IsJump = false;
+			MoveP.IsFireJump = false;
+			MoveP.Animation->MotionEnd = true;
+		}
+		if (!MoveP.IsGround)
+		{
+			MoveP.Animation->AnimController->SetTrackPosition(0, wi);
+		}
+	}
+
+	if (MoveP.GroundDistance > 0 && MoveP.GroundDistance < 2.5f)
+	{
+		wi += 0.01f;
+	}
 
 
 	MovePAnimeCur();
@@ -268,8 +299,8 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.AnimeChange = true;
 	}
 
-
-
+	MoveP.RHand = GetBoneMatrix(MoveP.Animation, "hand");
+	MoveP.RHandPos = D3DXVECTOR3(MoveP.RHand._41, MoveP.RHand._42, MoveP.RHand._43);
 	// アニメーションを更新 
 	//必ず入れてください、さもないと、動画が動けない
 	UpdateAnimation(MoveP.Animation, f_TimeDelta * MoveP.ActionSpeed);
@@ -559,10 +590,10 @@ void MovePAnimeNext(void)
 			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
 			break;
 		case MoveP_JumpFire:
-			ChangeAnimation(MoveP.Animation, MoveP_JumpFire, 1.0f, false);
+			ChangeAnimation(MoveP.Animation, MoveP_JumpFire, 0.5f, false);
 			if (MoveP.IsChange)
 			{
-				MoveP.Animation->NextAnimID = MoveP_FireIdle;
+				MoveP.Animation->NextAnimID = MoveP_FireRun;
 			}
 			if (!MoveP.IsChange)
 			{
@@ -584,7 +615,7 @@ void MovePAnimeNext(void)
 			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
 			break;
 		case MoveP_WalkBackwards:
-			ChangeAnimation(MoveP.Animation, MoveP_WalkBackwards, 1.0f, false);
+			ChangeAnimation(MoveP.Animation, MoveP_WalkBackwards, 1.5f, false);
 			MoveP.Animation->NextAnimID = MoveP_FireIdle;
 			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
 			break;
@@ -688,7 +719,7 @@ HRESULT InitCallbackKeys_MoveP(void)
 			break;
 		case MoveP_JumpFire:
 			AddKeydata(0.01f, MovePJumpFireStart);
-			AddKeydata(0.8f, MovePJumpFireEnd);
+			AddKeydata(0.3f, MovePJumpFireEnd);
 			break;
 		case MoveP_Die:
 			AddKeydata(0.95f, MovePDeath);

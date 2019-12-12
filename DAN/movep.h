@@ -47,13 +47,15 @@ typedef struct
 	D3DXANIMATION		*Animation;			// アニメーション
 	float				ActionSpeed;		// 全体アクションの速度
 	float				fTimeDelta = 0.0f;
-
-
+	D3DXMATRIX			RHand;
+	D3DXVECTOR3			RHandPos;
 D3DXVECTOR3			PrePos;				// 1フレイム前の座標
 D3DXVECTOR3			CenterPos;			// プレイヤーの中心座標
 D3DXVECTOR3			NextPos;			// 次の座標
 D3DXVECTOR3			Move;				// 移動量
 D3DXVECTOR3			DestAngle;			// 向き
+float				MoveY;				// 目標角度
+float				GroundDistance;		// 地面との距離
 float				facing;				// 目標角度
 float				facingTarget;		// 次のアニメーションの目標角度
 int					HP;					// プレイヤーのHP
@@ -67,6 +69,8 @@ bool				IsWalk = false;
 bool				IsRoll = false;
 bool				IsJump = false;
 bool				IsFireJump = false;
+bool				IsJumpEnd = false;
+bool				IsGround = false;
 bool				IsDefend = false;
 bool				AnimeChange = true;
 bool				IsChange = false;

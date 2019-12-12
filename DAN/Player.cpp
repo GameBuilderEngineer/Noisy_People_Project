@@ -54,6 +54,8 @@ Player::Player()
 	//基本アクション
 	onJump					= false;				//ジャンプフラグ
 
+	groundDistance			= 0.0f;
+
 }
 
 //===================================================================================================================================
@@ -243,7 +245,14 @@ bool Player::grounding(LPD3DXMESH mesh, D3DXMATRIX matrix)
 
 	//レイによる衝突検知
 	bool hit = gravityRay.rayIntersect(mesh, matrix);
-
+	MOVEP *MoveP = GetMovePAdr();
+	if (hit && infomation.playerType == gameMasterNS::PLAYER_1P) {
+		MoveP->GroundDistance = gravityRay.distance + size.y / 2;
+	}
+	else if(infomation.playerType == gameMasterNS::PLAYER_1P)
+	{
+		MoveP->GroundDistance = 10.0f;
+	}
 	//レイ衝突時、レイ距離が、プレイヤー高さより小さい場合食い込み状態となっているので、
 	if (hit && size.y/2 + difference >= gravityRay.distance)
 	{
@@ -342,6 +351,9 @@ void Player::updatePhysics(float frameTime)
 	// 加速度の影響を速度に与える
 	speed += acceleration * frameTime;
 
+	MOVEP *MoveP = GetMovePAdr();
+	MoveP->MoveY = speed.y;
+
 	if (onGround) {
 		//摩擦方向を算出
 		D3DXVECTOR3 frictionDirection;
@@ -429,6 +441,8 @@ void Player::moveOperation()
 //===================================================================================================================================
 void Player::jumpOperation()
 {
+	MOVEP *MoveP = GetMovePAdr();
+
 	//ジャンプ操作が無効
 	if (!whetherValidOperation(ENABLE_JUMP))return;
 
@@ -436,6 +450,36 @@ void Player::jumpOperation()
 	{
 		jump();
 	}
+
+
+	//if (MoveP->IsJumpEnd)
+	//{
+	//	if (onGround)
+	//	{
+	//		MoveP->IsJumpEnd = false;
+	//		MoveP->IsJump = false;
+	//		MoveP->IsFireJump = false;
+	//		MoveP->Animation->MotionEnd = true;
+	//	}
+	//	if(!onGround)
+	//	{
+	//		MoveP->Animation->AnimController->SetTrackPosition(0, 0.83f);
+	//	}
+	//}
+	if (infomation.playerType == gameMasterNS::PLAYER_1P)
+	{
+		if (onGround)
+		{
+			MoveP->IsGround = true;
+		}
+		else
+		{
+			MoveP->IsGround = false;
+		}
+	}
+
+
+
 
 	if (input->getMouseRButton() || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))
 	{
@@ -671,6 +715,7 @@ float Player::dash()
 //===================================================================================================================================
 void Player::jump()
 {
+
 	if (onGround && !onJump)
 	{
 		onJump = true;	// ジャンプ踏切フラグをオンにする
@@ -1020,6 +1065,8 @@ void Player::updatePostureByAiming()
 //===================================================================================================================================
 void Player::updateShooting(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
+	MOVEP *MoveP = GetMovePAdr();
+
 	//発射位置の更新
 	launchPosition = center;// +axisZ.direction*radius;
 	//狙撃レイの更新

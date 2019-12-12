@@ -161,9 +161,7 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 	case MovePJumpFireStart:
 		break;
 	case MovePJumpFireEnd:
-		MoveP->IsJump = false;
-		MoveP->IsFireJump = false;
-		AnimPointer->MotionEnd = true;
+		MoveP->IsJumpEnd = true;
 		break;
 	case MovePDeath:
 		MoveP->IsDeath = true;
