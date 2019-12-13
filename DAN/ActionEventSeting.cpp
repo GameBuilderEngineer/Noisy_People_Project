@@ -172,6 +172,10 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 		MoveP->AttackMove2 = false;
 		AnimPointer->MotionEnd = true;
 		break;
+	case MovePMoveVoice:
+		//‚±‚±•à‚­‰¹‚ð“ü‚ê‚é
+
+		break;
 	case MovePJumpFireStart:
 		break;
 	case MovePJumpFireEnd:
