@@ -127,18 +127,18 @@ void Display::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	PACKAGE package = networkServer->updata();
+	PACKAGE *package = networkServer->updata();
 	
 	//同期タイマー：ゲームプレイ（クライアント）時更新
-	if (package.networkTester == true)
+	if (package->networkTester == true)
 	{
-		syncTimer = package.timer;
+		syncTimer = package->timer;
 	}
 
-	if (package.num != 0)
+	if (package->num != 0)
 	{
 		//パッケージ内のイベントを呼び出す
-		for (int i = 0; i < package.num; i++)
+		for (int i = 0; i < package->num; i++)
 		{
 			//イベント対象のツリー
 			Tree* selectTree = NULL;
@@ -146,7 +146,7 @@ void Display::update(float _frameTime)
 			for (int num = 0; num < treeManager->getTreeList().size(); num++)
 			{
 				Tree* tree = treeManager->getTreeList()[i];
-				if (tree->getTreeData()->treeID == package.treeTable[i].id)
+				if (tree->getTreeData()->treeID == package->treeTable[i].id)
 				{
 					selectTree = tree;
 					num = treeManager->getTreeList().size();//検索終了
@@ -157,7 +157,7 @@ void Display::update(float _frameTime)
 			if (selectTree == NULL)continue;
 
 			//イベント別にアクションする
-			switch (package.treeTable[i].eventType)
+			switch (package->treeTable[i].eventType)
 			{
 			case gameMasterNS::TO_DEAD:
 				selectTree->transState();
@@ -171,7 +171,7 @@ void Display::update(float _frameTime)
 			}
 		}
 		//パッケージ内のイベントを解放する
-		free(package.treeTable);
+		free(package->treeTable);
 	}
 
 	//テストフィールドの更新

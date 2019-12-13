@@ -31,7 +31,7 @@ public:
 	NETWORK_INTERFACE();
 	~NETWORK_INTERFACE();
 
-	PACKAGE updata();
+	PACKAGE *updata();
 
 private:
 	WSADATA wsaData;

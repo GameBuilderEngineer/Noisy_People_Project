@@ -44,7 +44,7 @@ NETWORK_INTERFACE::~NETWORK_INTERFACE()
 	WSACleanup();
 }
 
-PACKAGE NETWORK_INTERFACE::updata()
+PACKAGE *NETWORK_INTERFACE::updata()
 {
 	//PACKAGEÇÃèÓïÒÇÃÇ›
 	const int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
@@ -63,7 +63,7 @@ PACKAGE NETWORK_INTERFACE::updata()
 	memset(&tmp, 0, sizeof(PACKAGE));
 	if (nRtn != sizeOfPackage)
 	{
-		return tmp;
+		return &tmp;
 	}
 	else
 	{
@@ -89,12 +89,12 @@ PACKAGE NETWORK_INTERFACE::updata()
 			&fromlen);
 		if (nRtn != sizeOfTreeTable)
 		{
-			return tmp;
+			return &tmp;
 		}
 		tmp.treeTable = (TreeTable*)malloc(sizeOfTreeTable);
 		memcpy(tmp.treeTable, buf2, sizeOfTreeTable);
 		free(buf2);
 	}
 
-	return tmp;
+	return &tmp;
 }
