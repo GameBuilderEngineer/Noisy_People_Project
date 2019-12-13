@@ -133,45 +133,45 @@ void Display::update(float _frameTime)
 	if (package->networkTester == true)
 	{
 		syncTimer = package->timer;
-	}
 
-	if (package->treeMax != 0)
-	{
-		//パッケージ内のイベントを呼び出す
-		for (int i = 0; i < package->num; i++)
+		if (package->treeMax != 0)
 		{
-			//イベント対象のツリー
-			Tree* selectTree = NULL;
-			//イベント対象のツリーを検索する
-			for (int num = 0; num < treeManager->getTreeList().size(); num++)
+			//パッケージ内のイベントを呼び出す
+			for (int i = 0; i < package->num; i++)
 			{
-				Tree* tree = treeManager->getTreeList()[i];
-				if (tree->getTreeData()->treeID == package->treeTable[i].id)
+				//イベント対象のツリー
+				Tree* selectTree = NULL;
+				//イベント対象のツリーを検索する
+				for (int num = 0; num < treeManager->getTreeList().size(); num++)
 				{
-					selectTree = tree;
-					num = treeManager->getTreeList().size();//検索終了
+					Tree* tree = treeManager->getTreeList()[i];
+					if (tree->getTreeData()->treeID == package->treeTable[i].id)
+					{
+						selectTree = tree;
+						num = treeManager->getTreeList().size();//検索終了
+					}
+				}
+
+				//イベントの対象ツリーが存在しない場合はスルー
+				if (selectTree == NULL)continue;
+
+				//イベント別にアクションする
+				switch (package->treeTable[i].eventType)
+				{
+				case gameMasterNS::TO_DEAD:
+					selectTree->transState();
+					break;
+				case gameMasterNS::TO_GREEN_WITH_ANALOG:
+					selectTree->transState();
+					break;
+				case gameMasterNS::TO_GREEN_WITH_DIGITAL:
+					selectTree->transState();
+					break;
 				}
 			}
-		
-			//イベントの対象ツリーが存在しない場合はスルー
-			if (selectTree == NULL)continue;
-
-			//イベント別にアクションする
-			switch (package->treeTable[i].eventType)
-			{
-			case gameMasterNS::TO_DEAD:
-				selectTree->transState();
-				break;
-			case gameMasterNS::TO_GREEN_WITH_ANALOG:
-				selectTree->transState();
-				break;
-			case gameMasterNS::TO_GREEN_WITH_DIGITAL:
-				selectTree->transState();
-				break;
-			}
+			//パッケージ内のイベントを解放する
+			free(package->treeTable);
 		}
-		//パッケージ内のイベントを解放する
-		free(package->treeTable);
 	}
 
 	//テストフィールドの更新
