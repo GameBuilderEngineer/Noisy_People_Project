@@ -169,8 +169,8 @@ void Display::update(float _frameTime)
 					break;
 				}
 			}
-			//パッケージ内のイベントを解放する
-			SAFE_DELETE_ARRAY(package->treeTable);
+			////パッケージ内のイベントを解放する
+			//SAFE_DELETE_ARRAY(package->treeTable);
 		}
 	}
 

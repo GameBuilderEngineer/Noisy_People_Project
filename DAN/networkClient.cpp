@@ -49,10 +49,10 @@ NETWORK_CLIENT::~NETWORK_CLIENT()
 {
 	closesocket(s);
 	WSACleanup();
-	if (treeNum != 0)
-	{
-		SAFE_DELETE_ARRAY(treeTable);
-	}
+	//if (treeNum != 0)
+	//{
+	//	//SAFE_DELETE_ARRAY(treeTable);
+	//}
 }
 
 ////===================================================================================================================================
