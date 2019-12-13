@@ -12,6 +12,7 @@
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
 #include "MoveP.h"
+#include "MoveP1.h"
 #include "NormalState.h"
 
 //===================================================================================================================================
@@ -24,7 +25,7 @@ using namespace playerNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Player::Player() 
+Player::Player()
 {
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
@@ -33,28 +34,28 @@ Player::Player()
 	}
 
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
-	onGravity			= true;
+	onGravity = true;
 	//タイマー
-	invincibleTimer			= 0.0f;					//無敵時間
-	recoveryPowerTimer		= 0.0f;					//自動電力回復時間
+	invincibleTimer = 0.0f;					//無敵時間
+	recoveryPowerTimer = 0.0f;					//自動電力回復時間
 
 	//汎用
-	reverseValueXAxis		= CAMERA_SPEED;			//操作Ｘ軸
-	reverseValueYAxis		= -CAMERA_SPEED;		//操作Ｙ軸
+	reverseValueXAxis = CAMERA_SPEED;			//操作Ｘ軸
+	reverseValueYAxis = -CAMERA_SPEED;		//操作Ｙ軸
 
 	//物理
-	onGround				= false;				//接地判定
-	difference				= DIFFERENCE_FIELD;		//フィールド補正差分
+	onGround = false;				//接地判定
+	difference = DIFFERENCE_FIELD;		//フィールド補正差分
 
 	//カメラ遷移
-	cameraTransitionTimer	= 0.0f;
-	cameraTransitionTime	= 0.0f;
-	nowCameraTransing		= false;
+	cameraTransitionTimer = 0.0f;
+	cameraTransitionTime = 0.0f;
+	nowCameraTransing = false;
 
 	//基本アクション
-	onJump					= false;				//ジャンプフラグ
+	onJump = false;				//ジャンプフラグ
 
-	groundDistance			= 0.0f;
+	groundDistance = 0.0f;
 
 }
 
@@ -74,14 +75,14 @@ Player::~Player()
 //プレイヤータイプごとに初期化内容を変更
 void Player::initialize(PlayerTable info)
 {
-	device				= getDevice();
-	input				= getInput();
-	infomation			= info;
-	keyTable			= KEY_TABLE[infomation.playerType];
+	device = getDevice();
+	input = getInput();
+	infomation = info;
+	keyTable = KEY_TABLE[infomation.playerType];
 	Object::initialize(&(D3DXVECTOR3)START_POSITION[infomation.playerType]);
 
 	// コライダの初期化
-	bodyCollide.initialize(	&position, staticMeshNS::reference(infomation.modelType)->mesh);
+	bodyCollide.initialize(&position, staticMeshNS::reference(infomation.modelType)->mesh);
 	setRadius(bodyCollide.getRadius());	// メッシュ半径を取得
 
 	//サイズの設定
@@ -91,31 +92,31 @@ void Player::initialize(PlayerTable info)
 	hp = MAX_HP;
 
 	//電力の設定
-	power				= MAX_POWER;							//キャラクター電力確認用
+	power = MAX_POWER;							//キャラクター電力確認用
 
 	//通常状態
 	state = new normalNS::NormalState(this);
 	enableOperation(ENABLE_CAMERA);
 
 	//シューティングアクション
-	bulletManager		= new BulletManager;
+	bulletManager = new BulletManager;
 
 	//デジタルアクション
 	//デジタルシフト
-	digitalShiftEffect	= new DigitalShiftEffect;
-	shiftLine.start		= position;
-	shiftLine.end		= position+axisZ.direction;
+	digitalShiftEffect = new DigitalShiftEffect;
+	shiftLine.start = position;
+	shiftLine.end = position + axisZ.direction;
 
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
 	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	shiftStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftStart, false ,NULL,false,NULL};
-	shiftFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftFinish, false ,NULL,false,NULL};
-	visionSE			= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Vision, false ,NULL,false,NULL};
-	visionStartSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionStart, false ,NULL,false,NULL};
-	visionFinishSE		= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL};
-	skyVisionStartSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL};
-	skyVisionFinishSE	= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL};
+	shiftStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftStart, false ,NULL,false,NULL };
+	shiftFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftFinish, false ,NULL,false,NULL };
+	visionSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Vision, false ,NULL,false,NULL };
+	visionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionStart, false ,NULL,false,NULL };
+	visionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL };
+	skyVisionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
+	skyVisionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
 
 }
 
@@ -125,12 +126,12 @@ void Player::initialize(PlayerTable info)
 void Player::update(float frameTime)
 {
 	// 事前処理
-	this->frameTime				= frameTime;
-	friction					= 1.0f;
-	isExecutingMoveOperation	= false;
-	onJump						= false;
-	acceleration				*= 0.0f;
-	onGroundBefore				= onGround;
+	this->frameTime = frameTime;
+	friction = 1.0f;
+	isExecutingMoveOperation = false;
+	onJump = false;
+	acceleration *= 0.0f;
+	onGroundBefore = onGround;
 
 
 	//自動電力回復
@@ -179,7 +180,7 @@ void Player::update(float frameTime)
 void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	//バレットの描画
-	bulletManager->render(view,projection,cameraPosition);
+	bulletManager->render(view, projection, cameraPosition);
 	//デジタルシフトエフェクトの描画
 	digitalShiftEffect->render(view, projection, cameraPosition);
 
@@ -249,15 +250,25 @@ bool Player::grounding(LPD3DXMESH mesh, D3DXMATRIX matrix)
 	if (hit && infomation.playerType == gameMasterNS::PLAYER_1P) {
 		MoveP->GroundDistance = gravityRay.distance + size.y / 2;
 	}
-	else if(infomation.playerType == gameMasterNS::PLAYER_1P)
+	else if (infomation.playerType == gameMasterNS::PLAYER_1P)
 	{
 		MoveP->GroundDistance = 10.0f;
 	}
+
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
+	if (hit && infomation.playerType == gameMasterNS::PLAYER_2P) {
+		MoveP1->GroundDistance = gravityRay.distance + size.y / 2;
+	}
+	else if (infomation.playerType == gameMasterNS::PLAYER_2P)
+	{
+		MoveP1->GroundDistance = 10.0f;
+	}
+
 	//レイ衝突時、レイ距離が、プレイヤー高さより小さい場合食い込み状態となっているので、
-	if (hit && size.y/2 + difference >= gravityRay.distance)
+	if (hit && size.y / 2 + difference >= gravityRay.distance)
 	{
 		//接地状態とみなし、
-		onGround = true;	
+		onGround = true;
 		//食い込んでいる距離分、位置を補正する
 		position += gravityRay.direction*(gravityRay.distance - size.y / 2);
 		return true;
@@ -290,12 +301,12 @@ bool Player::insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMA
 	using namespace objectNS;
 	switch (axisID)
 	{
-	case AXIS_X:	return insetCorrection(axisX,			distance, mesh, matrix); break;
-	case AXIS_RX:	return insetCorrection(reverseAxisX,	distance, mesh, matrix); break;
-	case AXIS_Y:	return insetCorrection(axisY,			distance, mesh, matrix); break;
-	case AXIS_RY:	return insetCorrection(reverseAxisY,	distance, mesh, matrix); break;
-	case AXIS_Z:	return insetCorrection(axisZ,			distance, mesh, matrix); break;
-	case AXIS_RZ:	return insetCorrection(reverseAxisZ,	distance, mesh, matrix); break;
+	case AXIS_X:	return insetCorrection(axisX, distance, mesh, matrix); break;
+	case AXIS_RX:	return insetCorrection(reverseAxisX, distance, mesh, matrix); break;
+	case AXIS_Y:	return insetCorrection(axisY, distance, mesh, matrix); break;
+	case AXIS_RY:	return insetCorrection(reverseAxisY, distance, mesh, matrix); break;
+	case AXIS_Z:	return insetCorrection(axisZ, distance, mesh, matrix); break;
+	case AXIS_RZ:	return insetCorrection(reverseAxisZ, distance, mesh, matrix); break;
 	}
 	return false;
 }
@@ -324,7 +335,7 @@ void Player::physicalBehavior()
 	// 加速度処理
 	//------------
 	// 重力処理
- 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
+	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
 	gravityRay.update(position, gravityDirection);
 	// 空中で重力をかける（地上では重力をかけない）
 	setGravity(gravityDirection, GRAVITY_FORCE);
@@ -357,7 +368,7 @@ void Player::updatePhysics(float frameTime)
 	if (onGround) {
 		//摩擦方向を算出
 		D3DXVECTOR3 frictionDirection;
-		D3DXVec3Normalize(&frictionDirection,&speed);
+		D3DXVec3Normalize(&frictionDirection, &speed);
 
 		dot = D3DXVec3Dot(&gravityRay.normal, &D3DXVECTOR3(0, 1, 0));
 		if (dot >= 1.0f - 70.0f / 90.0f) {
@@ -367,7 +378,7 @@ void Player::updatePhysics(float frameTime)
 		else {
 			// 速度に摩擦の影響を与える
 			speed -= frictionDirection * MOVE_FRICTION * GRAVITY_FORCE  * frameTime;
-		
+
 			//斜面滑りベクトル
 			D3DXVECTOR3 slipVector;
 			D3DXVec3Normalize(&slipVector, &slip(D3DXVECTOR3(0, -1, 0), gravityRay.normal));
@@ -378,11 +389,11 @@ void Player::updatePhysics(float frameTime)
 		}
 	}
 
-	D3DXVECTOR3 ySpeed			= D3DXVECTOR3(0.0f,speed.y,0.0f);
-	D3DXVECTOR3 yAcceleration	= D3DXVECTOR3(0.0f, acceleration.y, 0.0f);
+	D3DXVECTOR3 ySpeed = D3DXVECTOR3(0.0f, speed.y, 0.0f);
+	D3DXVECTOR3 yAcceleration = D3DXVECTOR3(0.0f, acceleration.y, 0.0f);
 
-	D3DXVECTOR3 xzSpeed			= D3DXVECTOR3(speed.x,0.0f, speed.z);
-	D3DXVECTOR3 xzAcceleration	= D3DXVECTOR3(acceleration.x, 0.0f, acceleration.z);
+	D3DXVECTOR3 xzSpeed = D3DXVECTOR3(speed.x, 0.0f, speed.z);
+	D3DXVECTOR3 xzAcceleration = D3DXVECTOR3(acceleration.x, 0.0f, acceleration.z);
 
 	//速度に最大速度で制限をかける
 	if (D3DXVec3Length(&xzSpeed) > MAX_SPEED)
@@ -405,34 +416,38 @@ void Player::moveOperation()
 {
 
 	MOVEP *MoveP = GetMovePAdr();
-	if (!MoveP->IsAttack)
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
+
+	if (!MoveP->IsDie || !MoveP1->IsDie)
 	{
+
+		//移動操作が無効
+		if (!whetherValidOperation(ENABLE_MOVE))return;
+
+		//前へ進む
+		if (input->isKeyDown(keyTable.front)) {
+			move(D3DXVECTOR2(0, -1), camera->getDirectionX(), camera->getDirectionZ());
+		}
+		//後ろへ進む
+		if (input->isKeyDown(keyTable.back)) {
+			move(D3DXVECTOR2(0, 1), camera->getDirectionX(), camera->getDirectionZ());
+		}
+		//左へ進む
+		if (input->isKeyDown(keyTable.left)) {
+			move(D3DXVECTOR2(-1, 0), camera->getDirectionX(), camera->getDirectionZ());
+		}
+		//右へ進む
+		if (input->isKeyDown(keyTable.right))
+		{
+			move(D3DXVECTOR2(1, 0), camera->getDirectionX(), camera->getDirectionZ());
+		}
+
+		//コントローラスティックによる移動
+		if (input->getController()[infomation.playerType]->checkConnect()) {
+			move(input->getController()[infomation.playerType]->getLeftStick()*0.001f, camera->getDirectionX(), camera->getDirectionZ());
+		}
 	}
 
-	//移動操作が無効
-	if (!whetherValidOperation(ENABLE_MOVE))return;
-
-	//前へ進む
-	if (input->isKeyDown(keyTable.front)) {
-		move(D3DXVECTOR2(0, -1), camera->getDirectionX(), camera->getDirectionZ());
-	}
-	//後ろへ進む
-	if (input->isKeyDown(keyTable.back)) {
-		move(D3DXVECTOR2(0, 1), camera->getDirectionX(), camera->getDirectionZ());
-	}
-	//左へ進む
-	if (input->isKeyDown(keyTable.left)) {
-		move(D3DXVECTOR2(-1, 0), camera->getDirectionX(), camera->getDirectionZ());
-	}
-	//右へ進む
-	if (input->isKeyDown(keyTable.right))
-	{
-		move(D3DXVECTOR2(1, 0), camera->getDirectionX(), camera->getDirectionZ());
-	}
-	//コントローラスティックによる移動
-	if (input->getController()[infomation.playerType]->checkConnect()) {
-		move(input->getController()[infomation.playerType]->getLeftStick()*0.001f, camera->getDirectionX(), camera->getDirectionZ());
-	}
 }
 
 //===================================================================================================================================
@@ -442,30 +457,20 @@ void Player::moveOperation()
 void Player::jumpOperation()
 {
 	MOVEP *MoveP = GetMovePAdr();
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
 
 	//ジャンプ操作が無効
 	if (!whetherValidOperation(ENABLE_JUMP))return;
 
-	if (input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP))
+	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_1P]->wasButton(BUTTON_JUMP)) && !MoveP->IsDie)
+	{
+		jump();
+	}
+	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_2P]->wasButton(BUTTON_JUMP)) && !MoveP1->IsDie)
 	{
 		jump();
 	}
 
-
-	//if (MoveP->IsJumpEnd)
-	//{
-	//	if (onGround)
-	//	{
-	//		MoveP->IsJumpEnd = false;
-	//		MoveP->IsJump = false;
-	//		MoveP->IsFireJump = false;
-	//		MoveP->Animation->MotionEnd = true;
-	//	}
-	//	if(!onGround)
-	//	{
-	//		MoveP->Animation->AnimController->SetTrackPosition(0, 0.83f);
-	//	}
-	//}
 	if (infomation.playerType == gameMasterNS::PLAYER_1P)
 	{
 		if (onGround)
@@ -475,6 +480,18 @@ void Player::jumpOperation()
 		else
 		{
 			MoveP->IsGround = false;
+		}
+	}
+
+	if (infomation.playerType == gameMasterNS::PLAYER_2P)
+	{
+		if (onGround)
+		{
+			MoveP1->IsGround = true;
+		}
+		else
+		{
+			MoveP1->IsGround = false;
 		}
 	}
 
@@ -506,7 +523,7 @@ void Player::controlCamera(float frameTime)
 	//マウス操作
 	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
 	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
-	
+
 	//コントローラ操作
 	if (input->getController()[infomation.playerType]->checkConnect()) {
 		camera->rotation(D3DXVECTOR3(0, 1, 0), input->getController()[infomation.playerType]->getRightStick().x*0.1f*frameTime*reverseValueXAxis);
@@ -515,7 +532,7 @@ void Player::controlCamera(float frameTime)
 	//カメラの注視位置を更新（相対位置にも加算）
 	D3DXQUATERNION cameraGazeRelativeQ = camera->relativeQuaternion;
 	Base::anyAxisRotation(&cameraGazeRelativeQ, D3DXVECTOR3(0, 1, 0), -90);
-	D3DXVec3Normalize(&cameraGazeRelative,&(D3DXVECTOR3)cameraGazeRelativeQ);
+	D3DXVec3Normalize(&cameraGazeRelative, &(D3DXVECTOR3)cameraGazeRelativeQ);
 	//カメラ注視位置の更新
 	cameraGaze = position
 		+ cameraGazeRelative * CAMERA_GAZE.x
@@ -540,7 +557,7 @@ void Player::controlSkyCamera()
 	//マウス操作
 	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
 	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
-	
+
 	//コントローラ操作
 	if (input->getController()[infomation.playerType]->checkConnect()) {
 		camera->rotation(D3DXVECTOR3(0, 1, 0), input->getController()[infomation.playerType]->getRightStick().x*0.1f*frameTime*reverseValueXAxis);
@@ -549,7 +566,7 @@ void Player::controlSkyCamera()
 	//カメラの注視位置を更新（相対位置にも加算）
 	D3DXQUATERNION cameraGazeRelativeQ = camera->relativeQuaternion;
 	Base::anyAxisRotation(&cameraGazeRelativeQ, D3DXVECTOR3(0, 1, 0), -90);
-	D3DXVec3Normalize(&cameraGazeRelative,&(D3DXVECTOR3)cameraGazeRelativeQ);
+	D3DXVec3Normalize(&cameraGazeRelative, &(D3DXVECTOR3)cameraGazeRelativeQ);
 
 	//カメラ注視位置の更新
 	cameraGaze = position
@@ -575,7 +592,7 @@ void Player::returnTransitionCamera(float time)
 //===================================================================================================================================
 //【カメラ遷移開始】
 //===================================================================================================================================
-void Player::startTransitionCamera(float time, D3DXVECTOR3 before,D3DXVECTOR3 next)
+void Player::startTransitionCamera(float time, D3DXVECTOR3 before, D3DXVECTOR3 next)
 {
 	//遷移中にする
 	nowCameraTransing = true;
@@ -587,13 +604,13 @@ void Player::startTransitionCamera(float time, D3DXVECTOR3 before,D3DXVECTOR3 ne
 	nextGaze = next;
 
 	//遷移時間を設定
-	cameraTransitionTime = time;		
+	cameraTransitionTime = time;
 
 	//カメラの操作許可を切る
-	disableOperation(ENABLE_CAMERA);	
+	disableOperation(ENABLE_CAMERA);
 
 	//遷移タイマーを0で初期化
-	cameraTransitionTimer = 0.0f;		
+	cameraTransitionTimer = 0.0f;
 }
 
 //===================================================================================================================================
@@ -616,7 +633,7 @@ void Player::transitionCamera()
 		float rate = cameraTransitionTimer / cameraTransitionTime;
 		D3DXVec3Lerp(&cameraGaze, &beforeGaze, &nextGaze, rate);
 	}
-	else 
+	else
 	{
 		//カメラ遷移中フラグを終了
 		nowCameraTransing = false;
@@ -637,7 +654,7 @@ void Player::transitionCamera()
 //===================================================================================================================================
 void Player::recoveryPower()
 {
-	if (power >= FULL_POWER)return; 
+	if (power >= FULL_POWER)return;
 	//1秒に1度回復
 	if (recoveryPowerTimer < 1.0f)
 	{
@@ -646,7 +663,7 @@ void Player::recoveryPower()
 	}
 
 	recoveryPowerTimer = 0.0f;
-	power = UtilityFunction::clamp(power + AUTO_RECOVERY_POWER,0,FULL_POWER);
+	power = UtilityFunction::clamp(power + AUTO_RECOVERY_POWER, 0, FULL_POWER);
 }
 //===================================================================================================================================
 //【リスポーン】
@@ -674,7 +691,7 @@ void Player::respawn()
 // [処理内容1]入力された２次元ベクトルに応じてカメラ情報に基づき、速度へ加算処理を行う。
 // [処理内容2]移動後の姿勢制御を行う。
 //===================================================================================================================================
-void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVECTOR3 cameraAxisZ)
+void Player::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ)
 {
 	if (operationDirection.x == 0 && operationDirection.y == 0)return;//入力値が0以下ならば移動しない
 	isExecutingMoveOperation = true;
@@ -728,10 +745,36 @@ void Player::jump()
 //===================================================================================================================================
 bool Player::shot()
 {
-	if (!input->getMouseLButton() &&
-		!input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))return false;
-	bulletManager->launch(shootingRay);
-	return true;
+	MOVEP *MoveP = GetMovePAdr();
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
+
+
+	if (!MoveP->IsDie)
+	{
+		if (!input->getMouseLButton() && !input->getController()[gameMasterNS::PLAYER_1P]->isButton(BUTTON_BULLET))
+		{
+			return false;
+		}
+		else
+		{
+			bulletManager->launch(shootingRay);
+			return true;
+		}
+	}
+
+	if (!MoveP1->IsDie)
+	{
+		if (!input->getMouseLButton() && !input->getController()[gameMasterNS::PLAYER_2P]->isButton(BUTTON_BULLET))
+		{
+			return false;
+		}
+		else
+		{
+			bulletManager->launch(shootingRay);
+			return true;
+		}
+	}
+
 }
 
 //===================================================================================================================================
@@ -756,10 +799,10 @@ bool Player::digitalShift()
 		+ axisY.direction*CAMERA_GAZE.y;
 
 	//カメラ遷移を開始
-	startTransitionCamera(SKY_TRANSITION_TIME,cameraGaze,nextGaze);
-	
+	startTransitionCamera(SKY_TRANSITION_TIME, cameraGaze, nextGaze);
+
 	//デジタルシフトの開始エフェクトを再生
-	digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT,center);
+	digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT, center);
 
 	transState(DIGITAL_SHIFT);
 	return true;
@@ -776,9 +819,9 @@ bool Player::collideShiftRay(Cylinder target)
 
 	//カメラからの半径付きレイを設定
 	Cylinder volumeRayFromCamera;
-	volumeRayFromCamera.centerLine.start	= camera->position;
-	volumeRayFromCamera.centerLine.end		= camera->position + camera->getDirectionZ()*10000.0f;
-	volumeRayFromCamera.radius				= 3.0f;
+	volumeRayFromCamera.centerLine.start = camera->position;
+	volumeRayFromCamera.centerLine.end = camera->position + camera->getDirectionZ()*10000.0f;
+	volumeRayFromCamera.radius = 3.0f;
 
 	//
 	D3DXVECTOR3 nearest =
@@ -791,7 +834,7 @@ bool Player::collideShiftRay(Cylinder target)
 	float distanceOnRay = Base::between2VectorLength(nearest, camera->position);
 
 	//円柱間の距離
-	float distance = Base::between2LineDistance(target.centerLine,volumeRayFromCamera.centerLine);
+	float distance = Base::between2LineDistance(target.centerLine, volumeRayFromCamera.centerLine);
 
 	//円柱同士の衝突時距離
 	float radiusDistance = target.radius + volumeRayFromCamera.radius;
@@ -997,7 +1040,7 @@ bool Player::skyVision()
 		+ axisY.direction*SKY_HEIGH;
 
 	//カメラ遷移を開始
-	startTransitionCamera(SKY_TRANSITION_TIME,cameraGaze,nextGaze);
+	startTransitionCamera(SKY_TRANSITION_TIME, cameraGaze, nextGaze);
 
 	//スカイビジョンへ遷移
 	transState(SKY_VISION);
@@ -1020,7 +1063,7 @@ bool Player::cancelSkyVision()
 		+ axisY.direction;
 
 	//カメラ遷移を開始
-	startTransitionCamera(SKY_RETURN_TIME,cameraGaze,nextGaze);
+	startTransitionCamera(SKY_RETURN_TIME, cameraGaze, nextGaze);
 
 	//通常状態へ遷移
 	transState(NORMAL);
@@ -1101,7 +1144,7 @@ void Player::outputGUI()
 		float limitBottom = -1000;
 
 		ImGui::Text("state[%s]", state->stateName.c_str());
-		
+
 
 		ImGui::Text("speedVectorLength %f", D3DXVec3Length(&speed));
 
@@ -1118,9 +1161,9 @@ void Player::outputGUI()
 		ImGui::Text("shootingRay.distance %.02f", shootingRay.distance);
 
 		//カメラ遷移
-		ImGui::Text(nowCameraTransing? "nowCameraTransing:ON":"nowCameraTransing:OFF");
+		ImGui::Text(nowCameraTransing ? "nowCameraTransing:ON" : "nowCameraTransing:OFF");
 		ImGui::Text("CameraTransTime : %.02f / %.02f",
-			cameraTransitionTimer,cameraTransitionTime);
+			cameraTransitionTimer, cameraTransitionTime);
 		//デジタルシフトレイ
 		ImGui::Text("[shiftRay] start(%.02f,%.02f,%.02f):distance(%.02f)",
 			shiftRay.start.x, shiftRay.start.y, shiftRay.start.z,
@@ -1132,10 +1175,10 @@ void Player::outputGUI()
 
 		//操作有効フラグ
 		//シフト
-		ImGui::Text(whetherValidOperation(ENABLE_SHIFT) ? "ENABLE_SHIFT:ON":"ENABLE_SHIFT:OFF");
+		ImGui::Text(whetherValidOperation(ENABLE_SHIFT) ? "ENABLE_SHIFT:ON" : "ENABLE_SHIFT:OFF");
 
 		//接地関係
-		ImGui::Text(onGround ? "onGround:ON":"onGround:OFF");							//接地フラグ
+		ImGui::Text(onGround ? "onGround:ON" : "onGround:OFF");							//接地フラグ
 		ImGui::Text("dot:%.02f", dot);
 
 		//オブジェクトパラメータ
@@ -1159,9 +1202,9 @@ void Player::outputGUI()
 //===================================================================================================================================
 void Player::reset()
 {
-	position	= START_POSITION[infomation.playerType];
-	speed		= acceleration = D3DXVECTOR3(0, 0, 0);
-	quaternion	= D3DXQUATERNION(0, 0, 0, 1);
+	position = START_POSITION[infomation.playerType];
+	speed = acceleration = D3DXVECTOR3(0, 0, 0);
+	quaternion = D3DXQUATERNION(0, 0, 0, 1);
 	axisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(1, 0, 0));
 	axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));
 	axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));
@@ -1177,35 +1220,35 @@ void Player::reset()
 //===================================================================================================================================
 //【setter】
 //===================================================================================================================================
-void Player::setCamera(Camera* _camera) { 
-	camera = _camera; 
+void Player::setCamera(Camera* _camera) {
+	camera = _camera;
 	aimingRay.initialize(camera->position, camera->getDirectionZ());
-	aimingRay.color = D3DXCOLOR(255,123,193,255);
+	aimingRay.color = D3DXCOLOR(255, 123, 193, 255);
 	shootingRay.color = D3DXCOLOR(120, 10, 20, 255);
 }
 void Player::setInfomation(PlayerTable info) { infomation = info; };
 void Player::addpower(int add)
 {
-	power = UtilityFunction::clamp( power + add, MIN_POWER, MAX_POWER);		//電力回復
-}					
+	power = UtilityFunction::clamp(power + add, MIN_POWER, MAX_POWER);		//電力回復
+}
 void Player::pullpower(int pull)
 {
-	power = UtilityFunction::clamp( power - pull, MIN_POWER, MAX_POWER);		//電力消費
+	power = UtilityFunction::clamp(power - pull, MIN_POWER, MAX_POWER);		//電力消費
 }
 void Player::damage(int _damage)
 {
 	hp -= _damage;
 	if (hp < 0) hp = 0;
 }
-void Player::setValidOperation(int value) 
+void Player::setValidOperation(int value)
 {
 	validOperation = value;
 }
-void Player::enableOperation(int value) 
+void Player::enableOperation(int value)
 {
 	validOperation |= value;
 }
-void Player::disableOperation(int value) 
+void Player::disableOperation(int value)
 {
 	validOperation &= ~value;
 }
@@ -1223,11 +1266,11 @@ bool Player::whetherValidOperation(int operation) {
 	if (validOperation & operation)	return true;
 	return false;
 }
-bool Player::canShot()			{ return whetherValidOperation(ENABLE_SHOT); }
-bool Player::canJump()			{ return whetherValidOperation(ENABLE_JUMP); }
-bool Player::canDoVision()		{ return whetherValidOperation(ENABLE_VISION); }
-bool Player::canDoSkyVision()	{ return whetherValidOperation(ENABLE_SKY_VISION); }
-bool Player::canShift()			{ return whetherValidOperation(ENABLE_SHIFT); }
+bool Player::canShot() { return whetherValidOperation(ENABLE_SHOT); }
+bool Player::canJump() { return whetherValidOperation(ENABLE_JUMP); }
+bool Player::canDoVision() { return whetherValidOperation(ENABLE_VISION); }
+bool Player::canDoSkyVision() { return whetherValidOperation(ENABLE_SKY_VISION); }
+bool Player::canShift() { return whetherValidOperation(ENABLE_SHIFT); }
 BoundingSphere* Player::getBodyCollide() { return &bodyCollide; }
 PlayerTable* Player::getInfomation() { return &infomation; }
 D3DXVECTOR3* Player::getCameraGaze() { return &cameraGaze; }

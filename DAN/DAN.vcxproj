@@ -169,6 +169,7 @@
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
+    <ClInclude Include="movep1.h" />
     <ClInclude Include="Player1UI.h" />
     <ClInclude Include="Player2UI.h" />
     <ClInclude Include="NormalState.h" />
@@ -321,6 +322,7 @@
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
+    <ClCompile Include="movep1.cpp" />
     <ClCompile Include="Player1UI.cpp" />
     <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="NormalState.cpp" />

@@ -151,6 +151,7 @@ void Game::initialize() {
 
 	//アニメションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 
 
 	// サウンドの再生
@@ -362,6 +363,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(ad);
 
 	UninitMoveP();
+	UninitMoveP1();
 
 }
 
@@ -413,13 +415,21 @@ void Game::update(float _frameTime) {
 	mapObjectManager->update(frameTime);
 
 	UpdateMoveP(frameTime);
-
 	//キャラクターの場所と回転の連携
 	MOVEP *mp = GetMovePAdr();
-	mp->Pos = player->position;
-	D3DXQUATERNION q = player->quaternion;
+	mp->Pos = player[gameMasterNS::PLAYER_1P].position;
+	D3DXQUATERNION q = player[gameMasterNS::PLAYER_1P].quaternion;
 	Base::anyAxisRotation(&q,D3DXVECTOR3(0,1,0),180);
 	mp->Quaternion = q;
+
+	UpdateMoveP1(frameTime);
+	//キャラクターの場所と回転の連携
+	MOVEP1 *mp1 = GetMoveP1Adr();
+	mp1->Pos = player[gameMasterNS::PLAYER_2P].position;
+	D3DXQUATERNION q1 = player[gameMasterNS::PLAYER_2P].quaternion;
+	Base::anyAxisRotation(&q1, D3DXVECTOR3(0, 1, 0), 180);
+	mp1->Quaternion = q1;
+
 
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
@@ -604,6 +614,8 @@ void Game::render3D(Camera currentCamera) {
 
 	//アニメーションモデルの描画
 	DrawMoveP();
+
+	DrawMoveP1();
 
 	////木の描画
 	//deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);

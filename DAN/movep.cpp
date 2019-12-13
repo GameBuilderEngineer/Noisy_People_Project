@@ -160,8 +160,6 @@ void UpdateMoveP(float f_TimeDelta)
 
 	CallBackHandler.AnimPointer = MoveP.Animation;
 
-
-
 	if (input->getMouseLButton() || input->getController()[gameMasterNS::PLAYER_1P]->isButton(BUTTON_ATTACK))
 	{
 		MoveP.IsChange = true;
@@ -171,7 +169,7 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.IsChange = false;
 	}
 
-	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_1P]->wasButton(BUTTON_JUMP)) && !MoveP.IsJump)
+	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_1P]->wasButton(BUTTON_JUMP)) && !MoveP.IsJump && MoveP.IsGround )
 	{
 		MoveP.IsJump = true;
 		wi = 0.24f;
@@ -182,34 +180,36 @@ void UpdateMoveP(float f_TimeDelta)
 	if (!MoveP.IsChange)
 	{
 		MoveP.IsChangeRun = false;
-
 		MoveP.Animation->NextAnimID = MoveP_Idle;
 
-		if (input->isKeyDown('W') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y < 0.0f)
+		if (MoveP.IsGround)
 		{
-			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_Run;
-		}
-		else if (input->isKeyDown('S') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y > 0.0f)
-		{
-			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
-		}
-		else if (input->isKeyDown('A') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x < 0.0f)
-		{
-			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkLeft;
-		}
-		else if (input->isKeyDown('D') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x > 0.0f)
-		{
-			MoveP.IsRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkRight;
-		}
-		else
-		{
-			MoveP.IsRun = false;
-		}
 
+			if (input->isKeyDown('W') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y < 0.0f)
+			{
+				MoveP.IsRun = true;
+				MoveP.Animation->NextAnimID = MoveP_Run;
+			}
+			else if (input->isKeyDown('S') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y > 0.0f)
+			{
+				MoveP.IsRun = true;
+				MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
+			}
+			else if (input->isKeyDown('A') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x < 0.0f)
+			{
+				MoveP.IsRun = true;
+				MoveP.Animation->NextAnimID = MoveP_WalkLeft;
+			}
+			else if (input->isKeyDown('D') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x > 0.0f)
+			{
+				MoveP.IsRun = true;
+				MoveP.Animation->NextAnimID = MoveP_WalkRight;
+			}
+			else
+			{
+				MoveP.IsRun = false;
+			}
+		}
 		//if (MoveP.IsRun)
 		//{
 		//	MoveP.Animation->NextAnimID = MoveP_Run;
@@ -222,35 +222,34 @@ void UpdateMoveP(float f_TimeDelta)
 
 		MoveP.Animation->NextAnimID = MoveP_FireIdle;
 
-		if (input->isKeyDown('W') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y < 0.0f)
+		if (MoveP.IsGround)
 		{
-			MoveP.IsChangeRun = true;
-			MoveP.Animation->NextAnimID = MoveP_FireRun;
-		}
-		else if (input->isKeyDown('S') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y > 0.0f)
-		{
-			MoveP.IsChangeRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
-		}
-		else if (input->isKeyDown('A') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x < 0.0f)
-		{
-			MoveP.IsChangeRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkLeft;
-		}
-		else if (input->isKeyDown('D') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x > 0.0f)
-		{
-			MoveP.IsChangeRun = true;
-			MoveP.Animation->NextAnimID = MoveP_WalkRight;
-		}
-		else
-		{
-			MoveP.IsChangeRun = false;
-		}
 
-		//if (MoveP.IsChangeRun)
-		//{
-		//	MoveP.Animation->NextAnimID = MoveP_FireRun;
-		//}
+			if (input->isKeyDown('W') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y < 0.0f)
+			{
+				MoveP.IsChangeRun = true;
+				MoveP.Animation->NextAnimID = MoveP_FireRun;
+			}
+			else if (input->isKeyDown('S') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().y > 0.0f)
+			{
+				MoveP.IsChangeRun = true;
+				MoveP.Animation->NextAnimID = MoveP_WalkBackwards;
+			}
+			else if (input->isKeyDown('A') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x < 0.0f)
+			{
+				MoveP.IsChangeRun = true;
+				MoveP.Animation->NextAnimID = MoveP_WalkLeft;
+			}
+			else if (input->isKeyDown('D') || input->getController()[gameMasterNS::PLAYER_1P]->getLeftStick().x > 0.0f)
+			{
+				MoveP.IsChangeRun = true;
+				MoveP.Animation->NextAnimID = MoveP_WalkRight;
+			}
+			else
+			{
+				MoveP.IsChangeRun = false;
+			}
+		}
 	}
 
 	if (MoveP.IsJump)
