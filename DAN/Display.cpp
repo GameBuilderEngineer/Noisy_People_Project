@@ -135,7 +135,7 @@ void Display::update(float _frameTime)
 		syncTimer = package->timer;
 	}
 
-	if (package->num != 0)
+	if (package->treeMax != 0)
 	{
 		//パッケージ内のイベントを呼び出す
 		for (int i = 0; i < package->num; i++)

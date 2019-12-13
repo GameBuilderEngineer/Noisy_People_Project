@@ -60,7 +60,7 @@ PACKAGE *NETWORK_INTERFACE::updata()
 		&fromlen);
 	
 	PACKAGE tmp;
-	memset(&tmp, 0, sizeof(PACKAGE));
+	memset(&tmp, 0, sizeof(sizeOfPackage));
 	if (nRtn != sizeOfPackage)
 	{
 		return &tmp;
