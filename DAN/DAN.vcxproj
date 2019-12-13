@@ -159,6 +159,8 @@
     <ClInclude Include="DigitalShiftState.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="networkServer.h" />
+    <ClInclude Include="SaiDelayReverb.h" />
+    <ClInclude Include="SaiFadeIn.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
@@ -322,6 +324,8 @@
     <ClCompile Include="DigitalShiftState.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="networkServer.cpp" />
+    <ClCompile Include="SaiDelayReverb.cpp" />
+    <ClCompile Include="SaiFadeIn.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />

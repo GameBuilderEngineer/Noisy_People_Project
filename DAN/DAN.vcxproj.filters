@@ -826,6 +826,12 @@
     <ClCompile Include="networkClient.cpp">
       <Filter>Game Layer\Network</Filter>
     </ClCompile>
+    <ClCompile Include="SaiFadeIn.cpp">
+      <Filter>Constant Layer\Sound\APO</Filter>
+    </ClCompile>
+    <ClCompile Include="SaiDelayReverb.cpp">
+      <Filter>Constant Layer\Sound\APO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1316,6 +1322,12 @@
     </ClInclude>
     <ClInclude Include="networkClient.h">
       <Filter>Game Layer\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="SaiFadeIn.h">
+      <Filter>Constant Layer\Sound\APO</Filter>
+    </ClInclude>
+    <ClInclude Include="SaiDelayReverb.h">
+      <Filter>Constant Layer\Sound\APO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
