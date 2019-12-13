@@ -128,7 +128,7 @@ void Display::update(float _frameTime)
 	frameTime = _frameTime;
 
 	PACKAGE *package = networkServer->updata();
-	
+
 	//同期タイマー：ゲームプレイ（クライアント）時更新
 	if (package->networkTester == true)
 	{
@@ -137,14 +137,14 @@ void Display::update(float _frameTime)
 		if (package->treeMax != 0)
 		{
 			//パッケージ内のイベントを呼び出す
-			for (int i = 0; i < package->num; i++)
+			for (int i = 0; i < package->treeMax; i++)
 			{
 				//イベント対象のツリー
 				Tree* selectTree = NULL;
 				//イベント対象のツリーを検索する
 				for (int num = 0; num < treeManager->getTreeList().size(); num++)
 				{
-					Tree* tree = treeManager->getTreeList()[i];
+					Tree* tree = treeManager->getTreeList()[num];
 					if (tree->getTreeData()->treeID == package->treeTable[i].id)
 					{
 						selectTree = tree;
@@ -170,7 +170,7 @@ void Display::update(float _frameTime)
 				}
 			}
 			//パッケージ内のイベントを解放する
-			free(package->treeTable);
+			SAFE_DELETE_ARRAY(package->treeTable);
 		}
 	}
 
