@@ -80,6 +80,7 @@ void NETWORK_CLIENT::send(float time)
 		(LPSOCKADDR)&addrin, sizeof(addrin));
 	free(buf1);
 
+	//TreeTable‚ÌÀ‘Ì
 	if (tmpPackage.treeMax > 0)
 	{
 		//TreeTable‚ÌÀ‘Ì
@@ -90,11 +91,7 @@ void NETWORK_CLIENT::send(float time)
 		nRtn = sendto(s, buf2, sizeOfTreeTable, 0,
 			(LPSOCKADDR)&addrin, sizeof(addrin));
 		free(buf2);
-	}
 
-	//ƒƒ‚ƒŠ‰ğ•ú
-	if (treeNum > 0)
-	{
 		SAFE_DELETE_ARRAY(treeTable);
 		treeNum = 0;	//0ƒNƒŠƒA
 	}

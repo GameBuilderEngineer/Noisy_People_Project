@@ -137,8 +137,8 @@ void Display::update(float _frameTime)
 	if (package.num != 0)
 	{
 		int x = 0;
+		free(package.treeTable);
 	}
-	free(package.treeTable);
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
