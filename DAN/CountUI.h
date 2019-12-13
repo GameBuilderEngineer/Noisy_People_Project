@@ -18,11 +18,13 @@
 namespace CountUINS
 {
 	//表示時間
-	const float DISPLAY_TIME = 1.0f;
+	const float COUNT_DISPLAY_TIME	= 1.0f;
+	const float START_DISPLAY_TIME	= 3.0f;
+
 	//スプラッシュスプライト情報の定義
-	const int WIDTH					= 1200;
+	const int WIDTH					= 1024;
 	const int DIVIDE_WIDTH			= 10;//横の分割数
-	const int HEIGHT				= 120;
+	const int HEIGHT				= 128;
 	const D3DXVECTOR3 POSITION		= D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 2, 0.0f);
 	const D3DXVECTOR3 ROTATION		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	const D3DCOLOR COLOR			= D3DCOLOR_RGBA(255, 255, 255, 0);
@@ -36,6 +38,7 @@ class CountUI :public Sprite
 {
 private:
 	float displayTimer;
+	float displayTime;
 public:
 	CountUI();
 	~CountUI();

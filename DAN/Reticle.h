@@ -19,20 +19,67 @@
 //===================================================================================================================================
 namespace reticleNS
 {
-	//レティクル情報の定義
-	const int	NUM_U			= 5;
-	const int	NUM_V			= 2;
-	const float UNIT_U			= 1.0f/NUM_U;//単位U
-	const float UNIT_V			= 1.0f/NUM_V;//単位V
-	const int WIDTH				= 640;//テクスチャ全体の幅
-	const int HEIGHT			= 256;//テクスチャ全体の高さ	
-	const int UNIT_WIDTH		= (int)(WIDTH/NUM_U);//単位幅
-	const int UNIT_HEIGHT		= (int)(HEIGHT/NUM_V);//単位高さ
+	//2Dレティクル情報の定義
+	namespace Reticle2DNS{
+		const int	NUM_U			= 5;
+		const int	NUM_V			= 2;
+		const float UNIT_U			= 1.0f/NUM_U;//単位U
+		const float UNIT_V			= 1.0f/NUM_V;//単位V
+		const int WIDTH				= 640;//テクスチャ全体の幅
+		const int HEIGHT			= 256;//テクスチャ全体の高さ	
+		const int UNIT_WIDTH		= (int)(WIDTH/NUM_U);//単位幅
+		const int UNIT_HEIGHT		= (int)(HEIGHT/NUM_V);//単位高さ
+		const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2, 0.0f);
+		const D3DXVECTOR3 POSITION2 = D3DXVECTOR3((float)WINDOW_WIDTH / 4 *3, (float)WINDOW_HEIGHT / 2, 0.0f);
+		const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 196);
+	}
 
-	const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2, 0.0f);
-	const D3DXVECTOR3 POSITION2 = D3DXVECTOR3((float)WINDOW_WIDTH / 4 *3, (float)WINDOW_HEIGHT / 2, 0.0f);
-	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 192);
+	//2Dリロード表示情報の定義
+	namespace Reload2DNS{
+		const int	NUM_U			= 10;
+		const int	NUM_V			= 5;
+		const float UNIT_U			= 1.0f/NUM_U;//単位U
+		const float UNIT_V			= 1.0f/NUM_V;//単位V
+		const int WIDTH				= 1280;//テクスチャ全体の幅
+		const int HEIGHT			= 640;//テクスチャ全体の高さ	
+		const int UNIT_WIDTH		= (int)(WIDTH/NUM_U);//単位幅
+		const int UNIT_HEIGHT		= (int)(HEIGHT/NUM_V);//単位高さ
+		const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2, 0.0f);
+		const D3DXVECTOR3 POSITION2 = D3DXVECTOR3((float)WINDOW_WIDTH / 4 *3, (float)WINDOW_HEIGHT / 2, 0.0f);
+		const D3DXVECTOR3 ROTATION	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		const D3DCOLOR COLOR		= D3DCOLOR_RGBA(255, 255, 255, 255);
+	}
+
+	//2D電力不足表示情報の定義
+	namespace EnergyEmpty2DNS{
+		const int	NUM_U			= 1;
+		const int	NUM_V			= 1;
+		const float UNIT_U			= 1.0f/NUM_U;//単位U
+		const float UNIT_V			= 1.0f/NUM_V;//単位V
+		const int WIDTH				= 256;//テクスチャ全体の幅
+		const int HEIGHT			= 128;//テクスチャ全体の高さ	
+		const int UNIT_WIDTH		= (int)(WIDTH/NUM_U);//単位幅
+		const int UNIT_HEIGHT		= (int)(HEIGHT/NUM_V);//単位高さ
+		const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2, 0.0f);
+		const D3DXVECTOR3 POSITION2 = D3DXVECTOR3((float)WINDOW_WIDTH / 4 *3, (float)WINDOW_HEIGHT / 2, 0.0f);
+		const D3DXVECTOR3 ROTATION	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		const D3DCOLOR COLOR		= D3DCOLOR_RGBA(255, 255, 255, 255);
+	}
+
+	//3Dレティクル情報
+	namespace Reticle3DNS {
+		const int	NUM_U			= 1;
+		const int	NUM_V			= 1;
+		const float UNIT_U			= 1.0f / NUM_U;//単位U
+		const float UNIT_V			= 1.0f / NUM_V;//単位V
+		const int WIDTH				= 128;//テクスチャ全体の幅
+		const int HEIGHT			= 128;//テクスチャ全体の高さ	
+		const int UNIT_WIDTH		= (int)(WIDTH / NUM_U);//単位幅
+		const int UNIT_HEIGHT		= (int)(HEIGHT / NUM_V);//単位高さ
+	}
+
+
 
 	class Reticle3D :public InstancingBillboardNS::Instance
 	{
@@ -51,20 +98,30 @@ namespace reticleNS
 class Reticle :	public Base
 {
 private:
-	D3DXVECTOR2				uv[reticleNS::NUM_U][reticleNS::NUM_V];
+	//2D
+	//レティクル
+	D3DXVECTOR2				uv[reticleNS::Reticle2DNS::NUM_U][reticleNS::Reticle2DNS::NUM_V];
 	Sprite*					reticle2D;
-	InstancingBillboard*	billboard;
+	int currentU;
+	int currentV;
+	int type;
+	int remainingBullet[gameMasterNS::PLAYER_NUM];//残弾数
 
+	D3DXVECTOR2				uvReload[reticleNS::Reload2DNS::NUM_U][reticleNS::Reload2DNS::NUM_V];
+	Sprite*					reload2D;
+	int						reloadU;
+	int						reloadV;
+
+	Sprite*					energyEmpty2D;
+
+	//3D
+	InstancingBillboard*	billboard;
 	//レティクルレイ
 	D3DXVECTOR3*			cameraPosition;
 	D3DXVECTOR3*			aimingPosition1;
 	D3DXVECTOR3*			aimingPosition2;
 	float					collideDistance;
 
-	int currentU;
-	int currentV;
-	int type;
-	int remainingBullet[gameMasterNS::PLAYER_NUM];//残弾数
 
 public:
 	Reticle();
@@ -73,7 +130,7 @@ public:
 	void setCameraPosition(D3DXVECTOR3* position);
 	void setAimingPosition1(D3DXVECTOR3* position);
 	void setAimingPosition2(D3DXVECTOR3* position);
-	void setAnime();
+	void setAnime(int playerState);
 	void setRemainingBullet(int num, int playerNo);//残弾数
 
 	void update(float frameTime);
