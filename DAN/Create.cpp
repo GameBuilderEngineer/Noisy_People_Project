@@ -73,6 +73,17 @@ void Create::initialize() {
 	camera->setFieldOfView((D3DX_PI / 18) * 9);
 	camera->setLimitRotationTop(0.3f);
 	camera->setLimitRotationBottom(0.7f);
+	
+	//TopViewCamera
+	topView = new Camera;
+	topView->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	topView->setTarget(tmpObject->getPositionYeah());
+	topView->setRelative(D3DXQUATERNION(0.0f, 100.0f, 0.0f, 0.0f));
+	topView->setGaze(D3DXVECTOR3(0, 0, 0));
+	topView->setRelativeGaze(CAMERA_RELATIVE_GAZE);
+	topView->setUpVector(D3DXVECTOR3(0, 1, 0));
+	topView->setFieldOfView((D3DX_PI / 18) * 9);
+	onTopView = false;
 
 	//light
 	light = new Light;
@@ -113,10 +124,10 @@ void Create::initialize() {
 //===================================================================================================================================
 void Create::uninitialize() {
 	SAFE_DELETE(camera);
+	SAFE_DELETE(topView);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testFieldRenderer);
 
-	//たつき待ち
 	SAFE_DELETE(tmpObjRenderer);
 
 //	SAFE_DELETE(deadTree);
@@ -187,6 +198,8 @@ void Create::update(float _frameTime) {
 
 	//カメラの更新
 	camera->update();
+	//hukanカメラの更新
+	topView->update();
 
 	// Enterまたは〇ボタンでリザルトへ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -205,9 +218,23 @@ void Create::update(float _frameTime) {
 void Create::render() {
 
 	//カメラ・ウィンドウ
-	camera->renderReady();
 	direct3D9->changeViewportFullWindow();
-	render3D(*camera);
+
+	if (input->wasKeyPressed('Z'))
+	{
+		onTopView = !onTopView;
+	}
+
+	if (onTopView)
+	{
+		topView->renderReady();
+		render3D(*topView);
+	}
+	else {
+		camera->renderReady();
+		render3D(*camera);
+	}
+	
 	effekseerNS::setCameraMatrix(0,camera->position, camera->gazePosition, camera->upVector);
 	effekseerNS::render(0);
 

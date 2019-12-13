@@ -52,6 +52,9 @@ class Create : public AbstractScene
 {
 private:
 
+	//hukankamera
+	Camera* topView;
+	bool onTopView;
 	//仮オブジェクト
 	TmpObject *tmpObject;
 	StaticMeshRenderer* tmpObjRenderer;
