@@ -46,7 +46,7 @@ namespace gameMasterNS {
 	};
 
 	const float OPENING_TIME			= 5.0f;					//5秒
-	const float GAME_TIME				= 60.0f * 4.0f;			//4分
+	const float GAME_TIME				= 60.0f * 1.0f;			//4分
 	const float COUNT_DOWN_TIME			= 3.0f;					//3秒
 	const float ENDING_TIME				= 3.0f;					//3秒
 
@@ -61,11 +61,18 @@ namespace gameMasterNS {
 	const int	PASSING_COUNT_DOWN_TWO			= 0x00000040;//2カウントダウン
 	const int	PASSING_COUNT_DOWN_ONE			= 0x00000080;//1カウントダウン
 	const int	PASSING_GAME_START				= 0x00000100;//ゲームスタート
-	const int	PASSING_REMAINING_THREE			= 0x00000200;//残り3秒
-	const int	PASSING_REMAINING_TWO			= 0x00000400;//残り2秒
-	const int	PASSING_REMAINING_ONE			= 0x00000800;//残り1秒
-	const int	PASSING_GAME_FINISH				= 0x00001000;//ゲーム終了
-	const int	PASSING_GAME_ENDING				= 0x00002000;//ED終了
+	const int	PASSING_REMAINING_10			= 0x00000200;//残り10描画
+	const int	PASSING_REMAINING_9				= 0x00000400;//残り9描画
+	const int	PASSING_REMAINING_8				= 0x00000800;//残り8描画
+	const int	PASSING_REMAINING_7				= 0x00001000;//残り7描画
+	const int	PASSING_REMAINING_6				= 0x00002000;//残り6描画
+	const int	PASSING_REMAINING_5				= 0x00004000;//残り5描画
+	const int	PASSING_REMAINING_4				= 0x00008000;//残り4描画
+	const int	PASSING_REMAINING_3				= 0x00010000;//残り3描画
+	const int	PASSING_REMAINING_2				= 0x00020000;//残り2描画
+	const int	PASSING_REMAINING_1				= 0x00040000;//残り1描画
+	const int	PASSING_GAME_FINISH				= 0x00080000;//ゲーム終了
+	const int	PASSING_GAME_ENDING				= 0x00100000;//ED終了
 	
 
 	enum EVENT_TYPE
@@ -144,9 +151,11 @@ public:
 	void updateOpeningTime(float frameTime);						//ゲーム時間の更新
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
 	void updateStartCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
+	void updateFinishCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
 	bool paused();													//ポーズ処理
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
 	bool playActionStartCount(int countNum);						//開始カウント3時のアクション
+	bool playActionFinishCount(int countNum);						//終了カウント3時のアクション
 
 	//木の設定関数
 	void setTreeNum(int num);										//ツリーの数を保存する

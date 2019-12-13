@@ -78,7 +78,7 @@ void Game::initialize() {
 	//オープニングカメラ
 	cameraOP = new Camera;
 	//カメラの設定
-	cameraOP->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+	cameraOP->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	cameraOP->setTarget(&testField->position);
 	cameraOP->setRelative(D3DXVECTOR3(1.5f,3.0f,-3.0f));
 	cameraOP->setGazeDistance(500.0f);
@@ -361,38 +361,30 @@ void Game::update(float _frameTime) {
 	gameMaster->updateOpeningTime(frameTime);
 
 	//カウントダウンの更新
-	gameMaster->updateStartCountDown(frameTime);
+	gameMaster->updateStartCountDown(frameTime);	//開始カウント
+	gameMaster->updateFinishCountDown(frameTime);	//終了カウント
 
-	//開始カウントダウン3
-	if (gameMaster->playActionStartCount(3))
-	{
-		count = 3;
-		countUI->play(count);
-	}
-
-	//開始カウントダウン2
-	if (gameMaster->playActionStartCount(2))
-	{
-		count = 2;
-		countUI->play(count);
-	}
-
-	//開始カウントダウン1
-	if (gameMaster->playActionStartCount(1))
-	{
-		count = 1;
-		countUI->play(count);
-	}
-
-	//ゲーム開始
-	if (gameMaster->playActionStartCount(0))
-	{
-		count = 0;
-		countUI->play(count);
-	}
+	//開始カウントダウン
+	if (gameMaster->playActionStartCount(3))	countUI->startCount(3);
+	if (gameMaster->playActionStartCount(2))	countUI->startCount(2);
+	if (gameMaster->playActionStartCount(1))	countUI->startCount(1);
+	if (gameMaster->playActionStartCount(0))	countUI->startCount(0);		//ゲーム開始
 
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
+
+	//終了カウントダウン
+	if (gameMaster->playActionFinishCount(10))	countUI->finishCount(10);
+	if (gameMaster->playActionFinishCount(9))	countUI->finishCount(9);
+	if (gameMaster->playActionFinishCount(8))	countUI->finishCount(8);
+	if (gameMaster->playActionFinishCount(7))	countUI->finishCount(7);
+	if (gameMaster->playActionFinishCount(6))	countUI->finishCount(6);
+	if (gameMaster->playActionFinishCount(5))	countUI->finishCount(5);
+	if (gameMaster->playActionFinishCount(4))	countUI->finishCount(4);
+	if (gameMaster->playActionFinishCount(3))	countUI->finishCount(3);
+	if (gameMaster->playActionFinishCount(2))	countUI->finishCount(2);
+	if (gameMaster->playActionFinishCount(1))	countUI->finishCount(1);
+	if (gameMaster->playActionFinishCount(0))	countUI->finishCount(0);	//ゲーム終了
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -560,6 +552,8 @@ void Game::update(float _frameTime) {
 		telopManager->play(telopManagerNS::TELOP_TYPE4);
 		SoundInterface::BGM->SetSpeed();
 	}
+
+
 
 	//フェーダーテスト
 	if (input->wasKeyPressed('P'))

@@ -130,8 +130,24 @@ void GameMaster::updateOpeningTime(float frameTime)
 void GameMaster::updateStartCountDown(float frameTime)
 {
 	if (gameTimerStop)return;
+
+	//ゲームが開始されたら更新しない
+	if (whetherAchieved(PASSING_GAME_START))return;
+	
 	//ゲームオープニングが終了していた場合
 	if(whetherAchieved(PASSING_GAME_OPENING))
+		countDownTimer -= frameTime;
+}
+
+//===================================================================================================================================
+//【ゲーム終了カウントダウンの更新】
+//===================================================================================================================================
+void GameMaster::updateFinishCountDown(float frameTime)
+{
+	if (gameTimerStop)return;
+
+	//残り10秒の場合
+	if(gameTimer <= 10)
 		countDownTimer -= frameTime;
 }
 
@@ -182,6 +198,7 @@ bool GameMaster::playActionStartCount(int countNum)
 	case 0:
 		if (whetherAchieved(PASSING_GAME_START))return false;
 		setProgress(PASSING_GAME_START);
+		countDownTimer = 10.0f;
 		return true; break;
 	}
 	return false;
@@ -200,6 +217,64 @@ bool GameMaster::playActionRamaining1Min()
 	return true;
 }
 
+//===================================================================================================================================
+//【終了カウントダウン時のアクション】
+//===================================================================================================================================
+bool GameMaster::playActionFinishCount(int countNum)
+{
+	//ゲームタイマーが10秒以上ある
+	if (gameTimer > 10)return false;
+
+	if (countDownTimer > (float)countNum)return false;
+	switch (countNum)
+	{
+	case 10:
+		if (whetherAchieved(PASSING_REMAINING_10))return false;
+		setProgress(PASSING_REMAINING_10);
+		return true; break;
+	case 9:
+		if (whetherAchieved(PASSING_REMAINING_9))return false;
+		setProgress(PASSING_REMAINING_9);
+		return true; break;
+	case 8:
+		if (whetherAchieved(PASSING_REMAINING_8))return false;
+		setProgress(PASSING_REMAINING_8);
+		return true; break;
+	case 7:
+		if (whetherAchieved(PASSING_REMAINING_7))return false;
+		setProgress(PASSING_REMAINING_7);
+		return true; break;
+	case 6:
+		if (whetherAchieved(PASSING_REMAINING_6))return false;
+		setProgress(PASSING_REMAINING_6);
+		return true; break;
+	case 5:
+		if (whetherAchieved(PASSING_REMAINING_5))return false;
+		setProgress(PASSING_REMAINING_5);
+		return true; break;
+	case 4:
+		if (whetherAchieved(PASSING_REMAINING_4))return false;
+		setProgress(PASSING_REMAINING_4);
+		return true; break;
+	case 3:
+		if (whetherAchieved(PASSING_REMAINING_3))return false;
+		setProgress(PASSING_REMAINING_3);
+		return true; break;
+	case 2:
+		if (whetherAchieved(PASSING_REMAINING_2))return false;
+		setProgress(PASSING_REMAINING_2);
+		return true; break;
+	case 1:
+		if (whetherAchieved(PASSING_REMAINING_1))return false;
+		setProgress(PASSING_REMAINING_1);
+		return true; break;
+	case 0:
+		if (whetherAchieved(PASSING_GAME_FINISH))return false;
+		setProgress(PASSING_GAME_FINISH);
+		return true; break;
+	}
+	return false;
+}
 
 #pragma region conversionOrderFunction
 //===================================================================================================================================

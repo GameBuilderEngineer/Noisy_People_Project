@@ -47,9 +47,7 @@ void Reticle3D::update(float frameTime)
 Reticle::Reticle()
 {
 	//レティクル2D
-	{
-		using namespace Reticle2DNS;
-		
+	{using namespace Reticle2DNS;
 		//テクスチャに対するUV値の設定
 		//UV値の設定
 		for (int u = 0; u < NUM_U; u++)

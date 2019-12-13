@@ -107,12 +107,17 @@ private:
 	int type;
 	int remainingBullet[gameMasterNS::PLAYER_NUM];//残弾数
 
+	//リロード
 	D3DXVECTOR2				uvReload[reticleNS::Reload2DNS::NUM_U][reticleNS::Reload2DNS::NUM_V];
 	Sprite*					reload2D;
 	int						reloadU;
 	int						reloadV;
 
+
+	//電力不足表示
 	Sprite*					energyEmpty2D;
+
+
 
 	//3D
 	InstancingBillboard*	billboard;

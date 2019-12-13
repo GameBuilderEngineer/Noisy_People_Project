@@ -20,6 +20,7 @@ namespace CountUINS
 	//表示時間
 	const float COUNT_DISPLAY_TIME	= 1.0f;
 	const float START_DISPLAY_TIME	= 3.0f;
+	const float FINISH_DISPLAY_TIME	= 5.0f;
 
 	//スプラッシュスプライト情報の定義
 	const int WIDTH					= 1024;
@@ -29,6 +30,11 @@ namespace CountUINS
 	const D3DXVECTOR3 ROTATION		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	const D3DCOLOR COLOR			= D3DCOLOR_RGBA(255, 255, 255, 0);
 
+
+	enum {
+		START,
+		FINISH,
+	};
 }
 
 //===================================================================================================================================
@@ -37,14 +43,16 @@ namespace CountUINS
 class CountUI :public Sprite
 {
 private:
-	float displayTimer;
-	float displayTime;
+	float	displayTimer;
+	float	displayTime;
+	int		count;
+	bool	finished;
 public:
 	CountUI();
 	~CountUI();
 	void update(float frameTime);
-	void play(int count);
-
+	void startCount(int count);
+	void finishCount(int count);
 
 };
 
