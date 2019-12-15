@@ -165,6 +165,9 @@ void Title::update(float _frameTime)
 
 	if (frameTime > 10.0f / 60.0f)return;
 
+	//スカイフィールドの更新
+	sky->update();
+
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
 	
@@ -172,8 +175,6 @@ void Title::update(float _frameTime)
 	titleField->update();	//オブジェクト
 	titleFieldRenderer->update();
 
-	//スカイフィールドの更新
-	sky->update();
 
 	target->update();
 

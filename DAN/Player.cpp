@@ -793,9 +793,6 @@ bool Player::shot()
 			return true;
 		}
 	}
-
-}
-
 	return false;
 }
 

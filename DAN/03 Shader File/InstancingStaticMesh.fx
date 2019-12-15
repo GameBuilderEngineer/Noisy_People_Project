@@ -135,7 +135,7 @@ technique mainTechnique {
 	//ライトをOFF ランバート拡散反射を考慮せずテクセルカラーのみで出力
 	pass p1 {
 		//ステート設定
-		Zenable					= FALSE;			//Zバッファ有効
+		Zenable					= TRUE;			//Zバッファ有効
 		ZWriteEnable			= TRUE;			//Zバッファへの書き込み有効
 		ShadeMode				= GOURAUD;		//グーロー・シェーディング
 		CullMode				= CCW;			//背面をカリング

@@ -680,7 +680,7 @@ void Game::render3D(Camera* currentCamera) {
 	DrawMoveP();
 	DrawMoveP1();
 	//ƒXƒJƒCƒh[ƒ€‚Ì•`‰æ
-	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	//sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 	//ŠC–Ê‚Ì•`‰æ
 	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
