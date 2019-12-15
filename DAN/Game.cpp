@@ -80,6 +80,20 @@ void Game::initialize() {
 	maleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
 	femaleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
+	//オープニングカメラ
+	cameraOP = new Camera;
+	//カメラの設定
+	cameraOP->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	cameraOP->setTarget(&testField->position);
+	cameraOP->setRelative(D3DXVECTOR3(1.5f,3.0f,-3.0f));
+	cameraOP->setGazeDistance(500.0f);
+	cameraOP->setGaze(D3DXVECTOR3(0, 0, 0));
+	cameraOP->setUpVector(D3DXVECTOR3(0, 1, 0));
+	cameraOP->setFieldOfView((D3DX_PI / 180) * 91);
+	cameraOP->setLimitRotationTop(0.1f);
+	cameraOP->setLimitRotationBottom(0.1f);
+
+
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -219,6 +233,9 @@ void Game::initialize() {
 	player2UI = new Player2UI;
 	player2UI->initialize(&player[gameMasterNS::PLAYER_2P]);
 
+	//カウントUI
+	countUI = new CountUI();
+
 	//レティクル
 	reticle = new Reticle();
 	reticle->setAimingPosition1(player[gameMasterNS::PLAYER_1P].getAiming());
@@ -263,58 +280,25 @@ void Game::initialize() {
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
 
-	//// ツリーをランダムに設置する
-	//treeNS::TreeData treeData;
-	//treeData.hp = 0;
-	//treeData.type = treeNS::ANALOG_TREE;
-	//treeData.greenState = treeNS::DEAD;
-	//treeData.isAttaked = false;
+	////エネミーをランダムに設置する
+	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
+	//{
+	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
+	//	pos -= D3DXVECTOR3(200, 0, 240);
+	//	enemyNS::ENEMYSET tmp =
+	//	{
+	//		enemyManager->issueNewEnemyID(),
+	//		rand() % (enemyNS::ENEMY_TYPE::TYPE_MAX - 1),
+	//		stateMachineNS::PATROL,
+	//		pos,
+	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	//	};
+	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
+	//	enemyManager->createEnemy(p);
+	//}
 
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
-
-	//// ツリーをランダムに設置する
-	//treeNS::TreeData treeData;
-	//treeData.hp = 0;
-	//treeData.type = treeNS::ANALOG_TREE;
-	//treeData.greenState = treeNS::DEAD;
-	//treeData.isAttaked = false;
-
-	//treeData.size = treeNS::STANDARD;
-	//treeData.model = treeNS::B_MODEL;
-	//for (int i = 0; i < 250; i++)
-	//{
-	//	treeData.initialPosition =
-	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-	//	treeData.treeID = treeManager->issueNewTreeID();
-	//	treeManager->createTree(treeData);
-	//}
-
-	//treeData.size = treeNS::LARGE;
-	//treeData.model = treeNS::B_MODEL;
-	//for (int i = 0; i < 15; i++)
-	//{
-	//	treeData.initialPosition =
-	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-	//	treeData.treeID = treeManager->issueNewTreeID();
-	//	
-	//	treeManager->createTree(treeData);
-	//}
-
-	//treeData.size = treeNS::VERY_LARGE;
-	//treeData.model = treeNS::B_MODEL;
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	treeData.initialPosition =
-	//		D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
-	//	treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
-	//	treeData.treeID = treeManager->issueNewTreeID();
-
-	//	treeManager->createTree(treeData);
-	//}
-
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）
 	aiDirector = new AIDirector;
@@ -334,6 +318,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(linear8TreeManager);
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
+	SAFE_DELETE(cameraOP);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
@@ -356,6 +341,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(fixedUI);
 	SAFE_DELETE(player1UI);
 	SAFE_DELETE(player2UI);
+	SAFE_DELETE(countUI);
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
 	UninitMoveP();
@@ -381,8 +367,34 @@ void Game::update(float _frameTime) {
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 10.0f/60.0f)return;
 
+	//オープニング時間の更新
+	gameMaster->updateOpeningTime(frameTime);
+
+	//カウントダウンの更新
+	gameMaster->updateStartCountDown(frameTime);	//開始カウント
+	gameMaster->updateFinishCountDown(frameTime);	//終了カウント
+
+	//開始カウントダウン
+	if (gameMaster->playActionStartCount(3))	countUI->startCount(3);
+	if (gameMaster->playActionStartCount(2))	countUI->startCount(2);
+	if (gameMaster->playActionStartCount(1))	countUI->startCount(1);
+	if (gameMaster->playActionStartCount(0))	countUI->startCount(0);		//ゲーム開始
+
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
+
+	//終了カウントダウン
+	if (gameMaster->playActionFinishCount(10))	countUI->finishCount(10);
+	if (gameMaster->playActionFinishCount(9))	countUI->finishCount(9);
+	if (gameMaster->playActionFinishCount(8))	countUI->finishCount(8);
+	if (gameMaster->playActionFinishCount(7))	countUI->finishCount(7);
+	if (gameMaster->playActionFinishCount(6))	countUI->finishCount(6);
+	if (gameMaster->playActionFinishCount(5))	countUI->finishCount(5);
+	if (gameMaster->playActionFinishCount(4))	countUI->finishCount(4);
+	if (gameMaster->playActionFinishCount(3))	countUI->finishCount(3);
+	if (gameMaster->playActionFinishCount(2))	countUI->finishCount(2);
+	if (gameMaster->playActionFinishCount(1))	countUI->finishCount(1);
+	if (gameMaster->playActionFinishCount(0))	countUI->finishCount(0);	//ゲーム終了
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -395,7 +407,7 @@ void Game::update(float _frameTime) {
 	femaleRenderer->update();				//レンダラー
 
 	// エネミーの更新
-	enemyManager->update(frameTime);
+	//enemyManager->update(frameTime);
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -506,7 +518,15 @@ void Game::update(float _frameTime) {
 	
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
 		camera[i].update();
+	}
+
+	//オープニングカメラの更新
+	if (!gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))
+	{
+		cameraOP->update();
+	}
 
 	//固定UIの更新
 	fixedUI->update(gameMaster->getGameTime());
@@ -514,6 +534,9 @@ void Game::update(float _frameTime) {
 	//プレイヤー周りのUIの更新
 	player1UI->update();
 	player2UI->update();
+
+	//カウントUIの更新
+	countUI->update(frameTime);
 
 	//レティクルの更新
 	reticle->update(frameTime);
@@ -531,6 +554,8 @@ void Game::update(float _frameTime) {
 		changeScene(nextScene);
 	}
 
+	
+
 	//残り時間１分
 	if (gameMaster->playActionRamaining1Min())
 	{
@@ -540,6 +565,15 @@ void Game::update(float _frameTime) {
 
 	networkClient->send(gameMaster->getGameTime());
 
+
+
+	//フェーダーテスト
+	if (input->wasKeyPressed('P'))
+	{
+		getFader()->setShader(faderNS::NORMAL);
+		getFader()->start();
+	}
+
 #ifdef _DEBUG
 	test();
 #endif
@@ -548,23 +582,34 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
-void Game::render() {
+void Game::render() 
+{
+	if (!gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))
+	{
+		//OP中
+		nowRenderingWindow = gameMasterNS::PLAYER_1P;
+		direct3D9->changeViewportFullWindow();
+		cameraOP->renderReady();
+		render3D(cameraOP);
+		return;
+	}
+
 
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
 	camera[gameMasterNS::PLAYER_1P].renderReady();
 	direct3D9->changeViewport1PWindow();
-	render3D(camera[gameMasterNS::PLAYER_1P]);
+	render3D(&camera[gameMasterNS::PLAYER_1P]);
 	effekseerNS::setCameraMatrix(
 		0,
-		camera[gameMasterNS::PLAYER_1P].position, 
-		camera[gameMasterNS::PLAYER_1P].gazePosition, 
+		camera[gameMasterNS::PLAYER_1P].position,
+		camera[gameMasterNS::PLAYER_1P].gazePosition,
 		camera[gameMasterNS::PLAYER_1P].upVector);
 	effekseerNS::render(0);
 	effekseerNS::setCameraMatrix(
 		1,
-		camera[gameMasterNS::PLAYER_1P].position, 
-		camera[gameMasterNS::PLAYER_1P].gazePosition, 
+		camera[gameMasterNS::PLAYER_1P].position,
+		camera[gameMasterNS::PLAYER_1P].gazePosition,
 		camera[gameMasterNS::PLAYER_1P].upVector);
 	effekseerNS::render(1);
 
@@ -572,7 +617,7 @@ void Game::render() {
 	nowRenderingWindow = gameMasterNS::PLAYER_2P;
 	camera[gameMasterNS::PLAYER_2P].renderReady();
 	direct3D9->changeViewport2PWindow();
-	render3D(camera[gameMasterNS::PLAYER_2P]);
+	render3D(&camera[gameMasterNS::PLAYER_2P]);
 	effekseerNS::setCameraMatrix(
 		0,
 		camera[gameMasterNS::PLAYER_2P].position,
@@ -590,12 +635,13 @@ void Game::render() {
 	//UI
 	direct3D9->changeViewportFullWindow();
 	renderUI();
+
 }
 
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Game::render3D(Camera currentCamera) {
+void Game::render3D(Camera* currentCamera) {
 
 	//スカイドームの描画
 	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -609,33 +655,27 @@ void Game::render3D(Camera currentCamera) {
 	else {
 		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 	}
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 
 	// プレイヤーの描画
-	//maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
-	//femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	//maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+	//femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+		player[i].otherRender(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//アニメーションモデルの描画
 	DrawMoveP();
 
-	////木の描画
-	//deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	////木Aの描画
-	//treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	////木Bの描画
-	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	////石の描画
-	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//スカイドームの描画
+	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 	//海面の描画
-	//ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// エネミーの描画
-	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// ツリーの描画
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
@@ -646,30 +686,30 @@ void Game::render3D(Camera currentCamera) {
 	else {
 		treeManager->switchingNormalView(nowRenderingWindow);
 	}
-	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	treeManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// アイテムの描画
-	itemManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	itemManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// 風の描画
-	windManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	windManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// マップオブジェクトの描画
-	mapObjectManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	mapObjectManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//エフェクト（インスタンシング）テスト
-	//testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//testEffect->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ディスプレイ用プレーンサンプル
-	samplePlane->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	samplePlane->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// 開発中広告
-	//ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	//ad->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
-		reticle->render3D(nowRenderingWindow,currentCamera.view, currentCamera.projection, currentCamera.position);
+		reticle->render3D(nowRenderingWindow,currentCamera->view, currentCamera->projection, currentCamera->position);
 
 #if _DEBUG
 	//4分木空間分割のライン描画
@@ -695,7 +735,7 @@ void Game::render3D(Camera currentCamera) {
 
 #ifdef _DEBUG
 #if 0	// ナビゲーションメッシュのデバッグ描画
-	naviMesh->debugRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+	naviMesh->debugRender(currentCamera->view, currentCamera->projection, currentCamera->position);
 #endif
 #endif //_DEBUG
 }
@@ -731,6 +771,9 @@ void Game::renderUI() {
 
 	//プレイヤー2周りのUIの描画
 	player2UI->render();
+
+	//カウントUIの描画
+	countUI->render();
 
 	//レティクルの描画
 	reticle->render2D(&player[gameMasterNS::PLAYER_1P]);
@@ -825,14 +868,22 @@ void Game::collisions()
 		//地面方向補正処理
 		player[i].grounding(mesh,matrix);
 		//壁ずり処理
-		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
-		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
-		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
-		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2,mesh,matrix);
+		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2, mesh, matrix);
+		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2, mesh, matrix);
+		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2, mesh, matrix);
 		//照準レイ更新/姿勢更新/狙撃レイ更新
 		player[i].updateAiming(mesh, matrix);
 		player[i].updatePostureByAiming();
 		player[i].updateShooting(mesh, matrix);
+	}
+	//カメラとフィールド
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
+		D3DXMATRIX matrix = testField->matrixWorld;
+		//カメラのめり込み補正
+		camera[i].insetCorrection(mesh, matrix);
 	}
 
 	//ビジョン|スカイビジョン状態の時
@@ -945,6 +996,7 @@ void Game::createGUI()
 	Object* tmp2;
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
+	ImGui::Text("count = %d", count);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Text("collisionNum:%d", collisionNum);

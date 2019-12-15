@@ -2,7 +2,7 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/11/13
+// [更新日]2019/12/11
 //===================================================================================================================================
 #pragma once
 
@@ -12,6 +12,8 @@
 #include "Base.h"
 #include "Window.h"
 #include "Direct3D9.h"
+#include "Ray.h"
+#include "Object.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -57,6 +59,8 @@ public:
 	D3DXQUATERNION		posture;					//姿勢クォータニオン
 	D3DXMATRIX			world;						//姿勢制御用行列
 	D3DXQUATERNION		relativeQuaternion;			//ターゲットに対する相対位置ベクトル
+	float				relativeDistance;			//相対位置ベクトル距離
+	float				betweenGaze;				//相対位置ベクトル固定距離
 	D3DXVECTOR3*		target;						//注視ターゲット位置ポインタ
 	D3DXVECTOR3*		targetX;					//注視ターゲットX方向ポインタ
 	D3DXVECTOR3*		targetY;					//注視ターゲットY方向ポインタ
@@ -72,7 +76,12 @@ public:
 	HRESULT initialize(DWORD _windowWidth, DWORD _windowHeight);
 	void update();
 	void renderReady();
-	void outputGUI();
+	virtual void outputGUI();
+
+	//衝突補正
+	bool insetCorrection(LPD3DXMESH mesh, D3DXMATRIX matrix);	//めり込み補正
+	bool sphereCollide(D3DXVECTOR3 position,float radius);		//球判定
+	bool rayCollide(LPD3DXMESH mesh, D3DXMATRIX matrix);		//レイ判定
 
 	//制限[limit]
 	void enableLimit(int limitParameter);				//制限の有効化
@@ -87,6 +96,8 @@ public:
 	//タイトル操作 ターゲットに追従
 	void GetViewMaatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world);
 
+	//注視点間距離の補正
+	void setGazeDistance(float newValue);
 
 	//getter
 	D3DXVECTOR3 getDirectionX() { 
@@ -112,6 +123,12 @@ public:
 	void setGaze(D3DXVECTOR3 _gazePosition) { gazePosition = _gazePosition; };
 	void setUpVector(D3DXVECTOR3 _upVector) { upVector = _upVector; };
 	void setRelative(D3DXQUATERNION _relativeQuaternion) {relativeQuaternion = _relativeQuaternion; };
+	void setRelative(D3DXVECTOR3 relativeVector) {
+		relativeQuaternion.x = relativeVector.x;
+		relativeQuaternion.y = relativeVector.y;
+		relativeQuaternion.z = relativeVector.z;
+		relativeQuaternion.w = 1.0f;};
+	void setRelativeLength(float length) { relativeDistance = length; }
 	void setTarget(D3DXVECTOR3* _target) { target = _target; }
 	void setTargetX(D3DXVECTOR3* targetAxisX) { targetX = targetAxisX; }
 	void setTargetY(D3DXVECTOR3* targetAxisY) { targetY = targetAxisY; }

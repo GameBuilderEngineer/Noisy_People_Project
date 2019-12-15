@@ -152,6 +152,7 @@
     <ClInclude Include="Base.h" />
     <ClInclude Include="BearAnimation.h" />
     <ClInclude Include="CharaIcon.h" />
+    <ClInclude Include="CountUI.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="Defeat_Chara.h" />
@@ -325,6 +326,7 @@
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BearAnimation.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
+    <ClCompile Include="CountUI.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="Defeat_Chara.cpp" />

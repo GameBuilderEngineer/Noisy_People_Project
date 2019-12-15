@@ -2,7 +2,7 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/11/13
+// [更新日]2019/12/11
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -21,12 +21,12 @@ using namespace cameraNS;
 //===================================================================================================================================
 Camera::Camera()
 {
-	ZeroMemory(this, sizeof(Camera));
 	D3DXQuaternionIdentity(&relativeQuaternion);
 	posture = D3DXQUATERNION(0, 0, 0, 1);
 	D3DXMatrixRotationQuaternion(&world, &posture);
 	nearZ = INIT_NEAR_Z;
 	farZ = INIT_FAR_Z;
+	betweenGaze = relativeDistance = 1.0f;
 }
 
 //===================================================================================================================================
@@ -34,7 +34,6 @@ Camera::Camera()
 //===================================================================================================================================
 Camera::~Camera()
 {
-
 }
 
 //===================================================================================================================================
@@ -63,7 +62,9 @@ void Camera::update()
 	if(targetY != NULL)Base::postureControl(&posture,axisY,*targetY ,0.1f);
 
 	D3DXVECTOR3 relativePosition = (D3DXVECTOR3)relativeQuaternion;
-	
+	D3DXVec3Normalize(&relativePosition,&relativePosition);
+	relativePosition *= relativeDistance;
+
 	//姿勢クォータニオンから姿勢行列を作成する
 	D3DXMatrixRotationQuaternion(&world, &posture);
 	position +=
@@ -172,7 +173,50 @@ void Camera::lockOn(D3DXVECTOR3 lockOnTarget,float frameTime)
 
 }
 
+//===================================================================================================================================
+//【めり込み補正】
+//===================================================================================================================================
+bool Camera::insetCorrection(LPD3DXMESH mesh, D3DXMATRIX matrix) 
+{
+	Ray ray;
+	ray.initialize(position, getDirectionZ());
 
+	if (ray.rayIntersect(mesh, matrix) && ray.distance < betweenGaze)
+	{
+		relativeDistance = min(0.1f,ray.distance);
+	}
+	else {
+		relativeDistance = betweenGaze;//固定値の代入
+	}
+
+	return false;
+}
+
+//===================================================================================================================================
+//【球による衝突判定】
+//===================================================================================================================================
+bool Camera::sphereCollide(D3DXVECTOR3 position, float radius)
+{
+
+	return false;
+}
+
+//===================================================================================================================================
+//【レイによる衝突判定】
+//===================================================================================================================================
+bool Camera::rayCollide(LPD3DXMESH mesh, D3DXMATRIX matrix)
+{
+
+	return false;
+}
+
+//===================================================================================================================================
+//【注視点間距離の設定】
+//===================================================================================================================================
+void Camera::setGazeDistance(float newValue)
+{
+	betweenGaze = relativeDistance = newValue;
+}
 
 //===================================================================================================================================
 //【ImGUIへの出力】
@@ -199,6 +243,7 @@ void Camera::outputGUI()
 		ImGui::SliderFloat3("position", position, limitBottom, limitTop);						//位置
 		ImGui::SliderFloat3("gazePosition", gazePosition, limitBottom, limitTop);				//注視位置
 		ImGui::SliderFloat4("relativeQuaternion", relativeQuaternion, minRelative, maxRelative);//相対位置
+		ImGui::SliderFloat("relativeDistance", &relativeDistance, 0.01f, 10.0f);				//注視点間距離
 		ImGui::SliderFloat3("upVector", upVector, -1, 1);										//上方ベクトル
 		ImGui::SliderFloat4("posture", posture, limitBottom, limitTop);							//姿勢クォータニオン
 
