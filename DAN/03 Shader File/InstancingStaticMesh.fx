@@ -33,7 +33,8 @@ struct VS_OUT
 {
 	float4 position	: POSITION;
 	float2 uv		: TEXCOORD0;
-	float4 color	: COLOR0;
+	float4 diffuse	: COLOR0;
+	float4 color	: COLOR1;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +47,8 @@ VS_OUT VS(
 	float4 matrix1		: TEXCOORD1,
 	float4 matrix2		: TEXCOORD2,
 	float4 matrix3		: TEXCOORD3,
-	float4 matrix4		: TEXCOORD4)
+	float4 matrix4		: TEXCOORD4,
+	float4 color		: TEXCOORD5)
 {
 	VS_OUT Out;
 	
@@ -87,7 +89,8 @@ VS_OUT VS(
 
 	//ランバート演算カラー
 	float4 lambert = max(ambient,saturate(dot(normal, lightDirection)));
-	Out.color = lambert*diffuse;
+	Out.diffuse = lambert*diffuse;
+	Out.color = color;
 
 	return Out;
 }
@@ -98,15 +101,14 @@ VS_OUT VS(
 float4 PS(VS_OUT In) : COLOR0
 {
 	float4 texel		= tex2D(textureSampler, In.uv);
-	float4 finalColor	= texel*In.color;
+	float4 finalColor	= texel*In.diffuse;
 	return finalColor;
 }
 //ライトを考慮しない
 float4 PS1(VS_OUT In) : COLOR0
 {
 	float4 texel		= tex2D(textureSampler, In.uv);
-	float4 alpha		= float4(1.0f,1.0f,1.0f,alphaValue);
-	float4 finalColor	= texel * alpha;
+	float4 finalColor	= texel * In.color;
 	return finalColor;
 }
 
@@ -133,7 +135,7 @@ technique mainTechnique {
 	//ライトをOFF ランバート拡散反射を考慮せずテクセルカラーのみで出力
 	pass p1 {
 		//ステート設定
-		Zenable					= TRUE;			//Zバッファ有効
+		Zenable					= FALSE;			//Zバッファ有効
 		ZWriteEnable			= TRUE;			//Zバッファへの書き込み有効
 		ShadeMode				= GOURAUD;		//グーロー・シェーディング
 		CullMode				= CCW;			//背面をカリング

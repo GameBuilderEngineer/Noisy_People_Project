@@ -12,6 +12,7 @@
 #include "AbstractScene.h"
 #include "StaticMeshRenderer.h"
 #include "TreeManager.h"
+#include "networkServer.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -35,7 +36,7 @@ private:
 	//フィールド
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
-
+	NETWORK_INTERFACE*				networkServer;
 	TreeManager*					treeManager;		//ツリー
 
 	float							syncTimer;			//同期タイマー

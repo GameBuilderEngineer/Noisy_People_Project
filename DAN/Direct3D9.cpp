@@ -230,7 +230,8 @@ HRESULT Direct3D9::changeViewport(DWORD x, DWORD y, DWORD width, DWORD height)
 	vp.MinZ = 0;
 	vp.MaxZ = 1;
 
-	MFAIL(device->SetViewport(&vp), "ビューポート切り替え失敗");
+	
+	(device->SetViewport(&vp), "ビューポート切り替え失敗");
 
 	return S_OK;
 }

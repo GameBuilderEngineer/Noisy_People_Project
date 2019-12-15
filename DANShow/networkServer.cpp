@@ -1,6 +1,6 @@
 //network.cpp
 
-#include "network.h"
+#include "networkServer.h"
 
 NETWORK_INTERFACE::NETWORK_INTERFACE()
 {
@@ -29,6 +29,11 @@ NETWORK_INTERFACE::NETWORK_INTERFACE()
 	}
 
 	loop = true;
+
+	// 
+	u_long val = 1;
+	ioctlsocket(s, FIONBIO, &val);
+
 }
 
 NETWORK_INTERFACE::~NETWORK_INTERFACE()
@@ -41,23 +46,28 @@ NETWORK_INTERFACE::~NETWORK_INTERFACE()
 
 void NETWORK_INTERFACE::updata()
 {
-	while (loop)
-	{
+	//while (loop)
+	//{
 		// buf
-		char *buf;
-		buf = (char *)malloc(sizeof(PACKAGE));
+	char *buf;
+	buf = (char *)malloc(sizeof(PACKAGE));
 
-		fromlen = (int)sizeof(from);
-		nRtn = recvfrom(s,
-			buf,
-			(int)sizeof(PACKAGE),
-			0,
-			(SOCKADDR *)&from,
-			&fromlen);
+	fromlen = (int)sizeof(from);
+	nRtn = recvfrom(s,
+		buf,
+		(int)sizeof(PACKAGE),
+		0,
+		(SOCKADDR *)&from,
+		&fromlen);
 
-		PACKAGE tmp;
-		memcpy(&tmp, buf, sizeof(PACKAGE));
-
-		free(buf);
+	PACKAGE tmp;
+	tmp.mun = 0;
+	memcpy(&tmp, buf, sizeof(PACKAGE));
+	if (tmp.mun > 0)
+	{
+		int x = 0;
 	}
+
+	free(buf);
+	//}
 }

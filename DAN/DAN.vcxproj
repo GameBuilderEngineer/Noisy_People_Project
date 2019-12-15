@@ -164,6 +164,9 @@
     <ClInclude Include="TigerAnimation.h" />
     <ClInclude Include="TigerBullet.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="networkServer.h" />
+    <ClInclude Include="SaiDelayReverb.h" />
+    <ClInclude Include="SaiFadeIn.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
@@ -181,7 +184,7 @@
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
-    <ClInclude Include="network.h" />
+    <ClInclude Include="networkClient.h" />
     <ClInclude Include="Player1UI.h" />
     <ClInclude Include="Player2UI.h" />
     <ClInclude Include="NormalState.h" />
@@ -334,6 +337,9 @@
     <ClCompile Include="PartsAnimationManager.cpp" />
     <ClCompile Include="TigerAnimation.cpp" />
     <ClCompile Include="TigerBullet.cpp" />
+    <ClCompile Include="networkServer.cpp" />
+    <ClCompile Include="SaiDelayReverb.cpp" />
+    <ClCompile Include="SaiFadeIn.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
@@ -351,7 +357,7 @@
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
-    <ClCompile Include="network.cpp" />
+    <ClCompile Include="networkClient.cpp" />
     <ClCompile Include="Player1UI.cpp" />
     <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="NormalState.cpp" />
@@ -484,6 +490,7 @@
     <Text Include="01 Data File\DumpRecuasionArea.txt" />
     <Text Include="01 Data File\memo.txt" />
     <Text Include="01 Data File\wasuremonoPosCheck.txt" />
+    <Text Include="08 Network File\PCName.txt" />
     <Text Include="Readme\Readme.txt" />
     <Text Include="Readme\コーディング規約.txt" />
   </ItemGroup>

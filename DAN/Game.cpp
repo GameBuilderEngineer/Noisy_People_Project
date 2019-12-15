@@ -72,6 +72,7 @@ void Game::initialize() {
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 #endif
 	testFieldRenderer->registerObject(testField);
+	testFieldRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
@@ -227,6 +228,9 @@ void Game::initialize() {
 	spriteGauge = new SpriteGauge;
 	spriteGauge->initialize();
 
+	//Network
+	networkClient = new NETWORK_CLIENT;
+
 #pragma region Memory Test
 	////メモリテスト
 
@@ -353,7 +357,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(player1UI);
 	SAFE_DELETE(player2UI);
 	//SAFE_DELETE(ad);
-
+	SAFE_DELETE(networkClient);
 	UninitMoveP();
 
 }
@@ -534,6 +538,8 @@ void Game::update(float _frameTime) {
 		SoundInterface::BGM->SetSpeed();
 	}
 
+	networkClient->send(gameMaster->getGameTime());
+
 #ifdef _DEBUG
 	test();
 #endif
@@ -591,6 +597,9 @@ void Game::render() {
 //===================================================================================================================================
 void Game::render3D(Camera currentCamera) {
 
+	//スカイドームの描画
+	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//テストフィールドの描画
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
@@ -622,8 +631,6 @@ void Game::render3D(Camera currentCamera) {
 	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	////石の描画
 	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	//スカイドームの描画
-	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//海面の描画
 	//ocean->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -658,6 +665,7 @@ void Game::render3D(Camera currentCamera) {
 
 	// 開発中広告
 	//ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
@@ -951,7 +959,7 @@ void Game::createGUI()
 				tmp2->id, tmp2->position.x,tmp2->position.y,tmp2->position.z);
 		}
 	}
-
+	networkClient->outputGUI();
 	player->outputGUI();			//プレイヤー
 	enemyManager->outputGUI();		//エネミー
 	itemManager->outputGUI();		//アイテムマネージャ

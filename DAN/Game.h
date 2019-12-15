@@ -45,7 +45,7 @@
 #include "Player1UI.h"
 #include "Player2UI.h"
 //#include "Text.h"
-
+#include "networkClient.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -116,6 +116,9 @@ private:
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
+
+	//Network
+	NETWORK_CLIENT*					networkClient;
 	
 public:
 	Game();

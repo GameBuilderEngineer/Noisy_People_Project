@@ -21,6 +21,8 @@ TREE_TOOLS::TREE_TOOLS()
 
 #ifdef _DEBUG
 	//レンダラーの初期化
+	Model[treeNS::TREE_TYPE::ANALOG_TREE] = staticMeshNS::A_TRUNK;
+	Model[treeNS::TREE_TYPE::DIGITAL_TREE] = staticMeshNS::B_TRUNK;
 	initRender();
 #endif
 
@@ -67,9 +69,7 @@ TREE_TOOLS::TREE_TOOLS()
 	TreeListboxSize = treeNS::TREE_SIZE::STANDARD;
 	TreeListboxModel = treeNS::TREE_MODEL::A_MODEL;
 
-	Model[treeNS::TREE_TYPE::ANALOG_TREE] = staticMeshNS::A_TRUNK;
-	Model[treeNS::TREE_TYPE::DIGITAL_TREE] = staticMeshNS::B_TRUNK;
-
+	input = getInput();
 #endif
 }
 
@@ -146,6 +146,14 @@ void TREE_TOOLS::outputTreeToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		//フラグ
 		bool creatFlag = false;
 		bool deleteFlag = false;
+		if (input->wasKeyPressed('J'))
+		{
+			creatFlag = true;
+		}
+		else if (input->wasKeyPressed('K'))
+		{
+			deleteFlag = true;
+		}
 
 		//機能
 		ImGui::Checkbox("New Tree", &creatFlag);
