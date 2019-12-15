@@ -877,7 +877,9 @@
     <ClCompile Include="CountUI.cpp">
       <Filter>Game Layer\GameUI\CountUI</Filter>
     </ClCompile>
-  </ItemGroup>
+    <ClCompile Include="movep1.cpp">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
       <Filter>Constant Layer\Base</Filter>
@@ -1400,6 +1402,9 @@
     </ClInclude>
     <ClInclude Include="CountUI.h">
       <Filter>Game Layer\GameUI\CountUI</Filter>
+    </ClInclude>
+    <ClInclude Include="movep1.h">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -257,6 +257,7 @@ private:
 	BoundingSphere				bodyCollide;					//球コリジョン
 	float						difference;						//フィールド補正差分
 	bool						onGround;						//接地判定
+	float						groundDistance;					//地面との距離
 	bool						onGroundBefore;					//直前フレームの接地判定
 	D3DXVECTOR3					groundNormal;					//接地面法線
 
