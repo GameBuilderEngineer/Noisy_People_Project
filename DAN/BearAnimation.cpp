@@ -22,15 +22,15 @@ using namespace::bearAnimNS;
 //=============================================================================
 static const D3DXVECTOR3 DEFAULT_ANIMATION_BODY[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEFAULT_ANIMATION_ARM_L[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
 };
 static const D3DXVECTOR3 DEFAULT_ANIMATION_ARM_R[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
 };
 static const D3DXVECTOR3 DEFAULT_ANIMATION_WAIST[] =
 {
@@ -69,26 +69,51 @@ void DefaultAnimation::update(D3DXVECTOR3* rot, Object** parts, float t)
 //=============================================================================
 static const D3DXVECTOR3 MOVE_ANIMATION_BODY[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.2f, 0.0f, -0.01f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.01f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 MOVE_ANIMATION_ARM_L[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
+	D3DXVECTOR3(0.0f, 0.2f, -0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
+	D3DXVECTOR3(0.0f, -0.2f, -0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
 };
 static const D3DXVECTOR3 MOVE_ANIMATION_ARM_R[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
+	D3DXVECTOR3(0.0f, 0.2f, 0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
+	D3DXVECTOR3(0.0f, -0.2f, 0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
 };
 static const D3DXVECTOR3 MOVE_ANIMATION_WAIST[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, -0.2f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.2f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+
 };
 static const D3DXVECTOR3 MOVE_ANIMATION_LEG_L[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 MOVE_ANIMATION_LEG_R[] =
 {
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 
@@ -116,27 +141,52 @@ void MoveAnimation::update(D3DXVECTOR3* rot, Object** parts, float t)
 //=============================================================================
 static const D3DXVECTOR3 ATTACK1_ANIMATION_BODY[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.2f, 0.0f, -0.01f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.01f),
+	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 ATTACK1_ANIMATION_ARM_L[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.6f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.6f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
 };
 static const D3DXVECTOR3 ATTACK1_ANIMATION_ARM_R[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.6f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.6f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
 };
 static const D3DXVECTOR3 ATTACK1_ANIMATION_WAIST[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, -0.05f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.005f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+
 };
 static const D3DXVECTOR3 ATTACK1_ANIMATION_LEG_L[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.25f),
+	D3DXVECTOR3(0.5f, 0.0f, 0.25f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.25f),
+	D3DXVECTOR3(-0.5f, 0.0f, 0.25f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.25f),
 };
 static const D3DXVECTOR3 ATTACK1_ANIMATION_LEG_R[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.25f),
+	D3DXVECTOR3(-0.5f, 0.0f, -0.25),
+	D3DXVECTOR3(0.0f, 0.0f, -0.25),
+	D3DXVECTOR3(0.5f, 0.0f, -0.25),
+	D3DXVECTOR3(0.0f, 0.0f, -0.25),
 };
 
 // コンストラクタ
@@ -163,28 +213,53 @@ void Attack1Animation::update(D3DXVECTOR3* rot, Object** parts, float t)
 //=============================================================================
 static const D3DXVECTOR3 DEAD_ANIMATION_BODY[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(-0.3f, 0.0f, 0.0f),
+	D3DXVECTOR3(-0.3f, 0.2f, 0.0f),
+	D3DXVECTOR3(-0.3f, 0.0f, 0.0f),
+	D3DXVECTOR3(-0.3f, -0.2f, 0.0f),
+	D3DXVECTOR3(-0.3f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_ARM_L[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -1.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_ARM_R[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 1.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 1.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_WAIST[] =
 {
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.1f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.1f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_LEG_L[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_LEG_R[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
+
 
 // コンストラクタ
 DeadAnimation::DeadAnimation(DWORD _flag) :PartsAnimation(_flag)
@@ -283,24 +358,22 @@ void BearAnimationManager::culcPartsMatrix()
 		D3DXMatrixTranslation(&parts[i]->matrixPosition, parts[i]->position.x, parts[i]->position.y, parts[i]->position.z);
 		// 回転マトリクスをワールドマトリクスに掛ける
 		D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[i]->matrixRotation);
+
+		// 子パーツのワールドマトリクスに親パーツの回転マトリクスを掛ける
+		if (i == ARM_L || i == ARM_R)
+		{
+			D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[BODY]->matrixRotation);
+		}
+		else if (i == LEG_L || i == LEG_R)
+		{
+			D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[WAIST]->matrixRotation);
+		}
+
 		// 位置マトリクスをワールドマトリクスに掛ける
 		D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[i]->matrixPosition);
 
-		//if (i == BODY || i == WAIST)
-		//{
-			// パーツのワールドマトリクスに親オブジェクトのワールドマトリクスを掛ける
-			D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parent->matrixWorld);
-		//}
-		//else if (i == ARM_L || i == ARM_R)
-		//{
-		//	// 子パーツのワールドマトリクスに親パーツのマトリクスを掛ける
-		//	D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[BODY]->matrixWorld);
-		//}
-		//else if (i == LEG_L || i == LEG_R)
-		//{
-		//	//// 子パーツのワールドマトリクスに親パーツのマトリクスを掛ける
-		//	//D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[WAIST]->matrixWorld);
-		//}
+		// パーツのワールドマトリクスに親オブジェクトのワールドマトリクスを掛ける
+		D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parent->matrixWorld);
 	}
 }
 

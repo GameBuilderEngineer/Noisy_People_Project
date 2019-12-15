@@ -41,11 +41,11 @@ namespace bearAnimNS
 	const float ANIMATION_SPEED[ANIMATION_TYPE_MAX] =
 	{
 		1.0f,		// DEFAULT
-		4.0f,		// MOVE
+		0.8f,		// MOVE
 		5.0f,		// ATTACK1
 		5.0f,		// ATTACK2
 		5.0f,		// ATTACK3
-		20.0f,		// DEAD
+		5.0f,		// DEAD
 	};
 
 	//----------------------
