@@ -644,7 +644,7 @@ void Game::render()
 void Game::render3D(Camera* currentCamera) {
 
 	//スカイドームの描画
-	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//テストフィールドの描画
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
