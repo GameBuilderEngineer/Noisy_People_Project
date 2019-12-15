@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Base.h"
+#include "Object.h"
 
 
 //=============================================================================
@@ -12,14 +13,24 @@
 //=============================================================================
 class PartsAnimation: public Base
 {
-private:
+public:
 	float animationTime;	// アニメーション時間
 	int keyFrame;			// キーフレーム
 	int numKeyFrame;		// キーフレームの数
+	DWORD flag;				// 自身のアニメーションフラグ
+	bool wasPlayedToEnd;	// 最後まで再生された
 
-public:
-	PartsAnimation();
+	// コンストラクタ
+	PartsAnimation(DWORD _flag);
+	// デストラクタ
 	~PartsAnimation();
+	// 初期化
 	void initialize();
-	void update(float t);
+	// 更新
+	virtual void update(D3DXVECTOR3* rot, Object** parts, float t) = 0;
+	// アニメーション時間とキーフレームの更新
+	void updateTimeAndKeyFrame(float t);
+	// 回転の更新
+	D3DXVECTOR3 updateRotation(const D3DXVECTOR3* rotation);
+
 };

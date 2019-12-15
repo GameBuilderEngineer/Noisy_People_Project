@@ -4,6 +4,8 @@
 // 作成開始日 : 2019/10/21
 //-----------------------------------------------------------------------------
 #include "Tiger.h"
+#include "EnemyManager.h"
+#include "TigerAnimation.h"
 using namespace enemyNS;
 using namespace stateMachineNS;
 using namespace tigerNS;
@@ -14,8 +16,7 @@ using namespace tigerNS;
 Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 {
 	// サイズを設定後にオブジェクト⇒姿勢制御の順で初期化
-	scale *= 2.5f;
-	setSize(D3DXVECTOR3(1.0f, 2.9, 1.0f) * 2.5f);
+	setSize(D3DXVECTOR3(2.0f, 2.8, 2.0f));
 	Object::initialize(&position);
 	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
@@ -24,14 +25,14 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 	for (int i = 0; i < PARTS_MAX; i++)
 	{
 		parts[i] = new Object;
+		parts[i]->position = PARTS_OFFSET_POS[i];
 	}
 
 	// アニメーションマネージャを初期化
 	animationManager = new TigerAnimationManager(PARTS_MAX, this, &parts[0]);
-	animationManager->culcPartsWorldMatrix();
 
 	// バレットマネージャにレンダラーを設定
-	bulletManager = new TigerBulletManager(constructionPackage.tigerBulletRender);
+	bulletManager = new TigerBulletManager(EnemyManager::tigerBulletRenderer);
 }
 
 
@@ -45,7 +46,8 @@ Tiger::~Tiger()
 	{
 		SAFE_DELETE(parts[i]);
 	}
-
+	// アニメーションマネージャの破棄
+	SAFE_DELETE(animationManager);
 	// バレットマネージャの破棄
 	SAFE_DELETE(bulletManager);
 }
@@ -64,17 +66,21 @@ void Tiger::update(float frameTime)
 	case REST:   rest(frameTime);   break;
 	case DIE:    die(frameTime);    break;
 	}
+	//if (enemyData->enemyID == debugEnemyID)
+	//{
+	//	if (input->wasKeyPressed('N'))
+	//	{
+	//		shot(&player[0]);
+	//	}
+	//}
+	Enemy::postprocess(frameTime);
+
+	// パーツアニメーションの更新
+	animationManager->update(frameTime);
+
+	// バレットの更新
 	muzzlePosition = center;// ●仮
 	bulletManager->update(frameTime);
-
-	if (enemyData->enemyID == debugEnemyID)
-	{
-		if (input->wasKeyPressed('N'))
-		{
-			shot(&player[0]);
-		}
-	}
-	Enemy::postprocess(frameTime);
 }
 
 
@@ -83,7 +89,6 @@ void Tiger::update(float frameTime)
 //=============================================================================
 void::Tiger::chase(float frameTime)
 {
-
 	float distance = between2VectorLength(position, *movingTarget);
 
 	if (distance < 7.0f && canAttack)
@@ -146,6 +151,17 @@ void Tiger::shot(Player* target)
 //=============================================================================
 void::Tiger::die(float frameTime)
 {
+	if (cntTimeDie > DIE_STATE_RENDERING_TIME)
+	{
+		EnemyManager::tigerBodyRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerBodyRenderer->updateAccessList();
+		EnemyManager::tigerGunRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerGunRenderer->updateAccessList();
+		EnemyManager::tigerLegLRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerLegLRenderer->updateAccessList();
+		EnemyManager::tigerLegRRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerLegRRenderer->updateAccessList();
+	}
 	Enemy::die(frameTime);
 }
 

@@ -8,8 +8,11 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-PartsAnimation::PartsAnimation()
+PartsAnimation::PartsAnimation(DWORD _flag)
 {
+	// フラグをセット
+	flag = _flag;
+
 	initialize();
 }
 
@@ -30,13 +33,14 @@ void PartsAnimation::initialize()
 {
 	animationTime = 0.0f;
 	keyFrame = 0;
+	wasPlayedToEnd = true;	// 最後まで再生された状態 = 未再生状態
 }
 
 
 //=============================================================================
-// 更新処理
+// アニメーション時間とキーフレームの更新
 //=============================================================================
-void PartsAnimation::update(float t)
+void PartsAnimation::updateTimeAndKeyFrame(float t)
 {
 	animationTime += t;
 	keyFrame = (int)animationTime;	// キーフレームに変換
@@ -46,3 +50,13 @@ void PartsAnimation::update(float t)
 		initialize();
 	}
 }
+
+
+//=============================================================================
+// 回転の更新
+//=============================================================================
+D3DXVECTOR3 PartsAnimation::updateRotation(const D3DXVECTOR3* rotation)
+{
+	return rotation[keyFrame] + (rotation[keyFrame + 1] - rotation[keyFrame]) * (animationTime - keyFrame);
+}
+

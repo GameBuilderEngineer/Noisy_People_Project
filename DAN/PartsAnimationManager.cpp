@@ -12,11 +12,21 @@ PartsAnimationManager::PartsAnimationManager(int _partsMax, Object* _parent, Obj
 {
 	partsMax = _partsMax;
 	parent = _parent;
+
+	// パーツ数の配列を確保
 	parts = new Object*[partsMax];
 	for (int i = 0; i < partsMax; i++)
 	{
 		parts[i] = _parts[i];
 	}
+	rot = new D3DXVECTOR3[partsMax];
+	for (int i = 0; i < partsMax; i++)
+	{
+		rot[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	}
+
+	// フラグを初期化
+	flagState = 0;
 }
 
 
@@ -26,44 +36,44 @@ PartsAnimationManager::PartsAnimationManager(int _partsMax, Object* _parent, Obj
 PartsAnimationManager::~PartsAnimationManager()
 {
 	SAFE_DELETE_ARRAY(parts);
-}
-
-
-//=============================================================================
-// 初期化
-//=============================================================================
-void PartsAnimationManager::initialize()
-{
-	flagState = 0;
-}
-
-
-//=============================================================================
-// パーツのワールドマトリクスを算出
-//=============================================================================
-void PartsAnimationManager::culcPartsWorldMatrix()
-{
-	for (int i = 0; i < partsMax; i++)
-	{
-		D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parent->matrixWorld);
-	}
+	SAFE_DELETE_ARRAY(rot);
 }
 
 
 //=============================================================================
 // アニメーション起動
 //=============================================================================
-void PartsAnimationManager::activate(DWORD flag)
+void PartsAnimationManager::activate(PartsAnimation* animation)
 {
-	flagState |= flag;
+	flagState |= animation->flag;
+	animation->wasPlayedToEnd = false;
 }
 
 
 //=============================================================================
 // アニメーション停止
 //=============================================================================
-void PartsAnimationManager::inactivate(DWORD flag)
+void PartsAnimationManager::inactivate(PartsAnimation* animation)
 {
-	flagState &= ~flag;
+	flagState &= ~animation->flag;
+	animation->wasPlayedToEnd = true;
 }
 
+
+//=============================================================================
+// アニメーション全停止
+//=============================================================================
+void PartsAnimationManager::inactivateAll()
+{
+	flagState = 0;
+	for (int i = 0; i < animatinMax; i++)
+	{
+		animation[i]->wasPlayedToEnd = true;
+	}
+}
+
+
+PartsAnimation* PartsAnimationManager::getAnimation(int type)
+{
+	return animation[type];
+}

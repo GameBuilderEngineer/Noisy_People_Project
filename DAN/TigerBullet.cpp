@@ -154,13 +154,12 @@ TigerBulletManager::TigerBulletManager(StaticMeshRenderer* _renderer)
 //=============================================================================
 TigerBulletManager::~TigerBulletManager()
 {
-	// 描画を切る
 	for (int i = 0; i < bulletList.nodeNum; i++)
 	{
-		renderer->unRegisterObjectByID((*bulletList.getValue(i))->id);
+		destroy(*bulletList.getValue(i), i);
 	}
 
-	// バレットリストの削除
+	// バレットリストの終了処理
 	bulletList.terminate();
 }
 

@@ -150,6 +150,7 @@
     <ClInclude Include="AnalogTree.h" />
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="BearAnimation.h" />
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DeathState.h" />
@@ -305,6 +306,7 @@
     <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Wolf.h" />
+    <ClInclude Include="WolfAnimation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DSound.cpp" />
@@ -317,6 +319,7 @@
     <ClCompile Include="AnalogTree.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="BearAnimation.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DeathState.cpp" />
@@ -465,6 +468,7 @@
     <ClCompile Include="Wind.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Wolf.cpp" />
+    <ClCompile Include="WolfAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico" />

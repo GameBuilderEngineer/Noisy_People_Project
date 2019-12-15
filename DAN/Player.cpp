@@ -157,6 +157,10 @@ void Player::update(float frameTime)
 		acceleration.z *= 2;
 		speed.y += 1.5f;
 	}
+	if (input->isKeyDown('J'))
+	{// ‚‘¬ˆÚ“®
+		position += speed;
+	}
 	if (input->wasKeyPressed(keyTable.reset))
 	{// ƒŠƒZƒbƒg
 		reset();

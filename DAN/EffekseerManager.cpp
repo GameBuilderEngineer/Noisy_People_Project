@@ -49,6 +49,8 @@ EffekseerManager::EffekseerManager()
 	fileName[GREENING]			= { L"Greening.efk" };
 	fileName[DIGIT_MODE]		= { L"Digit_mode.efk" };
 	fileName[DROP_ITEM]			= { L"Drop_Item.efk" };
+	fileName[ENEMY_DEATH]		= { L"Enemy_Death.efk" };
+	fileName[WIND]				= { L"Wind.efk" };
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }

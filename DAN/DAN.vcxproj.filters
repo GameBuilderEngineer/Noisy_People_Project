@@ -844,6 +844,12 @@
     <ClCompile Include="Display.cpp">
       <Filter>Game Layer\Scene\Display</Filter>
     </ClCompile>
+    <ClCompile Include="WolfAnimation.cpp">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="BearAnimation.cpp">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1346,6 +1352,12 @@
     </ClInclude>
     <ClInclude Include="PartsAnimationManager.h">
       <Filter>Game Layer\Enemy\PartsAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="WolfAnimation.h">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="BearAnimation.h">
+      <Filter>Game Layer\Enemy\Bear</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

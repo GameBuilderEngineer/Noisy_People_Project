@@ -48,6 +48,18 @@ namespace staticMeshNS {
 		WOLF,
 		TIGER,
 		BEAR,
+		WOLF_BODY,
+		WOLF_ARM,
+		TIGER_BODY,
+		TIGER_GUN,
+		TIGER_LEG_L,
+		TIGER_LEG_R,
+		BEAR_BODY, 
+		BEAR_ARM_L,
+		BEAR_ARM_R,
+		BEAR_WAIST,
+		BEAR_LEG_L,
+		BEAR_LEG_R,
 
 		DEAD_TREE,								//01
 		GREEN_TREE_001,							//02

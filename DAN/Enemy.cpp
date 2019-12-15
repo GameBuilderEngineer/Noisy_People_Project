@@ -4,6 +4,7 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #include "Enemy.h"
+#include "EnemyManager.h"
 #include "ImguiManager.h"
 #include "Sound.h"
 #include "ItemManager.h"
@@ -31,7 +32,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	player = constructionPackage.player;
 	attractorMesh = constructionPackage.attractorMesh;
 	attractorMatrix = constructionPackage.attractorMatrix;
-	markRenderer = constructionPackage.markRenderer;
+	markRenderer = EnemyManager::markRenderer;// ●グローバルでとれるようにしたからこの必要がない
 
 	// エネミーデータをオブジェクトにセット
 	position = enemyData->position;
@@ -187,6 +188,12 @@ void Enemy::preprocess(float frameTime)
 	friction = 1.0f;		// 摩擦係数初期化
 	acceleration *= 0.0f;	// 加速度を初期化
 
+	if (enemyData->type == TIGER || enemyData->type == WOLF)
+	{
+		animationManager->switchDefault();
+	}
+
+
 #ifdef _DEBUG
 	if (enemyData->state == CHASE)
 	{
@@ -332,10 +339,18 @@ void Enemy::move(float frameTime)
 	if (isAttacking)
 	{
 		attacking(frameTime);
+		if (enemyData->type == TIGER || enemyData->type == WOLF)
+		{
+			animationManager->switchAttack();
+		}
 	}
 	else
 	{
 		steering(frameTime);
+		if (enemyData->type == TIGER || enemyData->type == WOLF)
+		{
+			animationManager->switchMove();
+		}
 	}
 }
 #pragma endregion
@@ -739,6 +754,11 @@ void Enemy::prepareAttackTree()
 //=============================================================================
 void Enemy::prepareDie()
 {
+	// 死亡エフェクトの再生
+	deathEffect = new DeathEffect(&center);
+	deathEffect->scale *= DEATH_EFFECT_SCALE[enemyData->type];
+	effekseerNS::play(0, deathEffect);
+
 	// 追跡マークの削除
 	deleteMark();
 }
@@ -770,7 +790,6 @@ void Enemy::chase(float frameTime)
 	//D3DXMatrixRotationQuaternion(&matrix, &quaternion);
 	////D3DXVec3TransformCoord(&markDirection, &markDirection, &matrix);
 	//markFront->rotation.x = 
-	
 
 	// 追跡マーク（表）の更新
 	markFront->position = position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f);
@@ -852,13 +871,17 @@ void Enemy::attackTree(float frameTime)
 //=============================================================================
 void Enemy::die(float frameTime)
 {
-	cntTimeDie += frameTime;
-
 	// 死ぬ寸前の振動
 	speed.x += (rand() % 8) / 10.0f;
 	speed.x -= 0.4f;
 	speed.z += (rand() % 8) / 10.0f;
 	speed.z -= 0.4f;
+
+	if (enemyData->type == TIGER || enemyData->type == WOLF)
+	{
+		animationManager->switchDead();
+	}
+
 
 	// 死亡時
 	if (cntTimeDie > DIE_STATE_TIME)
@@ -878,6 +901,9 @@ void Enemy::die(float frameTime)
 			itemManager->createItem(itemData);
 		}
 	}
+
+	// 死亡ステート時間のカウントアップ
+	cntTimeDie += frameTime;
 }
 #pragma endregion
 

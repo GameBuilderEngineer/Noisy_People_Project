@@ -42,6 +42,20 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[TIGER]									= { "Tiger.x" };
 	fileName[BEAR]									= { "Bear.x" };
 
+	fileName[WOLF_BODY] = { "Wolf_body.x" };
+	fileName[WOLF_ARM] = { "Wolf_arm.x" };
+	fileName[TIGER_BODY] = { "Tiger_Body.x" };
+	fileName[TIGER_GUN] = { "Tiger_Gun.x" };
+	fileName[TIGER_LEG_L] = { "Tiger_LegL.x" };
+	fileName[TIGER_LEG_R] = { "Tiger_LegR.x" };
+	fileName[BEAR_BODY] = { "Bear_Body.x" };
+	fileName[BEAR_ARM_L] = { "Bear_ArmL.x" };
+	fileName[BEAR_ARM_R] = { "Bear_ArmR.x" };
+	fileName[BEAR_WAIST] = { "Bear_Waist.x" };
+	fileName[BEAR_LEG_L] = { "Bear_LegL.x" };
+	fileName[BEAR_LEG_R] = { "Bear_LegR.x" };
+
+
 	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
 	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
 	fileName[GREEN_TREE_002]						= { "greenTree002.x" };						//03

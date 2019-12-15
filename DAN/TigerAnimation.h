@@ -12,53 +12,104 @@
 //=============================================================================
 namespace tigerAnimNS
 {
+	// アニメーションの種類
 	enum ANIMATION_TYPE
 	{
 		DEFAULT,
 		MOVE,
 		ATTACK,
+		DEAD,
 		SHOT,
 		ANIMATION_TYPE_MAX
 	};
 
+	// アニメーションのビット演算フラグ
 	const DWORD ANIMATION_FLAG[ANIMATION_TYPE_MAX] =
 	{
 		0x00000001, // DEFAULT
 		0x00000002,	// MOVE
 		0x00000004,	// ATTACK
-		0x00000008,	// SHOT
+		0x00000008,	// DEAD
+		0x00000010,	// SHOT
 	};
 
+	// アニメーションのスピード
+	// キーフレームが「1進むのに1秒」かかるスピードに対しての倍率. ex)3.0f →　「1進むのに0.33秒」
+	// また1つのアニメーション全体の長さは(キーフレームの数 - 1) * (1.0f / この倍率)で求められる.
 	const float ANIMATION_SPEED[ANIMATION_TYPE_MAX] =
 	{
 		1.0f,		// DEFAULT
-		1.0f,		// MOVE
-		1.0f,		// ATTACK
+		4.0f,		// MOVE
+		5.0f,		// ATTACK
+		20.0f,		// DEAD
 		1.0f,		// SHOT
 	};
 
-	class DefaultAnimation : public PartsAnimation { public: void update(float t); };
-	class MoveAnimation : public PartsAnimation { public: void update(float t); };
-	class AttackAnimation : public PartsAnimation { public: void update(float t); };
-	class ShotAnimation : public PartsAnimation { public: void update(float t); };
+	//----------------------
+	// アニメーションクラス
+	//----------------------
+	// デフォルト
+	class DefaultAnimation : public PartsAnimation
+	{
+	public:
+		DefaultAnimation(DWORD _flag);
+		void update(D3DXVECTOR3* rot, Object** parts, float t);
+	};
+
+	// 移動
+	class MoveAnimation : public PartsAnimation
+	{
+	public:
+		MoveAnimation(DWORD _flag);
+		void update(D3DXVECTOR3* rot, Object** parts, float t);
+	};
+
+	// 攻撃
+	class AttackAnimation : public PartsAnimation
+	{
+	public:
+		AttackAnimation(DWORD _flag);
+		void update(D3DXVECTOR3* rot, Object** parts, float t);
+	};
+
+	// 死亡
+	class DeadAnimation : public PartsAnimation
+	{
+	public:
+		DeadAnimation(DWORD _flag);
+		void update(D3DXVECTOR3* rot, Object** parts, float t);
+	};
+
+	// ショット
+	class ShotAnimation : public PartsAnimation
+	{
+	public:
+		ShotAnimation(DWORD _flag);
+		void update(D3DXVECTOR3* rot, Object** parts, float t);
+	};
 }
 
 
 //=============================================================================
-// アニメーションマネージャー
+// アニメーションマネージャークラス
 //=============================================================================
 class TigerAnimationManager: public PartsAnimationManager
 {
-private:
-	Object* parts[tigerAnimNS::ANIMATION_TYPE_MAX];
-	tigerAnimNS::DefaultAnimation defaultAnimation;
-	tigerAnimNS::MoveAnimation moveAnimation;
-	tigerAnimNS::AttackAnimation attackAnimation;
-	tigerAnimNS::ShotAnimation shotAnimation;
-
 public:
+	// コンストラクタ
 	TigerAnimationManager(int partsMax, Object* parent, Object** parts);
+	// デストラクタ
 	~TigerAnimationManager();
-	void initialize();
+	// 更新
 	void update(float frameTime) override;
+	// パーツのマトリクスを計算する
+	void culcPartsMatrix() override;
+	// デフォルトアニメーションに切り替え
+	void switchDefault() override;
+	// 移動アニメーションに切り替え
+	void switchMove() override;
+	// 攻撃アニメーションに切り替え
+	void switchAttack() override;
+	// 死亡アニメーションに切り替え
+	void switchDead() override;
 };

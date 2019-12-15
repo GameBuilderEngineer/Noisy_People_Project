@@ -806,10 +806,8 @@ void Game::collisions()
 	}
 
 	// 風との当たり判定
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		windManager->windCollision(&player[i]);
-	}
+	windManager->windCollision(player);
+
 
 	//プレイヤーとフィールド
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)

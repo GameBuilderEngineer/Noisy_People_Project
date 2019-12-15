@@ -15,6 +15,7 @@
 #include "SoundBase.h"
 #include "Tree.h"
 #include "EnemyChaseMark.h"
+#include "PartsAnimationManager.h"
 
 //=============================================================================
 // ビルドスイッチ
@@ -173,6 +174,32 @@ namespace enemyNS
 		SE_3D_MAX
 	};
 
+	//-----------
+	// Effekseer
+	//-----------
+	const float DEATH_EFFECT_SCALE[TYPE_MAX] =
+	{
+		1.0f,		// WOLF
+		1.5f,		// TIGER
+		3.0f,		// BEAR
+	};
+
+	class DeathEffect :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3 * syncPosition;
+		DeathEffect(D3DXVECTOR3* sync)
+		{
+			syncPosition = sync;
+			effectNo = effekseerNS::ENEMY_DEATH;
+		}
+		virtual void update()
+		{
+			position = *syncPosition;
+			Instance::update();
+		};
+	};
+
 	// Physics Constant
 	const float AIR_MOVE_ACC_MAGNIFICATION = 0.12f;		// 空中移動加速度倍率
 	const float STOP_SPEED = 0.5f;						// 移動停止速度
@@ -198,6 +225,7 @@ namespace enemyNS
 	const float AUTO_DESTRUCTION_HEIGHT = -100.0f;		// 自動破棄される高さ
 	const float MARK_FLOATING_HEIGHT = 0.1f;			// 追跡マークの高さ
 	const float DIE_STATE_TIME = 4.0f;					// 死亡ステートの時間
+	const float DIE_STATE_RENDERING_TIME = 2.5f;		// 死亡ステートのうち描画が続く時間
 
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
@@ -262,8 +290,8 @@ namespace enemyNS
 		Player* player;
 		LPD3DXMESH	attractorMesh;
 		D3DXMATRIX*	attractorMatrix;
-		EnemyChaseMark* markRenderer;
-		StaticMeshRenderer* tigerBulletRender;
+		//EnemyChaseMark* markRenderer;
+		//StaticMeshRenderer* tigerBulletRender;
 	};
 
 #if _DEBUG
@@ -300,7 +328,9 @@ namespace enemyNS
 class Enemy: public Object
 {
 protected:
+#ifdef _DEBUG
 public:
+#endif
 	enemyNS::EnemyData* enemyData;					// エネミーデータ
 	static int numOfEnemy;							// エネミーの総数
 	StaticMesh* staticMesh;							// メッシュ情報
@@ -309,6 +339,7 @@ public:
 	LPD3DXMESH	attractorMesh;						// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;					// 重力（引力）発生オブジェクトマトリックス
 	StateMachine stateMachine;						// ステートマシン
+	PartsAnimationManager* animationManager;		// アニメーションマネージャ
 
 	// ブラックボード
 	bool isNoticingPlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識フラグ
@@ -371,6 +402,9 @@ public:
 
 	// サウンド
 	PLAY_PARAMETERS playParameters;
+
+	// エフェクト
+	enemyNS::DeathEffect* deathEffect;						// 死亡エフェクト
 
 	//------------------
 	// アクションクエリ
