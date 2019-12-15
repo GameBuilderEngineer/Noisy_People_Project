@@ -352,6 +352,9 @@
     <Filter Include="Game Layer\Scene\Display">
       <UniqueIdentifier>{9d1dd45d-9c58-4c71-ab0c-eaf56df266b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SerialCommunication">
+      <UniqueIdentifier>{27094aec-2858-4e07-af46-390a562c548b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -757,9 +760,6 @@
     <ClCompile Include="ElectGuage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
-    <ClCompile Include="ElectTank.cpp">
-      <Filter>Game Layer\GameUI\Guage</Filter>
-    </ClCompile>
     <ClCompile Include="DebugScene.cpp">
       <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClCompile>
@@ -819,6 +819,18 @@
     </ClCompile>
     <ClCompile Include="Persent.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialCommunication.cpp">
+      <Filter>SerialCommunication</Filter>
+    </ClCompile>
+    <ClCompile Include="Mark.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="Green.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GreenRate.cpp">
+      <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1248,9 +1260,6 @@
     <ClInclude Include="ElectGuage.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
-    <ClInclude Include="ElectTank.h">
-      <Filter>Game Layer\GameUI\Guage</Filter>
-    </ClInclude>
     <ClInclude Include="DebugScene.h">
       <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClInclude>
@@ -1310,6 +1319,18 @@
     </ClInclude>
     <ClInclude Include="Display.h">
       <Filter>Game Layer\Scene\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialCommunication.h">
+      <Filter>SerialCommunication</Filter>
+    </ClInclude>
+    <ClInclude Include="Mark.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="Green.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GreenRate.h">
+      <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

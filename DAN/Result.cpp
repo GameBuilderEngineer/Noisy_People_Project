@@ -236,7 +236,7 @@ void Result::render()
 	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
 
 	//UI
-	//renderUI();
+	renderUI();
 }
 
 //===================================================================================================================================

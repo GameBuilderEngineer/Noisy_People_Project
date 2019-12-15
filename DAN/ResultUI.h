@@ -25,10 +25,10 @@ namespace resultUiNS
 	//リザルトのフェイズ
 	enum RESULT_PHASE
 	{
-		PHASE_01,		//リザルトロゴのスライドイン
-		PHASE_02,		//島表示
-		PHASE_03,		//文字表示
-		PHASE_04,		//数字のカウントアップ
+		PHASE_01,		//島の緑化状況
+		PHASE_02,		//緑化率のカウントアップ
+		PHASE_03,		//2Dリザルトの描画開始
+		PHASE_04,		//
 		PHASE_05,		//ランクの表示
 		PHASE_MAX,		//フェイズの総数
 	};
@@ -40,6 +40,8 @@ namespace resultUiNS
 		PLAYER_02,
 		PLAYER_MAX,
 	};
+
+	const float PHASE_TIME = 5.0f;
 
 }
 //============================

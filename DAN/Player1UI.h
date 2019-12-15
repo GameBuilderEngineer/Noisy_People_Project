@@ -14,7 +14,9 @@
 #include "HPguageEmp.h"
 #include "ElectGuageeEmp.h"
 #include "ElectGuage.h"
-#include "ElectTank.h"
+#include "Green.h"
+#include "Mark.h"
+#include "GreenRate.h"
 
 //==================================
 //名前空間
@@ -35,7 +37,7 @@ namespace playerUiNS
 //==================================
 //クラス定義
 //==================================
-class Player1UI
+class Player1UI:public GameMaster
 {
 public://メンバー変数
 	ButtonUI * buttonUiP1;
@@ -45,7 +47,9 @@ public://メンバー変数
 	CharaIcon * charaIcon;
 	ElectGuageEmp* electGuageEmp;
 	ElectGuage* electGuage;
-	ElectTank* electTank;
+	Green* green;
+	Mark* mark;
+	GreenRate* greenRate;
 	Player *player;			//P1の情報
 	bool	skyVisionFlag;	//スカイビジョンフラグ
 	bool	shotFlag;		//ショットフラグ
@@ -55,6 +59,7 @@ public://メンバー変数
 	int		hp;				//hp保存
 	int		power;			//電力保存
 	int     state;			//プレイヤーの状態
+	float   greeningRate;   //緑化率
 private:
 public://メンバー関数
 	Player1UI();

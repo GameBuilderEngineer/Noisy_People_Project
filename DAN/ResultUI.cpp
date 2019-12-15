@@ -101,7 +101,7 @@ void ResultUI::render()
 {
 	rank01 = decisionRank(greenigPersent, greeningNum01, defeat01);
 	rank02 = decisionRank(greenigPersent, greeningNum02, defeat02);
-	resultBG->render();					//ƒŠƒUƒ‹ƒg”wŒi‚Ì•`‰æ
+	//resultBG->render();					//ƒŠƒUƒ‹ƒg”wŒi‚Ì•`‰æ
 	uiTexture.render(resultPhase);		//ƒeƒNƒXƒ`ƒƒ‚Ì•`‰æ
 	uiCharacter01->render(resultPhase);	//ƒvƒŒƒCƒ„[‚P‚Ì•¶Žš•`‰æ
 	uiCharacter02->render(resultPhase);	//ƒvƒŒƒCƒ„[2‚Ì•¶Žš•`‰æ
@@ -148,7 +148,7 @@ void ResultUI::update(float flameTime)
 	time += flameTime;
 
 	//ƒtƒFƒCƒY‚ÌXV
-	if (time > 2.0f)
+	if (time > PHASE_TIME)
 	{
 		resultPhase = PHASE_02;
 		uiNumber[uiNumberNS::GREENIG_PERSENT].update(greenigPersent);

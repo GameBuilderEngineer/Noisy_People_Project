@@ -80,14 +80,15 @@ TextureLoader::TextureLoader()
 	textureName[UI_HP_GUAGE_EMP_P2] = { "HPGuage_Emp2.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
 	textureName[UI_ICON_P2] = { "Chara_2.png" };
-	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Emp1.png" };
-	textureName[UI_EN_GUAGE_EMP_P2] = { "EnGuage_Emp2.png" };
-	textureName[UI_EN_GUAGE_P1] = { "EnGuage1.png" };
-	textureName[UI_EN_GUAGE_P2] = { "EnGuage2.png" };
-	textureName[UI_EN_TANK] = { "EnGuage_Stock.png" };
+	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Empty_1.png" };
+	textureName[UI_EN_GUAGE_EMP_P2] = { "EnGuage_Empty_2.png" };
+	textureName[UI_EN_GUAGE_P1] = { "EnGuage_NoMark_1.png" };
+	textureName[UI_EN_GUAGE_P2] = { "EnGuage_NoMark_2.png" };
+	textureName[UI_EN_TANK] = { "Greening.png"};
 	textureName[UI_TREE_MARKER] = { "Dot.png" };
 	textureName[UI_TREE_SIGN] = { "Digit_Tree.png" };
 	textureName[UI_TIMER_NUMBER] = { "num_white.png" };
+	textureName[UI_EN_MARK] = { "Shiftable_Mark.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };

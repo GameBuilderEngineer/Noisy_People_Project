@@ -39,6 +39,7 @@ void ElectGuage::initialize(int playerType)
 	switch (playerType)
 	{
 	case basicUiNS::P1:
+		BasicUI::assingColor(COLOR);
 		BasicUI::assingSize(WIDTH_EN_GUAGE, HEIGHT_EN_GUAGE);
 		BasicUI::assingPosition(POSITION_EN_GUAGE);
 		BasicUI::changePivot(SpriteNS::TOP_LEFT);
@@ -70,7 +71,14 @@ void ElectGuage::render()
 void ElectGuage::update(int power)
 {
 	changeGuage(power);
-	
+	if (power < 70)
+	{
+		BasicUI::changeColor(electGuage, LED_COLOR);
+	}
+	else
+	{
+		BasicUI::changeColor(electGuage,COLOR);
+	}
 }
 
 //===================================
@@ -79,28 +87,10 @@ void ElectGuage::update(int power)
 //===================================
 void ElectGuage::changeGuage(int power)
 {
-	//電力の下2桁を取り出して割合を出す
-	if (power == 100 || power == 200 || power == 300)
+	//HPを参照しサイズを変更
+	float enPersent = (float)power / 300;//現在のENを最大HPで割って割合を出す
+	if (BasicUI::widthSize>WIDTH_EN_GUAGE*enPersent)
 	{
-		BasicUI::changeWhidthSize(electGuage, WIDTH_EN_GUAGE);
-		/*uvCoord01 = D3DXVECTOR2(0.0f, 0.0f);
-		uvCoord02 = D3DXVECTOR2(1.0f, 0.0f);
-		uvCoord03 = D3DXVECTOR2(0.0f, 1.0f);
-		uvCoord04 = D3DXVECTOR2(1.0f, 1.0f);
-		BasicUI::changeUV(electGuage, uvCoord01, uvCoord02, uvCoord03, uvCoord04);*/
-	}
-	else
-	{
-		float  enPersent = (power % 100)/100.0f;
-		width= WIDTH_EN_GUAGE * enPersent;
-		if (BasicUI::widthSize > width)
-		{
-			BasicUI::reductionWidthSize(electGuage, 1.0f);
-		}
-		/*uvCoord01 = D3DXVECTOR2(0.0f, 0.0f);
-		uvCoord02 = D3DXVECTOR2(enPersent, 0.0f);
-		uvCoord03 = D3DXVECTOR2(0.0f, 1.0f);
-		uvCoord04 = D3DXVECTOR2(enPersent, 1.0f);
-		BasicUI::changeUV(electGuage, uvCoord01, uvCoord02, uvCoord03, uvCoord04);*/
+		BasicUI::reductionWidthSize(electGuage, 1.5f);
 	}
 }
