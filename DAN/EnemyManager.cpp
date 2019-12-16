@@ -9,6 +9,27 @@
 #include "EnemyTools.h"
 using namespace enemyNS;
 
+// Staticメンバ変数
+StaticMeshRenderer* EnemyManager::wolfRenderer;
+StaticMeshRenderer* EnemyManager::tigerRenderer;
+StaticMeshRenderer* EnemyManager::bearRenderer;
+
+StaticMeshRenderer* EnemyManager::wolfBodyRenderer;
+StaticMeshRenderer* EnemyManager::wolfArmRenderer;
+StaticMeshRenderer* EnemyManager::tigerBodyRenderer;
+StaticMeshRenderer* EnemyManager::tigerGunRenderer;
+StaticMeshRenderer* EnemyManager::tigerLegLRenderer;
+StaticMeshRenderer* EnemyManager::tigerLegRRenderer;
+StaticMeshRenderer* EnemyManager::bearBodyRenderer;
+StaticMeshRenderer* EnemyManager::bearArmLRenderer;
+StaticMeshRenderer* EnemyManager::bearArmRRenderer;
+StaticMeshRenderer* EnemyManager::bearWaistRenderer;
+StaticMeshRenderer* EnemyManager::bearLegLRenderer;
+StaticMeshRenderer* EnemyManager::bearLegRRenderer;
+
+EnemyChaseMark* EnemyManager::markRenderer;						// 追跡マーク描画
+StaticMeshRenderer* EnemyManager::tigerBulletRenderer;
+
 
 //=============================================================================
 // 初期化
@@ -28,34 +49,50 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	player = _player;
 
 	// 描画オブジェクトの作成
-	wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
-	tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER));
-	bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR));
+	//wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
+	//tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER));
+	//bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR));
 
-	// チュートリアルシーンでの初期化処理
-	if (_sceneName == "Scene -Tutorial-")
-	{
+	wolfBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF_BODY));
+	wolfArmRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF_ARM));
+	tigerBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER_BODY));
+	tigerGunRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER_GUN));
+	tigerLegLRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER_LEG_L));
+	tigerLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER_LEG_R));
+	bearBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_BODY));
+	bearArmLRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_ARM_L));
+	bearArmRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_ARM_R));
+	bearWaistRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_WAIST));
+	bearLegLRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_L));
+	bearLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_R));
 
-		return;
-	}
+	markRenderer = new EnemyChaseMark;
+	tigerBulletRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+
+// チュートリアルシーンでの初期化処理
+if (_sceneName == "Scene -Tutorial-")
+{
+
+	return;
+}
 
 #if 1	// エネミーツールのデータを読み込む
-	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-	{
-		createEnemyData(enemyTools->GetEnemySet(i));
-	}
-	SAFE_DELETE(enemyTools);
+ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+{
+	createEnemyData(enemyTools->GetEnemySet(i));
+}
+SAFE_DELETE(enemyTools);
 #endif
 
 #if 1	// エネミーオブジェクトをツールデータを元に作成する
-		for (size_t i = 0; i < enemyDataList.nodeNum; i++)
-		{
-			if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
-			{
-				createEnemy(enemyDataList.getValue(i));
-			}
-		}
+for (int i = 0; i < enemyDataList.nodeNum; i++)
+{
+	if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
+	{
+		createEnemy(enemyDataList.getValue(i));
+	}
+}
 #endif
 }
 
@@ -76,9 +113,32 @@ void EnemyManager::uninitialize()
 	enemyList.swap(temp);
 
 	// 描画オブジェクトを破棄
-	SAFE_DELETE(wolfRenderer);
-	SAFE_DELETE(tigerRenderer);
-	SAFE_DELETE(bearRenderer);
+	//SAFE_DELETE(wolfRenderer);
+	//SAFE_DELETE(tigerRenderer);
+	//SAFE_DELETE(bearRenderer);
+
+	SAFE_DELETE(wolfBodyRenderer);
+	SAFE_DELETE(wolfArmRenderer);
+	SAFE_DELETE(tigerBodyRenderer);
+	SAFE_DELETE(tigerGunRenderer);
+	SAFE_DELETE(tigerLegLRenderer);
+	SAFE_DELETE(tigerLegRRenderer);
+	SAFE_DELETE(bearBodyRenderer);
+	SAFE_DELETE(bearArmLRenderer);
+	SAFE_DELETE(bearArmRRenderer);
+	SAFE_DELETE(bearWaistRenderer);
+	SAFE_DELETE(bearLegLRenderer);
+	SAFE_DELETE(bearLegRRenderer);
+
+	// マークのレンダラーはInstancingBillBoardデストラクタで
+	// LinkedListのポインタの入ったノードもその中の実体も破棄
+	// しているのでレンダラーの破棄のみで良い
+	SAFE_DELETE(markRenderer);
+
+	// タイガーバレットはタイガー破棄に合わせてインスタンスの破棄と
+	// 描画解除も行われているためレンダラーの破棄のみで良い
+	tigerBodyRenderer->allUnRegister();
+	SAFE_DELETE(tigerBulletRenderer);
 }
 
 
@@ -87,9 +147,9 @@ void EnemyManager::uninitialize()
 //=============================================================================
 void EnemyManager::update(float frameTime)
 {
-	//----------------------
-	// エネミーデータリスト
-	//----------------------
+	//----------------------------
+	// エネミーデータリストの更新
+	//----------------------------
 	cntTimeDataList += frameTime;
 	if (cntTimeDataList > DATA_LIST_CHECK_INTERVAL)
 	{
@@ -115,53 +175,78 @@ void EnemyManager::update(float frameTime)
 		}
 	}
 
-	//----------------
-	// エネミーリスト
-	//----------------
-	vector<Enemy*>::iterator itr;
-	for (itr = enemyList.begin(); itr != enemyList.end();)
+	//----------------------
+	// エネミーリストの更新
+	//----------------------
+	vector<Enemy*>::iterator itr = enemyList.begin();
+	while(itr != enemyList.end())
 	{
 		// エネミーの更新
 		(*itr)->update(frameTime);
 
-		// 遠距離エネミーの計算
+		// 破棄フラグ
+		bool isDestroyTarget = false;
+
+		// 遠距離エネミーを破棄する
 		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
 		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
+		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2) && (*itr)->getEnemyData()->type != enemyNS::BEAR)
+		{
+			isDestroyTarget = true;
+		}
 
-		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2 || (*itr)->getEnemyData()->isAlive == false))
-		{// エネミーオブジェクトを破棄する
+		// 死亡済みエネミーを破棄する
+		if ((*itr)->getEnemyData()->isAlive == false)
+		{
+			isDestroyTarget = true;
+		}
 
-			// BEARは遠距離でも例外として破棄しない
-			if ((*itr)->getEnemyData()->type == enemyNS::BEAR && (*itr)->getEnemyData()->isAlive)
-			{
-				itr++;
-				continue;
-			}
-
+		// 破棄処理
+		if (isDestroyTarget)
+		{
+			// 動的作成イベントで作ったエネミーのIDを記録する
 			int destroyTargetEnemyData = -1;
 			if ((*itr)->getEnemyData()->isGeneratedBySpawnEvent)
-			{// 動的作成イベントで作ったエネミーを死亡させIDを記録する
-				(*itr)->getEnemyData()->isAlive = false;
+			{
 				destroyTargetEnemyData = (*itr)->getEnemyID();
 			}
 
+			// エネミーオブジェクトの破棄
 			(*itr)->getEnemyData()->isObjectExists = false;
-			destroyEnemy((*itr));
+			destroyEnemy(*itr);
 			itr = enemyList.erase(itr);
+
+			// 動的作成イベントで作ったエネミーのみエネミーデータも破棄する（エネミーの破棄後）
 			if (destroyTargetEnemyData != -1)
-			{// 動的作成イベントで作ったエネミーのみエネミーデータも破棄する
+			{
 				destroyEnemyData(destroyTargetEnemyData);
 			}
 		}
 		else
-		{// イテレータを進める
+		{
 			itr++;
 		}
 	}
 
-	wolfRenderer->update();
-	tigerRenderer->update();
-	bearRenderer->update();
+	//wolfRenderer->update();
+	//tigerRenderer->update();
+	//bearRenderer->update();
+
+	wolfBodyRenderer->update();
+	wolfArmRenderer->update();
+	tigerBodyRenderer->update();
+	tigerGunRenderer->update();
+	tigerLegLRenderer->update();
+	tigerLegRRenderer->update();
+	bearBodyRenderer->update();
+	bearArmLRenderer->update();
+	bearArmRRenderer->update();
+	bearWaistRenderer->update();
+	bearLegLRenderer->update();
+	bearLegRRenderer->update();
+
+	markRenderer->update(frameTime);
+	tigerBulletRenderer->update();
 }
 
 
@@ -170,9 +255,25 @@ void EnemyManager::update(float frameTime)
 //=============================================================================
 void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	wolfRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	tigerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	bearRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	//wolfRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	//tigerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	//bearRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+
+	wolfBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	wolfArmRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tigerBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tigerGunRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tigerLegLRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tigerLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bearBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bearArmLRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bearArmRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bearWaistRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bearLegLRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	bearLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+
+	markRenderer->render(view, projection, cameraPosition);
+	tigerBulletRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 #ifdef _DEBUG
 
@@ -228,8 +329,6 @@ enemyNS::EnemyData* EnemyManager::createEnemyData(enemyNS::ENEMYSET enemySetting
 //=============================================================================
 void EnemyManager::createEnemy(EnemyData* enemyData)
 {
-	Enemy* enemy = NULL;
-
 	enemyNS::ConstructionPackage constructionPackage;
 	constructionPackage.enemyData = enemyData;
 	constructionPackage.gameMaster = gameMaster;
@@ -238,28 +337,69 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	constructionPackage.attractorMatrix = attractorMatrix;
 	constructionPackage.enemyData->isObjectExists = true;
 
+	Wolf* wolf = NULL;
+	Tiger* tiger = NULL;
+	Bear* bear = NULL;
+
 	switch (enemyData->type)
 	{
 	case WOLF:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::WOLF);
-		enemy = new Wolf(constructionPackage);
-		wolfRenderer->registerObject(enemy);
+		wolf = new Wolf(constructionPackage);
+		//wolfRenderer->registerObject(wolf);
+		//wolfRenderer->updateAccessList();
+		// 描画登録
+		wolfBodyRenderer->registerObject(wolf->getParts(wolfNS::BODY));
+		wolfArmRenderer->registerObject(wolf->getParts(wolfNS::ARM));
+		// 描画リスト更新
+		wolfBodyRenderer->updateAccessList();
+		wolfArmRenderer->updateAccessList();
+
+		enemyList.emplace_back(wolf);
 		break;
 
 	case TIGER:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::TIGER);
-		enemy = new Tiger(constructionPackage);
-		tigerRenderer->registerObject(enemy);
+		tiger = new Tiger(constructionPackage);
+		// 描画登録
+		//tigerRenderer->registerObject(tiger);
+		//tigerRenderer->updateAccessList();
+		tigerBodyRenderer->registerObject(tiger->getParts(tigerNS::BODY));
+		tigerGunRenderer->registerObject(tiger->getParts(tigerNS::GUN));
+		tigerLegLRenderer->registerObject(tiger->getParts(tigerNS::LEG_L));
+		tigerLegRRenderer->registerObject(tiger->getParts(tigerNS::LEG_R));
+		// 描画リスト更新
+		tigerBodyRenderer->updateAccessList();
+		tigerGunRenderer->updateAccessList();
+		tigerLegLRenderer->updateAccessList();
+		tigerLegRRenderer->updateAccessList();
+
+		enemyList.emplace_back(tiger);
 		break;
 
 	case BEAR:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::BEAR);
-		enemy = new Bear(constructionPackage);
-		bearRenderer->registerObject(enemy);
+		bear = new Bear(constructionPackage);
+		//bearRenderer->registerObject(bear);
+		//bearRenderer->updateAccessList();
+		// 描画登録
+		bearBodyRenderer->registerObject(bear->getParts(bearNS::BODY));
+		bearArmLRenderer->registerObject(bear->getParts(bearNS::ARM_L));
+		bearArmRRenderer->registerObject(bear->getParts(bearNS::ARM_R));
+		bearWaistRenderer->registerObject(bear->getParts(bearNS::WAIST));
+		bearLegLRenderer->registerObject(bear->getParts(bearNS::LEG_L));
+		bearLegRRenderer->registerObject(bear->getParts(bearNS::LEG_R));
+		// 描画リスト更新
+		bearBodyRenderer->updateAccessList();
+		bearArmLRenderer->updateAccessList();
+		bearArmRRenderer->updateAccessList();
+		bearWaistRenderer->updateAccessList();
+		bearLegLRenderer->updateAccessList();
+		bearLegRRenderer->updateAccessList();
+
+		enemyList.emplace_back(bear);
 		break;
 	}
-
-	enemyList.emplace_back(enemy);
 }
 
 
@@ -322,19 +462,58 @@ void EnemyManager::destroyEnemy(int _enemyID)
 //=============================================================================
 void EnemyManager::destroyEnemy(Enemy* enemy)
 {
-	// 描画の解除
+	Wolf* wolf = NULL;
+	Tiger* tiger = NULL;
+	Bear* bear = NULL;
+
 	switch (enemy->getEnemyData()->type)
 	{
 	case WOLF:
-		wolfRenderer->unRegisterObjectByID(enemy->id);
+		wolf = (Wolf*)enemy;
+		//wolfRenderer->updateAccessList();
+		//wolfRenderer->unRegisterObjectByID(enemy->id);
+		// 描画解除
+		wolfBodyRenderer->unRegisterObjectByID(wolf->getParts(wolfNS::BODY)->id);
+		wolfArmRenderer->unRegisterObjectByID(wolf->getParts(wolfNS::ARM)->id);
+		// 描画リスト更新
+		wolfBodyRenderer->updateAccessList();
+		wolfArmRenderer->updateAccessList();
 		break;
 
 	case TIGER:
-		tigerRenderer->unRegisterObjectByID(enemy->id);
+		tiger = (Tiger*)enemy;
+		//tigerRenderer->updateAccessList();
+		//tigerRenderer->unRegisterObjectByID(tiger->id);
+		// 描画解除
+		tigerBodyRenderer->unRegisterObjectByID(tiger->getParts(tigerNS::BODY)->id);
+		tigerGunRenderer->unRegisterObjectByID(tiger->getParts(tigerNS::GUN)->id);
+		tigerLegLRenderer->unRegisterObjectByID(tiger->getParts(tigerNS::LEG_L)->id);
+		tigerLegRRenderer->unRegisterObjectByID(tiger->getParts(tigerNS::LEG_R)->id);
+		// 描画リスト更新
+		tigerBodyRenderer->updateAccessList();
+		tigerGunRenderer->updateAccessList();
+		tigerLegLRenderer->updateAccessList();
+		tigerLegRRenderer->updateAccessList();
 		break;
 
 	case BEAR:
-		bearRenderer->unRegisterObjectByID(enemy->id);
+		bear = (Bear*)enemy;
+		//bearRenderer->updateAccessList();
+		//bearRenderer->unRegisterObjectByID(enemy->id);
+		// 描画解除
+		bearBodyRenderer->unRegisterObjectByID(bear->getParts(bearNS::BODY)->id);
+		bearArmLRenderer->unRegisterObjectByID(bear->getParts(bearNS::ARM_L)->id);
+		bearArmRRenderer->unRegisterObjectByID(bear->getParts(bearNS::ARM_R)->id);
+		bearWaistRenderer->unRegisterObjectByID(bear->getParts(bearNS::WAIST)->id);
+		bearLegLRenderer->unRegisterObjectByID(bear->getParts(bearNS::LEG_L)->id);
+		bearLegRRenderer->unRegisterObjectByID(bear->getParts(bearNS::LEG_R)->id);
+		// 描画リスト更新
+		bearBodyRenderer->updateAccessList();
+		bearArmLRenderer->updateAccessList();
+		bearArmRRenderer->updateAccessList();
+		bearWaistRenderer->updateAccessList();
+		bearLegLRenderer->updateAccessList();
+		bearLegRRenderer->updateAccessList();
 		break;
 	}
 	enemy->treeCell.remove();					// 衝突判定リストから削除
@@ -348,9 +527,24 @@ void EnemyManager::destroyEnemy(Enemy* enemy)
 void EnemyManager::destroyAllEnemy()
 {
 	// 描画全解除
-	wolfRenderer->allUnRegister();
-	tigerRenderer->allUnRegister();
-	bearRenderer->allUnRegister();
+	//wolfRenderer->allUnRegister();
+	//tigerRenderer->allUnRegister();
+	//bearRenderer->allUnRegister();
+
+	wolfBodyRenderer->allUnRegister();
+	wolfArmRenderer->allUnRegister();
+
+	tigerBodyRenderer->allUnRegister();
+	tigerGunRenderer->allUnRegister();
+	tigerLegLRenderer->allUnRegister();
+	tigerLegRRenderer->allUnRegister();
+
+	bearBodyRenderer->allUnRegister();
+	bearArmLRenderer->allUnRegister();
+	bearArmRRenderer->allUnRegister();
+	bearWaistRenderer->allUnRegister();
+	bearLegLRenderer->allUnRegister();
+	bearLegRRenderer->allUnRegister();
 
 	for (size_t i = 0; i < enemyList.size(); i++)
 	{
@@ -417,6 +611,8 @@ Enemy* EnemyManager::findEnemy(int _enemyID)
 			return enemyList[i];
 		}
 	}
+
+	return NULL;
 }
 
 
@@ -451,6 +647,9 @@ void EnemyManager::outputGUI()
 		ImGui::Text("enemyList.size()     :%d\n", enemyList.size());
 		ImGui::Text("numOfEnemy           :%d\n", Enemy::getNumOfEnemy());
 		ImGui::Text("nextID	:%d\n", nextID);
+		//ImGui::Text("wolfRenderer.objectNum:%d\n", wolfRenderer->objectNum);
+		//ImGui::Text("tigerRenderer.objectNum:%d\n", tigerRenderer->objectNum);
+		//ImGui::Text("bearRenderer.objectNum:%d\n", bearRenderer->objectNum);
 
 		// ボタン
 		ImGui::Checkbox("Create Enemy", &createFlag);
@@ -463,7 +662,15 @@ void EnemyManager::outputGUI()
 		{
 			if (enemyList[i]->getEnemyID() == Enemy::debugEnemyID)
 			{
-				//ImGui::Text("horizontalAngle:%f\n", enemyList[i]->horizontalAngle);
+				ImGui::Text("state:%d\n", enemyList[i]->getEnemyData()->state);
+				ImGui::Text("[U]faceNumber:%d\n", enemyList[i]->faceNumber);
+
+				if (enemyList[i]->edgeList == NULL) { continue; }
+				for (int cnt = 0; cnt < enemyList[i]->edgeList->nodeNum; cnt++)
+				{
+					ImGui::Text("index(%d, %d)\n", enemyList[i]->edgeList->getValue(cnt)->index[0],
+						enemyList[i]->edgeList->getValue(cnt)->index[1]);
+				}	
 			}
 		}
 	}
@@ -483,23 +690,22 @@ void EnemyManager::outputGUI()
 		createEnemy(p);
 	}
 
+	static D3DXQUATERNION playerRelativeQuaternion;	// プレイヤー注視カメラの相対位置ベクトル
 	if (createDebugEnemy)
 	{
 		if (getEnemyList().empty() == false)
 		{
 			Enemy* debugEnemy = getEnemyList().back();
 			debugEnemy->debugEnemyID = debugEnemy->getEnemyID();
-			camera->setTarget(debugEnemy->getPosition());
+			camera->setTarget(&debugEnemy->center);
 			camera->setTargetX(&debugEnemy->getAxisX()->direction);
 			camera->setTargetY(&debugEnemy->getAxisY()->direction);
 			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
-			camera->setRelative(D3DXQUATERNION(0.0f, 6.0f, -4.5f, 0.0f));
-			debugEnemy->setDebugEnvironment();
+			playerRelativeQuaternion = camera->relativeQuaternion;
+			camera->setRelative(D3DXQUATERNION(0.0f, 30.0f, -10.5f, 0.0f));
 			debugEnemy->setCamera(&camera[0]);
 			debugEnemy->setDebugEnvironment();
 		}
-
-		
 	}
 
 	if (returnPlayer)
@@ -508,7 +714,7 @@ void EnemyManager::outputGUI()
 		camera->setTargetX(&player->getAxisX()->direction);
 		camera->setTargetY(&player->getAxisY()->direction);
 		camera->setTargetZ(&player->getAxisZ()->direction);
-		//camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -1.5f, 0.0f));
+		camera->setRelative(playerRelativeQuaternion = camera->relativeQuaternion);
 	}
 
 	if (destroyAllFlag)

@@ -18,6 +18,7 @@
 #include "Game.h"
 #include "Result.h"
 #include "Credit.h"
+#include "Display.h"
 #include "Finale.h"
 #include "SE.h"
 #include "LinearTreeCell.h"
@@ -145,7 +146,14 @@ HRESULT Director::initialize() {
 	//animationLoader->initialize(d3d->device);
 
 	//scene
-	scene = new Splash();
+	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO| MB_TOPMOST) == IDYES)
+	{
+		scene = new Splash();
+	}
+	else {
+		scene = new Display();
+	}
+
 	scene->setGameMaster(gameMaster);
 	scene->initialize();
 

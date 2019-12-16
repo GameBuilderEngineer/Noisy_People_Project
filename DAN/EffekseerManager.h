@@ -77,6 +77,8 @@ namespace effekseerNS
 		GREENING,
 		DIGIT_MODE,
 		DROP_ITEM,
+		ENEMY_DEATH,
+		WIND,
 		MAX_EFFEKSEER,
 	};
 

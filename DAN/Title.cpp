@@ -165,6 +165,9 @@ void Title::update(float _frameTime)
 
 	if (frameTime > 10.0f / 60.0f)return;
 
+	//スカイフィールドの更新
+	sky->update();
+
 	//エフェクト（インスタンシング）テスト
 	testEffect->update(frameTime);
 	
@@ -172,8 +175,6 @@ void Title::update(float _frameTime)
 	titleField->update();	//オブジェクト
 	titleFieldRenderer->update();
 
-	//スカイフィールドの更新
-	sky->update();
 
 	target->update();
 
@@ -565,7 +566,11 @@ void Title::update(float _frameTime)
 		camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
 	}
 
-	
+	if (input->wasKeyPressed('P'))
+	{
+		getFader()->setShader(faderNS::NORMAL);
+		getFader()->start();
+	}
 
 	//カメラ
 	camera->update();
@@ -617,7 +622,7 @@ void Title::render()
 	effekseerNS::render(0);
 
 	// 3D
-	render3D(*camera);
+	render3D(camera);
 
 	// 2D
 	render2D();
@@ -627,17 +632,17 @@ void Title::render()
 //============================================================================================================================================
 //【3D描画】
 //============================================================================================================================================
-void Title::render3D(Camera _currentCamera)
+void Title::render3D(Camera* _currentCamera)
 {
 
 	//エフェクト（インスタンシング）テスト
-	testEffect->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	//testEffect->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
 	
 	//タイトルフィールド（テスト）
-	titleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	titleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
 	//スカイフィールドの描画
-	sky->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	sky->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
 	// タイトルプレイヤー描画
 	//player[0].toonRender
@@ -657,13 +662,13 @@ void Title::render3D(Camera _currentCamera)
 //============================================================================================================================================
 void Title::render2D()
 {
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
-	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 
-	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	// タイトルUI
 	titleUI.render();

@@ -24,28 +24,10 @@ namespace mapObjectNS
 		MAPOBJECT_MAX
 	};
 
-	// 衝突判定を取るオブジェクトか設定
-	const bool CAN_COLLISION[MAPOBJECT_MAX] =
-	{
-		true,										// STONE_01
-	};
-
-	// 衝突判定オブジェクトタイプ
-	const int OBJECT_TYPE[MAPOBJECT_MAX] =
-	{
-		ObjectType::STONE,							// STONE_01
-	};
-
-	// 衝突判定ターゲット
-	const int COLLISION_TARGET[MAPOBJECT_MAX] =
-	{
-		ObjectType::PLAYER | ObjectType::ENEMY,		// STONE_01
-	};
-
 	// サイズ
 	const D3DXVECTOR3 SETTING_SIZE[MAPOBJECT_MAX] =
 	{
-		D3DXVECTOR3(1.7f, 1.0f, 1.7f),				// STONE_01
+		D3DXVECTOR3(1.7f, 1.0f, 1.7f),	// STONE_01
 	};
 
 	typedef struct MapObjectData
@@ -66,6 +48,7 @@ class MapObject: public Object
 {
 private:
 	mapObjectNS::MapObjectData mapObjectData;	// マップオブジェクトデータ
+	StaticMesh*	staticMesh;						// メッシュ情報
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
 
@@ -73,15 +56,16 @@ private:
 	static int numOfMapObject;					// アイテムオブジェクトの総数
 
 public:
-	MapObject(StaticMesh* _staticMesh, mapObjectNS::MapObjectData _itemData);
+	MapObject(StaticMesh* _staticMesh, mapObjectNS::MapObjectData _mapObjData);
 	~MapObject();
+	// 更新
 	virtual void update(float frameTime);
+	// 重力発生メッシュの設定
 	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
-
 	// Getter
 	static int getNumOfMapObject();					// マップオブジェクトの数を取得
 	mapObjectNS::MapObjectData* getMapObjectData();	// マップオブジェクトデータを取得
-
+	StaticMesh* getStaticMesh();					// メッシュ情報を取得
 	// Setter
 	void setDataToMapObject(mapObjectNS::MapObjectData _itemData);
 };

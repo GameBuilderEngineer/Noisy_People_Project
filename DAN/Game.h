@@ -35,17 +35,18 @@
 #include "Ocean.h"
 #include "FixedUI.h"
 #include "Advertisement.h"
-
 #include "Sound.h"
 #include "SoundBase.h"
 #include "LinearTreeCell.h"
 #include "movep.h"
+#include "movep1.h"
 
 #include "TelopManager.h"
 #include "Player1UI.h"
 #include "Player2UI.h"
 //#include "Text.h"
-
+#include "networkClient.h"
+#include "CountUI.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -113,10 +114,20 @@ private:
 	FixedUI*						fixedUI;			//固定されたUI
 	Player1UI*						player1UI;			//プレイヤー周りのUI
 	Player2UI*						player2UI;			//プレイヤー２周りのUI
+	CountUI*						countUI;			//カウントUI
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
+
+	//Network
+	NETWORK_CLIENT*					networkClient;
 	
+	
+	//オープニングカメラ
+	Camera* cameraOP;
+
+	int count;
+
 public:
 	Game();
 	~Game();
@@ -127,7 +138,7 @@ public:
 	virtual void AI() override;
 	virtual void uninitialize() override;
 
-	void render3D(Camera currentCamera);
+	void render3D(Camera* currentCamera);
 	void renderUI();
 	void test();
 	//void tree4Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理

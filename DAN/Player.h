@@ -151,9 +151,10 @@ namespace playerNS{
 	const float MOVE_ACC_WHEN_NOT_GROUND	= MOVE_ACC / 8.5f;						//空中移動加速度
 	const float STOP_SPEED					= 0.5f;									//移動停止速度
 	const float MAX_SPEED					= 6.0f;									//移動停止速度
-	const float MAX_SLIP					= 10.0f;								//移動停止速度
+	const float MAX_SLIP					= 8.0f;									//移動停止速度
+	const float MAX_SLOPE					= cosf(D3DXToRadian(60.0f));			//登れる傾斜角度
 	const float FALL_SPEED_MAX				= 60.0f;								//落下最高速度
-	const float MOVE_FRICTION				= 1.0f;									//地面摩擦係数
+	const float MOVE_FRICTION				= 1.3f;									//地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									//壁ずり摩擦係数
 	const float GROUND_FRICTION				= 0.25;									//着地摩擦係数
 	const float GRAVITY_FORCE				= 9.8f;									//重力
@@ -256,6 +257,7 @@ private:
 	BoundingSphere				bodyCollide;					//球コリジョン
 	float						difference;						//フィールド補正差分
 	bool						onGround;						//接地判定
+	float						groundDistance;					//地面との距離
 	bool						onGroundBefore;					//直前フレームの接地判定
 	D3DXVECTOR3					groundNormal;					//接地面法線
 
@@ -365,7 +367,6 @@ public:
 	void collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix);	//シフトレイとの衝突
 	void collideShiftRay(D3DXVECTOR3 position);					//シフトレイとの衝突
 	bool collideShiftRay(Cylinder target);						//シフトレイとの衝突
-	void stopSelectLight();
 	void playSelectLight();
 	void shownSelectLight(bool shown);
 
@@ -406,9 +407,8 @@ public:
 	Bullet*			getBullet(int i);							//発射中の弾へのポインタ
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
-	bool			getWhetherExecutingMoveOpe();							//移動操作中か取得
+	bool			getWhetherExecutingMoveOpe();				//移動操作中か取得
 	BulletManager*  getBulletManager();							//バレットマネージャを取得
-	bool			getOnGround();											//接地しているか取得
-	D3DXVECTOR3*	getGroundNormal();								//接地面法線を取得
-
+	bool			getOnGround();								//接地しているか取得
+	D3DXVECTOR3*	getGroundNormal();							//接地面法線を取得
 };

@@ -7,6 +7,7 @@
 
 #include "ActionEventSeting.h"
 #include "movep.h"
+#include "movep1.h"
 
 
 
@@ -54,9 +55,21 @@ HRESULT SetupCallbackKeys(KEYDATA *Keydata, LPCSTR SetName, int CallbacksNum, co
 
 	//Sample of SetupCallbackKeys
 	MOVEP *MoveP = GetMovePAdr();
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
+
 	if (strcmp(Owner, "MoveP") == 0)
 	{
 		Animation = MoveP->Animation;
+		if (FAILED(Animation->AnimController->GetAnimationSetByName(SetName, (ID3DXAnimationSet**)&AnimSetTemp)))
+		{
+			sprintf(Message, "Setup Callbacks in %s AnimationSet Failed！", SetName);
+			goto FunctionExit;
+
+		}
+	}
+	else if (strcmp(Owner, "MoveP1") == 0)
+	{
+		Animation = MoveP1->Animation;
 		if (FAILED(Animation->AnimController->GetAnimationSetByName(SetName, (ID3DXAnimationSet**)&AnimSetTemp)))
 		{
 			sprintf(Message, "Setup Callbacks in %s AnimationSet Failed！", SetName);
@@ -142,6 +155,7 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 
 	//eventの設置
 	MOVEP *MoveP = GetMovePAdr();
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
 	switch (KeyType)
 	{
 	case MovePAttackStart:
@@ -158,12 +172,14 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 		MoveP->AttackMove2 = false;
 		AnimPointer->MotionEnd = true;
 		break;
+	case MovePMoveVoice:
+		//ここ歩く音を入れる
+
+		break;
 	case MovePJumpFireStart:
 		break;
 	case MovePJumpFireEnd:
-		MoveP->IsJump = false;
-		MoveP->IsFireJump = false;
-		AnimPointer->MotionEnd = true;
+		MoveP->IsJumpEnd = true;
 		break;
 	case MovePDeath:
 		MoveP->IsDeath = true;
@@ -174,6 +190,36 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 	case MovePIsDamageEnd:
 		MoveP->IsNoDefendDamage = false;
 		break;
+
+	case MoveP1AttackStart:
+		MoveP1->IsAttack = true;
+		MoveP1->AttackMove = true;
+		break;
+	case MoveP1AttackEnd:
+		//安全のため全部を閉める
+		MoveP1->IsAttack = false;
+		MoveP1->IsAttack1 = false;
+		MoveP1->IsAttack2 = false;
+		MoveP1->AttackMove = false;
+		MoveP1->AttackMove1 = false;
+		MoveP1->AttackMove2 = false;
+		AnimPointer->MotionEnd = true;
+		break;
+	case MoveP1JumpFireStart:
+		break;
+	case MoveP1JumpFireEnd:
+		MoveP1->IsJumpEnd = true;
+		break;
+	case MoveP1Death:
+		MoveP1->IsDeath = true;
+		break;
+	case MoveP1IsDamage:
+		MoveP1->IsNoDefendDamage = true;
+		break;
+	case MoveP1IsDamageEnd:
+		MoveP1->IsNoDefendDamage = false;
+		break;
+
 	case MotionEnd:
 		AnimPointer->MotionEnd = true;
 		break;

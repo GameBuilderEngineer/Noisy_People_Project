@@ -150,13 +150,24 @@
     <ClInclude Include="AnalogTree.h" />
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="BearAnimation.h" />
     <ClInclude Include="CharaIcon.h" />
+    <ClInclude Include="CountUI.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="Defeat_Chara.h" />
     <ClInclude Include="Defeat_Moji.h" />
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
+    <ClInclude Include="EnemyChaseMark.h" />
+    <ClInclude Include="PartsAnimation.h" />
+    <ClInclude Include="PartsAnimationManager.h" />
+    <ClInclude Include="TigerAnimation.h" />
+    <ClInclude Include="TigerBullet.h" />
+    <ClInclude Include="Display.h" />
+    <ClInclude Include="networkServer.h" />
+    <ClInclude Include="SaiDelayReverb.h" />
+    <ClInclude Include="SaiFadeIn.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
@@ -174,7 +185,8 @@
     <ClInclude Include="HPguage.h" />
     <ClInclude Include="HPguageEmp.h" />
     <ClInclude Include="HPguageP2.h" />
-    <ClInclude Include="network.h" />
+    <ClInclude Include="networkClient.h" />
+    <ClInclude Include="movep1.h" />
     <ClInclude Include="Player1UI.h" />
     <ClInclude Include="Player2UI.h" />
     <ClInclude Include="NormalState.h" />
@@ -300,6 +312,7 @@
     <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Wolf.h" />
+    <ClInclude Include="WolfAnimation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DSound.cpp" />
@@ -312,13 +325,24 @@
     <ClCompile Include="AnalogTree.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="BearAnimation.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
+    <ClCompile Include="CountUI.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="Defeat_Chara.cpp" />
     <ClCompile Include="Defeat_Moji.cpp" />
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
+    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="EnemyChaseMark.cpp" />
+    <ClCompile Include="PartsAnimation.cpp" />
+    <ClCompile Include="PartsAnimationManager.cpp" />
+    <ClCompile Include="TigerAnimation.cpp" />
+    <ClCompile Include="TigerBullet.cpp" />
+    <ClCompile Include="networkServer.cpp" />
+    <ClCompile Include="SaiDelayReverb.cpp" />
+    <ClCompile Include="SaiFadeIn.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
@@ -336,7 +360,8 @@
     <ClCompile Include="HPguage.cpp" />
     <ClCompile Include="HPguageEmp.cpp" />
     <ClCompile Include="HPguageP2.cpp" />
-    <ClCompile Include="network.cpp" />
+    <ClCompile Include="networkClient.cpp" />
+    <ClCompile Include="movep1.cpp" />
     <ClCompile Include="Player1UI.cpp" />
     <ClCompile Include="Player2UI.cpp" />
     <ClCompile Include="NormalState.cpp" />
@@ -455,6 +480,7 @@
     <ClCompile Include="Wind.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Wolf.cpp" />
+    <ClCompile Include="WolfAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico" />
@@ -468,6 +494,7 @@
     <Text Include="01 Data File\DumpRecuasionArea.txt" />
     <Text Include="01 Data File\memo.txt" />
     <Text Include="01 Data File\wasuremonoPosCheck.txt" />
+    <Text Include="08 Network File\PCName.txt" />
     <Text Include="Readme\Readme.txt" />
     <Text Include="Readme\コーディング規約.txt" />
   </ItemGroup>

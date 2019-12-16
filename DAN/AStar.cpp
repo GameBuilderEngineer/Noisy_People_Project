@@ -69,18 +69,22 @@ LinkedList<meshDataNS::Index2>* AStar::pathSearch(
 		for (int i = 0; i < 3; i++)
 		{
 			DWORD adjacentIndex = meshData->getFaceArray()[work->faceIndex].adjacency[i];
-			if (adjacentIndex == -1){ continue; }								// 隣接面がない
+			if (adjacentIndex == (DWORD)-1){ continue; }						// 隣接面がない
 			if (searchNodeByFaceIndex(adjacentIndex) != NULL) { continue; }		// リストに既出
+			//（いままできた面を省いてもいる）
 
 			// 新しいノードをリストに追加
 			AStarNode data;
 			data.faceIndex = adjacentIndex;
 			data.status = OPEN;
-			float len;
-			culcDistanceToEdge(&len, &data.pos, work->pos, work->faceIndex, adjacentIndex);
-			data.cost = work->cost + len;
+			//------------------------------------------------------------------------------
+			// ここが経路選択に関わる
+			float tempDistance = 0.0f;
+			culcDistanceToEdge(&tempDistance, &data.pos, work->pos, work->faceIndex, adjacentIndex);
+			data.cost = 0;// work->cost + tempDistance;
 			data.heuristic = D3DXVec3Length(&(destPos - data.pos));
-			data.score = data.cost + data.score;
+			data.score = data.cost + data.heuristic;
+			//------------------------------------------------------------------------------
 			data.edge = meshData->getSharingVertexIndexFromTwoFace(work->faceIndex, data.faceIndex);
 			addAStarNode(work, data);
 		}
@@ -258,7 +262,10 @@ float AStar::culcDistanceToEdge(float* outLen, D3DXVECTOR3* outPos, D3DXVECTOR3 
 {
 	// 共有している頂点インデックスを取得
 	Index2 sharing = meshData->getSharingVertexIndexFromTwoFace(faceInd1, faceInd2);
-	if (sharing.index[0] == -1 || sharing.index[1] == -1) return -1;// 面が接していない
+	if (sharing.index[0] == (WORD)-1 || sharing.index[1] == (WORD)-1)
+	{
+		return -1;// 面が接していない
+	}
 
 	// インデックスの頂点座標を取得
 	D3DXVECTOR3* pos1 = (D3DXVECTOR3*)vtxAccessor->getPointer(vtxAccess::POSITION,
@@ -272,9 +279,19 @@ float AStar::culcDistanceToEdge(float* outLen, D3DXVECTOR3* outPos, D3DXVECTOR3 
 
 	// 交点までの距離を求める
 	float ans;
-	if (nearestPoint == *pos1)		ans = D3DXVec3Length(&(*pos1 - inPos));
-	else if(nearestPoint == *pos2)	ans = D3DXVec3Length(&(*pos2 - inPos));
-	else							ans = D3DXVec3Length(&(nearestPoint - inPos));
+	if (nearestPoint == *pos1)
+	{
+		ans = D3DXVec3Length(&(*pos1 - inPos));
+	}
+	else if (nearestPoint == *pos2)
+	{
+		ans = D3DXVec3Length(&(*pos2 - inPos));
+	}
+	else
+	{
+		ans = D3DXVec3Length(&(nearestPoint - inPos));
+	}
+
 	if(outLen != NULL) *outLen = ans;
 	return ans;
 }

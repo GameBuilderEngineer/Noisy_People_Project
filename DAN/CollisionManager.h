@@ -17,6 +17,7 @@
 #include "Enemy.h"
 #include "Tree.h"
 #include "GreeningArea.h"
+#include "MapObject.h"
 
 //===================================================================================================================================
 //ÅyñºëOãÛä‘Åz
@@ -56,6 +57,7 @@ public:
 	static bool playerAndBullet(Player* player, Bullet* bullet);		//PLAYER<->BULLET
 	static bool playerAndEnemy(Player* player, Enemy* enemy);			//PLAYER<->ENEMY
 	static bool playerAndTree(Player* player, Tree* enemy);				//PLAYER<->TREE
+	static bool playerAndMapObject(Player* player, MapObject* mapObject);//PLAYER<->MAPOBJECT
 	
 	//BULLET
 	static bool bulletAndBullet(Bullet* bullet1, Bullet* bullet2);		//BULLET<->BULLET

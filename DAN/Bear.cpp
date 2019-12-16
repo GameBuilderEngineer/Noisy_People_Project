@@ -4,8 +4,11 @@
 // 作成開始日 : 2019/10/21
 //-----------------------------------------------------------------------------
 #include "Bear.h"
+#include "EnemyManager.h"
+#include "BearAnimation.h"
 using namespace enemyNS;
 using namespace stateMachineNS;
+using namespace bearNS;
 
 
 //=============================================================================
@@ -14,11 +17,20 @@ using namespace stateMachineNS;
 Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 {
 	// サイズを設定後にオブジェクト⇒姿勢制御の順で初期化
-	scale *= 6.0f;
-	setSize(D3DXVECTOR3(1.0f, 2.7f, 1.0f) * 6.0f);
+	setSize(D3DXVECTOR3(1.0f, 2.7f, 1.0f) * 14.0f);
 	Object::initialize(&position);
 	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
+
+	// パーツの作成
+	for (int i = 0; i < PARTS_MAX; i++)
+	{
+		parts[i] = new Object;
+		parts[i]->position = PARTS_OFFSET_POS[i];
+	}
+
+	// アニメーションマネージャを初期化
+	animationManager = new BearAnimationManager(PARTS_MAX, this, &parts[0]);
 }
 
 
@@ -45,6 +57,9 @@ void Bear::update(float frameTime)
 	case DIE:    die(frameTime);    break;
 	}
 	Enemy::postprocess(frameTime);
+
+	// パーツアニメーションの更新
+	animationManager->update(frameTime);
 }
 
 
@@ -101,6 +116,23 @@ void Bear::attackTree(float frameTime)
 //=============================================================================
 void::Bear::die(float frameTime)
 {
+	if (cntTimeDie > DIE_STATE_RENDERING_TIME)
+	{
+		// 描画解除
+		EnemyManager::bearBodyRenderer->unRegisterObjectByID(id);
+		EnemyManager::bearArmLRenderer->unRegisterObjectByID(id);
+		EnemyManager::bearArmRRenderer->unRegisterObjectByID(id);
+		EnemyManager::bearWaistRenderer->unRegisterObjectByID(id);
+		EnemyManager::bearLegLRenderer->unRegisterObjectByID(id);
+		EnemyManager::bearLegRRenderer->unRegisterObjectByID(id);
+		// 描画リスト更新
+		EnemyManager::bearBodyRenderer->updateAccessList();
+		EnemyManager::bearArmLRenderer->updateAccessList();
+		EnemyManager::bearArmRRenderer->updateAccessList();
+		EnemyManager::bearWaistRenderer->updateAccessList();
+		EnemyManager::bearLegLRenderer->updateAccessList();
+		EnemyManager::bearLegRRenderer->updateAccessList();
+	}
 	Enemy::die(frameTime);
 }
 
@@ -108,7 +140,10 @@ void::Bear::die(float frameTime)
 //=============================================================================
 // Getter
 //=============================================================================
-
+Object* Bear::getParts(int type)
+{
+	return parts[type];
+}
 
 //=============================================================================
 // Setter

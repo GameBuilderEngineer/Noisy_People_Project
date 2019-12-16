@@ -134,6 +134,7 @@ void TreeManager::update(float frameTime)
 			in.rotation		= tree->quaternion;
 			in.scale		= tree->scale;
 			in.modelType	= data->model;
+			in.playBacked	= false;
 
 			//あとで場合分け
 			in.player		= gameMasterNS::PLAYER_2P;
@@ -143,8 +144,13 @@ void TreeManager::update(float frameTime)
 			in.eventType	= gameMasterNS::TO_DEAD;
 			in.eventType	= gameMasterNS::TO_GREEN_WITH_DIGITAL;
 			in.eventType	= gameMasterNS::TO_GREEN_WITH_ANALOG;
+
 			//ゲームマスターへ記録
-			if(gameMaster)gameMaster->recordTreeTable(in);
+			if (gameMaster)
+			{
+				NETWORK_CLIENT::setSendTreeTable(in);
+				gameMaster->recordTreeTable(in);
+			}
 
 		}
 
