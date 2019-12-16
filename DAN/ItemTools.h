@@ -13,6 +13,7 @@
 #include "StaticMeshRenderer.h"
 #include "Player.h"
 #include "Item.h"
+#include "Input.h"
 
 //===================================================================================================================================
 //【マクロ】
@@ -92,7 +93,7 @@ private:
 
 	//変数
 	ITEM_FILE itemFile;										//アイテム構造体
-
+	Input *input;
 	//アイテムファイル
 	void OutputItemFile(void);								//アイテムファイルの書き出し処理
 	void CreatNewItemFile(void);							//アイテムファイルの新規作成

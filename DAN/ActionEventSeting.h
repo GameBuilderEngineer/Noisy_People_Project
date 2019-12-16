@@ -28,6 +28,17 @@ enum CallbackKeyType
 	MovePDeath,
 	MovePIsDamage,
 	MovePIsDamageEnd,
+	MoveP1AttackStart,
+	MoveP1AttackEnd,
+	MoveP1JumpFireStart,
+	MoveP1JumpFireEnd,
+	MoveP1RollStart,
+	MoveP1RollEnd,
+	MoveP1Death,
+	MoveP1IsDamage,
+	MoveP1IsDamageEnd,
+	MovePMoveVoice,
+	MoveP1MoveVoice,
 	ResetTime,				// アニメーションのローカル時間をリセット 
 	MotionEnd,				// モーション終了
 };

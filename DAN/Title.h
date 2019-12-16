@@ -49,6 +49,7 @@ namespace titleNS
 	};
 
 	const float TITLE_CAMERA_SPEED = 1.0f;
+	//const D3DXVECTOR3 firstEndPoint()
 
 }
 
@@ -75,21 +76,32 @@ private:
 	int selectStateMemory;
 
 
-	int stateCamera;
+	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度
 	
 	float moveTime;				//終点までの時間
 	float moveTimer;			//移動タイマー
+	float moveTime2;				//終点までの時間
+	float moveTimer2;			//移動タイマー
+	float moveTime3;				//終点までの時間
+	float moveTimer3;			//移動タイマー
+	float moveTime4;				//終点までの時間
+	float moveTimer4;			//移動タイマー
 	D3DXVECTOR3 startPos;		//ラープ始点
 	
+	float rate;
 	float rateY;
 	float rateX;
 	float degreeY;
 	float degreeX;
 	float degreeTimer = 0.0f;
+	float degreeTime;
 
-	
+	//D3DXVECTOR3 P0_1;
+	//D3DXVECTOR3 P1_2;
+
+
 
 	//カメラの軸取得変数
 	D3DXVECTOR3 cameraAxisZ;
@@ -108,10 +120,12 @@ public:
 	virtual void update(float _frameTime) override;
 	void updateInput(void);
 	virtual void render() override;
-	void render3D(Camera _currentCamera);
+	void render3D(Camera* _currentCamera);
 	void render2D();
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
+
+	D3DXVECTOR3 BezierCurve(D3DXVECTOR3 startpoint, D3DXVECTOR3 curvepoint, D3DXVECTOR3 endpoint, float rate);
 
 	float tmpVolume = 0;
 #ifdef _DEBUG

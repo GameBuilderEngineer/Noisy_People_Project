@@ -64,6 +64,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
 	textureName[UI_MAIN_RETICLE] = { "Reticle_Target.png" };
 	textureName[UI_SUB_RETICLE] = { "Reticle.png" };
+	textureName[UI_RELOAD] = { "Reload.png" };
 	textureName[UI_MAIN_DIGITAL_RETICLE] = { "Digi_Reticle_Target.png" };
 	textureName[UI_SUB_DIGITAL_RETICLE] = { "Digi_Reticle.png" };
 	textureName[UI_TIMERFLAME] = { "Time_Frame.png" };
@@ -89,6 +90,9 @@ TextureLoader::TextureLoader()
 	textureName[UI_TREE_MARKER] = { "Dot.png" };
 	textureName[UI_TREE_SIGN] = { "Digit_Tree.png" };
 	textureName[UI_TIMER_NUMBER] = { "num_white.png" };
+	textureName[UI_TIME_UP] = { "TimeUP!.png" };
+	textureName[UI_COUNT_NUM] = { "num_count.png" };
+	textureName[UI_GAME_START] = { "Mission_Start.png" };
 	textureName[UI_CAHSE_MARK] = { "ChaseMark.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

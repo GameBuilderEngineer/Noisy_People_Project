@@ -26,7 +26,7 @@ Result::Result(void)
 	sceneName = ("Scene -Result-");
 
 	// 次のシーン( タイトル )
-	nextScene = SceneList::TITLE;
+	nextScene = SceneList::FINALE;
 
 }
 
@@ -228,7 +228,7 @@ void Result::render()
 	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
 
 	//UI
-	//renderUI();
+	renderUI();
 }
 
 //===================================================================================================================================

@@ -10,6 +10,10 @@
 #include "AbstractScene.h"
 #include "Player.h"
 
+
+//仮
+const D3DXVECTOR3 tunnalPos = D3DXVECTOR3(0, 0, 0);
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -52,6 +56,8 @@ S3DManager::S3DManager()
 	float p2Matrix[] = { 0.0f,0.0f,1.0f,1.0f };
 	MidpointVoice[playerNS::PLAYER1]->SetOutputMatrix(EndpointVoice, ENDPOINT_INPUT_CHANNEL, ENDPOINT_INPUT_CHANNEL, p1Matrix);
 	MidpointVoice[playerNS::PLAYER2]->SetOutputMatrix(EndpointVoice, ENDPOINT_INPUT_CHANNEL, ENDPOINT_INPUT_CHANNEL, p2Matrix);
+
+	this->loadBuffer();
 #endif
 }
 
@@ -112,7 +118,7 @@ void S3DManager::outputGUI(void)
 				ImGui::Text("Voice ID:%d", tmpSoundParameters->playParameters.voiceID);
 
 				//名
-				ImGui::Text("%s", S3D_PATH_LIST_TAIL(tutorial, [tmpSoundParameters->playParameters.soundId]));
+				ImGui::Text("%s", S3D_PATH_LIST_TAIL(tmpSoundParameters->playParameters.soundId));
 
 				//音量
 				ImGui::Text("volume:%f", volume);
@@ -152,42 +158,6 @@ void S3DManager::outputGUI(void)
 #endif
 }
 #endif
-
-////===================================================================================================================================
-////【ステージ遷移に合わせて必要なサウンドバッファを用意する】
-////===================================================================================================================================
-//void S3DManager::SwitchAudioBuffer(int scene)
-//{
-//#if(XADUIO2_STATE)
-//	//サウンドディレクトリに設定する
-//	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_S3D);
-//
-//	//解放処理
-//	for (int i = 0; i < S3DManager::bufferMax; i++)
-//	{
-//		SAFE_DELETE_ARRAY(S3DManager::bufferList[i].wavFile.data.waveData);
-//	}
-//	SAFE_DELETE_ARRAY(S3DManager::bufferList);
-//
-//	bufferMax = TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX;
-//	S3DManager::bufferList = new LIST_BUFFER[TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX];
-//	for (int i = 0; i < TUTORIAL_S3D_LIST::TUTORIAL_S3D_MAX; i++)
-//	{
-//		S3DManager::bufferList[i].buffer = { 0 };
-//
-//		FILE *fp = nullptr;
-//		fp = fopen(S3D_PATH_LIST_TAIL(tutorial, [i]), "rb");
-//		S3DManager::bufferList[i].wavFile = LoadWavChunk(fp);
-//
-//		S3DManager::bufferList[i].buffer.pAudioData = (BYTE*)S3DManager::bufferList[i].wavFile.data.waveData;
-//		S3DManager::bufferList[i].buffer.AudioBytes = S3DManager::bufferList[i].wavFile.data.waveSize;
-//		S3DManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
-//
-//		fclose(fp);
-//	}
-//
-//#endif
-//}
 
 #if(XADUIO2_STATE)
 //===================================================================================================================================
@@ -270,6 +240,33 @@ void S3DManager::SetVolume(const PLAY_PARAMETERS playParameters, float volume)
 			//ボリューム
 			tmpSoundParameters->SourceVoice->SetVolume(volume);
 		}
+	}
+#endif
+}
+//===================================================================================================================================
+//【必要なサウンドバッファを用意する】
+//===================================================================================================================================
+void S3DManager::loadBuffer(void)
+{
+#if(XADUIO2_STATE)
+	//サウンドディレクトリに設定する
+	setSoundDirectory(ENDPOINT_VOICE_LIST::ENDPOINT_S3D);
+
+	bufferMax = S3D_LIST::S3D_MAX;
+	S3DManager::bufferList = new LIST_BUFFER[bufferMax];
+	for (int i = 0; i < bufferMax; i++)
+	{
+		S3DManager::bufferList[i].buffer = { 0 };
+
+		FILE *fp = nullptr;
+		fp = fopen(S3D_PATH_LIST_TAIL(i), "rb");
+		S3DManager::bufferList[i].wavFile = LoadWavChunk(fp);
+		S3DManager::bufferList[i].soundId = i;
+		S3DManager::bufferList[i].buffer.pAudioData = (BYTE*)S3DManager::bufferList[i].wavFile.data.waveData;
+		S3DManager::bufferList[i].buffer.AudioBytes = S3DManager::bufferList[i].wavFile.data.waveSize;
+		S3DManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+		fclose(fp);
 	}
 #endif
 }

@@ -37,6 +37,7 @@ namespace faderNS
 {
 	enum SHADER_TYPE
 	{
+		NORMAL,
 		BLUR,
 		MAX_NUM
 	};
@@ -78,9 +79,40 @@ namespace faderNS
 		//シェーダーへ値をセット
 		virtual void setValue(D3DSURFACE_DESC desc) = 0;
 		//シェーダーの値の更新
-		virtual void updateValue() = 0;
+		virtual void updateValue(float rate) = 0;
 	};
 
+	//ノーマルシェーダー
+	class NormalShader:public ShaderState
+	{
+	public:
+		LPDIRECT3DTEXTURE9	targetTexture;		//ターゲットテクスチャ
+		float				alpha;				//α値
+		//コンストラクタ
+		NormalShader(LPDIRECT3DTEXTURE9 _targetTexture)
+			:targetTexture(_targetTexture),ShaderState()
+		{
+			effect		= *shaderNS::reference(shaderNS::NORMAL_FADE);
+			inTime		= 1.0f;
+			outTime		= 1.0f;
+			waitTime	= 1.0f;
+			playTime	= 1.0f;
+		}
+		//値の設定
+		virtual void setValue(D3DSURFACE_DESC desc) override
+		{
+			effect->SetTechnique("main");
+			effect->SetFloat("TexWidth",	(float)desc.Width);
+			effect->SetFloat("TexHeight",	(float)desc.Height);
+		}
+		//値の更新
+		virtual void updateValue(float rate) override
+		{
+			effect->SetTexture("Tex", targetTexture);
+			effect->SetFloat("rate", rate);
+			effect->CommitChanges();
+		}
+	};
 	//ブラーシェーダー
 	class BlurShader:public ShaderState
 	{
@@ -106,7 +138,7 @@ namespace faderNS
 			effect->SetFloat("Level", level);
 		}
 		//値の更新
-		virtual void updateValue() override
+		virtual void updateValue(float rate) override
 		{
 			effect->SetTexture("BlurTex", targetTexture);
 			effect->CommitChanges();
@@ -122,6 +154,7 @@ class Fader :public Base
 private:
 	LPDIRECT3DDEVICE9		device;			//デバイスポインタ保存
 	LPDIRECT3DTEXTURE9		targetTexture;	//描画対象テクスチャ
+	LPDIRECT3DSURFACE9		surface;		//描画テクスチャサーフェース
 	LPDIRECT3DSURFACE9		textureZBuffer;	//ｚバッファ描画テクスチャ
 	FADE_VERTEX				point[4 + 1];	//テクスチャ貼り付けポリゴン
 	faderNS::ShaderState*	shaderState;	//シェーダー切り替クラス
@@ -130,6 +163,7 @@ private:
 	float					frameTime;		//フレーム時間の保存変数
 
 	//タイマー
+	float					shaderRate;		//シェーダーレート
 	float					inTimer;		//フェードインタイマー
 	float					outTimer;		//フェードアウトタイマー
 	float					waitTimer;		//待機タイマー
