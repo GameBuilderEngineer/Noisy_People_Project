@@ -519,8 +519,8 @@ void Game::update(float _frameTime) {
 	fixedUI->update(gameMaster->getGameTime());
 
 	//プレイヤー周りのUIの更新
-	player1UI->update();
-	player2UI->update();
+	player1UI->update(treeManager->getGreeningRate()*100);
+	player2UI->update(treeManager->getGreeningRate()*100);
 
 	//レティクルの更新
 	reticle->update(frameTime);

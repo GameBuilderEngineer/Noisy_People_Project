@@ -77,7 +77,7 @@ void Player2UI::render()
 //==================================
 //更新
 //==================================
-void Player2UI::update()
+void Player2UI::update(float neRate)
 {
 
 	//各フラグの獲得
@@ -97,7 +97,7 @@ void Player2UI::update()
 	electGuage->update(power);
 
 	//緑化率
-	greenRate->update(0);//とりあえず0
+	greenRate->update(neRate);//とりあえず0
 }
 
 //==================================

@@ -89,6 +89,7 @@ void ElectGuage::changeGuage(int power)
 {
 	//HPを参照しサイズを変更
 	float enPersent = (float)power / 300;//現在のENを最大HPで割って割合を出す
+	/*BasicUI::changeUV(electGuage, D3DXVECTOR2(0, 0), D3DXVECTOR2(enPersent, 0), D3DXVECTOR2(0, 1), D3DXVECTOR2(enPersent, 1));*/
 	if (BasicUI::widthSize>WIDTH_EN_GUAGE*enPersent)
 	{
 		BasicUI::reductionWidthSize(electGuage, 1.5f);

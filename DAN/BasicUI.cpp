@@ -236,8 +236,8 @@ void BasicUI::changeUV(Sprite *sprite,D3DXVECTOR2 uv01, D3DXVECTOR2 uv02, D3DXVE
 {
 	
 	sprite->setUVCoord(uv01, uv02, uv03, uv04);
-	sprite->setVertex();
-	sprite->render();
+	/*sprite->setVertex();
+	sprite->render();*/
 }
 
 //=================================

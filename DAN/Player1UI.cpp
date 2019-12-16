@@ -84,7 +84,7 @@ void Player1UI::render()
 //==================================
 //更新
 //==================================
-void Player1UI::update()
+void Player1UI::update(float neRate)
 {
 	//各フラグの獲得
 	getFlag();
@@ -98,7 +98,7 @@ void Player1UI::update()
 
 	hpGuage->update(hp);
 	electGuage->update(power);
-	greenRate->update(0);
+	greenRate->update(neRate);
 }
 
 //==================================
