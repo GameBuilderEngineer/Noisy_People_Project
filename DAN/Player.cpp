@@ -100,6 +100,7 @@ void Player::initialize(PlayerTable info)
 
 	//シューティングアクション
 	bulletManager = new BulletManager;
+	collideAxisX = false;
 
 	//デジタルアクション
 	//デジタルシフト
@@ -308,25 +309,34 @@ bool Player::insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMA
 	using namespace objectNS;
 	switch (axisID)
 	{
-	case AXIS_X:	return insetCorrection(axisX, distance, mesh, matrix); break;
-	case AXIS_RX:	return insetCorrection(reverseAxisX, distance, mesh, matrix); break;
-	case AXIS_Y:	return insetCorrection(axisY, distance, mesh, matrix); break;
-	case AXIS_RY:	return insetCorrection(reverseAxisY, distance, mesh, matrix); break;
-	case AXIS_Z:	return insetCorrection(axisZ, distance, mesh, matrix); break;
-	case AXIS_RZ:	return insetCorrection(reverseAxisZ, distance, mesh, matrix); break;
+	case AXIS_X:	
+		collideAxisX = insetCorrection(&axisX, distance, mesh, matrix);
+		return collideAxisX; break;
+	case AXIS_RX:	return insetCorrection(&reverseAxisX, distance, mesh, matrix); break;
+	case AXIS_Y:	return insetCorrection(&axisY, distance, mesh, matrix); break;
+	case AXIS_RY:	return insetCorrection(&reverseAxisY, distance, mesh, matrix); break;
+	case AXIS_Z:	return insetCorrection(&axisZ, distance, mesh, matrix); break;
+	case AXIS_RZ:	return insetCorrection(&reverseAxisZ, distance, mesh, matrix); break;
 	}
 	return false;
 }
-bool Player::insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix)
+bool Player::insetCorrection(Ray* ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
-	if (!ray.rayIntersect(mesh, matrix))return false;
+	Ray tmp = *ray;
 
-	if (distance >= ray.distance)
+	if (!tmp.rayIntersect(mesh, matrix))
 	{
-		position += ray.normal*(distance - ray.distance);
-		return true;
+		ray->distance = 100000.0f;
+		return false; 
 	}
-	return false;
+
+	ray->distance = tmp.distance;
+
+	if (distance >= tmp.distance)
+	{
+		position += tmp.normal*(distance - tmp.distance);
+	}
+	return true;
 }
 #pragma endregion
 
@@ -543,8 +553,15 @@ void Player::controlCamera(float frameTime)
 	D3DXVec3Normalize(&cameraGazeRelative, &(D3DXVECTOR3)cameraGazeRelativeQ);
 	//カメラ注視位置の更新
 	cameraGaze = position
-		+ cameraGazeRelative * CAMERA_GAZE.x
 		+ axisY.direction*CAMERA_GAZE.y;
+	if (collideAxisX && CAMERA_GAZE.x > axisX.distance)
+	{
+		cameraGaze += cameraGazeRelative * axisX.distance;
+	}
+	else {
+		cameraGaze += cameraGazeRelative * CAMERA_GAZE.x;
+	}
+
 
 	//カメラの更新
 	camera->update();
@@ -1114,7 +1131,7 @@ bool Player::cancelSkyVision()
 //===================================================================================================================================
 void Player::updateAiming(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
-	aimingRay.update(camera->position + camera->getDirectionZ(), camera->getDirectionZ());
+	aimingRay.update(*camera->target + camera->getDirectionZ(), camera->getDirectionZ());
 	//照射位置の算出
 	collideDistance = MAX_DISTANCE;
 	aimingPosition = aimingRay.start + (aimingRay.direction * collideDistance);
