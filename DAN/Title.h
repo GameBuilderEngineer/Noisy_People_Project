@@ -47,11 +47,22 @@ namespace titleNS
 		CAMERA5,
 		CAMERA6,
 		CAMERA7,
+		CAMERA8,
+		CAMERA9,
 		MAX_CAMERA
 	};
 
 	const float TITLE_CAMERA_SPEED = 1.0f;
 	//const D3DXVECTOR3 firstEndPoint()
+
+	//プレイヤー初期位置
+	const D3DXVECTOR3 PLAYER_POSITION = D3DXVECTOR3(0, 100, 0);
+
+	//カメラ相対位置
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 0.0f, -1.5f, 0.0f);
+
+	//カメラ相対注視位置
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 }
 
@@ -106,6 +117,9 @@ private:
 	D3DXVECTOR3 cameraAxisY;
 	D3DXVECTOR3 fixedAxisX;
 	D3DXQUATERNION tmpCameraQ;//カメラの相対位置ベクトルの一時保存
+	D3DXVECTOR3 BezierCurveS1;
+	D3DXVECTOR3 BezierCurveS2;
+
 
 public:
 

@@ -11,6 +11,9 @@
 //===================================================================================================================================
 #include "AbstractScene.h"
 #include "UtilityFunction.h"
+#include "Object.h"
+#include "StaticMeshRenderer.h"
+#include "Sky.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -33,6 +36,30 @@ namespace FinaleNS
 class Finale : public AbstractScene
 {
 private:
+
+	//フィールド
+	Object*					finaleField;
+	StaticMeshRenderer*		finaleFieldRenderer;
+	//スカイドーム
+	Sky* sky;
+	//ターゲットオブジェクト
+	Object* target;
+
+	int stateCamera;						//カメラステータス
+	float frameDegree = 1.0f / 10.0f;		//自動速度
+	float inputDegree = 2.0f;				//入力速度
+
+	//カメラの軸取得変数
+	D3DXVECTOR3 cameraAxisZ;
+	D3DXVECTOR3 fixedAxisZ;
+	D3DXVECTOR3 cameraAxisX;
+	D3DXVECTOR3 cameraAxisY;
+	D3DXVECTOR3 fixedAxisX;
+	D3DXQUATERNION tmpCameraQ;//カメラの相対位置ベクトルの一時保存
+	D3DXVECTOR3 BezierCurveS1;
+	D3DXVECTOR3 BezierCurveS2;
+
+	D3DXQUATERNION cameraRelativeQuaternion;
 
 public:
 	Finale();

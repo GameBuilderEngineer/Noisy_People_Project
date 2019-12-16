@@ -254,9 +254,7 @@ void Title::update(float _frameTime)
 		if (moveTimer > 0)
 		{
 			moveTimer -= frameTime;
-			/*D3DXVec3Lerp(&P0_1, &startPos, &D3DXVECTOR3(-165.0f, 75.0f, -122.0), 1.0f - moveTimer / moveTime);
-			D3DXVec3Lerp(&P1_2, &D3DXVECTOR3(-165.0f, 75.0f, -122.0), &D3DXVECTOR3(-34.0f, 160.0f, -135.0f), 1.0f - moveTimer / moveTime);
-			D3DXVec3Lerp(&target->position, &P0_1, &P1_2, 1.0f - moveTimer / moveTime);*/
+
 			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-34.0f, 160.0f, -135.0f), 1.0f - moveTimer / moveTime);
 			//前のカメラの相対位置に補正する
 			camera->relativeQuaternion = tmpCameraQ;
@@ -439,7 +437,7 @@ void Title::update(float _frameTime)
 			startPos = target->position;
 			moveTime = 6.0f;
 			moveTimer = moveTime;
-			degreeTimer = 6.0f;
+			degreeTimer = 3.0f;
 			degreeTime = degreeTimer;
 			stateCamera++;
 			//次ステート用に角度調整
@@ -456,8 +454,40 @@ void Title::update(float _frameTime)
 		degreeTimer -= frameTime;
 		rate = moveTimer / moveTime;
 
-		//rateY = degreeTimer / degreeTime;
+		rateX = degreeTimer / degreeTime;
+		degreeX = UtilityFunction::lerp(0, -100.0f, 1.0f - rateX);
 
+		BezierCurveS1 = BezierCurve(startPos, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-23, 200, 300), rate);
+		BezierCurveS2 = BezierCurve(startPos, D3DXVECTOR3(-23, 400, 200), D3DXVECTOR3(-23, 200, 300), rate);
+		D3DXVec3Lerp(&target->position, &BezierCurveS1, &BezierCurveS2, 1.0f - rate);
+		if (degreeTimer > 0)
+		{
+			camera->relativeQuaternion = tmpCameraQ;
+			camera->rotation(fixedAxisX, degreeX);
+		}
+
+		if (moveTimer <= 0)
+		{
+			startPos = target->position;
+			moveTime = 6.0f;
+			moveTimer = moveTime;
+			degreeTimer = 6.0f;
+			degreeTime = degreeTimer;
+			stateCamera++;
+			//次ステート用に角度調整
+			/*camera->rotation(D3DXVECTOR3(0, 1, 0), -130.0f);
+			camera->rotation(fixedAxisX, -25.0f);*/
+			//カメラの相対位置を一時保存
+			tmpCameraQ = camera->relativeQuaternion;
+		}
+
+
+		break;
+	case CAMERA8:
+		
+		
+		break;
+	case CAMERA9:
 		break;
 	default:
 		break;
