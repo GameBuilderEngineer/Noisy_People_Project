@@ -257,11 +257,11 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.Animation->NextAnimID = MoveP_JumpFire;
 	}
 
-	if (input->isKeyDown('Q'))
-	{
-		MoveP.Animation->NextAnimID = MoveP_Die;
-		MoveP.IsDie = true;
-	}
+	//if (input->isKeyDown('Q'))
+	//{
+	//	MoveP.Animation->NextAnimID = MoveP_Die;
+	//	MoveP.IsDie = true;
+	//}
 
 	if (MoveP.IsDeath)
 	{

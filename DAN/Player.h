@@ -303,6 +303,7 @@ private:
 
 	//debug
 	float dot;
+	bool collideAxisX;
 
 public:
 	Player();
@@ -327,7 +328,7 @@ public:
 	//float distance：補正距離
 	//LPD3DXMESH mesh：衝突対象メッシュ
 	//D3DXMATRIX matrix：衝突対象行列
-	bool insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
+	bool insetCorrection(Ray* ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
 	bool insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
 
 

@@ -179,11 +179,12 @@ void Camera::lockOn(D3DXVECTOR3 lockOnTarget,float frameTime)
 bool Camera::insetCorrection(LPD3DXMESH mesh, D3DXMATRIX matrix) 
 {
 	Ray ray;
-	ray.initialize(position, getDirectionZ());
+	if (target)		ray.initialize(*target, -getDirectionZ());
+	else			ray.initialize(position, -getDirectionZ());
 
 	if (ray.rayIntersect(mesh, matrix) && ray.distance < betweenGaze)
 	{
-		relativeDistance = min(0.1f,ray.distance);
+		relativeDistance = max(0.01f,ray.distance);
 	}
 	else {
 		relativeDistance = betweenGaze;//ŒÅ’è’l‚Ì‘ã“ü

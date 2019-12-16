@@ -878,6 +878,15 @@ void Game::collisions()
 	windManager->windCollision(player);
 
 
+	//カメラとフィールド
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
+		D3DXMATRIX matrix = testField->matrixWorld;
+		//カメラのめり込み補正
+		camera[i].insetCorrection(mesh, matrix);
+	}
+
 	//プレイヤーとフィールド
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
@@ -894,14 +903,6 @@ void Game::collisions()
 		player[i].updateAiming(mesh, matrix);
 		player[i].updatePostureByAiming();
 		player[i].updateShooting(mesh, matrix);
-	}
-	//カメラとフィールド
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
-		D3DXMATRIX matrix = testField->matrixWorld;
-		//カメラのめり込み補正
-		camera[i].insetCorrection(mesh, matrix);
 	}
 
 	//ビジョン|スカイビジョン状態の時
