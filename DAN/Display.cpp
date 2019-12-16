@@ -89,6 +89,7 @@ void Display::initialize()
 	camera->setFieldOfView((D3DX_PI / 180) * 90);
 	camera->setLimitRotationTop(0.1f);
 	camera->setLimitRotationBottom(0.1f);
+	camera->setGazeDistance(300.0f);
 
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(0,
