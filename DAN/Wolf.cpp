@@ -120,9 +120,9 @@ void::Wolf::die(float frameTime)
 {
 	if (cntTimeDie > DIE_STATE_RENDERING_TIME)
 	{
-		EnemyManager::wolfBodyRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::wolfBodyRenderer->unRegisterObjectByID(parts[BODY]->id);
 		EnemyManager::wolfBodyRenderer->updateAccessList();
-		EnemyManager::wolfArmRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::wolfArmRenderer->unRegisterObjectByID(parts[ARM]->id);
 		EnemyManager::wolfArmRenderer->updateAccessList();
 	}
 	Enemy::die(frameTime);

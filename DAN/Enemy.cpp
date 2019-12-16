@@ -89,6 +89,9 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	isHitPlayer = false;
 	friction = 1.0f;
 
+	// State
+	cntTimeDie = 0.0f;
+
 	// オブジェクト初期化(initialize()は派生クラス)
 	onGravity = true;
 	radius = sphereCollider.getRadius();
@@ -188,10 +191,8 @@ void Enemy::preprocess(float frameTime)
 	friction = 1.0f;		// 摩擦係数初期化
 	acceleration *= 0.0f;	// 加速度を初期化
 
-	if (enemyData->type == TIGER || enemyData->type == WOLF)
-	{
-		animationManager->switchDefault();
-	}
+	// デフォルトアニメーション
+	animationManager->switchDefault();
 
 
 #ifdef _DEBUG
@@ -339,18 +340,16 @@ void Enemy::move(float frameTime)
 	if (isAttacking)
 	{
 		attacking(frameTime);
-		if (enemyData->type == TIGER || enemyData->type == WOLF)
-		{
-			animationManager->switchAttack();
-		}
+
+		// 攻撃アニメーションに切り替え
+		animationManager->switchAttack();
 	}
 	else
 	{
 		steering(frameTime);
-		if (enemyData->type == TIGER || enemyData->type == WOLF)
-		{
-			animationManager->switchMove();
-		}
+
+		// 移動アニメーションに切り替え
+		animationManager->switchMove();
 	}
 }
 #pragma endregion
@@ -761,6 +760,9 @@ void Enemy::prepareDie()
 
 	// 追跡マークの削除
 	deleteMark();
+
+	// 死亡アニメーションに切り替え
+	animationManager->switchDead();
 }
 #pragma endregion
 
@@ -876,12 +878,6 @@ void Enemy::die(float frameTime)
 	speed.x -= 0.4f;
 	speed.z += (rand() % 8) / 10.0f;
 	speed.z -= 0.4f;
-
-	if (enemyData->type == TIGER || enemyData->type == WOLF)
-	{
-		animationManager->switchDead();
-	}
-
 
 	// 死亡時
 	if (cntTimeDie > DIE_STATE_TIME)

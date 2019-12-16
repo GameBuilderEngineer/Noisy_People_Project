@@ -10,10 +10,6 @@
 using namespace enemyNS;
 
 // Staticƒƒ“ƒo•Ï”
-StaticMeshRenderer* EnemyManager::wolfRenderer;
-StaticMeshRenderer* EnemyManager::tigerRenderer;
-StaticMeshRenderer* EnemyManager::bearRenderer;
-
 StaticMeshRenderer* EnemyManager::wolfBodyRenderer;
 StaticMeshRenderer* EnemyManager::wolfArmRenderer;
 StaticMeshRenderer* EnemyManager::tigerBodyRenderer;
@@ -49,10 +45,6 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	player = _player;
 
 	// •`‰æƒIƒuƒWƒFƒNƒg‚Ìì¬
-	//wolfRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
-	//tigerRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER));
-	//bearRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR));
-
 	wolfBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF_BODY));
 	wolfArmRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF_ARM));
 	tigerBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TIGER_BODY));
@@ -113,10 +105,6 @@ void EnemyManager::uninitialize()
 	enemyList.swap(temp);
 
 	// •`‰æƒIƒuƒWƒFƒNƒg‚ð”jŠü
-	//SAFE_DELETE(wolfRenderer);
-	//SAFE_DELETE(tigerRenderer);
-	//SAFE_DELETE(bearRenderer);
-
 	SAFE_DELETE(wolfBodyRenderer);
 	SAFE_DELETE(wolfArmRenderer);
 	SAFE_DELETE(tigerBodyRenderer);
@@ -227,10 +215,6 @@ void EnemyManager::update(float frameTime)
 			itr++;
 		}
 	}
-
-	//wolfRenderer->update();
-	//tigerRenderer->update();
-	//bearRenderer->update();
 
 	wolfBodyRenderer->update();
 	wolfArmRenderer->update();
@@ -346,8 +330,6 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	case WOLF:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::WOLF);
 		wolf = new Wolf(constructionPackage);
-		//wolfRenderer->registerObject(wolf);
-		//wolfRenderer->updateAccessList();
 		// •`‰æ“o˜^
 		wolfBodyRenderer->registerObject(wolf->getParts(wolfNS::BODY));
 		wolfArmRenderer->registerObject(wolf->getParts(wolfNS::ARM));
@@ -362,8 +344,6 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::TIGER);
 		tiger = new Tiger(constructionPackage);
 		// •`‰æ“o˜^
-		//tigerRenderer->registerObject(tiger);
-		//tigerRenderer->updateAccessList();
 		tigerBodyRenderer->registerObject(tiger->getParts(tigerNS::BODY));
 		tigerGunRenderer->registerObject(tiger->getParts(tigerNS::GUN));
 		tigerLegLRenderer->registerObject(tiger->getParts(tigerNS::LEG_L));
@@ -380,8 +360,6 @@ void EnemyManager::createEnemy(EnemyData* enemyData)
 	case BEAR:
 		constructionPackage.staticMesh = staticMeshNS::reference(staticMeshNS::BEAR);
 		bear = new Bear(constructionPackage);
-		//bearRenderer->registerObject(bear);
-		//bearRenderer->updateAccessList();
 		// •`‰æ“o˜^
 		bearBodyRenderer->registerObject(bear->getParts(bearNS::BODY));
 		bearArmLRenderer->registerObject(bear->getParts(bearNS::ARM_L));
@@ -466,12 +444,12 @@ void EnemyManager::destroyEnemy(Enemy* enemy)
 	Tiger* tiger = NULL;
 	Bear* bear = NULL;
 
+	// ¦•`‰æ‚ÍƒGƒlƒ~[‚ÌŽ€–SƒXƒe[ƒg’†‚É‰ðœ‚³‚ê‚Ä‚¢‚éê‡‚ª‚Ù‚Æ‚ñ‚Ç
+
 	switch (enemy->getEnemyData()->type)
 	{
 	case WOLF:
 		wolf = (Wolf*)enemy;
-		//wolfRenderer->updateAccessList();
-		//wolfRenderer->unRegisterObjectByID(enemy->id);
 		// •`‰æ‰ðœ
 		wolfBodyRenderer->unRegisterObjectByID(wolf->getParts(wolfNS::BODY)->id);
 		wolfArmRenderer->unRegisterObjectByID(wolf->getParts(wolfNS::ARM)->id);
@@ -482,8 +460,6 @@ void EnemyManager::destroyEnemy(Enemy* enemy)
 
 	case TIGER:
 		tiger = (Tiger*)enemy;
-		//tigerRenderer->updateAccessList();
-		//tigerRenderer->unRegisterObjectByID(tiger->id);
 		// •`‰æ‰ðœ
 		tigerBodyRenderer->unRegisterObjectByID(tiger->getParts(tigerNS::BODY)->id);
 		tigerGunRenderer->unRegisterObjectByID(tiger->getParts(tigerNS::GUN)->id);
@@ -498,8 +474,6 @@ void EnemyManager::destroyEnemy(Enemy* enemy)
 
 	case BEAR:
 		bear = (Bear*)enemy;
-		//bearRenderer->updateAccessList();
-		//bearRenderer->unRegisterObjectByID(enemy->id);
 		// •`‰æ‰ðœ
 		bearBodyRenderer->unRegisterObjectByID(bear->getParts(bearNS::BODY)->id);
 		bearArmLRenderer->unRegisterObjectByID(bear->getParts(bearNS::ARM_L)->id);
@@ -526,11 +500,9 @@ void EnemyManager::destroyEnemy(Enemy* enemy)
 //=============================================================================
 void EnemyManager::destroyAllEnemy()
 {
-	// •`‰æ‘S‰ðœ
-	//wolfRenderer->allUnRegister();
-	//tigerRenderer->allUnRegister();
-	//bearRenderer->allUnRegister();
+	// ¦•`‰æ‚ÍƒGƒlƒ~[‚ÌŽ€–SƒXƒe[ƒg’†‚É‰ðœ‚³‚ê‚Ä‚¢‚éê‡‚ª‚Ù‚Æ‚ñ‚Ç
 
+	// •`‰æ‘S‰ðœ
 	wolfBodyRenderer->allUnRegister();
 	wolfArmRenderer->allUnRegister();
 
@@ -680,7 +652,7 @@ void EnemyManager::outputGUI()
 		enemyNS::ENEMYSET tmp =
 		{
 			issueNewEnemyID(),
-			enemyNS::TIGER,
+			enemyNS::BEAR,
 			stateMachineNS::PATROL,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f),

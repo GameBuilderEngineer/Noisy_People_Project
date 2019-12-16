@@ -153,13 +153,13 @@ void::Tiger::die(float frameTime)
 {
 	if (cntTimeDie > DIE_STATE_RENDERING_TIME)
 	{
-		EnemyManager::tigerBodyRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerBodyRenderer->unRegisterObjectByID(parts[BODY]->id);
 		EnemyManager::tigerBodyRenderer->updateAccessList();
-		EnemyManager::tigerGunRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerGunRenderer->unRegisterObjectByID(parts[GUN]->id);
 		EnemyManager::tigerGunRenderer->updateAccessList();
-		EnemyManager::tigerLegLRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerLegLRenderer->unRegisterObjectByID(parts[LEG_L]->id);
 		EnemyManager::tigerLegLRenderer->updateAccessList();
-		EnemyManager::tigerLegRRenderer->unRegisterObjectByID(this->id);
+		EnemyManager::tigerLegRRenderer->unRegisterObjectByID(parts[LEG_R]->id);
 		EnemyManager::tigerLegRRenderer->updateAccessList();
 	}
 	Enemy::die(frameTime);

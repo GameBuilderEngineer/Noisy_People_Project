@@ -43,9 +43,9 @@ namespace enemyNS
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
-		40,			// WOLF
-		100,		// TIGER
-		250,		// BEAR
+		80,			// WOLF
+		170,		// TIGER
+		450,		// BEAR
 	};
 
 	// エネミーのプレイヤー記憶時間テーブル
@@ -61,7 +61,7 @@ namespace enemyNS
 	{
 		15.0f,		// WOLF
 		15.0f,		// TIGER
-		15.0f,		// BEAR
+		12.0f,		// BEAR
 	};
 
 	//-------------
@@ -71,8 +71,8 @@ namespace enemyNS
 	const float SENSOR_UPDATE_INTERVAL[TYPE_MAX] =
 	{
 		0.3f,		// WOLF
-		0.2f,		// TIGER
-		0.1f,		// BEAR
+		0.3f,		// TIGER
+		0.3f,		// BEAR
 	};
 
 	// エネミーの視力距離テーブル
@@ -96,15 +96,15 @@ namespace enemyNS
 	{
 		0.5f,		// WOLF
 		0.5f,		// TIGER
-		0.5f,		// BEAR
+		0.8f,		// BEAR
 	};
 
 	// エネミーの聴覚距離テーブル
 	const float NOTICEABLE_DISTANCE_PLAYER[TYPE_MAX] =
 	{
 		3.5f,		// WOLF
-		3.5f,		// TIGER
-		3.5f,		// BEAR
+		5.5f,		// TIGER
+		18.5f,		// BEAR
 	};
 	const float SHOT_SOUND_SCALE = 4.5f;// ショット音距離倍率
 
@@ -115,8 +115,8 @@ namespace enemyNS
 	const int ATTACK_DAMAGE[TYPE_MAX] =
 	{
 		5,			// WOLF
-		10,			// TIGER
-		15,			// BEAR
+		12,			// TIGER
+		20,			// BEAR
 	};
 
 	// エネミーの攻撃移動速度テーブル
@@ -141,7 +141,7 @@ namespace enemyNS
 	{
 		8.0f,		// WOLF
 		8.0f,		// TIGER
-		8.0f,		// BEAR
+		10.0f,		// BEAR
 	};
 
 	//--------
@@ -179,9 +179,9 @@ namespace enemyNS
 	//-----------
 	const float DEATH_EFFECT_SCALE[TYPE_MAX] =
 	{
-		1.0f,		// WOLF
-		1.5f,		// TIGER
-		3.0f,		// BEAR
+		1.2f,		// WOLF
+		2.0f,		// TIGER
+		8.0f,		// BEAR
 	};
 
 	class DeathEffect :public effekseerNS::Instance
@@ -225,7 +225,7 @@ namespace enemyNS
 	const float AUTO_DESTRUCTION_HEIGHT = -100.0f;		// 自動破棄される高さ
 	const float MARK_FLOATING_HEIGHT = 0.1f;			// 追跡マークの高さ
 	const float DIE_STATE_TIME = 4.0f;					// 死亡ステートの時間
-	const float DIE_STATE_RENDERING_TIME = 2.5f;		// 死亡ステートのうち描画が続く時間
+	const float DIE_STATE_RENDERING_TIME = 2.8f;		// 死亡ステートのうち描画が続く時間
 
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
@@ -398,13 +398,13 @@ public:
 	D3DXVECTOR3 markDirection;						// ●追跡マークの方角
 
 	// State
-	float cntTimeDie;								// ●死亡ステート時間カウンタ
+	float cntTimeDie;								// 死亡ステート時間カウンタ
 
 	// サウンド
 	PLAY_PARAMETERS playParameters;
 
 	// エフェクト
-	enemyNS::DeathEffect* deathEffect;						// 死亡エフェクト
+	enemyNS::DeathEffect* deathEffect;				// 死亡エフェクト
 
 	//------------------
 	// アクションクエリ
