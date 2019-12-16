@@ -76,9 +76,6 @@
     <Filter Include="Game Layer\MetaAI">
       <UniqueIdentifier>{61acdd25-3097-4d98-b7f5-7b868895cb2b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Tree">
-      <UniqueIdentifier>{ffb95cd0-ab47-490b-a1ac-bea73ce39236}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Item">
       <UniqueIdentifier>{0025d4b5-8404-4e24-95de-cdbafbb5d176}</UniqueIdentifier>
     </Filter>
@@ -367,14 +364,20 @@
     <Filter Include="Game Layer\Enemy\PartsAnimation">
       <UniqueIdentifier>{e26a7ebf-ba18-4968-87ed-2668cf10827d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Scene\Display\Server">
-      <UniqueIdentifier>{5a583993-1f62-4171-b644-171020321cb0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resorce Layer\08 Network File">
       <UniqueIdentifier>{43b86670-f599-4ca4-b190-94a58eaa2609}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Layer\GameUI\CountUI">
       <UniqueIdentifier>{32cfdeb6-d27d-4326-93ea-b92546bf7881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Network\Client">
+      <UniqueIdentifier>{b01364ad-dd61-4fb6-a242-2edf07d77e7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Network\Server">
+      <UniqueIdentifier>{5a583993-1f62-4171-b644-171020321cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Tree">
+      <UniqueIdentifier>{ffb95cd0-ab47-490b-a1ac-bea73ce39236}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -859,14 +862,11 @@
     <ClCompile Include="BearAnimation.cpp">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClCompile>
-	    <ClCompile Include="Finale.cpp">
+    <ClCompile Include="Finale.cpp">
       <Filter>Game Layer\Scene\Finale</Filter>
     </ClCompile>
     <ClCompile Include="networkServer.cpp">
-      <Filter>Game Layer\Scene\Display\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="networkClient.cpp">
-      <Filter>Game Layer\Network</Filter>
+      <Filter>Game Layer\Network\Server</Filter>
     </ClCompile>
     <ClCompile Include="SaiFadeIn.cpp">
       <Filter>Constant Layer\Sound\APO</Filter>
@@ -879,7 +879,11 @@
     </ClCompile>
     <ClCompile Include="movep1.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
-    </ClCompile>  </ItemGroup>
+    </ClCompile>
+    <ClCompile Include="networkClient.cpp">
+      <Filter>Game Layer\Network\Client</Filter>
+    </ClCompile>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
       <Filter>Constant Layer\Base</Filter>
@@ -1385,14 +1389,11 @@
     <ClInclude Include="BearAnimation.h">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClInclude>
-	    <ClInclude Include="Finale.h">
+    <ClInclude Include="Finale.h">
       <Filter>Game Layer\Scene\Finale</Filter>
     </ClInclude>
     <ClInclude Include="networkServer.h">
-      <Filter>Game Layer\Scene\Display\Server</Filter>
-    </ClInclude>
-    <ClInclude Include="networkClient.h">
-      <Filter>Game Layer\Network</Filter>
+      <Filter>Game Layer\Network\Server</Filter>
     </ClInclude>
     <ClInclude Include="SaiFadeIn.h">
       <Filter>Constant Layer\Sound\APO</Filter>
@@ -1405,6 +1406,9 @@
     </ClInclude>
     <ClInclude Include="movep1.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="networkClient.h">
+      <Filter>Game Layer\Network\Client</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

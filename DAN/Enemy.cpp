@@ -932,15 +932,15 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 		switch (enemyType)
 		{
 		case WOLF:
-			parameter.soundId = GAME_S3D_LIST::S3D_GAME_FOOTSTEP_01;// ‰¼
+			parameter.soundId = S3D_LIST::S3D_FOOTSTEP_01;// ‰¼
 			break;
 
 		case TIGER:
-			parameter.soundId = GAME_S3D_LIST::S3D_GAME_FOOTSTEP_02;// ‰¼
+			parameter.soundId = S3D_LIST::S3D_FOOTSTEP_02;// ‰¼
 			break;
 
 		case BEAR:
-			parameter.soundId = GAME_S3D_LIST::S3D_GAME_FOOTSTEP_03;// ‰¼
+			parameter.soundId = S3D_LIST::S3D_FOOTSTEP_03;// ‰¼
 			break;
 		}
 		break;

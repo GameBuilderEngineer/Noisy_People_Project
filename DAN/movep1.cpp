@@ -479,6 +479,8 @@ HRESULT InitCallbackKeys_MoveP1(void)
 		case MoveP1_Idle:
 			break;
 		case MoveP1_Run:
+			AddKeydata(0.33f, MoveP1MoveVoice);
+			AddKeydata(0.68f, MoveP1MoveVoice);
 			AddKeydata(0.95f, MotionEnd);
 			break;
 		case MoveP1_FireIdle:
