@@ -401,6 +401,13 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 
+	if (input->wasKeyPressed('6'))
+	{
+		//aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
+
+		aiDirector->eventMaker.makeEventBossEntry();
+	}
+
 	// ツリーの更新
 	treeManager->update(frameTime);
 
