@@ -93,6 +93,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_TIME_UP] = { "TimeUP!.png" };
 	textureName[UI_COUNT_NUM] = { "num_count.png" };
 	textureName[UI_GAME_START] = { "Mission_Start.png" };
+	textureName[UI_START_COUNT] = { "Num_Start.png" };
 	textureName[UI_CAHSE_MARK] = { "ChaseMark.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ

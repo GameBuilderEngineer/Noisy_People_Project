@@ -974,7 +974,8 @@ void Game::collisions()
 				//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL};
 				SoundInterface::SE->playSound(&playParameters);	//SE再生
-				itemManager->destroyAllItem();					//デリート(今は全消し)
+				//itemManager->destroyAllItem();					//デリート(今は全消し)
+				itemManager->destroyItem(itemList[i]->getItemData()->itemID);					//デリート(今は全消し)
 			}
 		}
 	}

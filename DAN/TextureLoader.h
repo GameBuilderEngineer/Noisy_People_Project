@@ -88,6 +88,7 @@ namespace textureNS
 		UI_TIME_UP,
 		UI_COUNT_NUM,
 		UI_GAME_START,
+		UI_START_COUNT,
 
 		// Result
 		RESULT,

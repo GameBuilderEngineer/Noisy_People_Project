@@ -1,8 +1,8 @@
 //===================================================================================================================================
-//【Game.h】
+//【Announcement.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
-// [作成日]2019/09/20
-// [更新日]2019/11/05
+// [作成日]2019/12/17
+// [更新日]2019/12/17
 //===================================================================================================================================
 #pragma once
 
@@ -12,14 +12,29 @@
 #include "Base.h"
 #include "Sprite.h"
 
+namespace AnnouncementNS {
+
+	const int WIDTH					= 1024;
+	const int DIVIDE_WIDTH			= 1;//横の分割数
+	const int HEIGHT				= 128;
+	const D3DXVECTOR3 POSITION		= D3DXVECTOR3((float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT / 2, 0.0f);
+	const D3DXVECTOR3 ROTATION		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	const D3DCOLOR COLOR			= D3DCOLOR_RGBA(255, 255, 255, 0);
+
+}
+
 //===================================================================================================================================
 //【アナウンスクラス】
 //===================================================================================================================================
 class Announcement :public Base
 {
+private:
+	Sprite*		sprite;
 public:
 	Announcement();
 	~Announcement();
 
+	void update(float frameTime);
+	void render();
 };
 

@@ -376,7 +376,10 @@
     <Filter Include="Game Layer\GameUI\CountUI">
       <UniqueIdentifier>{32cfdeb6-d27d-4326-93ea-b92546bf7881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Announcement">
+    <Filter Include="Game Layer\GameUI\Marker">
+      <UniqueIdentifier>{fc82430f-8944-44f1-8ffe-b9d9598036fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Announcement">
       <UniqueIdentifier>{bc0bd313-0b51-4d5d-abec-beb5d883894c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -884,7 +887,10 @@
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClCompile>
     <ClCompile Include="Announcement.cpp">
-      <Filter>Game Layer\Announcement</Filter>
+      <Filter>Game Layer\GameUI\Announcement</Filter>
+    </ClCompile>
+    <ClCompile Include="Marker.cpp">
+      <Filter>Game Layer\GameUI\Marker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1414,7 +1420,10 @@
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClInclude>
     <ClInclude Include="Announcement.h">
-      <Filter>Game Layer\Announcement</Filter>
+      <Filter>Game Layer\GameUI\Announcement</Filter>
+    </ClInclude>
+    <ClInclude Include="Marker.h">
+      <Filter>Game Layer\GameUI\Marker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

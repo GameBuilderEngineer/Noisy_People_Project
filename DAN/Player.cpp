@@ -816,7 +816,7 @@ bool Player::digitalShift()
 bool Player::collideShiftRay(Cylinder target)
 {
 	//シフトレイをカメラからのレイとして更新
-	shiftRay.update(camera->position, camera->getDirectionZ());
+	shiftRay.update(camera->gazePosition, camera->getDirectionZ());
 
 	//カメラからの半径付きレイを設定
 	Cylinder volumeRayFromCamera;
