@@ -33,8 +33,9 @@ Item::Item(StaticMesh* _staticMesh, ItemData _itemData)
 //=============================================================================
 Item::~Item()
 {
-	effekseerNS::stop(0);
-	//effekseerNS::play(0, itemDestroyEffect);
+	//effekseerNS::stop(0);
+	effekseerNS::stop(0, itemEffect);
+	//effekseerNS::stop(0, itemDestroyEffect);
 	numOfItem--;
 }
 

@@ -199,6 +199,7 @@ void EffekseerManager::stop(::effekseerNS::Instance* instance)
 {
 	manager->StopEffect(instance->handle);
 	instanceList->remove(instance->nodePointer);
+	instanceList->listUpdate();
 }
 
 //===================================================================================================================================
@@ -232,7 +233,7 @@ void EffekseerManager::uninitialize()
 	}
 	ES_SAFE_RELEASE(xa2);
 #endif
-
+	instanceList->listUpdate();
 	for (int i = 0;i <instanceList->nodeNum; i++)
 	{
 		SAFE_DELETE(*instanceList->getValue(i));
