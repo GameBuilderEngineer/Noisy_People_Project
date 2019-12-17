@@ -25,6 +25,7 @@ UIcharacter::UIcharacter()
 	defeatChara = new Defeat_Chara;
 	defeatMoji = new Defeat_Moji;
 	greening = new WholeGreening;
+	persent = new Persent;
 }
 
 //============================
@@ -39,6 +40,7 @@ UIcharacter::~UIcharacter()
 	delete defeatChara;
 	delete defeatMoji;
 	delete greening;
+	delete persent;
 }
 
 //============================
@@ -53,6 +55,7 @@ void UIcharacter::initialize(int playerType)
 	defeatChara->initialize(playerType);
 	defeatMoji->initialize(playerType);
 	greening->initialize();
+	persent->initialize();
 }
 
 //============================
@@ -69,10 +72,12 @@ void UIcharacter::render(int resultPhase)
 	case PHASE_02:
 		result->render();
 		greening->render();
+		persent->render();
 		break;
 	case PHASE_03:
 		result->render();
 		greening->render();
+		persent->render();
 		player->render();
 		greenChara->render();
 		greenMoji->render();
@@ -82,6 +87,7 @@ void UIcharacter::render(int resultPhase)
 	case PHASE_04:
 		result->render();
 		greening->render();
+		persent->render();
 		player->render();
 		greenChara->render();
 		greenMoji->render();
@@ -91,6 +97,7 @@ void UIcharacter::render(int resultPhase)
 	case PHASE_05:
 		result->render();
 		greening->render();
+		persent->render();
 		player->render();
 		greenChara->render();
 		greenMoji->render();

@@ -69,6 +69,7 @@ Director::~Director() {
 	SAFE_DELETE(effekseerManager[1]);
 	SAFE_DELETE(effekseerManager[2]);
 	SAFE_DELETE(gameMaster);
+	SAFE_DELETE(serialCommunication);
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
@@ -102,6 +103,9 @@ HRESULT Director::initialize() {
 	SetForegroundWindow(wnd);
 	imgui = new ImguiManager(wnd);
 #endif // _DEBUG
+
+	//シリアル通信クラス
+	serialCommunication = new SerialCommunication();
 
 	//エフェクシアー
 	effekseerManager[0] = new EffekseerManager();
@@ -144,6 +148,8 @@ HRESULT Director::initialize() {
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
 	//animationLoader->initialize(d3d->device);
+
+
 
 	//scene
 	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO| MB_TOPMOST) == IDYES)
@@ -247,6 +253,17 @@ void Director::run(HINSTANCE _instance) {
 // [用途]基本的にループする内容
 //===================================================================================================================================
 void Director::mainLoop() {
+
+	//シリアル通信：送信
+	/*if (input->isKeyDown('0'))
+	{
+		serialCommunication->send(1);
+	}
+	else {
+		serialCommunication->send(2);
+	}*/
+
+
 	//リセット
 	if (input->wasKeyPressed(VK_F5))
 	{

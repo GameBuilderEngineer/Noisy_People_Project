@@ -25,10 +25,10 @@ namespace resultUiNS
 	//リザルトのフェイズ
 	enum RESULT_PHASE
 	{
-		PHASE_01,		//リザルトロゴのスライドイン
-		PHASE_02,		//島表示
-		PHASE_03,		//文字表示
-		PHASE_04,		//数字のカウントアップ
+		PHASE_01,		//島の緑化状況
+		PHASE_02,		//緑化率のカウントアップ
+		PHASE_03,		//2Dリザルトの描画開始
+		PHASE_04,		//
 		PHASE_05,		//ランクの表示
 		PHASE_MAX,		//フェイズの総数
 	};
@@ -41,6 +41,8 @@ namespace resultUiNS
 		PLAYER_MAX,
 	};
 
+	const float PHASE_TIME = 5.0f;
+
 }
 //============================
 //クラス定義
@@ -51,7 +53,7 @@ public: //メンバー変数
 	UIcharacter* uiCharacter01;		//プレイヤー１用文字のUI
 	UIcharacter* uiCharacter02;		//プレイヤー2用文字のUI
 	UItexture	uiTexture;			//テクスチャのUI
-	UIrank*     uiRank;			//プレイヤー１のランクのUI
+	UIrank*     uiRank;				//プレイヤー１のランクのUI
 	UIrank      uiRank02;			//プレイヤー2のランクのUI
 	UInumber	uiNumber[uiNumberNS::NUMBER_TYPE_MAX];//数字
 	ResultBG*   resultBG;			//リザルト背景
@@ -68,6 +70,8 @@ public: //メンバー変数
 	int			rank01;				//プレイヤー１のランク管理用
 	int         rank02;				//プレイヤー2のランク管理用
 	bool		playedBGM;			//BGM再生用フラグ
+	int			score;				//スコア
+	int			rankType;			//ランク確認用
 public: //メンバー関数
 	ResultUI();						//コンストラクタ
 	~ResultUI();					//デストラクタ

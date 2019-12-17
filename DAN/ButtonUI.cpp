@@ -139,16 +139,16 @@ void ButtonUI::changeRenderP2(int state)
 	switch (state)
 	{
 	case STATE::VISION:
-		position.x = POSITION_BUTTON2.x;
+		/*position.x = POSITION_BUTTON2.x;
 		button[SHIFT]->setPosition(position);
-		button[SHIFT]->setVertex();
+		button[SHIFT]->setVertex();*/
 		button[SHIFT]->render();
 		break;
 
 	case STATE::SKY_VISION:
-		position.x = POSITION_BUTTON2.x;
+		/*position.x = POSITION_BUTTON2.x;
 		button[SHIFT]->setPosition(position);
-		button[SHIFT]->setVertex();
+		button[SHIFT]->setVertex();*/
 		button[SHIFT]->render();
 		break;
 

@@ -36,6 +36,7 @@ void ResultBG::initialize()
 {
 	BasicUI::assingPosition(BG_POSITION);
 	BasicUI::assingSize(WIDTH_BG, HEIGHT_BG);
+	BasicUI::assingColor(COLOR);
 	BasicUI::initialize(resultBG, textureNS::reference(textureNS::RESULT_BG));
 }
 

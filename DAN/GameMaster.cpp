@@ -331,7 +331,9 @@ int	 GameMaster::getGreeningRate() {
 		case TO_GREEN_WITH_DIGITAL:numGreening++;	break;
 		}
 	}
-	float rate = numGreening / treeNum;
+	float rate = 1.0f;
+	if(treeNum)
+		rate = (float)numGreening / (float)treeNum;
 	return (int)(rate*100.0f);
 }													
 //—Î‰»–{”

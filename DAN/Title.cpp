@@ -217,7 +217,7 @@ void Title::update(float _frameTime)
 	}
 
 	// ƒ^ƒCƒgƒ‹UI
-	titleUI.update(input);
+	titleUI.update(input,frameTime);
 
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||

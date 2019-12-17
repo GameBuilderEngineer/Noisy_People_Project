@@ -8,11 +8,13 @@
 //============================
 #include "TitleUI.h"
 #include "Sound.h"
+#include "BasicUI.h"
 
 //============================
 //【using宣言】
 //============================
 using namespace titleUiNS;
+
 
 //============================
 //グローバル変数
@@ -108,6 +110,9 @@ void TitleUI::initialize()
 
 	//選択状態の初期化
 	selectState = TUTORIAL;
+
+	//α値の初期化
+	alpha = 0.0f;
 }
 
 //============================
@@ -143,8 +148,18 @@ void TitleUI::render()
 //============================
 //更新
 //============================
-void TitleUI::update(Input *input)
+void TitleUI::update(Input *input,float flametime)
 {
+	if (alpha < 255)
+	{
+		alpha += 0.7f;
+		UI[UI_LOGO]->setAlphaAllVertex(alpha);
+	}
+	else
+	{
+		UI[UI_LOGO]->setAlphaAllVertex(255);
+	}
+	
 	
 	ringSE(input);
 
