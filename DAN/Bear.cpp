@@ -70,7 +70,7 @@ void::Bear::chase(float frameTime)
 {
 	float distance = between2VectorLength(position, *movingTarget);
 
-	if (distance < 7.0f && canAttack)
+	if (distance < 18.0f && canAttack)
 	{
 		attack();
 	}
@@ -119,12 +119,12 @@ void::Bear::die(float frameTime)
 	if (cntTimeDie > DIE_STATE_RENDERING_TIME)
 	{
 		// •`‰æ‰ðœ
-		EnemyManager::bearBodyRenderer->unRegisterObjectByID(id);
-		EnemyManager::bearArmLRenderer->unRegisterObjectByID(id);
-		EnemyManager::bearArmRRenderer->unRegisterObjectByID(id);
-		EnemyManager::bearWaistRenderer->unRegisterObjectByID(id);
-		EnemyManager::bearLegLRenderer->unRegisterObjectByID(id);
-		EnemyManager::bearLegRRenderer->unRegisterObjectByID(id);
+		EnemyManager::bearBodyRenderer->unRegisterObjectByID(parts[BODY]->id);
+		EnemyManager::bearArmLRenderer->unRegisterObjectByID(parts[ARM_L]->id);
+		EnemyManager::bearArmRRenderer->unRegisterObjectByID(parts[ARM_R]->id);
+		EnemyManager::bearWaistRenderer->unRegisterObjectByID(parts[WAIST]->id);
+		EnemyManager::bearLegLRenderer->unRegisterObjectByID(parts[LEG_L]->id);
+		EnemyManager::bearLegRRenderer->unRegisterObjectByID(parts[LEG_R]->id);
 		// •`‰æƒŠƒXƒgXV
 		EnemyManager::bearBodyRenderer->updateAccessList();
 		EnemyManager::bearArmLRenderer->updateAccessList();

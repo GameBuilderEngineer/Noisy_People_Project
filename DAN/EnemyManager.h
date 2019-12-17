@@ -31,10 +31,10 @@ namespace enemyNS
 	const int ENEMY_OBJECT_MAX = 30;
 
 	// オブジェクト作成基準の近距離(2乗)
-	const float NEAR_DISTANCE2 = 10000.0f;	// 100 * 100
+	const float NEAR_DISTANCE2 = 22500.0f;	// 150 * 150
 
 	// オブジェクト破棄基準の遠距離(2乗)
-	const float FAR_DISTANCE2 = 14400.0f;	// 120 * 120
+	const float FAR_DISTANCE2 = 28900.0f;	// 170 * 170
 
 	// エネミーデータリストのチェック頻度
 	const float DATA_LIST_CHECK_INTERVAL = 0.5f;
@@ -58,10 +58,6 @@ private:
 
 public:
 	// 描画オブジェクト
-	static StaticMeshRenderer* wolfRenderer;
-	static StaticMeshRenderer* tigerRenderer;
-	static StaticMeshRenderer* bearRenderer;
-
 	static StaticMeshRenderer* wolfBodyRenderer;
 	static StaticMeshRenderer* wolfArmRenderer;
 	static StaticMeshRenderer* tigerBodyRenderer;

@@ -121,7 +121,16 @@ void TelopManager::initialize()
 		telopNS::COLOR
 	);
 
-
+	// ‹‘åŠÂ‹«”j‰óƒƒ{‚ªŒ»‚ê‚½I
+	telop[BOSS_ENTRY]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_BOSS),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
 }
 
 //=============================================================================

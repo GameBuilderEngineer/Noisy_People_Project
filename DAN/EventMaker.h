@@ -45,10 +45,14 @@ public:
 	void makeEventRespawnEnemy();
 	// エネミーデジタルツリー襲撃イベントの作成（ENEMY_ATTACKS_TREE）
 	void makeEventEnemyAttaksTree();
+	// 巨大環境破壊ロボ登場イベントの作成(BOSS_ENTRY)
+	void makeEventBossEntry();
 	// 動的作成するエネミーのパラメータを決める
 	enemyNS::ENEMY_TYPE decideSpawnEnemyType();
 	// 襲撃イベント対象デジタルツリーを選定する
 	int decideAttackTargetTree();
+	// 巨大環境破壊ロボの場所を決める
+	D3DXVECTOR3 decideBossEntryPoint();
 	// 基準座標を基に接地座標を作成する
 	D3DXVECTOR3 createGroundedPositionFromPivot(D3DXVECTOR3 pivot, float distance, float reduction);
 	// XZ平面上のベクトル(長さ1.0)をランダムに作成する
