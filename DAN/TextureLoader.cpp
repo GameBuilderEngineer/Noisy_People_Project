@@ -95,6 +95,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_GAME_START] = { "Mission_Start.png" };
 	textureName[UI_START_COUNT] = { "Num_Start.png" };
 	textureName[UI_CAHSE_MARK] = { "ChaseMark.png" };
+	textureName[OP_ANNOUNCEMENT] = { "Mission_Term.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };

@@ -257,6 +257,9 @@ void Game::initialize() {
 	//Network
 	networkClient = new NETWORK_CLIENT;
 
+	//OPアナウンス
+	announcement = new Announcement;
+
 #pragma region Memory Test
 	////メモリテスト
 
@@ -336,6 +339,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(countUI);
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
+	SAFE_DELETE(announcement);
 	UninitMoveP();
 	UninitMoveP1();
 
@@ -542,6 +546,8 @@ void Game::update(float _frameTime) {
 	//レティクルの更新
 	reticle->update(frameTime);
 
+	//OPアナウンス
+	announcement->update(frameTime);
 
 	// Enterまたは〇ボタンでリザルトへ
 	//if (input->wasKeyPressed(VK_RETURN) ||
@@ -592,6 +598,7 @@ void Game::render()
 		direct3D9->changeViewportFullWindow();
 		cameraOP->renderReady();
 		render3D(cameraOP);
+		renderUI();
 		return;
 	}
 
@@ -744,7 +751,15 @@ void Game::render3D(Camera* currentCamera) {
 //===================================================================================================================================
 //【UI/2D描画】
 //===================================================================================================================================
-void Game::renderUI() {
+void Game::renderUI() 
+{
+	//OP中UI
+	if (!gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))
+	{
+		announcement->render();
+		return;
+	}
+
 
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
