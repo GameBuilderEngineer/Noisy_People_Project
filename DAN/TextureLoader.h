@@ -40,7 +40,8 @@ namespace textureNS
 		TITLE_INFO_CREDIT,
 		TITLE_INFO_EXIT,
 		TITLE_COPYRIGHT,			
-		TITLE_BAR,				
+		TITLE_BAR,
+		TITLE_PRESS,
 
 		// Credit
 		CREDIT,

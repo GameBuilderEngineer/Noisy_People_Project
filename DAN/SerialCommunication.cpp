@@ -90,5 +90,4 @@ void SerialCommunication::send(BYTE	data)
 		return;
 	}
 
-
 }

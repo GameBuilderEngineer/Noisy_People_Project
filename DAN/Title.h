@@ -48,6 +48,13 @@ namespace titleNS
 		MAX_CAMERA
 	};
 
+	enum TITLE_STATE
+	{
+		TITLE01,
+		TITLE02,
+		TITLE03,
+		TITLE_STATE_MAX,
+	};
 	const float TITLE_CAMERA_SPEED = 1.0f;
 
 }
@@ -58,11 +65,8 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
-
-
 	TestEffect* testEffect;
 	WaveBall *waveBall;
-	
 	//フィールド
 	Object*					titleField;
 	StaticMeshRenderer*		titleFieldRenderer;	
@@ -70,37 +74,28 @@ private:
 	Sky* sky;
 	//ターゲットオブジェクト
 	Object* target;
-
-	TitleUI titleUI;										//タイトルUI
+	TitleUI titleUI;					//タイトルUI
 	int selectStateMemory;
-
-
+	int titleState;						//タイトルの状態管理
 	int stateCamera;
-	float frameDegree = 1.0f / 10.0f;		//自動速度
-	float inputDegree = 2.0f;				//入力速度
-	
-	float moveTime;				//終点までの時間
-	float moveTimer;			//移動タイマー
-	D3DXVECTOR3 startPos;		//ラープ始点
-	
+	float frameDegree = 1.0f / 10.0f;	//自動速度
+	float inputDegree = 2.0f;			//入力速度
+	float moveTime;						//終点までの時間
+	float moveTimer;					//移動タイマー
+	D3DXVECTOR3 startPos;				//ラープ始点
 	float rateY;
 	float rateX;
 	float degreeY;
 	float degreeX;
 	float degreeTimer = 0.0f;
-
-	
-
 	//カメラの軸取得変数
 	D3DXVECTOR3 cameraAxisZ;
 	D3DXVECTOR3 fixedAxisZ;
 	D3DXVECTOR3 cameraAxisX;
 	D3DXVECTOR3 cameraAxisY;
 	D3DXVECTOR3 fixedAxisX;
-	
 
 public:
-
 	Title(void);
 	~Title(void);
 	virtual void initialize() override;
@@ -112,7 +107,6 @@ public:
 	void render2D();
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
-
 	float tmpVolume = 0;
 #ifdef _DEBUG
 	virtual void createGUI() override;

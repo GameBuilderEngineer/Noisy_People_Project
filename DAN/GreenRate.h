@@ -38,7 +38,7 @@ public://メンバー関数
 	GreenRate();//コンストラクタ
 	~GreenRate();//デストラクタ
 	void initialize(int playerType);//初期化
-	void render(int playerType);//描画処理
+	void render(int playerType, int state);//描画処理
 	void update(float gametime);//更新処理
 	void uninitialize();//終了処理
 	void setUV(int time);//uv座標の設定
