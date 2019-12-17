@@ -75,8 +75,7 @@ void  WindManager::windCollision(Player* player)
 
 	for (int i = 0; i < NUM_WIND; i++)
 	{
-#if 0 // この処理を行うと他のエフェクトでバグる.何故か分からない.
-		// エフェクトを描画するか判断する
+#if 1	// エフェクトを描画するか判断する
 		float temp1 = between2VectorLength(wind[i].position, player[0].center);
 		float temp2 = between2VectorLength(wind[i].position, player[1].center);
 		if (temp1 > EFFECT_RENDERING_DISTANCE && temp2 > EFFECT_RENDERING_DISTANCE)
