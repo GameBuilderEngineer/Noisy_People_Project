@@ -409,7 +409,7 @@ void Game::update(float _frameTime) {
 	femaleRenderer->update();				//レンダラー
 
 	// エネミーの更新
-	//enemyManager->update(frameTime);
+	enemyManager->update(frameTime);
 
 	// ツリーの更新
 	treeManager->update(frameTime);

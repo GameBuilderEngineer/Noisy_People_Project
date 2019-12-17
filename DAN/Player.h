@@ -128,6 +128,20 @@ namespace playerNS{
 		STATE_NUM
 	};
 
+	struct StartPosition
+	{
+		D3DXVECTOR3 player1;
+		D3DXVECTOR3 player2;
+	};
+
+	const int POSITION_PATTERN = 5;
+
+	//const StartPosition START_POSITION[POSITION_PATTERN] =
+	//{
+	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)},
+	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)}
+	//};
+
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		D3DXVECTOR3(0, 20, -180),				//1P

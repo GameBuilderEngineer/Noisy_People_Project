@@ -148,6 +148,7 @@
     <ClInclude Include="AIDirector.h" />
     <ClInclude Include="AllocateHierarchy.h" />
     <ClInclude Include="AnalogTree.h" />
+    <ClInclude Include="Announcement.h" />
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BearAnimation.h" />
@@ -323,6 +324,7 @@
     <ClCompile Include="AIDirector.cpp" />
     <ClCompile Include="AllocateHierarchy.cpp" />
     <ClCompile Include="AnalogTree.cpp" />
+    <ClCompile Include="Announcement.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BearAnimation.cpp" />

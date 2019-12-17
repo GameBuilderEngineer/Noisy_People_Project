@@ -376,6 +376,9 @@
     <Filter Include="Game Layer\GameUI\CountUI">
       <UniqueIdentifier>{32cfdeb6-d27d-4326-93ea-b92546bf7881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Announcement">
+      <UniqueIdentifier>{bc0bd313-0b51-4d5d-abec-beb5d883894c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -859,7 +862,7 @@
     <ClCompile Include="BearAnimation.cpp">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClCompile>
-	    <ClCompile Include="Finale.cpp">
+    <ClCompile Include="Finale.cpp">
       <Filter>Game Layer\Scene\Finale</Filter>
     </ClCompile>
     <ClCompile Include="networkServer.cpp">
@@ -879,7 +882,11 @@
     </ClCompile>
     <ClCompile Include="movep1.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
-    </ClCompile>  </ItemGroup>
+    </ClCompile>
+    <ClCompile Include="Announcement.cpp">
+      <Filter>Game Layer\Announcement</Filter>
+    </ClCompile>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
       <Filter>Constant Layer\Base</Filter>
@@ -1385,7 +1392,7 @@
     <ClInclude Include="BearAnimation.h">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClInclude>
-	    <ClInclude Include="Finale.h">
+    <ClInclude Include="Finale.h">
       <Filter>Game Layer\Scene\Finale</Filter>
     </ClInclude>
     <ClInclude Include="networkServer.h">
@@ -1405,6 +1412,9 @@
     </ClInclude>
     <ClInclude Include="movep1.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Announcement.h">
+      <Filter>Game Layer\Announcement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
