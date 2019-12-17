@@ -66,7 +66,7 @@ void Create::initialize() {
 	camera->setTargetX(&tmpObject->getAxisX()->direction);
 	camera->setTargetY(&tmpObject->getAxisY()->direction);
 	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
-	camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -5.5f, 0.0f));
+	camera->setRelative(D3DXQUATERNION(0.0f, 10.0f, -15.5f, 0.0f));
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
@@ -173,15 +173,6 @@ void Create::update(float _frameTime) {
 		tmpObject->grounding(mesh, matrix);
 	}
 
-	// アイテムの更新
-	if (input->wasKeyPressed('0'))
-	{
-		itemNS::ItemData unko = { 0, itemNS::BATTERY, *tmpObject->getPosition() };
-	}
-	if (input->wasKeyPressed('Y'))
-	{
-		//tmpObject->
-	}
 
 	////カメラの更新
 	//camera->update();
