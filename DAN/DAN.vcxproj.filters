@@ -777,6 +777,9 @@
     <ClCompile Include="movep1.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClCompile>
+    <ClCompile Include="Equipment.cpp">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1232,6 +1235,9 @@
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="movep1.h">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Equipment.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClInclude>
   </ItemGroup>

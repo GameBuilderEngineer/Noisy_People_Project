@@ -41,6 +41,7 @@
 #include "LinearTreeCell.h"
 #include "movep.h"
 #include "movep1.h"
+#include "Equipment.h"
 
 #include "TelopManager.h"
 #include "Player1UI.h"
