@@ -46,7 +46,7 @@ namespace gameMasterNS {
 	};
 
 	const float OPENING_TIME			= 5.0f;					//5秒
-	const float GAME_TIME				= 60.0f * 1.0f;			//4分
+	const float GAME_TIME				= 60.0f * 4.0f;			//4分
 	const float COUNT_DOWN_TIME			= 3.0f;					//3秒
 	const float ENDING_TIME				= 3.0f;					//3秒
 
@@ -151,7 +151,7 @@ public:
 	void updateOpeningTime(float frameTime);						//ゲーム時間の更新
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
 	void updateStartCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
-	void updateFinishCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
+	void updateFinishCountDown(float frameTime);					//ゲーム開始カウントダウンの更新
 	bool paused();													//ポーズ処理
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
 	bool playActionStartCount(int countNum);						//開始カウント3時のアクション

@@ -27,6 +27,9 @@ PartsAnimationManager::PartsAnimationManager(int _partsMax, Object* _parent, Obj
 
 	// ƒtƒ‰ƒO‚ğ‰Šú‰»
 	flagState = 0;
+
+	wasTimingCame = false;
+	canPlayMoveSound = false;
 }
 
 

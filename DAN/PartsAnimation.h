@@ -32,5 +32,8 @@ public:
 	void updateTimeAndKeyFrame(float t);
 	// 回転の更新
 	D3DXVECTOR3 updateRotation(const D3DXVECTOR3* rotation);
-
+	// 現在のキーフレームを取得
+	int getKeyFrame();
+	// キーフレームの数を取得
+	int getNumKeyFrame();
 };
