@@ -46,7 +46,7 @@ namespace gameMasterNS {
 	};
 
 	const float OPENING_TIME			= 5.0f;					//5•b
-	const float GAME_TIME				= 60.0f * 1.0f;			//4•ª
+	const float GAME_TIME				= 60.0f * 4.0f;			//4•ª
 	const float COUNT_DOWN_TIME			= 3.0f;					//3•b
 	const float ENDING_TIME				= 3.0f;					//3•b
 

@@ -478,48 +478,28 @@ void Player::jumpOperation()
 	//ジャンプ操作が無効
 	if (!whetherValidOperation(ENABLE_JUMP))return;
 
-	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_1P]->wasButton(BUTTON_JUMP)) && !MoveP->IsDie)
+	//死亡時操作を受け付けない
+	switch (infomation.playerType)
 	{
-		jump();
+	case gameMasterNS::PLAYER_1P:		if (MoveP->IsDie)return;		break;
+	case gameMasterNS::PLAYER_2P:		if (MoveP1->IsDie)return;		break;
 	}
-	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_2P]->wasButton(BUTTON_JUMP)) && !MoveP1->IsDie)
+
+	//入力確認
+	if ((input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP)))
 	{
 		jump();
 		PLAY_PARAMETERS jumpVoice = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Man_Jump, false, NULL, false, NULL };
 		SoundInterface::SE->playSound(&jumpVoice);	//SE再生
 	}
 
-	if (infomation.playerType == gameMasterNS::PLAYER_1P)
+	//接地フラグ切替
+	switch (infomation.playerType)
 	{
-		if (onGround)
-		{
-			MoveP->IsGround = true;
-		}
-		else
-		{
-			MoveP->IsGround = false;
-		}
+	case gameMasterNS::PLAYER_1P:	MoveP->IsGround		= onGround;	break;
+	case gameMasterNS::PLAYER_2P:	MoveP1->IsGround	= onGround;	break;
 	}
 
-	if (infomation.playerType == gameMasterNS::PLAYER_2P)
-	{
-		if (onGround)
-		{
-			MoveP1->IsGround = true;
-		}
-		else
-		{
-			MoveP1->IsGround = false;
-		}
-	}
-
-
-
-
-	if (input->getMouseRButton() || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))
-	{
-
-	}
 }
 
 #pragma endregion
@@ -773,42 +753,28 @@ bool Player::shot()
 	MOVEP *MoveP = GetMovePAdr();
 	MOVEP1 *MoveP1 = GetMoveP1Adr();
 
-
-	if (!MoveP->IsDie)
+	//入力確認
+	if (!input->getMouseLButton() && !input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))
 	{
-		if (!input->getMouseLButton() && !input->getController()[gameMasterNS::PLAYER_1P]->isButton(BUTTON_BULLET))
-		{
-			return false;
-		}
-		else
-		{
-			if (bulletManager->launch(shootingRay))
-			{
-				//エフェクトの再生
-				bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
-				effekseerNS::play(0, muzzle);
-			}
-			return true;
-		}
+		return false;
 	}
 
-	if (!MoveP1->IsDie)
+	//死亡時操作を受け付けない
+	switch (infomation.playerType)
 	{
-		if (!input->getMouseLButton() && !input->getController()[gameMasterNS::PLAYER_2P]->isButton(BUTTON_BULLET))
-		{
-			return false;
-		}
-		else
-		{
-			if (bulletManager->launch(shootingRay))
-			{
-				//エフェクトの再生
-				bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
-				effekseerNS::play(0, muzzle);
-			}
-			return true;
-		}
+	case gameMasterNS::PLAYER_1P:		if (MoveP->IsDie)	return false;	break;
+	case gameMasterNS::PLAYER_2P:		if (MoveP1->IsDie)	return false;	break;
 	}
+
+	//弾の発射
+	if (bulletManager->launch(shootingRay))
+	{
+		//エフェクトの再生
+		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
+		effekseerNS::play(0, muzzle);
+		return true;
+	}
+
 	return false;
 }
 
