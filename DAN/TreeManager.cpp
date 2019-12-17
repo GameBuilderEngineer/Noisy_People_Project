@@ -27,8 +27,8 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	aLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_LEAF));
 	bTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_TRUNK));
 	bLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_LEAF));
-	cTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	cLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	cTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_TRUNK));
+	cLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_LEAF));
 
 	// 描画オブジェクトの作成
 	//デジタルツリー
@@ -36,8 +36,8 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	aDLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_LEAF));
 	bDTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_TRUNK));
 	bDLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_LEAF));
-	cDTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::GREEN_TREE_002));
-	cDLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DEAD_TREE));
+	cDTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_TRUNK));
+	cDLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_LEAF));
 
 	//アナログツリー(葉)
 	//透過処理を有効にする

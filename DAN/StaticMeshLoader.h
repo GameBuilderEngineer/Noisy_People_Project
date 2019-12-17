@@ -72,7 +72,9 @@ namespace staticMeshNS {
 		A_LEAF,									//09
 		B_TRUNK,								//10
 		B_LEAF,									//11
-		OCEAN,									//12
+		C_TRUNK,								//12
+		C_LEAF,									//13
+		OCEAN,									//14
 
 		ITEM_BRANCH,
 
