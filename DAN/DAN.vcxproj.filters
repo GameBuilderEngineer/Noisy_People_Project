@@ -370,6 +370,9 @@
     <Filter Include="Game Layer\GameUI\CountUI">
       <UniqueIdentifier>{32cfdeb6-d27d-4326-93ea-b92546bf7881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Announcement">
+      <UniqueIdentifier>{bc0bd313-0b51-4d5d-abec-beb5d883894c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game Layer\Network\Client">
       <UniqueIdentifier>{b01364ad-dd61-4fb6-a242-2edf07d77e7e}</UniqueIdentifier>
     </Filter>
@@ -879,6 +882,11 @@
     </ClCompile>
     <ClCompile Include="movep1.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Announcement.cpp">
+      <Filter>Game Layer\Announcement</Filter>
+    </ClCompile>
+  </ItemGroup>
     </ClCompile>
     <ClCompile Include="networkClient.cpp">
       <Filter>Game Layer\Network\Client</Filter>
@@ -1409,6 +1417,9 @@
     </ClInclude>
     <ClInclude Include="networkClient.h">
       <Filter>Game Layer\Network\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="Announcement.h">
+      <Filter>Game Layer\Announcement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

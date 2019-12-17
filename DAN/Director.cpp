@@ -146,7 +146,7 @@ HRESULT Director::initialize() {
 	//animationLoader->initialize(d3d->device);
 
 	//scene
-	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO) == IDYES)
+	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO| MB_TOPMOST) == IDYES)
 	{
 		scene = new Splash();
 	}

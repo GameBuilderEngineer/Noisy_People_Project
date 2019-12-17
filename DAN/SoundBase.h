@@ -175,11 +175,11 @@ protected:
 #endif
 
 	//APO
-	IUnknown *SaiDelayApo;
-	IUnknown *SaiFadeInApo;
+	//IUnknown *SaiDelayApo;
+	//IUnknown *SaiFadeInApo;
 	//エフェクト
-	SAI_APO_DELAY_REVERB saiApoDelayParameters;
-	SAI_APO_FADE_IN saiApoFadeInParameters;
+	//SAI_APO_DELAY_REVERB saiApoDelayParameters;
+	//SAI_APO_FADE_IN saiApoFadeInParameters;
 	// エフェクトチェン
 	XAUDIO2_EFFECT_CHAIN chain;
 	// ディスクリプタ
