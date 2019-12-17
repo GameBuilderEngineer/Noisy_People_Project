@@ -124,6 +124,7 @@ private:
 	//Ä¶ƒpƒ‰ƒ[ƒ^
 	PLAY_PARAMETERS playParameters[4];
 
+
 	//Network
 	NETWORK_CLIENT*					networkClient;
 	

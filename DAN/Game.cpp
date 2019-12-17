@@ -568,6 +568,10 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionRamaining1Min())
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE4);
+	}
+
+	if (gameMaster->getGameTime() <= 60)
+	{
 		SoundInterface::BGM->SetSpeed();
 	}
 
