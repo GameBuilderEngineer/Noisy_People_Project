@@ -68,6 +68,7 @@ void Create::initialize() {
 	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
 	camera->setRelative(D3DXQUATERNION(0.0f, 10.0f, -15.5f, 0.0f));
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
+	camera->setGazeDistance(10.0f);
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI / 18) * 9);
@@ -78,7 +79,11 @@ void Create::initialize() {
 	topView = new Camera;
 	topView->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	topView->setTarget(tmpObject->getPositionYeah());
-	topView->setRelative(D3DXQUATERNION(0.0f, 100.0f, 0.0f, 0.0f));
+	topView->setTargetX(&tmpObject->getAxisX()->direction);
+	topView->setTargetY(&tmpObject->getAxisY()->direction);
+	topView->setTargetZ(&tmpObject->getAxisZ()->direction);
+	topView->setRelative(D3DXQUATERNION(1.0f, 100.0f, 0.0f, 0.0f));
+	topView->setGazeDistance(100.0f);
 	topView->setGaze(D3DXVECTOR3(0, 0, 0));
 	topView->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	topView->setUpVector(D3DXVECTOR3(0, 1, 0));
@@ -189,7 +194,8 @@ void Create::update(float _frameTime) {
 
 	//カメラの更新
 	camera->update();
-	//hukanカメラの更新
+
+	//俯瞰カメラの更新
 	topView->update();
 
 	// Enterまたは〇ボタンでリザルトへ
