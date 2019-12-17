@@ -54,6 +54,7 @@ namespace textureNS
 		UI_INFO_LIMIT1,
 		UI_INFO_LIMIT2,
 		UI_INFO_MISSION,
+		UI_INFO_BOSS,
 		UI_INFO_BAR,
 		UI_MAIN_RETICLE,
 		UI_SUB_RETICLE,
@@ -87,6 +88,9 @@ namespace textureNS
 		UI_TIME_UP,
 		UI_COUNT_NUM,
 		UI_GAME_START,
+		UI_START_COUNT,
+		OP_ANNOUNCEMENT,
+		UI_EN_MARK,
 
 		// Result
 		RESULT,

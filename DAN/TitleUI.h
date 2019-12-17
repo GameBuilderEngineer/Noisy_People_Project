@@ -82,12 +82,13 @@ class TitleUI
 public: //メンバー変数
 	Sprite * UI[titleUiNS::UI_MAX];
 	int selectState;
+	float alpha;						//α値
 
 public: //メンバー関数
 	void initialize();		//初期
 	void uninitialize();	//終了
 	void render();			//描画
-	void update(Input *input);			//更新
+	void update(Input *input, float flametime);//更新
 	int getSelectState();	//選択肢状態の取得
 	void moveBar();			//バーの移動
 	void ringSE(Input *input);//SEを鳴らす処理

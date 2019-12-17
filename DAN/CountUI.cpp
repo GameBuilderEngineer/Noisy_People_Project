@@ -21,8 +21,10 @@ using namespace CountUINS;
 //===================================================================================================================================
 CountUI::CountUI()
 {
+	//開始時
+	using namespace StartNS;
 	initialize(
-		*textureNS::reference(textureNS::UI_COUNT_NUM),	//テクスチャポインタ
+		*textureNS::reference(textureNS::UI_START_COUNT),	//テクスチャポインタ
 		SpriteNS::CENTER,									//原点
 		WIDTH/DIVIDE_WIDTH,									//幅
 		HEIGHT,												//高さ
@@ -84,6 +86,7 @@ void CountUI::update(float frameTime)
 //===================================================================================================================================
 void CountUI::startCount(int count)
 {
+	using namespace StartNS;
 	this->count = count;
 	switch (count)
 	{
@@ -91,7 +94,7 @@ void CountUI::startCount(int count)
 		//表示時間のセット
 		displayTimer = displayTime = COUNT_DISPLAY_TIME;
 		//テクスチャポインタのセット
-		setTexturePointer(*textureNS::reference(textureNS::UI_COUNT_NUM));
+		setTexturePointer(*textureNS::reference(textureNS::UI_START_COUNT));
 		//サイズのセット
 		setSize(WIDTH / DIVIDE_WIDTH * 3, HEIGHT * 3);
 		//UV値の設定
@@ -119,6 +122,7 @@ void CountUI::startCount(int count)
 //===================================================================================================================================
 void CountUI::finishCount(int count)
 {
+	using namespace FinishNS;
 	this->count = count;
 	switch (count)
 	{

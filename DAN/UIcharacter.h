@@ -13,6 +13,7 @@
 #include "Defeat_Chara.h"
 #include "Defeat_Moji.h"
 #include "WholeGreening.h"
+#include "Persent.h"
 
 //============================
 //名前空間 定数
@@ -59,6 +60,7 @@ public: //メンバー変数
 	Defeat_Chara* defeatChara;
 	Defeat_Moji* defeatMoji;
 	WholeGreening* greening;
+	Persent* persent;
 
 public: //メンバー関数
 	UIcharacter();						//コンストラクタ

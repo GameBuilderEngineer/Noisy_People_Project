@@ -5,6 +5,14 @@
 // [更新日]2019/11/19
 //===================================================================================================================================
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// ※対応後に決してください（by 中込）
+// プレイヤーの初期位置は、プレイヤー間で重複なくランダムに4か所から選定されます。
+// ①南の平野(-43, 8, -236), ②西の岬(-265, 54, 26), ③北の平野(142, 13, 246), ④東の狭い所(311, 13, -65)
+// 伊達山方向を正面に、各y座標より10m上にスポーンします。リスポーンのためにその回の初期位置を記録しておく
+// 必要があります。
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
@@ -249,6 +257,9 @@ void Game::initialize() {
 	//Network
 	networkClient = new NETWORK_CLIENT;
 
+	//OPアナウンス
+	announcement = new Announcement;
+
 #pragma region Memory Test
 	////メモリテスト
 
@@ -281,23 +292,6 @@ void Game::initialize() {
 	enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
 #endif // _DEBUG
 
-	////エネミーをランダムに設置する
-	//for (int i = 0; i < enemyNS::ENEMY_OBJECT_MAX; i++)
-	//{
-	//	D3DXVECTOR3 pos = D3DXVECTOR3(rand() % 400, 150, rand() % 480);
-	//	pos -= D3DXVECTOR3(200, 0, 240);
-	//	enemyNS::ENEMYSET tmp =
-	//	{
-	//		enemyManager->issueNewEnemyID(),
-	//		rand() % (enemyNS::ENEMY_TYPE::TYPE_MAX - 1),
-	//		stateMachineNS::PATROL,
-	//		pos,
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-	//	};
-	//	enemyNS::EnemyData* p = enemyManager->createEnemyData(tmp);
-	//	enemyManager->createEnemy(p);
-	//}
-
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
 
@@ -308,6 +302,7 @@ void Game::initialize() {
 	
 	//ゲーム開始時処理
 	gameMaster->startGame();
+	gameMaster->setTreeNum(treeManager->getTreeNum());
 }
 
 //===================================================================================================================================
@@ -345,6 +340,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(countUI);
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
+	SAFE_DELETE(announcement);
 	UninitMoveP();
 	UninitMoveP1();
 
@@ -409,7 +405,7 @@ void Game::update(float _frameTime) {
 	femaleRenderer->update();				//レンダラー
 
 	// エネミーの更新
-	//enemyManager->update(frameTime);
+	enemyManager->update(frameTime);
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -542,8 +538,8 @@ void Game::update(float _frameTime) {
 	fixedUI->update(gameMaster->getGameTime());
 
 	//プレイヤー周りのUIの更新
-	player1UI->update();
-	player2UI->update();
+	player1UI->update(treeManager->getGreeningRate()*100);
+	player2UI->update(treeManager->getGreeningRate()*100);
 
 	//カウントUIの更新
 	countUI->update(frameTime);
@@ -551,6 +547,8 @@ void Game::update(float _frameTime) {
 	//レティクルの更新
 	reticle->update(frameTime);
 
+	//OPアナウンス
+	announcement->update(frameTime);
 
 	// Enterまたは〇ボタンでリザルトへ
 	//if (input->wasKeyPressed(VK_RETURN) ||
@@ -570,6 +568,10 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionRamaining1Min())
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE4);
+	}
+
+	if (gameMaster->getGameTime() <= 60)
+	{
 		SoundInterface::BGM->SetSpeed();
 	}
 
@@ -601,6 +603,7 @@ void Game::render()
 		direct3D9->changeViewportFullWindow();
 		cameraOP->renderReady();
 		render3D(cameraOP);
+		renderUI();
 		return;
 	}
 
@@ -753,7 +756,15 @@ void Game::render3D(Camera* currentCamera) {
 //===================================================================================================================================
 //【UI/2D描画】
 //===================================================================================================================================
-void Game::renderUI() {
+void Game::renderUI() 
+{
+	//OP中UI
+	if (!gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))
+	{
+		announcement->render();
+		return;
+	}
+
 
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
@@ -870,6 +881,15 @@ void Game::collisions()
 	windManager->windCollision(player);
 
 
+	//カメラとフィールド
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
+		D3DXMATRIX matrix = testField->matrixWorld;
+		//カメラのめり込み補正
+		camera[i].insetCorrection(mesh, matrix);
+	}
+
 	//プレイヤーとフィールド
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
@@ -886,14 +906,6 @@ void Game::collisions()
 		player[i].updateAiming(mesh, matrix);
 		player[i].updatePostureByAiming();
 		player[i].updateShooting(mesh, matrix);
-	}
-	//カメラとフィールド
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
-		D3DXMATRIX matrix = testField->matrixWorld;
-		//カメラのめり込み補正
-		camera[i].insetCorrection(mesh, matrix);
 	}
 
 	//ビジョン|スカイビジョン状態の時
@@ -982,7 +994,8 @@ void Game::collisions()
 				//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL};
 				SoundInterface::SE->playSound(&playParameters);	//SE再生
-				itemManager->destroyAllItem();					//デリート(今は全消し)
+				//itemManager->destroyAllItem();					//デリート(今は全消し)
+				itemManager->destroyItem(itemList[i]->getItemData()->itemID);					//デリート(今は全消し)
 			}
 		}
 	}
@@ -992,7 +1005,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	//aiDirector->run();		// メタAI実行
+	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
@@ -1071,19 +1084,19 @@ void Game::test()
 	//}
 
 
+	if (input->wasKeyPressed('6'))
+	{
+		//aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
+
+		aiDirector->eventMaker.makeEventBossEntry();
+	}
+
 	//if (input->wasKeyPressed('6'))
 	//{
 	//	aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
 
 	//	//aiDirector->eventMaker.makeEventEnemyAttaksTree();
 	//}
-
-	if (input->wasKeyPressed('6'))
-	{
-		aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
-
-		//aiDirector->eventMaker.makeEventEnemyAttaksTree();
-	}
 	if (input->wasKeyPressed('Z'))
 	{
 		player->position = D3DXVECTOR3(20, 5, 0);

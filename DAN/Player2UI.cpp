@@ -19,7 +19,9 @@ Player2UI::Player2UI()
 	hpGuageEmp = new HPguageEmp;
 	electGuageEmp = new ElectGuageEmp;
 	electGuage = new ElectGuage;
-	electTank = new ElectTank;
+	mark = new Mark;
+	green = new Green;
+	greenRate = new GreenRate;
 }
 
 //=================================
@@ -33,7 +35,9 @@ Player2UI::~Player2UI()
 	delete hpGuageEmp;
 	delete electGuageEmp;
 	delete electGuage;
-	delete electTank;
+	delete mark;
+	delete green;
+	delete greenRate;
 }
 
 //==================================
@@ -48,7 +52,9 @@ void Player2UI::initialize(Player *player)
 	hpGuageEmp->initialize(basicUiNS::P2);
 	electGuageEmp->initialize(basicUiNS::P2);
 	electGuage->initialize(basicUiNS::P2);
-	electTank->initialize(basicUiNS::P2);
+	mark->initialize(basicUiNS::P2);
+	green->initialize(basicUiNS::P2);
+	greenRate->initialize(basicUiNS::P2);
 }
 
 //==================================
@@ -63,13 +69,15 @@ void Player2UI::render()
 	charaIcon->render();
 	electGuageEmp->render();
 	electGuage->render();
-	electTank->render();
+	mark->render();
+	green->render();
+	greenRate->render(basicUiNS::P2);
 }
 
 //==================================
 //更新
 //==================================
-void Player2UI::update()
+void Player2UI::update(float neRate)
 {
 
 	//各フラグの獲得
@@ -87,7 +95,9 @@ void Player2UI::update()
 
 	//電力ゲージ処理
 	electGuage->update(power);
-	electTank->update(power, basicUiNS::P2);
+
+	//緑化率
+	greenRate->update(neRate);//とりあえず0
 }
 
 //==================================

@@ -128,6 +128,20 @@ namespace playerNS{
 		STATE_NUM
 	};
 
+	struct StartPosition
+	{
+		D3DXVECTOR3 player1;
+		D3DXVECTOR3 player2;
+	};
+
+	const int POSITION_PATTERN = 5;
+
+	//const StartPosition START_POSITION[POSITION_PATTERN] =
+	//{
+	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)},
+	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)}
+	//};
+
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		D3DXVECTOR3(0, 20, -180),				//1P
@@ -303,6 +317,7 @@ private:
 
 	//debug
 	float dot;
+	bool collideAxisX;
 
 public:
 	Player();
@@ -327,7 +342,7 @@ public:
 	//float distance：補正距離
 	//LPD3DXMESH mesh：衝突対象メッシュ
 	//D3DXMATRIX matrix：衝突対象行列
-	bool insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
+	bool insetCorrection(Ray* ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
 	bool insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
 
 

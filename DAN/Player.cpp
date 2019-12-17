@@ -100,6 +100,7 @@ void Player::initialize(PlayerTable info)
 
 	//シューティングアクション
 	bulletManager = new BulletManager;
+	collideAxisX = false;
 
 	//デジタルアクション
 	//デジタルシフト
@@ -308,25 +309,34 @@ bool Player::insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMA
 	using namespace objectNS;
 	switch (axisID)
 	{
-	case AXIS_X:	return insetCorrection(axisX, distance, mesh, matrix); break;
-	case AXIS_RX:	return insetCorrection(reverseAxisX, distance, mesh, matrix); break;
-	case AXIS_Y:	return insetCorrection(axisY, distance, mesh, matrix); break;
-	case AXIS_RY:	return insetCorrection(reverseAxisY, distance, mesh, matrix); break;
-	case AXIS_Z:	return insetCorrection(axisZ, distance, mesh, matrix); break;
-	case AXIS_RZ:	return insetCorrection(reverseAxisZ, distance, mesh, matrix); break;
+	case AXIS_X:	
+		collideAxisX = insetCorrection(&axisX, distance, mesh, matrix);
+		return collideAxisX; break;
+	case AXIS_RX:	return insetCorrection(&reverseAxisX, distance, mesh, matrix); break;
+	case AXIS_Y:	return insetCorrection(&axisY, distance, mesh, matrix); break;
+	case AXIS_RY:	return insetCorrection(&reverseAxisY, distance, mesh, matrix); break;
+	case AXIS_Z:	return insetCorrection(&axisZ, distance, mesh, matrix); break;
+	case AXIS_RZ:	return insetCorrection(&reverseAxisZ, distance, mesh, matrix); break;
 	}
 	return false;
 }
-bool Player::insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix)
+bool Player::insetCorrection(Ray* ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
-	if (!ray.rayIntersect(mesh, matrix))return false;
+	Ray tmp = *ray;
 
-	if (distance >= ray.distance)
+	if (!tmp.rayIntersect(mesh, matrix))
 	{
-		position += ray.normal*(distance - ray.distance);
-		return true;
+		ray->distance = 100000.0f;
+		return false; 
 	}
-	return false;
+
+	ray->distance = tmp.distance;
+
+	if (distance >= tmp.distance)
+	{
+		position += tmp.normal*(distance - tmp.distance);
+	}
+	return true;
 }
 #pragma endregion
 
@@ -468,48 +478,28 @@ void Player::jumpOperation()
 	//ジャンプ操作が無効
 	if (!whetherValidOperation(ENABLE_JUMP))return;
 
-	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_1P]->wasButton(BUTTON_JUMP)) && !MoveP->IsDie)
+	//死亡時操作を受け付けない
+	switch (infomation.playerType)
 	{
-		jump();
+	case gameMasterNS::PLAYER_1P:		if (MoveP->IsDie)return;		break;
+	case gameMasterNS::PLAYER_2P:		if (MoveP1->IsDie)return;		break;
 	}
-	if ((input->getMouseRButtonTrigger() || input->getController()[gameMasterNS::PLAYER_2P]->wasButton(BUTTON_JUMP)) && !MoveP1->IsDie)
+
+	//入力確認
+	if ((input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP)))
 	{
 		jump();
 		PLAY_PARAMETERS jumpVoice = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Man_Jump, false, NULL, false, NULL };
 		SoundInterface::SE->playSound(&jumpVoice);	//SE再生
 	}
 
-	if (infomation.playerType == gameMasterNS::PLAYER_1P)
+	//接地フラグ切替
+	switch (infomation.playerType)
 	{
-		if (onGround)
-		{
-			MoveP->IsGround = true;
-		}
-		else
-		{
-			MoveP->IsGround = false;
-		}
+	case gameMasterNS::PLAYER_1P:	MoveP->IsGround		= onGround;	break;
+	case gameMasterNS::PLAYER_2P:	MoveP1->IsGround	= onGround;	break;
 	}
 
-	if (infomation.playerType == gameMasterNS::PLAYER_2P)
-	{
-		if (onGround)
-		{
-			MoveP1->IsGround = true;
-		}
-		else
-		{
-			MoveP1->IsGround = false;
-		}
-	}
-
-
-
-
-	if (input->getMouseRButton() || input->getController()[infomation.playerType]->isButton(BUTTON_JUMP))
-	{
-
-	}
 }
 
 #pragma endregion
@@ -543,8 +533,15 @@ void Player::controlCamera(float frameTime)
 	D3DXVec3Normalize(&cameraGazeRelative, &(D3DXVECTOR3)cameraGazeRelativeQ);
 	//カメラ注視位置の更新
 	cameraGaze = position
-		+ cameraGazeRelative * CAMERA_GAZE.x
 		+ axisY.direction*CAMERA_GAZE.y;
+	if (collideAxisX && CAMERA_GAZE.x > axisX.distance)
+	{
+		cameraGaze += cameraGazeRelative * axisX.distance;
+	}
+	else {
+		cameraGaze += cameraGazeRelative * CAMERA_GAZE.x;
+	}
+
 
 	//カメラの更新
 	camera->update();
@@ -741,7 +738,6 @@ float Player::dash()
 //===================================================================================================================================
 void Player::jump()
 {
-
 	if (onGround && !onJump)
 	{
 		onJump = true;	// ジャンプ踏切フラグをオンにする
@@ -757,42 +753,28 @@ bool Player::shot()
 	MOVEP *MoveP = GetMovePAdr();
 	MOVEP1 *MoveP1 = GetMoveP1Adr();
 
-
-	if (!MoveP->IsDie)
+	//入力確認
+	if (!input->getMouseLButton() && !input->getController()[infomation.playerType]->isButton(BUTTON_BULLET))
 	{
-		if (!input->getMouseLButton() && !input->getController()[gameMasterNS::PLAYER_1P]->isButton(BUTTON_BULLET))
-		{
-			return false;
-		}
-		else
-		{
-			if (bulletManager->launch(shootingRay))
-			{
-				//エフェクトの再生
-				bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
-				effekseerNS::play(0, muzzle);
-			}
-			return true;
-		}
+		return false;
 	}
 
-	if (!MoveP1->IsDie)
+	//死亡時操作を受け付けない
+	switch (infomation.playerType)
 	{
-		if (!input->getMouseLButton() && !input->getController()[gameMasterNS::PLAYER_2P]->isButton(BUTTON_BULLET))
-		{
-			return false;
-		}
-		else
-		{
-			if (bulletManager->launch(shootingRay))
-			{
-				//エフェクトの再生
-				bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
-				effekseerNS::play(0, muzzle);
-			}
-			return true;
-		}
+	case gameMasterNS::PLAYER_1P:		if (MoveP->IsDie)	return false;	break;
+	case gameMasterNS::PLAYER_2P:		if (MoveP1->IsDie)	return false;	break;
 	}
+
+	//弾の発射
+	if (bulletManager->launch(shootingRay))
+	{
+		//エフェクトの再生
+		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
+		effekseerNS::play(0, muzzle);
+		return true;
+	}
+
 	return false;
 }
 
@@ -834,7 +816,7 @@ bool Player::digitalShift()
 bool Player::collideShiftRay(Cylinder target)
 {
 	//シフトレイをカメラからのレイとして更新
-	shiftRay.update(camera->position, camera->getDirectionZ());
+	shiftRay.update(camera->gazePosition, camera->getDirectionZ());
 
 	//カメラからの半径付きレイを設定
 	Cylinder volumeRayFromCamera;
@@ -1114,7 +1096,7 @@ bool Player::cancelSkyVision()
 //===================================================================================================================================
 void Player::updateAiming(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
-	aimingRay.update(camera->position + camera->getDirectionZ(), camera->getDirectionZ());
+	aimingRay.update(*camera->target + camera->getDirectionZ(), camera->getDirectionZ());
 	//照射位置の算出
 	collideDistance = MAX_DISTANCE;
 	aimingPosition = aimingRay.start + (aimingRay.direction * collideDistance);

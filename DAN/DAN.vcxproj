@@ -148,6 +148,7 @@
     <ClInclude Include="AIDirector.h" />
     <ClInclude Include="AllocateHierarchy.h" />
     <ClInclude Include="AnalogTree.h" />
+    <ClInclude Include="Announcement.h" />
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BearAnimation.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
     <ClInclude Include="EnemyChaseMark.h" />
+    <ClInclude Include="Marker.h" />
     <ClInclude Include="PartsAnimation.h" />
     <ClInclude Include="PartsAnimationManager.h" />
     <ClInclude Include="TigerAnimation.h" />
@@ -168,9 +170,14 @@
     <ClInclude Include="networkServer.h" />
     <ClInclude Include="SaiDelayReverb.h" />
     <ClInclude Include="SaiFadeIn.h" />
+    <ClInclude Include="GreenRate.h" />
+    <ClInclude Include="Mark.h" />
+    <ClInclude Include="Persent.h" />
+    <ClInclude Include="SerialCommunication.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
+    <ClInclude Include="Green.h" />
     <ClInclude Include="ElectTank.h" />
     <ClInclude Include="Finale.h" />
     <ClInclude Include="Greenig_Chara.h" />
@@ -323,6 +330,7 @@
     <ClCompile Include="AIDirector.cpp" />
     <ClCompile Include="AllocateHierarchy.cpp" />
     <ClCompile Include="AnalogTree.cpp" />
+    <ClCompile Include="Announcement.cpp" />
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BearAnimation.cpp" />
@@ -334,8 +342,12 @@
     <ClCompile Include="Defeat_Moji.cpp" />
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
+    <ClCompile Include="GreenRate.cpp" />
+    <ClCompile Include="Mark.cpp" />
+    <ClCompile Include="Persent.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="EnemyChaseMark.cpp" />
+    <ClCompile Include="Marker.cpp" />
     <ClCompile Include="PartsAnimation.cpp" />
     <ClCompile Include="PartsAnimationManager.cpp" />
     <ClCompile Include="TigerAnimation.cpp" />
@@ -343,10 +355,11 @@
     <ClCompile Include="networkServer.cpp" />
     <ClCompile Include="SaiDelayReverb.cpp" />
     <ClCompile Include="SaiFadeIn.cpp" />
+    <ClCompile Include="SerialCommunication.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
-    <ClCompile Include="ElectTank.cpp" />
+    <ClCompile Include="Green.cpp" />
     <ClCompile Include="Greenig_Chara.cpp" />
     <ClCompile Include="Finale.cpp" />
     <ClCompile Include="GreeningArea.cpp" />

@@ -48,11 +48,19 @@ void Result::initialize()
 	//リザルトUIの初期化
 	resultUI.initialize();
 	
-	resultUI.greenigPersent = 0;//全体緑化率
-	resultUI.greeningNum01 =0;//player1の緑化本数
-	resultUI.greeningNum02 = 0;//player2の緑化本数
-	resultUI.defeat01 = 0;//player1の撃破数
-	resultUI.defeat02 = 0;//player2の撃破数
+	//こんな感じ？
+	resultUI.greenigPersent =gameMaster->getGreeningRate();//全体緑化率
+	resultUI.greeningNum01 =gameMaster->getGreeningTreeNum(basicUiNS::P1);//player1の緑化本数
+	resultUI.greeningNum02 = gameMaster->getGreeningTreeNum(basicUiNS::P2);//player2の緑化本数
+	resultUI.defeat01 = gameMaster->getKillEnemyNum(basicUiNS::P1);//player1の撃破数
+	resultUI.defeat02 = gameMaster->getKillEnemyNum(basicUiNS::P2);//player2の撃破数
+
+	//確認用
+	//resultUI.greenigPersent =60;//全体緑化率
+	//resultUI.greeningNum01 =10;//player1の緑化本数
+	//resultUI.greeningNum02 = 0;//player2の緑化本数
+	//resultUI.defeat01 = 70;//player1の撃破数
+	//resultUI.defeat02 = 0;//player2の撃破数
 
 	//テストフィールド
 	testField = new Object();

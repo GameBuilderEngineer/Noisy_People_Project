@@ -60,6 +60,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_LIMIT1] = { "Info_Limit1.png" };
 	textureName[UI_INFO_LIMIT2] = { "Info_Limit2.png" };
 	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
+	textureName[UI_INFO_BOSS] = { "Info_Boss.png" };
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
 	textureName[UI_MAIN_RETICLE] = { "Reticle_Target.png" };
 	textureName[UI_SUB_RETICLE] = { "Reticle.png" };
@@ -81,18 +82,21 @@ TextureLoader::TextureLoader()
 	textureName[UI_HP_GUAGE_EMP_P2] = { "HPGuage_Emp2.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
 	textureName[UI_ICON_P2] = { "Chara_2.png" };
-	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Emp1.png" };
-	textureName[UI_EN_GUAGE_EMP_P2] = { "EnGuage_Emp2.png" };
-	textureName[UI_EN_GUAGE_P1] = { "EnGuage1.png" };
-	textureName[UI_EN_GUAGE_P2] = { "EnGuage2.png" };
-	textureName[UI_EN_TANK] = { "EnGuage_Stock.png" };
+	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Empty_1.png" };
+	textureName[UI_EN_GUAGE_EMP_P2] = { "EnGuage_Empty_2.png" };
+	textureName[UI_EN_GUAGE_P1] = { "EnGuage_NoMark_1.png" };
+	textureName[UI_EN_GUAGE_P2] = { "EnGuage_NoMark_2.png" };
+	textureName[UI_EN_TANK] = { "Greening.png"};
 	textureName[UI_TREE_MARKER] = { "Dot.png" };
 	textureName[UI_TREE_SIGN] = { "Digit_Tree.png" };
 	textureName[UI_TIMER_NUMBER] = { "num_white.png" };
 	textureName[UI_TIME_UP] = { "TimeUP!.png" };
 	textureName[UI_COUNT_NUM] = { "num_count.png" };
 	textureName[UI_GAME_START] = { "Mission_Start.png" };
+	textureName[UI_START_COUNT] = { "Num_Start.png" };
 	textureName[UI_CAHSE_MARK] = { "ChaseMark.png" };
+	textureName[OP_ANNOUNCEMENT] = { "Mission_Term.png" };
+	textureName[UI_EN_MARK] = { "Shiftable_Mark.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };

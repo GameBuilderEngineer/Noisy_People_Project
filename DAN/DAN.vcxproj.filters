@@ -376,6 +376,15 @@
     <Filter Include="Game Layer\GameUI\CountUI">
       <UniqueIdentifier>{32cfdeb6-d27d-4326-93ea-b92546bf7881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\GameUI\Marker">
+      <UniqueIdentifier>{fc82430f-8944-44f1-8ffe-b9d9598036fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Announcement">
+      <UniqueIdentifier>{bc0bd313-0b51-4d5d-abec-beb5d883894c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SerialCommunication">
+      <UniqueIdentifier>{27094aec-2858-4e07-af46-390a562c548b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -772,9 +781,6 @@
     <ClCompile Include="ElectGuage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
-    <ClCompile Include="ElectTank.cpp">
-      <Filter>Game Layer\GameUI\Guage</Filter>
-    </ClCompile>
     <ClCompile Include="DebugScene.cpp">
       <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClCompile>
@@ -859,7 +865,7 @@
     <ClCompile Include="BearAnimation.cpp">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClCompile>
-	    <ClCompile Include="Finale.cpp">
+    <ClCompile Include="Finale.cpp">
       <Filter>Game Layer\Scene\Finale</Filter>
     </ClCompile>
     <ClCompile Include="networkServer.cpp">
@@ -879,7 +885,29 @@
     </ClCompile>
     <ClCompile Include="movep1.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
-    </ClCompile>  </ItemGroup>
+    </ClCompile>
+    <ClCompile Include="Announcement.cpp">
+      <Filter>Game Layer\GameUI\Announcement</Filter>
+    </ClCompile>
+    <ClCompile Include="Marker.cpp">
+      <Filter>Game Layer\GameUI\Marker</Filter>
+    </ClCompile>
+    <ClCompile Include="Persent.cpp">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialCommunication.cpp">
+      <Filter>SerialCommunication</Filter>
+    </ClCompile>
+    <ClCompile Include="Mark.cpp">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="Green.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GreenRate.cpp">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClCompile>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
       <Filter>Constant Layer\Base</Filter>
@@ -1298,9 +1326,6 @@
     <ClInclude Include="ElectGuage.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
-    <ClInclude Include="ElectTank.h">
-      <Filter>Game Layer\GameUI\Guage</Filter>
-    </ClInclude>
     <ClInclude Include="DebugScene.h">
       <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClInclude>
@@ -1352,6 +1377,9 @@
     <ClInclude Include="WholeGreening.h">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClInclude>
+    <ClInclude Include="Persent.h">
+      <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
+    </ClInclude>
     <ClInclude Include="Display.h">
       <Filter>Game Layer\Scene\Display</Filter>
     </ClInclude>
@@ -1385,7 +1413,7 @@
     <ClInclude Include="BearAnimation.h">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClInclude>
-	    <ClInclude Include="Finale.h">
+    <ClInclude Include="Finale.h">
       <Filter>Game Layer\Scene\Finale</Filter>
     </ClInclude>
     <ClInclude Include="networkServer.h">
@@ -1405,6 +1433,24 @@
     </ClInclude>
     <ClInclude Include="movep1.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Announcement.h">
+      <Filter>Game Layer\GameUI\Announcement</Filter>
+    </ClInclude>
+    <ClInclude Include="Marker.h">
+      <Filter>Game Layer\GameUI\Marker</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialCommunication.h">
+      <Filter>SerialCommunication</Filter>
+    </ClInclude>
+    <ClInclude Include="Mark.h">
+      <Filter>Game Layer\GameUI\Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="Green.h">
+      <Filter>Game Layer\GameUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GreenRate.h">
+      <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
