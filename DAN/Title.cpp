@@ -18,7 +18,6 @@ using namespace titleNS;
 //============================================================================================================================================
 //【グローバル変数】
 //============================================================================================================================================
-//int selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;	//	タイトルメニュー選択状態記憶
 
 //============================================================================================================================================
 //【コンストラクタ】
@@ -57,16 +56,10 @@ Title::~Title(void)
 //============================================================================================================================================
 void Title::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_TITLE, soundNS::METHOD::LOOP);
 	
 	//ターゲットオブジェクト
 	target = new Object;
 	target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
-	
-
-	//
-	
 
 	//初期フォトグラフ
 	stateCamera = CAMERA0;
@@ -175,16 +168,6 @@ void Title::update(float _frameTime)
 
 	target->update();
 
-	// カメラ
-	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
-	//camera[0].update();
-
-	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
-
-	//バーの移動
-	//if(input->wasKeyPressed()
-
-
 	//ミュート
 	if (input->isKeyDown('M'))
 	{
@@ -225,6 +208,9 @@ void Title::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_MAIN)
 		)
 	{
+		PLAY_PARAMETERS playParameters = { 0 };
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL };
+		SoundInterface::SE->playSound(&playParameters);
 		titleState++;
 	}
 	//シーン遷移

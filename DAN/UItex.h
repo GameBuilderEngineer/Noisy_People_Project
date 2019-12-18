@@ -66,10 +66,14 @@ namespace uiTexNS
 	const float END_POS_CHARA_B = (628 * WINDOW_HEIGHT / 1080);	//最終座標のy座標
 
 	//NEXTテクスチャ
-	const int WIDTH_NEXT = (381 * WINDOW_WIDTH / 1920);		//幅
-	const int HEIGHT_NEXT = (95 * WINDOW_HEIGHT / 1080);		//高さ
+	const int WIDTH_NEXT = (512 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_NEXT = (64 * WINDOW_HEIGHT / 1080);		//高さ
 	const D3DXVECTOR3 POSITION_NEXT = D3DXVECTOR3(4500, 1017, 0);//位置
 	const float END_POS_NEXT = (1730 * WINDOW_WIDTH / 1920);	//最終座標のx座標
+
+	//タイトルへ戻るボタン
+	const int WIDTH_TO_TITLE = (512 * WINDOW_WIDTH / 1920);		//幅
+	const int HEIGHT_TO_TITLET = (64 * WINDOW_HEIGHT / 1080);		//高さ
 
 	//共通
 	const D3DXVECTOR3 ROTATION_TEX = D3DXVECTOR3(0, 0, 0);			//回転
