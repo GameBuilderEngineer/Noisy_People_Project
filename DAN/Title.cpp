@@ -62,7 +62,7 @@ void Title::initialize()
 	
 	//ターゲットオブジェクト
 	target = new Object;
-	target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
+	target->initialize(&D3DXVECTOR3(-34.0f, 180.0f, 100));		//ターゲットの初期位置設定
 	
 	//初期フォトグラフ
 	stateCamera = CAMERA0;
@@ -259,7 +259,7 @@ void Title::update(float _frameTime)
 		if (sceneTimer > 0.0f)
 		{
 			startPos = target->position;	//ラープ始点
-			moveTime = 2.0f;				//終点までの時間
+			moveTime = 10.0f;				//終点までの時間
 			moveTimer = moveTime;			//移動タイマー
 			stateCamera++;
 			//カメラの相対位置を一時保存
@@ -270,66 +270,42 @@ void Title::update(float _frameTime)
 		if (moveTimer > 0)
 		{
 			moveTimer -= frameTime;
+			rate = moveTimer / moveTime;
 
-			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-34.0f, 160.0f, -135.0f), 1.0f - moveTimer / moveTime);
+			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-34.0f, 180.0f, -135.0f), 1.0f - rate);
+			
 			//前のカメラの相対位置に補正する
 			camera->relativeQuaternion = tmpCameraQ;
-			if (target->position.z < -135.0f)
-			{
-				target->position.z = -135.0f;
-				startPos = target->position;
-				moveTime = 1.5f;
-				moveTimer = moveTime;
-				degreeTimer = 2.0f;
-				stateCamera++;
-				//カメラの相対位置を一時保存
-				tmpCameraQ = camera->relativeQuaternion;			}
-		}
-		break;
-	case CAMERA2:
-		if (moveTimer > 0)
-		{
-			moveTimer -= frameTime;
-			degreeTimer -= frameTime;
-			D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-65.0f, 75.0f, -122.0), 1.0f - moveTimer / moveTime);
-			rateY = degreeTimer / 2.0f;
-			rateX = degreeTimer / 2.0f;
-			degreeY = UtilityFunction::lerp(0, 100.0f, 1.0f - rateY);
-			degreeX = UtilityFunction::lerp(0, 45.0f, 1.0f - rateX);
-			if (degreeTimer > 0.0f)
-			{
-				//前のカメラの相対位置に補正する
-				camera->relativeQuaternion = tmpCameraQ;
-				camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
-				camera->rotation(fixedAxisX, degreeX);
-			}
 			if (moveTimer <= 0)
 			{
 				target->position = D3DXVECTOR3(-65.0f, 75.0f, -122.0);
 				startPos = target->position;
-				moveTime = 3.0f;
+				moveTime = 6.0f;
 				moveTimer = moveTime;
-				degreeTimer = 3.0f;
+				degreeTimer = 6.0f;
+				degreeTime = degreeTimer;
 				stateCamera++;
 				//カメラの相対位置を一時保存
-				tmpCameraQ = camera->relativeQuaternion;
+				camera->rotation(D3DXVECTOR3(0, 1, 0), 55.0f);
+				camera->rotation(fixedAxisX, 45.0f);
+				tmpCameraQ = camera->relativeQuaternion;	
+				
+				
 			}
-
 		}
 		break;
-		
-	case CAMERA3:
+	case CAMERA2:
 		if (moveTime > 0.0f)
 		{
 			moveTimer -= frameTime;
 			rate = moveTimer / moveTime;
 			degreeTimer -= frameTime;
 
-			target->position = BezierCurve(startPos, D3DXVECTOR3(-200.0f, 63.0f, -176.0), D3DXVECTOR3(-185.0f, 40.0f, 45.0f), rate);
-			
-			rateY = degreeTimer / 3.0f;
-			rateX = degreeTimer / 3.0f;
-			degreeY = UtilityFunction::lerp(0, 90.0f, 1.0f - rateY);
+			target->position = BezierCurve(startPos, D3DXVECTOR3(-250.0f, 63.0f, -200.0), D3DXVECTOR3(-185.0f, 40.0f, 80.0f), rate);
+
+			rateY = degreeTimer / degreeTime;
+			rateX = degreeTimer / degreeTime;
+			degreeY = UtilityFunction::lerp(0, 150.0f, 1.0f - rateY);
 			degreeX = UtilityFunction::lerp(0, -45.0f, 1.0f - rateX);
 			if (degreeTimer > 0)
 			{
@@ -338,11 +314,7 @@ void Title::update(float _frameTime)
 				camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
 				camera->rotation(fixedAxisX, degreeX);
 			}
-			//D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-150.0f, 63.0f, -76.0), 1.0f - moveTimer / moveTime);
-
-			/*D3DXVec3Lerp(&P0_1, &startPos, &D3DXVECTOR3(-150.0f, 63.0f, -76.0), 1.0f - moveTimer / moveTime);
-			D3DXVec3Lerp(&P1_2, &D3DXVECTOR3(-150.0f, 63.0f, -76.0), &D3DXVECTOR3(-185.0f, 40.0f, 45.0f), 1.0f - moveTimer / moveTime);
-			D3DXVec3Lerp(&target->position, &P0_1, &P1_2, 1.0f - moveTimer / moveTime);*/
+			
 		}
 		if (moveTimer <= 0)
 		{
@@ -354,18 +326,19 @@ void Title::update(float _frameTime)
 			degreeTime = degreeTimer;
 			stateCamera++;
 			//次ステート用に角度調整
-			camera->rotation(D3DXVECTOR3(0, 1, 0), 25.0f);
+			camera->rotation(D3DXVECTOR3(0, 1, 0), -15.0f);
 			camera->rotation(fixedAxisX, 35.0f);
 			//カメラの相対位置を一時保存
 			tmpCameraQ = camera->relativeQuaternion;
 		}
-
-		break; 
-	case CAMERA4:
+		break;
+		
+	
+	case CAMERA3:
 		moveTimer -= frameTime;
 		degreeTimer -= frameTime;
 		rate = moveTimer / moveTime;
-		//D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-290.0f, 156.0f, 265.0f), 1.0f - moveTimer / moveTime);
+		
 		target->position = BezierCurve(startPos, D3DXVECTOR3(-430.0f, 96.0f, 200.0f), D3DXVECTOR3(-290.0f, 156.0f, 265.0f), rate);
 	
 		rateY = degreeTimer / degreeTime;
@@ -395,7 +368,7 @@ void Title::update(float _frameTime)
 		}
 		break;
 
-	case CAMERA5:
+	case CAMERA4:
 		moveTimer -= frameTime;
 		degreeTimer -= frameTime;
 		rate = moveTimer / moveTime;
@@ -429,7 +402,7 @@ void Title::update(float _frameTime)
 		break;
 
 		
-	case CAMERA6:
+	case CAMERA5:
 		moveTimer -= frameTime;
 		degreeTimer -= frameTime;
 		rate = moveTimer / moveTime;
@@ -439,7 +412,7 @@ void Title::update(float _frameTime)
 		rateY = degreeTimer / degreeTime;
 		rateX = degreeTimer / degreeTime;
 		degreeY = UtilityFunction::lerp(0, 140.0f, 1.0f - rateY);
-		//degreeX = UtilityFunction::lerp(0, 30.0f, 1.0f - rateX);
+	
 		if (degreeTimer > 0)
 		{
 			camera->relativeQuaternion = tmpCameraQ;
@@ -449,23 +422,22 @@ void Title::update(float _frameTime)
 
 		if (moveTimer <= 0)
 		{
-			target->position = D3DXVECTOR3(-30.0f, 115.0f, -300.0f);
+			target->position = D3DXVECTOR3(-50.0f, 115.0f, -300.0f);
 			startPos = target->position;
-			moveTime = 6.0f;
+			moveTime = 5.0f;
 			moveTimer = moveTime;
-			degreeTimer = 3.0f;
+			degreeTimer = 4.0f;
 			degreeTime = degreeTimer;
 			stateCamera++;
 			//次ステート用に角度調整
 			camera->rotation(D3DXVECTOR3(0, 1, 0), 75.0f);
-			//camera->rotation(fixedAxisX, -25.0f);
 			//カメラの相対位置を一時保存
 			tmpCameraQ = camera->relativeQuaternion;
 		}
 
 		break;
 
-	case CAMERA7:
+	case CAMERA6:
 		moveTimer -= frameTime;
 		degreeTimer -= frameTime;
 		rate = moveTimer / moveTime;
@@ -473,8 +445,8 @@ void Title::update(float _frameTime)
 		rateX = degreeTimer / degreeTime;
 		degreeX = UtilityFunction::lerp(0, -80.0f, 1.0f - rateX);
 
-		BezierCurveS1 = BezierCurve(startPos, D3DXVECTOR3(0, 0, -100), D3DXVECTOR3(-23, 200, 300), rate);
-		BezierCurveS2 = BezierCurve(startPos, D3DXVECTOR3(-23, 400, 150), D3DXVECTOR3(-23, 200, 300), rate);
+		BezierCurveS1 = BezierCurve(startPos, D3DXVECTOR3(-43.0f, -50.0f, -200.0f), D3DXVECTOR3(-43.0f, 250.0f, 350.0f), rate);
+		BezierCurveS2 = BezierCurve(startPos, D3DXVECTOR3(-43.0f, 300.0f, 150.0f), D3DXVECTOR3(-43.0f, 250.0f, 350.0f), rate);
 		D3DXVec3Lerp(&target->position, &BezierCurveS1, &BezierCurveS2, 1.0f - rate);
 		if (degreeTimer > 0)
 		{
@@ -484,29 +456,28 @@ void Title::update(float _frameTime)
 
 		if (moveTimer <= 0)
 		{
+			target->position = D3DXVECTOR3(-23.0f, 250.0f, 350.0f);
 			startPos = target->position;
-			moveTime = 6.0f;
+			moveTime = 3.0f;
 			moveTimer = moveTime;
-			degreeTimer = 2.0f;
+			degreeTimer = 3.0f;
 			degreeTime = degreeTimer;
 			stateCamera++;
 			//次ステート用に角度調整
-			/*camera->rotation(D3DXVECTOR3(0, 1, 0), -130.0f);
-			camera->rotation(fixedAxisX, -25.0f);*/
+			
 			//カメラの相対位置を一時保存
 			tmpCameraQ = camera->relativeQuaternion;
 		}
 
 
 		break;
-	case CAMERA8:
+	case CAMERA7:
 		moveTimer -= frameTime;
 		degreeTimer -= frameTime;
 		rate = moveTimer / moveTime;
 		if (measurement)
 		{
-			//targetDistance = startPos * 2;
-			targetDistance = (startPos * 2) - startPos;
+			targetDistance = D3DXVECTOR3(0, 100.0f, 0) - startPos;
 			distance = D3DXVec3Length(&targetDistance);
 			measurement = false;
 		}
@@ -514,30 +485,29 @@ void Title::update(float _frameTime)
 		rateY = degreeTimer / degreeTime;
 		rateX = degreeTimer / degreeTime;
 		degreeY = UtilityFunction::lerp(0, 180.0f, 1.0f - rateY);
-		degreeX = UtilityFunction::lerp(0, 60.0f, 1.0f - rateX);
+		degreeX = UtilityFunction::lerp(0, 75.0f, 1.0f - rateX);
 
-		D3DXVec3Lerp(&target->position, &startPos, &(startPos * 2), 1.0f - rate);
-		//target->position = BezierCurve(startPos, D3DXVECTOR3(50, 200, 500), D3DXVECTOR3(0, 0, 0), rate);
-		moveDistance = UtilityFunction::lerp(0, -distance, 1.0 - rate);
-		/*D3DXVec3Lerp(&targetDistance, &startPos, &targetDistance, 1.0f - rate);
-		distance = D3DXVec3Length(&targetDistance);
-		moveDistance = UtilityFunction::lerp(0, distance, 1.0 - rate);*/
-		camera->setGazeDistance(-moveDistance);
+		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(0, 100.0f, 0), 1.0f - rate);
+		
+		moveDistance = UtilityFunction::lerp(0, distance, 1.0 - rate);
+		
+		camera->setGazeDistance(moveDistance);
 		if (degreeTimer > 0)
 		{
 			//前のカメラの相対位置に補正する
 			camera->relativeQuaternion = tmpCameraQ;
-			/*camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
-			camera->rotation(fixedAxisX, degreeX);*/
+			camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+			camera->rotation(fixedAxisX, degreeX);
 
 		}
 		
 		if (moveTimer <= 0)
 		{
+			target->position = D3DXVECTOR3(0, 100.0f, 0);
 			startPos = target->position;
 			moveTime = 6.0f;
 			moveTimer = moveTime;
-			degreeTimer = 6.0f;
+			degreeTimer = 30.0f;
 			degreeTime = degreeTimer;
 			stateCamera++;
 			//カメラの相対位置を一時保存
@@ -545,7 +515,30 @@ void Title::update(float _frameTime)
 		}
 		
 		break;
+	case CAMERA8:
+		moveTimer -= frameTime;
+		degreeTimer -= frameTime;
+		rate = moveTimer / moveTime;
+		rateY = degreeTimer / degreeTime;
+
+		degreeY = UtilityFunction::lerp(0, 900.0f, 1.0 - rateY);
+		if (degreeTimer > 0)
+		{
+			camera->relativeQuaternion = tmpCameraQ;
+			camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+		}
+		else if (degreeTimer <= 0)
+		{
+			stateCamera = CAMERA0;
+			target->initialize(&D3DXVECTOR3(-34.0f, 180.0f, 100));		//ターゲットの初期位置設定
+			camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, 1.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
+			camera->setGazeDistance(20.0f);
+			//stateCamera++;
+		}
+
+		break;
 	case CAMERA9:
+
 		//stateCamera = CAMERA0;
 		//target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
 		//camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, 20.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
@@ -558,9 +551,6 @@ void Title::update(float _frameTime)
 		{
 			stateCamera++;
 		}*/
-
-		break;
-	case CAMERA10:
 		break;
 	default:
 		break;
@@ -569,77 +559,77 @@ void Title::update(float _frameTime)
 
 	//Base::anyAxisRotationSlerp(&cameraQ,D3DXVECTOR3(13.2f, 6.0f, -13.0f),);
 
-	//カメラ移動
-	if (input->isKeyDown('W'))
-	{
-		fixedAxisZ *= 1.0f;
-		target->position += fixedAxisZ;
-	}
-	if (input->isKeyDown('S'))
-	{
-		fixedAxisZ *= -1.0f;
-		target->position += fixedAxisZ;
-	}
-	if (input->isKeyDown('A'))
-	{
-		cameraAxisX *= -1.0f;
-		target->position += cameraAxisX;
-	}
-	if (input->isKeyDown('D'))
-	{
-		cameraAxisX *= 1.0f;
-		target->position += cameraAxisX;
-	}
-	if (input->isKeyDown('Q'))
-	{
-		Y *= 1.0f;
-		target->position += camera->upVector;
-	}
-	if (input->isKeyDown('E'))
-	{
-		Y *= 1.0f;
-		target->position -= camera->upVector;
+	////カメラ移動
+	//if (input->isKeyDown('W'))
+	//{
+	//	fixedAxisZ *= 1.0f;
+	//	target->position += fixedAxisZ;
+	//}
+	//if (input->isKeyDown('S'))
+	//{
+	//	fixedAxisZ *= -1.0f;
+	//	target->position += fixedAxisZ;
+	//}
+	//if (input->isKeyDown('A'))
+	//{
+	//	cameraAxisX *= -1.0f;
+	//	target->position += cameraAxisX;
+	//}
+	//if (input->isKeyDown('D'))
+	//{
+	//	cameraAxisX *= 1.0f;
+	//	target->position += cameraAxisX;
+	//}
+	//if (input->isKeyDown('Q'))
+	//{
+	//	Y *= 1.0f;
+	//	target->position += camera->upVector;
+	//}
+	//if (input->isKeyDown('E'))
+	//{
+	//	Y *= 1.0f;
+	//	target->position -= camera->upVector;
 
-	}
+	//}
 
-	//カメラ回転
-	//camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
-	//Y軸
-	if (input->isKeyDown(VK_RIGHT))
-	{
-		
-		camera->rotation(camera->upVector, inputDegree);
-		//target->quaternion.y += 5.0f;
-	}
-	if (input->isKeyDown(VK_LEFT))
-	{
-		camera->rotation(-camera->upVector, inputDegree);
-		//target->quaternion.y -= 5.0f;
-	}
-	//X軸
-	if (input->isKeyDown(VK_UP))
-	{
-		camera->rotation(-fixedAxisX, inputDegree);
-	}
-	if (input->isKeyDown(VK_DOWN))
-	{
-		camera->rotation(fixedAxisX, inputDegree);
-	}
-	//ズーム
-	if (input->isKeyDown('Z'))
-	{
-		camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
-	}
-	if (input->isKeyDown('X'))
-	{
-		camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
-	}
+	////カメラ回転
+	////camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
+	////Y軸
+	//if (input->isKeyDown(VK_RIGHT))
+	//{
+	//	
+	//	camera->rotation(camera->upVector, inputDegree);
+	//	//target->quaternion.y += 5.0f;
+	//}
+	//if (input->isKeyDown(VK_LEFT))
+	//{
+	//	camera->rotation(-camera->upVector, inputDegree);
+	//	//target->quaternion.y -= 5.0f;
+	//}
+	////X軸
+	//if (input->isKeyDown(VK_UP))
+	//{
+	//	camera->rotation(-fixedAxisX, inputDegree);
+	//}
+	//if (input->isKeyDown(VK_DOWN))
+	//{
+	//	camera->rotation(fixedAxisX, inputDegree);
+	//}
+	////ズーム
+	//if (input->isKeyDown('Z'))
+	//{
+	//	camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
+	//}
+	//if (input->isKeyDown('X'))
+	//{
+	//	camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
+	//}
 
-	if (input->wasKeyPressed('P'))
-	{
-		getFader()->setShader(faderNS::NORMAL);
-		getFader()->start();
-	}
+	//if (input->wasKeyPressed('P'))
+	//{
+	//	getFader()->setShader(faderNS::NORMAL);
+	//	getFader()->start();
+	//}
 
 	//カメラ
 	camera->update();
