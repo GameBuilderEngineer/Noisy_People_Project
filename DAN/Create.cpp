@@ -66,7 +66,7 @@ void Create::initialize() {
 	camera->setTargetX(&tmpObject->getAxisX()->direction);
 	camera->setTargetY(&tmpObject->getAxisY()->direction);
 	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
-	camera->setRelative(D3DXQUATERNION(0.0f, 10.0f, -15.5f, 0.0f));
+	camera->setRelative(D3DXQUATERNION(0.0f, 60.0f, -15.5f, 0.0f));
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setGazeDistance(10.0f);
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
@@ -179,8 +179,7 @@ void Create::update(float _frameTime) {
 	}
 
 
-	////カメラの更新
-	//camera->update();
+	//カメラの更新
 	tmpObjRenderer->update();
 
 	////枯木の更新
@@ -206,7 +205,6 @@ void Create::update(float _frameTime) {
 		// シーン遷移
 		changeScene(nextScene);
 	}
-
 }
 
 //===================================================================================================================================
@@ -238,7 +236,6 @@ void Create::render() {
 	//UI
 	direct3D9->changeViewportFullWindow();
 	renderUI();
-
 }
 
 //===================================================================================================================================
