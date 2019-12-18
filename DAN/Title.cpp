@@ -29,14 +29,14 @@ Title::Title(void)
 	sceneName = ("Scene -Title-");
 	nextScene = SceneList::TUTORIAL;
 
-	//再生パラメータ
-	PLAY_PARAMETERS playParameters[2];//同時に再生したい数
-	memset(playParameters, 0, sizeof(playParameters));//
-	//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Cancel, false,1.0f,false,NULL };//SEの設定
-	playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
-	//再生
-	SoundInterface::BGM->playSound(&playParameters[1]);
+	////再生パラメータ
+	//PLAY_PARAMETERS playParameters[2];//同時に再生したい数
+	//memset(playParameters, 0, sizeof(playParameters));//
+	////再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
+	//playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Cancel, false,1.0f,false,NULL };//SEの設定
+	//playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
+	////再生
+	//SoundInterface::BGM->playSound(&playParameters[1]);
 	
 
 	//初期化
@@ -49,7 +49,7 @@ Title::Title(void)
 Title::~Title(void)
 {
 	// サウンドの停止
-	SoundInterface::BGM->uninitSoundStop();
+	//SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================
@@ -472,7 +472,7 @@ void Title::update(float _frameTime)
 			startPos = target->position;
 			moveTime = 6.0f;
 			moveTimer = moveTime;
-			degreeTimer = 6.0f;
+			degreeTimer = 2.0f;
 			degreeTime = degreeTimer;
 			stateCamera++;
 			//次ステート用に角度調整
@@ -490,25 +490,28 @@ void Title::update(float _frameTime)
 		rate = moveTimer / moveTime;
 		if (measurement)
 		{
-			targetDistance = D3DXVECTOR3(0, 0, 0) - startPos;
-			distance = D3DXVec3Length(&targetDistance);
+			targetDistance = startPos * 2;
+			//targetDistance = startPos - D3DXVECTOR3(0, 0, 0);
+			//distance = D3DXVec3Length(&targetDistance);
 			measurement = false;
 		}
 
 		rateY = degreeTimer / degreeTime;
 		rateX = degreeTimer / degreeTime;
 		degreeY = UtilityFunction::lerp(0, 180.0f, 1.0f - rateY);
-		degreeX = UtilityFunction::lerp(0, 10.0f, 1.0f - rateX);
+		degreeX = UtilityFunction::lerp(0, -30.0f, 1.0f - rateX);
 
 		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(0, 0, 0), 1.0f - rate);
-		moveDistance = UtilityFunction::lerp(0, distance, 1.0 - rate);
-		camera->setGazeDistance(-moveDistance);
-		if (degreeTime > 0)
+		D3DXVec3Lerp(&targetDistance, &startPos, &targetDistance, 1.0f - rate);
+		distance = D3DXVec3Length(&targetDistance);
+		//moveDistance = UtilityFunction::lerp(0, distance, 1.0 - rate);
+		camera->setGazeDistance(-distance);
+		if (degreeTimer > 0)
 		{
 			//前のカメラの相対位置に補正する
 			camera->relativeQuaternion = tmpCameraQ;
-			camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
-			camera->rotation(fixedAxisX, degreeX);
+			/*camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+			camera->rotation(fixedAxisX, degreeX);*/
 
 		}
 		
@@ -537,8 +540,8 @@ void Title::update(float _frameTime)
 		if (degreeTimer <= 0)
 		{
 			stateCamera++;
-		}
-*/
+		}*/
+
 		break;
 	case CAMERA10:
 		break;
@@ -724,7 +727,7 @@ void Title::render2D()
 
 #if _DEBUG
 	//WaveBall
-	waveBall->draw();
+	//waveBall->draw();
 #endif
 
 	// αテストを無効に
@@ -785,7 +788,7 @@ void Title::createGUI()
 	if (backUpTmpVolume != tmpVolume)
 	{
 		backUpTmpVolume = tmpVolume;
-		waveBall->setVolume(tmpVolume);
+		//waveBall->setVolume(tmpVolume);
 	}
 
 	ImGui::Text("controller1 LStick(%.02f,%.02f)", 
@@ -794,7 +797,7 @@ void Title::createGUI()
 	ImGui::Text("controller1 LStickTrigger(%.02f,%.02f)", 
 		input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().x,
 		input->getController()[inputNS::DINPUT_1P]->getLeftStickTrigger().y);
-
+	
 	//ツール用シーン
 	if (createScene)
 	{
