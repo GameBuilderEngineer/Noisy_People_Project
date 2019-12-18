@@ -1004,7 +1004,6 @@ void Game::collisions()
 			if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
 				player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
 			{
-				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
 				player[j].addpower(batteryNS::RECOVERY_POWER);	//“d—Í‰ÁŽZ
 				//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL};

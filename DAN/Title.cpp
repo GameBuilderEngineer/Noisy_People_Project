@@ -471,10 +471,10 @@ void Title::update(float _frameTime)
 		rate = moveTimer / moveTime;
 
 		rateX = degreeTimer / degreeTime;
-		degreeX = UtilityFunction::lerp(0, -100.0f, 1.0f - rateX);
+		degreeX = UtilityFunction::lerp(0, -80.0f, 1.0f - rateX);
 
-		BezierCurveS1 = BezierCurve(startPos, D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-23, 200, 300), rate);
-		BezierCurveS2 = BezierCurve(startPos, D3DXVECTOR3(-23, 400, 200), D3DXVECTOR3(-23, 200, 300), rate);
+		BezierCurveS1 = BezierCurve(startPos, D3DXVECTOR3(0, 0, -100), D3DXVECTOR3(-23, 200, 300), rate);
+		BezierCurveS2 = BezierCurve(startPos, D3DXVECTOR3(-23, 400, 150), D3DXVECTOR3(-23, 200, 300), rate);
 		D3DXVec3Lerp(&target->position, &BezierCurveS1, &BezierCurveS2, 1.0f - rate);
 		if (degreeTimer > 0)
 		{
@@ -505,22 +505,24 @@ void Title::update(float _frameTime)
 		rate = moveTimer / moveTime;
 		if (measurement)
 		{
-			targetDistance = startPos * 2;
-			//targetDistance = startPos - D3DXVECTOR3(0, 0, 0);
-			//distance = D3DXVec3Length(&targetDistance);
+			//targetDistance = startPos * 2;
+			targetDistance = (startPos * 2) - startPos;
+			distance = D3DXVec3Length(&targetDistance);
 			measurement = false;
 		}
 
 		rateY = degreeTimer / degreeTime;
 		rateX = degreeTimer / degreeTime;
 		degreeY = UtilityFunction::lerp(0, 180.0f, 1.0f - rateY);
-		degreeX = UtilityFunction::lerp(0, -30.0f, 1.0f - rateX);
+		degreeX = UtilityFunction::lerp(0, 60.0f, 1.0f - rateX);
 
-		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(0, 0, 0), 1.0f - rate);
-		D3DXVec3Lerp(&targetDistance, &startPos, &targetDistance, 1.0f - rate);
+		D3DXVec3Lerp(&target->position, &startPos, &(startPos * 2), 1.0f - rate);
+		//target->position = BezierCurve(startPos, D3DXVECTOR3(50, 200, 500), D3DXVECTOR3(0, 0, 0), rate);
+		moveDistance = UtilityFunction::lerp(0, -distance, 1.0 - rate);
+		/*D3DXVec3Lerp(&targetDistance, &startPos, &targetDistance, 1.0f - rate);
 		distance = D3DXVec3Length(&targetDistance);
-		//moveDistance = UtilityFunction::lerp(0, distance, 1.0 - rate);
-		camera->setGazeDistance(-distance);
+		moveDistance = UtilityFunction::lerp(0, distance, 1.0 - rate);*/
+		camera->setGazeDistance(-moveDistance);
 		if (degreeTimer > 0)
 		{
 			//‘O‚ÌƒJƒƒ‰‚Ì‘Š‘ÎˆÊ’u‚É•â³‚·‚é
