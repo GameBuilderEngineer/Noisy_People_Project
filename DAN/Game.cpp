@@ -178,7 +178,7 @@ void Game::initialize() {
 	//アニメションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-
+	//InitEquipment(TRUE);
 
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
@@ -357,7 +357,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(announcement);
 	UninitMoveP();
 	UninitMoveP1();
-
+	//UninitEquipment();
 }
 
 //===================================================================================================================================
@@ -461,7 +461,10 @@ void Game::update(float _frameTime) {
 	mp->Pos = player[gameMasterNS::PLAYER_1P].position;
 	D3DXQUATERNION q = player[gameMasterNS::PLAYER_1P].quaternion;
 	Base::anyAxisRotation(&q,D3DXVECTOR3(0,1,0),180);
-	mp->Quaternion = q;
+	if (!mp->IsDie)
+	{
+		mp->Quaternion = q;
+	}
 
 	UpdateMoveP1(frameTime);
 	//キャラクターの場所と回転の連携
@@ -469,7 +472,15 @@ void Game::update(float _frameTime) {
 	mp1->Pos = player[gameMasterNS::PLAYER_2P].position;
 	D3DXQUATERNION q1 = player[gameMasterNS::PLAYER_2P].quaternion;
 	Base::anyAxisRotation(&q1, D3DXVECTOR3(0, 1, 0), 180);
-	mp1->Quaternion = q1;
+	if (!mp1->IsDie)
+	{
+		mp1->Quaternion = q1;
+	}
+	//UpdateEquipment();
+	//SWORD *Gun = GetSword("MoveP1");
+	//D3DXQUATERNION q2 = player[gameMasterNS::PLAYER_1P].quaternion;
+	//Base::anyAxisRotation(&q2, D3DXVECTOR3(0, 1, 0), 270);
+	//Gun->Quaternion = q2;
 
 
 	//エフェクシアーのテスト
@@ -716,6 +727,7 @@ void Game::render3D(Camera* currentCamera) {
 	//アニメーションモデルの描画
 	DrawMoveP();
 	DrawMoveP1();
+	//DrawEquipment();
 	//スカイドームの描画
 	//sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 	//海面の描画
