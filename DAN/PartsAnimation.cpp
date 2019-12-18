@@ -60,3 +60,20 @@ D3DXVECTOR3 PartsAnimation::updateRotation(const D3DXVECTOR3* rotation)
 	return rotation[keyFrame] + (rotation[keyFrame + 1] - rotation[keyFrame]) * (animationTime - keyFrame);
 }
 
+
+//=============================================================================
+// 現在のキーフレームを取得
+//=============================================================================
+int PartsAnimation::getKeyFrame()
+{
+	return keyFrame;
+}
+
+
+//=============================================================================
+// キーフレームの数を取得
+//=============================================================================
+int PartsAnimation::getNumKeyFrame()
+{
+	return numKeyFrame;
+}

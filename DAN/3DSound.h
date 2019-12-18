@@ -16,57 +16,24 @@
 //===================================================================================================================================
 //【マクロ定義】
 //===================================================================================================================================
-#define S3D_PATH_LIST_TAIL(scene,num)			scene##S3DPathList##num
+#define S3D_PATH_LIST_TAIL(num)			S3DPathList##[num]
 
 //===================================================================================================================================
 //【列挙型定数】
 //===================================================================================================================================
-enum SPLASH_S3D_LIST
+enum S3D_LIST
 {
-	SPLASH_S3D_MAX
-};
-
-enum TITLE_S3D_LIST
-{
-	TITLE_S3D_MAX
-};
-
-enum CREDIT_S3D_LIST
-{
-	CREDIT_S3D_MAX
-};
-
-enum GAME_S3D_LIST
-{
-	S3D_GAME_FOOTSTEP_01,
-	S3D_GAME_FOOTSTEP_02,
-	S3D_GAME_FOOTSTEP_03,
-	GAME_S3D_MAX
-};
-
-enum TUTORIAL_S3D_LIST
-{
-	S3D_TUTORIAL_FOOTSTEP_01,
-	S3D_TUTORIAL_FOOTSTEP_02,
-	S3D_TUTORIAL_FOOTSTEP_03,
-	TUTORIAL_S3D_MAX
-};
-
-enum CREATE_S3D_LIST
-{
-	CREATE_S3D_MAX
-};
-
-enum RESULT_S3D_LIST
-{
-	RESULT_S3D_MAX
+	S3D_FOOTSTEP_01,
+	S3D_FOOTSTEP_02,
+	S3D_FOOTSTEP_03,
+	S3D_PLAYER_WALK,
+	S3D_MAX
 };
 
 //===================================================================================================================================
 //【定数定義】
 //===================================================================================================================================
-static const char *gameS3DPathList[] = { "3D_ADD_TREE01.wav","3D_Enemy_Walk00.wav","3D_Enemy_Walk01.wav" };
-static const char *tutorialS3DPathList[] = { "3D_ADD_TREE01.wav","3D_Enemy_Walk00.wav","3D_Enemy_Walk01.wav" };
+static const char *S3DPathList[] = { "3D_ADD_TREE01.wav","3D_Enemy_Walk00.wav","3D_Enemy_Walk01.wav","3D_PLAYER_WALK.wav" };
 
 //===================================================================================================================================
 //【サウンド(XAudio2)】
@@ -79,7 +46,6 @@ public:
 	~S3DManager();
 
 	//基本機能
-	//void	 SwitchAudioBuffer(int scene)override;							//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void SetVolume(const PLAY_PARAMETERS playParameters, float volume);	//ボリューム
 
 	//debug用
@@ -96,5 +62,7 @@ private:
 
 	//ソースボイスの作成
 	void MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *listBuffer)override;
+
+	void loadBuffer(void)override;
 #endif
 };

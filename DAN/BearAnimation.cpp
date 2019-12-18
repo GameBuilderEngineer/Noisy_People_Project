@@ -98,7 +98,6 @@ static const D3DXVECTOR3 MOVE_ANIMATION_WAIST[] =
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.2f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-
 };
 static const D3DXVECTOR3 MOVE_ANIMATION_LEG_L[] =
 {
@@ -294,9 +293,8 @@ void DeadAnimation::update(D3DXVECTOR3* rot, Object** parts, float t)
 BearAnimationManager::BearAnimationManager(int partsMax, Object* parent, Object** parts)
 	: PartsAnimationManager(partsMax, parent, parts)
 {
-	animation = new PartsAnimation*[ANIMATION_TYPE_MAX];
-
 	// アニメーションを作成
+	animation = new PartsAnimation*[ANIMATION_TYPE_MAX];
 	animation[DEFAULT] = new DefaultAnimation(ANIMATION_FLAG[DEFAULT]);
 	animation[MOVE] = new MoveAnimation(ANIMATION_FLAG[MOVE]);
 	animation[ATTACK1] = new Attack1Animation(ANIMATION_FLAG[ATTACK1]);
@@ -304,7 +302,6 @@ BearAnimationManager::BearAnimationManager(int partsMax, Object* parent, Object*
 	animation[ATTACK3] = NULL;
 	animation[DEAD] = new DeadAnimation(ANIMATION_FLAG[DEAD]);
 }
-
 
 //=============================================================================
 // デストラクタ
@@ -327,11 +324,46 @@ void BearAnimationManager::update(float frameTime)
 	// 回転の更新
 	for (int i = 0; i < ANIMATION_TYPE_MAX; i++)
 	{
+		// 未実装アニメーションをパス
 		if (animation[i] == NULL) { continue; }
 
+		// アニメーションの更新
 		if (flagState & animation[i]->flag)
 		{
 			animation[i]->update(rot, parts, frameTime * ANIMATION_SPEED[i]);
+		}
+	}
+
+	//------------
+	// 3Dサウンド
+	//------------
+	// 再生タイミングをリセット
+	int keyFrame = animation[MOVE]->getKeyFrame();
+	if (keyFrame == 0 || keyFrame == 2)
+	{
+		wasTimingCame = false;
+	}
+
+	if (flagState & animation[MOVE]->flag)
+	{
+		// 指定のキーフレームになった最初のタイミングで再生フラグを立てる
+		int keyFrame = animation[MOVE]->getKeyFrame();
+		if (keyFrame == 1 || keyFrame == 3)
+		{
+			if (wasTimingCame == false)
+			{
+				wasTimingCame = true;
+				canPlayMoveSound = true;
+				/*
+				 ここで再生！
+				 AnimationMangaerはエネミーが個別に持つオブジェクトなので以下のような感じで。
+				 if(animationManager->canPlayMoveSound)
+				 {
+					animationManager->canPlayMoveSound = false;
+					footSteps(~);	// サウンド再生
+				 }
+				*/
+			}
 		}
 	}
 
@@ -397,6 +429,13 @@ void BearAnimationManager::switchDefault()
 //=============================================================================
 void BearAnimationManager::switchMove()
 {
+	//// 移動アニメーションが既に再生されている場合はそのまま
+	//if (flagState & animation[MOVE]->flag)
+	//{
+	//	return;
+	//}
+	// ●このあたりのフラグの循環がまだ甘い
+
 	// 攻撃アニメーションが終了していないと再生されない
 	if (animation[ATTACK1]->wasPlayedToEnd)
 	{
