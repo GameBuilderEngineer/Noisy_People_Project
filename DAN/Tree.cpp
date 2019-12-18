@@ -181,7 +181,7 @@ void Tree::render()
 //【周辺の緑化処理（デジタル化時）】
 //=============================================================================
 void Tree::greeningAround()
-{	
+{
 	greeningArea.initialize(&center);
 	greeningArea.setRadius(1.0f);
 	//エフェクトの再生
@@ -195,7 +195,7 @@ void Tree::greeningAround()
 //【状態遷移を行う】
 //=============================================================================
 void Tree::transState()
-{	
+{
 	onTransState = true;
 }
 
@@ -203,7 +203,7 @@ void Tree::transState()
 //【デジタルエフェクトの再生】
 //=============================================================================
 void Tree::playDigitalEffect()
-{	
+{
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//VISION時
@@ -300,6 +300,7 @@ void Tree::addHp(int value) {
 //緑化エリアのスケールを設定
 void Tree::setGreeningArea(float value)
 {
+	greeningArea.size = D3DXVECTOR3(value, value, value);
 	greeningArea.sphere->setScale(value);
 }
 //周囲への緑化を終了
@@ -367,8 +368,12 @@ void DigitalState::start()
 		aroundGreenRange = AROUND_GREEN_RANGE_V; break;
 	}
 
+	//
+	tree->getGreeningArea()->scale *= aroundGreenRange;
+
 	//周囲への緑化を開始する
 	tree->greeningAround();
+
 }
 
 //=============================================================================
@@ -394,11 +399,14 @@ void DigitalState::update(float frameTime)
 			tree->disableAroundGreening();			//周囲緑化フラグを切る
 		}
 	}
+
+	//
 	if (tree->isAroundGreening())
 	{
 		float rate = aroundGreenTimer/AROUND_GREEN_TIME;
 		tree->setGreeningArea(UtilityFunction::lerp(1.0f, aroundGreenRange, rate));
 	}
+
 }
 
 //=============================================================================

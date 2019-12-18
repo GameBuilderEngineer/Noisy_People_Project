@@ -70,7 +70,7 @@ public:
 		result = min(result, high);
 		return result;
 	}
-	//視錐台カリング
+	//視錐台カリング：視野内の場合true;
 	static bool culling(D3DXVECTOR3 center, float radius, D3DXMATRIX view, float angle, float  nearClip, float farClip, float aspect);
 
 	//【変換】極座標->直交座標
