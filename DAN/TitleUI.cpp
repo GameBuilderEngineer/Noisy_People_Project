@@ -124,7 +124,11 @@ void TitleUI::initialize()
 	//α値の初期化
 	alpha = 0.0f;
 
+	//タイトル状態の初期化
 	titleState = 0;
+
+	//タイトル時間
+	titleTime = 0.0f;
 }
 
 //============================
@@ -138,7 +142,10 @@ void TitleUI::render()
 	}
 	else
 	{
-		UI[UI_LOGO]->render();
+		if (titleTime >FLOAT_LOGO_TIME)
+		{
+			UI[UI_LOGO]->render();
+		}
 		UI[UI_BAR]->render();
 		UI[UI_MENU]->render();
 		switch (selectState)
@@ -182,12 +189,13 @@ void TitleUI::update(Input *input,float flametime)
 
 	if (titleState == 1)
 	{
-		if (alpha < 255)
+		titleTime += flametime;
+		if (alpha < 255 && titleTime>FLOAT_LOGO_TIME)
 		{
-			alpha += 0.7f;
+			alpha += ALPHA_SPEED;
 			UI[UI_LOGO]->setAlphaAllVertex(alpha);
 		}
-		else
+		else if(alpha>=255)
 		{
 			UI[UI_LOGO]->setAlphaAllVertex(255);
 		}

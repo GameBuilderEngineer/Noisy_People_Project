@@ -254,15 +254,15 @@ void Director::run(HINSTANCE _instance) {
 void Director::mainLoop() {
 
 	//シリアル通信：送信
-	/*if (input->isKeyDown('0'))
-	{
-		serialCommunication->send(1);
-	}
-	else {
-		serialCommunication->send(2);
-	}*/
+	//if (input->isKeyDown('0'))
+	//{
+	//	serialCommunication->send(1);
+	//}
+	//else {
+	//	serialCommunication->send(2);
+	//}
 
-
+	
 	//リセット
 	if (input->wasKeyPressed(VK_F5))
 	{
