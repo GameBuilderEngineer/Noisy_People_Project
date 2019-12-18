@@ -48,7 +48,6 @@ void Result::initialize()
 	//リザルトUIの初期化
 	resultUI.initialize();
 	
-	//こんな感じ？
 	resultUI.greenigPersent =gameMaster->getGreeningRate();//全体緑化率
 	resultUI.greeningNum01 =gameMaster->getGreeningTreeNum(basicUiNS::P1);//player1の緑化本数
 	resultUI.greeningNum02 = gameMaster->getGreeningTreeNum(basicUiNS::P2);//player2の緑化本数
@@ -70,6 +69,7 @@ void Result::initialize()
 	camera->setTargetY(&testField->getAxisY()->direction);
 	camera->setTargetZ(&testField->getAxisZ()->direction);
 	camera->setRelative(CAMERA_RELATIVE_QUATERNION);
+	camera->setGazeDistance(400.0f);
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI / 180) * 90);

@@ -19,7 +19,7 @@
 //===================================================================================================================================
 namespace DisplayNS
 {
-	const D3DXQUATERNION	CAMERA_RELATIVE_QUATERNION	= D3DXQUATERNION(0.0f,300.0f, -300.0f, 0.0f);
+	const D3DXQUATERNION	CAMERA_RELATIVE_QUATERNION	= D3DXQUATERNION(0.0f,300.0f, 10.0f, 0.0f);
 	const float				CAMERA_SPEED				= 30.0f;
 
 

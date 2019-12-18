@@ -89,7 +89,7 @@ void Display::initialize()
 	camera->setFieldOfView((D3DX_PI / 180) * 90);
 	camera->setLimitRotationTop(0.1f);
 	camera->setLimitRotationBottom(0.1f);
-	camera->setGazeDistance(300.0f);
+	camera->setGazeDistance(400.0f);
 
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(0,
@@ -201,7 +201,7 @@ void Display::update(float _frameTime)
 
 	//カメラの更新
 	{
-		float rate = (sinf(sceneTimer * 6) / 2.0f) + 0.5f;
+		float rate = (sinf(sceneTimer) / 2.0f) + 0.5f;
 		float fov = UtilityFunction::lerp((D3DX_PI / 180) * 70, (D3DX_PI / 180) * 90, 0.5);
 		camera->setFieldOfView(fov);
 		camera->rotation(D3DXVECTOR3(0, 1, 0), CAMERA_SPEED*frameTime);
