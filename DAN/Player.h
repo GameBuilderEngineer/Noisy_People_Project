@@ -190,7 +190,6 @@ namespace playerNS{
 	const float	SKY_TRANSITION_TIME			= 0.5f;									//‹ó’†‚Ö‚Ì‘JˆÚŽžŠÔ
 	const float	SKY_RETURN_TIME				= 0.5f;									//‹ó’†‚©‚ç–ß‚é‘JˆÚŽžŠÔ
 
-
 	//EnableOperation
 	const int	DISABLE_OPERATION			= 0x00000000;
 	const int	ENABLE_SHOT					= 0x00000001;
@@ -203,6 +202,11 @@ namespace playerNS{
 	const int	ENABLE_CAMERA				= 0x00000080;
 	const int	ENABLE_MOVE					= 0x00000100;
 	const int	ALL_OPERATION				= 0xffffffff;
+
+	//Voice
+	const int	NUM_JUMP_VOICE				= 2;
+	const int	NUM_DAMAGE_VOICE			= 2;
+	const int	NUM_SHIFT_VOICE				= 2;
 }
 
 
@@ -314,6 +318,11 @@ private:
 	PLAY_PARAMETERS visionFinishSE;
 	PLAY_PARAMETERS skyVisionStartSE;
 	PLAY_PARAMETERS skyVisionFinishSE;
+	//(ˆÈ‰ºƒ{ƒCƒX)
+	PLAY_PARAMETERS voiceJump[2];
+	PLAY_PARAMETERS voiceDamage[2];
+	PLAY_PARAMETERS voiceShift[2];
+
 
 	//debug
 	float dot;

@@ -295,8 +295,6 @@ void Game::initialize() {
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
 
-	//treeManager->update(1);
-
 	//for (int i = 0; i < treeManager->getTreeList().size(); i++)
 	//{
 	//	treeManager->getTreeList()[i]->transState();
@@ -401,6 +399,21 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionFinishCount(2))	countUI->finishCount(2);
 	if (gameMaster->playActionFinishCount(1))	countUI->finishCount(1);
 	if (gameMaster->playActionFinishCount(0))	countUI->finishCount(0);	//ゲーム終了
+
+	//ゲーム開始時ボイス
+	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] == false)
+	{
+		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Start, false, NULL, false, NULL };
+		SoundInterface::SE->playSound(&voiceStart);
+		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] = true;
+	}
+	else if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME -2.0f && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] == false)
+	{
+		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Start, false, NULL, false, NULL };
+		SoundInterface::SE->playSound(&voiceStart);
+		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] = true;
+	}
+
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
