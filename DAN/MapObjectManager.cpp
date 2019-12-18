@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "MapObjectManager.h"
 #include "ImguiManager.h"
+#include "MapObjectTool.h"
 using namespace mapObjectNS;
 
 
@@ -23,8 +24,13 @@ void MapObjectManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attrac
 	stone01Renderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::STONE_003));
 
 
-#if 0	// マップオブジェクトツールのデータを読み込む
-
+#if 1	// マップオブジェクトツールのデータを読み込む
+	MPOJ_TOOLS* mpojTools = new MPOJ_TOOLS;
+	for (int i = 0; i < mpojTools->GetMpojMax(); i++)
+	{
+		createMapObject(mpojTools->GetMpojSet(i));
+	}
+	SAFE_DELETE(mpojTools);
 #endif
 }
 
@@ -87,7 +93,7 @@ void MapObjectManager::createMapObject(MapObjectData mapObjectData)
 	switch (mapObjectData.type)
 	{
 	case STONE_01:
-		mapObject->scale *= 0.1f;// サイズの調整
+		mapObject->scale *= 1.0f;// サイズの調整
 		stone01Renderer->registerObject(mapObject);
 		break;
 	}

@@ -136,7 +136,6 @@ private:
 	PlayerTable				playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
 	int						progress;										//達成状況
 
-
 public:
 	//基本処理
 	GameMaster();
@@ -151,7 +150,7 @@ public:
 	void updateOpeningTime(float frameTime);						//ゲーム時間の更新
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
 	void updateStartCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
-	void updateFinishCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
+	void updateFinishCountDown(float frameTime);					//ゲーム開始カウントダウンの更新
 	bool paused();													//ポーズ処理
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
 	bool playActionStartCount(int countNum);						//開始カウント3時のアクション
@@ -170,6 +169,10 @@ public:
 	//TreeTable* out ：ポインタを代入するとリストが格納される。
 	//float		 time：経過時間を代入する
 	int getEventList(TreeTable** out,float time);
+
+	//ボイス
+	bool	wasStartVoicePlayed[gameMasterNS::PLAYER_NUM];	// スタートボイスフラグ
+	bool	wasFinishVoicePlayed[gameMasterNS::PLAYER_NUM];	// 終了ボイスフラグ
 
 	//setter
 	void setConversionOrder(int* newValue);

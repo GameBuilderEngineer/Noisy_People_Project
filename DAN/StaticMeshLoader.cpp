@@ -63,10 +63,12 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STONE_001]								= { "stone001.x" };							//05
 	fileName[STONE_002]								= { "stone002.x" };							//06
 	fileName[STONE_003]								= { "Rocks.x" };							//07
-	fileName[A_TRUNK]								= { "tree_01_blanch.x" };					//08
-	fileName[A_LEAF]								= { "tree_01_leaf.x" };						//09
-	fileName[B_TRUNK]								= { "tree_02_blanch.x" };					//10
-	fileName[B_LEAF]								= { "tree_02_leaf.x" };						//11
+	fileName[A_TRUNK]								= { "Tree_A_Branch.x" };					//08
+	fileName[A_LEAF]								= { "Tree_A_Leaf.x" };						//09
+	fileName[B_TRUNK]								= { "Tree_B_Branch.x" };					//10
+	fileName[B_LEAF]								= { "Tree_B_Leaf.x" };						//11
+	fileName[C_TRUNK]								= { "Tree_C_Branch.x" };					//10
+	fileName[C_LEAF]								= { "Tree_C_Leaf.x" };						//11
 	fileName[OCEAN]									= { "Water4.x" };							//12
 
 	fileName[ITEM_BRANCH]							= { "Bllue_branch.x" };

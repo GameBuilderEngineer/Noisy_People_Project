@@ -37,7 +37,6 @@ Title::Title(void)
 	playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
 	//再生
 	SoundInterface::BGM->playSound(&playParameters[1]);
-	
 
 	//初期化
 	tmpVolume = 1.0f;
@@ -64,10 +63,6 @@ void Title::initialize()
 	target = new Object;
 	target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
 	
-
-	//
-	
-
 	//初期フォトグラフ
 	stateCamera = CAMERA0;
 
@@ -120,7 +115,17 @@ void Title::initialize()
 	 cameraAxisY = D3DXVECTOR3(0, 0, 0);
 	 fixedAxisX = D3DXVECTOR3(0, 0, 0);
 	
-
+	 // ツリーの初期化
+	 treeManager = new TreeManager();
+	 treeManager->initialize(titleFieldRenderer->getStaticMesh()->mesh, titleField->getMatrixWorld());
+	 // ツリーをツール情報を元に設置する
+	 treeManager->createUsingTool();
+	 // 非ヴィジョンの描画
+	 treeManager->switchingNormalView(0);
+	 for (int i = 0; i < treeManager->getTreeList().size(); i++)
+	 {
+ 		treeManager->getTreeList()[i]->transState();
+	 }
 }
 
 //============================================================================================================================================
@@ -153,6 +158,8 @@ void Title::uninitialize(void)
 	// タイトルUI
 	titleUI.uninitialize();
 
+	// ツリーマネージャー
+	SAFE_DELETE(treeManager);
 }
 
 //============================================================================================================================================
@@ -237,6 +244,9 @@ void Title::update(float _frameTime)
 	D3DXVec3Cross(&Y, &fixedAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
+
+	// ツリーの更新
+	treeManager->update(frameTime);
 
 	switch (stateCamera)
 	{
@@ -643,6 +653,10 @@ void Title::render3D(Camera* _currentCamera)
 
 	//スカイフィールドの描画
 	sky->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
+
+	//ツリーの描画
+	treeManager->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
+
 
 	// タイトルプレイヤー描画
 	//player[0].toonRender

@@ -38,6 +38,7 @@ enum CallbackKeyType
 	MoveP1IsDamage,
 	MoveP1IsDamageEnd,
 	MovePMoveVoice,
+	MoveP1MoveVoice,
 	ResetTime,				// アニメーションのローカル時間をリセット 
 	MotionEnd,				// モーション終了
 };

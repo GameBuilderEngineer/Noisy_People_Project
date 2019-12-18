@@ -108,6 +108,9 @@ void GameMaster::startGame()
 	pause = false;
 	progress = 0x00000000;
 	discardConversionOrder();
+
+	ZeroMemory(wasStartVoicePlayed, 2 * sizeof(bool));
+	ZeroMemory(wasFinishVoicePlayed, 2 * sizeof(bool));
 }
 
 //===================================================================================================================================

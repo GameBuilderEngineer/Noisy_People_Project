@@ -27,7 +27,22 @@ MarkerInstance::MarkerInstance(Tree* owner) : InstancingBillboardNS::Instance()
 	this->tree = owner;
 	position = tree->center;
 	position.y += tree->size.y / 2;
-	scale = D3DXVECTOR2(0.5f, 0.5f);
+	
+	switch (owner->getTreeData()->size)
+	{
+	case treeNS::STANDARD:
+		scale = D3DXVECTOR2(0.5f, 0.5f);
+		break;
+
+	case treeNS::LARGE:
+		scale = D3DXVECTOR2(1.5f, 1.5f);
+		break;
+
+	case treeNS::VERY_LARGE:
+		scale = D3DXVECTOR2(4.75f, 4.75f);
+		position.y += 14.0f;
+		break;
+	}
 	//rotation = D3DXVECTOR3((float)(rand() % 20 - 10), (float)(rand() % 20 - 10), (float)(rand() % 20 - 10));
 	rotation = D3DXVECTOR3(0, 0, 0);
 	//instance.scale				= D3DXVECTOR2((float)(rand() % 20 + 1), (float)(rand() % 20 + 1));
@@ -60,6 +75,25 @@ void MarkerInstance::update(float frameTime)
 	//ˆÊ’u
 	position = tree->center;
 	position.y += tree->size.y / 2;
+	switch (tree->getTreeData()->size)
+	{
+	case treeNS::STANDARD:
+		position.y -= 1.1f;
+		break;
+
+	case treeNS::LARGE:
+		position.y -= 2.65f;
+		break;
+
+	case treeNS::VERY_LARGE:
+		position.y += 0.0f;
+		break;
+	}
+
+	if (tree->getTreeData()->size == treeNS::VERY_LARGE)
+	{
+		position.y += 14.0f;
+	}
 	//position += speed * frameTime;
 }
 //===================================================================================================================================
@@ -95,6 +129,25 @@ SignInstance::SignInstance(Tree* owner) : InstancingBillboardNS::Instance()
 	rotation = D3DXVECTOR3(0, 0, 0);
 	//instance.scale				= D3DXVECTOR2((float)(rand() % 20 + 1), (float)(rand() % 20 + 1));
 	scale = D3DXVECTOR2(1.0f*4.0f, 1.125f*4.0f);
+	switch (owner->getTreeData()->size)
+	{
+	case treeNS::STANDARD:
+		scale = D3DXVECTOR2(1.0f*4.0f, 1.125f*4.0f);
+		position.y -= 1.1f;
+		break;
+
+	case treeNS::LARGE:
+		scale = D3DXVECTOR2(1.0f*12.0f, 1.125f*12.0f);
+		position.y -= 2.65f;
+		break;
+
+	case treeNS::VERY_LARGE:
+		scale = D3DXVECTOR2(1.0f*38.0f, 1.125f*38.0f);
+		position.y += 3.0f;
+		break;
+	}
+
+
 	//speed = D3DXVECTOR3(0, 3.0f, 0.0f);
 	changeColor();
 	//limitTime = (float)(rand() % 30);
@@ -121,6 +174,21 @@ void SignInstance::update(float frameTime)
 	
 	//ˆÊ’u
 	position = tree->center;
+	switch (tree->getTreeData()->size)
+	{
+	case treeNS::STANDARD:
+		position.y -= 1.1f;
+		break;
+
+	case treeNS::LARGE:
+		position.y -= 2.65f;
+		break;
+
+	case treeNS::VERY_LARGE:
+		position.y += 3.0f;
+		break;
+	}
+
 	//position += speed * frameTime;
 }
 

@@ -19,6 +19,7 @@
 
 #include "Object.h"
 #include "StaticMeshRenderer.h"
+#include "TreeManager.h"
 
 #include "WaveBall.h"
 #include "Sky.h"
@@ -88,7 +89,6 @@ private:
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;
 
-
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度
@@ -96,6 +96,8 @@ private:
 	float moveTime;				//終点までの時間
 	float moveTimer;			//移動タイマー
 	D3DXVECTOR3 startPos;		//ラープ始点
+
+	TreeManager* treeManager;	//ツリーマネージャー
 	
 	float rate;
 	float rateY;

@@ -82,5 +82,6 @@ public: //メンバー関数
 	void decidionBGM();
 	int decisionRank(int greening, int greenNum, int defeat);
 	
+	GameMaster* gameMaster;			// ゲームマスターのポインタ
 };
 

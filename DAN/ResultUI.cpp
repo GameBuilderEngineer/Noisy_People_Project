@@ -179,7 +179,20 @@ void ResultUI::update(float flameTime)
 			decidionBGM();
 		}
 	}
-	
+	if (time > 14.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] == false && score > 70)
+	{
+		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Finish, false, NULL, false, NULL };
+		SoundInterface::SE->playSound(&voiceFinish);
+		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] = true;
+
+	}
+	if (time > 16.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] == false && score > 70)
+	{
+		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Finish, false, NULL, false, NULL };
+		SoundInterface::SE->playSound(&voiceFinish);
+		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] = true;
+	}
+
 	uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
 	uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
 	uiTexture.update(resultPhase);		//テクスチャの更新

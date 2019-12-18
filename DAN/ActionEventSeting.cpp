@@ -8,7 +8,7 @@
 #include "ActionEventSeting.h"
 #include "movep.h"
 #include "movep1.h"
-
+#include "Sound.h"
 
 
 ACTIONEVENTSETING ActionEventSeting;
@@ -151,7 +151,9 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 {
 	static float PreActionSpeed = 0.0f;
 	int KeyType = (int)pCallbackData;
-
+	
+	//テスト
+	PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_PLAYER_WALK, false ,NULL,true,gameMasterNS::PLAYER_1P };
 
 	//eventの設置
 	MOVEP *MoveP = GetMovePAdr();
@@ -174,7 +176,13 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 		break;
 	case MovePMoveVoice:
 		//ここ歩く音を入れる
-
+		playParameters.soundId = gameMasterNS::PLAYER_1P;
+		SoundInterface::S3D->playSound(&playParameters);
+		break;
+	case MoveP1MoveVoice:
+		//ここ歩く音を入れる
+		playParameters.soundId = gameMasterNS::PLAYER_2P;
+		SoundInterface::S3D->playSound(&playParameters);
 		break;
 	case MovePJumpFireStart:
 		break;

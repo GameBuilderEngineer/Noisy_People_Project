@@ -132,6 +132,8 @@ void TmpObject::update(float frameTime)
 	PositionYeah = position;
 	PositionYeah.y += 1.7f;
 
+	// Žp¨§Œä
+	//axisZ.direction = camera->getDirectionZ();
 }
 
 //===================================================================================================================================
