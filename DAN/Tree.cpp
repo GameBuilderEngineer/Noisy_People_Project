@@ -105,11 +105,6 @@ Tree::Tree(treeNS::TreeData _treeData)
 		selectShift[i] = false;
 	}
 
-	//AbstractState* tmp = state->transition();
-	SAFE_DELETE(state);
-	state = new DigitalState(this);
-	onTransState = false;
-
 }
 
 

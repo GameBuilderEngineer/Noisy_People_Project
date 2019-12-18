@@ -295,7 +295,15 @@ void Game::initialize() {
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
 
-	// メタAI（メタAIはツリーの数が確定した後に初期化する）
+	//treeManager->update(1);
+
+	//for (int i = 0; i < treeManager->getTreeList().size(); i++)
+	//{
+	//	treeManager->getTreeList()[i]->transState();
+	//}
+	//int unko = treeManager->getTreeNum();
+
+	// メタAI（メタAIはツリーの数が確定した後に初期化する）5
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, testFieldRenderer->getStaticMesh()->mesh,
 		player, enemyManager, treeManager, itemManager, telopManager);
