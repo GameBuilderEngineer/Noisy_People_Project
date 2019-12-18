@@ -23,9 +23,9 @@ Announcement::Announcement()
 {
 	sprite = new Sprite;
 	sprite->initialize(
-		*textureNS::reference(textureNS::UI_START_COUNT),	//テクスチャポインタ
+		*textureNS::reference(textureNS::OP_ANNOUNCEMENT),	//テクスチャポインタ
 		SpriteNS::CENTER,									//原点
-		WIDTH / DIVIDE_WIDTH,									//幅
+		WIDTH / DIVIDE_WIDTH,								//幅
 		HEIGHT,												//高さ
 		POSITION,											//位置
 		ROTATION,											//回転

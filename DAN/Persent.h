@@ -1,5 +1,5 @@
 //========================================
-//リザルトBGクラス[ResultBG.h]
+//パーセントクラス[ResultBG.h]
 //染矢晃介
 //========================================
 #pragma once
@@ -12,26 +12,24 @@
 //========================================
 //名前空間
 //========================================
-namespace resultBGNS
+namespace persentNS
 {
-	const int WIDTH_BG = WINDOW_WIDTH;//横幅
-	const int HEIGHT_BG = WINDOW_HEIGHT;//縦幅
-	const D3DXVECTOR3 BG_POSITION = D3DXVECTOR3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0);
-	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 100);
-
+	const int WIDTH_PERSENT = (115*WINDOW_WIDTH/1920);//横幅
+	const int HEIGHT_PERSENT = (124*WINDOW_HEIGHT/1080);//縦幅
+	const D3DXVECTOR3 PERSNT_POSITION = D3DXVECTOR3(1250 * WINDOW_WIDTH / 1920, 220 *WINDOW_HEIGHT / 1080, 0);
 }
 
 //========================================
 //クラス定義
 //========================================
-class ResultBG :public BasicUI
+class Persent :public BasicUI
 {
 public://メンバー変数
-	Sprite * resultBG;		//スプライト
+	Sprite * persent;		//スプライト
 private:
 public://メンバー関数
-	ResultBG();				//コンストラクタ
-	~ResultBG();			//デストラクタ
+	Persent();				//コンストラクタ
+	~Persent();				//デストラクタ
 	void initialize();		//初期化
 	void render();			//描画
 	void update();			//更新

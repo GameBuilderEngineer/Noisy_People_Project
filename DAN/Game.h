@@ -50,6 +50,7 @@
 //#include "Text.h"
 #include "networkClient.h"
 #include "CountUI.h"
+#include "Announcement.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -118,9 +119,11 @@ private:
 	Player1UI*						player1UI;			//プレイヤー周りのUI
 	Player2UI*						player2UI;			//プレイヤー２周りのUI
 	CountUI*						countUI;			//カウントUI
+	Announcement*					announcement;		//アナウンス
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
+
 
 	//Network
 	NETWORK_CLIENT*					networkClient;

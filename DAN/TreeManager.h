@@ -54,6 +54,7 @@ private:
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
 
+	int treeNum;
 	int greeningTreeNum;						//緑化本数
 	float greeningRate;							//緑化率
 	bool playedDigitalTreeEffect[gameMasterNS::PLAYER_NUM];
@@ -105,4 +106,5 @@ public:
 	// Getter
 	std::vector<Tree*>& getTreeList();
 	float getGreeningRate();
+	int getTreeNum();
 };

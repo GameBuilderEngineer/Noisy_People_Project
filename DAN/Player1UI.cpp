@@ -25,7 +25,9 @@ Player1UI::Player1UI()
 	hpGuageEmp = new HPguageEmp;
 	electGuageEmp = new ElectGuageEmp;
 	electGuage = new ElectGuage;
-	electTank = new ElectTank;
+	mark = new Mark;
+	green = new Green;
+	greenRate = new GreenRate;
 }
 
 //=================================
@@ -40,7 +42,9 @@ Player1UI::~Player1UI()
 	delete hpGuageEmp;
 	delete electGuageEmp;
 	delete electGuage;
-	delete electTank;
+	delete mark;
+	delete green;
+	delete greenRate;
 }
 
 //==================================
@@ -55,7 +59,9 @@ void Player1UI::initialize(Player *player)
 	hpGuageEmp->initialize(basicUiNS::P1);
 	electGuageEmp->initialize(basicUiNS::P1);
 	electGuage->initialize(basicUiNS::P1);
-	electTank->initialize(basicUiNS::P1);
+	mark->initialize(basicUiNS::P1);
+	green->initialize(basicUiNS::P1);
+	greenRate->initialize(basicUiNS::P1);
 }
 
 //==================================
@@ -70,13 +76,15 @@ void Player1UI::render()
 	charaIcon->render();
 	electGuageEmp->render();
 	electGuage->render();
-	electTank->render();
+	mark->render();
+	green->render();
+	greenRate->render(basicUiNS::P1);
 }
 
 //==================================
 //更新
 //==================================
-void Player1UI::update()
+void Player1UI::update(float neRate)
 {
 	//各フラグの獲得
 	getFlag();
@@ -90,7 +98,7 @@ void Player1UI::update()
 
 	hpGuage->update(hp);
 	electGuage->update(power);
-	electTank->update(power,basicUiNS::P1);
+	greenRate->update(neRate);
 }
 
 //==================================
@@ -107,4 +115,5 @@ void Player1UI::getFlag()
 	hp = player->getHp();
 	power = player->getPower();
 	state = player->getState();
+	//greeningRate = GameMaster::getGreeningRate();
 }

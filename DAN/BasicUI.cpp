@@ -236,7 +236,8 @@ void BasicUI::changeUV(Sprite *sprite,D3DXVECTOR2 uv01, D3DXVECTOR2 uv02, D3DXVE
 {
 	
 	sprite->setUVCoord(uv01, uv02, uv03, uv04);
-	sprite->render();
+	/*sprite->setVertex();
+	sprite->render();*/
 }
 
 //=================================
@@ -246,6 +247,17 @@ void BasicUI::changeWhidthSize(Sprite *sprite, int size)
 {
 	widthSize = size;
 	sprite->setSize(widthSize, heightSize);
+	sprite->setVertex();
+	sprite->render();
+}
+
+//==================================
+//F‚Ì•ÏX
+//==================================
+void BasicUI::changeColor(Sprite *sprite, D3DCOLOR col)
+{
+	color = col;
+	sprite->setColorAllVertex(color);
 	sprite->setVertex();
 	sprite->render();
 }
