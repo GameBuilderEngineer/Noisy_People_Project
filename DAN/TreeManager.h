@@ -13,6 +13,7 @@
 #include "DigitalTree.h"
 #include "TreeEffect.h"
 #include "GameMaster.h"
+#include "networkClient.h"
 
 //=============================================================================
 // –¼‘O‹óŠÔ

@@ -37,26 +37,30 @@ Fader::Fader()
 	outTimer		= 0.0f;
 	waitTimer		= 0.0f;
 	playTimer		= 0.0f;
-
+	shaderRate		= 0.0f;
 
 	shaderState		= NULL;
 	targetTexture	= NULL;
 	textureZBuffer	= NULL;
+	surface			= NULL;
 
 	//テクスチャオブジェクトの作成
-	D3DXCreateTexture(getDevice(), WINDOW_WIDTH, WINDOW_HEIGHT, 0,
+	D3DXCreateTexture(getDevice(), WINDOW_WIDTH, WINDOW_HEIGHT, 1,
 		D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &targetTexture);
+	//サーフェースの取得
+	targetTexture->GetSurfaceLevel(0, &surface);
+
 	//テクスチャをレンダリングターゲットする際のZバッファを作成
 	D3DSURFACE_DESC desc;
 	targetTexture->GetLevelDesc(0, &desc);
 	getDevice()->CreateDepthStencilSurface(desc.Width, desc.Height,
-		D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, true, &textureZBuffer, NULL);
+		D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, true, &textureZBuffer, NULL);
 
 	//フェード描画頂点構造体
-	point[0] = {-1,1,1,0,0 };
-	point[1] = {1,1,1,1,0 };
-	point[2] = {-1,-1,1,0,1 };
-	point[3] = {1,-1,1,1,1 };
+	point[0] = {-1,1,0,0,0 };
+	point[1] = {1,1,0,1,0 };
+	point[2] = {-1,-1,0,0,1 };
+	point[3] = {1,-1,0,1,1 };
 
 	processing = false;
 }
@@ -66,7 +70,7 @@ Fader::Fader()
 //===================================================================================================================================
 Fader::~Fader()
 {
-
+	SAFE_RELEASE(surface);
 }
 
 //===================================================================================================================================
@@ -98,10 +102,12 @@ void Fader::update(float frameTime)
 void Fader::fadeIn()
 {
 	inTimer += frameTime;
+	shaderRate = inTimer / limitInTime;
 	//フェードイン終了
 	if (inTimer > limitInTime)
 	{
 		state		= faderNS::FADE_WAIT;//待機状態へ
+		shaderRate	= 1.0f;
 		waitTimer	= 0.0f;
 	}
 }
@@ -112,10 +118,12 @@ void Fader::fadeIn()
 void Fader::fadeOut()
 {
 	outTimer += frameTime;
+	shaderRate = 1.0f - (outTimer / limitInTime);
 	//フェードアウト終了
 	if (outTimer > limitOutTime)
 	{
 		state		= faderNS::FADE_PLAY;//再生状態へ
+		shaderRate	= 0.0f;
 		playTimer	= 0.0f;
 	}
 }
@@ -126,9 +134,11 @@ void Fader::fadeOut()
 void Fader::play()
 {
 	playTimer += frameTime;
+	shaderRate = 0.0f;
 	if (playTimer > limitPlayTime)
 	{
 		state = faderNS::FADE_IN;//フェードイン状態へ
+		shaderRate = 0.0f;
 		inTimer = 0.0f;
 	}
 }
@@ -139,6 +149,7 @@ void Fader::play()
 void Fader::wait()
 {
 	waitTimer	+= frameTime;
+	shaderRate	= 1.0f;
 	processing	= false;
 }
 
@@ -150,15 +161,15 @@ void Fader::render()
 	if (shaderState == NULL)return;
 	if (!processing)return;
 
-	getDirect3D9()->setRenderBackBuffer(0);
-	device->SetRenderState(D3DRS_LIGHTING, false);
+	//getDirect3D9()->setRenderBackBuffer(0);
+	//device->SetRenderState(D3DRS_LIGHTING, false);
 	device->SetFVF(D3DFVF_XYZ | D3DFVF_TEX1);
 	D3DSURFACE_DESC desc;
 	targetTexture->GetLevelDesc(0, &desc);
 
 	shaderState->setValue(desc);
 	shaderState->begin(0);
-	shaderState->updateValue();
+	shaderState->updateValue(shaderRate);
 
 	device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, point, sizeof(FADE_VERTEX));
 
@@ -170,11 +181,8 @@ void Fader::render()
 //===================================================================================================================================
 void Fader::setRenderTexture()
 {
-	LPDIRECT3DSURFACE9 surface = NULL;
-	targetTexture->GetSurfaceLevel(0, &surface);
 	getDevice()->SetRenderTarget(0, surface);
 	getDevice()->SetDepthStencilSurface(textureZBuffer);
-	SAFE_RELEASE(surface);
 }
 
 //===================================================================================================================================
@@ -182,8 +190,12 @@ void Fader::setRenderTexture()
 //===================================================================================================================================
 void Fader::setShader(int shaderType)
 {
+	SAFE_DELETE(shaderState);
 	switch (shaderType)
 	{
+	case faderNS::SHADER_TYPE::NORMAL:
+		shaderState = new faderNS::NormalShader(targetTexture);
+		break;
 	case faderNS::SHADER_TYPE::BLUR:
 		shaderState = new faderNS::BlurShader(4, targetTexture);
 		break;

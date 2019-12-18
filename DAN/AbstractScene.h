@@ -38,7 +38,8 @@ namespace SceneList
 		CREDIT,			//クレジット
 		GAME,			//ゲーム
 		RESULT,			//リザルト
-		CREATE			//クリエイト
+		CREATE,			//クリエイト
+		FINALE			//フィナーレ
 	};
 }
 

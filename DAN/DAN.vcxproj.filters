@@ -349,8 +349,38 @@
     <Filter Include="Game Layer\Scene\Result\ResultUI\Character">
       <UniqueIdentifier>{7f82b514-6794-4903-92f0-a684eb0cf356}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\Scene\Finale">
+      <UniqueIdentifier>{ef78fdf6-66da-4cc1-ac8b-771c021c5441}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game Layer\Scene\Display">
       <UniqueIdentifier>{9d1dd45d-9c58-4c71-ab0c-eaf56df266b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\Wolf">
+      <UniqueIdentifier>{a00de235-f42d-4b26-8e47-054820349a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\Tiger">
+      <UniqueIdentifier>{b831f9c0-6125-43b1-9c49-e75aac2dc750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\Bear">
+      <UniqueIdentifier>{27f8d238-8367-4f3b-aa29-5c2cdfe54ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Enemy\PartsAnimation">
+      <UniqueIdentifier>{e26a7ebf-ba18-4968-87ed-2668cf10827d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\Display\Server">
+      <UniqueIdentifier>{5a583993-1f62-4171-b644-171020321cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resorce Layer\08 Network File">
+      <UniqueIdentifier>{43b86670-f599-4ca4-b190-94a58eaa2609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\CountUI">
+      <UniqueIdentifier>{32cfdeb6-d27d-4326-93ea-b92546bf7881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Marker">
+      <UniqueIdentifier>{fc82430f-8944-44f1-8ffe-b9d9598036fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\GameUI\Announcement">
+      <UniqueIdentifier>{bc0bd313-0b51-4d5d-abec-beb5d883894c}</UniqueIdentifier>
     </Filter>
     <Filter Include="SerialCommunication">
       <UniqueIdentifier>{27094aec-2858-4e07-af46-390a562c548b}</UniqueIdentifier>
@@ -586,9 +616,6 @@
     <ClCompile Include="MeshData.cpp">
       <Filter>Game Layer\NaviAI</Filter>
     </ClCompile>
-    <ClCompile Include="Wolf.cpp">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="TmpObject.cpp">
       <Filter>Game Layer\Scene\Create</Filter>
     </ClCompile>
@@ -603,12 +630,6 @@
     </ClCompile>
     <ClCompile Include="StaticMeshRenderer.cpp">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Bear.cpp">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiger.cpp">
-      <Filter>Game Layer\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="MemoryDebug.cpp">
       <Filter>Game Layer</Filter>
@@ -784,9 +805,6 @@
     <ClCompile Include="DeathState.cpp">
       <Filter>Game Layer\Player\State\DeathState</Filter>
     </ClCompile>
-    <ClCompile Include="network.cpp">
-      <Filter>Game Layer\Network</Filter>
-    </ClCompile>
     <ClCompile Include="ResultBG.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClCompile>
@@ -814,8 +832,65 @@
     <ClCompile Include="WholeGreening.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyChaseMark.cpp">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiger.cpp">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClCompile>
+    <ClCompile Include="TigerAnimation.cpp">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClCompile>
+    <ClCompile Include="TigerBullet.cpp">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClCompile>
+    <ClCompile Include="Bear.cpp">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClCompile>
+    <ClCompile Include="PartsAnimation.cpp">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="PartsAnimationManager.cpp">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
+    </ClCompile>
     <ClCompile Include="Display.cpp">
       <Filter>Game Layer\Scene\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="WolfAnimation.cpp">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="BearAnimation.cpp">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClCompile>
+    <ClCompile Include="Finale.cpp">
+      <Filter>Game Layer\Scene\Finale</Filter>
+    </ClCompile>
+    <ClCompile Include="networkServer.cpp">
+      <Filter>Game Layer\Scene\Display\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="networkClient.cpp">
+      <Filter>Game Layer\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="SaiFadeIn.cpp">
+      <Filter>Constant Layer\Sound\APO</Filter>
+    </ClCompile>
+    <ClCompile Include="SaiDelayReverb.cpp">
+      <Filter>Constant Layer\Sound\APO</Filter>
+    </ClCompile>
+    <ClCompile Include="CountUI.cpp">
+      <Filter>Game Layer\GameUI\CountUI</Filter>
+    </ClCompile>
+    <ClCompile Include="movep1.cpp">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Announcement.cpp">
+      <Filter>Game Layer\GameUI\Announcement</Filter>
+    </ClCompile>
+    <ClCompile Include="Marker.cpp">
+      <Filter>Game Layer\GameUI\Marker</Filter>
     </ClCompile>
     <ClCompile Include="Persent.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI\Character</Filter>
@@ -1086,17 +1161,8 @@
     <ClInclude Include="Create.h">
       <Filter>Game Layer\Scene\Create</Filter>
     </ClInclude>
-    <ClInclude Include="Wolf.h">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiger.h">
-      <Filter>Game Layer\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="StaticMeshRenderer.h">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Bear.h">
-      <Filter>Game Layer\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="TmpObject.h">
       <Filter>Game Layer\Scene\Create</Filter>
@@ -1284,9 +1350,6 @@
     <ClInclude Include="DeathState.h">
       <Filter>Game Layer\Player\State\DeathState</Filter>
     </ClInclude>
-    <ClInclude Include="network.h">
-      <Filter>Game Layer\Network</Filter>
-    </ClInclude>
     <ClInclude Include="ResultBG.h">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
     </ClInclude>
@@ -1319,6 +1382,63 @@
     </ClInclude>
     <ClInclude Include="Display.h">
       <Filter>Game Layer\Scene\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyChaseMark.h">
+      <Filter>Game Layer\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiger.h">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClInclude>
+    <ClInclude Include="TigerAnimation.h">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClInclude>
+    <ClInclude Include="TigerBullet.h">
+      <Filter>Game Layer\Enemy\Tiger</Filter>
+    </ClInclude>
+    <ClInclude Include="Bear.h">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClInclude>
+    <ClInclude Include="PartsAnimation.h">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="PartsAnimationManager.h">
+      <Filter>Game Layer\Enemy\PartsAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="WolfAnimation.h">
+      <Filter>Game Layer\Enemy\Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="BearAnimation.h">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClInclude>
+    <ClInclude Include="Finale.h">
+      <Filter>Game Layer\Scene\Finale</Filter>
+    </ClInclude>
+    <ClInclude Include="networkServer.h">
+      <Filter>Game Layer\Scene\Display\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="networkClient.h">
+      <Filter>Game Layer\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="SaiFadeIn.h">
+      <Filter>Constant Layer\Sound\APO</Filter>
+    </ClInclude>
+    <ClInclude Include="SaiDelayReverb.h">
+      <Filter>Constant Layer\Sound\APO</Filter>
+    </ClInclude>
+    <ClInclude Include="CountUI.h">
+      <Filter>Game Layer\GameUI\CountUI</Filter>
+    </ClInclude>
+    <ClInclude Include="movep1.h">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Announcement.h">
+      <Filter>Game Layer\GameUI\Announcement</Filter>
+    </ClInclude>
+    <ClInclude Include="Marker.h">
+      <Filter>Game Layer\GameUI\Marker</Filter>
     </ClInclude>
     <ClInclude Include="SerialCommunication.h">
       <Filter>SerialCommunication</Filter>
@@ -1364,6 +1484,9 @@
     </Text>
     <Text Include="Readme\コーディング規約.txt">
       <Filter>Readme</Filter>
+    </Text>
+    <Text Include="08 Network File\PCName.txt">
+      <Filter>Resorce Layer\08 Network File</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

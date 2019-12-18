@@ -10,7 +10,7 @@
 //===================================================================================================================================
 #include "Create.h"
 #include "Game.h"
-#include "network.h"
+#include "networkClient.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -24,7 +24,7 @@ Create::Create()
 {
 	sceneName = "Scene -Create-";
 
-	nextScene = SceneList::RESULT;
+	nextScene = SceneList::TITLE;
 
 	//エネミーツール
 	enemyTools = new ENEMY_TOOLS;
@@ -68,11 +68,27 @@ void Create::initialize() {
 	camera->setTargetZ(&tmpObject->getAxisZ()->direction);
 	camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -5.5f, 0.0f));
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
+	camera->setGazeDistance(10.0f);
 	camera->setRelativeGaze(CAMERA_RELATIVE_GAZE);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI / 18) * 9);
 	camera->setLimitRotationTop(0.3f);
 	camera->setLimitRotationBottom(0.7f);
+	
+	//TopViewCamera
+	topView = new Camera;
+	topView->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	topView->setTarget(tmpObject->getPositionYeah());
+	topView->setTargetX(&tmpObject->getAxisX()->direction);
+	topView->setTargetY(&tmpObject->getAxisY()->direction);
+	topView->setTargetZ(&tmpObject->getAxisZ()->direction);
+	topView->setRelative(D3DXQUATERNION(1.0f, 100.0f, 0.0f, 0.0f));
+	topView->setGazeDistance(100.0f);
+	topView->setGaze(D3DXVECTOR3(0, 0, 0));
+	topView->setRelativeGaze(CAMERA_RELATIVE_GAZE);
+	topView->setUpVector(D3DXVECTOR3(0, 1, 0));
+	topView->setFieldOfView((D3DX_PI / 18) * 9);
+	onTopView = false;
 
 	//light
 	light = new Light;
@@ -113,10 +129,10 @@ void Create::initialize() {
 //===================================================================================================================================
 void Create::uninitialize() {
 	SAFE_DELETE(camera);
+	SAFE_DELETE(topView);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testFieldRenderer);
 
-	//たつき待ち
 	SAFE_DELETE(tmpObjRenderer);
 
 //	SAFE_DELETE(deadTree);
@@ -167,8 +183,9 @@ void Create::update(float _frameTime) {
 	{
 		itemNS::ItemData unko = { 0, itemNS::BATTERY, *tmpObject->getPosition() };
 	}
-	if (input->wasKeyPressed('9'))
+	if (input->wasKeyPressed('Y'))
 	{
+		//tmpObject->
 	}
 
 	////カメラの更新
@@ -187,6 +204,9 @@ void Create::update(float _frameTime) {
 	//カメラの更新
 	camera->update();
 
+	//俯瞰カメラの更新
+	topView->update();
+
 	// Enterまたは〇ボタンでリザルトへ
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
@@ -204,9 +224,23 @@ void Create::update(float _frameTime) {
 void Create::render() {
 
 	//カメラ・ウィンドウ
-	camera->renderReady();
 	direct3D9->changeViewportFullWindow();
-	render3D(*camera);
+
+	if (input->wasKeyPressed('Z'))
+	{
+		onTopView = !onTopView;
+	}
+
+	if (onTopView)
+	{
+		topView->renderReady();
+		render3D(*topView);
+	}
+	else {
+		camera->renderReady();
+		render3D(*camera);
+	}
+	
 	effekseerNS::setCameraMatrix(0,camera->position, camera->gazePosition, camera->upVector);
 	effekseerNS::render(0);
 
@@ -347,12 +381,12 @@ void Create::collideGUI()
 {
 	bool tmpButton = false;
 	ImGui::Checkbox("Test Network", &tmpButton);
-	if (tmpButton)
-	{
-		NETWORK_CLIENT *client = new NETWORK_CLIENT;
-		client->send();
-		SAFE_DELETE(client);
-	}
+	//if (tmpButton)
+	//{
+	//	NETWORK_CLIENT *client = new NETWORK_CLIENT;
+	//	client->send();
+	//	SAFE_DELETE(client);
+	//}
 
 	//当たり判定
 	ImGui::Text("Enemy:");
@@ -362,6 +396,12 @@ void Create::collideGUI()
 			tmpObject->getRadius(), *enemyTools->object[i]->getMatrixWorld(), *tmpObject->getMatrixWorld()))
 		{
 			ImGui::Text("%d", i);
+			enemyTools->collideDraw(i, true);
+			break;
+		}
+		else
+		{
+			enemyTools->collideDraw(i, false);
 		}
 	}
 	ImGui::Text("Item:");

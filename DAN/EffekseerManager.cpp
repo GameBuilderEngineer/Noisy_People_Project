@@ -49,6 +49,8 @@ EffekseerManager::EffekseerManager()
 	fileName[GREENING]			= { L"Greening.efk" };
 	fileName[DIGIT_MODE]		= { L"Digit_mode.efk" };
 	fileName[DROP_ITEM]			= { L"Drop_Item.efk" };
+	fileName[ENEMY_DEATH]		= { L"Enemy_Death.efk" };
+	fileName[WIND]				= { L"Wind.efk" };
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }
@@ -197,6 +199,7 @@ void EffekseerManager::stop(::effekseerNS::Instance* instance)
 {
 	manager->StopEffect(instance->handle);
 	instanceList->remove(instance->nodePointer);
+	instanceList->listUpdate();
 }
 
 //===================================================================================================================================
@@ -230,7 +233,7 @@ void EffekseerManager::uninitialize()
 	}
 	ES_SAFE_RELEASE(xa2);
 #endif
-
+	instanceList->listUpdate();
 	for (int i = 0;i <instanceList->nodeNum; i++)
 	{
 		SAFE_DELETE(*instanceList->getValue(i));

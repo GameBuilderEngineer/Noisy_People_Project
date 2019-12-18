@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "EnemyManager.h"
+#include "Input.h"
 
 //===================================================================================================================================
 //【マクロ】
@@ -91,12 +92,13 @@ public:
 		D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);			
 	void generate(Object *object, short enemyType,			//作成
 		D3DXVECTOR3 position, D3DXVECTOR3 dir);
+	void collideDraw(int ID, bool use);
 #endif
 
 private:
-
 	//変数	
 	ENEMY_FILE enemyFile;									//エネミー構造体
+	Input *input;
 
 	//エネミーファイル
 	void OutputEnemyFile(void);								//エネミーファイルの書き出し処理

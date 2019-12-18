@@ -21,6 +21,9 @@ MPOJ_TOOLS::MPOJ_TOOLS()
 
 #ifdef _DEBUG
 	//レンダラーの初期化
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_01] = staticMeshNS::STONE_003;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_02] = staticMeshNS::STONE_003;
+	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_03] = staticMeshNS::STONE_003;
 	initRender();
 #endif
 
@@ -63,13 +66,8 @@ MPOJ_TOOLS::MPOJ_TOOLS()
 	//マップオブジェクト情報
 	MpojListboxCurrent = 0;
 	MpojListboxType = mapObjectNS::MAPOBJECT_TYPE::STONE_01;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_01] = staticMeshNS::STONE_003;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_02] = staticMeshNS::STONE_003;
-	Model[mapObjectNS::MAPOBJECT_TYPE::STONE_03] = staticMeshNS::STONE_003;
 
-	//レンダラーのリセット処理
-	ResetRenderer();
-
+	input = getInput();
 #endif
 }
 
@@ -138,6 +136,14 @@ void MPOJ_TOOLS::outputMpojToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		//フラグ
 		bool creatFlag = false;
 		bool deleteFlag = false;
+		if (input->wasKeyPressed('J'))
+		{
+			creatFlag = true;
+		}
+		else if (input->wasKeyPressed('K'))
+		{
+			deleteFlag = true;
+		}
 
 		//機能
 		ImGui::Checkbox("New Mpoj", &creatFlag);

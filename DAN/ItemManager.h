@@ -27,6 +27,7 @@ namespace itemNS
 class ItemManager
 {
 private:
+	static ItemManager* instance;				// 外部取得用ポインタ
 	std::vector<Item*> itemList;				// アイテムポインタリスト
 	StaticMeshRenderer* batteryRenderer;		// 描画オブジェクト
 	StaticMeshRenderer* exampleItemRender;		// テスト用アイテム
@@ -34,9 +35,11 @@ private:
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス
 
-	
-
 public:
+	// 外部取得用
+	ItemManager() { instance = this; }	// ※シングルトンではない
+	static ItemManager* get() { return instance; }
+
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
 	void update(float frameTime);

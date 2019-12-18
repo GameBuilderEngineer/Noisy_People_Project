@@ -66,10 +66,11 @@ namespace InstancingBillboardNS {
 	};
 
 	//描画タイプ(renderType)
-	const int NORMAL_PASS		= 0x00000001;//通常ビルボード
-	const int TRANSPARENT_PASS	= 0x00000002;//透過処理有効描画
-	const int FOREGROUND_PASS	= 0x00000004;//最前面描画
-	const int Y_BILLBOARD_PASS	= 0x00000008;//Y軸ビルボード
+	const int NORMAL_PASS			= 0x00000001;//通常ビルボード
+	const int TRANSPARENT_PASS		= 0x00000002;//透過処理有効描画
+	const int FOREGROUND_PASS		= 0x00000004;//最前面描画
+	const int Y_BILLBOARD_PASS		= 0x00000008;//Y軸ビルボード
+	const int OFF_BILLBOARD_PASS	= 0x00000010;//ビルボードをしない
 
 }
 

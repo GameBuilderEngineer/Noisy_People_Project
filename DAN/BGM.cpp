@@ -146,12 +146,13 @@ void BGMManager::outputGUI(void)
 				//‘¬“x’²®
 				ImGui::Text("%d", ((int)state.SamplesPlayed / tmpBuffer->wavFile.fmt.fmtSampleRate));
 				ImGui::SliderFloat("Speed", &tmpSoundParameters->playParameters.speed, 0.1f, 3.0f);
-
+				bool speedUp = false;
 				if (backUpSpeed != tmpSoundParameters->playParameters.speed)
 				{
 					tmpSoundParameters->isSpeed = true;
+					speedUp = true;
 				}
-				if (tmpSoundParameters->isSpeed)
+				if (speedUp)
 				{
 					SetSpeed();
 				}

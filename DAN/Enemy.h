@@ -14,6 +14,8 @@
 #include "Sound.h"
 #include "SoundBase.h"
 #include "Tree.h"
+#include "EnemyChaseMark.h"
+#include "PartsAnimationManager.h"
 
 //=============================================================================
 // ビルドスイッチ
@@ -41,9 +43,9 @@ namespace enemyNS
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
-		40,			// WOLF
-		100,		// TIGER
-		250,		// BEAR
+		80,			// WOLF
+		170,		// TIGER
+		450,		// BEAR
 	};
 
 	// エネミーのプレイヤー記憶時間テーブル
@@ -59,7 +61,7 @@ namespace enemyNS
 	{
 		15.0f,		// WOLF
 		15.0f,		// TIGER
-		15.0f,		// BEAR
+		12.0f,		// BEAR
 	};
 
 	//-------------
@@ -69,8 +71,8 @@ namespace enemyNS
 	const float SENSOR_UPDATE_INTERVAL[TYPE_MAX] =
 	{
 		0.3f,		// WOLF
-		0.2f,		// TIGER
-		0.1f,		// BEAR
+		0.3f,		// TIGER
+		0.3f,		// BEAR
 	};
 
 	// エネミーの視力距離テーブル
@@ -94,15 +96,15 @@ namespace enemyNS
 	{
 		0.5f,		// WOLF
 		0.5f,		// TIGER
-		0.5f,		// BEAR
+		0.8f,		// BEAR
 	};
 
 	// エネミーの聴覚距離テーブル
 	const float NOTICEABLE_DISTANCE_PLAYER[TYPE_MAX] =
 	{
 		3.5f,		// WOLF
-		3.5f,		// TIGER
-		3.5f,		// BEAR
+		5.5f,		// TIGER
+		18.5f,		// BEAR
 	};
 	const float SHOT_SOUND_SCALE = 4.5f;// ショット音距離倍率
 
@@ -113,8 +115,8 @@ namespace enemyNS
 	const int ATTACK_DAMAGE[TYPE_MAX] =
 	{
 		5,			// WOLF
-		10,			// TIGER
-		15,			// BEAR
+		12,			// TIGER
+		20,			// BEAR
 	};
 
 	// エネミーの攻撃移動速度テーブル
@@ -139,7 +141,26 @@ namespace enemyNS
 	{
 		8.0f,		// WOLF
 		8.0f,		// TIGER
-		8.0f,		// BEAR
+		10.0f,		// BEAR
+	};
+
+	//--------
+	// その他
+	//--------
+	// 追跡マークの大きさ
+	const D3DXVECTOR2 MARK_SCALE[TYPE_MAX] =
+	{
+		D3DXVECTOR2(2.0f, 2.0f),	// WOLF
+		D3DXVECTOR2(3.5f, 3.5f),	// TIGER
+		D3DXVECTOR2(3.0f, 3.0f),	// BEAR
+	};
+
+	// アイテムを出す確率の分母（1/x）
+	const int ITEM_DROP_PROBABILITY_DENOMINATOR[TYPE_MAX] =
+	{
+		7,			// WOLF
+		2,			// TIGER
+		1			// BEAR
 	};
 
 	//------------
@@ -151,6 +172,32 @@ namespace enemyNS
 		ATTACK_SE,		// 攻撃音
 		DIE_SE,			// 死亡音
 		SE_3D_MAX
+	};
+
+	//-----------
+	// Effekseer
+	//-----------
+	const float DEATH_EFFECT_SCALE[TYPE_MAX] =
+	{
+		1.2f,		// WOLF
+		2.0f,		// TIGER
+		8.0f,		// BEAR
+	};
+
+	class DeathEffect :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3 * syncPosition;
+		DeathEffect(D3DXVECTOR3* sync)
+		{
+			syncPosition = sync;
+			effectNo = effekseerNS::ENEMY_DEATH;
+		}
+		virtual void update()
+		{
+			position = *syncPosition;
+			Instance::update();
+		};
 	};
 
 	// Physics Constant
@@ -176,6 +223,9 @@ namespace enemyNS
 	const float CAMERA_SPEED = 1.0f;					// カメラの速さ
 	const int PATOROL_ROUTE_MAX = 8;					// 警戒ステート時の巡回座標最大数
 	const float AUTO_DESTRUCTION_HEIGHT = -100.0f;		// 自動破棄される高さ
+	const float MARK_FLOATING_HEIGHT = 0.1f;			// 追跡マークの高さ
+	const float DIE_STATE_TIME = 4.0f;					// 死亡ステートの時間
+	const float DIE_STATE_RENDERING_TIME = 2.8f;		// 死亡ステートのうち描画が続く時間
 
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
@@ -240,6 +290,8 @@ namespace enemyNS
 		Player* player;
 		LPD3DXMESH	attractorMesh;
 		D3DXMATRIX*	attractorMatrix;
+		//EnemyChaseMark* markRenderer;
+		//StaticMeshRenderer* tigerBulletRender;
 	};
 
 #if _DEBUG
@@ -276,6 +328,9 @@ namespace enemyNS
 class Enemy: public Object
 {
 protected:
+#ifdef _DEBUG
+public:
+#endif
 	enemyNS::EnemyData* enemyData;					// エネミーデータ
 	static int numOfEnemy;							// エネミーの総数
 	StaticMesh* staticMesh;							// メッシュ情報
@@ -284,6 +339,7 @@ protected:
 	LPD3DXMESH	attractorMesh;						// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;					// 重力（引力）発生オブジェクトマトリックス
 	StateMachine stateMachine;						// ステートマシン
+	PartsAnimationManager* animationManager;		// アニメーションマネージャ
 
 	// ブラックボード
 	bool isNoticingPlayer[gameMasterNS::PLAYER_NUM];// プレイヤー認識フラグ
@@ -318,6 +374,7 @@ protected:
 	// 移動
 	D3DXVECTOR3 destination;						// 目的地
 	D3DXVECTOR3 moveDirection;						// 移動ベクトル
+	D3DXQUATERNION	moveMotion;						// 移動モーション
 	bool isArraved;									// 到着フラグ
 	float movingTime;								// 計測移動時間
 	bool isDestinationLost;							// 目的地を見失った
@@ -334,8 +391,20 @@ protected:
 	bool isHitPlayer;								// プレイヤーと接触している
 	float friction;									// 摩擦係数
 
+	// 追跡マーク
+	EnemyChaseMark* markRenderer;					// 追跡マークレンダラー
+	enemyChaseMarkNS::StandardChaseMark* markFront;	// 追跡マークポインタ
+	enemyChaseMarkNS::StandardChaseMark* markBack;	// 追跡マークポインタ
+	D3DXVECTOR3 markDirection;						// ●追跡マークの方角
+
+	// State
+	float cntTimeDie;								// 死亡ステート時間カウンタ
+
 	// サウンド
 	PLAY_PARAMETERS playParameters;
+
+	// エフェクト
+	enemyNS::DeathEffect* deathEffect;				// 死亡エフェクト
 
 	//------------------
 	// アクションクエリ
@@ -356,7 +425,7 @@ protected:
 	// 聴覚センサー
 	bool earSensor(int playerType);
 	// ステアリング
-	void steering();
+	void steering(float frameTime);
 	// 攻撃中
 	void attacking(float frameTime);
 	//----------------
@@ -408,6 +477,10 @@ protected:
 	void setDebugDestination();
 	// 巡回路リングバッファの更新
 	void updatePatrolRoute();
+	// 追跡マークの作成
+	void createMark();
+	// 追跡マークの破棄
+	void deleteMark();
 
 public:
 	//----------
@@ -472,6 +545,7 @@ public:
 	static int debugEnemyID;			// デバッグするエネミーのID
 	Ray eyeAngleRay[4];					// 視覚レイ表示用
 	BoundingSphere hearingSphere[2];	// 聴覚距離表示用
+	DWORD faceNumber;					// デバッグ用面番号
 
 	// デバッグ環境を設定
 	void setDebugEnvironment();
@@ -485,8 +559,6 @@ public:
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
 	// デバッグセンサー
 	void debugSensor();
-	// ナビメッシュデバッグ描画
-	void debugNavimesh();
 	// ImGUIへの出力
 	void outputGUI();
 #endif//_DEBUG

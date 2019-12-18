@@ -27,6 +27,7 @@ namespace aiNS
 		SPAWN_ENEMY_AROUND_PLAYER,		// プレイヤーの周りに動的にエネミーをスポーンする
 		RESPAWN_ENEMY,					// 一度倒したエネミーを初期位置にリスポーンする
 		ENEMY_ATTACKS_TREE,				// エネミーがツリーを襲撃するイベントが発生する
+		BOSS_ENTRY,						// 巨大環境破壊ロボが登場
 		NUM_EVENT_LIST
 	};
 
@@ -52,7 +53,7 @@ namespace aiNS
 	const float WEIGHT_RESPAWN = 0.7f;				// RESPAWN_ENEMY
 	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.8f;	// ENEMY_ATTACKS_TREE
 
-	const float MANDATORY_SPAWN_INTERVAL = 30.0f;	// エネミースポーンのための最低経過間隔秒
+	const float MANDATORY_SPAWN_INTERVAL = 20.0f;				// エネミースポーンのための最低経過間隔秒
 	const float MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE = 40.0f;	// ツリー襲撃イベントの最低経過間隔秒
 	const float MANDATOEY_INTERVAL_CHECKING_WEIGHT = 8.0f;		// ツリー襲撃イベントの発生評価値チェック間隔
 
@@ -102,6 +103,7 @@ namespace aiNS
 		// イベント
 		float lastTimeEnemyAttaksTree;						// 最後にツリー襲撃イベントが発生した時間
 		float lastTimeCheckedWeightEnemyAttacksTree;		// 最後にツリー襲撃イベントの発生評価値をチェックした時間
+		bool wasBossEntried;								// 環境破壊ロボが登場したか
 
 		// イベント発生の評価値（0.0～1.0）
 		float weightSpawn[gameMasterNS::PLAYER_NUM];		// SPAWN_ENEMY_AROUND_PLAYER

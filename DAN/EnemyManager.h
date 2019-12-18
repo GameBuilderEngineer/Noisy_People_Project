@@ -19,6 +19,7 @@
 #include "GameMaster.h"
 #include "Sound.h"
 #include "SoundBase.h"
+#include "EnemyChaseMark.h"
 
 
 //=============================================================================
@@ -30,10 +31,10 @@ namespace enemyNS
 	const int ENEMY_OBJECT_MAX = 30;
 
 	// オブジェクト作成基準の近距離(2乗)
-	const float NEAR_DISTANCE2 = 10000.0f;	// 100 * 100
+	const float NEAR_DISTANCE2 = 22500.0f;	// 150 * 150
 
 	// オブジェクト破棄基準の遠距離(2乗)
-	const float FAR_DISTANCE2 = 14400.0f;	// 120 * 120
+	const float FAR_DISTANCE2 = 28900.0f;	// 170 * 170
 
 	// エネミーデータリストのチェック頻度
 	const float DATA_LIST_CHECK_INTERVAL = 0.5f;
@@ -48,9 +49,6 @@ class EnemyManager :public Base
 private:
 	LinkedList<enemyNS::EnemyData> enemyDataList;		// エネミーデータリスト
 	std::vector<Enemy*> enemyList;						// エネミーポインタリスト
-	StaticMeshRenderer* wolfRenderer;					// 描画オブジェクト
-	StaticMeshRenderer* tigerRenderer;					// 描画オブジェクト
-	StaticMeshRenderer* bearRenderer;					// 描画オブジェクト
 	int nextID;											// 次回エネミー発行ID
 	LPD3DXMESH	attractorMesh;							// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;						// 重力（引力）発生オブジェクトマトリックス
@@ -59,6 +57,23 @@ private:
 	float cntTimeDataList;								// エネミーデータリストのチェック時間カウンタ
 
 public:
+	// 描画オブジェクト
+	static StaticMeshRenderer* wolfBodyRenderer;
+	static StaticMeshRenderer* wolfArmRenderer;
+	static StaticMeshRenderer* tigerBodyRenderer;
+	static StaticMeshRenderer* tigerGunRenderer;
+	static StaticMeshRenderer* tigerLegLRenderer;
+	static StaticMeshRenderer* tigerLegRRenderer;
+	static StaticMeshRenderer* bearBodyRenderer;
+	static StaticMeshRenderer* bearArmLRenderer;
+	static StaticMeshRenderer* bearArmRRenderer;
+	static StaticMeshRenderer* bearWaistRenderer;
+	static StaticMeshRenderer* bearLegLRenderer;
+	static StaticMeshRenderer* bearLegRRenderer;
+
+	static EnemyChaseMark* markRenderer;						// 追跡マーク描画
+	static StaticMeshRenderer* tigerBulletRenderer;
+
 	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player);
 	void uninitialize();
 	void update(float frameTime);

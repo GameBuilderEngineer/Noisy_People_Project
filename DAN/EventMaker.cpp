@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "AIDirector.h"
 #include "EventMaker.h"
+#include "Game.h"
 using namespace aiNS;
 
 
@@ -89,6 +90,16 @@ void EventMaker::update()
 			}
 		}
 	}
+
+
+#ifndef CHEAT_PRESENTATION
+	// 巨大環境破壊ロボイベント
+	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
+	{
+		data->wasBossEntried = true;
+		makeEventBossEntry();
+	}
+#endif
 }
 
 
@@ -100,7 +111,7 @@ void EventMaker::makeEventSpawningEnemyAroundPlayer(int playerType)
 	enemyNS::ENEMYSET enemySet;
 	enemySet.enemyID = enemyManager->issueNewEnemyID();
 	enemySet.type = decideSpawnEnemyType();
-	enemySet.defaultPosition = createGroundedPositionFromPivot(player[playerType].position, 25.0f, 5.0f);
+	enemySet.defaultPosition = createGroundedPositionFromPivot(player[playerType].position, 65.0, 5.0);
 	enemySet.defaultDirection = *player[playerType].getPosition() - enemySet.defaultPosition;
 	enemySet.defaultState = stateMachineNS::PATROL;
 	opeGenerator->spawnEnemy(enemySet);
@@ -160,6 +171,25 @@ void EventMaker::makeEventEnemyAttaksTree()
 
 
 //=============================================================================
+// 巨大環境破壊ロボ登場イベントの作成(BOSS_ENTRY)
+//=============================================================================
+void EventMaker::makeEventBossEntry()
+{
+	enemyNS::ENEMYSET enemySet;
+	enemySet.enemyID = enemyManager->issueNewEnemyID();
+	enemySet.type = enemyNS::BEAR;
+
+	// 両プレイヤーとの距離の差が少なし登場場所を選ぶ
+	// しかし至近距離にいないことが条件である
+	enemySet.defaultPosition = decideBossEntryPoint();
+	// 伊達山のほうを向く
+	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f) - enemySet.defaultPosition;
+	enemySet.defaultState = stateMachineNS::PATROL;
+	opeGenerator->bossEntry(enemySet);
+}
+
+
+//=============================================================================
 // 動的作成するエネミーのパラメータを決める
 //=============================================================================
 enemyNS::ENEMY_TYPE EventMaker::decideSpawnEnemyType()
@@ -199,7 +229,7 @@ enemyNS::ENEMY_TYPE EventMaker::decideSpawnEnemyType()
 	score += (float)((rand() % 5) - 2);
 
 	// スコアによってエネミーのタイプを変更する
-	if (score > 0.2f)
+	if (score > 0.09f)
 	{
 		ans = enemyNS::WOLF;
 	}
@@ -293,6 +323,23 @@ int EventMaker::decideAttackTargetTree()
 	SAFE_DELETE_ARRAY(selectIndexList);
 	SAFE_DELETE_ARRAY(candidateList);
 	return treeID;
+}
+
+
+//=============================================================================
+// 巨大環境破壊ロボの場所を決める
+//=============================================================================
+D3DXVECTOR3 EventMaker::decideBossEntryPoint()
+{
+	//●とりあえず
+	switch (rand() % 2)
+	{
+	case 0:
+		return D3DXVECTOR3(186.0f, 100.0f, -165.0f); // 東の台地
+
+	case 1:
+		return D3DXVECTOR3(-204.0f, 86.0f, 197.0f);	// 北の台地
+	}
 }
 
 

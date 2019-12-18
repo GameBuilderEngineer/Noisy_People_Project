@@ -59,3 +59,15 @@ void OperationGenerator::enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _att
 	enemyManager->createEnemy(p);
 
 }
+
+
+//=============================================================================
+// ‹‘åŠÂ‹«”j‰óƒƒ{‚ª“oê
+//=============================================================================
+void OperationGenerator::bossEntry(enemyNS::ENEMYSET _enemySet)
+{
+	telopManager->play(telopManagerNS::BOSS_ENTRY);
+	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
+	p->isGeneratedBySpawnEvent = true;
+	enemyManager->createEnemy(p);
+}

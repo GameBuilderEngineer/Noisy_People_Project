@@ -4,8 +4,10 @@
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
 #include "Enemy.h"
+#include "EnemyManager.h"
 #include "ImguiManager.h"
 #include "Sound.h"
+#include "ItemManager.h"
 #include <cassert>
 using namespace enemyNS;
 using namespace stateMachineNS;
@@ -30,6 +32,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	player = constructionPackage.player;
 	attractorMesh = constructionPackage.attractorMesh;
 	attractorMatrix = constructionPackage.attractorMatrix;
+	markRenderer = EnemyManager::markRenderer;// ●グローバルでとれるようにしたからこの必要がない
 
 	// エネミーデータをオブジェクトにセット
 	position = enemyData->position;
@@ -70,6 +73,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	// 移動の初期化
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXQuaternionIdentity(&moveMotion);
 	isArraved = false;
 	movingTime = 0.0f;
 	isDestinationLost = false;
@@ -84,6 +88,9 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	groundNormal = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	isHitPlayer = false;
 	friction = 1.0f;
+
+	// State
+	cntTimeDie = 0.0f;
 
 	// オブジェクト初期化(initialize()は派生クラス)
 	onGravity = true;
@@ -131,6 +138,9 @@ Enemy::~Enemy()
 		edgeList->terminate();
 		SAFE_DELETE(edgeList);
 	}
+
+	// 追跡マークの削除
+	deleteMark();
 
 	numOfEnemy--;
 }
@@ -181,6 +191,10 @@ void Enemy::preprocess(float frameTime)
 	friction = 1.0f;		// 摩擦係数初期化
 	acceleration *= 0.0f;	// 加速度を初期化
 
+	// デフォルトアニメーション
+	animationManager->switchDefault();
+
+
 #ifdef _DEBUG
 	if (enemyData->state == CHASE)
 	{
@@ -201,7 +215,7 @@ void Enemy::preprocess(float frameTime)
 
 		if (input->wasKeyPressed('8'))
 		{
-			destination = player->position;
+			destination = player->center;
 			movingTarget = &destination;
 		}
 		if (input->wasKeyPressed('7'))
@@ -211,6 +225,10 @@ void Enemy::preprocess(float frameTime)
 		if (input->isKeyDown('M'))
 		{
 			move(frameTime);
+		}
+		if (input->wasKeyPressed('U'))
+		{
+			naviMesh->isHitGrounding(NULL, &faceNumber, center);
 		}
 	}
 #endif// _DEBUG
@@ -284,20 +302,20 @@ void Enemy::searchPath()
 	canSearch = false;
 	isArraved = false;
 
-	if (edgeList != NULL)
-	{
-		// エッジリストの破棄
-		edgeList->terminate();
-		SAFE_DELETE(edgeList);
-	}
-
+	// 移動ターゲットの現在位置までのエッジリストを取得
 	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+	// 移動ターゲットの現在位置を目的地に設定
 	destination = *movingTarget;
 
 #ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)
 	{
-		naviMesh->debugEdgeList = edgeList;
+		// 移動ターゲットの現在位置までのエッジリストを取得
+		naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+		// 移動ターゲットの現在位置を目的地に設定
+		destination = *movingTarget;
+
+		naviMesh->debugEdgeList = &edgeList;
 	}
 #endif
 }
@@ -321,11 +339,17 @@ void Enemy::move(float frameTime)
 {
 	if (isAttacking)
 	{
-		attacking( frameTime);
+		attacking(frameTime);
+
+		// 攻撃アニメーションに切り替え
+		animationManager->switchAttack();
 	}
 	else
 	{
-		steering();
+		steering(frameTime);
+
+		// 移動アニメーションに切り替え
+		animationManager->switchMove();
 	}
 }
 #pragma endregion
@@ -437,36 +461,44 @@ void Enemy::attacking(float frameTime)
 //=============================================================================
 // ステアリング
 //=============================================================================
-void Enemy::steering()
+void Enemy::steering(float frameTime)
 {
-	moveDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 newMoveDirection;
+	D3DXVECTOR3 tempDirection;
 
-	if (edgeList != NULL && edgeList->isEnpty())
-	{
-		// エッジリストの破棄
-		edgeList->terminate();
-		SAFE_DELETE(edgeList);
-	}
 
-	if (edgeList == NULL)
-	{
-		// 目的地に直線移動
-		moveDirection = destination - position;
-		D3DXVec3Normalize(&moveDirection, &moveDirection);
-	}
-	else
-	{
-		// ナビメッシュによる移動ベクトル生成（ステアリング）
-		naviMesh->steering(&moveDirection, &naviFaceIndex, center, edgeList);
-	}
+	// ナビメッシュによる移動ベクトル生成（ステアリング）
+	naviMesh->steering(&moveDirection, &naviFaceIndex, center, destination, &edgeList);
 
-#ifdef _DEBUG
-	if (enemyData->enemyID == debugEnemyID)
-	{
-		naviMesh->debugEdgeList = edgeList;
-	}
-#endif//_DEBUG
+	////moveDirection += newMoveDirection;
 
+	////if (oldMoveDirection == D3DXVECTOR3(0, 0, 0))
+	////{
+	////	oldMoveDirection = axisZ.direction;
+	////}
+	//if (moveDirection == D3DXVECTOR3(0, 0, 0))
+	//{
+	//	tempDirection = axisZ.direction;
+	//}
+	//else
+	//{
+	//	tempDirection = moveDirection;
+	//}
+
+	////カーブモーション
+	//float rotationRadian;
+	//if (formedRadianAngle(&rotationRadian, tempDirection, newMoveDirection))
+	//{
+	//	Base::anyAxisRotationSlerp(&moveMotion, groundNormal, rotationRadian, 1);
+	//}
+	//D3DXMATRIX matrix;
+	//D3DXMatrixIdentity(&matrix);
+	//D3DXMatrixRotationQuaternion(&matrix, &moveMotion);
+	//D3DXVec3TransformCoord(&moveDirection, &tempDirection, &matrix);
+
+	//moveDirection = newMoveDirection;
+	
+	// 加速度に加算
 	acceleration += moveDirection * MOVE_ACC[enemyData->type];
 }
 #pragma endregion
@@ -669,9 +701,15 @@ void Enemy::updataBlackBoard(float frameTime)
 //=============================================================================
 void Enemy::prepareChase()
 {
+	// 最初から追跡ステートであるエネミーを作るとこの関数を経由しない
+	// 様々な問題が出てくるので注意されたし
+
 	cntPathSearchInterval = 0.0f;
 	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyActive, false, NULL, false, NULL };
 	SoundInterface::SE->playSound(&playParameters);
+
+	// 追跡マークの作成
+	createMark();
 }
 
 
@@ -681,6 +719,9 @@ void Enemy::prepareChase()
 void Enemy::preparePatrol()
 {
 	isDestinationLost = true;
+
+	// 追跡マークの削除
+	deleteMark();
 }
 
 
@@ -689,7 +730,8 @@ void Enemy::preparePatrol()
 //=============================================================================
 void Enemy::prepareRest()
 {
-
+	// 追跡マークの削除
+	deleteMark();
 }
 
 
@@ -700,6 +742,9 @@ void Enemy::prepareAttackTree()
 {
 	setAttackTarget(enemyData->targetTree);
 	setMovingTarget(enemyData->targetTree->getPosition());
+
+	// 追跡マークの削除
+	deleteMark();
 }
 
 
@@ -708,7 +753,16 @@ void Enemy::prepareAttackTree()
 //=============================================================================
 void Enemy::prepareDie()
 {
+	// 死亡エフェクトの再生
+	deathEffect = new DeathEffect(&center);
+	deathEffect->scale *= DEATH_EFFECT_SCALE[enemyData->type];
+	effekseerNS::play(0, deathEffect);
 
+	// 追跡マークの削除
+	deleteMark();
+
+	// 死亡アニメーションに切り替え
+	animationManager->switchDead();
 }
 #pragma endregion
 
@@ -730,6 +784,32 @@ void Enemy::chase(float frameTime)
 		searchPath();
 	}
 
+	//D3DXQUATERNION quaternion;
+	//D3DXQuaternionIdentity(&quaternion);
+	//Base::postureControl(&quaternion, D3DXVECTOR3(0, 0, 0), player[chasingPlayer].position - position, 1.0f);
+	//D3DXMATRIX matrix;
+	//D3DXMatrixIdentity(&matrix);
+	//D3DXMatrixRotationQuaternion(&matrix, &quaternion);
+	////D3DXVec3TransformCoord(&markDirection, &markDirection, &matrix);
+	//markFront->rotation.x = 
+
+	// 追跡マーク（表）の更新
+	markFront->position = position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f);
+	formedRadianAngle(&markFront->rotation.y, D3DXVECTOR3(0.0f, 0.0f, 1.0f), player[chasingPlayer].position - position);
+	if (position.x < player[chasingPlayer].position.x) { markFront->rotation.y = -markFront->rotation.y; }
+	// 追跡マーク（裏）の更新
+	markBack->position = position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f);
+	formedRadianAngle(&markBack->rotation.y, D3DXVECTOR3(0.0f, 0.0f, 1.0f), player[chasingPlayer].position - position);
+	if (position.x < player[chasingPlayer].position.x)
+	{
+		markBack->rotation.y = D3DX_PI - markBack->rotation.y;
+	}
+	else
+	{
+		markBack->rotation.y = -(D3DX_PI - markBack->rotation.y);
+	}
+
+	// 移動
 	move(frameTime);
 }
 
@@ -784,7 +864,6 @@ void Enemy::attackTree(float frameTime)
 		searchPath();
 	}
 
-
 	move(frameTime);
 }
 
@@ -794,8 +873,33 @@ void Enemy::attackTree(float frameTime)
 //=============================================================================
 void Enemy::die(float frameTime)
 {
-	enemyData->isAlive = false;
-	enemyData->deadTime = gameMaster->getGameTime();
+	// 死ぬ寸前の振動
+	speed.x += (rand() % 8) / 10.0f;
+	speed.x -= 0.4f;
+	speed.z += (rand() % 8) / 10.0f;
+	speed.z -= 0.4f;
+
+	// 死亡時
+	if (cntTimeDie > DIE_STATE_TIME)
+	{
+		enemyData->isAlive = false;
+		enemyData->deadTime = gameMaster->getGameTime();
+
+		// アイテムドロップ
+		if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
+		{
+			ItemManager* itemManager = ItemManager::get();
+			itemNS::ItemData itemData;
+			itemData.itemID = itemManager->issueNewItemID();
+			itemData.type = itemNS::BATTERY;
+			itemData.defaultPosition = position;
+			itemData.defaultDirection = axisZ.direction;
+			itemManager->createItem(itemData);
+		}
+	}
+
+	// 死亡ステート時間のカウントアップ
+	cntTimeDie += frameTime;
 }
 #pragma endregion
 
@@ -982,6 +1086,42 @@ void Enemy::updatePatrolRoute()
 
 	}
 }
+
+
+//=============================================================================
+// 追跡マークの作成
+//=============================================================================
+void Enemy::createMark()
+{
+	// 表
+	markFront = new enemyChaseMarkNS::StandardChaseMark(position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f));
+	markFront->scale = MARK_SCALE[enemyData->type];
+	markRenderer->generateMark(markFront);
+	// 裏
+	markBack = new enemyChaseMarkNS::StandardChaseMark(position + D3DXVECTOR3(0.0f, MARK_FLOATING_HEIGHT, 0.0f));
+	markBack->scale = MARK_SCALE[enemyData->type];
+	markBack->rotation = D3DXVECTOR3(D3DX_PI / 2.0f, 0, 0);
+	markRenderer->generateMark(markBack);
+}
+
+
+//=============================================================================
+// 追跡マークの破棄
+//=============================================================================
+void Enemy::deleteMark()
+{
+	if (markFront != NULL)
+	{
+		markRenderer->deleteMark(markFront);
+		markFront = NULL;	// ダングリングポインタにならないはずだが仕様変更等に備えて
+	}
+
+	if (markBack != NULL)
+	{
+		markRenderer->deleteMark(markBack);
+		markBack = NULL;	// ダングリングポインタにならないはずだが仕様変更等に備えて
+	}
+}
 #pragma endregion
 
 
@@ -1116,7 +1256,7 @@ void Enemy::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVE
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	if (onGround)
 	{
-		acceleration += moveDirection * MOVE_ACC[enemyData->type];
+		acceleration += moveDirection * MOVE_ACC[enemyData->type] * 3; 
 	}
 	else
 	{
@@ -1187,21 +1327,11 @@ void Enemy::debugSensor()
 		if (sound)
 		{
 			// 音を鳴らす
-			playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
-			SoundInterface::SE->playSound(&playParameters);	//SE再生
+			//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
+			//SoundInterface::SE->playSound(&playParameters);	//SE再生
 		}
 
 	}
-}
-
-
-//=============================================================================
-// ナビメッシュデバッグ描画
-//=============================================================================
-void Enemy::debugNavimesh()
-{
-	naviMesh->affectToEdgeVertex(edgeList);
-	naviMesh->debugRenderEdge(edgeList);
 }
 
 

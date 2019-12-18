@@ -19,6 +19,7 @@
 #include "Result.h"
 #include "Credit.h"
 #include "Display.h"
+#include "Finale.h"
 #include "SE.h"
 #include "LinearTreeCell.h"
 #include "DebugScene.h"
@@ -151,7 +152,7 @@ HRESULT Director::initialize() {
 
 
 	//scene
-	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO) == IDYES)
+	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO| MB_TOPMOST) == IDYES)
 	{
 		scene = new Splash();
 	}
@@ -559,6 +560,7 @@ void Director::changeNextScene() {
 	case SceneList::CREDIT:					scene = new Credit();	break;
 	case SceneList::GAME:					scene = new Game();		break;
 	case SceneList::RESULT:					scene = new Result();	break;
+	case SceneList::FINALE:					scene = new Finale();	break;
 #if _DEBUG 
 	case SceneList::CREATE:					scene = new Create();	break; 
 #endif

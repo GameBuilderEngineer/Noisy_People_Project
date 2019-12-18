@@ -47,4 +47,6 @@ public:
 	void respawnEnemy(int _enemyID);
 	// エネミーデジタルツリー襲撃
 	void enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _attackTarget);
+	// 巨大環境破壊ロボが登場
+	void bossEntry(enemyNS::ENEMYSET _enemySet);
 };

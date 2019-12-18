@@ -114,7 +114,7 @@ HRESULT InstancingBillboard::initialize(LPDIRECT3DTEXTURE9 _texture,int divideU,
 		{ 0, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,	0 },	//頂点座標
 		{ 0, sizeof(D3DXVECTOR2),				D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	0 },	//UV
 		{ 1, 0,									D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	1 },	//位置
-		{ 2, 0,									D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,			0 },	//カラー
+		{ 2, 0,									D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,		0 },	//カラー
 		{ 3, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	2 },	//相対UV
 		{ 4, 0,									D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	3 },	//回転
 		{ 5, 0,									D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	4 },	//スケール
@@ -223,13 +223,17 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 
 	effect->Begin(0, 0);
 
-	int billboardY = 0;
-	if (renderType & Y_BILLBOARD_PASS)billboardY = 3;
-	switch (renderType & ~Y_BILLBOARD_PASS)
+	int passValue = 0;
+	if (renderType & OFF_BILLBOARD_PASS)
+	{passValue += 6;}
+	else if (renderType & Y_BILLBOARD_PASS) 
+	{ passValue += 3; }
+
+	switch (renderType & ~(Y_BILLBOARD_PASS|OFF_BILLBOARD_PASS))
 	{
-	case NORMAL_PASS:		effect->BeginPass(0+billboardY);break;
-	case TRANSPARENT_PASS:	effect->BeginPass(1+billboardY);break;
-	case FOREGROUND_PASS:	effect->BeginPass(2+billboardY);break;
+	case NORMAL_PASS:		effect->BeginPass(0+passValue);break;
+	case TRANSPARENT_PASS:	effect->BeginPass(1+passValue);break;
+	case FOREGROUND_PASS:	effect->BeginPass(2+passValue);break;
 	}
 		
 	device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);

@@ -54,6 +54,7 @@ void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Play
 	data.treeDistanceFromPlayer[gameMasterNS::PLAYER_2P] = new float[treeManager->getTreeList().size()];
 	data.lastTimeEnemyAttaksTree = gameMasterNS::GAME_TIME;
 	data.lastTimeCheckedWeightEnemyAttacksTree = gameMasterNS::GAME_TIME;
+	data.wasBossEntried = false;
 
 	BoundingSphere temp;
 	temp.initialize(NULL, fieldMesh);

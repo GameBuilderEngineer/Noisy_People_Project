@@ -22,6 +22,7 @@ State* ChaseState::transition(stateMachineNS::TransitionTimeChecker* checker, En
 
 	if (enemy->getEnemyData()->hp == 0)
 	{
+		enemy->prepareDie();
 		return DieState::getInstance();
 	}
 
@@ -45,6 +46,7 @@ State* PatrolState::transition(stateMachineNS::TransitionTimeChecker* checker, E
 
 	if (enemy->getEnemyData()->hp == 0)
 	{
+		enemy->prepareDie();
 		return DieState::getInstance();
 	}
 
@@ -57,6 +59,12 @@ State* PatrolState::transition(stateMachineNS::TransitionTimeChecker* checker, E
 //=============================================================================
 State* RestState::transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy)
 {
+	if (enemy->getEnemyData()->hp == 0)
+	{
+		enemy->prepareDie();
+		return DieState::getInstance();
+	}
+
 	return this;
 }
 

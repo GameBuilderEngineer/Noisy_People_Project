@@ -146,7 +146,11 @@ void TreeManager::update(float frameTime)
 			in.eventType	= gameMasterNS::TO_GREEN_WITH_ANALOG;
 
 			//ゲームマスターへ記録
-			if(gameMaster)gameMaster->recordTreeTable(in);
+			if (gameMaster)
+			{
+				NETWORK_CLIENT::setSendTreeTable(in);
+				gameMaster->recordTreeTable(in);
+			}
 
 		}
 

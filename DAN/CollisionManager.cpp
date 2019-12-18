@@ -51,6 +51,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case ENEMY:			return playerAndEnemy((Player*)obj1, (Enemy*)obj2);					break;
 		case TREE:			return playerAndTree((Player*)obj1, (Tree*)obj2);					break;
 		case GREENING_AREA:	return false;														break;
+		case MAPOBJECT:		return playerAndMapObject((Player*)obj1, (MapObject*)obj2);			break;
 		}break;
 	case BULLET:
 		switch (type2) {
@@ -59,6 +60,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case ENEMY:				return bulletAndEnemy((Bullet*)obj1, (Enemy*)obj2);				break;
 		case TREE:				return bulletAndTree((Bullet*)obj1, (Tree*)obj2);				break;
 		case GREENING_AREA:		return false;													break;
+		case MAPOBJECT:			return false;													break;
 		}break;
 	case ENEMY:
 		switch (type2) {
@@ -67,6 +69,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case ENEMY:				return enemyAndEnemy((Enemy*)obj1, (Enemy*)obj2);				break;
 		case TREE:				return enemyAndTree((Enemy*)obj1, (Tree*)obj2);					break;
 		case GREENING_AREA:		return false;													break;
+		case MAPOBJECT:			return false;													break;
 		}break;
 	case TREE:
 		switch (type2) {
@@ -75,6 +78,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case ENEMY:				return enemyAndTree((Enemy*)obj2, (Tree*)obj1);					break;
 		case TREE:				return false;													break;
 		case GREENING_AREA:		return greeningAreaAndTree((GreeningArea*)obj2, (Tree*)obj1);	break;
+		case MAPOBJECT:			return false;													break;
 		}break;
 	case GREENING_AREA:
 		switch (type2) {
@@ -83,14 +87,23 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case ENEMY:				return false;													break;
 		case TREE:				return greeningAreaAndTree((GreeningArea*)obj1,(Tree*)obj2);	break;
 		case GREENING_AREA:		return false;													break;
+		case MAPOBJECT:			return false;													break;
 		}break;
+	case MAPOBJECT:
+		switch (type2) {
+		case PLAYER:		return playerAndMapObject((Player*)obj2, (MapObject*)obj1);			break;
+		case BULLET:		return false;														break;
+		case ENEMY:			return false;														break;
+		case TREE:			return false;														break;
+		case GREENING_AREA:	return false;														break;
+		case MAPOBJECT:		return false;														break;
+		}
 	default:return false; break;
 	}
 
 	return false;
 
 }
-
 
 
 #pragma region CollisionFunction
@@ -256,6 +269,43 @@ bool CollisionManager::playerAndTree(Player* player, Tree* tree)
 		return true;
 	}
 	return false;
+}
+
+//===================================================================================================================================
+//【プレイヤー<-> マップオブジェクト】
+//===================================================================================================================================
+bool CollisionManager::playerAndMapObject(Player* player, MapObject* mapObject)
+{
+	// 半径距離以上の場合は衝突無しとする
+	float distance2 = D3DXVec3LengthSq(&(player->center - mapObject->center));
+	if ((player->radius + mapObject->radius) * (player->radius + mapObject->radius) < distance2)
+	{
+		return false;
+	}
+
+	LPD3DXMESH mesh;
+	D3DXMATRIX matrix;
+
+	// 接地
+	mesh = mapObject->box->mesh;	// BOXのメッシュなら乗る 本来のメッシュだとガタガタ
+	matrix = mapObject->matrixCenter;
+	if (player->grounding(mesh, matrix))
+	{
+		player->grounding();
+		//player->speed.x *= 0.99f;
+		//player->speed.z *= 0.99f;
+		// 乗るけど速度がゆっくりになり滑る
+	}
+
+	// めり込み補正
+	// あまりうまくいっていない
+	mesh = mapObject->getStaticMesh()->mesh;
+	matrix = mapObject->matrixWorld;
+	player->insetCorrection(objectNS::AXIS_X, player->size.x / 2, mesh, matrix);
+	player->insetCorrection(objectNS::AXIS_RX, player->size.x / 2, mesh, matrix);
+	player->insetCorrection(objectNS::AXIS_Z, player->size.z / 2, mesh, matrix);
+	player->insetCorrection(objectNS::AXIS_RZ, player->size.z / 2, mesh, matrix);
+	return true;
 }
 
 #pragma endregion

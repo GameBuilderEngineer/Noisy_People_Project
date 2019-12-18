@@ -81,19 +81,19 @@ void TmpObject::update(float frameTime)
 	moveOperation();			// 移動操作
 #ifdef _DEBUG
 	if (input->isKeyDown(keyTable.fly))
-	{// ジャンプ中にHで飛べます
+	{
 		acceleration.y = 0;
 		acceleration.x *= 2;
 		acceleration.z *= 2;
-		speed.y += 10.0f;
+		speed.y += 20.0f;
 	}
 
 	if (input->isKeyDown(keyTable.down))
-	{// ジャンプ中にHで飛べます
+	{
 		acceleration.y = 0;
 		acceleration.x *= 2;
 		acceleration.z *= 2;
-		speed.y -= 10.0f;
+		speed.y -= 20.0f;
 	}
 
 	if (input->isKeyDown(keyTable.spin))

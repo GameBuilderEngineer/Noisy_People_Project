@@ -19,8 +19,18 @@ namespace windNS
 		D3DXVECTOR3(234.0f, 13.0f, -178.0f),	// 東の台地の穴の中
 		D3DXVECTOR3(179.0f, 13.0f, -26.0f),		// 東のジャンプするとこ
 		D3DXVECTOR3(58.0f, 34.0f, 158.0f),		// 北のジャンプするとこ
-		D3DXVECTOR3(-105.0f, 60.0f, 192.0f),	// 北の台地にあがるとこ
-		D3DXVECTOR3(393.0f, 81.0f, -116.0f),	// 東の小島
+		D3DXVECTOR3(-114.0f, 60.0f, 187.0f),	// 北の台地にあがるとこ
+		D3DXVECTOR3(369.0f, 81.0f, -102.0f),	// 東の小島
+	};
+
+	// 衝突判定球の大きさ（= オブジェクトの大きさ）
+	const float SCALE[NUM_WIND] =
+	{
+		3.0f,
+		3.0f,
+		3.0f,
+		3.0f,
+		3.0f
 	};
 
 	// 風の方向
@@ -36,22 +46,24 @@ namespace windNS
 	// 風の飛距離
 	const float DISTANCE[NUM_WIND] =
 	{
-		20.0f,
-		14.0f,
+		8.0f,
+		10.0f,
 		7.0f,
-		15.0f,
-		15.0f,
+		10.0f,
+		8.0f,
 	};
 
 	// 風の速度
 	const float SPEED[NUM_WIND]
 	{
-		1.5f,
+		2.5f,
+		1.8f,
 		1.0f,
 		1.0f,
-		1.0f,
-		1.0f,
+		2.0f,
 	};
+
+	const float EFFECT_RENDERING_DISTANCE = 200.0f;	// エフェクト描画距離
 }
 
 
@@ -68,11 +80,13 @@ private:
 	public:
 		D3DXVECTOR3 windDirection;
 		float windSpeed;
+		effekseerNS::Instance* effect;
+		BoundingSphere sphere;
 	};
 
 	Wind wind[windNS::NUM_WIND];		// 風オブジェクト
 	Ray ray;							// 共用レイ
-	StaticMeshRenderer* windRenderer;	// 描画オブジェクト
+
 
 public:
 	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);

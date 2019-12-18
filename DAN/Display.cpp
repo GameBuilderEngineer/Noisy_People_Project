@@ -68,7 +68,7 @@ Display::~Display()
 //===================================================================================================================================
 void Display::initialize()
 {
-
+	syncTimer = 0.0f;
 	//テストフィールド
 	testField = new Object();
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
@@ -89,6 +89,7 @@ void Display::initialize()
 	camera->setFieldOfView((D3DX_PI / 180) * 90);
 	camera->setLimitRotationTop(0.1f);
 	camera->setLimitRotationBottom(0.1f);
+	camera->setGazeDistance(300.0f);
 
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(0,
@@ -104,7 +105,7 @@ void Display::initialize()
 	treeManager->createUsingTool();
 	treeManager->switchingNormalView(gameMasterNS::PLAYER_1P);
 
-
+	networkServer = new NETWORK_INTERFACE;
 }
 
 //===================================================================================================================================
@@ -116,6 +117,7 @@ void Display::uninitialize(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
+	SAFE_DELETE(networkServer);
 }
 
 //===================================================================================================================================
@@ -126,9 +128,52 @@ void Display::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	//同期タイマー：ゲームプレイ（クライアント）時更新
-	if(testMode == CLIENT_MODE) syncTimer += frameTime;
+	PACKAGE *package = networkServer->updata();
 
+	//同期タイマー：ゲームプレイ（クライアント）時更新
+	if (package->networkTester == true)
+	{
+		syncTimer = package->timer;
+
+		if (package->treeMax != 0)
+		{
+			//パッケージ内のイベントを呼び出す
+			for (int i = 0; i < package->treeMax; i++)
+			{
+				//イベント対象のツリー
+				Tree* selectTree = NULL;
+				//イベント対象のツリーを検索する
+				for (int num = 0; num < treeManager->getTreeList().size(); num++)
+				{
+					Tree* tree = treeManager->getTreeList()[num];
+					if (tree->getTreeData()->treeID == package->treeTable[i].id)
+					{
+						selectTree = tree;
+						num = treeManager->getTreeList().size();//検索終了
+					}
+				}
+
+				//イベントの対象ツリーが存在しない場合はスルー
+				if (selectTree == NULL)continue;
+
+				//イベント別にアクションする
+				switch (package->treeTable[i].eventType)
+				{
+				case gameMasterNS::TO_DEAD:
+					selectTree->transState();
+					break;
+				case gameMasterNS::TO_GREEN_WITH_ANALOG:
+					selectTree->transState();
+					break;
+				case gameMasterNS::TO_GREEN_WITH_DIGITAL:
+					selectTree->transState();
+					break;
+				}
+			}
+			////パッケージ内のイベントを解放する
+			//SAFE_DELETE_ARRAY(package->treeTable);
+		}
+	}
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -143,10 +188,11 @@ void Display::update(float _frameTime)
 	//if (input->wasKeyPressed(VK_RETURN) ||
 	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-
+	
 	//蔡へ
 	//通信プログラムでtarnsitionをtrueにしてシーン遷移を行う。
 	bool transition = false;
+	
 	if(transition)
 	{
 		// シーン遷移
@@ -239,7 +285,7 @@ void Display::createGUI()
 {
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
-	ImGui::Text("playbackTimer = %f", syncTimer);
+	ImGui::Text("syncTimer = %f", syncTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 #endif // _DEBUG

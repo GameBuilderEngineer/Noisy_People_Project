@@ -11,6 +11,8 @@
 //===================================================================================================================================
 #include "Base.h"
 #include "LinkedList.h"
+#include "SaiDelayReverb.h"
+#include "SaiFadeIn.h"
 
 //===================================================================================================================================
 //【マクロ定義】
@@ -142,7 +144,7 @@ public:
 	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void uninitSoundStop(void);								//停止(全部のサウンド)
 	void setEndPointVoiceVolume(float volume);				//エンドポイントボイスのボリューム
-
+	void setDelay(D3DXVECTOR3 pos);							//ディレイ
 protected:
 #if(XADUIO2_STATE)
 	//エンドポイントボイス
@@ -172,4 +174,14 @@ protected:
 	virtual	void	 outputGUI(void) {};							//ImGUIへの出力
 #endif
 
+	//APO
+	//IUnknown *SaiDelayApo;
+	//IUnknown *SaiFadeInApo;
+	//エフェクト
+	//SAI_APO_DELAY_REVERB saiApoDelayParameters;
+	//SAI_APO_FADE_IN saiApoFadeInParameters;
+	// エフェクトチェン
+	XAUDIO2_EFFECT_CHAIN chain;
+	// ディスクリプタ
+	XAUDIO2_EFFECT_DESCRIPTOR sourceDescriptor[2];
 };

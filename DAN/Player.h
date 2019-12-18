@@ -128,6 +128,20 @@ namespace playerNS{
 		STATE_NUM
 	};
 
+	struct StartPosition
+	{
+		D3DXVECTOR3 player1;
+		D3DXVECTOR3 player2;
+	};
+
+	const int POSITION_PATTERN = 5;
+
+	//const StartPosition START_POSITION[POSITION_PATTERN] =
+	//{
+	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)},
+	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)}
+	//};
+
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		D3DXVECTOR3(0, 20, -180),				//1P
@@ -152,7 +166,7 @@ namespace playerNS{
 	const float STOP_SPEED					= 0.5f;									//移動停止速度
 	const float MAX_SPEED					= 6.0f;									//移動停止速度
 	const float MAX_SLIP					= 8.0f;									//移動停止速度
-	const float MAX_SLOPE					= cosf(D3DXToRadian(69.0f));			//登れる傾斜角度
+	const float MAX_SLOPE					= cosf(D3DXToRadian(60.0f));			//登れる傾斜角度
 	const float FALL_SPEED_MAX				= 60.0f;								//落下最高速度
 	const float MOVE_FRICTION				= 1.3f;									//地面摩擦係数
 	const float WALL_FRICTION				= 0.98;									//壁ずり摩擦係数
@@ -257,6 +271,7 @@ private:
 	BoundingSphere				bodyCollide;					//球コリジョン
 	float						difference;						//フィールド補正差分
 	bool						onGround;						//接地判定
+	float						groundDistance;					//地面との距離
 	bool						onGroundBefore;					//直前フレームの接地判定
 	D3DXVECTOR3					groundNormal;					//接地面法線
 
@@ -302,6 +317,7 @@ private:
 
 	//debug
 	float dot;
+	bool collideAxisX;
 
 public:
 	Player();
@@ -326,7 +342,7 @@ public:
 	//float distance：補正距離
 	//LPD3DXMESH mesh：衝突対象メッシュ
 	//D3DXMATRIX matrix：衝突対象行列
-	bool insetCorrection(Ray ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
+	bool insetCorrection(Ray* ray, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
 	bool insetCorrection(int axisID, float distance, LPD3DXMESH mesh, D3DXMATRIX matrix);
 
 
@@ -366,7 +382,6 @@ public:
 	void collideShiftRay(LPD3DXMESH mesh, D3DXMATRIX matrix);	//シフトレイとの衝突
 	void collideShiftRay(D3DXVECTOR3 position);					//シフトレイとの衝突
 	bool collideShiftRay(Cylinder target);						//シフトレイとの衝突
-	void stopSelectLight();
 	void playSelectLight();
 	void shownSelectLight(bool shown);
 
@@ -407,9 +422,8 @@ public:
 	Bullet*			getBullet(int i);							//発射中の弾へのポインタ
 	int				getShootingNum();							//発射中の弾数
 	LPD3DXMESH		getMesh();									//レイ衝突用メッシュ
-	bool			getWhetherExecutingMoveOpe();							//移動操作中か取得
+	bool			getWhetherExecutingMoveOpe();				//移動操作中か取得
 	BulletManager*  getBulletManager();							//バレットマネージャを取得
-	bool			getOnGround();											//接地しているか取得
-	D3DXVECTOR3*	getGroundNormal();								//接地面法線を取得
-
+	bool			getOnGround();								//接地しているか取得
+	D3DXVECTOR3*	getGroundNormal();							//接地面法線を取得
 };

@@ -49,12 +49,6 @@ private:
 	StaticMeshRenderer* renderer;				// 描画オブジェクト
 	D3DXVECTOR3 gravityDirection;				// 重力方向
 	static NavigationMesh* pointer;				// 取得用ポインタ
-	
-	// pathSearch()実行毎に更新される情報
-	D3DXVECTOR3 from;							// 開始座標
-	D3DXVECTOR3 dest;							// 目的地座標
-	DWORD startIndex;							// 開始ポリゴン面インデックス
-	DWORD destIndex;							// 目的地面ポリゴンインデックス
 
 public:
 	NavigationMesh(StaticMesh* staticMesh);
@@ -62,11 +56,11 @@ public:
 	void uninitialize();
 	void update();
 	// 経路探索
-	navigationMeshNS::NAVIRESULT pathSearch(LinkedList<meshDataNS::Index2>** pOut,
-		DWORD* faceIndex, D3DXVECTOR3 _from, D3DXVECTOR3 _dest);
+	navigationMeshNS::NAVIRESULT pathSearch(LinkedList<meshDataNS::Index2>** edgeList,
+		DWORD* faceIndex, D3DXVECTOR3 from, D3DXVECTOR3 dest);
 	// ステアリング（移動ベクトルの作成）
 	navigationMeshNS::NAVIRESULT steering(D3DXVECTOR3* out, DWORD* faceIndex,
-		D3DXVECTOR3 _position, LinkedList<meshDataNS::Index2>* _edgeList);
+		D3DXVECTOR3 from, D3DXVECTOR3 dest, LinkedList<meshDataNS::Index2>** edgeList);
 	// 接地チェック
 	bool isHitGrounding(float* distance, DWORD* faceIndex, D3DXVECTOR3 _position);
 	// Getter
@@ -86,13 +80,13 @@ public:
 	}
 
 #ifdef _DEBUG
-	LinkedList<meshDataNS::Index2>* debugEdgeList;
+	LinkedList<meshDataNS::Index2>** debugEdgeList = NULL;
 	void dumpEdgeList(LinkedList<meshDataNS::Index2>* _edgeList);
 	void debugRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void debugRenderMesh(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	void debugRenderEdge(LinkedList<meshDataNS::Index2>* _edgeList);
+	void debugRenderEdge(LinkedList<meshDataNS::Index2>** edgeList);
 	void changeColor();
-	void affectToEdgeVertex(LinkedList<meshDataNS::Index2>* _edgeList);
+	void affectToEdgeVertex(LinkedList<meshDataNS::Index2>** edgeList);
 	void outputGUI();
 #endif // _DEBUG
 };

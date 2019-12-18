@@ -75,6 +75,7 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
 	d3dpp.EnableAutoDepthStencil	= true;
 	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;
+	d3dpp.MultiSampleType			= D3DMULTISAMPLE_NONE;
 
 	if (FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, targetWnd,
 		D3DCREATE_HARDWARE_VERTEXPROCESSING,
@@ -230,7 +231,8 @@ HRESULT Direct3D9::changeViewport(DWORD x, DWORD y, DWORD width, DWORD height)
 	vp.MinZ = 0;
 	vp.MaxZ = 1;
 
-	MFAIL(device->SetViewport(&vp), "ビューポート切り替え失敗");
+	
+	(device->SetViewport(&vp), "ビューポート切り替え失敗");
 
 	return S_OK;
 }

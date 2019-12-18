@@ -7,7 +7,6 @@
 #include "EnemyTools.h"
 #include "ImguiManager.h"
 
-
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -22,6 +21,9 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 
 #ifdef _DEBUG
 	//レンダラーの初期化
+	Model[enemyNS::ENEMY_TYPE::WOLF] = staticMeshNS::WOLF;
+	Model[enemyNS::ENEMY_TYPE::TIGER] = staticMeshNS::TIGER;
+	Model[enemyNS::ENEMY_TYPE::BEAR] = staticMeshNS::BEAR;
 	initRender();
 #endif
 
@@ -68,9 +70,8 @@ ENEMY_TOOLS::ENEMY_TOOLS()
 	EnemyListboxCurrent = 0;
 	EnemyListboxType = enemyNS::ENEMY_TYPE::WOLF;
 	EnemyListboxState = stateMachineNS::ENEMY_STATE::CHASE;
-	Model[enemyNS::ENEMY_TYPE::WOLF] = staticMeshNS::WOLF;
-	Model[enemyNS::ENEMY_TYPE::TIGER] = staticMeshNS::TIGER;
-	Model[enemyNS::ENEMY_TYPE::BEAR] = staticMeshNS::BEAR;
+
+	input = getInput();
 #endif
 }
 
@@ -144,6 +145,10 @@ void ENEMY_TOOLS::outputEnemyToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3
 		//機能
 		ImGui::Checkbox("New Enemy", &creatFlag);
 		ImGui::Checkbox("Delete", &deleteFlag);
+		if (input->wasKeyPressed('J'))
+		{
+			creatFlag = true;
+		}
 
 		//エネミーの種類
 		const char* listboxEnemyType[] = { "WOLF", "TIGER", "BEAR" };
@@ -281,6 +286,7 @@ void ENEMY_TOOLS::initRender()
 	for (int i = 0; i < enemyNS::ENEMY_TYPE::TYPE_MAX; i++)
 	{
 		renderer[i] = new StaticMeshRenderer(staticMeshNS::reference(Model[i]));
+		renderer[i]->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	}
 
 	//更新フラグ
@@ -347,6 +353,30 @@ void ENEMY_TOOLS::generate(Object *object, short enemyType, D3DXVECTOR3 position
 	object->postureControl(object->axisZ.direction, dir, 1.0f);
 	object->existenceTimer = 1.0f;		// < 0 なら消える
 	renderer[enemyType]->registerObject(object);
+}
+
+//===================================================================================================================================
+//【生成】当たり判定描画
+//===================================================================================================================================
+void ENEMY_TOOLS::collideDraw(int ID, bool use)
+{
+	if (use)
+	{
+		//object[ID]->setAlpha(0.1f);
+		object[ID]->color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f);
+
+		if (input->wasKeyPressed('K'))
+		{
+			//削除
+			DeleteEnemyFormat(ID);
+		}
+	}
+	else
+	{
+		//object[ID]->setAlpha(1.0f);
+		object[ID]->color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+	needUpdate = true;
 }
 #endif
 
