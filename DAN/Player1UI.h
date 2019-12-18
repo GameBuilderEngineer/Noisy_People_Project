@@ -59,7 +59,6 @@ public://メンバー変数
 	int		hp;				//hp保存
 	int		power;			//電力保存
 	int     state;			//プレイヤーの状態
-	float   greeningRate;   //緑化率
 private:
 public://メンバー関数
 	Player1UI();

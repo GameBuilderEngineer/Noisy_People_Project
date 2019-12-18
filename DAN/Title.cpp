@@ -18,7 +18,6 @@ using namespace titleNS;
 //============================================================================================================================================
 //【グローバル変数】
 //============================================================================================================================================
-//int selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;	//	タイトルメニュー選択状態記憶
 
 //============================================================================================================================================
 //【コンストラクタ】
@@ -56,8 +55,6 @@ Title::~Title(void)
 //============================================================================================================================================
 void Title::initialize()
 {
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_TITLE, soundNS::METHOD::LOOP);
 	
 	//ターゲットオブジェクト
 	target = new Object;
@@ -126,6 +123,7 @@ void Title::initialize()
 	 {
  		treeManager->getTreeList()[i]->transState();
 	 }
+	 titleState = TITLE01;//タイトルの状態を０で初期化
 }
 
 //============================================================================================================================================
@@ -185,16 +183,6 @@ void Title::update(float _frameTime)
 
 	target->update();
 
-	// カメラ
-	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
-	//camera[0].update();
-
-	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
-
-	//バーの移動
-	//if(input->wasKeyPressed()
-
-
 	//ミュート
 	if (input->isKeyDown('M'))
 	{
@@ -226,12 +214,31 @@ void Title::update(float _frameTime)
 	// タイトルUI
 	titleUI.update(input,frameTime);
 
+	//タイトルシーンの更新
 	if (input->wasKeyPressed(VK_RETURN) ||
+		input->wasKeyPressed(VK_SPACE) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
+		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_MAIN)
+		)
 	{
-		updateInput();
-		changeScene(nextScene);
+		PLAY_PARAMETERS playParameters = { 0 };
+		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL };
+		SoundInterface::SE->playSound(&playParameters);
+		titleState++;
+	}
+	//シーン遷移
+	if (titleState == TITLE03)
+	{
+		if (input->wasKeyPressed(VK_RETURN) ||
+			input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+			input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+		{
+			updateInput();
+			changeScene(nextScene);
+		}
+
 	}
 
 	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
@@ -592,6 +599,7 @@ void Title::update(float _frameTime)
 //============================================================================================================================================
 void Title::updateInput(void)
 {
+
 	switch (titleUI.getSelectState())
 	{
 	case titleUiNS::TUTORIAL:

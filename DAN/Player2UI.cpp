@@ -66,12 +66,12 @@ void Player2UI::render()
 	buttonUi->renderP2(state);
 	hpGuageEmp->render();
 	hpGuage->render();
-	charaIcon->render();
 	electGuageEmp->render();
 	electGuage->render();
+	charaIcon->render();
 	mark->render();
-	green->render();
-	greenRate->render(basicUiNS::P2);
+	green->render(state);
+	greenRate->render(basicUiNS::P2,state);
 }
 
 //==================================
@@ -97,7 +97,7 @@ void Player2UI::update(float neRate)
 	electGuage->update(power);
 
 	//—Î‰»—¦
-	greenRate->update(neRate);//‚Æ‚è‚ ‚¦‚¸0
+	greenRate->update(neRate);
 }
 
 //==================================

@@ -80,29 +80,58 @@ void GreenRate::initialize(int playerType)
 //====================================
 //描画処理
 //====================================
-void GreenRate::render(int playerType)
+void GreenRate::render(int playerType,int state)
 {
 
 	setUV((int)keepRate);
-	if (playerType == basicUiNS::P1)
+	//ビジョン、スカイビジョン中のみ描画
+	switch (state)
 	{
-		for (int i = 0; i < DIGIT_GREEN_RATE; i++)
+	case 2:
+		if (playerType == basicUiNS::P1)
 		{
-			position.x = -WIDTH_GREEN_RATE * i + POSITION_GREEN_RATE.x;
-			timer[i]->setPosition(position);
-			timer[i]->setVertex();
-			timer[i]->render();
+			for (int i = 0; i < DIGIT_GREEN_RATE; i++)
+			{
+				position.x = -WIDTH_GREEN_RATE * i + POSITION_GREEN_RATE.x;
+				timer[i]->setPosition(position);
+				timer[i]->setVertex();
+				timer[i]->render();
+			}
 		}
-	}
-	else if(playerType == basicUiNS::P2)
-	{
-		for (int i = 0; i < DIGIT_GREEN_RATE; i++)
+		else if(playerType == basicUiNS::P2)
 		{
-			position.x = -WIDTH_GREEN_RATE * i + POSITION_GREEN_RATE_P2.x;
-			timer[i]->setPosition(position);
-			timer[i]->setVertex();
-			timer[i]->render();
+			for (int i = 0; i < DIGIT_GREEN_RATE; i++)
+			{
+				position.x = -WIDTH_GREEN_RATE * i + POSITION_GREEN_RATE_P2.x;
+				timer[i]->setPosition(position);
+				timer[i]->setVertex();
+				timer[i]->render();
+			}
 		}
+		break;
+
+	case 3:
+		if (playerType == basicUiNS::P1)
+		{
+			for (int i = 0; i < DIGIT_GREEN_RATE; i++)
+			{
+				position.x = -WIDTH_GREEN_RATE * i + POSITION_GREEN_RATE.x;
+				timer[i]->setPosition(position);
+				timer[i]->setVertex();
+				timer[i]->render();
+			}
+		}
+		else if (playerType == basicUiNS::P2)
+		{
+			for (int i = 0; i < DIGIT_GREEN_RATE; i++)
+			{
+				position.x = -WIDTH_GREEN_RATE * i + POSITION_GREEN_RATE_P2.x;
+				timer[i]->setPosition(position);
+				timer[i]->setVertex();
+				timer[i]->render();
+			}
+		}
+		break;
 	}
 }
 

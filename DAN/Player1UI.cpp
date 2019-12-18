@@ -73,12 +73,12 @@ void Player1UI::render()
 	buttonUiP1->renderP1(state);
 	hpGuageEmp->render();
 	hpGuage->render();
-	charaIcon->render();
 	electGuageEmp->render();
 	electGuage->render();
+	charaIcon->render();
 	mark->render();
-	green->render();
-	greenRate->render(basicUiNS::P1);
+	green->render(state);
+	greenRate->render(basicUiNS::P1,state);
 }
 
 //==================================
@@ -115,5 +115,4 @@ void Player1UI::getFlag()
 	hp = player->getHp();
 	power = player->getPower();
 	state = player->getState();
-	//greeningRate = GameMaster::getGreeningRate();
 }

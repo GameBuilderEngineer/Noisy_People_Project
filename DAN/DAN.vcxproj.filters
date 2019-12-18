@@ -1452,6 +1452,7 @@
     <ClInclude Include="GreenRate.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
+    <ClInclude Include="ElectTank.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

@@ -53,6 +53,13 @@ namespace titleNS
 		MAX_CAMERA
 	};
 
+	enum TITLE_STATE
+	{
+		TITLE01,
+		TITLE02,
+		TITLE03,
+		TITLE_STATE_MAX,
+	};
 	const float TITLE_CAMERA_SPEED = 1.0f;
 	//const D3DXVECTOR3 firstEndPoint()
 
@@ -73,11 +80,8 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
-
-
 	TestEffect* testEffect;
 	WaveBall *waveBall;
-	
 	//フィールド
 	Object*					titleField;
 	StaticMeshRenderer*		titleFieldRenderer;	
@@ -85,10 +89,10 @@ private:
 	Sky* sky;
 	//ターゲットオブジェクト
 	Object* target;
-
-	TitleUI titleUI;										//タイトルUI
+	TitleUI titleUI;					//タイトルUI
 	int selectStateMemory;
 
+	int titleState;
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度
@@ -124,7 +128,6 @@ private:
 
 
 public:
-
 	Title(void);
 	~Title(void);
 	virtual void initialize() override;

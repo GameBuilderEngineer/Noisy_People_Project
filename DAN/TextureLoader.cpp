@@ -47,6 +47,7 @@ TextureLoader::TextureLoader()
 	textureName[TITLE_INFO_EXIT] = { "Exit_info.png" };
 	textureName[TITLE_COPYRIGHT] = { "Copyrights.png" };
 	textureName[TITLE_BAR] = { "Select_Bar.png" };
+	textureName[TITLE_PRESS] = { "Press_Any_Button.png" };
 
 	// Credit
 	textureName[CREDIT] = { "staffroll_1.png" };
@@ -116,6 +117,7 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_CHARA_A] = { "Chara_A.png" };
 	textureName[RESULT_CHARA_B] = { "Chara_B.png" };
 	textureName[RESULT_NEXT] = { "Next.png" };
+	textureName[RESULT_TO_TITLE] = { "Back_to_Title.png" };
 
 	//ResultUI‚Ìƒ‰ƒ“ƒN
 	textureName[RESULT_EXCELLENT] = { "Excellent.png" };
