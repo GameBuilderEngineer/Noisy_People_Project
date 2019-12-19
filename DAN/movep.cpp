@@ -66,11 +66,53 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 				//.X中のAnimationSet の後ろの名前は動作の名前です
 				//それを確認して、編成する
 				//									   SetName		AnimSet ShiftTime CurWeightTime
+			//case MoveP_Idle:
+			//	MoveP.Animation->AnimData[Set_No] = { "Idle",			NULL, 0.3f,	0.0f };
+			//	break;
+			//case MoveP_Run:
+			//	MoveP.Animation->AnimData[Set_No] = { "Runing",		NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_FireIdle:
+			//	MoveP.Animation->AnimData[Set_No] = { "FireIdle",		NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_FireRun:
+			//	MoveP.Animation->AnimData[Set_No] = { "FireRun",	NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_Jump:
+			//	MoveP.Animation->AnimData[Set_No] = { "SmallJump",		NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_JumpFire:
+			//	MoveP.Animation->AnimData[Set_No] = { "JumpFire",		NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_Die:
+			//	MoveP.Animation->AnimData[Set_No] = { "Death",	NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_WalkRight:
+			//	MoveP.Animation->AnimData[Set_No] = { "WalkRight",	NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_WalkLeft:
+			//	MoveP.Animation->AnimData[Set_No] = { "WalkLeft",	NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_WalkBackwards:
+			//	MoveP.Animation->AnimData[Set_No] = { "WalkBackwards",	NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_WalkBackward:
+			//	MoveP.Animation->AnimData[Set_No] = { "WalkBackward",	NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_WalkStrafeLeft:
+			//	MoveP.Animation->AnimData[Set_No] = { "WalkStrafeLeft",	NULL, 0.1f,	0.0f };
+			//	break;
+			//case MoveP_WalkStrafeRight:
+			//	MoveP.Animation->AnimData[Set_No] = { "WalkStrafeRight",	NULL, 0.1f,	0.0f };
+			//	break;
+
+
+
 			case MoveP_Idle:
 				MoveP.Animation->AnimData[Set_No] = { "Idle",			NULL, 0.3f,	0.0f };
 				break;
 			case MoveP_Run:
-				MoveP.Animation->AnimData[Set_No] = { "Runing",		NULL, 0.1f,	0.0f };
+				MoveP.Animation->AnimData[Set_No] = { "Run",		NULL, 0.1f,	0.0f };
 				break;
 			case MoveP_FireIdle:
 				MoveP.Animation->AnimData[Set_No] = { "FireIdle",		NULL, 0.1f,	0.0f };
@@ -78,33 +120,22 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 			case MoveP_FireRun:
 				MoveP.Animation->AnimData[Set_No] = { "FireRun",	NULL, 0.1f,	0.0f };
 				break;
-			case MoveP_Jump:
-				MoveP.Animation->AnimData[Set_No] = { "SmallJump",		NULL, 0.1f,	0.0f };
+			case MoveP_WalkLeft:
+				MoveP.Animation->AnimData[Set_No] = { "FireLeft",	NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_WalkRight:
+				MoveP.Animation->AnimData[Set_No] = { "FireRight",	NULL, 0.1f,	0.0f };
+				break;
+			case MoveP_WalkBackwards:
+				MoveP.Animation->AnimData[Set_No] = { "FireBack",	NULL, 0.1f,	0.0f };
 				break;
 			case MoveP_JumpFire:
-				MoveP.Animation->AnimData[Set_No] = { "JumpFire",		NULL, 0.1f,	0.0f };
+				MoveP.Animation->AnimData[Set_No] = { "FireJump",		NULL, 0.1f,	0.0f };
 				break;
 			case MoveP_Die:
 				MoveP.Animation->AnimData[Set_No] = { "Death",	NULL, 0.1f,	0.0f };
 				break;
-			case MoveP_WalkRight:
-				MoveP.Animation->AnimData[Set_No] = { "WalkRight",	NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_WalkLeft:
-				MoveP.Animation->AnimData[Set_No] = { "WalkLeft",	NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_WalkBackwards:
-				MoveP.Animation->AnimData[Set_No] = { "WalkBackwards",	NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_WalkBackward:
-				MoveP.Animation->AnimData[Set_No] = { "WalkBackward",	NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_WalkStrafeLeft:
-				MoveP.Animation->AnimData[Set_No] = { "WalkStrafeLeft",	NULL, 0.1f,	0.0f };
-				break;
-			case MoveP_WalkStrafeRight:
-				MoveP.Animation->AnimData[Set_No] = { "WalkStrafeRight",	NULL, 0.1f,	0.0f };
-				break;
+
 			default:
 				break;
 			}
@@ -300,7 +331,7 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.AnimeChange = true;
 	}
 
-	MoveP.RHand = GetBoneMatrix(MoveP.Animation, "hand");
+	MoveP.RHand = GetBoneMatrix(MoveP.Animation, "right_hand");
 	MoveP.RHandPos = D3DXVECTOR3(MoveP.RHand._41, MoveP.RHand._42, MoveP.RHand._43);
 	// アニメーションを更新 
 	//必ず入れてください、さもないと、動画が動けない
@@ -618,21 +649,6 @@ void MovePAnimeNext(void)
 		case MoveP_WalkBackwards:
 			ChangeAnimation(MoveP.Animation, MoveP_WalkBackwards, 1.5f, false);
 			MoveP.Animation->NextAnimID = MoveP_FireIdle;
-			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
-			break;
-		case MoveP_WalkStrafeRight:
-			ChangeAnimation(MoveP.Animation, MoveP_WalkStrafeRight, 2.0f, false);
-			MoveP.Animation->NextAnimID = MoveP_Idle;
-			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
-			break;
-		case MoveP_WalkStrafeLeft:
-			ChangeAnimation(MoveP.Animation, MoveP_WalkStrafeLeft, 2.0f, false);
-			MoveP.Animation->NextAnimID = MoveP_Idle;
-			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
-			break;
-		case MoveP_WalkBackward:
-			ChangeAnimation(MoveP.Animation, MoveP_WalkBackward, 1.0f, false);
-			MoveP.Animation->NextAnimID = MoveP_Idle;
 			MoveP.Animation->MotionEnd = true;//そう設定しないと、走るの動作完成しないと、別の動作続けない
 			break;
 		default:
