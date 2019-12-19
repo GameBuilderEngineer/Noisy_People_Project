@@ -66,20 +66,26 @@ void Tiger::update(float frameTime)
 	case REST:   rest(frameTime);   break;
 	case DIE:    die(frameTime);    break;
 	}
-	//if (enemyData->enemyID == debugEnemyID)
-	//{
-	//	if (input->wasKeyPressed('N'))
-	//	{
-	//		shot(&player[0]);
-	//	}
-	//}
+#ifdef _DEBUG
+	if (enemyData->enemyID == debugEnemyID)
+	{
+		
+		if (input->wasKeyPressed('N'))
+		{
+			shot(&player[0]);
+		}
+	}
+#endif
 	Enemy::postprocess(frameTime);
 
 	// パーツアニメーションの更新
+	animationManager->inactivateAll();
+	animationManager->activate(animationManager->getAnimation(tigerAnimNS::SHOT));
+	
 	animationManager->update(frameTime);
 
 	// バレットの更新
-	muzzlePosition = center;// ●仮
+	shot(&player[0]);
 	bulletManager->update(frameTime);
 }
 
@@ -111,7 +117,6 @@ void::Tiger::patrol(float frameTime)
 		searchPath();
 	}
 	Enemy::patrol(frameTime);
-
 }
 
 
@@ -138,10 +143,15 @@ void Tiger::attackTree(float frameTime)
 //=============================================================================
 void Tiger::shot(Player* target)
 {
+	D3DXVECTOR3 muzzlePosition;			// 銃口ポジション
+	D3DXVECTOR3 connectionPosition;		// 接続部ポジション
+
+	D3DXVec3TransformCoord(&muzzlePosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[GUN]->matrixWorld);
+	D3DXVec3TransformCoord(&connectionPosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[GUN]->matrixWorld);
+
 	Ray temp;
-	temp.start = muzzlePosition;
-	temp.direction = target->center - muzzlePosition;
-	D3DXVec3Normalize(&temp.direction, &temp.direction);
+	temp.start = connectionPosition;
+	temp.direction = target->position - connectionPosition;
 	bulletManager->shoot(temp);
 }
 

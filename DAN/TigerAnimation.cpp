@@ -169,33 +169,33 @@ void AttackAnimation::update(D3DXVECTOR3* rot, Object** parts, float t)
 static const D3DXVECTOR3 DEAD_ANIMATION_BODY[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.01f, 0.01f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(-0.01f, -0.01f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_GUN[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.0f, 0.03f, 0.0f),
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.0f, -0.03f, 0.0f),
+	D3DXVECTOR3(-0.1f, 0.0f, 0.0f),
+	D3DXVECTOR3(-0.1f, 0.0f, 0.0f),
+	D3DXVECTOR3(-0.1f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_LEG_L[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.05f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(-0.05f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEAD_ANIMATION_LEG_R[] =
 {
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(-0.05f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.05f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 
@@ -352,7 +352,7 @@ void TigerAnimationManager::culcPartsMatrix()
 		else
 		{
 			// 子パーツのワールドマトリクスに親パーツのマトリクスを掛ける
-			D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[0]->matrixWorld);
+			D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[BODY]->matrixWorld);
 		}
 	}
 }

@@ -12,6 +12,7 @@
 //=============================================================================
 namespace tigerNS
 {
+	// パーツの種類
 	enum PARTS_TYPE
 	{
 		BODY,		// 胴体
@@ -21,13 +22,16 @@ namespace tigerNS
 		PARTS_MAX	// パーツの数
 	};	
 
+	// パーツ関係のオフセット座標
 	const D3DXVECTOR3 PARTS_OFFSET_POS[PARTS_MAX] =
 	{
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 胴体
-		D3DXVECTOR3(0.0f, 2.71f, -0.94f),	// 銃口
-		D3DXVECTOR3(0.85f, 1.84f, -0.62f),// 左足
+		D3DXVECTOR3(0.0f, 2.71f, -0.94f),	// 銃
+		D3DXVECTOR3(0.85f, 1.84f, -0.62f),	// 左足
 		D3DXVECTOR3(-0.85f, 1.84f, -0.62f),	// 右足
 	};
+	const D3DXVECTOR3 MUZZLE_POSITION = D3DXVECTOR3(0.0f, 3.01f, -2.47f);
+
 }
 
 
@@ -42,7 +46,6 @@ private:
 	// ※ワールド変換等の処理はアニメーションマネージャが代替する.
 
 	TigerBulletManager* bulletManager;			// バレットマネージャ
-	D3DXVECTOR3 muzzlePosition;					// ●銃口ポジション
 
 public:
 	Tiger(enemyNS::ConstructionPackage constructionPackage);

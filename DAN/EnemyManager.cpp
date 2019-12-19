@@ -59,7 +59,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	bearLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_R));
 
 	markRenderer = new EnemyChaseMark;
-	tigerBulletRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	//tigerBulletRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 
 // チュートリアルシーンでの初期化処理
 if (_sceneName == "Scene -Tutorial-")
@@ -123,10 +123,10 @@ void EnemyManager::uninitialize()
 	// しているのでレンダラーの破棄のみで良い
 	SAFE_DELETE(markRenderer);
 
-	// タイガーバレットはタイガー破棄に合わせてインスタンスの破棄と
-	// 描画解除も行われているためレンダラーの破棄のみで良い
-	tigerBodyRenderer->allUnRegister();
-	SAFE_DELETE(tigerBulletRenderer);
+	//// タイガーバレットはタイガー破棄に合わせてインスタンスの破棄と
+	//// 描画解除も行われているためレンダラーの破棄のみで良い
+	//tigerBodyRenderer->allUnRegister();
+	//SAFE_DELETE(tigerBulletRenderer);
 }
 
 
@@ -230,7 +230,7 @@ void EnemyManager::update(float frameTime)
 	bearLegRRenderer->update();
 
 	markRenderer->update(frameTime);
-	tigerBulletRenderer->update();
+	//tigerBulletRenderer->update();
 }
 
 
@@ -257,7 +257,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	bearLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 	markRenderer->render(view, projection, cameraPosition);
-	tigerBulletRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	//tigerBulletRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 #ifdef _DEBUG
 
@@ -652,7 +652,7 @@ void EnemyManager::outputGUI()
 		enemyNS::ENEMYSET tmp =
 		{
 			issueNewEnemyID(),
-			enemyNS::BEAR,
+			enemyNS::TIGER,
 			stateMachineNS::PATROL,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f),
@@ -674,7 +674,7 @@ void EnemyManager::outputGUI()
 			camera->setTargetY(&debugEnemy->getAxisY()->direction);
 			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
 			playerRelativeQuaternion = camera->relativeQuaternion;
-			camera->setRelative(D3DXQUATERNION(0.0f, 30.0f, -10.5f, 0.0f));
+			camera->setRelative(D3DXQUATERNION(0.0f, 30.0f, -30.5f, 0.0f));
 			debugEnemy->setCamera(&camera[0]);
 			debugEnemy->setDebugEnvironment();
 		}
@@ -686,7 +686,7 @@ void EnemyManager::outputGUI()
 		camera->setTargetX(&player->getAxisX()->direction);
 		camera->setTargetY(&player->getAxisY()->direction);
 		camera->setTargetZ(&player->getAxisZ()->direction);
-		camera->setRelative(playerRelativeQuaternion = camera->relativeQuaternion);
+		camera->setRelative(playerRelativeQuaternion);
 	}
 
 	if (destroyAllFlag)
