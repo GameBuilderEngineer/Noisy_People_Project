@@ -786,7 +786,7 @@ bool Player::shot()
 	if (bulletManager->launch(shootingRay))
 	{
 		//エフェクトの再生
-		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
+		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&matrixWorld);
 		effekseerNS::play(0, muzzle);
 		return true;
 	}

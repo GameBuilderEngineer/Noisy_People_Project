@@ -209,9 +209,8 @@ void Reticle::update(float frameTime)
 //===================================================================================================================================
 //y‚R‚cî•ñ‚Ì•`‰æz
 //===================================================================================================================================
-void Reticle::render3D(int playerType,D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void Reticle::render3D(int playerType,Camera* camera)
 {
-	
 	//•`‰æˆÊ’u‚ÌÝ’è
 	switch (playerType)
 	{
@@ -219,7 +218,7 @@ void Reticle::render3D(int playerType,D3DXMATRIX view, D3DXMATRIX projection, D3
 	case gameMasterNS::PLAYER_2P:(*billboard->getList().getFrontValue())->position = *aimingPosition2; break;
 	}
 	billboard->update(0);
-	billboard->render(view, projection, cameraPositon);				//•`‰æ
+	billboard->render(camera);				//•`‰æ
 
 
 }

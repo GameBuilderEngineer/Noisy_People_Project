@@ -42,6 +42,7 @@ Camera::~Camera()
 HRESULT Camera::initialize(DWORD _windowWidth, DWORD _windowHeight)
 {
 	setAspect(_windowWidth,_windowHeight);
+	updateOrtho();
 	return S_OK;
 }
 
@@ -254,6 +255,18 @@ void Camera::outputGUI()
 #endif // _DEBUG
 }
 
+
+//===================================================================================================================================
+//y³Ë‰es—ñ‚ğXV‚·‚éz
+//===================================================================================================================================
+void Camera::updateOrtho()
+{
+	//³Ë‰es—ñ‚ğ‹‚ß‚é
+	float nearH = nearZ * tanf(fieldOfView*0.5f)*2.0f;
+	float nearW = nearH * (float)windowWidth / (float)windowHeight;
+	D3DXMatrixOrthoLH(&ortho, nearW, nearH, nearZ, farZ);
+
+}
 
 //===================================================================================================================================
 //ysetterz

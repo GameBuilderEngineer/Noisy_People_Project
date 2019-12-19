@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float4x4 matrixProjection;
 float4x4 matrixView;
+float4x4 matrixOrtho;//正射影行列
 texture planeTexture;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -336,12 +337,28 @@ VS_OUT vsMainFixedSize(
 		0.0f, scale.y, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f);
+
+
+	float4 orthoPosition = float4(worldPosition,1.0f);
+	//一度ビュー×プロジェクション変換を行う
+	orthoPosition = mul(orthoPosition,matrixView);
+	orthoPosition = mul(orthoPosition,matrixProjection);
+	//正射影の逆行列をかけて、正射影した場合に同じ位置に移るようなカメラ座標系の座標を計算する
+	float4x4 inverseOrtho;
+	inverseOrtho = transpose(matrixOrtho);
+	orthoPosition = mul(orthoPosition, inverseOrtho);
+	//ビュー行列の逆行列を掛けて、ワールド座標系に戻す
+	float4x4 inverseView;
+	inverseView = transpose(matrixView);
+	orthoPosition = mul(orthoPosition, inverseView);
+
 	//位置行列
 	float4x4 positionMatrix = float4x4(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
-		worldPosition.x, worldPosition.y, worldPosition.z, 1.0f);
+		orthoPosition.x, orthoPosition.y, orthoPosition.z, 1.0f);
+
 	//X軸回転行列
 	float4x4 xRotationMatrix = float4x4(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -372,12 +389,14 @@ VS_OUT vsMainFixedSize(
 	matrixWorld = mul(matrixWorld, yRotationMatrix);			//*y軸回転
 	matrixWorld = mul(matrixWorld, zRotationMatrix);			//*z軸回転
 	matrixWorld = mul(matrixWorld, cancelRotation);				//*ビルボード
-	//matrixWorld = mul(matrixWorld, positionMatrix);				//*移動
+	matrixWorld = mul(matrixWorld, positionMatrix);				//*移動
 
 	//ビュー行列
 	matrixWorld = mul(matrixWorld, matrixView);
 	//プロジェクション行列
 	matrixWorld = mul(matrixWorld, matrixProjection);
+	//正射影行列
+	matrixWorld = mul(matrixWorld, matrixOrtho);
 
 	//頂点へ演算
 	Out.position = mul(Out.position, matrixWorld);

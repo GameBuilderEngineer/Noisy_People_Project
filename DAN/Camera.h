@@ -67,6 +67,7 @@ public:
 	D3DXVECTOR3*		targetZ;					//注視ターゲットZ方向ポインタ
 	D3DXMATRIX			view;						//ビューマトリックス
 	D3DXMATRIX			projection;					//プロジェクションマトリックス
+	D3DXMATRIX			ortho;						//正射影行列
 
 	//Method
 	Camera();
@@ -98,6 +99,8 @@ public:
 
 	//注視点間距離の補正
 	void setGazeDistance(float newValue);
+	//正射影行列を更新する
+	void updateOrtho();
 
 	//getter
 	D3DXVECTOR3 getDirectionX() { 

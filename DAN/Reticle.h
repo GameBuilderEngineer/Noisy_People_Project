@@ -13,6 +13,7 @@
 #include "InstancingBillboard.h"
 #include "Ray.h"
 #include "Player.h"
+#include "Camera.h"
 
 //===================================================================================================================================
 //ÅyñºëOãÛä‘Åz
@@ -139,7 +140,6 @@ public:
 	void setRemainingBullet(int num, int playerNo);//écíeêî
 
 	void update(float frameTime);
-	void render3D(int playerType,D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	void render3D(int playerType,Camera* camera);
 	void render2D(Player* player);
 };
-

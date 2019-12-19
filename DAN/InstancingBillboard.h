@@ -11,6 +11,7 @@
 //===================================================================================================================================
 #include "Base.h"
 #include "LinkedList.h"
+#include "Camera.h"
 
 //===================================================================================================================================
 //【インスタンシングビルボード頂点構造体】
@@ -130,6 +131,7 @@ public:
 	virtual HRESULT initialize(LPDIRECT3DTEXTURE9 texture,int divideU = 0,int divideV = 0);	//初期化
 	virtual void update(float frameTime);													//更新
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);	//描画
+	virtual void render(Camera* camera);	//描画
 
 	//描画をオフにする
 	void enableRender();
