@@ -80,6 +80,7 @@ namespace effekseerNS
 		DROP_ITEM,
 		ENEMY_DEATH,
 		WIND,
+		TIGER_BULLET,
 		MAX_EFFEKSEER,
 	};
 
