@@ -50,7 +50,6 @@ namespace titleNS
 		CAMERA7,
 		CAMERA8,
 		CAMERA9,
-		CAMERA10,
 		MAX_CAMERA
 	};
 
@@ -128,6 +127,7 @@ private:
 	D3DXVECTOR3 BezierCurveS1;			//S字ベジェ曲線点１
 	D3DXVECTOR3 BezierCurveS2;			//S字ベジェ曲線点２
 	D3DXVECTOR3 targetDistance;
+	D3DXVECTOR3 newRelative;
 	bool measurement = true;
 
 public:
