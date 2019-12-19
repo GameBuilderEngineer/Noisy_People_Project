@@ -76,7 +76,7 @@ public: //メンバー関数
 	ResultUI();						//コンストラクタ
 	~ResultUI();					//デストラクタ
 	void initialize(/*Player *player*/);//初期化
-	void render();					//描画
+	void render(bool texFlag);		//描画
 	void update(float flameTime);	//更新
 	void uninitialize();			//終了
 	void decidionBGM();

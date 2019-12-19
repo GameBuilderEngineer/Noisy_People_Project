@@ -94,4 +94,8 @@ void ElectGuage::changeGuage(int power)
 	{
 		BasicUI::reductionWidthSize(electGuage, 1.5f);
 	}
+	else if(enPersent <=1.0f &&BasicUI::widthSize<512)
+	{
+		BasicUI::expansionWidthSize(electGuage, 1.5f);
+	}
 }

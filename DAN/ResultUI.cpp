@@ -97,44 +97,48 @@ void ResultUI::initialize()
 //描画
 //ここもめっちゃk持ち悪い
 //============================
-void ResultUI::render()
+void ResultUI::render(bool texFlag)
 {
-	rank01 = decisionRank(greenigPersent, greeningNum01, defeat01);
-	rank02 = decisionRank(greenigPersent, greeningNum02, defeat02);
-	//resultBG->render();					//リザルト背景の描画
-	uiTexture.render(resultPhase);		//テクスチャの描画
-	uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
-	uiCharacter02->render(resultPhase);	//プレイヤー2の文字描画
+	if (texFlag == true)
+	{
 
-	//全体緑化率の描画
-	if (resultPhase == PHASE_02)
-	{
-		uiNumber[uiNumberNS::GREENIG_PERSENT].render();
-	}
+		rank01 = decisionRank(greenigPersent, greeningNum01, defeat01);
+		rank02 = decisionRank(greenigPersent, greeningNum02, defeat02);
+		//resultBG->render();					//リザルト背景の描画
+		uiTexture.render(resultPhase);		//テクスチャの描画
+		uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
+		uiCharacter02->render(resultPhase);	//プレイヤー2の文字描画
 
-	if (resultPhase == PHASE_03)
-	{
-		uiNumber[uiNumberNS::GREENIG_PERSENT].render();
-	}
-	//数字表示はフェイズ４から描画
-	if (resultPhase == PHASE_04)
-	{
-		//数字の表示
-		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+		//全体緑化率の描画
+		if (resultPhase == PHASE_02)
 		{
-			uiNumber[i].render();
+			uiNumber[uiNumberNS::GREENIG_PERSENT].render();
 		}
-	}
-	//ランク表示フェーズ
-	if (resultPhase == PHASE_05)
-	{
-		//ランク描画
-		uiRank->render(rank01, rank02);
-		//数字の表示
-		for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+
+		if (resultPhase == PHASE_03)
 		{
-			uiNumber[i].render();
+			uiNumber[uiNumberNS::GREENIG_PERSENT].render();
+		}
+		//数字表示はフェイズ４から描画
+		if (resultPhase == PHASE_04)
+		{
+			//数字の表示
+			for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+			{
+				uiNumber[i].render();
+			}
+		}
+		//ランク表示フェーズ
+		if (resultPhase == PHASE_05)
+		{
+			//ランク描画
+			uiRank->render(rank01, rank02);
+			//数字の表示
+			for (int i = 0; i < uiNumberNS::NUMBER_TYPE_MAX; i++)
+			{
+				uiNumber[i].render();
 			
+			}
 		}
 	}
 }
