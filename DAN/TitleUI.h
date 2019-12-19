@@ -45,11 +45,21 @@ namespace titleUiNS
 	const D3DXVECTOR3 POSITION_BAR_CREDIT = D3DXVECTOR3(1600 * WINDOW_WIDTH / 1920, 925 * WINDOW_HEIGHT / 1080, 0);//位置
 	const D3DXVECTOR3 POSITION_BAR_EXIT = D3DXVECTOR3(1600 * WINDOW_WIDTH / 1920, 990 * WINDOW_HEIGHT / 1080, 0);//位置
 	
+	//PressAnyButton
+	const int WIDTH_PRESS = (1024 * WINDOW_WIDTH / 1920);					//幅
+	const int HEIGHT_PRESS = (64 * WINDOW_HEIGHT / 1080);					//高さ
+	const D3DXVECTOR3 POSITION_PRESS = D3DXVECTOR3(908 * WINDOW_WIDTH / 1920, 800 * WINDOW_HEIGHT / 1080, 0);//位置
+
 	//共通
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0, 0, 0);			//回転
 	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);	//色
-	
-	//UIの種類
+
+	//ロゴの浮き上がってくる速度
+	const float ALPHA_SPEED = 0.7f;
+
+	//ロゴが浮き上がってくる時間
+	const float FLOAT_LOGO_TIME = 5.0f;
+
 	enum UI_TYPE
 	{
 		UI_LOGO,			//ロゴ
@@ -60,7 +70,8 @@ namespace titleUiNS
 		UI_INFO_EXIT,		//終了選択肢の説明
 		UI_COPYRIGHT,		//制作者情報
 		UI_BAR,				//選択肢のバー
-		UI_MAX			//UIの総数
+		UI_PRESS,			//PressAnyButton
+		UI_MAX				//UIの総数
 	};
 
 	//メニュー選択肢
@@ -82,8 +93,9 @@ class TitleUI
 public: //メンバー変数
 	Sprite * UI[titleUiNS::UI_MAX];
 	int selectState;
-	float alpha;						//α値
-
+	float alpha;//α値
+	int titleState;//タイトルの状態
+	float titleTime;//タイトル時間
 public: //メンバー関数
 	void initialize();		//初期
 	void uninitialize();	//終了

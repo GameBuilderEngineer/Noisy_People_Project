@@ -835,23 +835,27 @@ bool Player::digitalShift()
 bool Player::collideShiftRay(Cylinder target)
 {
 	//シフトレイをカメラからのレイとして更新
-	shiftRay.update(camera->gazePosition, camera->getDirectionZ());
+	shiftRay.update(cameraGaze, camera->getDirectionZ());
 
 	//カメラからの半径付きレイを設定
 	Cylinder volumeRayFromCamera;
-	volumeRayFromCamera.centerLine.start = camera->position;
-	volumeRayFromCamera.centerLine.end = camera->position + camera->getDirectionZ()*10000.0f;
+	volumeRayFromCamera.centerLine.start	= cameraGaze;
+	volumeRayFromCamera.centerLine.end		= cameraGaze + camera->getDirectionZ()*10000.0f;
 	volumeRayFromCamera.radius = 3.0f;
 
-	//
+	//対象の始点と最も近い点を算出
 	D3DXVECTOR3 nearest =
 		Base::nearestPointOnLine(
-			shiftRay.start,
-			shiftRay.start + shiftRay.direction*10000.0f,
+			volumeRayFromCamera.centerLine.start,
+			volumeRayFromCamera.centerLine.end,
 			target.centerLine.start);
-
+	//カメラの始点と同一であれば、失敗
+	if (volumeRayFromCamera.centerLine.start == nearest)
+	{
+		return false;
+	}
 	//カメラからのレイ上での距離
-	float distanceOnRay = Base::between2VectorLength(nearest, camera->position);
+	float distanceOnRay = Base::between2VectorLength(nearest, cameraGaze);
 
 	//円柱間の距離
 	float distance = Base::between2LineDistance(target.centerLine, volumeRayFromCamera.centerLine);

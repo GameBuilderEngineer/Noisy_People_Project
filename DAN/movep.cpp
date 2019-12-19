@@ -38,6 +38,8 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	MoveP.Quaternion = D3DXQUATERNION(0, 0, 0, 1);
 	MoveP.Scl = Scl;
 	MoveP.ActionSpeed = 1.25f;
+	MoveP.IsDie = false;
+	MoveP.IsDeath = false;
 
 
 	// èâÇﬂÇƒèâä˙âª
@@ -741,5 +743,4 @@ HRESULT InitCallbackKeys_MoveP(void)
 
 	return S_OK;
 }
-
 

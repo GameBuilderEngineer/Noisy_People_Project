@@ -54,6 +54,7 @@ D3DXVECTOR3			CenterPos;			// プレイヤーの中心座標
 D3DXVECTOR3			NextPos;			// 次の座標
 D3DXVECTOR3			Move;				// 移動量
 D3DXVECTOR3			DestAngle;			// 向き
+
 float				MoveY;				// 目標角度
 float				GroundDistance;		// 地面との距離
 float				facing;				// 目標角度

@@ -80,7 +80,6 @@ void Game::initialize() {
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 #endif
 	testFieldRenderer->registerObject(testField);
-	testFieldRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
@@ -179,7 +178,7 @@ void Game::initialize() {
 	//アニメションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-
+	//InitEquipment(TRUE);
 
 	// サウンドの再生
 	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
@@ -260,6 +259,14 @@ void Game::initialize() {
 	//OPアナウンス
 	announcement = new Announcement;
 
+	//マーカー
+	markerRenderer = new MarkerRenderer;
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		markerRenderer->playerPosition[i] = &player[i].center;
+	}
+
+
 #pragma region Memory Test
 	////メモリテスト
 
@@ -309,6 +316,7 @@ void Game::initialize() {
 	//ゲーム開始時処理
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
+
 }
 
 //===================================================================================================================================
@@ -349,7 +357,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(announcement);
 	UninitMoveP();
 	UninitMoveP1();
-
+	//UninitEquipment();
 }
 
 //===================================================================================================================================
@@ -453,7 +461,10 @@ void Game::update(float _frameTime) {
 	mp->Pos = player[gameMasterNS::PLAYER_1P].position;
 	D3DXQUATERNION q = player[gameMasterNS::PLAYER_1P].quaternion;
 	Base::anyAxisRotation(&q,D3DXVECTOR3(0,1,0),180);
-	mp->Quaternion = q;
+	if (!mp->IsDie)
+	{
+		mp->Quaternion = q;
+	}
 
 	UpdateMoveP1(frameTime);
 	//キャラクターの場所と回転の連携
@@ -461,7 +472,15 @@ void Game::update(float _frameTime) {
 	mp1->Pos = player[gameMasterNS::PLAYER_2P].position;
 	D3DXQUATERNION q1 = player[gameMasterNS::PLAYER_2P].quaternion;
 	Base::anyAxisRotation(&q1, D3DXVECTOR3(0, 1, 0), 180);
-	mp1->Quaternion = q1;
+	if (!mp1->IsDie)
+	{
+		mp1->Quaternion = q1;
+	}
+	//UpdateEquipment();
+	//SWORD *Gun = GetSword("MoveP1");
+	//D3DXQUATERNION q2 = player[gameMasterNS::PLAYER_1P].quaternion;
+	//Base::anyAxisRotation(&q2, D3DXVECTOR3(0, 1, 0), 270);
+	//Gun->Quaternion = q2;
 
 
 	//エフェクシアーのテスト
@@ -578,6 +597,9 @@ void Game::update(float _frameTime) {
 	//OPアナウンス
 	announcement->update(frameTime);
 
+	//マーカーの更新
+	markerRenderer->update(frameTime);
+
 	// Enterまたは〇ボタンでリザルトへ
 	//if (input->wasKeyPressed(VK_RETURN) ||
 	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
@@ -590,22 +612,17 @@ void Game::update(float _frameTime) {
 		changeScene(nextScene);
 	}
 
-	
-
 	//残り時間１分
 	if (gameMaster->playActionRamaining1Min())
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE4);
 	}
-
 	if (gameMaster->getGameTime() <= 60)
 	{
 		SoundInterface::BGM->SetSpeed();
 	}
 
 	networkClient->send(gameMaster->getGameTime());
-
-
 
 	//フェーダーテスト
 	if (input->wasKeyPressed('P'))
@@ -710,6 +727,7 @@ void Game::render3D(Camera* currentCamera) {
 	//アニメーションモデルの描画
 	DrawMoveP();
 	DrawMoveP1();
+	//DrawEquipment();
 	//スカイドームの描画
 	//sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 	//海面の描画
@@ -751,6 +769,9 @@ void Game::render3D(Camera* currentCamera) {
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
 		reticle->render3D(nowRenderingWindow,currentCamera->view, currentCamera->projection, currentCamera->position);
+
+	//マーカーの描画(2D/3D)両方とも描画
+	markerRenderer->render(nowRenderingWindow, currentCamera);
 
 #if _DEBUG
 	//4分木空間分割のライン描画
@@ -1017,7 +1038,6 @@ void Game::collisions()
 			if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
 				player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
 			{
-				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
 				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
 				//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL};

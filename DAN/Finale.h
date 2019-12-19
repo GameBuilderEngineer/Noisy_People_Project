@@ -50,14 +50,14 @@ private:
 	float inputDegree = 2.0f;				//入力速度
 
 	//カメラの軸取得変数
-	D3DXVECTOR3 cameraAxisZ;
-	D3DXVECTOR3 fixedAxisZ;
-	D3DXVECTOR3 cameraAxisX;
-	D3DXVECTOR3 cameraAxisY;
-	D3DXVECTOR3 fixedAxisX;
-	D3DXQUATERNION tmpCameraQ;//カメラの相対位置ベクトルの一時保存
-	D3DXVECTOR3 BezierCurveS1;
-	D3DXVECTOR3 BezierCurveS2;
+	D3DXVECTOR3 cameraAxisX;			//カメラ回転軸X
+	D3DXVECTOR3 cameraAxisY;			//カメラ回転軸Y
+	D3DXVECTOR3 cameraAxisZ;			//カメラ回転軸Z
+	D3DXVECTOR3 fixedAxisX;				//固定X軸
+	D3DXVECTOR3 fixedAxisZ;				//固定Z軸
+	D3DXQUATERNION tmpCameraQ;			//カメラの相対位置ベクトルの一時保存
+	D3DXVECTOR3 BezierCurveS1;			//S字ベジェ曲線点１
+	D3DXVECTOR3 BezierCurveS2;			//S字ベジェ曲線点２
 
 	D3DXQUATERNION cameraRelativeQuaternion;
 

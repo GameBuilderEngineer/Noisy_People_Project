@@ -53,6 +53,13 @@ namespace titleNS
 		MAX_CAMERA
 	};
 
+	enum TITLE_STATE
+	{
+		TITLE01,
+		TITLE02,
+		TITLE03,
+		TITLE_STATE_MAX,
+	};
 	const float TITLE_CAMERA_SPEED = 1.0f;
 	//const D3DXVECTOR3 firstEndPoint()
 
@@ -73,11 +80,8 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
-
-
 	TestEffect* testEffect;
 	WaveBall *waveBall;
-	
 	//フィールド
 	Object*					titleField;
 	StaticMeshRenderer*		titleFieldRenderer;	
@@ -85,10 +89,10 @@ private:
 	Sky* sky;
 	//ターゲットオブジェクト
 	Object* target;
-
-	TitleUI titleUI;										//タイトルUI
+	TitleUI titleUI;					//タイトルUI
 	int selectStateMemory;
 
+	int titleState;
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度
@@ -106,25 +110,27 @@ private:
 	float degreeX;
 	float degreeTimer;
 	float degreeTime;
-
+	float distance;
+	float moveDistance;
 	//D3DXVECTOR3 P0_1;
 	//D3DXVECTOR3 P1_2;
 
 
 
 	//カメラの軸取得変数
-	D3DXVECTOR3 cameraAxisZ;
-	D3DXVECTOR3 fixedAxisZ;
-	D3DXVECTOR3 cameraAxisX;
-	D3DXVECTOR3 cameraAxisY;
-	D3DXVECTOR3 fixedAxisX;
-	D3DXQUATERNION tmpCameraQ;//カメラの相対位置ベクトルの一時保存
-	D3DXVECTOR3 BezierCurveS1;
-	D3DXVECTOR3 BezierCurveS2;
-
+	D3DXVECTOR3 cameraAxisX;			//カメラ回転軸X
+	D3DXVECTOR3 cameraAxisY;			//カメラ回転軸Y
+	D3DXVECTOR3 cameraAxisZ;			//カメラ回転軸Z
+	D3DXVECTOR3 fixedAxisX;				//固定X軸
+	D3DXVECTOR3 fixedAxisZ;				//固定Z軸
+	D3DXQUATERNION tmpCameraQ;			//カメラの相対位置ベクトルの一時保存
+	D3DXVECTOR3 BezierCurveS1;			//S字ベジェ曲線点１
+	D3DXVECTOR3 BezierCurveS2;			//S字ベジェ曲線点２
+	D3DXVECTOR3 targetDistance;
+	D3DXVECTOR3 newRelative;
+	bool measurement = true;
 
 public:
-
 	Title(void);
 	~Title(void);
 	virtual void initialize() override;

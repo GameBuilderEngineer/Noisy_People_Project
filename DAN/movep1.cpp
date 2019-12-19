@@ -38,6 +38,8 @@ HRESULT InitMoveP1(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	MoveP1.Quaternion = D3DXQUATERNION(0, 0, 0, 1);
 	MoveP1.Scl = Scl;
 	MoveP1.ActionSpeed = 1.25f;
+	MoveP1.IsDie = false;
+	MoveP1.IsDeath = false;
 
 
 	// ‰‚ß‚Ä‰Šú‰»
@@ -117,6 +119,7 @@ HRESULT InitMoveP1(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 		ChangeAnimation(MoveP1.Animation, MoveP1_Idle, 1.0f, false);
 
 	}
+
 
 	MoveP1.Animation->MotionEnd = true;
 
