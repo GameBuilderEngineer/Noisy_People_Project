@@ -394,7 +394,7 @@ VS_OUT vsMainFixedSize(
 	//ビュー行列
 	matrixWorld = mul(matrixWorld, matrixView);
 	//プロジェクション行列
-	matrixWorld = mul(matrixWorld, matrixProjection);
+	//matrixWorld = mul(matrixWorld, matrixProjection);
 	//正射影行列
 	matrixWorld = mul(matrixWorld, matrixOrtho);
 
