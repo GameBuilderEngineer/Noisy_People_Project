@@ -38,7 +38,9 @@ Bullet::Bullet(Ray shootingRay)
 	ballisticRay.initialize(launchPosition, shootingRay.direction);
 	ballisticRay.color = D3DXCOLOR(0, 255, 120, 255);
 
-
+	//弾本体
+	effect = new effekseerNS::Instance(0,effekseerNS::DAC_BULLET);
+	effekseerNS::play(0, effect);
 
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
@@ -58,7 +60,7 @@ Bullet::Bullet(Ray shootingRay)
 //===================================================================================================================================
 Bullet::~Bullet()
 {
-
+	effekseerNS::stop(0, effect);
 }
 
 //===================================================================================================================================
@@ -71,6 +73,7 @@ void Bullet::update(float frameTime)
 	//位置更新
 	D3DXVec3Lerp(&position, &ballisticRay.start, &endPoint,1.0f - existenceTimer/EXIST_TIME);
 	Object::update();
+	effect->position = position;
 }
 
 //===================================================================================================================================

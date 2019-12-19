@@ -71,7 +71,7 @@ namespace InstancingBillboardNS {
 	const int FOREGROUND_PASS		= 0x00000004;//最前面描画
 	const int Y_BILLBOARD_PASS		= 0x00000008;//Y軸ビルボード
 	const int OFF_BILLBOARD_PASS	= 0x00000010;//ビルボードをしない
-
+	const int FIXED_SIZE_PASS		= 0x00000020;//サイズを固定する
 }
 
 

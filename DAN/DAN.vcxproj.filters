@@ -1455,7 +1455,6 @@
     <ClInclude Include="GreenRate.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="ElectTank.h" />
     <ClInclude Include="Equipment.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClInclude>
