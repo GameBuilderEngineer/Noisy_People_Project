@@ -276,6 +276,11 @@ void Director::mainLoop() {
 		scene->changeScene(SceneList::RESULT);
 		changeNextScene();
 	}
+	else if (input->wasKeyPressed('2'))
+	{
+		scene->changeScene(SceneList::FINALE);
+		changeNextScene();
+	}
 #endif // _DEBUG
 
 	//シーン切替フラグの確認

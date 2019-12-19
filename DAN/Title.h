@@ -85,7 +85,9 @@ private:
 	Sky* sky;
 	//ターゲットオブジェクト
 	Object* target;
-
+	//ツリーマネージャー
+	TreeManager* treeManager;	
+	//タイトルUI
 	TitleUI titleUI;										//タイトルUI
 	int selectStateMemory;
 
@@ -97,7 +99,6 @@ private:
 	float moveTimer;			//移動タイマー
 	D3DXVECTOR3 startPos;		//ラープ始点
 
-	TreeManager* treeManager;	//ツリーマネージャー
 	
 	float rate;
 	float rateY;
@@ -140,7 +141,7 @@ public:
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
 
-	D3DXVECTOR3 BezierCurve(D3DXVECTOR3 startpoint, D3DXVECTOR3 curvepoint, D3DXVECTOR3 endpoint, float rate);
+	static D3DXVECTOR3 BezierCurve(D3DXVECTOR3 startpoint, D3DXVECTOR3 curvepoint, D3DXVECTOR3 endpoint, float rate);
 
 	float tmpVolume = 0;
 #ifdef _DEBUG

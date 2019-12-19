@@ -14,6 +14,8 @@
 #include "Object.h"
 #include "StaticMeshRenderer.h"
 #include "Sky.h"
+#include "TreeManager.h"
+#include "Title.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -28,6 +30,14 @@ namespace FinaleNS
 
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	enum FINALE_CAMERA_LIST
+	{
+		CAMERA0,
+		CAMERA1,
+		MAX_CAMERA,
+	};
+	
 }
 
 //===================================================================================================================================
@@ -44,10 +54,27 @@ private:
 	Sky* sky;
 	//ターゲットオブジェクト
 	Object* target;
+	//ツリーマネージャー
+	TreeManager* treeManager;
 
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度
+
+	float moveTime;				//終点までの時間
+	float moveTimer;			//移動タイマー
+	D3DXVECTOR3 startPos;		//ラープ始点
+
+
+	float rate;
+	float rateY;
+	float rateX;
+	float degreeY;
+	float degreeX;
+	float degreeTimer;
+	float degreeTime;
+	float distance;
+	float moveDistance;
 
 	//カメラの軸取得変数
 	D3DXVECTOR3 cameraAxisX;			//カメラ回転軸X
@@ -75,6 +102,7 @@ public:
 #ifdef _DEBUG
 	virtual void createGUI() override;
 #endif
+	
 
 };
 
