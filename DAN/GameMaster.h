@@ -177,7 +177,7 @@ public:
 	//setter
 	void setConversionOrder(int* newValue);
 	void setProgress(int achievement);
-
+	void addKillEnemyNum(int playerNo);
 	//getter
 	PlayerTable*	getPlayerInfomation();
 	float			getGameTime();

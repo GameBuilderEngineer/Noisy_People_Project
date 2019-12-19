@@ -406,6 +406,9 @@ public:
 	// エフェクト
 	enemyNS::DeathEffect* deathEffect;				// 死亡エフェクト
 
+	//エネミーを撃破したプレイヤー
+	int playerNo;
+
 	//------------------
 	// アクションクエリ
 	//------------------
@@ -518,11 +521,12 @@ public:
 	bool getNoticedOfPlayer(int playerType);
 	bool getIsAttacking();
 	int getChasingPlayer();
+	int getPlayerNo();
 
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();
 	// ダメージ処理
-	void damage(int _damage);
+	void damage(int _damage,int playerNo);
 	// 攻撃中状態を止める
 	void stopAttacking();
 	// プレイヤーに気づく
@@ -531,7 +535,8 @@ public:
 	void setMovingTarget(D3DXVECTOR3* _target);
 	// 攻撃ターゲットを設定
 	void setAttackTarget(Object* _target);
-
+	// 倒されたプレイヤーを設定
+	void setPlayerNo(int playerNo);
 #ifdef _DEBUG
 	//-----------
 	// Debug Use

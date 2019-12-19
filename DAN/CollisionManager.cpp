@@ -325,7 +325,7 @@ bool CollisionManager::bulletAndBullet(Bullet* bullet1, Bullet* bullet2)
 bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 {
 	bool hit = false;
-
+	int playerNo = 0;
 	if (collisionCylinder(bullet, enemy))
 	{
 		hit = bullet->collide(enemy->getMesh(), enemy->matrixCenter);
@@ -333,7 +333,7 @@ bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 
 	if (hit)
 	{
-		enemy->damage(bullet->getDigitalPower());
+		enemy->damage(bullet->getDigitalPower(), playerNo);
 		enemy->setAttention(-bullet->getBulletSpeed());
 		bullet->destroy();
 	}

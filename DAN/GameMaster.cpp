@@ -313,7 +313,7 @@ void GameMaster::discardConversionOrder() {
 //===================================================================================================================================
 void GameMaster::setConversionOrder(int* newValue) {} // conversionOrder = newValue; };
 void GameMaster::setProgress(int achievement) { progress |= achievement; }
-
+void GameMaster::addKillEnemyNum(int playerNo) { killEnemyNum[playerNo]++; }
 //===================================================================================================================================
 //ÅygetterÅz
 //===================================================================================================================================

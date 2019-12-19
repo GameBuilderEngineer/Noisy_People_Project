@@ -1137,7 +1137,7 @@ LPD3DXMESH Enemy::getMesh() { return box->mesh; }
 bool Enemy::getNoticedOfPlayer(int playerType) { return isNoticingPlayer[playerType]; }
 bool Enemy::getIsAttacking() { return isAttacking; }
 int Enemy::getChasingPlayer() { return chasingPlayer; };
-
+int Enemy::getPlayerNo() { return playerNo; };
 
 //=============================================================================
 // Setter
@@ -1147,11 +1147,12 @@ void Enemy::resetNumOfEnemy()
 	numOfEnemy = 0;
 }
 
-void Enemy::damage(int _damage)
+void Enemy::damage(int _damage,int playerNo)
 {
 	enemyData->hp -= _damage;
 	if (enemyData->hp <= 0)
 	{
+		this->playerNo = playerNo;
 		enemyData->hp = 0;
 	}
 }
@@ -1177,6 +1178,11 @@ void Enemy::setMovingTarget(D3DXVECTOR3* _target)
 void Enemy::setAttackTarget(Object* _target)
 {
 	attackTarget = _target;
+}
+
+void Enemy::setPlayerNo(int playerNo)
+{
+	this->playerNo = playerNo;
 }
 #pragma endregion
 

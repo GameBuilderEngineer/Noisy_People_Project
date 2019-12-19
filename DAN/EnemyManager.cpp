@@ -197,6 +197,8 @@ void EnemyManager::update(float frameTime)
 			if ((*itr)->getEnemyData()->isGeneratedBySpawnEvent)
 			{
 				destroyTargetEnemyData = (*itr)->getEnemyID();
+				//ゲームマスターへ記録
+				gameMaster->addKillEnemyNum((*itr)->getPlayerNo());
 			}
 
 			// エネミーオブジェクトの破棄
