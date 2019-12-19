@@ -541,6 +541,7 @@ void Game::update(float _frameTime) {
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_10);
 	}
 	//—Î‰»ó‹µ30%
 	if (treeManager->getGreeningRate() >= 0.3 &&
@@ -548,6 +549,7 @@ void Game::update(float _frameTime) {
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE1);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30);
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_30);
 	}
 	//—Î‰»ó‹µ50%
 	if (treeManager->getGreeningRate() >= 0.5 &&
@@ -555,6 +557,7 @@ void Game::update(float _frameTime) {
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE2);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
 	
 
