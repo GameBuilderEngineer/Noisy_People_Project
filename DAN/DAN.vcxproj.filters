@@ -907,6 +907,9 @@
     <ClCompile Include="GreenRate.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
+    <ClCompile Include="Equipment.cpp">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1452,7 +1455,9 @@
     <ClInclude Include="GreenRate.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
-    <ClInclude Include="ElectTank.h" />
+    <ClInclude Include="Equipment.h">
+      <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

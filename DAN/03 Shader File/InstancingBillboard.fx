@@ -299,6 +299,96 @@ VS_OUT vsMainOFF(
 	return Out;
 }
 
+//固定サイズビルボード
+VS_OUT vsMainFixedSize(
+	float2 position				: POSITION, 
+	float2 localUV				: TEXCOORD0,
+	float3 worldPosition		: TEXCOORD1,
+	float2 uv					: TEXCOORD2,
+	float3 rotation				: TEXCOORD3,
+	float2 scale				: TEXCOORD4,
+	float4 color				: COLOR0)
+{
+	VS_OUT Out;
+
+	Out.position = float4(
+		position.x,
+		position.y,
+		0.0f,
+		1.0f);
+
+	float cosX = cos(rotation.x);
+	float sinX = sin(rotation.x);
+	float cosY = cos(rotation.y);
+	float sinY = sin(rotation.y);
+	float cosZ = cos(rotation.z);
+	float sinZ = sin(rotation.z);
+
+	//ワールド行列
+	float4x4 matrixWorld = float4x4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+	//スケール行列
+	float4x4 scaleMatrix = float4x4(
+		scale.x, 0.0f, 0.0f, 0.0f,
+		0.0f, scale.y, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+	//位置行列
+	float4x4 positionMatrix = float4x4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		worldPosition.x, worldPosition.y, worldPosition.z, 1.0f);
+	//X軸回転行列
+	float4x4 xRotationMatrix = float4x4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, cosX, -sinX, 0.0f,
+		0.0f, sinX, cosX, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+	//Y軸回転行列
+	float4x4 yRotationMatrix = float4x4(
+		cosY, 0.0f, sinY, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		-sinY, 0.0f, cosY, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+	//Z軸回転行列
+	float4x4 zRotationMatrix = float4x4(
+		cosZ, -sinZ, 0.0f, 0.0f,
+		sinZ, cosZ, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+	//ビルボード処理
+	float4x4 cancelRotation = matrixView;
+	cancelRotation._41_42_43 = 0.0f;
+	cancelRotation = transpose(cancelRotation);
+
+
+	//行列の演算
+	matrixWorld = mul(matrixWorld, scaleMatrix);				//*スケール
+	matrixWorld = mul(matrixWorld, xRotationMatrix);			//*x軸回転
+	matrixWorld = mul(matrixWorld, yRotationMatrix);			//*y軸回転
+	matrixWorld = mul(matrixWorld, zRotationMatrix);			//*z軸回転
+	matrixWorld = mul(matrixWorld, cancelRotation);				//*ビルボード
+	//matrixWorld = mul(matrixWorld, positionMatrix);				//*移動
+
+	//ビュー行列
+	matrixWorld = mul(matrixWorld, matrixView);
+	//プロジェクション行列
+	matrixWorld = mul(matrixWorld, matrixProjection);
+
+	//頂点へ演算
+	Out.position = mul(Out.position, matrixWorld);
+
+	Out.uv = localUV + uv;
+
+	Out.color = color;
+
+	return Out;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //ピクセル・シェーダー
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -413,6 +503,41 @@ technique mainTechnique {
 		CullMode = CCW;			//背面をカリング
 
 		VertexShader = compile vs_2_0 vsMainOFF();
+		PixelShader = compile ps_2_0 psMain();
+	}
+
+	//固定サイズ
+	pass p9 {
+		//ステート設定
+		Zenable = TRUE;				//Zバッファ
+		ZWriteEnable = TRUE;				//Zバッファへの書き込み
+		CullMode = CCW;				//背面をカリング
+		VertexShader = compile vs_2_0 vsMainFixedSize();
+		PixelShader = compile ps_2_0 psMain();
+	}
+
+
+	//固定サイズ（透過）
+	pass p10 {
+
+		//ステート設定
+		Zenable = TRUE;			//Zバッファ
+		ZWriteEnable = FALSE;		//Zバッファへの書き込み
+		CullMode = CCW;			//背面をカリング
+
+		VertexShader = compile vs_2_0 vsMainFixedSize();
+		PixelShader = compile ps_2_0 psMain();
+	}
+
+	//固定サイズ（最前面）
+	pass p11 {
+
+		//ステート設定
+		Zenable = FALSE;		//Zバッファ
+		ZWriteEnable = FALSE;		//Zバッファへの書き込み
+		CullMode = CCW;			//背面をカリング
+
+		VertexShader = compile vs_2_0 vsMainFixedSize();
 		PixelShader = compile ps_2_0 psMain();
 	}
 

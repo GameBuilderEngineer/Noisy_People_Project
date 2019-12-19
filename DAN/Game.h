@@ -43,7 +43,7 @@
 #include "LinearTreeCell.h"
 #include "movep.h"
 #include "movep1.h"
-
+#include "Equipment.h"
 #include "TelopManager.h"
 #include "Player1UI.h"
 #include "Player2UI.h"
@@ -51,6 +51,7 @@
 #include "networkClient.h"
 #include "CountUI.h"
 #include "Announcement.h"
+#include "Marker.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -120,6 +121,7 @@ private:
 	Player2UI*						player2UI;			//プレイヤー２周りのUI
 	CountUI*						countUI;			//カウントUI
 	Announcement*					announcement;		//アナウンス
+	MarkerRenderer*					markerRenderer;		//マーカー
 
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[4];
@@ -133,7 +135,6 @@ private:
 	Camera* cameraOP;
 
 	int count;
-
 public:
 	Game();
 	~Game();

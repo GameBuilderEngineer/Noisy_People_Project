@@ -11,7 +11,7 @@ SerialCommunication::SerialCommunication()
 	//COMポートハンドルの取得
 	//ポートをファイルとみなしてCreateFile()関数でオープンしてハンドルを取得する
 	arduino = CreateFile(
-		"\\\\.\\COM3",								//ポートの名前：どのポートを開くのか
+		"\\\\.\\COM3",						//ポートの名前：どのポートを開くのか
 		GENERIC_WRITE, 						//アクセスモード：通常送受信ともするので読み書き両方を指定
 		0,									//共有モード：通常0に設定　再オープン禁止
 		NULL, 								//セキュリティアトリビュート：通常ではNULLに設定
@@ -22,7 +22,7 @@ SerialCommunication::SerialCommunication()
 	//エラー処理
 	if (arduino == INVALID_HANDLE_VALUE)	//ハンドル取得に失敗した場合
 	{
-		MSG("PORT CLOUD NOT OPEN");
+		MSG("PORT COULD NOT OPEN");
 		return;
 	}
 
@@ -89,6 +89,5 @@ void SerialCommunication::send(BYTE	data)
 		CloseHandle(arduino);
 		return;
 	}
-
 
 }

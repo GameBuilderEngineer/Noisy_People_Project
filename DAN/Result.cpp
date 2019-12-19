@@ -48,19 +48,11 @@ void Result::initialize()
 	//リザルトUIの初期化
 	resultUI.initialize();
 	
-	//こんな感じ？
 	resultUI.greenigPersent =gameMaster->getGreeningRate();//全体緑化率
 	resultUI.greeningNum01 =gameMaster->getGreeningTreeNum(basicUiNS::P1);//player1の緑化本数
 	resultUI.greeningNum02 = gameMaster->getGreeningTreeNum(basicUiNS::P2);//player2の緑化本数
 	resultUI.defeat01 = gameMaster->getKillEnemyNum(basicUiNS::P1);//player1の撃破数
 	resultUI.defeat02 = gameMaster->getKillEnemyNum(basicUiNS::P2);//player2の撃破数
-
-	//確認用
-	//resultUI.greenigPersent =60;//全体緑化率
-	//resultUI.greeningNum01 =10;//player1の緑化本数
-	//resultUI.greeningNum02 = 0;//player2の緑化本数
-	//resultUI.defeat01 = 70;//player1の撃破数
-	//resultUI.defeat02 = 0;//player2の撃破数
 
 	//テストフィールド
 	testField = new Object();
@@ -77,6 +69,7 @@ void Result::initialize()
 	camera->setTargetY(&testField->getAxisY()->direction);
 	camera->setTargetZ(&testField->getAxisZ()->direction);
 	camera->setRelative(CAMERA_RELATIVE_QUATERNION);
+	camera->setGazeDistance(400.0f);
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI / 180) * 90);
@@ -99,6 +92,15 @@ void Result::initialize()
 	
 	//リプレイタイマー
 	playbackTimer = 0.0f;
+
+	// UIにゲームマスターを渡しておく
+	resultUI.gameMaster = gameMaster;
+	// サウンドの再生
+	//PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
+	////再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
+	//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };//BGMの設定
+	////再生
+	//SoundInterface::BGM->playSound(&playParameters);;
 
 }
 
@@ -185,16 +187,12 @@ void Result::update(float _frameTime)
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
 
-
-
 	//リザルトフェイズが5の時のみ Enterまたは〇ボタンでタイトルへ
 	if (resultUI.resultPhase == resultUiNS::PHASE_05&&
 		input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		// シーン遷移
 		changeScene(nextScene);
 	}
@@ -230,10 +228,6 @@ void Result::render()
 		camera->gazePosition,
 		camera->upVector);
 	effekseerNS::render(0);
-
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);			// αブレンドをつかう
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// αソースカラーの指定
-	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
 
 	//UI
 	renderUI();

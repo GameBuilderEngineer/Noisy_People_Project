@@ -66,6 +66,7 @@ private:
 	D3DXVECTOR3		initialCollide;			//初期衝突地点
 	D3DXVECTOR3		collidePosition;		//衝突位置
 	int				digitalPower;			//デジタルパワー
+	effekseerNS::Instance* effect;			//弾エフェクト
 public:
 //[基本処理]
 	Bullet(Ray shootingRay);

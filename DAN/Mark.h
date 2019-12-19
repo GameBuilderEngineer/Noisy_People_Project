@@ -18,8 +18,8 @@ namespace markNS
 {
 	const int WIDTH_MARK = (512 * WINDOW_WIDTH / 1920);	//キャラアイコンの横幅
 	const int HEIGHT_MARK = (32 * WINDOW_HEIGHT / 1080);	//キャラアイコンの縦幅
-	const D3DXVECTOR3 POSITION_MARK = D3DXVECTOR3(368 * WINDOW_WIDTH / 1920, 85 * WINDOW_HEIGHT / 1080, 0);	//キャラアイコンの表示位置(仮)
-	const D3DXVECTOR3 POSITION_MARK_P2 = D3DXVECTOR3(1793 * WINDOW_WIDTH / 1920, 85 * WINDOW_HEIGHT / 1080, 0);	//キャラアイコンの表示位置(仮)
+	const D3DXVECTOR3 POSITION_MARK = D3DXVECTOR3(348 * WINDOW_WIDTH / 1920, 85 * WINDOW_HEIGHT / 1080, 0);	//キャラアイコンの表示位置(仮)
+	const D3DXVECTOR3 POSITION_MARK_P2 = D3DXVECTOR3(1800 * WINDOW_WIDTH / 1920, 85 * WINDOW_HEIGHT / 1080, 0);	//キャラアイコンの表示位置(仮)
 }
 
 //==================================

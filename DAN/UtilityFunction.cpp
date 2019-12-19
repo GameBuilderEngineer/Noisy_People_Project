@@ -212,6 +212,7 @@ bool UtilityFunction::culling(D3DXVECTOR3 center, float radius, D3DXMATRIX view,
 		}
 	}
 
+	//Ž‹–ì“à
 	return true;
 
 }

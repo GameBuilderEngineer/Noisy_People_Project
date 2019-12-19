@@ -37,15 +37,15 @@ Player::Player()
 	onGravity = true;
 	//タイマー
 	invincibleTimer = 0.0f;					//無敵時間
-	recoveryPowerTimer = 0.0f;					//自動電力回復時間
+	recoveryPowerTimer = 0.0f;				//自動電力回復時間
 
 	//汎用
-	reverseValueXAxis = CAMERA_SPEED;			//操作Ｘ軸
+	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = -CAMERA_SPEED;		//操作Ｙ軸
 
 	//物理
-	onGround = false;				//接地判定
-	difference = DIFFERENCE_FIELD;		//フィールド補正差分
+	onGround = false;						//接地判定
+	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 
 	//カメラ遷移
 	cameraTransitionTimer = 0.0f;
@@ -121,7 +121,25 @@ void Player::initialize(PlayerTable info)
 	visionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL };
 	skyVisionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
 	skyVisionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
-
+	// (以下ボイス)
+	if (infomation.playerType == gameMasterNS::PLAYER_1P)
+	{// 男性キャラ
+		voiceJump[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Jump1, false, NULL, false, NULL };
+		voiceJump[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Jump2, false, NULL, false, NULL };
+		voiceDamage[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Damage1, false, NULL, false, NULL };
+		voiceDamage[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Damage2, false, NULL, false, NULL };
+		voiceShift[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Shift1, false, NULL, false, NULL };
+		voiceShift[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Shift2, false, NULL, false, NULL };
+	}
+	else
+	{// 女性キャラ
+		voiceJump[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Jump1, false, NULL, false, NULL };
+		voiceJump[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Jump2, false, NULL, false, NULL };
+		voiceDamage[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Damage1, false, NULL, false, NULL };
+		voiceDamage[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Damage2, false, NULL, false, NULL };
+		voiceShift[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Shift1, false, NULL, false, NULL };
+		voiceShift[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Shift2, false, NULL, false, NULL };
+	}
 }
 
 //===================================================================================================================================
@@ -136,7 +154,6 @@ void Player::update(float frameTime)
 	onJump = false;
 	acceleration *= 0.0f;
 	onGroundBefore = onGround;
-
 
 	//自動電力回復
 	recoveryPower();
@@ -489,8 +506,7 @@ void Player::jumpOperation()
 	if ((input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP)))
 	{
 		jump();
-		PLAY_PARAMETERS jumpVoice = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Man_Jump, false, NULL, false, NULL };
-		SoundInterface::SE->playSound(&jumpVoice);	//SE再生
+		SoundInterface::SE->playSound(&voiceJump[rand() % NUM_JUMP_VOICE]);	//SE再生
 	}
 
 	//接地フラグ切替
@@ -805,6 +821,9 @@ bool Player::digitalShift()
 	//デジタルシフトの開始エフェクトを再生
 	digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT, center);
 
+	//ボイス再生
+	SoundInterface::SE->playSound(&voiceShift[rand() % NUM_SHIFT_VOICE]);
+
 	transState(DIGITAL_SHIFT);
 	return true;
 
@@ -816,23 +835,27 @@ bool Player::digitalShift()
 bool Player::collideShiftRay(Cylinder target)
 {
 	//シフトレイをカメラからのレイとして更新
-	shiftRay.update(camera->gazePosition, camera->getDirectionZ());
+	shiftRay.update(cameraGaze, camera->getDirectionZ());
 
 	//カメラからの半径付きレイを設定
 	Cylinder volumeRayFromCamera;
-	volumeRayFromCamera.centerLine.start = camera->position;
-	volumeRayFromCamera.centerLine.end = camera->position + camera->getDirectionZ()*10000.0f;
+	volumeRayFromCamera.centerLine.start	= cameraGaze;
+	volumeRayFromCamera.centerLine.end		= cameraGaze + camera->getDirectionZ()*10000.0f;
 	volumeRayFromCamera.radius = 3.0f;
 
-	//
+	//対象の始点と最も近い点を算出
 	D3DXVECTOR3 nearest =
 		Base::nearestPointOnLine(
-			shiftRay.start,
-			shiftRay.start + shiftRay.direction*10000.0f,
+			volumeRayFromCamera.centerLine.start,
+			volumeRayFromCamera.centerLine.end,
 			target.centerLine.start);
-
+	//カメラの始点と同一であれば、失敗
+	if (volumeRayFromCamera.centerLine.start == nearest)
+	{
+		return false;
+	}
 	//カメラからのレイ上での距離
-	float distanceOnRay = Base::between2VectorLength(nearest, camera->position);
+	float distanceOnRay = Base::between2VectorLength(nearest, cameraGaze);
 
 	//円柱間の距離
 	float distance = Base::between2LineDistance(target.centerLine, volumeRayFromCamera.centerLine);
@@ -1262,6 +1285,8 @@ void Player::damage(int _damage)
 {
 	hp -= _damage;
 	if (hp < 0) hp = 0;
+	//サウンド再生
+	SoundInterface::SE->playSound(&voiceDamage[rand() % NUM_DAMAGE_VOICE]);
 }
 void Player::setValidOperation(int value)
 {

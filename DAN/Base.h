@@ -72,7 +72,7 @@
 //Common
 #define MFAIL(code,string) if(FAILED(code)){MessageBox(0,string,"error",MB_OK);return E_FAIL;}
 #define MFALSE(code,string) if(!(code)) {MessageBox(0,string,"error",MB_OK);return E_FAIL;}
-#define MSG(text) MessageBox(0,text,0,MB_OK);
+#define MSG(text) MessageBox(0,text,0, MB_OK|MB_TOPMOST);
 
 //===================================================================================================================================
 //【ポインタ参照項目を安全に処理するための関数テンプレート】

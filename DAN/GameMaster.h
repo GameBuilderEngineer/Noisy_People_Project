@@ -136,7 +136,6 @@ private:
 	PlayerTable				playerInformation[gameMasterNS::PLAYER_NUM];	//プレイヤー情報
 	int						progress;										//達成状況
 
-
 public:
 	//基本処理
 	GameMaster();
@@ -170,6 +169,10 @@ public:
 	//TreeTable* out ：ポインタを代入するとリストが格納される。
 	//float		 time：経過時間を代入する
 	int getEventList(TreeTable** out,float time);
+
+	//ボイス
+	bool	wasStartVoicePlayed[gameMasterNS::PLAYER_NUM];	// スタートボイスフラグ
+	bool	wasFinishVoicePlayed[gameMasterNS::PLAYER_NUM];	// 終了ボイスフラグ
 
 	//setter
 	void setConversionOrder(int* newValue);

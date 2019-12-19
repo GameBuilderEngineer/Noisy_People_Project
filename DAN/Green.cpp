@@ -51,7 +51,16 @@ void Green::initialize(int playerType)
 //==========================================
 //•`‰æˆ—
 //==========================================
-void Green::render()
+void Green::render(int state)
 {
-	green->render();
+	switch (state)
+	{
+	case 2:
+		green->render();
+		break;
+	case 3:
+		green->render();
+		break;
+	}
+	
 }
