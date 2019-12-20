@@ -31,8 +31,8 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 	// アニメーションマネージャを初期化
 	animationManager = new TigerAnimationManager(PARTS_MAX, this, &parts[0]);
 
-	// バレットマネージャにレンダラーを設定
-	bulletManager = new TigerBulletManager(EnemyManager::tigerBulletRenderer);
+	// バレットマネージャを作成
+	bulletManager = new TigerBulletManager();
 }
 
 

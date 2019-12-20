@@ -23,8 +23,7 @@ StaticMeshRenderer* EnemyManager::bearWaistRenderer;
 StaticMeshRenderer* EnemyManager::bearLegLRenderer;
 StaticMeshRenderer* EnemyManager::bearLegRRenderer;
 
-EnemyChaseMark* EnemyManager::markRenderer;						// 追跡マーク描画
-StaticMeshRenderer* EnemyManager::tigerBulletRenderer;
+EnemyChaseMark* EnemyManager::markRenderer;					// 追跡マーク描画
 
 
 //=============================================================================
@@ -59,7 +58,6 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	bearLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_R));
 
 	markRenderer = new EnemyChaseMark;
-	tigerBulletRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 
 // チュートリアルシーンでの初期化処理
 if (_sceneName == "Scene -Tutorial-")
@@ -76,7 +74,7 @@ for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 SAFE_DELETE(enemyTools);
 #endif
 
-#if 1// エネミーオブジェクトをツールデータを元に作成する
+#if 1	// エネミーオブジェクトをツールデータを元に作成する
 for (int i = 0; i < enemyDataList.nodeNum; i++)
 {
 	createEnemy(enemyDataList.getValue(i));
@@ -118,11 +116,6 @@ void EnemyManager::uninitialize()
 	// LinkedListのポインタの入ったノードもその中の実体も破棄
 	// しているのでレンダラーの破棄のみで良い
 	SAFE_DELETE(markRenderer);
-
-	//// タイガーバレットはタイガー破棄に合わせてインスタンスの破棄と
-	//// 描画解除も行われているためレンダラーの破棄のみで良い
-	tigerBulletRenderer->allUnRegister();
-	SAFE_DELETE(tigerBulletRenderer);
 }
 
 
@@ -226,7 +219,6 @@ void EnemyManager::update(float frameTime)
 	bearLegRRenderer->update();
 
 	markRenderer->update(frameTime);
-	tigerBulletRenderer->update();
 }
 
 
@@ -249,7 +241,6 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	bearLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 	markRenderer->render(view, projection, cameraPosition);
-	tigerBulletRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 #ifdef _DEBUG
 

@@ -87,7 +87,6 @@ namespace bulletNS{
 			matrix.Value[3][1] = M._42;
 			matrix.Value[3][2] = M._43;
 			manager->SetMatrix(handle, matrix);
-
 		};
 	};
 

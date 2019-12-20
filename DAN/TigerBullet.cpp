@@ -31,10 +31,9 @@ TigerBullet::TigerBullet(Ray shootingRay)
 
 	radius = 0.5f;
 
-	//// 弾エフェクトの再生
-	//tigerBulletEffect = new TigerBulletEffect(&position);
-	////tigerBulletEffect.
-	//effekseerNS::play(0, tigerBulletEffect);
+	// 弾エフェクトの再生
+	tigerBulletEffect = new TigerBulletEffect(&matrixWorld);
+	effekseerNS::play(0, tigerBulletEffect);
 }
 
 
@@ -43,8 +42,8 @@ TigerBullet::TigerBullet(Ray shootingRay)
 //=============================================================================
 TigerBullet::~TigerBullet()
 {
-	//// 弾エフェクト停止
-	//effekseerNS::stop(0, tigerBulletEffect);
+	// 弾エフェクト停止
+	effekseerNS::stop(0, tigerBulletEffect);
 }
 
 
@@ -146,9 +145,8 @@ void TigerBullet::hit()
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-TigerBulletManager::TigerBulletManager(StaticMeshRenderer* _renderer)
+TigerBulletManager::TigerBulletManager()
 {
-	renderer = _renderer;
 	remaining = MAGAZINE_NUM;
 	intervalTimer = 0.0f;
 	isShot = false;
@@ -162,7 +160,8 @@ TigerBulletManager::~TigerBulletManager()
 {
 	for (int i = 0; i < bulletList.nodeNum; i++)
 	{
-		destroy(*bulletList.getValue(i), i);
+		// バレットを破棄
+		SAFE_DELETE(*bulletList.getValue(i));
 	}
 
 	// バレットリストの終了処理
@@ -187,9 +186,6 @@ void TigerBulletManager::update(float frameTime)
 		TigerBullet* bullet = *bulletList.getValue(i);
 		bullet->update(frameTime);
 	}
-
-	// レンダラーの更新
-	renderer->updateAccessList();
 
 	// バレットの削除
 	for (int i = 0; i < bulletList.nodeNum; i++)
@@ -247,8 +243,6 @@ bool TigerBulletManager::shoot(Ray shootingRay)
 	TigerBullet* bullet = new TigerBullet(shootingRay);
 	bulletList.insertFront(bullet);
 	bulletList.listUpdate();
-	renderer->registerObject(bullet);
-	renderer->updateAccessList();
 }
 
 
@@ -257,10 +251,6 @@ bool TigerBulletManager::shoot(Ray shootingRay)
 //=============================================================================
 void TigerBulletManager::destroy(TigerBullet* bullet, int nodeNumber)
 {
-	// 描画を切る
-	renderer->unRegisterObjectByID(bulletList.getNode(nodeNumber)->value->id);
-	renderer->updateAccessList();
-
 	// ダブルポインタを渡してポインタノードを破棄
 	bulletList.remove(bulletList.getNode(nodeNumber));
 
