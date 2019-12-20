@@ -30,24 +30,64 @@ namespace bulletNS{
 	class Muzzle :public effekseerNS::Instance
 	{
 	public:
-		D3DXVECTOR3* syncPosition;
-		D3DXMATRIX* syncMatrixRotation;
-		Muzzle(D3DXVECTOR3* syncPosition, D3DXMATRIX* syncMatrixRotation) {
-			this->syncPosition = syncPosition;
-			this->syncMatrixRotation = syncMatrixRotation;
+		D3DXMATRIX* syncMatrix;
+		Muzzle(D3DXMATRIX* syncMatrix) {
+			this->syncMatrix = syncMatrix;
 			effectNo = effekseerNS::MUZZLE;
 			scale = D3DXVECTOR3(0.1f,0.1f,0.1f);
 		}
 		virtual void update() {
-			position = *syncPosition;
+			D3DXMATRIX M = *syncMatrix;
+
+			::Effekseer::Manager*	manager = getEffekseerManager(managerNo)->manager;
+			::Effekseer::Matrix43 matrix;
+			matrix.Value[0][0] = M._11;
+			matrix.Value[0][1] = M._12;
+			matrix.Value[0][2] = M._13;
+			matrix.Value[1][0] = M._21;
+			matrix.Value[1][1] = M._22;
+			matrix.Value[1][2] = M._23;
+			matrix.Value[2][0] = M._31;
+			matrix.Value[2][1] = M._32;
+			matrix.Value[2][2] = M._33;
+			matrix.Value[3][0] = M._41;
+			matrix.Value[3][1] = M._42;
+			matrix.Value[3][2] = M._43;
+			manager->SetMatrix(handle, matrix);
+			manager->SetScale(handle, scale.x, scale.y, scale.z);
+		};
+	};
+
+	//弾本体エフェクト
+	class BulletBody :public effekseerNS::Instance
+	{
+	public:
+		D3DXMATRIX* syncMatrix;
+		BulletBody(D3DXMATRIX* syncMatrix) {
+			this->syncMatrix = syncMatrix;
+			effectNo = effekseerNS::DAC_BULLET;
+			scale = D3DXVECTOR3(1.0f,1.0f,1.0f);
+		}
+		virtual void update() {
 			
-			D3DXMATRIX R = *syncMatrixRotation;
+			D3DXMATRIX M = *syncMatrix;
 
-			rotation.x = atan2f(R._32, R._33);
-			rotation.y = asinf(-R._31);
-			rotation.z = atan2f(R._21, R._11);
+			::Effekseer::Manager*	manager = getEffekseerManager(managerNo)->manager;
+			::Effekseer::Matrix43 matrix;
+			matrix.Value[0][0] = M._11;
+			matrix.Value[0][1] = M._12;
+			matrix.Value[0][2] = M._13;
+			matrix.Value[1][0] = M._21;
+			matrix.Value[1][1] = M._22;
+			matrix.Value[1][2] = M._23;
+			matrix.Value[2][0] = M._31;
+			matrix.Value[2][1] = M._32;
+			matrix.Value[2][2] = M._33;
+			matrix.Value[3][0] = M._41;
+			matrix.Value[3][1] = M._42;
+			matrix.Value[3][2] = M._43;
+			manager->SetMatrix(handle, matrix);
 
-			Instance::update();
 		};
 	};
 

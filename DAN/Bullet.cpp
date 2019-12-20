@@ -40,7 +40,7 @@ Bullet::Bullet(Ray shootingRay,int playerNo)
 	ballisticRay.color = D3DXCOLOR(0, 255, 120, 255);
 
 	//弾本体
-	effect = new effekseerNS::Instance(0,effekseerNS::DAC_BULLET);
+	effect = new BulletBody(&matrixWorld);
 	effekseerNS::play(0, effect);
 
 	{//オブジェクトタイプと衝突対象の指定
@@ -50,7 +50,7 @@ Bullet::Bullet(Ray shootingRay,int playerNo)
 	}
 
 	Object::initialize(&launchPosition);							//バレットモデルの初期化
-	postureControl(axisZ.direction, shootingRay.direction,1.0f);	//モデルを進行方向へ姿勢制御する
+	postureControl(axisZ.direction, -shootingRay.direction,1.0f);	//モデルを進行方向へ姿勢制御する
 	Object::update();
 	existenceTimer = EXIST_TIME;
 	endPoint = launchPosition + speed * EXIST_TIME;					//何にも衝突しなかった場合の終着位置
@@ -74,7 +74,6 @@ void Bullet::update(float frameTime)
 	//位置更新
 	D3DXVec3Lerp(&position, &ballisticRay.start, &endPoint,1.0f - existenceTimer/EXIST_TIME);
 	Object::update();
-	effect->position = position;
 }
 
 //===================================================================================================================================

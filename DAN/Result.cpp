@@ -187,6 +187,18 @@ void Result::update(float _frameTime)
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
 
+	if (resultUI.resultPhase == resultUiNS::PHASE_05)
+	{
+		if (gameMaster->getGreeningRate() >= 70)
+		{
+			SerialCommunicationNS::send(SerialCommunicationNS::CLEAR);
+
+		}
+		else {
+			SerialCommunicationNS::send(SerialCommunicationNS::FAILURE);
+		}
+	}
+
 	//リザルトフェイズが5の時のみ Enterまたは〇ボタンでタイトルへ
 	if (resultUI.resultPhase == resultUiNS::PHASE_05&&
 		input->wasKeyPressed(VK_RETURN) ||
@@ -251,8 +263,10 @@ void Result::render3D(Camera currentCamera)
 //===================================================================================================================================
 void Result::renderUI()
 {
+	//お試し用のフラグこいつがtrueになると2DUIの描画開始
+	bool testFlag = true;
 	// リザルトUI
-	resultUI.render();
+	resultUI.render(testFlag);
 }
 
 //===================================================================================================================================

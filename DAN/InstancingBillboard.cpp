@@ -177,6 +177,10 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	int instanceNum = getInstanceNum();
 	if (instanceNum <= 0)return;
 
+	D3DXMATRIX ortho;
+
+	float nearH = 
+
 	//Z深度バッファ
 	//device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	//device->SetRenderState(D3DRS_ZENABLE, TRUE);
@@ -219,6 +223,98 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->SetTechnique("mainTechnique");
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);
+	effect->SetMatrix("matrixOrtho", &ortho);
+	effect->SetTexture("planeTexture", texture);
+
+	effect->Begin(0, 0);
+
+	int passValue = 0;
+	if (renderType & FIXED_SIZE_PASS)
+	{passValue += 9;}
+	else if (renderType & OFF_BILLBOARD_PASS)
+	{passValue += 6;}
+	else if (renderType & Y_BILLBOARD_PASS) 
+	{ passValue += 3; }
+
+	switch (renderType & ~(Y_BILLBOARD_PASS|OFF_BILLBOARD_PASS|FIXED_SIZE_PASS))
+	{
+	case NORMAL_PASS:		effect->BeginPass(0+passValue);break;
+	case TRANSPARENT_PASS:	effect->BeginPass(1+passValue);break;
+	case FOREGROUND_PASS:	effect->BeginPass(2+passValue);break;
+	}
+		
+	device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
+
+	effect->EndPass();
+	effect->End();
+
+	device->SetStreamSource(0, NULL, 0, NULL);
+	device->SetStreamSource(1, NULL, 0, NULL);
+	device->SetStreamSource(2, NULL, 0, NULL);
+	device->SetStreamSource(3, NULL, 0, NULL);
+	device->SetStreamSource(4, NULL, 0, NULL);
+	device->SetStreamSource(5, NULL, 0, NULL);
+
+	//後始末
+	device->SetStreamSourceFreq(0, 0);
+	device->SetStreamSourceFreq(1, 0);
+	device->SetStreamSourceFreq(2, 0);
+	device->SetStreamSourceFreq(3, 0);
+	device->SetStreamSourceFreq(4, 0);
+	device->SetStreamSourceFreq(5, 0);
+	// αブレンドを切る
+	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+}
+
+void InstancingBillboard::render(Camera* camera)
+{
+	if (!onRender)return;
+	int instanceNum = getInstanceNum();
+	if (instanceNum <= 0)return;
+	//Z深度バッファ
+	//device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	//device->SetRenderState(D3DRS_ZENABLE, TRUE);
+
+	//αテスト
+	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	//device->SetRenderState(D3DRS_ALPHAREF, 0x00);
+
+	// αブレンドを行う
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	// αソースカラーの指定
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	//加算合成を行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	// αデスティネーションカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	//インスタンス宣言
+	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA		| instanceNum);
+	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(2, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(3, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(4, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+	device->SetStreamSourceFreq(5, D3DSTREAMSOURCE_INSTANCEDATA		| 1);
+
+	// 頂点宣言を通知
+	device->SetVertexDeclaration(declation);
+	
+	//デバイスデータストリームにメッシュの各バッファをバインド
+	device->SetStreamSource(0, vertexBuffer,	0, sizeof(InstancingBillboardNS::Vertex));		//頂点バッファ
+	device->SetStreamSource(1, positionBuffer,	0, sizeof(D3DXVECTOR3));						//位置バッファ
+	device->SetStreamSource(2, colorBuffer,		0, sizeof(D3DXCOLOR));							//カラーバッファ
+	device->SetStreamSource(3, uvBuffer,		0, sizeof(D3DXVECTOR2));						//UVバッファ
+	device->SetStreamSource(4, rotationBuffer,	0, sizeof(D3DXVECTOR3));						//回転バッファ
+	device->SetStreamSource(5, scaleBuffer,		0, sizeof(D3DXVECTOR2));						//スケールバッファ
+
+	//インデックスバッファをセット
+	device->SetIndices(indexBuffer);
+
+	effect->SetTechnique("mainTechnique");
+	effect->SetMatrix("matrixProjection", &camera->projection);
+	effect->SetMatrix("matrixView", &camera->view);
+	effect->SetMatrix("matrixOrtho", &camera->ortho);
 	effect->SetTexture("planeTexture", texture);
 
 	effect->Begin(0, 0);

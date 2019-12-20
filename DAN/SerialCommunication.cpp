@@ -1,5 +1,7 @@
 #include "SerialCommunication.h"
 
+SerialCommunication* pointerSerialCommunication = NULL;
+
 //RS232C シリアル通信
 //全体的な流れ
 //①CreateFile()関数でファイルをオープンする。(COMポートのハンドルを取得する)
@@ -7,6 +9,8 @@
 
 SerialCommunication::SerialCommunication()
 {
+	pointerSerialCommunication = this;
+	success = false;
 	//1.ポートをオープン
 	//COMポートハンドルの取得
 	//ポートをファイルとみなしてCreateFile()関数でオープンしてハンドルを取得する
@@ -23,6 +27,7 @@ SerialCommunication::SerialCommunication()
 	if (arduino == INVALID_HANDLE_VALUE)	//ハンドル取得に失敗した場合
 	{
 		MSG("PORT COULD NOT OPEN");
+		success = false;
 		return;
 	}
 
@@ -37,6 +42,7 @@ SerialCommunication::SerialCommunication()
 	{
 		MSG("SET UP FAILED");
 		CloseHandle(arduino);
+		success = false;
 		return;
 	}
 
@@ -46,6 +52,7 @@ SerialCommunication::SerialCommunication()
 	{
 		MSG("CLEAR FAILED");
 		CloseHandle(arduino);
+		success = false;
 		return;
 	}
 
@@ -64,9 +71,11 @@ SerialCommunication::SerialCommunication()
 	{
 		MSG("SetCommState FAILED");
 		CloseHandle(arduino);
+		success = false;
 		return;
 	}
 
+	success = true;
 
 }
 
@@ -79,9 +88,10 @@ SerialCommunication::~SerialCommunication()
 //送信
 void SerialCommunication::send(BYTE	data)
 {
+	if (!success)return;
+
 	DWORD	sendSize;
 	//DWORD	errorMask;
-
 	returnValue = WriteFile(arduino, &data, sizeof(data), &sendSize, NULL);
 	if (!returnValue)
 	{
@@ -90,4 +100,14 @@ void SerialCommunication::send(BYTE	data)
 		return;
 	}
 
+}
+
+void SerialCommunicationNS::send(BYTE data)
+{
+	pointerSerialCommunication->send(data);
+}
+
+SerialCommunication* getSerialCommunication()
+{
+	return pointerSerialCommunication;
 }

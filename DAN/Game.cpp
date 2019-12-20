@@ -99,6 +99,7 @@ void Game::initialize() {
 	cameraOP->setFieldOfView((D3DX_PI / 180) * 91);
 	cameraOP->setLimitRotationTop(0.1f);
 	cameraOP->setLimitRotationBottom(0.1f);
+	cameraOP->updateOrtho();
 
 
 	//camera
@@ -118,7 +119,8 @@ void Game::initialize() {
 		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
 		camera[i].setLimitRotationTop(0.1f);
 		camera[i].setLimitRotationBottom(0.3f);
-
+		camera[i].updateOrtho();
+		
 		//プレイヤーの設定
 		PlayerTable infomation;
 		switch (i)
@@ -539,6 +541,7 @@ void Game::update(float _frameTime) {
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_10);
 	}
 	//緑化状況30%
 	if (treeManager->getGreeningRate() >= 0.3 &&
@@ -546,6 +549,7 @@ void Game::update(float _frameTime) {
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE1);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30);
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_30);
 	}
 	//緑化状況50%
 	if (treeManager->getGreeningRate() >= 0.5 &&
@@ -553,6 +557,7 @@ void Game::update(float _frameTime) {
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE2);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
 	
 
@@ -768,7 +773,7 @@ void Game::render3D(Camera* currentCamera) {
 
 	//レティクル3D描画
 	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
-		reticle->render3D(nowRenderingWindow,currentCamera->view, currentCamera->projection, currentCamera->position);
+		reticle->render3D(nowRenderingWindow,currentCamera);
 
 	//マーカーの描画(2D/3D)両方とも描画
 	markerRenderer->render(nowRenderingWindow, currentCamera);

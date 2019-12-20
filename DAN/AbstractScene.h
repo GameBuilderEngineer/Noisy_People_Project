@@ -21,6 +21,7 @@
 #include "EffekseerManager.h"
 #include "Fader.h"
 #include "GameMaster.h"
+#include "SerialCommunication.h"
 //#include "TextManager.h"
 
 //===================================================================================================================================
