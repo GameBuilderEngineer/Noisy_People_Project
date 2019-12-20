@@ -72,7 +72,6 @@ void Tiger::update(float frameTime)
 		
 		if (input->wasKeyPressed('N'))
 		{
-			shot(&player[0]);
 		}
 	}
 #endif
@@ -85,7 +84,7 @@ void Tiger::update(float frameTime)
 	animationManager->update(frameTime);
 
 	// バレットの更新
-	shot(&player[0]);
+	shot();
 	bulletManager->update(frameTime);
 }
 
@@ -125,7 +124,7 @@ void::Tiger::patrol(float frameTime)
 //=============================================================================
 void::Tiger::rest(float frameTime)
 {
-
+	Enemy::rest(frameTime);
 }
 
 
@@ -141,17 +140,18 @@ void Tiger::attackTree(float frameTime)
 //=============================================================================
 // ショット
 //=============================================================================
-void Tiger::shot(Player* target)
+void Tiger::shot()
 {
 	D3DXVECTOR3 muzzlePosition;			// 銃口ポジション
 	D3DXVECTOR3 connectionPosition;		// 接続部ポジション
 
-	D3DXVec3TransformCoord(&muzzlePosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[GUN]->matrixWorld);
+	D3DXVec3TransformCoord(&muzzlePosition, &MUZZLE_POSITION, &parts[GUN]->matrixWorld);
 	D3DXVec3TransformCoord(&connectionPosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[GUN]->matrixWorld);
 
 	Ray temp;
 	temp.start = connectionPosition;
-	temp.direction = target->position - connectionPosition;
+	temp.direction = muzzlePosition - connectionPosition;
+	D3DXVec3Normalize(&temp.direction, &temp.direction);
 	bulletManager->shoot(temp);
 }
 
@@ -184,6 +184,10 @@ Object* Tiger::getParts(int type)
 	return parts[type];
 }
 
+TigerBulletManager* Tiger::getBulletMangaer()
+{
+	return bulletManager;
+}
 
 //=============================================================================
 // Setter

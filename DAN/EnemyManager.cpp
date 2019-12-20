@@ -59,12 +59,11 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	bearLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_R));
 
 	markRenderer = new EnemyChaseMark;
-	//tigerBulletRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	tigerBulletRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 
 // チュートリアルシーンでの初期化処理
 if (_sceneName == "Scene -Tutorial-")
 {
-
 	return;
 }
 
@@ -77,13 +76,10 @@ for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 SAFE_DELETE(enemyTools);
 #endif
 
-#if 1	// エネミーオブジェクトをツールデータを元に作成する
+#if 1// エネミーオブジェクトをツールデータを元に作成する
 for (int i = 0; i < enemyDataList.nodeNum; i++)
 {
-	if (1/* 本来はプレイヤーの初期位置と近ければ～など条件が付く */)
-	{
-		createEnemy(enemyDataList.getValue(i));
-	}
+	createEnemy(enemyDataList.getValue(i));
 }
 #endif
 }
@@ -125,8 +121,8 @@ void EnemyManager::uninitialize()
 
 	//// タイガーバレットはタイガー破棄に合わせてインスタンスの破棄と
 	//// 描画解除も行われているためレンダラーの破棄のみで良い
-	//tigerBodyRenderer->allUnRegister();
-	//SAFE_DELETE(tigerBulletRenderer);
+	tigerBulletRenderer->allUnRegister();
+	SAFE_DELETE(tigerBulletRenderer);
 }
 
 
@@ -230,7 +226,7 @@ void EnemyManager::update(float frameTime)
 	bearLegRRenderer->update();
 
 	markRenderer->update(frameTime);
-	//tigerBulletRenderer->update();
+	tigerBulletRenderer->update();
 }
 
 
@@ -239,10 +235,6 @@ void EnemyManager::update(float frameTime)
 //=============================================================================
 void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	//wolfRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	//tigerRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	//bearRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-
 	wolfBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	wolfArmRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	tigerBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
@@ -257,7 +249,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	bearLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 	markRenderer->render(view, projection, cameraPosition);
-	//tigerBulletRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	tigerBulletRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 
 #ifdef _DEBUG
 
@@ -275,6 +267,15 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 		enemyList[i]->hearingSphere[0].render(enemyList[i]->matrixCenter);
 		enemyList[i]->hearingSphere[1].render(enemyList[i]->matrixCenter);
 #endif
+
+		if (enemyList[i]->getEnemyData()->type == enemyNS::TIGER)
+		{
+			Tiger* tiger = (Tiger*)enemyList[i];
+			for (int k = 0; k < tiger->getBulletMangaer()->getBulletList()->nodeNum; k++)
+			{
+				tiger->getBulletMangaer()->render(view, projection,cameraPosition);
+			}
+		}
 
 	}
 
@@ -653,7 +654,7 @@ void EnemyManager::outputGUI()
 		{
 			issueNewEnemyID(),
 			enemyNS::TIGER,
-			stateMachineNS::PATROL,
+			stateMachineNS::REST,
 			*player->getPosition(),
 			D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			0

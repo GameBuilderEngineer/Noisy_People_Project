@@ -110,7 +110,7 @@ void::Bear::patrol(float frameTime)
 //=============================================================================
 void::Bear::rest(float frameTime)
 {
-
+	Enemy::rest(frameTime);
 }
 
 

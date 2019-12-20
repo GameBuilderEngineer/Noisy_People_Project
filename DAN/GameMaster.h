@@ -45,7 +45,7 @@ namespace gameMasterNS {
 		RANK_NUM
 	};
 
-	const float OPENING_TIME			= 5.0f;					//5•b
+	const float OPENING_TIME			= 10.0f;					//5•b
 	const float GAME_TIME				= 60.0f * 4.0f;			//4•ª
 	const float COUNT_DOWN_TIME			= 3.0f;					//3•b
 	const float ENDING_TIME				= 3.0f;					//3•b
@@ -177,7 +177,7 @@ public:
 	//setter
 	void setConversionOrder(int* newValue);
 	void setProgress(int achievement);
-
+	void addKillEnemy(int playerNo);
 	//getter
 	PlayerTable*	getPlayerInfomation();
 	float			getGameTime();

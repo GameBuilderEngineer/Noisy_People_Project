@@ -12,7 +12,6 @@ TigerBullet::TigerBullet(Ray shootingRay)
 {
 	launchPosition = shootingRay.start;
 	bulletSpeed = shootingRay.direction * SPEED;
-	//initialCollide = launchPosition + shootingRay.direction * shootingRay.distance;
 
 	// 弾道の初期化
 	ballisticRay.initialize(launchPosition, shootingRay.direction);
@@ -20,19 +19,22 @@ TigerBullet::TigerBullet(Ray shootingRay)
 
 	{// オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
-		treeCell.type = BULLET;
+		treeCell.type = ENEMY_BULLET;
 		treeCell.target = PLAYER;
 	}
 
+	Object::initialize(&launchPosition);
 	postureControl(axisZ.direction, shootingRay.direction, 1.0f);	// モデルを進行方向へ姿勢制御する
 	existenceTimer = EXIST_TIME;									// 存在時間
 	endPoint = launchPosition + bulletSpeed * EXIST_TIME;			// 何にも衝突しなかった場合の終着位置
 	isHit = false;													// 衝突フラグをオフ
-	Object::initialize(&launchPosition);
 
-	// 弾エフェクトの再生
-	tigerBulletEffect = new TigerBulletEffect(&position);
-	effekseerNS::play(0, tigerBulletEffect);
+	radius = 0.5f;
+
+	//// 弾エフェクトの再生
+	//tigerBulletEffect = new TigerBulletEffect(&position);
+	////tigerBulletEffect.
+	//effekseerNS::play(0, tigerBulletEffect);
 }
 
 
@@ -41,8 +43,8 @@ TigerBullet::TigerBullet(Ray shootingRay)
 //=============================================================================
 TigerBullet::~TigerBullet()
 {
-	// 弾エフェクト停止
-	effekseerNS::stop(0, tigerBulletEffect);
+	//// 弾エフェクト停止
+	//effekseerNS::stop(0, tigerBulletEffect);
 }
 
 
@@ -74,9 +76,9 @@ void TigerBullet::update(float frameTime)
 //=============================================================================
 void TigerBullet::render()
 {
-	//float length = Base::between2VectorLength(ballisticRay.start, position);
-	//ballisticRay.render(length);
-	//debugRender();
+	float length = Base::between2VectorLength(ballisticRay.start, position);
+	ballisticRay.render(length);
+	debugRender();
 }
 
 
@@ -107,12 +109,11 @@ bool TigerBullet::collide(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix)
 //=============================================================================
 void TigerBullet::hit()
 {
-	existenceTimer = 0.0f;
-
 	//サウンドの再生
 	PLAY_PARAMETERS hitSE;
 	hitSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_HitBulletTree, false ,NULL,false,NULL };
 	SoundInterface::SE->playSound(&hitSE);
+
 	//エフェクトの再生
 	effekseerNS::Instance* instance = new effekseerNS::Instance();
 	instance->position = position;
@@ -187,8 +188,8 @@ void TigerBulletManager::update(float frameTime)
 		bullet->update(frameTime);
 	}
 
-	//// レンダラーの更新
-	//renderer->updateAccessList();
+	// レンダラーの更新
+	renderer->updateAccessList();
 
 	// バレットの削除
 	for (int i = 0; i < bulletList.nodeNum; i++)
@@ -211,7 +212,10 @@ void TigerBulletManager::update(float frameTime)
 //=============================================================================
 void TigerBulletManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-
+	for (int i = 0; i < bulletList.nodeNum; i++)
+	{
+		(*bulletList.getValue(i))->render();
+	}
 }
 
 
@@ -243,8 +247,8 @@ bool TigerBulletManager::shoot(Ray shootingRay)
 	TigerBullet* bullet = new TigerBullet(shootingRay);
 	bulletList.insertFront(bullet);
 	bulletList.listUpdate();
-	//renderer->registerObject(bullet);
-	//renderer->updateAccessList();
+	renderer->registerObject(bullet);
+	renderer->updateAccessList();
 }
 
 
@@ -254,11 +258,21 @@ bool TigerBulletManager::shoot(Ray shootingRay)
 void TigerBulletManager::destroy(TigerBullet* bullet, int nodeNumber)
 {
 	// 描画を切る
-	//renderer->unRegisterObjectByID(bulletList.getNode(nodeNumber)->value->id);
+	renderer->unRegisterObjectByID(bulletList.getNode(nodeNumber)->value->id);
+	renderer->updateAccessList();
 
 	// ダブルポインタを渡してポインタノードを破棄
 	bulletList.remove(bulletList.getNode(nodeNumber));
 
 	// バレットを破棄
 	SAFE_DELETE(bullet);
+}
+
+
+//=============================================================================
+// バレットリストの取得
+//=============================================================================
+LinkedList<TigerBullet*>* TigerBulletManager::getBulletList()
+{
+	return &bulletList;
 }

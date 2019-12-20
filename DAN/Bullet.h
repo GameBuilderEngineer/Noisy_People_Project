@@ -68,8 +68,10 @@ private:
 	int				digitalPower;			//デジタルパワー
 	effekseerNS::Instance* effect;			//弾エフェクト
 public:
+	int playerNo;
+public:
 //[基本処理]
-	Bullet(Ray shootingRay);
+	Bullet(Ray shootingRay,int playerNo);
 	~Bullet();
 	void update(float frameTime);
 	void render();
@@ -113,7 +115,7 @@ public:
 
 //[アクション]
 	//発射
-	bool launch(Ray shootingRay);
+	bool launch(Ray shootingRay,int playerNo);
 	//リロード
 	void reload();
 	//弾削除

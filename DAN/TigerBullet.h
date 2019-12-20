@@ -19,7 +19,7 @@ public:
 	TigerBulletEffect(D3DXVECTOR3* sync)
 	{
 		syncPosition = sync;
-		effectNo = effekseerNS::TIGER_BULLET;
+		effectNo = effekseerNS::DAC_BULLET;
 	}
 	virtual void update()
 	{
@@ -45,7 +45,7 @@ private:
 	bool isHit;
 
 public:
-	const float		SPEED = 50.0f;			//’e‘¬
+	const float		SPEED = 5.0f;			//’e‘¬
 	const float		EXIST_TIME = 3.0f;		//‘¶İŠÔ
 
 	TigerBullet(Ray shootingRay);
@@ -59,6 +59,7 @@ public:
 	// Getter
 	bool getIsHit() { return isHit; }
 	// Setter
+	void setIsHit(bool set) { isHit = set; }
 };
 
 
@@ -89,4 +90,6 @@ public:
 	bool shoot(Ray shootingRay);
 	// ’e‚Ì”jŠü
 	void destroy(TigerBullet* bullet, int nodeNumber);
+	// ƒoƒŒƒbƒgƒŠƒXƒg‚Ìæ“¾
+	LinkedList<TigerBullet*>* getBulletList();
 };

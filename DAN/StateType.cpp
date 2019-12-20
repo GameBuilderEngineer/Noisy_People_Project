@@ -59,6 +59,24 @@ State* PatrolState::transition(stateMachineNS::TransitionTimeChecker* checker, E
 //=============================================================================
 State* RestState::transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy)
 {
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		if (checker[CHASE].executable && enemy->getNoticedOfPlayer(i))
+		{
+			enemy->prepareChase();
+			return ChaseState::getInstance();
+		}
+	}
+
+	if (enemy->getNoticedOfPlayer(gameMasterNS::PLAYER_1P) == false &&
+		enemy->getNoticedOfPlayer(gameMasterNS::PLAYER_2P) == false &&
+		enemy->isPayingNewAttention &&
+		checker[PATROL].executable)
+	{
+		enemy->preparePatrol();
+		return PatrolState::getInstance();
+	}
+
 	if (enemy->getEnemyData()->hp == 0)
 	{
 		enemy->prepareDie();
@@ -74,6 +92,15 @@ State* RestState::transition(stateMachineNS::TransitionTimeChecker* checker, Ene
 //=============================================================================
 State* AttackTree::transition(stateMachineNS::TransitionTimeChecker* checker, Enemy* enemy)
 {
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		if (checker[CHASE].executable && enemy->getNoticedOfPlayer(i))
+		{
+			enemy->prepareChase();
+			return ChaseState::getInstance();
+		}
+	}
+
 	if (enemy->getEnemyData()->hp == 0)
 	{
 		return DieState::getInstance();

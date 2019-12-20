@@ -254,10 +254,10 @@ void Enemy::postprocess(float frameTime)
 	Object::update();
 	// 到着判定
 	checkArrival();
-	// ブラックボードの更新
-	updataBlackBoard(frameTime);
 	// ステートの更新
 	int stateNumber = stateMachine.run(frameTime, this);
+	// ブラックボードの更新
+	updataBlackBoard(frameTime);
 	// エネミーデータの更新
 	enemyData->state = stateNumber;
 	enemyData->position = position;
@@ -704,6 +704,12 @@ void Enemy::prepareChase()
 	// 最初から追跡ステートであるエネミーを作るとこの関数を経由しない
 	// 様々な問題が出てくるので注意されたし
 
+	if (canSearch)
+	{
+		setPlayerChaseTarget();
+		searchPath();
+	}
+
 	cntPathSearchInterval = 0.0f;
 	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyActive, false, NULL, false, NULL };
 	SoundInterface::SE->playSound(&playParameters);
@@ -844,7 +850,19 @@ void Enemy::patrol(float frameTime)
 //=============================================================================
 void Enemy::rest(float frameTime)
 {
+	//if (canSense)
+	//{
+	//	sensor();
+	//}
 
+	//if (isPayingNewAttention)
+	//{
+	//	D3DXVec3Normalize(&attentionDirection, &attentionDirection);
+	//	destination = position + attentionDirection;
+	//	isDestinationLost = false;
+	//	setMovingTarget(&destination);
+	//	postureControl(axisZ.direction, attentionDirection, 1);
+	//}
 }
 
 
@@ -1311,27 +1329,27 @@ void Enemy::debugSensor()
 	}
 
 	bool sound = false;
-	if (canSense)
-	{
-		if (sensor())
-		{
-			// 視界に入ったら赤点滅
-			for (int i = 0; i < 4; i++)
-			{
-				eyeAngleRay[i].color = D3DXCOLOR(255, 0, 0, 255);
-			}
+	//if (canSense)
+	//{
+	//	if (sensor())
+	//	{
+	//		// 視界に入ったら赤点滅
+	//		for (int i = 0; i < 4; i++)
+	//		{
+	//			eyeAngleRay[i].color = D3DXCOLOR(255, 0, 0, 255);
+	//		}
 
-			sound = true;
-		}
+	//		sound = true;
+	//	}
 
-		if (sound)
-		{
-			// 音を鳴らす
-			//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
-			//SoundInterface::SE->playSound(&playParameters);	//SE再生
-		}
+	//	if (sound)
+	//	{
+	//		// 音を鳴らす
+	//		//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
+	//		//SoundInterface::SE->playSound(&playParameters);	//SE再生
+	//	}
 
-	}
+	//}
 }
 
 

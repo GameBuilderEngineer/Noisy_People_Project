@@ -43,8 +43,8 @@ namespace enemyNS
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
-		80,			// WOLF
-		170,		// TIGER
+		60,			// WOLF
+		100,		// TIGER
 		450,		// BEAR
 	};
 

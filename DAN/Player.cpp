@@ -182,11 +182,11 @@ void Player::update(float frameTime)
 	{// 高速移動
 		position += speed;
 	}
+#endif // DEBUG
 	if (input->wasKeyPressed(keyTable.reset))
 	{// リセット
 		reset();
 	}
-#endif // DEBUG
 
 	//物理更新(状態別)
 	state->physics();
@@ -783,7 +783,7 @@ bool Player::shot()
 	}
 
 	//弾の発射
-	if (bulletManager->launch(shootingRay))
+	if (bulletManager->launch(shootingRay,infomation.playerType))
 	{
 		//エフェクトの再生
 		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&launchPosition, &matrixRotation);
