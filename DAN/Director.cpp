@@ -23,6 +23,7 @@
 #include "SE.h"
 #include "LinearTreeCell.h"
 #include "DebugScene.h"
+#include "networkClient.h"
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -152,9 +153,25 @@ HRESULT Director::initialize() {
 
 
 	//scene
+	//シーン選択
 	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO| MB_TOPMOST) == IDYES)
 	{
 		scene = new Splash();
+		int msg = MessageBox(0,
+			"はい(Y):接続先を検索\nいいえ(N):インターネット接続を行わない",
+			"インターネット接続を行いますか?", MB_YESNO | MB_TOPMOST);
+		if (msg == IDYES)
+		{
+			//はい
+			NETWORK_CLIENT::requestConnection = true;
+			MSG("接続テストをおこないます。");
+			NETWORK_CLIENT* test = new NETWORK_CLIENT();
+			SAFE_DELETE(test);
+		}
+		else {
+			//いいえ
+			NETWORK_CLIENT::requestConnection = false;
+		}
 	}
 	else {
 		scene = new Display();

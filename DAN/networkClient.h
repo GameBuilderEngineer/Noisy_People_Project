@@ -17,12 +17,15 @@
 #include <conio.h>
 #pragma comment(lib, "ws2_32.lib")
 
+
 //===================================================================================================================================
 //【定数定義】
 //===================================================================================================================================
-const char szServer[64] = "DESKTOP-2C7Q2ME";		//中込PC
-//const char szServer[64] = "ths80214"; //伊達PC
-//const char szServer[64] = "INDES";		//サイ
+//const char szServer[64] = "ths80619";				//菅野PC
+//const char szServer[64] = "DESKTOP-2C7Q2ME";		//中込PC
+//const char szServer[64] = "ths80214";				//伊達PC
+//const char szServer[64] = "INDES";					//サイ
+
 //===================================================================================================================================
 //【クライアント】
 //===================================================================================================================================
@@ -31,6 +34,11 @@ class NETWORK_CLIENT
 public:
 	NETWORK_CLIENT();
 	~NETWORK_CLIENT();
+
+	static bool requestConnection;//接続要求
+	static bool initialConnection;//初期接続
+	static int connectionTarget;//接続先
+	bool success;
 
 	void send(float time);
 	void outputGUI();
