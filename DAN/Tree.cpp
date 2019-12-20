@@ -178,6 +178,7 @@ void Tree::greeningAround()
 {
 	greeningArea.initialize(&center);
 	greeningArea.setRadius(1.0f);
+	greeningArea.playerNo = playerNo;
 	//エフェクトの再生
 	GreeningAreaNS::GreeningEffect* greeningEffect 
 		= new GreeningAreaNS::GreeningEffect(&greeningArea.position,&greeningArea.scale);
@@ -272,7 +273,7 @@ bool Tree::getSelected(int playerNo) { return selectShift[playerNo]; }
 // Setter
 //=============================================================================
 void Tree::setDataToTree(TreeData _treeData) { treeData = _treeData; }
-void Tree::addHp(int value) { 
+void Tree::addHp(int value,int playerNo) { 
 	if (treeData.greenState == treeNS::GREEN)return;//緑化していれば加算しない
 	treeData.hp += value; 
 	if (treeData.hp >=MAX_HP)
@@ -286,6 +287,8 @@ void Tree::addHp(int value) {
 
 		//デジタルツリーエフェクトの再生
 		playDigitalEffect();
+
+		this->playerNo = playerNo;
 
 		//状態遷移
 		transState();

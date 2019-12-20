@@ -108,6 +108,10 @@ void GameMaster::startGame()
 	pause = false;
 	progress = 0x00000000;
 	discardConversionOrder();
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		killEnemyNum[i] = 0;
+	}
 
 	ZeroMemory(wasStartVoicePlayed, 2 * sizeof(bool));
 	ZeroMemory(wasFinishVoicePlayed, 2 * sizeof(bool));

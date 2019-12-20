@@ -438,10 +438,10 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 
-	if (input->wasKeyPressed('6'))
+	if (input->wasKeyPressed('6')|| 
+		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB)||
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
-		//aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
-
 		aiDirector->eventMaker.makeEventBossEntry();
 	}
 
@@ -901,7 +901,19 @@ void Game::collisions()
 	//敵の登録
 	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
 	{
-		tree8Reregister(enemyManager->getEnemyList()[i]);
+		Enemy* enemy = enemyManager->getEnemyList()[i];
+		// エネミー本体
+		tree8Reregister(enemy);
+
+		// エネミ―のバレット
+		if (enemy->getEnemyData()->type == enemyNS::TIGER)
+		{
+			Tiger* tiger = (Tiger*)enemy;
+			for (int k = 0; k < tiger->getBulletMangaer()->getBulletList()->nodeNum; k++)
+			{
+				tree8Reregister(*tiger->getBulletMangaer()->getBulletList()->getValue(k));
+			}
+		}
 	}
 	//木の登録
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)

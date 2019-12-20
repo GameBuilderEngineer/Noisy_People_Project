@@ -18,6 +18,7 @@
 #include "Tree.h"
 #include "GreeningArea.h"
 #include "MapObject.h"
+#include "TigerBullet.h"
 
 //===================================================================================================================================
 //ÅyñºëOãÛä‘Åz
@@ -51,13 +52,13 @@ public:
 	//êÖïΩï‚ê≥(ratio1 = obj1Ç™ï‚ê≥Ç≥ÇÍÇÈäÑçá(0.0ÇÕìÆÇ©Ç»Ç¢/1.0ÇÕÇ∑Ç◊ÇƒÇÃï‚ê≥ÇÇ§ÇØÇÈ)Åj
 	static void horizontalCorrection(Object* obj1, Object* obj2,float ratio1);
 
-
 	//PLAYER
-	static bool playerAndPlayer(Player* player1, Player* player2);		//PLAYER<->PLAYER
-	static bool playerAndBullet(Player* player, Bullet* bullet);		//PLAYER<->BULLET
-	static bool playerAndEnemy(Player* player, Enemy* enemy);			//PLAYER<->ENEMY
-	static bool playerAndTree(Player* player, Tree* enemy);				//PLAYER<->TREE
-	static bool playerAndMapObject(Player* player, MapObject* mapObject);//PLAYER<->MAPOBJECT
+	static bool playerAndPlayer(Player* player1, Player* player2);			//PLAYER<->PLAYER
+	static bool playerAndBullet(Player* player, Bullet* bullet);			//PLAYER<->BULLET
+	static bool playerAndEnemy(Player* player, Enemy* enemy);				//PLAYER<->ENEMY
+	static bool playerAndTree(Player* player, Tree* enemy);					//PLAYER<->TREE
+	static bool playerAndMapObject(Player* player, MapObject* mapObject);	//PLAYER<->MAPOBJECT
+	static bool playerAndEnemyBullet(Player* player, TigerBullet* bullet);	//PLAYER<->ENEMY_BULLET
 	
 	//BULLET
 	static bool bulletAndBullet(Bullet* bullet1, Bullet* bullet2);		//BULLET<->BULLET
@@ -72,5 +73,5 @@ public:
 	static bool treeAndTree(Tree* tree1, Tree* tree2);					//ENEMY<->TREE
 
 	//GREENING_AREA
-	static bool greeningAreaAndTree(GreeningArea* area, Tree* tree);			//GREENING_AREA<->TREE
+	static bool greeningAreaAndTree(GreeningArea* area, Tree* tree);	//GREENING_AREA<->TREE
 };

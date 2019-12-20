@@ -100,7 +100,7 @@ void::Wolf::patrol(float frameTime)
 //=============================================================================
 void::Wolf::rest(float frameTime)
 {
-
+	Enemy::rest(frameTime);
 }
 
 

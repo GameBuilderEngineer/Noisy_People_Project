@@ -137,8 +137,7 @@ void TreeManager::update(float frameTime)
 			in.playBacked	= false;
 
 			//‚ ‚Æ‚Åê‡•ª‚¯
-			in.player		= gameMasterNS::PLAYER_2P;
-			in.player		= gameMasterNS::PLAYER_1P;
+			in.player		= tree->playerNo;
 
 			//‚ ‚Æ‚Åê‡•ª‚¯
 			in.eventType	= gameMasterNS::TO_DEAD;
