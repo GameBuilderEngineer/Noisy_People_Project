@@ -26,7 +26,7 @@ Reticle3D::Reticle3D(D3DXVECTOR3 position,D3DXVECTOR2 uv):InstancingBillboardNS:
 	//‰Šú’l‚ÌÝ’è
 	this->position	= position;
 	this->rotation	= D3DXVECTOR3(0, 0, 0);
-	this->scale		= D3DXVECTOR2(1.0f,1.0f);
+	this->scale		= D3DXVECTOR2(0.1f,0.1f);
 	this->speed		= D3DXVECTOR3(0, 0, 0);
 	this->lifeTimer	= 0.0f;
 	this->limitTime = 1.0f;

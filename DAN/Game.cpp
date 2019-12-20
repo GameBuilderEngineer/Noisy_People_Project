@@ -772,7 +772,7 @@ void Game::render3D(Camera* currentCamera) {
 
 
 	//レティクル3D描画
-	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
+	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL && gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))
 		reticle->render3D(nowRenderingWindow,currentCamera);
 
 	//マーカーの描画(2D/3D)両方とも描画

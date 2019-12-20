@@ -36,18 +36,18 @@ namespace MarkerNS
 	};
 
 	namespace PlayerMarkerNS{
-		const int WIDTH			= 256;
-		const int HEIGHT		= 256;
+		const int WIDTH			= 128;
+		const int HEIGHT		= 128;
 		const int DIVIDE_WIDTH	= 1;//‰¡‚Ì•ªŠ„”
 	}
 	namespace BossEnemyMarkerNS{
-		const int WIDTH			= 256;
-		const int HEIGHT		= 256;
+		const int WIDTH			= 128;
+		const int HEIGHT		= 128;
 		const int DIVIDE_WIDTH	= 1;//‰¡‚Ì•ªŠ„”
 	}
 	namespace AttackedTreeNS{
-		const int WIDTH			= 256;
-		const int HEIGHT		= 256;
+		const int WIDTH			= 128;
+		const int HEIGHT		= 128;
 		const int DIVIDE_WIDTH	= 1;//‰¡‚Ì•ªŠ„”
 	}
 	const D3DXVECTOR3 POSITION	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);

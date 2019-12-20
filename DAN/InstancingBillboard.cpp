@@ -177,9 +177,6 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	int instanceNum = getInstanceNum();
 	if (instanceNum <= 0)return;
 
-	D3DXMATRIX ortho;
-
-	float nearH = 
 
 	//Z深度バッファ
 	//device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
@@ -223,7 +220,6 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	effect->SetTechnique("mainTechnique");
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);
-	effect->SetMatrix("matrixOrtho", &ortho);
 	effect->SetTexture("planeTexture", texture);
 
 	effect->Begin(0, 0);
@@ -314,7 +310,6 @@ void InstancingBillboard::render(Camera* camera)
 	effect->SetTechnique("mainTechnique");
 	effect->SetMatrix("matrixProjection", &camera->projection);
 	effect->SetMatrix("matrixView", &camera->view);
-	effect->SetMatrix("matrixOrtho", &camera->ortho);
 	effect->SetTexture("planeTexture", texture);
 
 	effect->Begin(0, 0);

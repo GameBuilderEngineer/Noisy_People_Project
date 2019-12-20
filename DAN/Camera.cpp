@@ -265,7 +265,6 @@ void Camera::updateOrtho()
 	float nearH = nearZ * tanf(fieldOfView*0.5f)*2.0f;
 	float nearW = nearH * (float)windowWidth / (float)windowHeight;
 	D3DXMatrixOrthoLH(&ortho, nearW, nearH, nearZ, farZ);
-
 }
 
 //===================================================================================================================================

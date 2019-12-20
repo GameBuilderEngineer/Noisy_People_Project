@@ -87,6 +87,8 @@ Marker::Marker(int type)
 		}
 	}
 
+	scale = D3DXVECTOR2(0.2f, 0.2f);
+
 }
 
 //===================================================================================================================================
@@ -134,7 +136,7 @@ MarkerRenderer::MarkerRenderer()
 	//インスタンシングビルボードの初期化
 	billboard = new InstancingBillboard();
 	billboard->initialize(*textureNS::reference(textureNS::COLOR_SCALE),7,7);
-	billboard->setRenderType(InstancingBillboardNS::FOREGROUND_PASS);
+	billboard->setRenderType(InstancingBillboardNS::FOREGROUND_PASS| InstancingBillboardNS::FIXED_SIZE_PASS);
 
 	//スプライトの初期化
 	for (int i = 0; i < MARKER_NUM; i++)
@@ -339,6 +341,11 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 			case gameMasterNS::PLAYER_2P:	renderPosition = CENTER2P;	break;
 			}
 
+			//3D空間上の方向を、2D平面座標へ変換する
+			D3DXVECTOR3 addVector = conversion2D(camera, center);
+			addVector *= length;
+			addVector.x = UtilityFunction::clamp(addVector.x, -xLimit, xLimit);
+			addVector.y = UtilityFunction::clamp(addVector.y, -yLimit, yLimit);
 			renderPosition.x += direction.x * (WINDOW_WIDTH / 4 - PlayerMarkerNS::WIDTH / 2);
 			renderPosition.y += -direction.z * (WINDOW_HEIGHT / 2 - PlayerMarkerNS::HEIGHT / 2);
 

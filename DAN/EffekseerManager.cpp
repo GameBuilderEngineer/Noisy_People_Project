@@ -200,8 +200,6 @@ void EffekseerManager::stop(::Effekseer::Handle handle)
 void EffekseerManager::stop(::effekseerNS::Instance* instance)
 {
 	manager->StopEffect(instance->handle);
-	instanceList->remove(instance->nodePointer);
-	instanceList->listUpdate();
 }
 
 //===================================================================================================================================

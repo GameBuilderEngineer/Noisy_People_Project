@@ -25,6 +25,13 @@ namespace gameMasterNS {
 		TYPE_NUM
 	};
 
+	enum CAMERA_TYPE
+	{
+		CAMERA_1P = PLAYER_1P,
+		CAMERA_2P = PLAYER_2P,
+		CAMERA_OP,
+	};
+
 	const int MODEL_MALE		= staticMeshNS::YAMADA_ROBOT;
 	const int MODEL_FEMALE		= staticMeshNS::YAMADA_ROBOT2;
 	const int MODEL_TYPE_MAX = 2;

@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float4x4 matrixProjection;
 float4x4 matrixView;
-float4x4 matrixOrtho;//正射影行列
 texture planeTexture;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,27 +337,12 @@ VS_OUT vsMainFixedSize(
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f);
 
-
-	float4 orthoPosition = float4(worldPosition,1.0f);
-	//一度ビュー×プロジェクション変換を行う
-	orthoPosition = mul(orthoPosition,matrixView);
-	orthoPosition = mul(orthoPosition,matrixProjection);
-	//正射影の逆行列をかけて、正射影した場合に同じ位置に移るようなカメラ座標系の座標を計算する
-	float4x4 inverseOrtho;
-	inverseOrtho = transpose(matrixOrtho);
-	orthoPosition = mul(orthoPosition, inverseOrtho);
-	//ビュー行列の逆行列を掛けて、ワールド座標系に戻す
-	float4x4 inverseView;
-	inverseView = transpose(matrixView);
-	orthoPosition = mul(orthoPosition, inverseView);
-
 	//位置行列
-	float4x4 positionMatrix = float4x4(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		orthoPosition.x, orthoPosition.y, orthoPosition.z, 1.0f);
-
+	//float4x4 positionMatrix = float4x4(
+	//	1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, 1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, 1.0f, 0.0f,
+	//	worldPosition.x, worldPosition.y, worldPosition.z, 1.0f);
 	//X軸回転行列
 	float4x4 xRotationMatrix = float4x4(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -378,28 +362,35 @@ VS_OUT vsMainFixedSize(
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f);
 	//ビルボード処理
-	float4x4 cancelRotation = matrixView;
-	cancelRotation._41_42_43 = 0.0f;
-	cancelRotation = transpose(cancelRotation);
+	//float4x4 cancelRotation = matrixView;
+	//cancelRotation._41_42_43 = 0.0f;
+	//cancelRotation = transpose(cancelRotation);
 
 
 	//行列の演算
 	matrixWorld = mul(matrixWorld, scaleMatrix);				//*スケール
-	matrixWorld = mul(matrixWorld, xRotationMatrix);			//*x軸回転
-	matrixWorld = mul(matrixWorld, yRotationMatrix);			//*y軸回転
-	matrixWorld = mul(matrixWorld, zRotationMatrix);			//*z軸回転
-	matrixWorld = mul(matrixWorld, cancelRotation);				//*ビルボード
-	matrixWorld = mul(matrixWorld, positionMatrix);				//*移動
+	//matrixWorld = mul(matrixWorld, xRotationMatrix);			//*x軸回転
+	//matrixWorld = mul(matrixWorld, yRotationMatrix);			//*y軸回転
+	//matrixWorld = mul(matrixWorld, zRotationMatrix);			//*z軸回転
+	//matrixWorld = mul(matrixWorld, cancelRotation);				//*ビルボード
+	//matrixWorld = mul(matrixWorld, positionMatrix);				//*移動
 
 	//ビュー行列
-	matrixWorld = mul(matrixWorld, matrixView);
+	//matrixWorld = mul(matrixWorld, matrixView);
 	//プロジェクション行列
 	//matrixWorld = mul(matrixWorld, matrixProjection);
 	//正射影行列
-	matrixWorld = mul(matrixWorld, matrixOrtho);
+	//matrixWorld = mul(matrixWorld, matrixOrtho);
 
 	//頂点へ演算
 	Out.position = mul(Out.position, matrixWorld);
+
+	//ビュー×プロジェクション変換
+	float4 orthoPosition = float4(worldPosition, 1.0f);
+	orthoPosition = mul(orthoPosition, matrixView);
+	orthoPosition = mul(orthoPosition, matrixProjection);
+	orthoPosition = orthoPosition / orthoPosition.w;
+	Out.position.xy = Out.position.xy + orthoPosition.xy;
 
 	Out.uv = localUV + uv;
 
@@ -531,6 +522,7 @@ technique mainTechnique {
 		Zenable = TRUE;				//Zバッファ
 		ZWriteEnable = TRUE;				//Zバッファへの書き込み
 		CullMode = CCW;				//背面をカリング
+		MultiSampleAntialias = TRUE;		//アンチエイリアシングを有効
 		VertexShader = compile vs_2_0 vsMainFixedSize();
 		PixelShader = compile ps_2_0 psMain();
 	}
@@ -543,6 +535,7 @@ technique mainTechnique {
 		Zenable = TRUE;			//Zバッファ
 		ZWriteEnable = FALSE;		//Zバッファへの書き込み
 		CullMode = CCW;			//背面をカリング
+		MultiSampleAntialias = TRUE;		//アンチエイリアシングを有効
 
 		VertexShader = compile vs_2_0 vsMainFixedSize();
 		PixelShader = compile ps_2_0 psMain();
@@ -555,6 +548,7 @@ technique mainTechnique {
 		Zenable = FALSE;		//Zバッファ
 		ZWriteEnable = FALSE;		//Zバッファへの書き込み
 		CullMode = CCW;			//背面をカリング
+		MultiSampleAntialias = TRUE;		//アンチエイリアシングを有効
 
 		VertexShader = compile vs_2_0 vsMainFixedSize();
 		PixelShader = compile ps_2_0 psMain();
