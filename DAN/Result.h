@@ -38,7 +38,10 @@ class Result :public AbstractScene
 {
 private:
 	ResultUI resultUI;
-
+	
+	InstancingBillboard*				backGround;			//背景
+	InstancingBillboardNS::Instance*	backGroundInstance;
+	float								backGroundDistance;
 	//フィールド
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー

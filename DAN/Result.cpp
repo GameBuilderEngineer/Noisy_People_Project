@@ -102,6 +102,14 @@ void Result::initialize()
 	////再生
 	//SoundInterface::BGM->playSound(&playParameters);;
 
+	//背景ビルボード
+	backGround = new InstancingBillboard();
+	backGround->setRenderType(InstancingBillboardNS::NORMAL_PASS);
+	backGround->initialize(*textureNS::reference(textureNS::RESULT_BG));
+	backGroundInstance = new InstancingBillboardNS::Instance();
+	backGroundInstance->scale = D3DXVECTOR2(1920.0f,1080.0f);
+	backGround->generateInstance(backGroundInstance);
+	backGroundDistance = 886.0f;
 }
 
 //===================================================================================================================================
@@ -113,6 +121,7 @@ void Result::uninitialize(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
+	SAFE_DELETE(backGround);
 	resultUI.uninitialize();
 
 }
@@ -199,6 +208,8 @@ void Result::update(float _frameTime)
 		}
 	}
 
+
+
 	//リザルトフェイズが5の時のみ Enterまたは〇ボタンでタイトルへ
 	if (resultUI.resultPhase == resultUiNS::PHASE_05&&
 		input->wasKeyPressed(VK_RETURN) ||
@@ -217,6 +228,11 @@ void Result::update(float _frameTime)
 		camera->rotation(D3DXVECTOR3(0, 1, 0), CAMERA_SPEED*frameTime);
 		camera->update();
 	}
+
+	//背景の更新
+	backGroundInstance->position = *camera->target + camera->getDirectionZ()*backGroundDistance;
+	backGround->update(0.0f);
+
 }
 
 //===================================================================================================================================
@@ -250,6 +266,9 @@ void Result::render()
 //===================================================================================================================================
 void Result::render3D(Camera currentCamera)
 {
+	//背景の描画
+	backGround->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	//テストフィールドの描画
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -295,5 +314,8 @@ void Result::createGUI()
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("playbackTimer = %f", playbackTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	ImGui::InputFloat("backGroundDistance", &backGroundDistance);
+
 }
 #endif // _DEBUG
