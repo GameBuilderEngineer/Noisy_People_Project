@@ -113,6 +113,34 @@ Reticle::Reticle()
 			uv[0][0] + D3DXVECTOR2(UNIT_U, UNIT_V));
 	}
 
+	//
+	{using namespace EnergyEmpty2DNS;
+
+		energyEmpty2D = new Sprite();
+		//UI情報の設定
+		energyEmpty2D->initialize(
+			*textureNS::reference(textureNS::UI_EN_GUAGE_EMP_P1),	//テクスチャポインタ
+			SpriteNS::CENTER,								//原点
+			(int)((float)UNIT_WIDTH),						//幅
+			(int)((float)UNIT_HEIGHT),					//高さ
+			POSITION1,										//位置
+			ROTATION,										//回転
+			COLOR											//色
+		);
+		//描画UV値を設定
+		reticle2D->setUVCoord(
+			uv[0][0] + D3DXVECTOR2(0.0, 0.0),
+			uv[0][0] + D3DXVECTOR2(UNIT_U, 0.0),
+			uv[0][0] + D3DXVECTOR2(0.0, UNIT_V),
+			uv[0][0] + D3DXVECTOR2(UNIT_U, UNIT_V));
+		//残弾数
+		for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		{
+			remainingBullet[i] = 0;
+		}
+	}
+
+
 	//レティクル3D
 	{using namespace Reticle3DNS;
 		billboard = new InstancingBillboard();

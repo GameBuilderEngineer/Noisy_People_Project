@@ -17,7 +17,7 @@
 //プレイヤー
 MOVEP MoveP;
 using namespace playerNS;
-
+bool initialized = false;
 float wi = 0.0f;
 
 //=============================================================================
@@ -43,7 +43,8 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 
 
 	// 初めて初期化
-	if (FirstInit == true)
+	//if (FirstInit == true)
+	if(!initialized)
 	{
 		// アニメーションオブジェクトを作る
 		MoveP.Animation = (D3DXANIMATION*)calloc(1, sizeof(D3DXANIMATION));
@@ -130,6 +131,7 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 		MoveP.Animation->CurrentAnimID = -1;
 		ChangeAnimation(MoveP.Animation, MoveP_Idle, 1.0f, false);
 
+		initialized = true;
 	}
 
 	MoveP.Animation->MotionEnd = true;

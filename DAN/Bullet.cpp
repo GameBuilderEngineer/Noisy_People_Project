@@ -149,7 +149,7 @@ void Bullet::destroy()
 BulletManager::BulletManager()
 {
 	bulletList		= new LinkedList<Bullet*>;
-	renderer		= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
+	//renderer		= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_SCISSORS));
 	remaining		= MAGAZINE_NUM;
 	intervalTimer	= 0.0f;
 	reloadTimer		= 0.0f;
@@ -168,8 +168,8 @@ BulletManager::BulletManager()
 BulletManager::~BulletManager()
 {
 	//レンダラーの解除/終了
-	renderer->allUnRegister();
-	SAFE_DELETE(renderer);
+	//renderer->allUnRegister();
+	//SAFE_DELETE(renderer);
 	//バレットリストの削除
 	bulletList->terminate();
 	SAFE_DELETE(bulletList);
@@ -203,7 +203,7 @@ void BulletManager::update(float frameTime)
 
 	//レンダラーの更新
 	//実体が消える前に解除処理を先行する
-	renderer->update();
+	//renderer->update();
 
 	//各バレットの削除処理
 	for (int i = 0; i < bulletList->nodeNum; i++)
@@ -256,7 +256,7 @@ void BulletManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 c
 	{
 		(*bulletList->getValue(i))->render();
 	}
-	renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	//renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 //===================================================================================================================================
@@ -287,7 +287,7 @@ bool BulletManager::launch(Ray shootingRay)
 	bulletList->listUpdate();
 
 	//レンダラーへの登録
-	renderer->registerObject(newBullet);
+	//renderer->registerObject(newBullet);
 
 	//残段数の減算
 	remaining--;

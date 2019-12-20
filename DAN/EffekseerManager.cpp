@@ -49,10 +49,16 @@ EffekseerManager::EffekseerManager()
 	fileName[DAC_BULLET]		= { L"DAC_Bullet.efk" };
 	fileName[GREENING]			= { L"Greening.efk" };
 	fileName[DIGIT_MODE]		= { L"Digit_mode.efk" };
+	fileName[DIGITAL_SHIFT]		= { L"Digital_Shift.efk" };
+	fileName[SKY_VISION]		= { L"Sky_Vision_Core.efk" };
+	fileName[SHIFT_TERMINATE]	= { L"Shift_Terminate.efk" };
+	fileName[SKY_JUMP]			= { L"Sky_Jump.efk" };
 	fileName[DROP_ITEM]			= { L"Drop_Item.efk" };
 	fileName[ENEMY_DEATH]		= { L"Enemy_Death.efk" };
 	fileName[WIND]				= { L"Wind.efk" };
 	fileName[TIGER_BULLET]		= { L"Enemy_Bullet.efk" };
+	fileName[FLOWER_SHOWER]		= { L"Flower_Shower.efk" };
+	fileName[FEATHER]			= { L"Feather.efk" };
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }

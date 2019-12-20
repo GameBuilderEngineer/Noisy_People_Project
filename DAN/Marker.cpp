@@ -30,7 +30,7 @@ Marker::Marker(int type)
 		{
 			using namespace PlayerMarkerNS;
 			sprite->initialize(
-				*textureNS::reference(textureNS::UI_ICON_P1),		//テクスチャポインタ
+				*textureNS::reference(textureNS::MARK_2D_MALE),		//テクスチャポインタ
 				SpriteNS::CENTER,									//原点
 				WIDTH,												//幅
 				HEIGHT,												//高さ
@@ -45,7 +45,7 @@ Marker::Marker(int type)
 		{
 			using namespace PlayerMarkerNS;
 			sprite->initialize(
-				*textureNS::reference(textureNS::UI_ICON_P2),				//テクスチャポインタ
+				*textureNS::reference(textureNS::MARK_2D_FEMALE),	//テクスチャポインタ
 				SpriteNS::CENTER,									//原点
 				WIDTH,												//幅
 				HEIGHT,												//高さ
@@ -60,7 +60,7 @@ Marker::Marker(int type)
 		{
 			using namespace BossEnemyMarkerNS;
 			sprite->initialize(
-				*textureNS::reference(textureNS::NEKO),				//テクスチャポインタ
+				*textureNS::reference(textureNS::MARK_BOSS),		//テクスチャポインタ
 				SpriteNS::CENTER,									//原点
 				WIDTH,												//幅
 				HEIGHT,												//高さ
