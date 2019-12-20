@@ -96,7 +96,7 @@ void Game::initialize() {
 	cameraOP->setGazeDistance(500.0f);
 	cameraOP->setGaze(D3DXVECTOR3(0, 0, 0));
 	cameraOP->setUpVector(D3DXVECTOR3(0, 1, 0));
-	cameraOP->setFieldOfView((D3DX_PI / 180) * 91);
+	cameraOP->setFieldOfView((D3DX_PI / 180) * 90);
 	cameraOP->setLimitRotationTop(0.1f);
 	cameraOP->setLimitRotationBottom(0.1f);
 	cameraOP->updateOrtho();
@@ -116,7 +116,7 @@ void Game::initialize() {
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
+		camera[i].setFieldOfView( (D3DX_PI/180) * 90);
 		camera[i].setLimitRotationTop(0.1f);
 		camera[i].setLimitRotationBottom(0.3f);
 		camera[i].updateOrtho();
@@ -770,13 +770,17 @@ void Game::render3D(Camera* currentCamera) {
 	// 開発中広告
 	//ad->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
+	//3DUI
+	if (gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))
+	{
+		//レティクル3D描画
+		if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
+			reticle->render3D(nowRenderingWindow,currentCamera);
 
-	//レティクル3D描画
-	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL && gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))
-		reticle->render3D(nowRenderingWindow,currentCamera);
+		//マーカーの描画(2D/3D)両方とも描画
+		markerRenderer->render(nowRenderingWindow, currentCamera);
 
-	//マーカーの描画(2D/3D)両方とも描画
-	markerRenderer->render(nowRenderingWindow, currentCamera);
+	}
 
 #if _DEBUG
 	//4分木空間分割のライン描画

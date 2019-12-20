@@ -87,7 +87,8 @@ Marker::Marker(int type)
 		}
 	}
 
-	scale = D3DXVECTOR2(0.2f, 0.2f);
+	scale = D3DXVECTOR2(0.05f, 0.05f);
+
 
 }
 
