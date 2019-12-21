@@ -90,6 +90,8 @@ private:
 	//ターゲットオブジェクト
 	Object* target;
 	TitleUI titleUI;					//タイトルUI
+
+	TreeManager* treeManager;
 	int selectStateMemory;
 
 	int titleState;
@@ -101,7 +103,6 @@ private:
 	float moveTimer;			//移動タイマー
 	D3DXVECTOR3 startPos;		//ラープ始点
 
-	TreeManager* treeManager;	//ツリーマネージャー
 	
 	float rate;
 	float rateY;
@@ -115,7 +116,8 @@ private:
 	//D3DXVECTOR3 P0_1;
 	//D3DXVECTOR3 P1_2;
 
-
+	//ネットワーク
+	NETWORK_CLIENT* networkClient;
 
 	//カメラの軸取得変数
 	D3DXVECTOR3 cameraAxisX;			//カメラ回転軸X
@@ -143,7 +145,7 @@ public:
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
 
-	D3DXVECTOR3 BezierCurve(D3DXVECTOR3 startpoint, D3DXVECTOR3 curvepoint, D3DXVECTOR3 endpoint, float rate);
+	static D3DXVECTOR3 BezierCurve(D3DXVECTOR3 startpoint, D3DXVECTOR3 curvepoint, D3DXVECTOR3 endpoint, float rate);
 
 	float tmpVolume = 0;
 #ifdef _DEBUG

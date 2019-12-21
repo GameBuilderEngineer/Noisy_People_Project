@@ -9,6 +9,7 @@
 //【インクルード】
 //===================================================================================================================================
 #include "Title.h"
+#include "SerialCommunication.h"
 
 //===================================================================================================================================
 //【using宣言】
@@ -28,18 +29,27 @@ Title::Title(void)
 	sceneName = ("Scene -Title-");
 	nextScene = SceneList::TUTORIAL;
 
-	////再生パラメータ
-	//PLAY_PARAMETERS playParameters[2];//同時に再生したい数
-	//memset(playParameters, 0, sizeof(playParameters));//
-	////再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
-	//playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Cancel, false,1.0f,false,NULL };//SEの設定
-	//playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
-	////再生
-	//SoundInterface::BGM->playSound(&playParameters[1]);
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[2];//同時に再生したい数
+	memset(playParameters, 0, sizeof(playParameters));//
+	//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Cancel, false,1.0f,false,NULL };//SEの設定
+	playParameters[1]= { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Title, true,1.0f,false,NULL };//BGMの設定
+	//再生
+	SoundInterface::BGM->playSound(&playParameters[1]);
 	
 
 	//初期化
 	tmpVolume = 1.0f;
+
+	//ネットワークの初期化
+	networkClient = new NETWORK_CLIENT;
+	networkClient->resetDisplay();//ディスプレイシーンをリセットする
+	networkClient->send(0.0f);
+	
+
+	//ライトOFF
+	SerialCommunicationNS::send(SerialCommunicationNS::OFF);
 }
 
 //============================================================================================================================================
@@ -47,8 +57,10 @@ Title::Title(void)
 //============================================================================================================================================
 Title::~Title(void)
 {
+	//ネットワーククライアントの削除
+	SAFE_DELETE(networkClient);
 	// サウンドの停止
-	//SoundInterface::BGM->uninitSoundStop();
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================
@@ -636,7 +648,7 @@ void Title::update(float _frameTime)
 
 	//カメラ
 	camera->update();
-
+	
 }
 
 //============================================================================================================================================
@@ -742,7 +754,7 @@ void Title::render2D()
 
 #if _DEBUG
 	//WaveBall
-	//waveBall->draw();
+	waveBall->draw();
 #endif
 
 	// αテストを無効に
@@ -803,7 +815,7 @@ void Title::createGUI()
 	if (backUpTmpVolume != tmpVolume)
 	{
 		backUpTmpVolume = tmpVolume;
-		//waveBall->setVolume(tmpVolume);
+		waveBall->setVolume(tmpVolume);
 	}
 
 	ImGui::Text("controller1 LStick(%.02f,%.02f)", 

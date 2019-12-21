@@ -270,16 +270,6 @@ void Director::run(HINSTANCE _instance) {
 // [用途]基本的にループする内容
 //===================================================================================================================================
 void Director::mainLoop() {
-
-	//シリアル通信：送信
-	//if (input->isKeyDown('0'))
-	//{
-	//	serialCommunication->send(1);
-	//}
-	//else {
-	//	serialCommunication->send(2);
-	//}
-
 	
 	//リセット
 	if (input->wasKeyPressed(VK_F5))
@@ -287,13 +277,6 @@ void Director::mainLoop() {
 		scene->changeScene(SceneList::SPLASH);
 		changeNextScene();
 	}
-#ifdef _DEBUG
-	else if (input->wasKeyPressed('1'))
-	{
-		scene->changeScene(SceneList::RESULT);
-		changeNextScene();
-	}
-#endif // _DEBUG
 
 	//シーン切替フラグの確認
 	if (scene->checkChangeOrder())
@@ -581,6 +564,7 @@ void Director::changeNextScene() {
 #if _DEBUG 
 	case SceneList::CREATE:					scene = new Create();	break; 
 #endif
+	case SceneList::DISPLAY:				scene = new Display();	break;
 	case SceneList::NONE_SCENE:				break;
 	}
 	scene->setGameMaster(gameMaster);				//ゲーム管理情報をシーンへセット

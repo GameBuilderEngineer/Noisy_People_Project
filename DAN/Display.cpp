@@ -52,7 +52,7 @@ Display::Display()
 	sceneName = ("Scene -Display-");
 
 	// 次のシーン( タイトル )
-	nextScene = SceneList::SPLASH;
+	nextScene = SceneList::DISPLAY;
 }
 
 //===================================================================================================================================
@@ -172,6 +172,15 @@ void Display::update(float _frameTime)
 			}
 			////パッケージ内のイベントを解放する
 			//SAFE_DELETE_ARRAY(package->treeTable);
+
+
+		}
+
+		bool transition = package->sceneReset;
+		if (transition)
+		{
+			// シーン遷移
+			changeScene(nextScene);
 		}
 	}
 
@@ -183,22 +192,37 @@ void Display::update(float _frameTime)
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
 
-
-
-	//if (input->wasKeyPressed(VK_RETURN) ||
-	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	
-	//蔡へ
-	//通信プログラムでtarnsitionをtrueにしてシーン遷移を行う。
-	bool transition = false;
-	
-	if(transition)
+	//OFF
+	if (input->wasKeyPressed('0'))
 	{
-		// シーン遷移
-		changeScene(nextScene);
+		SerialCommunicationNS::send(SerialCommunicationNS::OFF);
 	}
-
+	//緑化状況10%
+	if (input->wasKeyPressed('1') || treeManager->getGreeningRate() >= 0.1)
+	{
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_10);
+	}
+	//緑化状況30%
+	if (input->wasKeyPressed('2') || treeManager->getGreeningRate() >= 0.3)
+	{
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_30);
+	}
+	//緑化状況50%
+	if (input->wasKeyPressed('3') || treeManager->getGreeningRate() >= 0.5)
+	{
+		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
+	}
+	//CLEAR
+	if (input->wasKeyPressed('4'))
+	{
+		SerialCommunicationNS::send(SerialCommunicationNS::CLEAR);
+	}
+	//FAILURE
+	if (input->wasKeyPressed('5'))
+	{
+		SerialCommunicationNS::send(SerialCommunicationNS::FAILURE);
+	}
+	
 	//カメラの更新
 	{
 		float rate = (sinf(sceneTimer) / 2.0f) + 0.5f;

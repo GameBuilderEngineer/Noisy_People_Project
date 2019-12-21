@@ -21,7 +21,7 @@ typedef struct
 	D3DXVECTOR3 tmpPos;
 	float timer;
 	int treeMax;
-	//TreeTable *treeTable;
+	bool sceneReset;
 	TreeTable treeTable[20];
 }PACKAGE;
 

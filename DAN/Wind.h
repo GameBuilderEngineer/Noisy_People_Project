@@ -46,21 +46,21 @@ namespace windNS
 	// 風の飛距離
 	const float DISTANCE[NUM_WIND] =
 	{
-		8.0f,
-		10.0f,
-		7.0f,
-		10.0f,
+		8.0f, 
+		6.0f,
+		4.0f,
+		6.0f,
 		8.0f,
 	};
 
 	// 風の速度
 	const float SPEED[NUM_WIND]
 	{
-		2.5f,
-		1.8f,
-		1.0f,
-		1.0f,
-		2.0f,
+		2.0f * 60,
+		1.0f * 60,
+		1.0f * 60,
+		1.0f * 60,
+		1.5f * 60,
 	};
 
 	const float EFFECT_RENDERING_DISTANCE = 200.0f;	// エフェクト描画距離
@@ -84,14 +84,18 @@ private:
 		BoundingSphere sphere;
 	};
 
+	// 風に当たっているかのフラグ
+	bool isPlayerWindReceive[gameMasterNS::PLAYER_NUM];
+
 	Wind wind[windNS::NUM_WIND];		// 風オブジェクト
 	Ray ray;							// 共用レイ
+	Player* player;						// プレイヤー
 
 
 public:
-	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
+	void initialize(Player* _player);
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	void windCollision(Player* player);
+	void windCollision(Player* _player);
 };

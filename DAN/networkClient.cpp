@@ -50,24 +50,23 @@ using namespace ServerListNS;
 NETWORK_CLIENT::NETWORK_CLIENT()
 {
 	success = false;
-
+	onResetDisplay = false;
 	//接続要求に応じる
 	if (!requestConnection)return;//接続要求がない
-
-	switch (initialConnection)
-	{
 	//---------
 	//共通処理
 	//---------
-	default:
-		// WSA
-		nRtn = WSAStartup(MAKEWORD(1, 1), &wsaData);
+	// WSA
+	nRtn = WSAStartup(MAKEWORD(1, 1), &wsaData);
 
-		// Socket
-		s = socket(AF_INET, SOCK_DGRAM, 0);
-		if (s < 0) {
-			WSACleanup();
-		}
+	// Socket
+	s = socket(AF_INET, SOCK_DGRAM, 0);
+	if (s < 0) {
+		WSACleanup();
+	}
+
+	switch (initialConnection)
+	{
 
 	//---------
 	//初期接続
@@ -79,7 +78,6 @@ NETWORK_CLIENT::NETWORK_CLIENT()
 		{
 			//接続先が選択されている場合はテストしない
 			if (connectionTarget != -1)continue;
-
 			//SERVER_NAMEをホスト名として接続を試みる
 			lpHostEnt = (HOSTENT *)gethostbyname(SERVER_NAME_LIST[i]);
 			if (lpHostEnt != NULL)
@@ -254,6 +252,8 @@ void NETWORK_CLIENT::send(float time)
 	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
 	tmpPackage.networkTester = true;
 	tmpPackage.treeMax = treeNum;
+	tmpPackage.sceneReset = onResetDisplay;
+	onResetDisplay = false;
 	if (tmpPackage.treeMax > 0)
 	{
 		memcpy(tmpPackage.treeTable, treeTable, sizeof(treeTable));
@@ -273,6 +273,14 @@ void NETWORK_CLIENT::send(float time)
 	treeNum = 0;	//0クリア
 }
 
+
+//===================================================================================================================================
+//【ディスプレイシーンのリセット信号のセット】
+//===================================================================================================================================
+void NETWORK_CLIENT::resetDisplay()
+{
+	onResetDisplay = true;
+}
 
 //===================================================================================================================================
 //【GUI】

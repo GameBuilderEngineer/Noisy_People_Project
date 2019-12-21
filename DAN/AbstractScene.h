@@ -39,8 +39,9 @@ namespace SceneList
 		CREDIT,			//クレジット
 		GAME,			//ゲーム
 		RESULT,			//リザルト
+		FINALE,			//フィナーレ
 		CREATE,			//クリエイト
-		FINALE			//フィナーレ
+		DISPLAY,		//ディスプレイ
 	};
 }
 
@@ -62,7 +63,7 @@ protected:
 	float				frameTime = 0.0f;	//フレームタイム保存変数
 	float				stopTimer = 0.0f;	//処理落ち時間
 	bool				onChange;
-	int					nextScene;	
+	int					nextScene;
 	std::string			sceneName;
 #ifdef _DEBUG
 	bool				showGUI;

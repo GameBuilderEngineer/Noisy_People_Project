@@ -58,7 +58,7 @@ namespace titleUiNS
 	const float ALPHA_SPEED = 0.7f;
 
 	//ƒƒS‚ª•‚‚«ã‚ª‚Á‚Ä‚­‚éŠÔ
-	const float FLOAT_LOGO_TIME = 5.0f;
+	const float FLOAT_LOGO_TIME = 1.0f;
 
 	enum UI_TYPE
 	{

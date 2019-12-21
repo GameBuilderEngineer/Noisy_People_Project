@@ -214,7 +214,7 @@ void Game::initialize() {
 
 	// 風
 	windManager = new WindManager;
-	windManager->initialize(*getSceneName(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	windManager->initialize(player);
 
 	// マップオブジェクト
 	mapObjectManager = new MapObjectManager;
@@ -542,7 +542,7 @@ void Game::update(float _frameTime) {
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
 	//緑化状況10%
-	if ((input->wasKeyPressed('M')) || treeManager->getGreeningRate() >= 0.1 &&
+	if (treeManager->getGreeningRate() >= 0.1 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
@@ -628,6 +628,7 @@ void Game::update(float _frameTime) {
 		SoundInterface::BGM->SetSpeed();
 	}
 
+	//ディスプレイPCへ送信
 	networkClient->send(gameMaster->getGameTime());
 
 	//フェーダーテスト
@@ -638,6 +639,10 @@ void Game::update(float _frameTime) {
 	}
 
 #ifdef _DEBUG
+	if (input->wasKeyPressed('1'))
+	{
+		changeScene(SceneList::RESULT);
+	}
 	test();
 #endif
 }
@@ -1075,7 +1080,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	//aiDirector->run();		// メタAI実行
+	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
