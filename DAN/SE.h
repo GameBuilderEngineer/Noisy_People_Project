@@ -49,18 +49,6 @@ enum SE_LIST
 	SE_WIND,
 	SE_Result,
 	SE_HurryUp,
-	Voice_Female_Damage1,
-	Voice_Female_Damage2,
-	Voice_Female_Jump1,
-	Voice_Female_Jump2,
-	Voice_Female_Shift1,
-	Voice_Female_Shift2,
-	Voice_Male_Damage1,
-	Voice_Male_Damage2,
-	Voice_Male_Jump1,
-	Voice_Male_Jump2,
-	Voice_Male_Shift1,
-	Voice_Male_Shift2,
 	SE_MAX
 };
 
@@ -76,11 +64,7 @@ static const char *SEPathList[SE_LIST::SE_MAX] = {
 	"SE_Convert.wav","SE_Greening.wav","SE_EnemyActive.wav",
 	"SE_EnemyAttack.wav","SE_EnemyAttackHit.wav","SE_EnemyDefeated.wav",
 	"SE_StartGame.wav","SE_AnnounceTelop.wav","SE_Telop.wav","SE_TimeUp.wav",
-	"SE_Bird0.wav","SE_Bird1.wav","SE_Wind.wav","SE_Result.wav","SE_HurryUp.wav",
-	"Voice_Female_Damage1.wav","Voice_Female_Damage2.wav","Voice_Female_Jump1.wav",
-	"Voice_Female_Jump2.wav","Voice_Female_Shift1.wav","Voice_Female_Shift2.wav",
-	"Voice_Male_Damage1.wav","Voice_Male_Damage2.wav","Voice_Male_Jump1.wav",
-	"Voice_Male_Jump2.wav","Voice_Male_Shift1.wav","Voice_Male_Shift2.wav",
+	"SE_Bird0.wav","SE_Bird1.wav","SE_Wind.wav","SE_Result.wav","SE_HurryUp.wav"
 };
 
 //===================================================================================================================================
