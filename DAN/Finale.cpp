@@ -45,7 +45,7 @@ void Finale::initialize()
 	target = new Object;
 	//target->initialize(&D3DXVECTOR3(0.0f, 100.0f, -150));		//ターゲットの初期位置設定
 	target->initialize(&D3DXVECTOR3(0.0f, 20.0f, -300));		//ターゲットの初期位置設定
-	
+
 	//初期フォトグラフ
 	stateCamera = CAMERA0;
 	// Camera
@@ -75,7 +75,7 @@ void Finale::initialize()
 
 	//フィナーレフィールド（テスト）
 	finaleField = new Object();
-	finaleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+	finaleFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	finaleFieldRenderer->registerObject(finaleField);
 	finaleField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -102,6 +102,9 @@ void Finale::initialize()
 	}
 	int unko = treeManager->getTreeNum();
 
+	// BGM再生開始
+	PLAY_PARAMETERS playParameter = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Finale, false,1.0f,false,NULL };
+	SoundInterface::BGM->playSound(&playParameter);
 }
 
 //============================================================================================================================================
@@ -109,6 +112,10 @@ void Finale::initialize()
 //============================================================================================================================================
 void Finale::uninitialize(void)
 {
+	// サウンドの停止
+	SoundInterface::BGM->uninitSoundStop();
+
+
 	// ライト
 	SAFE_DELETE(light);
 

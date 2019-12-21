@@ -179,8 +179,8 @@ namespace enemyNS
 	//-----------
 	const float DEATH_EFFECT_SCALE[TYPE_MAX] =
 	{
-		1.2f,		// WOLF
-		2.0f,		// TIGER
+		0.85f,		// WOLF
+		1.5f,		// TIGER
 		8.0f,		// BEAR
 	};
 
@@ -524,6 +524,7 @@ public:
 	bool getIsAttacking();
 	int getChasingPlayer();
 	int getPlayerNo();
+	bool getIsPayingNewAttention();
 
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();

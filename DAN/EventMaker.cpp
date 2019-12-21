@@ -24,6 +24,8 @@ void EventMaker::initialize(aiNS::AnalyticalData* _data,
 	treeManager = _treeManager;
 	itemManager = _itemManager;
 	telopManager = _telopManager;
+
+	isBossEntried = false;
 }
 
 
@@ -175,6 +177,9 @@ void EventMaker::makeEventEnemyAttaksTree()
 //=============================================================================
 void EventMaker::makeEventBossEntry()
 {
+	if (isBossEntried == true) { return; }
+	isBossEntried = true;
+
 	enemyNS::ENEMYSET enemySet;
 	enemySet.enemyID = enemyManager->issueNewEnemyID();
 	enemySet.type = enemyNS::BEAR;

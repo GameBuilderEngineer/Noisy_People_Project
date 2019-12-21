@@ -55,6 +55,7 @@ private:
 	GameMaster* gameMaster;								// ゲーム管理オブジェクト
 	Player* player;										// プレイヤー
 	float cntTimeDataList;								// エネミーデータリストのチェック時間カウンタ
+	bool canUpdate;										// アップデート実行フラグ
 
 public:
 	// 描画オブジェクト
@@ -94,6 +95,9 @@ public:
 	LinkedList<enemyNS::EnemyData>* getEnemyDataList();
 	std::vector<Enemy*>& getEnemyList();
 	int getNextID();
+
+	// Setter
+	void setUpdate(bool setting);
 
 #ifdef _DEBUG
 	Camera* camera;

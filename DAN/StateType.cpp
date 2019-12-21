@@ -70,7 +70,7 @@ State* RestState::transition(stateMachineNS::TransitionTimeChecker* checker, Ene
 
 	if (enemy->getNoticedOfPlayer(gameMasterNS::PLAYER_1P) == false &&
 		enemy->getNoticedOfPlayer(gameMasterNS::PLAYER_2P) == false &&
-		enemy->isPayingNewAttention &&
+		enemy->getIsPayingNewAttention() &&
 		checker[PATROL].executable)
 	{
 		enemy->preparePatrol();

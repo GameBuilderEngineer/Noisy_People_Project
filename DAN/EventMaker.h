@@ -32,6 +32,8 @@ private:
 	ItemManager* itemManager;			// アイテム管理オブジェクト
 	TelopManager* telopManager;			// テロップ管理オブジェクト
 
+	bool isBossEntried;					// ボス登場済み
+
 public:
 	void initialize(aiNS::AnalyticalData* data, OperationGenerator* _opeGenerator,
 		GameMaster* _gameMaster, Player* _player, EnemyManager* _enemyManager,

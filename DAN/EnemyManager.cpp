@@ -36,6 +36,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
 	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 	cntTimeDataList = 0.0f;
+	canUpdate = false;						// アップデートされない
 
 	// 接地フィールドとプレイヤーをセット
 	attractorMesh = _attractorMesh;
@@ -124,6 +125,8 @@ void EnemyManager::uninitialize()
 //=============================================================================
 void EnemyManager::update(float frameTime)
 {
+	if (canUpdate == false) { return; }
+
 	//----------------------------
 	// エネミーデータリストの更新
 	//----------------------------
@@ -726,3 +729,8 @@ LinkedList<enemyNS::EnemyData>* EnemyManager::getEnemyDataList() { return &enemy
 std::vector<Enemy*>& EnemyManager::getEnemyList() { return enemyList; }
 int EnemyManager::getNextID() { return nextID; }
 
+
+//=============================================================================
+// Setter
+//=============================================================================
+void EnemyManager::setUpdate(bool setting) { canUpdate = setting; }

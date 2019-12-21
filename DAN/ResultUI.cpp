@@ -23,7 +23,11 @@ ResultUI::ResultUI()
 	uiCharacter01 = new UIcharacter;//プレイヤー1
 	uiCharacter02 = new UIcharacter;;//プレイヤー2
 	uiRank = new UIrank;
-}
+
+	//中込追記
+	seParameter = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_Score2, false,NULL,false,NULL };
+	ZeroMemory(wasSEPlayed, sizeof(bool) * 2);
+} 
 
 //============================
 //デストラクタ
@@ -161,6 +165,19 @@ void ResultUI::update(float flameTime)
 	{
 		resultPhase= PHASE_03;
 	}
+
+	// 中込追記部分（サウンド）
+	if (time > 8.2f && wasSEPlayed[0] == false)
+	{
+		wasSEPlayed[0] = true;
+		SoundInterface::SE->playSound(&seParameter);
+	}
+	if (time > 9.7f && wasSEPlayed[1] == false)
+	{
+		wasSEPlayed[1] = true;
+		SoundInterface::SE->playSound(&seParameter);
+	}
+
 	if (time > 10.0f)
 	{
 		resultPhase = PHASE_04;
@@ -183,6 +200,8 @@ void ResultUI::update(float flameTime)
 			decidionBGM();
 		}
 	}
+
+	// 中込追記部分（ボイス）
 	if (time > 14.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] == false && score > 70)
 	{
 		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Finish, false, NULL, true, gameMasterNS::PLAYER_1P };

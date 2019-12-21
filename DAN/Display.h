@@ -13,14 +13,15 @@
 #include "StaticMeshRenderer.h"
 #include "TreeManager.h"
 #include "networkServer.h"
+#include "Sky.h"
 
 //===================================================================================================================================
 //【名前空間】
 //===================================================================================================================================
 namespace DisplayNS
 {
-	const D3DXQUATERNION	CAMERA_RELATIVE_QUATERNION	= D3DXQUATERNION(0.0f,300.0f, 10.0f, 0.0f);
-	const float				CAMERA_SPEED				= 30.0f;
+	const D3DXQUATERNION	CAMERA_RELATIVE_QUATERNION	= D3DXQUATERNION(0.0f,300.0f, 50.0f, 0.0f);
+	const float				CAMERA_SPEED				= 8.0f;
 
 
 	const int				SERVER_MODE					= 0x00000001;
@@ -38,6 +39,8 @@ private:
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 	NETWORK_INTERFACE*				networkServer;
 	TreeManager*					treeManager;		//ツリー
+	Sky*							sky;				//スカイドーム
+
 
 	float							syncTimer;			//同期タイマー
 

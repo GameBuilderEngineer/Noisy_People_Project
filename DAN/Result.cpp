@@ -56,7 +56,7 @@ void Result::initialize()
 
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -110,6 +110,10 @@ void Result::initialize()
 	backGroundInstance->scale = D3DXVECTOR2(1920.0f,1080.0f);
 	backGround->generateInstance(backGroundInstance);
 	backGroundDistance = 886.0f;
+
+	// BGM（ジングル）再生開始
+	PLAY_PARAMETERS playParameter = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, SE_LIST::SE_Result, false,1.0f,false,NULL };
+	SoundInterface::SE->playSound(&playParameter);
 }
 
 //===================================================================================================================================

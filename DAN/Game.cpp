@@ -49,6 +49,8 @@ Game::Game()
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_CountDown, false,NULL,false,NULL };
 	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_StartGame, false,NULL,false,NULL };
 	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_TimeUp, false,NULL,false,NULL };
+	playParameters[4] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Opening, false,1.0f,false,NULL };
+	playParameters[5] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_HurryUp, false,1.0f,false,NULL };
 }
 
 //===================================================================================================================================
@@ -313,7 +315,7 @@ void Game::initialize() {
 	//ゲーム開始時処理
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
-
+	SoundInterface::BGM->playSound(&playParameters[4]);	//オープニングBGM再生
 }
 
 //===================================================================================================================================
@@ -401,9 +403,10 @@ void Game::update(float _frameTime) {
 	}
 	if (gameMaster->playActionStartCount(0))
 	{
-		countUI->startCount(0);		//ゲーム開始
+		countUI->startCount(0);									//ゲーム開始
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
+		enemyManager->setUpdate(true);							//エネミー更新開始
 	}
 
 	//ゲームタイムの更新
@@ -497,12 +500,15 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 
-	if (input->wasKeyPressed('6')|| 
+#ifdef CHEAT_PRESENTATION
+	// プレゼン用チート機能
+	if (input->wasKeyPressed('6') || 
 		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB)||
 		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
 		aiDirector->eventMaker.makeEventBossEntry();
 	}
+#endif
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -672,13 +678,26 @@ void Game::update(float _frameTime) {
 	}
 
 	//残り時間１分
-	if (gameMaster->playActionRamaining1Min())
+	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_TELOP_ACTIVITY_LIMIT))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE4);
+		telopManager->play(telopManagerNS::TELOP_TYPE4);	// 活動限界～
 	}
-	if (gameMaster->getGameTime() <= 60)
+	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_TELOP_CANT_SENSE_GREEN))
 	{
-		SoundInterface::BGM->SetSpeed();
+		telopManager->play(telopManagerNS::TELOP_TYPE5);	// 緑化率が分からなくなってしまった～
+	}
+	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_SE_HURRY_UP))
+	{
+		SoundInterface::SE->playSound(&playParameters[5]);	// ジングル
+		SoundInterface::BGM->stopSound(playParameters[0]);
+	}
+	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_BGM_TEMP_REPLAY))
+	{
+		SoundInterface::BGM->playSound(&playParameters[0]);
+	}
+	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_SE_BGM_SPEED_UP))
+	{
+		SoundInterface::BGM->SetSpeed();					// BGM加速
 	}
 
 	//ディスプレイPCへ送信
@@ -772,10 +791,10 @@ void Game::render3D(Camera* currentCamera) {
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
 	{
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_BLACK));
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE_BLACK));
 	}
 	else {
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	}
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 

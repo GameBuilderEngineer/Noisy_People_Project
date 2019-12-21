@@ -6,6 +6,7 @@
 #include "AIDirector.h"
 #include "OperationGenerator.h"
 #include "NavigationMesh.h"
+#include "Sound.h"
 using namespace aiNS;
 
 
@@ -23,6 +24,10 @@ void OperationGenerator::initialize(aiNS::AnalyticalData* _data, GameMaster* _ga
 	treeManager		= _treeManager;
 	itemManager		= _itemManager;
 	telopManager	= _telopManager;
+
+	wasBossEntried	= false;
+	ZeroMemory(wasTelopDisplayed, sizeof(bool) * 3);
+	bossEntryTime	= 1000.0f;
 }
 
 
@@ -57,7 +62,6 @@ void OperationGenerator::enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _att
 	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
 	p->targetTree = _attackTarget;
 	enemyManager->createEnemy(p);
-
 }
 
 
@@ -66,8 +70,36 @@ void OperationGenerator::enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _att
 //=============================================================================
 void OperationGenerator::bossEntry(enemyNS::ENEMYSET _enemySet)
 {
-	telopManager->play(telopManagerNS::BOSS_ENTRY);
+	wasBossEntried = true;
+	bossEntryTime = gameMaster->getGameTime();
+	
+	// ƒTƒCƒŒƒ“–Â‚ç‚·
+	PLAY_PARAMETERS playParameter= { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_BossSpawning, false, NULL, false, NULL };
+	SoundInterface::SE->playSound(&playParameter);
+
 	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
 	p->isGeneratedBySpawnEvent = true;
 	enemyManager->createEnemy(p);
+}
+
+void OperationGenerator::updateBossEvent()
+{
+	if (wasBossEntried == false) { return; }
+	float time = gameMaster->getGameTime();
+
+	if (wasTelopDisplayed[0] == false)
+	{
+		wasTelopDisplayed[0] = true;
+		telopManager->play(telopManagerNS::BOSS_ENTRY);
+	}
+	if (time < bossEntryTime - 4.0f && wasTelopDisplayed[1] == false)
+	{
+		wasTelopDisplayed[1] = true;
+		telopManager->play(telopManagerNS::BOSS_ENTRY2);
+	}
+	if (time < bossEntryTime - 8.0f && wasTelopDisplayed[2] == false)
+	{
+		wasTelopDisplayed[2] = true;
+		telopManager->play(telopManagerNS::BOSS_ENTRY3);
+	}
 }

@@ -762,7 +762,7 @@ void Enemy::prepareAttackTree()
 void Enemy::prepareDie()
 {
 	// 死亡エフェクトの再生
-	deathEffect = new DeathEffect(&center);
+	deathEffect = new DeathEffect(&position);
 	deathEffect->scale *= DEATH_EFFECT_SCALE[enemyData->type];
 	effekseerNS::play(0, deathEffect);
 
@@ -1160,6 +1160,7 @@ bool Enemy::getNoticedOfPlayer(int playerType) { return isNoticingPlayer[playerT
 bool Enemy::getIsAttacking() { return isAttacking; }
 int Enemy::getChasingPlayer() { return chasingPlayer; };
 int Enemy::getPlayerNo() { return playerNo; };
+bool Enemy::getIsPayingNewAttention() { return isPayingNewAttention; }
 
 //=============================================================================
 // Setter

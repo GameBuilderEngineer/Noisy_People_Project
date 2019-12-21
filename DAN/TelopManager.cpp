@@ -131,6 +131,28 @@ void TelopManager::initialize()
 		telopNS::ROTATION,
 		telopNS::COLOR
 	);
+
+	// このままではデジタルツリーが壊されてしまう
+	telop[BOSS_ENTRY2]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_BOSS2),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
+
+	// 出動せよ！
+	telop[BOSS_ENTRY3]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_BOSS3),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
 }
 
 //=============================================================================

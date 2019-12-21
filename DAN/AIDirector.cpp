@@ -87,6 +87,8 @@ void AIDirector::run()
 	}
 
 	frameCnt++;
+
+	opeGenerator.updateBossEvent();
 }
 
 
