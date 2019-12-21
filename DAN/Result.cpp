@@ -138,6 +138,10 @@ void Result::update(float _frameTime)
 
 	//UIの更新処理
 	bool flag = false;
+	if (playbackTimer > gameMasterNS::GAME_TIME + gameMasterNS::ENDING_TIME)
+	{
+		flag = true;
+	}
 	resultUI.update(frameTime, flag);//ここの第二引数が2Dテクスチャが出てくるトリガーなってます
 
 	//テストフィールドの更新
