@@ -124,7 +124,7 @@ private:
 	MarkerRenderer*					markerRenderer;		//マーカー
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters[1];
+	PLAY_PARAMETERS playParameters[4];
 
 
 	//Network
