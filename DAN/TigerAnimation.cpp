@@ -318,6 +318,51 @@ void TigerAnimationManager::update(float frameTime)
 		}
 	}
 
+	//------------
+	// 3Dサウンド
+	//------------
+	if (flagState & animation[MOVE]->flag)
+	{
+		int keyFrame = animation[MOVE]->getKeyFrame();
+
+		// 再生タイミングをリセット
+		if (keyFrame == 0 || keyFrame == 2)
+		{
+			wasTimingCame = false;
+		}
+
+		// 指定のキーフレームになった最初のタイミングで再生フラグを立てる
+		if (keyFrame == 1 || keyFrame == 3)
+		{
+			if (wasTimingCame == false)
+			{
+				wasTimingCame = true;
+				canPlayMoveSound = true;
+			}
+		}
+	}
+
+	if (flagState & animation[ATTACK]->flag)
+	{
+		int keyFrame = animation[ATTACK]->getKeyFrame();
+
+		// 再生タイミングをリセット
+		if (keyFrame == 0 || keyFrame == 2)
+		{
+			wasTimingCame = false;
+		}
+
+		// 指定のキーフレームになった最初のタイミングで再生フラグを立てる
+		if (keyFrame == 1 || keyFrame == 3)
+		{
+			if (wasTimingCame == false)
+			{
+				wasTimingCame = true;
+				canPlayMoveSound = true;
+			}
+		}
+	}
+
 	// 行列計算
 	culcPartsMatrix();
 }

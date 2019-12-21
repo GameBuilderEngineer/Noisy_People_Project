@@ -147,7 +147,8 @@ void TigerBullet::hit()
 
 //=============================================================================
 // Setter
-////=============================================================================
+//=============================================================================
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,11 +157,12 @@ void TigerBullet::hit()
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-TigerBulletManager::TigerBulletManager()
+TigerBulletManager::TigerBulletManager(Player* _player)
 {
 	remaining = MAGAZINE_NUM;
 	intervalTimer = 0.0f;
 	isShot = false;
+	player = _player;
 }
 
 
@@ -254,6 +256,11 @@ bool TigerBulletManager::shoot(Ray shootingRay)
 	TigerBullet* bullet = new TigerBullet(shootingRay);
 	bulletList.insertFront(bullet);
 	bulletList.listUpdate();
+
+	// ここでサウンド再生
+	shootingRay.start;	// 音の座標
+	player[gameMasterNS::PLAYER_1P];
+	player[gameMasterNS::PLAYER_2P];
 }
 
 

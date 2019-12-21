@@ -9,6 +9,7 @@
 #include "LinkedList.h"
 #include "Sound.h"
 #include "EffekseerManager.h"
+#include "Player.h"
 
 
 // バレットエフェクトクラス
@@ -90,13 +91,14 @@ private:
 	int							remaining;		// 残弾数
 	float						intervalTimer;	// 次の発射までのインターバル時間
 	bool						isShot;			// 発射したか
+	Player*						player;			// プレイヤーポインタ（3Dサウンドに使用）
 
 public:
 	const int MAGAZINE_NUM = 3;
 	const float INTERVAL_TIME = 0.5f;
 	const float RELOAD_TIME = 2.0f;
 
-	TigerBulletManager();
+	TigerBulletManager(Player* _player);
 	~TigerBulletManager();
 	// 更新
 	void update(float frameTime);

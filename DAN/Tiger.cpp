@@ -32,7 +32,7 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 	animationManager = new TigerAnimationManager(PARTS_MAX, this, &parts[0]);
 
 	// バレットマネージャを作成
-	bulletManager = new TigerBulletManager();
+	bulletManager = new TigerBulletManager(player);
 
 	// 戦術選択に個性を付ける
 	tacticsPersonality = rand() % 4;
@@ -83,6 +83,18 @@ void Tiger::update(float frameTime)
 	// パーツアニメーションの更新	
 	animationManager->update(frameTime);
 
+	// 3Dサウンド（移動音）の再生
+	if (animationManager->canPlayMoveSound)
+	{
+		animationManager->canPlayMoveSound = false;
+
+		// ここで再生
+		// プレイヤーの座標は取得できている
+		player[gameMasterNS::PLAYER_1P].position;
+		player[gameMasterNS::PLAYER_2P].position;
+		// 後よろしく。
+	}
+
 	// バレットの更新
 	bulletManager->update(frameTime);
 }
@@ -115,6 +127,7 @@ void::Tiger::chase(float frameTime)
 			animationManager->inactivateAll();
 			animationManager->activate(animationManager->getAnimation(tigerAnimNS::SHOT));
 			shot();
+			moveDirection = player[chasingPlayer].position - position;
 		}
 		else if (tacticsTime >= 6.0f + tacticsPersonality)
 		{
