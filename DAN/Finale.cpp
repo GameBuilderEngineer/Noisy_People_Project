@@ -43,16 +43,19 @@ void Finale::initialize()
 {
 	//ターゲットオブジェクト
 	target = new Object;
-	target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
-
+	//target->initialize(&D3DXVECTOR3(0.0f, 100.0f, -150));		//ターゲットの初期位置設定
+	target->initialize(&D3DXVECTOR3(0.0f, 20.0f, -300));		//ターゲットの初期位置設定
+	
+	//初期フォトグラフ
+	stateCamera = CAMERA0;
 	// Camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	//camera->setGaze(D3DXVECTOR3(0, 100, 0));
 	//camera->setRelative(D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f));	//※元の値※
-	camera->setRelative(CAMERA_RELATIVE_QUATERNION);   //※ターゲットの初期位置に足される形になっている
+	camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -1.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
 	camera->setTarget(&target->position);
-
+	camera->setGazeDistance(500.0f);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 10);
 	camera->setViewProjection();
@@ -86,6 +89,19 @@ void Finale::initialize()
 	fixedAxisX = D3DXVECTOR3(0, 0, 0);
 	cameraRelativeQuaternion = CAMERA_RELATIVE_QUATERNION;
 
+	// ツリーの初期化
+	treeManager = new TreeManager();
+	treeManager->initialize(finaleFieldRenderer->getStaticMesh()->mesh, finaleField->getMatrixWorld());
+	// ツリーをツール情報を元に設置する
+	treeManager->createUsingTool();
+	// 非ヴィジョンの描画
+	treeManager->switchingNormalView(0);
+	for (int i = 0; i < treeManager->getTreeList().size(); i++)
+	{
+		treeManager->getTreeList()[i]->transState();
+	}
+	int unko = treeManager->getTreeNum();
+
 }
 
 //============================================================================================================================================
@@ -108,6 +124,9 @@ void Finale::uninitialize(void)
 
 	//ターゲットオブジェクト
 	SAFE_DELETE(target);
+
+	// ツリーマネージャー
+	SAFE_DELETE(treeManager);
 }
 
 //============================================================================================================================================
@@ -158,6 +177,127 @@ void Finale::update(float _frameTime)
 	D3DXVec3Cross(&Y, &fixedAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
+
+	// ツリーの更新
+	treeManager->update(frameTime);
+
+	switch (stateCamera)
+	{
+	case CAMERA0:
+		if (sceneTimer > 0.0f)
+		{
+			startPos = target->position;	//ラープ始点
+			moveTime = 3.0f;				//終点までの時間
+			moveTimer = moveTime;			//移動タイマー
+			stateCamera++;
+			//カメラの相対位置を一時保存
+			tmpCameraQ = camera->relativeQuaternion;
+		}
+		break;
+	case CAMERA1:
+
+		if (moveTimer > 0.0f)
+		{
+			moveTimer -= frameTime;
+			rate = moveTimer / moveTime;
+
+			distance = UtilityFunction::lerp(500, 20, 1.0f - rate);
+			camera->setGazeDistance(distance);
+			//D3DXVec3Lerp(&target->position, &D3DXVECTOR3(0.0f, 100.0f, -150), &D3DXVECTOR3(0.0f, 20.0f, -300), 1.0f - rate);
+			if (moveTimer <= 0)
+			{
+				target->position = D3DXVECTOR3(0.0f, 20.0f, -300);
+				startPos = target->position;	//ラープ始点
+				moveTime = 10.0f;				//終点までの時間
+				moveTimer = moveTime;			//移動タイマー
+				degreeTime = 10.0;				//回転時間（Y軸）
+				degreeTimer = degreeTime;		//回転タイマー（Y軸）
+				degreeTimeX = 2.0;				//回転時間（X軸）
+				degreeTimerX = degreeTimeX;		//回転タイマー（X軸）
+				stateCamera++;
+				//カメラの相対位置を一時保存
+				tmpCameraQ = camera->relativeQuaternion;
+			}
+
+		}
+		break;
+	case CAMERA2:
+		if (moveTimer > 0)
+		{
+			moveTimer -= frameTime;
+			degreeTimer -= frameTime;
+			rate = moveTimer / moveTime;
+
+			rateY = degreeTimer / degreeTime;
+			degreeY = UtilityFunction::lerp(0, 380, 1.0 - rateY);
+			
+			//D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-34.0f, 180.0f, -135.0f), 1.0f - rate);
+			BezierPoint1 = Title::BezierCurve(startPos, D3DXVECTOR3(-1500, 800, -150), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);//丘上
+			BezierPoint2 = Title::BezierCurve(startPos, D3DXVECTOR3(-4000, -2700, 0), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);//橋下
+			D3DXVec3Lerp(&Curve1, &BezierPoint1, &BezierPoint2, 1.0f - rate);
+			
+			BezierPoint3 = Title::BezierCurve(startPos, D3DXVECTOR3(80, 300, 2000), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);//狭道
+			D3DXVec3Lerp(&Curve2, &Curve1, &BezierPoint3, 1.0f - rate);
+			
+			BezierPoint4 = Title::BezierCurve(startPos, D3DXVECTOR3(200, 400, 2000), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);//砂浜南
+			D3DXVec3Lerp(&Curve3, &Curve2, &BezierPoint4, 1.0f - rate);
+
+			BezierPoint5 = Title::BezierCurve(startPos, D3DXVECTOR3(0, -300, 2300), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);
+			D3DXVec3Lerp(&Curve4, &Curve3, &BezierPoint5, 1.0 - rate);
+
+			BezierPoint6 = Title::BezierCurve(startPos, D3DXVECTOR3(1300, 200, -300), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);
+			D3DXVec3Lerp(&target->position, &Curve4, &BezierPoint6, 1.0 - rate);
+
+			if (degreeTimer > 0)
+			{
+				//前のカメラの相対位置に補正する
+				camera->relativeQuaternion = tmpCameraQ;
+				camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+				if (moveTimer < 1.0f)
+				{
+					degreeTimerX -= frameTime;
+					rateX = degreeTimerX / degreeTimeX;
+					degreeX = UtilityFunction::lerp(0, 20, 1.0 - rateX);
+
+					camera->rotation(fixedAxisX, degreeX);
+				}
+			}
+			if (moveTimer <= 0)
+			{
+				target->position = D3DXVECTOR3(-70.0f, 150.0f, -370);
+				startPos = target->position;
+				moveTime = 5.0f;//待機
+				moveTimer = moveTime;
+				//degreeTimer = 6.0f;
+				//degreeTime = degreeTimer;
+				////カメラの相対位置を一時保存
+				//camera->rotation(D3DXVECTOR3(0, 1, 0), 55.0f);
+				//camera->rotation(fixedAxisX, 45.0f);
+				//tmpCameraQ = camera->relativeQuaternion;
+				stateCamera++;
+
+
+			}
+		}
+		break;
+	case CAMERA3:
+		if (moveTimer > 0)
+		{
+			moveTimer -= frameTime;
+			if (moveTimer <= 0)
+			{
+				changeScene(nextScene);
+			}
+
+
+		}
+
+
+		break;
+	default:
+		break;
+	}
+
 
 
 	//カメラ移動
@@ -260,12 +400,14 @@ void Finale::render()
 void Finale::render3D(Camera _currentCamera)
 {
 
-	//タイトルフィールド（テスト）
+	//フィナーレフィールド（テスト）
 	finaleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	//スカイフィールドの描画
 	sky->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
+	//ツリーの描画
+	treeManager->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
 }
 
 //============================================================================================================================================
