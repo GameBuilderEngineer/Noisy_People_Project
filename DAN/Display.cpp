@@ -52,7 +52,7 @@ Display::Display()
 	sceneName = ("Scene -Display-");
 
 	// 次のシーン( タイトル )
-	nextScene = SceneList::SPLASH;
+	nextScene = SceneList::DISPLAY;
 }
 
 //===================================================================================================================================
@@ -221,7 +221,7 @@ void Display::update(float _frameTime)
 	
 	//蔡へ
 	//通信プログラムでtarnsitionをtrueにしてシーン遷移を行う。
-	bool transition = false;
+	bool transition = package->sceneReset;
 	
 	if(transition)
 	{

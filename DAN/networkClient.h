@@ -31,18 +31,23 @@
 //===================================================================================================================================
 class NETWORK_CLIENT
 {
+//Method
 public:
 	NETWORK_CLIENT();
 	~NETWORK_CLIENT();
 
+	void send(float time);
+	void outputGUI();
+	static void setSendTreeTable(const TreeTable inTreeTable);
+	void resetDisplay();
+
+//Data
+public:
 	static bool requestConnection;//Ú‘±—v‹
 	static bool initialConnection;//‰ŠúÚ‘±
 	static int connectionTarget;//Ú‘±æ
 	bool success;
-
-	void send(float time);
-	void outputGUI();
-	static void setSendTreeTable(const TreeTable inTreeTable);
+	bool onResetDisplay;
 private:
 	int packageID;
 	WSADATA wsaData;

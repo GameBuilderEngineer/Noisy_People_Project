@@ -50,7 +50,7 @@ using namespace ServerListNS;
 NETWORK_CLIENT::NETWORK_CLIENT()
 {
 	success = false;
-
+	onResetDisplay = false;
 	//接続要求に応じる
 	if (!requestConnection)return;//接続要求がない
 	//---------
@@ -252,6 +252,8 @@ void NETWORK_CLIENT::send(float time)
 	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
 	tmpPackage.networkTester = true;
 	tmpPackage.treeMax = treeNum;
+	tmpPackage.sceneReset = onResetDisplay;
+	onResetDisplay = false;
 	if (tmpPackage.treeMax > 0)
 	{
 		memcpy(tmpPackage.treeTable, treeTable, sizeof(treeTable));
@@ -271,6 +273,14 @@ void NETWORK_CLIENT::send(float time)
 	treeNum = 0;	//0クリア
 }
 
+
+//===================================================================================================================================
+//【ディスプレイシーンのリセット信号のセット】
+//===================================================================================================================================
+void NETWORK_CLIENT::resetDisplay()
+{
+	onResetDisplay = true;
+}
 
 //===================================================================================================================================
 //【GUI】

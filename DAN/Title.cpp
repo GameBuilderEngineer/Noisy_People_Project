@@ -44,8 +44,9 @@ Title::Title(void)
 
 	//ネットワークの初期化
 	networkClient = new NETWORK_CLIENT;
+	networkClient->resetDisplay();//ディスプレイシーンをリセットする
 	networkClient->send(0.0f);
-
+	
 
 	//ライトOFF
 	SerialCommunicationNS::send(SerialCommunicationNS::OFF);
