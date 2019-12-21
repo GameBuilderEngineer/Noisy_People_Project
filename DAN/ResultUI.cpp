@@ -147,59 +147,63 @@ void ResultUI::render(bool texFlag)
 //更新
 //フレームタイムをもたせて一定時間経過でフェイズを更新
 //============================
-void ResultUI::update(float flameTime)
+void ResultUI::update(float flameTime,bool texStart)
 {
-	time += flameTime;
+	if (texStart==true)
+	{
 
-	//フェイズの更新
-	if (time > PHASE_TIME)
-	{
-		resultPhase = PHASE_02;
-		uiNumber[uiNumberNS::GREENIG_PERSENT].update(greenigPersent);
-	}
-	if (time > 5.0f)
-	{
-		resultPhase= PHASE_03;
-	}
-	if (time > 10.0f)
-	{
-		resultPhase = PHASE_04;
-		//数字
-		int score[uiNumberNS::GREENIG_PERSENT] = { greeningNum01,greeningNum02,defeat01,defeat02 };
-		for (int i = 0; i < uiNumberNS::GREENIG_PERSENT; i++)
+		time += flameTime;
+
+		//フェイズの更新
+		if (time > PHASE_TIME)
 		{
-			uiNumber[i].update(score[i]);
+			resultPhase = PHASE_02;
+			uiNumber[uiNumberNS::GREENIG_PERSENT].update(greenigPersent);
 		}
-		
-	}
-	if (time > 12.0f)
-	{
-		resultPhase = PHASE_05;
-		//ランク
-		uiRank->update(rank01, rank02);
-		//再生
+		if (time > 5.0f)
+		{
+			resultPhase= PHASE_03;
+		}
+		if (time > 10.0f)
+		{
+			resultPhase = PHASE_04;
+			//数字
+			int score[uiNumberNS::GREENIG_PERSENT] = { greeningNum01,greeningNum02,defeat01,defeat02 };
+			for (int i = 0; i < uiNumberNS::GREENIG_PERSENT; i++)
+			{
+			uiNumber[i].update(score[i]);
+			}
+			
+		}
+		if (time > 12.0f)
+		{
+			resultPhase = PHASE_05;
+			//ランク
+			uiRank->update(rank01, rank02);
+			//再生
 		if (playedBGM)
 		{
 			decidionBGM();
 		}
 	}
-	if (time > 14.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] == false && score > 70)
-	{
-		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Finish, false, NULL, false, NULL };
-		SoundInterface::SE->playSound(&voiceFinish);
-		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] = true;
+		if (time > 14.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] == false && score > 70)
+		{
+			PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Finish, false, NULL, false, NULL };
+			SoundInterface::SE->playSound(&voiceFinish);
+			gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] = true;
+	
+		}
+		if (time > 16.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] == false && score > 70)
+		{
+			PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Finish, false, NULL, false, NULL };
+			SoundInterface::SE->playSound(&voiceFinish);
+			gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] = true;
+		}
 
+		uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
+		uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
+		uiTexture.update(resultPhase);		//テクスチャの更新
 	}
-	if (time > 16.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] == false && score > 70)
-	{
-		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Finish, false, NULL, false, NULL };
-		SoundInterface::SE->playSound(&voiceFinish);
-		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] = true;
-	}
-
-	uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
-	uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
-	uiTexture.update(resultPhase);		//テクスチャの更新
 	
 }
 

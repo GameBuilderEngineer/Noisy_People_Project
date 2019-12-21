@@ -137,7 +137,8 @@ void Result::update(float _frameTime)
 	playbackTimer += frameTime*PLAYBACK_SPEED;
 
 	//UIの更新処理
-	resultUI.update(frameTime);
+	bool flag = false;
+	resultUI.update(frameTime, flag);//ここの第二引数が2Dテクスチャが出てくるトリガーなってます
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
