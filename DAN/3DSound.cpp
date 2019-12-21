@@ -203,8 +203,8 @@ void S3DManager::MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *l
 			&MidSendList[tmpSoundParameters->playParameters.playerID],
 			NULL);
 
-		//デフォールトボリューム
-		tmpSoundParameters->SourceVoice->SetVolume(0.0f);
+		////デフォールトボリューム
+		//tmpSoundParameters->SourceVoice->SetVolume(0.0f);
 
 		//バッファの提出
 		tmpSoundParameters->SourceVoice->SubmitSourceBuffer(&listBuffer->buffer);
