@@ -314,10 +314,6 @@ void Game::initialize() {
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 
-
-	//Ä¶
-	SoundInterface::SE->playSound(&playParameters[0]);
-
 }
 
 //===================================================================================================================================
@@ -356,8 +352,8 @@ void Game::uninitialize() {
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
-	UninitMoveP();
-	UninitMoveP1();
+	//UninitMoveP();
+	//UninitMoveP1();
 	//UninitEquipment();
 }
 
