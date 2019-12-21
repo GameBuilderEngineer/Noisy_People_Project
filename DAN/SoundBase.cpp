@@ -22,28 +22,28 @@ SoundBase::SoundBase()
 	voiceIDCnt = 0;
 
 	//エフェクトチェーン
-	//SaiDelayApo = (IXAPO *)new SAI_DELAY_REVERB_APO();
-	//SaiFadeInApo = (IXAPO *)new SAI_FADE_IN_APO();
+	SaiDelayApo = (IXAPO *)new SAI_DELAY_REVERB_APO();
+	SaiFadeInApo = (IXAPO *)new SAI_FADE_IN_APO();
 
 	// パラメータ
-	//saiApoDelayParameters.reverbVol = 0.5f;
-	//saiApoDelayParameters.delayTime = 0.2f;
-	//saiApoDelayParameters.dryVol = 0.5f;
-	//saiApoDelayParameters.wetVol = 0.5f;
+	saiApoDelayParameters.reverbVol = 0.5f;
+	saiApoDelayParameters.delayTime = 0.2f;
+	saiApoDelayParameters.dryVol = 0.5f;
+	saiApoDelayParameters.wetVol = 0.5f;
 
-	//saiApoFadeInParameters.fadeTime = 0.1f;
+	saiApoFadeInParameters.fadeTime = 0.1f;
 
 	// ディスクリプタ
-	//sourceDescriptor[0].pEffect = SaiDelayApo;
-	//sourceDescriptor[0].InitialState = true;
-	//sourceDescriptor[0].OutputChannels = ENDPOINT_INPUT_CHANNEL;
-	//sourceDescriptor[1].pEffect = SaiFadeInApo;
-	//sourceDescriptor[1].InitialState = true;
-	//sourceDescriptor[1].OutputChannels = ENDPOINT_INPUT_CHANNEL;
+	sourceDescriptor[0].pEffect = SaiDelayApo;
+	sourceDescriptor[0].InitialState = false;
+	sourceDescriptor[0].OutputChannels = ENDPOINT_INPUT_CHANNEL;
+	sourceDescriptor[1].pEffect = SaiFadeInApo;
+	sourceDescriptor[1].InitialState = false;
+	sourceDescriptor[1].OutputChannels = ENDPOINT_INPUT_CHANNEL;
 
 	// チェン
-	//chain.EffectCount = 2;
-	//chain.pEffectDescriptors = sourceDescriptor;
+	chain.EffectCount = 2;
+	chain.pEffectDescriptors = sourceDescriptor;
 	
 	//エンドポイントボイスの作成
 	if (FAILED(SoundInterface::GetXAudio2Interface()->CreateSubmixVoice(
@@ -52,13 +52,14 @@ SoundBase::SoundBase()
 		ENDPOINT_SAMPLE_RATE,								//サンプリングレート(入力)
 		XAUDIO2_VOICE_USEFILTER,								//フィルター機能
 		1,													//プロセスステージ
-		NULL)))												//送信リスト(NULL:Mastering Voiceへの単一の出力となる)
+		NULL,
+		&chain)))												//送信リスト(NULL:Mastering Voiceへの単一の出力となる)
 	{														//エフェクトチェーン
 		return;
 	}
 
-	//EndpointVoice->SetEffectParameters(0, &saiApoDelayParameters, sizeof(saiApoDelayParameters));
-	//EndpointVoice->SetEffectParameters(1, &saiApoFadeInParameters, sizeof(saiApoFadeInParameters));
+	EndpointVoice->SetEffectParameters(0, &saiApoDelayParameters, sizeof(saiApoDelayParameters));
+	EndpointVoice->SetEffectParameters(1, &saiApoFadeInParameters, sizeof(saiApoFadeInParameters));
 
 	//エンドポイントボイスへの送信リストの作成
 	SendDescriptor = { XAUDIO2_SEND_USEFILTER,EndpointVoice };
@@ -77,8 +78,8 @@ SoundBase::~SoundBase()
 	uninitSoundStop();
 
 	//APO解放
-	//SAFE_RELEASE(SaiDelayApo);
-	//SAFE_DELETE(SaiDelayApo);
+	SAFE_RELEASE(SaiDelayApo);
+	SAFE_DELETE(SaiDelayApo);
 
 	//バッファ解放処理
 	for (int i = 0; i < bufferMax; i++)

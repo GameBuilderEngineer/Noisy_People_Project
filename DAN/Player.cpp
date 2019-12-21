@@ -114,13 +114,13 @@ void Player::initialize(PlayerTable info)
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
 	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	shiftStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftStart, false ,NULL,false,NULL };
-	shiftFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftFinish, false ,NULL,false,NULL };
-	visionSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Vision, false ,NULL,false,NULL };
-	visionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionStart, false ,NULL,false,NULL };
-	visionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL };
-	skyVisionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
-	skyVisionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
+	shiftStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_ShiftStart, false ,NULL,true,infomation.playerType };
+	shiftFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_ShiftFinish, false ,NULL,true,infomation.playerType };
+	visionSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_Vision, false ,NULL,true,infomation.playerType };
+	visionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_VisionStart, false ,NULL,true,infomation.playerType };
+	visionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_VisionFinish, false ,NULL,true,infomation.playerType };
+	skyVisionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_SkyVisionStart, false ,NULL,true,infomation.playerType };
+	skyVisionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_SkyVisionStart, false ,NULL,true,infomation.playerType };
 	// (以下ボイス)
 	if (infomation.playerType == gameMasterNS::PLAYER_1P)
 	{// 男性キャラ

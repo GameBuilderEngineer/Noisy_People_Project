@@ -23,17 +23,28 @@
 //===================================================================================================================================
 enum S3D_LIST
 {
-	S3D_FOOTSTEP_01,
-	S3D_FOOTSTEP_02,
-	S3D_FOOTSTEP_03,
+	S3D_ShiftStart,
+	S3D_ShiftFinish,
+	S3D_Vision,
+	S3D_VisionStart,
+	S3D_VisionFinish,
+	S3D_SkyVisionStart,
+	S3D_SkyVisionFinish,
 	S3D_PLAYER_WALK,
+	Voice_Male_Start,
+	Voice_Male_Finish,
+	Voice_Female_Start,
+	Voice_Female_Finish,
 	S3D_MAX
 };
 
 //===================================================================================================================================
 //ÅyíËêîíËã`Åz
 //===================================================================================================================================
-static const char *S3DPathList[] = { "3D_ADD_TREE01.wav","3D_Enemy_Walk00.wav","3D_Enemy_Walk01.wav","3D_PLAYER_WALK.wav" };
+static const char *S3DPathList[] = { "3D_ShiftStart.wav", "3D_ShiftFinish.wav","3D_Vision.wav",
+									"3D_VisionStart.wav","3D_VisionFinish.wav",	"3D_SkyVisionStart.wav",
+									"3D_SkyVisionFinish.wav","3D_PLAYER_WALK.wav" ,"Voice_Male_Start.wav" ,
+									"Voice_Male_Finish.wav","Voice_Female_Start.wav","Voice_Female_Finish.wav" };
 
 //===================================================================================================================================
 //ÅyÉTÉEÉìÉh(XAudio2)Åz
