@@ -45,8 +45,7 @@ Game::Game()
 	nextScene = SceneList::RESULT;
 
 	//再生パラメータ
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
 		
 }
 
@@ -313,10 +312,6 @@ void Game::initialize() {
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 
-
-	//再生
-	SoundInterface::SE->playSound(&playParameters[0]);
-
 }
 
 //===================================================================================================================================
@@ -355,8 +350,8 @@ void Game::uninitialize() {
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
-	UninitMoveP();
-	UninitMoveP1();
+	//UninitMoveP();
+	//UninitMoveP1();
 	//UninitEquipment();
 }
 
@@ -394,7 +389,7 @@ void Game::update(float _frameTime) {
 	{
 		countUI->startCount(0);		//ゲーム開始
 		//BGM再生
-		SoundInterface::BGM->playSound(&playParameters[1]);
+		SoundInterface::BGM->playSound(&playParameters[0]);
 	}
 
 	//ゲームタイムの更新

@@ -75,6 +75,9 @@ Director::~Director() {
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
 
+	UninitMoveP();
+	UninitMoveP1();
+
 	// COMの終了処理
 	CoUninitialize();
 
@@ -149,7 +152,8 @@ HRESULT Director::initialize() {
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
 	//animationLoader->initialize(d3d->device);
-
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 
 
 	//scene
