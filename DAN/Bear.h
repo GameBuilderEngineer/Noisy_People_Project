@@ -55,6 +55,9 @@ public:
 	void attackTree(float frameTime) override;	// ツリー攻撃ステート
 	void die(float frameTime) override;			// 死亡ステート
 
+	// Sound
+	LinkedList<int>*soundIDList;
+
 	// Getter
 	Object* getParts(int type);
 

@@ -31,6 +31,9 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 
 	// アニメーションマネージャを初期化
 	animationManager = new BearAnimationManager(PARTS_MAX, this, &parts[0]);
+	soundIDList = new LinkedList<int>;
+	soundIDList->insertFront();
+	soundIDList->listUpdate();
 }
 
 
@@ -39,7 +42,8 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 //=============================================================================
 Bear::~Bear()
 {
-
+	soundIDList->terminate();
+	SAFE_DELETE(soundIDList);
 }
 
 
@@ -66,14 +70,27 @@ void Bear::update(float frameTime)
 	{
 		animationManager->canPlayMoveSound = false;
 
-		
-		getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+		PLAY_PARAMETERS tmpPlayParmeters =
+			getPlayParameters(FOOT_STEPS_SE, enemyData->type);
 
 		// ここで再生
-		// プレイヤーの座標は取得できている
-		player[gameMasterNS::PLAYER_1P].position;
-		player[gameMasterNS::PLAYER_2P].position;
-		// 後よろしく。
+		for (int i = 0; i < 2; i++)
+		{
+			tmpPlayParmeters.playerID = i;
+			SoundInterface::S3D->playSound(&tmpPlayParmeters);
+			*soundIDList->getValue(soundIDList->nodeNum - 1) = tmpPlayParmeters.voiceID;
+
+			// ボリューム
+			float distance = D3DXVec3Length(&(position - player[i].position));
+			float volume = 0.0f;
+			if (distance < DISTANCE_MAX)
+			{
+				volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
+			}
+
+			// ボリューム調整
+			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
+		}
 	}
 }
 
