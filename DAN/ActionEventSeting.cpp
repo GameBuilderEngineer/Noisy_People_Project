@@ -176,12 +176,12 @@ HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 		break;
 	case MovePMoveVoice:
 		//‚±‚±•à‚­‰¹‚ð“ü‚ê‚é
-		playParameters.soundId = gameMasterNS::PLAYER_1P;
+		playParameters.playerID = gameMasterNS::PLAYER_1P;
 		SoundInterface::S3D->playSound(&playParameters);
 		break;
 	case MoveP1MoveVoice:
 		//‚±‚±•à‚­‰¹‚ð“ü‚ê‚é
-		playParameters.soundId = gameMasterNS::PLAYER_2P;
+		playParameters.playerID = gameMasterNS::PLAYER_2P;
 		SoundInterface::S3D->playSound(&playParameters);
 		break;
 	case MovePJumpFireStart:

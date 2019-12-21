@@ -35,10 +35,10 @@ SoundBase::SoundBase()
 
 	// ディスクリプタ
 	sourceDescriptor[0].pEffect = SaiDelayApo;
-	sourceDescriptor[0].InitialState = true;
+	sourceDescriptor[0].InitialState = false;
 	sourceDescriptor[0].OutputChannels = ENDPOINT_INPUT_CHANNEL;
 	sourceDescriptor[1].pEffect = SaiFadeInApo;
-	sourceDescriptor[1].InitialState = true;
+	sourceDescriptor[1].InitialState = false;
 	sourceDescriptor[1].OutputChannels = ENDPOINT_INPUT_CHANNEL;
 
 	// チェン

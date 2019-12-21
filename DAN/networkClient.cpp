@@ -29,6 +29,7 @@ NETWORK_CLIENT::NETWORK_CLIENT()
 	if (lpHostEnt == NULL) {
 		addr = inet_addr(szServer);
 		lpHostEnt = (HOSTENT *)gethostbyaddr((char *)&addr, 4, AF_INET);
+		// ERROY PROSS
 		return;
 	}
 
