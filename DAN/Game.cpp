@@ -220,7 +220,7 @@ void Game::initialize() {
 
 	// 風
 	windManager = new WindManager;
-	windManager->initialize(*getSceneName(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	windManager->initialize(player);
 
 	// マップオブジェクト
 	mapObjectManager = new MapObjectManager;
@@ -1070,7 +1070,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	//aiDirector->run();		// メタAI実行
+	aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================
