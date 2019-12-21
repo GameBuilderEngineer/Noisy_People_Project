@@ -53,21 +53,20 @@ NETWORK_CLIENT::NETWORK_CLIENT()
 
 	//接続要求に応じる
 	if (!requestConnection)return;//接続要求がない
-
-	switch (initialConnection)
-	{
 	//---------
 	//共通処理
 	//---------
-	default:
-		// WSA
-		nRtn = WSAStartup(MAKEWORD(1, 1), &wsaData);
+	// WSA
+	nRtn = WSAStartup(MAKEWORD(1, 1), &wsaData);
 
-		// Socket
-		s = socket(AF_INET, SOCK_DGRAM, 0);
-		if (s < 0) {
-			WSACleanup();
-		}
+	// Socket
+	s = socket(AF_INET, SOCK_DGRAM, 0);
+	if (s < 0) {
+		WSACleanup();
+	}
+
+	switch (initialConnection)
+	{
 
 	//---------
 	//初期接続
@@ -79,7 +78,6 @@ NETWORK_CLIENT::NETWORK_CLIENT()
 		{
 			//接続先が選択されている場合はテストしない
 			if (connectionTarget != -1)continue;
-
 			//SERVER_NAMEをホスト名として接続を試みる
 			lpHostEnt = (HOSTENT *)gethostbyname(SERVER_NAME_LIST[i]);
 			if (lpHostEnt != NULL)
