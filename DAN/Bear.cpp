@@ -73,7 +73,6 @@ void Bear::update(float frameTime)
 		{
 			tmpPlayParmeters.playerID = i;
 			SoundInterface::S3D->playSound(&tmpPlayParmeters);
-
 			// ボリューム
 			float distance = D3DXVec3Length(&(position - player[i].position));
 			float volume = 0.0f;
@@ -81,7 +80,6 @@ void Bear::update(float frameTime)
 			{
 				volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
 			}
-
 			// ボリューム調整
 			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
 		}

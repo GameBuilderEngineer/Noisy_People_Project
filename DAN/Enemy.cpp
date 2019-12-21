@@ -947,15 +947,15 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 		switch (enemyType)
 		{
 		case WOLF:
-			parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// ‰¼
+			parameter.soundId = S3D_LIST::S3D_Wolf_Foot_Step;// ‰¼
 			break;
 
 		case TIGER:
-			parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// ‰¼
+			parameter.soundId = S3D_LIST::S3D_Tiger_Foot_Step;// ‰¼
 			break;
 
 		case BEAR:
-			parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// ‰¼
+			parameter.soundId = S3D_LIST::S3D_Bear_Foot_Step;// ‰¼
 			break;
 		}
 		break;
@@ -965,7 +965,7 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 	//--------
 	case ATTACK_SE:
 	{
-		parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// ‰¼
+		parameter.soundId = S3D_LIST::S3D_ShiftStart;// ‰¼
 	}
 	break;
 
@@ -974,7 +974,7 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 	//--------
 	case DIE_SE:
 	{
-		parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// ‰¼
+		parameter.soundId = S3D_LIST::S3D_ShiftStart;// ‰¼
 	}
 	break;
 

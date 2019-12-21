@@ -32,15 +32,15 @@ Wolf::Wolf(ConstructionPackage constructionPackage): Enemy(constructionPackage)
 	// アニメーションマネージャを初期化
 	animationManager = new WolfAnimationManager(PARTS_MAX, this, &parts[0]);
 	
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	playParmeters[i] =
-	//		getPlayParameters(FOOT_STEPS_SE, enemyData->type);
-	//	playParmeters[i].loop = true;
-	//	playParmeters[i].playerID = i;
-	//	SoundInterface::S3D->playSound(&playParmeters[i]);
-
-	//}
+	for (int i = 0; i < 2; i++)
+	{
+		playParmeters[i] =
+			getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+		playParmeters[i].loop = true;
+		playParmeters[i].playerID = i;
+		SoundInterface::S3D->playSound(&playParmeters[i]);
+		SoundInterface::S3D->SetVolume(playParmeters[i], 0.0f);
+	}
 }
 
 
@@ -51,7 +51,7 @@ Wolf::~Wolf()
 {
 	for (int i = 0; i < 2; i++)
 	{
-		//SoundInterface::S3D->stopSound(playParmeters[i]);
+		SoundInterface::S3D->stopSound(playParmeters[i]);
 	}
 }
 
@@ -79,28 +79,23 @@ void Wolf::update(float frameTime)
 	{
 		animationManager->canPlayMoveSound = false;
 
-		//// ここで再生
-		//for (int i = 0; i < 2; i++)
-		//{
-		//	// ボリューム
-		//	float distance = D3DXVec3Length(&(position - player[i].position));
-		//	float volume = 0.0f;
-		//	if (distance < DISTANCE_MAX)
-		//	{
-		//		volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
-		//	}
+		// ここで再生
+		for (int i = 0; i < 2; i++)
+		{
+			// ボリューム
+			float distance = D3DXVec3Length(&(position - player[i].position));
+			float volume = 0.0f;
+			if (distance < DISTANCE_MAX)
+			{
+				volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
+			}
 
-		//	if (enemyData->state != REST || enemyData->state != DIE)
-		//	{
-		//		// ボリューム調整
-		//		SoundInterface::S3D->SetVolume(playParmeters[i], volume);
-		//	}
-		//	else
-		//	{
-		//		// ボリューム調整
-		//		SoundInterface::S3D->SetVolume(playParmeters[i], 0.0f);
-		//	}
-		//}
+			if (enemyData->state != REST || enemyData->state != DIE)
+			{
+				// ボリューム調整
+				SoundInterface::S3D->SetVolume(playParmeters[i], volume);
+			}
+		}
 	}
 }
 
@@ -145,6 +140,10 @@ void::Wolf::patrol(float frameTime)
 //=============================================================================
 void::Wolf::rest(float frameTime)
 {
+	// ボリューム調整
+	SoundInterface::S3D->SetVolume(playParmeters[0], 0.0f);
+	SoundInterface::S3D->SetVolume(playParmeters[1], 0.0f);
+ 
 	Enemy::rest(frameTime);
 }
 
@@ -170,6 +169,11 @@ void::Wolf::die(float frameTime)
 		EnemyManager::wolfArmRenderer->unRegisterObjectByID(parts[ARM]->id);
 		EnemyManager::wolfArmRenderer->updateAccessList();
 	}
+	
+	// ボリューム調整
+	SoundInterface::S3D->SetVolume(playParmeters[0], 0.0f);
+	SoundInterface::S3D->SetVolume(playParmeters[1], 0.0f);
+
 	Enemy::die(frameTime);
 }
 
