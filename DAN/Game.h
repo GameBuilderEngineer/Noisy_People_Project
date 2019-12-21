@@ -134,6 +134,9 @@ private:
 	//オープニングカメラ
 	Camera* cameraOP;
 
+	//BOSSカメラ
+	Camera* cameraBoss;
+
 	int count;
 public:
 	Game();
