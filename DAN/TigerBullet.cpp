@@ -5,6 +5,10 @@
 //-----------------------------------------------------------------------------
 #include "TigerBullet.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// バレット ///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -12,6 +16,9 @@ TigerBullet::TigerBullet(Ray shootingRay)
 {
 	launchPosition = shootingRay.start;
 	bulletSpeed = shootingRay.direction * SPEED;
+	// フィールド初期衝突位置を設定
+	fieldCollisionPos = launchPosition + shootingRay.direction * shootingRay.distance;
+	initialDistance = shootingRay.distance;
 
 	// 弾道の初期化
 	ballisticRay.initialize(launchPosition, shootingRay.direction);
@@ -28,8 +35,6 @@ TigerBullet::TigerBullet(Ray shootingRay)
 	existenceTimer = EXIST_TIME;									// 存在時間
 	endPoint = launchPosition + bulletSpeed * EXIST_TIME;			// 何にも衝突しなかった場合の終着位置
 	isHit = false;													// 衝突フラグをオフ
-
-	radius = 0.5f;
 
 	// 弾エフェクトの再生
 	tigerBulletEffect = new TigerBulletEffect(&matrixWorld);
@@ -62,7 +67,13 @@ void TigerBullet::update(float frameTime)
 	D3DXVec3Lerp(&position, &ballisticRay.start, &endPoint, 1.0f - existenceTimer / EXIST_TIME);
 	Object::update();
 
-	// 前フレームの衝突判定で衝突していればtrue
+	float nowDistance = Base::between2VectorLength(ballisticRay.start, position);
+	if (initialDistance < nowDistance)
+	{
+		isHit = true;
+	}
+
+	// 上か前フレームの衝突判定で衝突していればtrue
 	if (isHit)
 	{
 		hit();
@@ -265,4 +276,13 @@ void TigerBulletManager::destroy(TigerBullet* bullet, int nodeNumber)
 LinkedList<TigerBullet*>* TigerBulletManager::getBulletList()
 {
 	return &bulletList;
+}
+
+
+//=============================================================================
+// 残弾数の取得
+//=============================================================================
+int TigerBulletManager::getRemaining()
+{
+	return remaining;
 }
