@@ -31,9 +31,6 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 
 	// アニメーションマネージャを初期化
 	animationManager = new BearAnimationManager(PARTS_MAX, this, &parts[0]);
-	soundIDList = new LinkedList<int>;
-	soundIDList->insertFront();
-	soundIDList->listUpdate();
 }
 
 
@@ -42,8 +39,6 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 //=============================================================================
 Bear::~Bear()
 {
-	soundIDList->terminate();
-	SAFE_DELETE(soundIDList);
 }
 
 
@@ -78,7 +73,6 @@ void Bear::update(float frameTime)
 		{
 			tmpPlayParmeters.playerID = i;
 			SoundInterface::S3D->playSound(&tmpPlayParmeters);
-			*soundIDList->getValue(soundIDList->nodeNum - 1) = tmpPlayParmeters.voiceID;
 
 			// ボリューム
 			float distance = D3DXVec3Length(&(position - player[i].position));

@@ -33,7 +33,8 @@ private:
 	Object* parts[wolfNS::PARTS_MAX];			// パーツオブジェクト
 // ※パーツオブジェクトはObjectクラスの更新処理を行わない.
 // ※ワールド変換等の処理はアニメーションマネージャが代替する.
-
+	// Sound
+	PLAY_PARAMETERS playParmeters[2];
 
 public:
 	Wolf(enemyNS::ConstructionPackage constructionPackage);

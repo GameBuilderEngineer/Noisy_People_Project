@@ -31,6 +31,16 @@ Wolf::Wolf(ConstructionPackage constructionPackage): Enemy(constructionPackage)
 
 	// アニメーションマネージャを初期化
 	animationManager = new WolfAnimationManager(PARTS_MAX, this, &parts[0]);
+	
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	playParmeters[i] =
+	//		getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+	//	playParmeters[i].loop = true;
+	//	playParmeters[i].playerID = i;
+	//	SoundInterface::S3D->playSound(&playParmeters[i]);
+
+	//}
 }
 
 
@@ -39,7 +49,10 @@ Wolf::Wolf(ConstructionPackage constructionPackage): Enemy(constructionPackage)
 //=============================================================================
 Wolf::~Wolf()
 {
-
+	for (int i = 0; i < 2; i++)
+	{
+		//SoundInterface::S3D->stopSound(playParmeters[i]);
+	}
 }
 
 
@@ -64,13 +77,30 @@ void Wolf::update(float frameTime)
 	// 3Dサウンド（移動音）の再生
 	if (animationManager->canPlayMoveSound)
 	{
-		// ループ再生
+		animationManager->canPlayMoveSound = false;
 
-		// ここで再生
-		// プレイヤーの座標は取得できている
-		player[gameMasterNS::PLAYER_1P].position;
-		player[gameMasterNS::PLAYER_2P].position;
-		// 後よろしく。
+		//// ここで再生
+		//for (int i = 0; i < 2; i++)
+		//{
+		//	// ボリューム
+		//	float distance = D3DXVec3Length(&(position - player[i].position));
+		//	float volume = 0.0f;
+		//	if (distance < DISTANCE_MAX)
+		//	{
+		//		volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
+		//	}
+
+		//	if (enemyData->state != REST || enemyData->state != DIE)
+		//	{
+		//		// ボリューム調整
+		//		SoundInterface::S3D->SetVolume(playParmeters[i], volume);
+		//	}
+		//	else
+		//	{
+		//		// ボリューム調整
+		//		SoundInterface::S3D->SetVolume(playParmeters[i], 0.0f);
+		//	}
+		//}
 	}
 }
 

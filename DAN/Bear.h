@@ -44,6 +44,9 @@ private:
 	// ※パーツオブジェクトはObjectクラスの更新処理を行わない.
 	// ※ワールド変換等の処理はアニメーションマネージャが代替する.
 
+	// Sound
+	//LinkedList<int>*soundIDList;
+
 public:
 	Bear(enemyNS::ConstructionPackage constructionPackage);
 	~Bear();
@@ -54,9 +57,6 @@ public:
 	void rest(float frameTime) override;		// 休憩ステート
 	void attackTree(float frameTime) override;	// ツリー攻撃ステート
 	void die(float frameTime) override;			// 死亡ステート
-
-	// Sound
-	LinkedList<int>*soundIDList;
 
 	// Getter
 	Object* getParts(int type);
