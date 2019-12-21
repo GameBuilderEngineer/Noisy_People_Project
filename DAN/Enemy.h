@@ -348,7 +348,8 @@ public:
 	D3DXVECTOR3* movingTarget;						// 移動ターゲット
 	Object* attackTarget;							// 攻撃対象（プレイヤー,ツリー）
 	D3DXVECTOR3 attentionDirection;					// 注目方向
-	bool isPayingNewAttention;						// 新規注目フラグ
+	//一時publicへ移動（2019/12/21:菅野）
+	//bool isPayingNewAttention;						// 新規注目フラグ
 	int nextIndexOfRoute;							// 警戒ステート時の次の巡回座標（リングバッファ添え字）
 	float tacticsTime;								// 戦術時間（AIの先頭行動分岐に汎用的に使用）
 	int tacticsPersonality;							// 戦術個性
@@ -488,6 +489,8 @@ public:
 	void deleteMark();
 
 public:
+	//一時publicへ移動（2019/12/21:菅野）
+	bool isPayingNewAttention;						// 新規注目フラグ
 	//----------
 	// 基本処理
 	//----------

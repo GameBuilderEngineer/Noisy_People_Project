@@ -124,7 +124,7 @@ private:
 	MarkerRenderer*					markerRenderer;		//マーカー
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters[2];
+	PLAY_PARAMETERS playParameters[4];
 
 
 	//Network
@@ -133,6 +133,9 @@ private:
 	
 	//オープニングカメラ
 	Camera* cameraOP;
+
+	//BOSSカメラ
+	Camera* cameraBoss;
 
 	int count;
 public:

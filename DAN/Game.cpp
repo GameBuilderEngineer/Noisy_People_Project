@@ -45,9 +45,10 @@ Game::Game()
 	nextScene = SceneList::RESULT;
 
 	//再生パラメータ
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
-		
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_CountDown, false,NULL,false,NULL };
+	playParameters[2] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_StartGame, false,NULL,false,NULL };
+	playParameters[3] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_TimeUp, false,NULL,false,NULL };
 }
 
 //===================================================================================================================================
@@ -95,6 +96,21 @@ void Game::initialize() {
 	cameraOP->setLimitRotationTop(0.1f);
 	cameraOP->setLimitRotationBottom(0.1f);
 	cameraOP->updateOrtho();
+
+	//オープニングカメラ
+	cameraBoss = new Camera;
+	//カメラの設定
+	cameraBoss->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	cameraBoss->setTarget(&testField->position);
+	cameraBoss->setRelative(D3DXVECTOR3(1.5f,3.0f,-3.0f));
+	cameraBoss->setGazeDistance(500.0f);
+	cameraBoss->setGaze(D3DXVECTOR3(0, 0, 0));
+	cameraBoss->setUpVector(D3DXVECTOR3(0, 1, 0));
+	cameraBoss->setFieldOfView((D3DX_PI / 180) * 90);
+	cameraBoss->setLimitRotationTop(0.1f);
+	cameraBoss->setLimitRotationBottom(0.1f);
+	cameraBoss->updateOrtho();
+
 
 
 	//camera
@@ -314,10 +330,6 @@ void Game::initialize() {
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 
-
-	//再生
-	SoundInterface::SE->playSound(&playParameters[0]);
-
 }
 
 //===================================================================================================================================
@@ -330,6 +342,7 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(cameraOP);
+	SAFE_DELETE(cameraBoss);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
@@ -356,8 +369,8 @@ void Game::uninitialize() {
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
-	UninitMoveP();
-	UninitMoveP1();
+	//UninitMoveP();
+	//UninitMoveP1();
 	//UninitEquipment();
 }
 
@@ -388,31 +401,88 @@ void Game::update(float _frameTime) {
 	gameMaster->updateFinishCountDown(frameTime);	//終了カウント
 
 	//開始カウントダウン
-	if (gameMaster->playActionStartCount(3))	countUI->startCount(3);
-	if (gameMaster->playActionStartCount(2))	countUI->startCount(2);
-	if (gameMaster->playActionStartCount(1))	countUI->startCount(1);
+	if (gameMaster->playActionStartCount(3))
+	{
+		countUI->startCount(3);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionStartCount(2))
+	{
+		countUI->startCount(2);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionStartCount(1))
+	{
+		countUI->startCount(1);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
 	if (gameMaster->playActionStartCount(0))
 	{
 		countUI->startCount(0);		//ゲーム開始
-		//BGM再生
-		SoundInterface::BGM->playSound(&playParameters[1]);
+		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
+		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
 	}
 
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
 
 	//終了カウントダウン
-	if (gameMaster->playActionFinishCount(10))	countUI->finishCount(10);
-	if (gameMaster->playActionFinishCount(9))	countUI->finishCount(9);
-	if (gameMaster->playActionFinishCount(8))	countUI->finishCount(8);
-	if (gameMaster->playActionFinishCount(7))	countUI->finishCount(7);
-	if (gameMaster->playActionFinishCount(6))	countUI->finishCount(6);
-	if (gameMaster->playActionFinishCount(5))	countUI->finishCount(5);
-	if (gameMaster->playActionFinishCount(4))	countUI->finishCount(4);
-	if (gameMaster->playActionFinishCount(3))	countUI->finishCount(3);
-	if (gameMaster->playActionFinishCount(2))	countUI->finishCount(2);
-	if (gameMaster->playActionFinishCount(1))	countUI->finishCount(1);
-	if (gameMaster->playActionFinishCount(0))	countUI->finishCount(0);	//ゲーム終了
+	if (gameMaster->playActionFinishCount(10))
+	{
+		countUI->finishCount(10);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(9))
+	{
+		countUI->finishCount(9);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+
+	if (gameMaster->playActionFinishCount(8))
+	{
+		countUI->finishCount(8);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(7))
+	{
+		countUI->finishCount(7);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(6))
+	{
+		countUI->finishCount(6);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(5))
+	{
+		countUI->finishCount(5);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(4))
+	{
+		countUI->finishCount(4);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(3))
+	{
+		countUI->finishCount(3);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(2))
+	{
+		countUI->finishCount(2);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(1))
+	{
+		countUI->finishCount(1);
+		SoundInterface::SE->playSound(&playParameters[1]);
+	}
+	if (gameMaster->playActionFinishCount(0))
+	{
+		countUI->finishCount(0);	//ゲーム終了
+		SoundInterface::SE->playSound(&playParameters[3]);	// タイムアップサウンド
+	}
 
 	//エンディング時間の更新
 	gameMaster->updateEndingTime(frameTime);
@@ -430,7 +500,6 @@ void Game::update(float _frameTime) {
 		SoundInterface::S3D->playSound(&voiceStart);
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
-
 
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
@@ -592,6 +661,9 @@ void Game::update(float _frameTime) {
 	{
 		cameraOP->update();
 	}
+	//ボスカメラの更新
+	//cameraBoss->update();
+
 
 	//固定UIの更新
 	fixedUI->update(gameMaster->getGameTime());
@@ -663,7 +735,8 @@ void Game::render()
 		renderUI();
 		return;
 	}
-
+	//ボスカメラ
+	//cameraBoss->renderReady();
 
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
