@@ -11,9 +11,10 @@ using namespace windNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void WindManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
-	D3DXMATRIX* _attractorMatrix)
+void WindManager::initialize(Player* _player)
 {
+	player = _player;
+
 	// 風オブジェクトを初期化
 	for (int i = 0; i < NUM_WIND; i++)
 	{
@@ -48,7 +49,20 @@ void WindManager::uninitialize()
 //=============================================================================
 void WindManager::update(float frameTime)
 {
+	for (int i = 0; i < NUM_WIND; i++)
+	{
+		wind[i].sphere.render();
 
+		for (int k = 0; k < gameMasterNS::PLAYER_NUM; k++)
+		{
+			if (isPlayerWindReceive[k])
+			{
+				player[k].jump();
+				player[k].addSpeed(wind[i].windDirection * wind[i].windSpeed * frameTime);
+			}
+			isPlayerWindReceive[k] = false;
+		}
+	}
 }
 
 
@@ -88,7 +102,6 @@ void  WindManager::windCollision(Player* player)
 			wind[i].effect->setShown(true);
 		}
 #endif
-
 		// 衝突判定
 		for (int k = 0; k < playerNS::NUM_PLAYER; k++)
 		{
@@ -98,10 +111,8 @@ void  WindManager::windCollision(Player* player)
 			ray.update(player[k].center, -wind[i].windDirection);
 			if (ray.rayIntersect(wind[i].sphere.getMesh(), wind[i].matrixWorld))
 			{
-				player[k].jump();
-				player[k].addSpeed(wind[i].windDirection * wind[i].windSpeed);
+				isPlayerWindReceive[k] = true;
 			}
 		}
 	}
-
 }
