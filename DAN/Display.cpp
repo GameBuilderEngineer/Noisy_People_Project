@@ -172,6 +172,15 @@ void Display::update(float _frameTime)
 			}
 			////パッケージ内のイベントを解放する
 			//SAFE_DELETE_ARRAY(package->treeTable);
+
+
+		}
+
+		bool transition = package->sceneReset;
+		if (transition)
+		{
+			// シーン遷移
+			changeScene(nextScene);
 		}
 	}
 
@@ -213,22 +222,7 @@ void Display::update(float _frameTime)
 	{
 		SerialCommunicationNS::send(SerialCommunicationNS::FAILURE);
 	}
-
-
-	//if (input->wasKeyPressed(VK_RETURN) ||
-	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	
-	//蔡へ
-	//通信プログラムでtarnsitionをtrueにしてシーン遷移を行う。
-	bool transition = package->sceneReset;
-	
-	if(transition)
-	{
-		// シーン遷移
-		changeScene(nextScene);
-	}
-
 	//カメラの更新
 	{
 		float rate = (sinf(sceneTimer) / 2.0f) + 0.5f;
