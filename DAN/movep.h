@@ -22,11 +22,15 @@ enum MovePAction
 	MoveP_Run,
 	MoveP_FireIdle,
 	MoveP_FireRun,
+	MoveP_Jump,
 	MoveP_JumpFire,
 	MoveP_Die,
 	MoveP_WalkRight,
 	MoveP_WalkLeft,
 	MoveP_WalkBackwards,
+	MoveP_WalkBackward,
+	MoveP_WalkStrafeLeft,
+	MoveP_WalkStrafeRight,
 	MoveP_Max
 };
 
