@@ -410,6 +410,9 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionFinishCount(1))	countUI->finishCount(1);
 	if (gameMaster->playActionFinishCount(0))	countUI->finishCount(0);	//ゲーム終了
 
+	//エンディング時間の更新
+	gameMaster->updateEndingTime(frameTime);
+
 	//ゲーム開始時ボイス
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] == false)
 	{
@@ -605,14 +608,9 @@ void Game::update(float _frameTime) {
 	//マーカーの更新
 	markerRenderer->update(frameTime);
 
-	// Enterまたは〇ボタンでリザルトへ
-	//if (input->wasKeyPressed(VK_RETURN) ||
-	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	if(gameMaster->getGameTime() <= 0)
+	//エンディングが終了したらシーン遷移
+	if(gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_ENDING))
 	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		// シーン遷移
 		changeScene(nextScene);
 	}
