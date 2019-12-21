@@ -139,13 +139,14 @@ void TitleUI::render()
 	if (titleState == 0)
 	{
 		UI[UI_PRESS]->render();
-	}
-	else
-	{
 		if (titleTime >FLOAT_LOGO_TIME)
 		{
 			UI[UI_LOGO]->render();
 		}
+	}
+	else
+	{
+		UI[UI_LOGO]->render();
 		UI[UI_BAR]->render();
 		UI[UI_MENU]->render();
 		switch (selectState)
@@ -176,6 +177,7 @@ void TitleUI::render()
 //============================
 void TitleUI::update(Input *input,float flametime)
 {
+	//ボタンを押すとメニュー選択へ
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->wasKeyPressed(VK_SPACE) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
@@ -187,19 +189,25 @@ void TitleUI::update(Input *input,float flametime)
 		titleState=1;
 	}
 
+
+	//PushAnyが出てる間のみフェイドイン
+	titleTime += flametime;
+	if (alpha < 255 && titleTime>FLOAT_LOGO_TIME)
+	{
+		alpha += ALPHA_SPEED;
+		UI[UI_LOGO]->setAlphaAllVertex(alpha);
+	}
+	else if (alpha >= 255)
+	{
+		UI[UI_LOGO]->setAlphaAllVertex(255);
+	}
+
+	//PushAnyの点滅
+	flash(titleTime);
+
+	//infoの処理と効果音
 	if (titleState == 1)
 	{
-		titleTime += flametime;
-		if (alpha < 255 && titleTime>FLOAT_LOGO_TIME)
-		{
-			alpha += ALPHA_SPEED;
-			UI[UI_LOGO]->setAlphaAllVertex(alpha);
-		}
-		else if(alpha>=255)
-		{
-			UI[UI_LOGO]->setAlphaAllVertex(255);
-		}
-	
 		ringSE(input);
 
 		if (selectState > EXIT)
@@ -294,3 +302,18 @@ void TitleUI::ringSE(Input *input)
 	}
 }
 
+//=================================================
+//点滅処理
+//=================================================
+void TitleUI::flash(float flashtime)
+{
+	int time =(int)flashtime%2;
+	if (time == 0)
+	{
+		UI[UI_PRESS]->setAlphaAllVertex(0);
+	}
+	else
+	{
+		UI[UI_PRESS]->setAlphaAllVertex(255);
+	}
+}
