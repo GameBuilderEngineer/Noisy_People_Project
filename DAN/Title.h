@@ -115,7 +115,8 @@ private:
 	//D3DXVECTOR3 P0_1;
 	//D3DXVECTOR3 P1_2;
 
-
+	//ネットワーク
+	NETWORK_CLIENT* networkClient;
 
 	//カメラの軸取得変数
 	D3DXVECTOR3 cameraAxisX;			//カメラ回転軸X

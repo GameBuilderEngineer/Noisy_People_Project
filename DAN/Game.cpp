@@ -630,6 +630,7 @@ void Game::update(float _frameTime) {
 		SoundInterface::BGM->SetSpeed();
 	}
 
+	//ディスプレイPCへ送信
 	networkClient->send(gameMaster->getGameTime());
 
 	//フェーダーテスト

@@ -42,6 +42,11 @@ Title::Title(void)
 	//初期化
 	tmpVolume = 1.0f;
 
+	//ネットワークの初期化
+	networkClient = new NETWORK_CLIENT;
+	networkClient->send(0.0f);
+
+
 	//ライトOFF
 	SerialCommunicationNS::send(SerialCommunicationNS::OFF);
 }
@@ -51,6 +56,8 @@ Title::Title(void)
 //============================================================================================================================================
 Title::~Title(void)
 {
+	//ネットワーククライアントの削除
+	SAFE_DELETE(networkClient);
 	// サウンドの停止
 	//SoundInterface::BGM->uninitSoundStop();
 }
