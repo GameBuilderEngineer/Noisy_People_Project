@@ -97,9 +97,6 @@
     <Filter Include="Game Layer\Sky">
       <UniqueIdentifier>{37485a13-b7c2-4de1-b39d-b550dff2fc37}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\NaviAI">
-      <UniqueIdentifier>{accd5b1a-788b-44e1-b16a-3215bd8aed77}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Scene\Create">
       <UniqueIdentifier>{38969594-a3b8-4c26-be69-77225b90e266}</UniqueIdentifier>
     </Filter>
@@ -343,9 +340,6 @@
     <Filter Include="Constant Layer\Collision\Cylinder">
       <UniqueIdentifier>{4e7b6768-8cad-46b1-85f4-0ca83835b231}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Network">
-      <UniqueIdentifier>{a4c35686-eed5-4a24-81e5-9399c4fbad0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Scene\Result\ResultUI\Character">
       <UniqueIdentifier>{7f82b514-6794-4903-92f0-a684eb0cf356}</UniqueIdentifier>
     </Filter>
@@ -384,6 +378,12 @@
     </Filter>
     <Filter Include="SerialCommunication">
       <UniqueIdentifier>{27094aec-2858-4e07-af46-390a562c548b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MetaAI\NaviAI">
+      <UniqueIdentifier>{accd5b1a-788b-44e1-b16a-3215bd8aed77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MetaAI\NaviAI\Network">
+      <UniqueIdentifier>{a4c35686-eed5-4a24-81e5-9399c4fbad0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -605,16 +605,16 @@
       <Filter>Game Layer\Scene\Create</Filter>
     </ClCompile>
     <ClCompile Include="NavigationMesh.cpp">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClCompile>
     <ClCompile Include="VertexAccessor.cpp">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClCompile>
     <ClCompile Include="AStar.cpp">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClCompile>
     <ClCompile Include="MeshData.cpp">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClCompile>
     <ClCompile Include="TmpObject.cpp">
       <Filter>Game Layer\Scene\Create</Filter>
@@ -650,7 +650,7 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClCompile>
     <ClCompile Include="PathFollowing.cpp">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClCompile>
     <ClCompile Include="AllocateHierarchy.cpp">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
@@ -872,7 +872,7 @@
       <Filter>Game Layer\Scene\Display\Server</Filter>
     </ClCompile>
     <ClCompile Include="networkClient.cpp">
-      <Filter>Game Layer\Network</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI\Network</Filter>
     </ClCompile>
     <ClCompile Include="SaiFadeIn.cpp">
       <Filter>Constant Layer\Sound\APO</Filter>
@@ -1150,16 +1150,16 @@
       <Filter>Game Layer\Sky</Filter>
     </ClInclude>
     <ClInclude Include="NavigationMesh.h">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClInclude>
     <ClInclude Include="VertexAccessor.h">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClInclude>
     <ClInclude Include="AStar.h">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClInclude>
     <ClInclude Include="MeshData.h">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClInclude>
     <ClInclude Include="Create.h">
       <Filter>Game Layer\Scene\Create</Filter>
@@ -1204,7 +1204,7 @@
       <Filter>Constant Layer\Sound\3D</Filter>
     </ClInclude>
     <ClInclude Include="PathFollowing.h">
-      <Filter>Game Layer\NaviAI</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI</Filter>
     </ClInclude>
     <ClInclude Include="AllocateHierarchy.h">
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
@@ -1423,7 +1423,7 @@
       <Filter>Game Layer\Scene\Display\Server</Filter>
     </ClInclude>
     <ClInclude Include="networkClient.h">
-      <Filter>Game Layer\Network</Filter>
+      <Filter>Game Layer\MetaAI\NaviAI\Network</Filter>
     </ClInclude>
     <ClInclude Include="SaiFadeIn.h">
       <Filter>Constant Layer\Sound\APO</Filter>
