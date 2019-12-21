@@ -45,8 +45,6 @@ Game::Game()
 	nextScene = SceneList::RESULT;
 
 	//çƒê∂ÉpÉâÉÅÅ[É^
-	PLAY_PARAMETERS playParameters[2];
-	memset(playParameters, 0, sizeof(playParameters));
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
 		
