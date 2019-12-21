@@ -255,10 +255,10 @@ void Director::run(HINSTANCE _instance) {
 void Director::mainLoop() {
 
 	//シリアル通信：送信
-	if (input->isKeyDown('0'))
-	{
-		serialCommunication->send(0);
-	}
+	//if (input->isKeyDown('0'))
+	//{
+	//	serialCommunication->send(1);
+	//}
 	//else {
 	//	serialCommunication->send(2);
 	//}
