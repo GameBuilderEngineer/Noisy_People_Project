@@ -66,6 +66,9 @@ void Bear::update(float frameTime)
 	{
 		animationManager->canPlayMoveSound = false;
 
+		
+		getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+
 		// ここで再生
 		// プレイヤーの座標は取得できている
 		player[gameMasterNS::PLAYER_1P].position;

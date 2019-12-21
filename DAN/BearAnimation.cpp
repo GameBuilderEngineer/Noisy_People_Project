@@ -337,32 +337,44 @@ void BearAnimationManager::update(float frameTime)
 	//------------
 	// 3Dサウンド
 	//------------
-	// 再生タイミングをリセット
-	int keyFrame = animation[MOVE]->getKeyFrame();
-	if (keyFrame == 0 || keyFrame == 2)
-	{
-		wasTimingCame = false;
-	}
-
 	if (flagState & animation[MOVE]->flag)
 	{
-		// 指定のキーフレームになった最初のタイミングで再生フラグを立てる
 		int keyFrame = animation[MOVE]->getKeyFrame();
+
+		// 再生タイミングをリセット
+		if (keyFrame == 0 || keyFrame == 2)
+		{
+			wasTimingCame = false;
+		}
+
+		// 指定のキーフレームになった最初のタイミングで再生フラグを立てる
 		if (keyFrame == 1 || keyFrame == 3)
 		{
 			if (wasTimingCame == false)
 			{
 				wasTimingCame = true;
 				canPlayMoveSound = true;
-				/*
-				 ここで再生！
-				 AnimationMangaerはエネミーが個別に持つオブジェクトなので以下のような感じで。
-				 if(animationManager->canPlayMoveSound)
-				 {
-					animationManager->canPlayMoveSound = false;
-					footSteps(~);	// サウンド再生
-				 }
-				*/
+			}
+		}
+	}
+
+	if (flagState & animation[ATTACK1]->flag)
+	{
+		int keyFrame = animation[ATTACK1]->getKeyFrame();
+
+		// 再生タイミングをリセット
+		if (keyFrame == 0 || keyFrame == 2)
+		{
+			wasTimingCame = false;
+		}
+
+		// 指定のキーフレームになった最初のタイミングで再生フラグを立てる
+		if (keyFrame == 1 || keyFrame == 3)
+		{
+			if (wasTimingCame == false)
+			{
+				wasTimingCame = true;
+				canPlayMoveSound = true;
 			}
 		}
 	}

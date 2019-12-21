@@ -961,10 +961,11 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 		break;
 
 	//--------
-	// çUåÇâπ
+	// çUåÇâπÅ@Å¶Ç¢Ç‹ÇÕ
 	//--------
 	case ATTACK_SE:
 	{
+		parameter.soundId = S3D_LIST::S3D_FOOTSTEP_03;// âº
 	}
 	break;
 
@@ -973,11 +974,13 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 	//--------
 	case DIE_SE:
 	{
+		parameter.soundId = S3D_LIST::S3D_FOOTSTEP_03;// âº
 	}
 	break;
 
 	}// switch(soundType)
 
+	// ï‘ãpíl
 	return parameter;
 }
 

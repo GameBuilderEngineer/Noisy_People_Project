@@ -60,6 +60,18 @@ void Wolf::update(float frameTime)
 
 	// パーツアニメーションの更新
 	animationManager->update(frameTime);
+
+	// 3Dサウンド（移動音）の再生
+	if (animationManager->canPlayMoveSound)
+	{
+		// ループ再生
+
+		// ここで再生
+		// プレイヤーの座標は取得できている
+		player[gameMasterNS::PLAYER_1P].position;
+		player[gameMasterNS::PLAYER_2P].position;
+		// 後よろしく。
+	}
 }
 
 
