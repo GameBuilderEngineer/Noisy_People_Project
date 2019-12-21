@@ -33,6 +33,9 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 
 	// バレットマネージャを作成
 	bulletManager = new TigerBulletManager();
+
+	// 戦術選択に個性を付ける
+	tacticsPersonality = rand() % 4;
 }
 
 
@@ -77,14 +80,10 @@ void Tiger::update(float frameTime)
 #endif
 	Enemy::postprocess(frameTime);
 
-	// パーツアニメーションの更新
-	animationManager->inactivateAll();
-	animationManager->activate(animationManager->getAnimation(tigerAnimNS::SHOT));
-	
+	// パーツアニメーションの更新	
 	animationManager->update(frameTime);
 
 	// バレットの更新
-	shot();
 	bulletManager->update(frameTime);
 }
 
@@ -94,13 +93,35 @@ void Tiger::update(float frameTime)
 //=============================================================================
 void::Tiger::chase(float frameTime)
 {
-	float distance = between2VectorLength(position, *movingTarget);
+	Enemy::chase(frameTime);
 
+	float distance = between2VectorLength(position, *movingTarget);
 	if (distance < 7.0f && canAttack)
 	{
 		attack();
 	}
-	Enemy::chase(frameTime);
+	else
+	{
+		// 時間をカウント
+		tacticsTime += frameTime;
+
+		if (tacticsTime < 3.0f + tacticsPersonality)
+		{
+			// 移動
+			move(frameTime);
+		}
+		else if (tacticsTime >= 3.0f + tacticsPersonality && tacticsTime < 6.0f + tacticsPersonality)
+		{
+			animationManager->inactivateAll();
+			animationManager->activate(animationManager->getAnimation(tigerAnimNS::SHOT));
+			shot();
+		}
+		else if (tacticsTime >= 6.0f + tacticsPersonality)
+		{
+			tacticsTime = 0.0f;
+			animationManager->inactivateAll();
+		}
+	}
 }
 
 
@@ -149,8 +170,13 @@ void Tiger::shot()
 	D3DXVec3TransformCoord(&connectionPosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[GUN]->matrixWorld);
 
 	Ray temp;
-	temp.start = connectionPosition;
-	temp.direction = muzzlePosition - connectionPosition;
+	//temp.start = connectionPosition;
+	//temp.direction = muzzlePosition - connectionPosition;
+	temp.start = muzzlePosition;
+	temp.direction = player[chasingPlayer].position - muzzlePosition;
+
+	temp.distance = 0.0f;
+	temp.rayIntersect(attractorMesh, *attractorMatrix);
 	D3DXVec3Normalize(&temp.direction, &temp.direction);
 	bulletManager->shoot(temp);
 }

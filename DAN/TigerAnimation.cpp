@@ -221,19 +221,19 @@ void DeadAnimation::update(D3DXVECTOR3* rot, Object** parts, float t)
 //=============================================================================
 static const D3DXVECTOR3 SHOT_ANIMATION_BODY[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.1f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.1f, 0.0f, 0.0f),
 	D3DXVECTOR3(0.1f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.1f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.1f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 SHOT_ANIMATION_GUN[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.2f, 0.0f, 0.0f),
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.05f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.1f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.15f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.1f, 0.0f, 0.0f),
+	D3DXVECTOR3(0.05f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 SHOT_ANIMATION_LEG_L[] =
 {

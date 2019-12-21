@@ -49,6 +49,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	attentionDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	isPayingNewAttention = false;
 	nextIndexOfRoute = 0;
+	tacticsTime = 0.0f;
 
 	// センサーの初期化
 	canSense = false;
@@ -196,17 +197,18 @@ void Enemy::preprocess(float frameTime)
 
 
 #ifdef _DEBUG
+	// 追跡ステートで両プレイヤーともを認識していない場合はエラー
 	if (enemyData->state == CHASE)
 	{
-		// 追跡ステートで両プレイヤーに認識されていない状態はエラー
 		assert(isNoticingPlayer[gameMasterNS::PLAYER_1P] || isNoticingPlayer[gameMasterNS::PLAYER_2P]);
 	}
+
+	// デバッグセンサー
 #ifdef RENDER_SENSOR
 	debugSensor();
 #endif// RENDER_SENSOR
-#endif// _DEBUG
 
-#ifdef _DEBUG
+	// デバッグエネミーモード
 	if (enemyData->enemyID == debugEnemyID)
 	{
 		controlCamera(frameTime);
@@ -254,10 +256,12 @@ void Enemy::postprocess(float frameTime)
 	Object::update();
 	// 到着判定
 	checkArrival();
-	// ステートの更新
-	int stateNumber = stateMachine.run(frameTime, this);
 	// ブラックボードの更新
 	updataBlackBoard(frameTime);
+	// ステートの更新
+	int stateNumber = stateMachine.run(frameTime, this);
+	// 新規注目フラグのオフ
+	isPayingNewAttention = false;
 	// エネミーデータの更新
 	enemyData->state = stateNumber;
 	enemyData->position = position;
@@ -689,8 +693,6 @@ void Enemy::updataBlackBoard(float frameTime)
 			}
 		}
 	}
-
-	isPayingNewAttention = false;
 }
 #pragma endregion
 
@@ -814,9 +816,6 @@ void Enemy::chase(float frameTime)
 	{
 		markBack->rotation.y = -(D3DX_PI - markBack->rotation.y);
 	}
-
-	// 移動
-	move(frameTime);
 }
 
 
@@ -850,19 +849,21 @@ void Enemy::patrol(float frameTime)
 //=============================================================================
 void Enemy::rest(float frameTime)
 {
-	//if (canSense)
-	//{
-	//	sensor();
-	//}
+	if (canSense)
+	{
+		sensor();
+	}
 
-	//if (isPayingNewAttention)
-	//{
-	//	D3DXVec3Normalize(&attentionDirection, &attentionDirection);
-	//	destination = position + attentionDirection;
-	//	isDestinationLost = false;
-	//	setMovingTarget(&destination);
-	//	postureControl(axisZ.direction, attentionDirection, 1);
-	//}
+	// isPayingNewAttentionの後に一回だけここを通る
+	// その後ステート遷移ですぐに追跡に変わる
+	if (isPayingNewAttention)
+	{
+		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
+		destination = position + attentionDirection;
+		isDestinationLost = false;
+		setMovingTarget(&destination);
+		postureControl(axisZ.direction, attentionDirection, 1);
+	}
 }
 
 

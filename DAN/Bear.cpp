@@ -87,6 +87,9 @@ void::Bear::chase(float frameTime)
 		attack();
 	}
 	Enemy::chase(frameTime);
+
+	// ˆÚ“®
+	move(frameTime);
 }
 
 

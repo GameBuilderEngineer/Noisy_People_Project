@@ -76,6 +76,9 @@ void::Wolf::chase(float frameTime)
 	}
 
 	Enemy::chase(frameTime);
+
+	// ˆÚ“®
+	move(frameTime);
 }
 
 

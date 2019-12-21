@@ -55,13 +55,13 @@ private:
 	Ray					ballisticRay;			//弾道レイ
 	D3DXVECTOR3			bulletSpeed;			//速度
 	D3DXVECTOR3			endPoint;				//終着点
-	D3DXVECTOR3			initialCollide;			//初期衝突地点
-	D3DXVECTOR3			collidePosition;		//衝突位置
+	D3DXVECTOR3			fieldCollisionPos;		//衝突位置
+	float				initialDistance;		//初期距離
 	TigerBulletEffect*	tigerBulletEffect;		//バレットエフェクト
 	bool isHit;
 
 public:
-	const float		SPEED = 25.0f;			//弾速
+	const float		SPEED = 20.0f;			//弾速
 	const float		EXIST_TIME = 3.0f;		//存在時間
 
 	TigerBullet(Ray shootingRay);
@@ -108,4 +108,6 @@ public:
 	void destroy(TigerBullet* bullet, int nodeNumber);
 	// バレットリストの取得
 	LinkedList<TigerBullet*>* getBulletList();
+	// 残弾数の取得
+	int getRemaining();
 };
