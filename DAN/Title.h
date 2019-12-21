@@ -90,6 +90,8 @@ private:
 	//ターゲットオブジェクト
 	Object* target;
 	TitleUI titleUI;					//タイトルUI
+
+	TreeManager* treeManager;
 	int selectStateMemory;
 
 	int titleState;
