@@ -34,8 +34,8 @@ namespace ServerListNS
 		{"DESKTOP-2C7Q2ME"},	//NAKAGOMI
 		{"ths80214"},			//DATE,
 		{"INDES"},				//SAI,
-		{"INDES"},				//SOMEYA,
-		{"INDES"},				//SHINZATO
+		{"MSI"},				//SOMEYA,
+		{"LAPTOP-74FA5EHG"},	//SHINZATO
 	};
 }
 

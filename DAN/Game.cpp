@@ -49,11 +49,7 @@ Game::Game()
 	memset(playParameters, 0, sizeof(playParameters));
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
-	
-	//再生
-	SoundInterface::SE->playSound(&playParameters[0]);
-	SoundInterface::BGM->playSound(&playParameters[1]);
-	
+		
 }
 
 //===================================================================================================================================
@@ -319,6 +315,10 @@ void Game::initialize() {
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 
+
+	//再生
+	SoundInterface::SE->playSound(&playParameters[0]);
+
 }
 
 //===================================================================================================================================
@@ -392,7 +392,12 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionStartCount(3))	countUI->startCount(3);
 	if (gameMaster->playActionStartCount(2))	countUI->startCount(2);
 	if (gameMaster->playActionStartCount(1))	countUI->startCount(1);
-	if (gameMaster->playActionStartCount(0))	countUI->startCount(0);		//ゲーム開始
+	if (gameMaster->playActionStartCount(0))
+	{
+		countUI->startCount(0);		//ゲーム開始
+		//BGM再生
+		SoundInterface::BGM->playSound(&playParameters[1]);
+	}
 
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
