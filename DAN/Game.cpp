@@ -45,8 +45,6 @@ Game::Game()
 	nextScene = SceneList::RESULT;
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters[2];
-	memset(playParameters, 0, sizeof(playParameters));
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
 		
@@ -421,14 +419,14 @@ void Game::update(float _frameTime) {
 	//ゲーム開始時ボイス
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] == false)
 	{
-		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Start, false, NULL, false, NULL };
-		SoundInterface::SE->playSound(&voiceStart);
+		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Start, false, NULL, true, gameMasterNS::PLAYER_1P };
+		SoundInterface::S3D->playSound(&voiceStart);
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] = true;
 	}
 	else if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME -2.0f && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] == false)
 	{
-		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Start, false, NULL, false, NULL };
-		SoundInterface::SE->playSound(&voiceStart);
+		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Start, false, NULL, true, gameMasterNS::PLAYER_2P };
+		SoundInterface::S3D->playSound(&voiceStart);
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
 

@@ -185,15 +185,15 @@ void ResultUI::update(float flameTime)
 	}
 	if (time > 14.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] == false && score > 70)
 	{
-		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Finish, false, NULL, false, NULL };
-		SoundInterface::SE->playSound(&voiceFinish);
+		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Finish, false, NULL, true, gameMasterNS::PLAYER_1P };
+		SoundInterface::S3D->playSound(&voiceFinish);
 		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] = true;
 
 	}
 	if (time > 16.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] == false && score > 70)
 	{
-		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Finish, false, NULL, false, NULL };
-		SoundInterface::SE->playSound(&voiceFinish);
+		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Finish, false, NULL, true, gameMasterNS::PLAYER_2P };
+		SoundInterface::S3D->playSound(&voiceFinish);
 		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
 

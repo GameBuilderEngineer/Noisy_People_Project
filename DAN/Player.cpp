@@ -114,31 +114,31 @@ void Player::initialize(PlayerTable info)
 	//再生パラメータの作成
 	//memset(playParameters, 0, sizeof(playParameters));
 	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	shiftStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftStart, false ,NULL,false,NULL };
-	shiftFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_ShiftFinish, false ,NULL,false,NULL };
-	visionSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Vision, false ,NULL,false,NULL };
-	visionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionStart, false ,NULL,false,NULL };
-	visionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_VisionFinish, false ,NULL,false,NULL };
-	skyVisionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
-	skyVisionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SkyVisionStart, false ,NULL,false,NULL };
+	shiftStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_ShiftStart, false ,NULL,true,infomation.playerType };
+	shiftFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_ShiftFinish, false ,NULL,true,infomation.playerType };
+	visionSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_Vision, false ,NULL,true,infomation.playerType };
+	visionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_VisionStart, false ,NULL,true,infomation.playerType };
+	visionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_VisionFinish, false ,NULL,true,infomation.playerType };
+	skyVisionStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_SkyVisionStart, false ,NULL,true,infomation.playerType };
+	skyVisionFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_SkyVisionStart, false ,NULL,true,infomation.playerType };
 	// (以下ボイス)
 	if (infomation.playerType == gameMasterNS::PLAYER_1P)
 	{// 男性キャラ
-		voiceJump[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Jump1, false, NULL, false, NULL };
-		voiceJump[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Jump2, false, NULL, false, NULL };
-		voiceDamage[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Damage1, false, NULL, false, NULL };
-		voiceDamage[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Damage2, false, NULL, false, NULL };
-		voiceShift[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Shift1, false, NULL, false, NULL };
-		voiceShift[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Male_Shift2, false, NULL, false, NULL };
+		voiceJump[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Jump1, false, NULL, true, gameMasterNS::PLAYER_1P };
+		voiceJump[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Jump2, false, NULL, true, gameMasterNS::PLAYER_1P };
+		voiceDamage[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Damage1, false, NULL, true, gameMasterNS::PLAYER_1P };
+		voiceDamage[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Damage2, false, NULL, true, gameMasterNS::PLAYER_1P };
+		voiceShift[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Shift1, false, NULL, true, gameMasterNS::PLAYER_1P };
+		voiceShift[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Shift2, false, NULL, true, gameMasterNS::PLAYER_1P };
 	}
 	else
 	{// 女性キャラ
-		voiceJump[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Jump1, false, NULL, false, NULL };
-		voiceJump[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Jump2, false, NULL, false, NULL };
-		voiceDamage[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Damage1, false, NULL, false, NULL };
-		voiceDamage[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Damage2, false, NULL, false, NULL };
-		voiceShift[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Shift1, false, NULL, false, NULL };
-		voiceShift[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::Voice_Female_Shift2, false, NULL, false, NULL };
+		voiceJump[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Jump1, false, NULL, true, gameMasterNS::PLAYER_2P };
+		voiceJump[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Jump2, false, NULL, true, gameMasterNS::PLAYER_2P };
+		voiceDamage[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Damage1, false, NULL, true, gameMasterNS::PLAYER_2P };
+		voiceDamage[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Damage2, false, NULL, true, gameMasterNS::PLAYER_2P };
+		voiceShift[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Shift1, false, NULL, true, gameMasterNS::PLAYER_2P };
+		voiceShift[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Shift2, false, NULL, true, gameMasterNS::PLAYER_2P };
 	}
 }
 
@@ -512,7 +512,7 @@ void Player::jumpOperation()
 	if ((input->getMouseRButtonTrigger() || input->getController()[infomation.playerType]->wasButton(BUTTON_JUMP)))
 	{
 		jump();
-		SoundInterface::SE->playSound(&voiceJump[rand() % NUM_JUMP_VOICE]);	//SE再生
+		SoundInterface::S3D->playSound(&voiceJump[rand() % NUM_JUMP_VOICE]);	//SE再生
 	}
 
 	//接地フラグ切替
@@ -828,7 +828,7 @@ bool Player::digitalShift()
 	digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT, center);
 
 	//ボイス再生
-	SoundInterface::SE->playSound(&voiceShift[rand() % NUM_SHIFT_VOICE]);
+	SoundInterface::S3D->playSound(&voiceShift[rand() % NUM_SHIFT_VOICE]);
 
 	transState(DIGITAL_SHIFT);
 	return true;
@@ -1292,7 +1292,7 @@ void Player::damage(int _damage)
 	hp -= _damage;
 	if (hp < 0) hp = 0;
 	//サウンド再生
-	SoundInterface::SE->playSound(&voiceDamage[rand() % NUM_DAMAGE_VOICE]);
+	SoundInterface::S3D->playSound(&voiceDamage[rand() % NUM_DAMAGE_VOICE]);
 }
 void Player::setValidOperation(int value)
 {
