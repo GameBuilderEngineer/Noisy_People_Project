@@ -24,8 +24,9 @@ using namespace bulletNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Bullet::Bullet(Ray shootingRay)
+Bullet::Bullet(Ray shootingRay,int playerNo)
 {
+	this->playerNo = playerNo;
 	//パラメータの初期化
 	digitalPower = DIGITAL_POWER;
 
@@ -262,7 +263,7 @@ void BulletManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 c
 //===================================================================================================================================
 //【発射：バレットマネージャー】
 //===================================================================================================================================
-bool BulletManager::launch(Ray shootingRay)
+bool BulletManager::launch(Ray shootingRay,int playerNo)
 {
 	//インターバル中：発射しない
 	if (intervalTimer > 0)return false;	
@@ -278,7 +279,7 @@ bool BulletManager::launch(Ray shootingRay)
 	}
 
 	//バレットリストへ新たに生成
-	Bullet* newBullet = new Bullet(shootingRay);
+	Bullet* newBullet = new Bullet(shootingRay,playerNo);
 
 	//リストへ追加
 	bulletList->insertFront(newBullet);

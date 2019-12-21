@@ -19,9 +19,10 @@ namespace ObjectType{
 		TREE			= 0x0008,
 		GREENING_AREA	= 0x0010,
 		MAPOBJECT		= 0x0020,
+		ENEMY_BULLET	= 0x0021,
 		//上記に新たにタイプを追加した場合は、
 		//ALLへor演算[|]で一番左に追加してください
-		ALL = MAPOBJECT |GREENING_AREA|TREE|ENEMY|BULLET|PLAYER,
+		ALL = ENEMY_BULLET|GREENING_AREA|TREE|ENEMY|BULLET|PLAYER,
 	};
 
 	//ビットの数を演算

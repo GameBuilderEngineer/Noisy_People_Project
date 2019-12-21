@@ -66,6 +66,9 @@ void Bear::update(float frameTime)
 	{
 		animationManager->canPlayMoveSound = false;
 
+		
+		getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+
 		// ここで再生
 		// プレイヤーの座標は取得できている
 		player[gameMasterNS::PLAYER_1P].position;
@@ -87,6 +90,9 @@ void::Bear::chase(float frameTime)
 		attack();
 	}
 	Enemy::chase(frameTime);
+
+	// 移動
+	move(frameTime);
 }
 
 
@@ -110,7 +116,7 @@ void::Bear::patrol(float frameTime)
 //=============================================================================
 void::Bear::rest(float frameTime)
 {
-
+	Enemy::rest(frameTime);
 }
 
 

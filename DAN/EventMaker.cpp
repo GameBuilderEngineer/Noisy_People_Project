@@ -331,15 +331,15 @@ int EventMaker::decideAttackTargetTree()
 //=============================================================================
 D3DXVECTOR3 EventMaker::decideBossEntryPoint()
 {
-	//œ‚Æ‚è‚ ‚¦‚¸
-	switch (rand() % 2)
-	{
-	case 0:
+	////œ‚Æ‚è‚ ‚¦‚¸
+	//switch (rand() % 2)
+	//{
+	//case 0:
 		return D3DXVECTOR3(186.0f, 100.0f, -165.0f); // “Œ‚Ì‘ä’n
 
-	case 1:
-		return D3DXVECTOR3(-204.0f, 86.0f, 197.0f);	// –k‚Ì‘ä’n
-	}
+	//case 1:
+	//	return D3DXVECTOR3(-204.0f, 86.0f, 197.0f);	// –k‚Ì‘ä’n
+	//}
 }
 
 

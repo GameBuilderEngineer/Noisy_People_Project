@@ -2,7 +2,7 @@
 //【GameMaster.h】
 // [作成者] HAL東京GP12A332 11 菅野 樹
 // [作成日] 2019/09/20
-// [更新日] 2019/10/24
+// [更新日] 2019/12/21
 //===================================================================================================================================
 #pragma once
 
@@ -52,10 +52,10 @@ namespace gameMasterNS {
 		RANK_NUM
 	};
 
-	const float OPENING_TIME			= 5.0f;					//5秒
+	const float OPENING_TIME			= 10.0f;				//10秒
 	const float GAME_TIME				= 60.0f * 4.0f;			//4分
 	const float COUNT_DOWN_TIME			= 3.0f;					//3秒
-	const float ENDING_TIME				= 3.0f;					//3秒
+	const float ENDING_TIME				= 5.0f;					//5秒
 
 	const int	PLAYER_NUM				= 2;
 
@@ -127,6 +127,7 @@ private:
 	//Data
 	//ゲーム
 	float					openingTimer;									//オープニング時間
+	float					endingTimer;									//エンディング時間
 	float					gameTimer;										//ゲーム時間
 	float					countDownTimer;									//カウントダウン時間
 	bool					pause;											//ポーズ
@@ -153,11 +154,11 @@ public:
 	//ゲーム
 	void startGame();												//ゲーム開始関数
 
-	void updateTimer(float frameTime);								//各タイマー更新
-	void updateOpeningTime(float frameTime);						//ゲーム時間の更新
+	void updateOpeningTime(float frameTime);						//オープニングの更新
 	void updateGameTime(float frameTime);							//ゲーム時間の更新
 	void updateStartCountDown(float frameTime);						//ゲーム開始カウントダウンの更新
-	void updateFinishCountDown(float frameTime);					//ゲーム開始カウントダウンの更新
+	void updateFinishCountDown(float frameTime);					//ゲーム終了カウントダウンの更新
+	void updateEndingTime(float frameTime);							//エンディング時間の更新
 	bool paused();													//ポーズ処理
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
 	bool playActionStartCount(int countNum);						//開始カウント3時のアクション

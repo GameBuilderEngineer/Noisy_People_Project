@@ -48,7 +48,7 @@ namespace titleUiNS
 	//PressAnyButton
 	const int WIDTH_PRESS = (1024 * WINDOW_WIDTH / 1920);					//幅
 	const int HEIGHT_PRESS = (64 * WINDOW_HEIGHT / 1080);					//高さ
-	const D3DXVECTOR3 POSITION_PRESS = D3DXVECTOR3(908 * WINDOW_WIDTH / 1920, 800 * WINDOW_HEIGHT / 1080, 0);//位置
+	const D3DXVECTOR3 POSITION_PRESS = D3DXVECTOR3(925 * WINDOW_WIDTH / 1920, 800 * WINDOW_HEIGHT / 1080, 0);//位置
 
 	//共通
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0, 0, 0);			//回転
@@ -104,6 +104,6 @@ public: //メンバー関数
 	int getSelectState();	//選択肢状態の取得
 	void moveBar();			//バーの移動
 	void ringSE(Input *input);//SEを鳴らす処理
-
+	void flash(float flashtime);
 private:
 };

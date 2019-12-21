@@ -9,38 +9,175 @@
 
 TreeTable NETWORK_CLIENT::treeTable[20] = { 0 };
 int NETWORK_CLIENT::treeNum = 0;
+bool NETWORK_CLIENT::requestConnection = false;
+bool NETWORK_CLIENT::initialConnection = true;
+int NETWORK_CLIENT::connectionTarget = -1;
+//===================================================================================================================================
+//【名前空間】
+//===================================================================================================================================
+namespace ServerListNS
+{
+
+	enum PC_LIST
+	{
+		KANNO,
+		NAKAGOMI,
+		DATE,
+		SAI,
+		SOMEYA,
+		SHINZATO,
+		PC_NUM
+	};
+
+	const char* SERVER_NAME_LIST[PC_NUM] = {
+		{"ths80619"},			//KANNO,
+		{"DESKTOP-2C7Q2ME"},	//NAKAGOMI
+		{"ths80214"},			//DATE,
+		{"INDES"},				//SAI,
+		{"MSI"},				//SOMEYA,
+		{"LAPTOP-74FA5EHG"},	//SHINZATO
+	};
+}
+
+//===================================================================================================================================
+//【using宣言】
+//===================================================================================================================================
+using namespace ServerListNS;
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
 NETWORK_CLIENT::NETWORK_CLIENT()
 {
-	// WSA
-	nRtn = WSAStartup(MAKEWORD(1, 1), &wsaData);
+	success = false;
 
-	// Socket
-	s = socket(AF_INET, SOCK_DGRAM, 0);
-	if (s < 0) {
-		WSACleanup();
+	//接続要求に応じる
+	if (!requestConnection)return;//接続要求がない
+
+	switch (initialConnection)
+	{
+	//---------
+	//共通処理
+	//---------
+	default:
+		// WSA
+		nRtn = WSAStartup(MAKEWORD(1, 1), &wsaData);
+
+		// Socket
+		s = socket(AF_INET, SOCK_DGRAM, 0);
+		if (s < 0) {
+			WSACleanup();
+		}
+
+	//---------
+	//初期接続
+	//---------
+	case true:
+		//接続テスト
+		// IPHost
+		for (int i = 0; i < PC_NUM; i++)
+		{
+			//接続先が選択されている場合はテストしない
+			if (connectionTarget != -1)continue;
+
+			//SERVER_NAMEをホスト名として接続を試みる
+			lpHostEnt = (HOSTENT *)gethostbyname(SERVER_NAME_LIST[i]);
+			if (lpHostEnt != NULL)
+			{
+				//接続成功
+				TCHAR confirm[MAX_PATH + 1];
+				sprintf(confirm, "このホストと接続を行いますか？\n%s",SERVER_NAME_LIST[i]);
+				if (MessageBox(0, confirm, "確認", MB_YESNO| MB_TOPMOST) == IDYES)
+				{
+					connectionTarget = i;
+				}
+			}
+			else {
+				//ホスト名による接続に失敗したので
+				//SERVER_NAMEをIPアドレスとして接続を試みる
+				addr = inet_addr(SERVER_NAME_LIST[i]);
+				if (addr != INADDR_NONE)
+				{
+					lpHostEnt = (HOSTENT *)gethostbyaddr((char *)&addr, 4, AF_INET);
+				}
+				if (lpHostEnt != NULL)
+				{
+					//接続成功
+					TCHAR confirm[MAX_PATH + 1];
+					sprintf(confirm, "このIPアドレスと接続を行いますか？\n%s", SERVER_NAME_LIST[i]);
+					if (MessageBox(0, confirm, "確認", MB_YESNO | MB_TOPMOST) == IDYES)
+					{
+						connectionTarget = i;
+					}
+				}
+			}
+		}
+
+		//接続先が選択されたかどうか
+		if (connectionTarget == -1)
+		{
+			MessageBox(0,"インターネット接続に失敗しました。","確認",MB_OK|MB_TOPMOST);
+		}
+		else {
+			TCHAR confirm[MAX_PATH + 1];
+			sprintf(confirm, "インターネット接続に成功しました。\n接続先：%s", SERVER_NAME_LIST[connectionTarget]);
+			MessageBox(0, confirm, "確認", MB_OK | MB_TOPMOST);
+		}
+
+		//初期接続終了
+		initialConnection = false;
+
+		break;
+
+	//---------
+	//実際の接続
+	//---------
+	case false:
+		//接続先が選択されていない場合は接続しない
+		if (connectionTarget == -1)return;
+
+		// IPHost
+		//SERVER_NAMEをホスト名として接続を試みる
+		lpHostEnt = (HOSTENT *)gethostbyname(SERVER_NAME_LIST[connectionTarget]);
+		if (lpHostEnt != NULL)
+		{
+			//接続成功
+			success = true;
+		}
+		else {
+			//ホスト名による接続に失敗したので
+			//SERVER_NAMEをIPアドレスとして接続を試みる
+			addr = inet_addr(SERVER_NAME_LIST[connectionTarget]);
+			if (addr != INADDR_NONE)
+			{
+				lpHostEnt = (HOSTENT *)gethostbyaddr((char *)&addr, 4, AF_INET);
+			}
+			if (lpHostEnt != NULL)
+			{
+				//接続成功
+				success = true;
+			}
+		}
+
+		if (!success)
+		{
+			//失敗したので終了
+			return;
+		}
+
+		//
+		memset(&addrin, 0, sizeof(addrin));
+		memcpy(&(addrin.sin_addr),
+			lpHostEnt->h_addr_list[0],
+			lpHostEnt->h_length);
+		addrin.sin_port = htons(port);
+		addrin.sin_family = AF_INET;
+		addrin.sin_addr.s_addr = *((unsigned long *)lpHostEnt->h_addr);
+	
+		packageID = 0;
+
+		break;
 	}
-
-	// IPHost
-	lpHostEnt = (HOSTENT *)gethostbyname(szServer);
-	if (lpHostEnt == NULL) {
-		addr = inet_addr(szServer);
-		lpHostEnt = (HOSTENT *)gethostbyaddr((char *)&addr, 4, AF_INET);
-		return;
-	}
-
-	memset(&addrin, 0, sizeof(addrin));
-	memcpy(&(addrin.sin_addr),
-		lpHostEnt->h_addr_list[0],
-		lpHostEnt->h_length);
-	addrin.sin_port = htons(port);
-	addrin.sin_family = AF_INET;
-	addrin.sin_addr.s_addr = *((unsigned long *)lpHostEnt->h_addr);
-
-	packageID = 0;
 }
 
 //===================================================================================================================================
@@ -106,6 +243,9 @@ NETWORK_CLIENT::~NETWORK_CLIENT()
 //===================================================================================================================================
 void NETWORK_CLIENT::send(float time)
 {
+	//接続に失敗しているので、送信を行わない
+	if (!success)return;
+	
 	// buf
 	packageID++;
 	PACKAGE tmpPackage;
@@ -142,7 +282,9 @@ void NETWORK_CLIENT::outputGUI()
 #ifdef _DEBUG
 	if (ImGui::CollapsingHeader("NetworkInformation"))
 	{
-		ImGui::Text("Server Name = %s", szServer);
+		ImGui::Checkbox("initilaConnection", &initialConnection);
+		ImGui::Checkbox("requestConnection", &requestConnection);
+		ImGui::InputInt("connectionTarget", &connectionTarget);
 	}
 #endif
 }

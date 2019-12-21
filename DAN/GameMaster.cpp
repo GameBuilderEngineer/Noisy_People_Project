@@ -2,7 +2,7 @@
 //【GameMaster.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
-// [更新日]2019/10/25
+// [更新日]2019/12/21
 //===================================================================================================================================
 #include "GameMaster.h"
 #include "ImguiManager.h"
@@ -27,6 +27,7 @@ using namespace gameMasterNS;
 GameMaster::GameMaster()
 {
 	openingTimer		= 0.0f;								//オープニング時間
+	endingTimer			= 0.0f;								//エンディング時間
 	gameTimer			= 0.0f;								//ゲーム時間
 	countDownTimer		= 0.0f;								//カウントダウン時間
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -102,12 +103,17 @@ bool GameMaster::paused()
 void GameMaster::startGame()
 {
 	openingTimer	= OPENING_TIME;
+	endingTimer		= ENDING_TIME;
 	countDownTimer	= COUNT_DOWN_TIME;
 	gameTimer		= GAME_TIME;
 	gameTimerStop	= false;
 	pause = false;
 	progress = 0x00000000;
 	discardConversionOrder();
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		killEnemyNum[i] = 0;
+	}
 
 	ZeroMemory(wasStartVoicePlayed, 2 * sizeof(bool));
 	ZeroMemory(wasFinishVoicePlayed, 2 * sizeof(bool));
@@ -150,7 +156,7 @@ void GameMaster::updateFinishCountDown(float frameTime)
 	if (gameTimerStop)return;
 
 	//残り10秒の場合
-	if(gameTimer <= 10)
+	if(gameTimer <= 11)
 		countDownTimer -= frameTime;
 }
 
@@ -172,6 +178,23 @@ void GameMaster::updateGameTime(float frameTime)
 	if (whetherAchieved(PASSING_GAME_START))
 	{
 		gameTimer -= frameTime;
+	}
+}
+
+//===================================================================================================================================
+//【ゲームエンディング時間の更新】
+//===================================================================================================================================
+void GameMaster::updateEndingTime(float frameTime)
+{
+	if (gameTimerStop)return;
+
+	//ゲームが終了している場合
+	if(whetherAchieved(PASSING_GAME_FINISH))
+		endingTimer -= frameTime;
+	
+	if (endingTimer <= 0.0f)
+	{
+		setProgress(PASSING_GAME_ENDING);
 	}
 }
 

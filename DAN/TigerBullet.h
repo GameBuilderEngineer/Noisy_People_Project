@@ -9,22 +9,39 @@
 #include "LinkedList.h"
 #include "Sound.h"
 #include "EffekseerManager.h"
+#include "Player.h"
 
 
 // バレットエフェクトクラス
 class TigerBulletEffect :public effekseerNS::Instance
 {
 public:
-	D3DXVECTOR3 * syncPosition;
-	TigerBulletEffect(D3DXVECTOR3* sync)
-	{
-		syncPosition = sync;
+public:
+	D3DXMATRIX* syncMatrix;
+	TigerBulletEffect(D3DXMATRIX* syncMatrix) {
+		this->syncMatrix = syncMatrix;
 		effectNo = effekseerNS::TIGER_BULLET;
+		scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	}
-	virtual void update()
-	{
-		position = *syncPosition;
-		Instance::update();
+	virtual void update() {
+
+		D3DXMATRIX M = *syncMatrix;
+
+		::Effekseer::Manager*	manager = getEffekseerManager(managerNo)->manager;
+		::Effekseer::Matrix43 matrix;
+		matrix.Value[0][0] = M._11;
+		matrix.Value[0][1] = M._12;
+		matrix.Value[0][2] = M._13;
+		matrix.Value[1][0] = M._21;
+		matrix.Value[1][1] = M._22;
+		matrix.Value[1][2] = M._23;
+		matrix.Value[2][0] = M._31;
+		matrix.Value[2][1] = M._32;
+		matrix.Value[2][2] = M._33;
+		matrix.Value[3][0] = M._41;
+		matrix.Value[3][1] = M._42;
+		matrix.Value[3][2] = M._43;
+		manager->SetMatrix(handle, matrix);
 	};
 };
 
@@ -39,13 +56,13 @@ private:
 	Ray					ballisticRay;			//弾道レイ
 	D3DXVECTOR3			bulletSpeed;			//速度
 	D3DXVECTOR3			endPoint;				//終着点
-	D3DXVECTOR3			initialCollide;			//初期衝突地点
-	D3DXVECTOR3			collidePosition;		//衝突位置
+	D3DXVECTOR3			fieldCollisionPos;		//衝突位置
+	float				initialDistance;		//初期距離
 	TigerBulletEffect*	tigerBulletEffect;		//バレットエフェクト
 	bool isHit;
 
 public:
-	const float		SPEED = 50.0f;			//弾速
+	const float		SPEED = 20.0f;			//弾速
 	const float		EXIST_TIME = 3.0f;		//存在時間
 
 	TigerBullet(Ray shootingRay);
@@ -59,6 +76,8 @@ public:
 	// Getter
 	bool getIsHit() { return isHit; }
 	// Setter
+	void setIsHit(bool set) { isHit = set; }
+
 };
 
 
@@ -69,17 +88,17 @@ class TigerBulletManager: public Base
 {
 private:
 	LinkedList<TigerBullet*>	bulletList;		// バレットリスト
-	StaticMeshRenderer*			renderer;		// レンダラー
 	int							remaining;		// 残弾数
 	float						intervalTimer;	// 次の発射までのインターバル時間
 	bool						isShot;			// 発射したか
+	Player*						player;			// プレイヤーポインタ（3Dサウンドに使用）
 
 public:
 	const int MAGAZINE_NUM = 3;
 	const float INTERVAL_TIME = 0.5f;
 	const float RELOAD_TIME = 2.0f;
 
-	TigerBulletManager(StaticMeshRenderer* _renderer);
+	TigerBulletManager(Player* _player);
 	~TigerBulletManager();
 	// 更新
 	void update(float frameTime);
@@ -89,4 +108,8 @@ public:
 	bool shoot(Ray shootingRay);
 	// 弾の破棄
 	void destroy(TigerBullet* bullet, int nodeNumber);
+	// バレットリストの取得
+	LinkedList<TigerBullet*>* getBulletList();
+	// 残弾数の取得
+	int getRemaining();
 };

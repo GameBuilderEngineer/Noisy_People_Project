@@ -49,11 +49,7 @@ Game::Game()
 	memset(playParameters, 0, sizeof(playParameters));
 	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
 	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
-	
-	//再生
-	SoundInterface::SE->playSound(&playParameters[0]);
-	SoundInterface::BGM->playSound(&playParameters[1]);
-	
+		
 }
 
 //===================================================================================================================================
@@ -319,6 +315,10 @@ void Game::initialize() {
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 
+
+	//再生
+	SoundInterface::SE->playSound(&playParameters[0]);
+
 }
 
 //===================================================================================================================================
@@ -392,7 +392,12 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionStartCount(3))	countUI->startCount(3);
 	if (gameMaster->playActionStartCount(2))	countUI->startCount(2);
 	if (gameMaster->playActionStartCount(1))	countUI->startCount(1);
-	if (gameMaster->playActionStartCount(0))	countUI->startCount(0);		//ゲーム開始
+	if (gameMaster->playActionStartCount(0))
+	{
+		countUI->startCount(0);		//ゲーム開始
+		//BGM再生
+		SoundInterface::BGM->playSound(&playParameters[1]);
+	}
 
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
@@ -409,6 +414,9 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionFinishCount(2))	countUI->finishCount(2);
 	if (gameMaster->playActionFinishCount(1))	countUI->finishCount(1);
 	if (gameMaster->playActionFinishCount(0))	countUI->finishCount(0);	//ゲーム終了
+
+	//エンディング時間の更新
+	gameMaster->updateEndingTime(frameTime);
 
 	//ゲーム開始時ボイス
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] == false)
@@ -438,10 +446,10 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 
-	if (input->wasKeyPressed('6'))
+	if (input->wasKeyPressed('6')|| 
+		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB)||
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
-		//aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
-
 		aiDirector->eventMaker.makeEventBossEntry();
 	}
 
@@ -605,14 +613,9 @@ void Game::update(float _frameTime) {
 	//マーカーの更新
 	markerRenderer->update(frameTime);
 
-	// Enterまたは〇ボタンでリザルトへ
-	//if (input->wasKeyPressed(VK_RETURN) ||
-	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	if(gameMaster->getGameTime() <= 0)
+	//エンディングが終了したらシーン遷移
+	if(gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_ENDING))
 	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		// シーン遷移
 		changeScene(nextScene);
 	}
@@ -901,7 +904,19 @@ void Game::collisions()
 	//敵の登録
 	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
 	{
-		tree8Reregister(enemyManager->getEnemyList()[i]);
+		Enemy* enemy = enemyManager->getEnemyList()[i];
+		// エネミー本体
+		tree8Reregister(enemy);
+
+		// エネミ―のバレット
+		if (enemy->getEnemyData()->type == enemyNS::TIGER)
+		{
+			Tiger* tiger = (Tiger*)enemy;
+			for (int k = 0; k < tiger->getBulletMangaer()->getBulletList()->nodeNum; k++)
+			{
+				tree8Reregister(*tiger->getBulletMangaer()->getBulletList()->getValue(k));
+			}
+		}
 	}
 	//木の登録
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)
@@ -1062,7 +1077,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	aiDirector->run();		// メタAI実行
+	//aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================

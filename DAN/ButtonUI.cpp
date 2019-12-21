@@ -82,10 +82,6 @@ void ButtonUI::renderP2(int state)
 void ButtonUI::update(bool flag,int buttontype)
 {
 	changeAlpha(flag,buttontype);
-	/*if (buttontype == SHIFT)
-	{
-		changeRender(flag);
-	}*/
 }
 
 //==================================
@@ -139,16 +135,18 @@ void ButtonUI::changeRenderP2(int state)
 	switch (state)
 	{
 	case STATE::VISION:
-		/*position.x = POSITION_BUTTON2.x;
+		position.x = POSITION_BUTTON2.x;
+		position.y = POSITION_BUTTON.y;
 		button[SHIFT]->setPosition(position);
-		button[SHIFT]->setVertex();*/
+		button[SHIFT]->setVertex();
 		button[SHIFT]->render();
 		break;
 
 	case STATE::SKY_VISION:
-		/*position.x = POSITION_BUTTON2.x;
+		position.x = POSITION_BUTTON2.x;
+		position.y = POSITION_BUTTON.y;
 		button[SHIFT]->setPosition(position);
-		button[SHIFT]->setVertex();*/
+		button[SHIFT]->setVertex();
 		button[SHIFT]->render();
 		break;
 

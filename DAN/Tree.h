@@ -146,7 +146,8 @@ private:
 	treeNS::DigitFront*				frontDigitalEffect[gameMasterNS::PLAYER_NUM];	//デジタルシフトエフェクト
 
 	bool							selectShift[gameMasterNS::PLAYER_NUM];			//シフト先として選択されている
-
+public:
+	int								playerNo;
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();
@@ -179,7 +180,7 @@ public:
 
 	// Setter
 	void setDataToTree(treeNS::TreeData _treeData);	
-	void addHp(int value);							//デジタル化するHPの増加
+	void addHp(int value,int playerNo);							//デジタル化するHPの増加
 	void setGreeningArea(float value);				//緑化エリアのスケールを設定
 	void disableAroundGreening();					//周囲への緑化を終了
 

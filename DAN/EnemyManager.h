@@ -70,9 +70,7 @@ public:
 	static StaticMeshRenderer* bearWaistRenderer;
 	static StaticMeshRenderer* bearLegLRenderer;
 	static StaticMeshRenderer* bearLegRRenderer;
-
 	static EnemyChaseMark* markRenderer;						// í«ê’É}Å[ÉNï`âÊ
-	static StaticMeshRenderer* tigerBulletRenderer;
 
 	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player);
 	void uninitialize();

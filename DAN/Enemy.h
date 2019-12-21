@@ -43,8 +43,8 @@ namespace enemyNS
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
-		80,			// WOLF
-		170,		// TIGER
+		60,			// WOLF
+		100,		// TIGER
 		450,		// BEAR
 	};
 
@@ -350,6 +350,8 @@ public:
 	D3DXVECTOR3 attentionDirection;					// 注目方向
 	bool isPayingNewAttention;						// 新規注目フラグ
 	int nextIndexOfRoute;							// 警戒ステート時の次の巡回座標（リングバッファ添え字）
+	float tacticsTime;								// 戦術時間（AIの先頭行動分岐に汎用的に使用）
+	int tacticsPersonality;							// 戦術個性
 
 	// センサー
 	bool canSense;									// センサー実行可能フラグ

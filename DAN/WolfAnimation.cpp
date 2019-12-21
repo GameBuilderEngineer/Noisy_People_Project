@@ -202,6 +202,22 @@ void WolfAnimationManager::update(float frameTime)
 		}
 	}
 
+	//------------
+	// 3Dサウンド
+	//------------
+	if (flagState & animation[MOVE]->flag)
+	{
+		canPlayMoveSound = true;
+	}
+	else if(flagState & animation[ATTACK]->flag)
+	{
+		canPlayMoveSound = true;
+	}
+	else
+	{
+		canPlayMoveSound = false;
+	}
+
 	// 行列計算
 	culcPartsMatrix();
 }

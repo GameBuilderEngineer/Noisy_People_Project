@@ -46,6 +46,7 @@ class GreeningArea :public Object
 private:
 
 public:
+	int playerNo;
 	GreeningArea();
 	~GreeningArea();
 	void update(float frameTime);

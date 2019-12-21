@@ -49,6 +49,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	attentionDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	isPayingNewAttention = false;
 	nextIndexOfRoute = 0;
+	tacticsTime = 0.0f;
 
 	// センサーの初期化
 	canSense = false;
@@ -196,17 +197,18 @@ void Enemy::preprocess(float frameTime)
 
 
 #ifdef _DEBUG
+	// 追跡ステートで両プレイヤーともを認識していない場合はエラー
 	if (enemyData->state == CHASE)
 	{
-		// 追跡ステートで両プレイヤーに認識されていない状態はエラー
 		assert(isNoticingPlayer[gameMasterNS::PLAYER_1P] || isNoticingPlayer[gameMasterNS::PLAYER_2P]);
 	}
+
+	// デバッグセンサー
 #ifdef RENDER_SENSOR
 	debugSensor();
 #endif// RENDER_SENSOR
-#endif// _DEBUG
 
-#ifdef _DEBUG
+	// デバッグエネミーモード
 	if (enemyData->enemyID == debugEnemyID)
 	{
 		controlCamera(frameTime);
@@ -258,6 +260,8 @@ void Enemy::postprocess(float frameTime)
 	updataBlackBoard(frameTime);
 	// ステートの更新
 	int stateNumber = stateMachine.run(frameTime, this);
+	// 新規注目フラグのオフ
+	isPayingNewAttention = false;
 	// エネミーデータの更新
 	enemyData->state = stateNumber;
 	enemyData->position = position;
@@ -689,8 +693,6 @@ void Enemy::updataBlackBoard(float frameTime)
 			}
 		}
 	}
-
-	isPayingNewAttention = false;
 }
 #pragma endregion
 
@@ -703,6 +705,12 @@ void Enemy::prepareChase()
 {
 	// 最初から追跡ステートであるエネミーを作るとこの関数を経由しない
 	// 様々な問題が出てくるので注意されたし
+
+	if (canSearch)
+	{
+		setPlayerChaseTarget();
+		searchPath();
+	}
 
 	cntPathSearchInterval = 0.0f;
 	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyActive, false, NULL, false, NULL };
@@ -808,9 +816,6 @@ void Enemy::chase(float frameTime)
 	{
 		markBack->rotation.y = -(D3DX_PI - markBack->rotation.y);
 	}
-
-	// 移動
-	move(frameTime);
 }
 
 
@@ -844,7 +849,21 @@ void Enemy::patrol(float frameTime)
 //=============================================================================
 void Enemy::rest(float frameTime)
 {
+	if (canSense)
+	{
+		sensor();
+	}
 
+	// isPayingNewAttentionの後に一回だけここを通る
+	// その後ステート遷移ですぐに追跡に変わる
+	if (isPayingNewAttention)
+	{
+		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
+		destination = position + attentionDirection;
+		isDestinationLost = false;
+		setMovingTarget(&destination);
+		postureControl(axisZ.direction, attentionDirection, 1);
+	}
 }
 
 
@@ -942,10 +961,11 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 		break;
 
 	//--------
-	// 攻撃音
+	// 攻撃音　※いまは
 	//--------
 	case ATTACK_SE:
 	{
+		parameter.soundId = S3D_LIST::S3D_FOOTSTEP_03;// 仮
 	}
 	break;
 
@@ -954,11 +974,13 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 	//--------
 	case DIE_SE:
 	{
+		parameter.soundId = S3D_LIST::S3D_FOOTSTEP_03;// 仮
 	}
 	break;
 
 	}// switch(soundType)
 
+	// 返却値
 	return parameter;
 }
 
@@ -1317,27 +1339,27 @@ void Enemy::debugSensor()
 	}
 
 	bool sound = false;
-	if (canSense)
-	{
-		if (sensor())
-		{
-			// 視界に入ったら赤点滅
-			for (int i = 0; i < 4; i++)
-			{
-				eyeAngleRay[i].color = D3DXCOLOR(255, 0, 0, 255);
-			}
+	//if (canSense)
+	//{
+	//	if (sensor())
+	//	{
+	//		// 視界に入ったら赤点滅
+	//		for (int i = 0; i < 4; i++)
+	//		{
+	//			eyeAngleRay[i].color = D3DXCOLOR(255, 0, 0, 255);
+	//		}
 
-			sound = true;
-		}
+	//		sound = true;
+	//	}
 
-		if (sound)
-		{
-			// 音を鳴らす
-			//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
-			//SoundInterface::SE->playSound(&playParameters);	//SE再生
-		}
+	//	if (sound)
+	//	{
+	//		// 音を鳴らす
+	//		//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_AnnounceTelop, false, NULL, false, NULL };
+	//		//SoundInterface::SE->playSound(&playParameters);	//SE再生
+	//	}
 
-	}
+	//}
 }
 
 

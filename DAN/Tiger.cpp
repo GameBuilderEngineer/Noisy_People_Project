@@ -31,8 +31,11 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 	// アニメーションマネージャを初期化
 	animationManager = new TigerAnimationManager(PARTS_MAX, this, &parts[0]);
 
-	// バレットマネージャにレンダラーを設定
-	bulletManager = new TigerBulletManager(EnemyManager::tigerBulletRenderer);
+	// バレットマネージャを作成
+	bulletManager = new TigerBulletManager(player);
+
+	// 戦術選択に個性を付ける
+	tacticsPersonality = rand() % 4;
 }
 
 
@@ -72,20 +75,27 @@ void Tiger::update(float frameTime)
 		
 		if (input->wasKeyPressed('N'))
 		{
-			shot(&player[0]);
 		}
 	}
 #endif
 	Enemy::postprocess(frameTime);
 
-	// パーツアニメーションの更新
-	animationManager->inactivateAll();
-	animationManager->activate(animationManager->getAnimation(tigerAnimNS::SHOT));
-	
+	// パーツアニメーションの更新	
 	animationManager->update(frameTime);
 
+	// 3Dサウンド（移動音）の再生
+	if (animationManager->canPlayMoveSound)
+	{
+		animationManager->canPlayMoveSound = false;
+
+		// ここで再生
+		// プレイヤーの座標は取得できている
+		player[gameMasterNS::PLAYER_1P].position;
+		player[gameMasterNS::PLAYER_2P].position;
+		// 後よろしく。
+	}
+
 	// バレットの更新
-	shot(&player[0]);
 	bulletManager->update(frameTime);
 }
 
@@ -95,13 +105,36 @@ void Tiger::update(float frameTime)
 //=============================================================================
 void::Tiger::chase(float frameTime)
 {
-	float distance = between2VectorLength(position, *movingTarget);
+	Enemy::chase(frameTime);
 
+	float distance = between2VectorLength(position, *movingTarget);
 	if (distance < 7.0f && canAttack)
 	{
 		attack();
 	}
-	Enemy::chase(frameTime);
+	else
+	{
+		// 時間をカウント
+		tacticsTime += frameTime;
+
+		if (tacticsTime < 3.0f + tacticsPersonality)
+		{
+			// 移動
+			move(frameTime);
+		}
+		else if (tacticsTime >= 3.0f + tacticsPersonality && tacticsTime < 6.0f + tacticsPersonality)
+		{
+			animationManager->inactivateAll();
+			animationManager->activate(animationManager->getAnimation(tigerAnimNS::SHOT));
+			shot();
+			moveDirection = player[chasingPlayer].position - position;
+		}
+		else if (tacticsTime >= 6.0f + tacticsPersonality)
+		{
+			tacticsTime = 0.0f;
+			animationManager->inactivateAll();
+		}
+	}
 }
 
 
@@ -125,7 +158,7 @@ void::Tiger::patrol(float frameTime)
 //=============================================================================
 void::Tiger::rest(float frameTime)
 {
-
+	Enemy::rest(frameTime);
 }
 
 
@@ -141,17 +174,23 @@ void Tiger::attackTree(float frameTime)
 //=============================================================================
 // ショット
 //=============================================================================
-void Tiger::shot(Player* target)
+void Tiger::shot()
 {
 	D3DXVECTOR3 muzzlePosition;			// 銃口ポジション
 	D3DXVECTOR3 connectionPosition;		// 接続部ポジション
 
-	D3DXVec3TransformCoord(&muzzlePosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[GUN]->matrixWorld);
+	D3DXVec3TransformCoord(&muzzlePosition, &MUZZLE_POSITION, &parts[GUN]->matrixWorld);
 	D3DXVec3TransformCoord(&connectionPosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[GUN]->matrixWorld);
 
 	Ray temp;
-	temp.start = connectionPosition;
-	temp.direction = target->position - connectionPosition;
+	//temp.start = connectionPosition;
+	//temp.direction = muzzlePosition - connectionPosition;
+	temp.start = muzzlePosition;
+	temp.direction = player[chasingPlayer].position - muzzlePosition;
+
+	temp.distance = 0.0f;
+	temp.rayIntersect(attractorMesh, *attractorMatrix);
+	D3DXVec3Normalize(&temp.direction, &temp.direction);
 	bulletManager->shoot(temp);
 }
 
@@ -184,6 +223,10 @@ Object* Tiger::getParts(int type)
 	return parts[type];
 }
 
+TigerBulletManager* Tiger::getBulletMangaer()
+{
+	return bulletManager;
+}
 
 //=============================================================================
 // Setter

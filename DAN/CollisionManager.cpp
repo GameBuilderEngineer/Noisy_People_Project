@@ -52,6 +52,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case TREE:			return playerAndTree((Player*)obj1, (Tree*)obj2);					break;
 		case GREENING_AREA:	return false;														break;
 		case MAPOBJECT:		return playerAndMapObject((Player*)obj1, (MapObject*)obj2);			break;
+		case ENEMY_BULLET:	return playerAndEnemyBullet((Player*)obj1, (TigerBullet*)obj2);		break;
 		}break;
 	case BULLET:
 		switch (type2) {
@@ -61,6 +62,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case TREE:				return bulletAndTree((Bullet*)obj1, (Tree*)obj2);				break;
 		case GREENING_AREA:		return false;													break;
 		case MAPOBJECT:			return false;													break;
+		case ENEMY_BULLET:		return false;													break;
 		}break;
 	case ENEMY:
 		switch (type2) {
@@ -70,6 +72,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case TREE:				return enemyAndTree((Enemy*)obj1, (Tree*)obj2);					break;
 		case GREENING_AREA:		return false;													break;
 		case MAPOBJECT:			return false;													break;
+		case ENEMY_BULLET:	return false;														break;
 		}break;
 	case TREE:
 		switch (type2) {
@@ -79,6 +82,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case TREE:				return false;													break;
 		case GREENING_AREA:		return greeningAreaAndTree((GreeningArea*)obj2, (Tree*)obj1);	break;
 		case MAPOBJECT:			return false;													break;
+		case ENEMY_BULLET:		return false;													break;
 		}break;
 	case GREENING_AREA:
 		switch (type2) {
@@ -88,6 +92,7 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case TREE:				return greeningAreaAndTree((GreeningArea*)obj1,(Tree*)obj2);	break;
 		case GREENING_AREA:		return false;													break;
 		case MAPOBJECT:			return false;													break;
+		case ENEMY_BULLET:		return false;													break;
 		}break;
 	case MAPOBJECT:
 		switch (type2) {
@@ -97,12 +102,23 @@ bool CollisionManager::collision(Object* obj1, Object* obj2)
 		case TREE:			return false;														break;
 		case GREENING_AREA:	return false;														break;
 		case MAPOBJECT:		return false;														break;
+		case ENEMY_BULLET:	return false;														break;
+		}break;
+	case ENEMY_BULLET:
+		switch (type2) {
+		case PLAYER:		return playerAndEnemyBullet((Player*)obj2, (TigerBullet*)obj1);		break;
+		case BULLET:		return false;														break;
+		case ENEMY:			return false;														break;
+		case TREE:			return false;														break;
+		case GREENING_AREA:	return false;														break;
+		case MAPOBJECT:		return false;														break;
+		case ENEMY_BULLET:	return false;														break;
 		}
+
 	default:return false; break;
 	}
 
 	return false;
-
 }
 
 
@@ -308,6 +324,23 @@ bool CollisionManager::playerAndMapObject(Player* player, MapObject* mapObject)
 	return true;
 }
 
+
+//===================================================================================================================================
+//【プレイヤー<-> エネミーバレット】
+//===================================================================================================================================
+bool CollisionManager::playerAndEnemyBullet(Player* player, TigerBullet* bullet)
+{
+	if (collisionCylinder(player, bullet))
+	{
+		if (bullet->collide(player->getMesh(), player->matrixPosition))
+		{
+			bullet->setIsHit(true);
+			player->damage(5);
+			return true;
+		}
+	}
+	return false;
+}
 #pragma endregion
 
 #pragma region BULLET
@@ -325,7 +358,6 @@ bool CollisionManager::bulletAndBullet(Bullet* bullet1, Bullet* bullet2)
 bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 {
 	bool hit = false;
-	int playerNo = 0;
 	if (collisionCylinder(bullet, enemy))
 	{
 		hit = bullet->collide(enemy->getMesh(), enemy->matrixCenter);
@@ -333,7 +365,7 @@ bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 
 	if (hit)
 	{
-		enemy->damage(bullet->getDigitalPower(), playerNo);
+		enemy->damage(bullet->getDigitalPower(), bullet->playerNo);
 		enemy->setAttention(-bullet->getBulletSpeed());
 		bullet->destroy();
 	}
@@ -347,7 +379,6 @@ bool CollisionManager::bulletAndEnemy(Bullet* bullet, Enemy* enemy)
 bool CollisionManager::bulletAndTree(Bullet* bullet, Tree* tree)
 {
 	bool hit = false;
-
 	if (collisionCylinder(bullet, tree))
 	{
 		hit = true;
@@ -356,7 +387,7 @@ bool CollisionManager::bulletAndTree(Bullet* bullet, Tree* tree)
 
 	if (hit)
 	{
-		tree->addHp(bullet->getDigitalPower());
+		tree->addHp(bullet->getDigitalPower(), bullet->playerNo);
 		bullet->destroy();
 	}
 
@@ -416,8 +447,11 @@ bool CollisionManager::greeningAreaAndTree(GreeningArea* area, Tree* tree)
 
 	if (hit)
 	{
-		if(tree->getTreeData()->greenState == treeNS::DEAD)
+		if (tree->getTreeData()->greenState == treeNS::DEAD)
+		{
 			tree->transState();//状態遷移
+			tree->playerNo = area->playerNo;
+		}
 	}
 
 	return hit;

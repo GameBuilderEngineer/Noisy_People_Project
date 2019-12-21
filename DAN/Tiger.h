@@ -30,8 +30,8 @@ namespace tigerNS
 		D3DXVECTOR3(0.85f, 1.84f, -0.62f),	// 左足
 		D3DXVECTOR3(-0.85f, 1.84f, -0.62f),	// 右足
 	};
-	const D3DXVECTOR3 MUZZLE_POSITION = D3DXVECTOR3(0.0f, 3.01f, -2.47f);
-
+	//const D3DXVECTOR3 MUZZLE_POSITION = D3DXVECTOR3(0.0f, 3.01f, -2.47f);
+	const D3DXVECTOR3 MUZZLE_POSITION = D3DXVECTOR3(0.0f, 0.28f, 3.38f);
 }
 
 
@@ -58,10 +58,11 @@ public:
 	void attackTree(float frameTime) override;	// ツリー攻撃ステート
 	void die(float frameTime) override;			// 死亡ステート
 
-	void shot(Player* target);
+	void shot();
 
 	// Getter
 	Object* getParts(int type);
+	TigerBulletManager* getBulletMangaer();
 
 	// Setter
 };
