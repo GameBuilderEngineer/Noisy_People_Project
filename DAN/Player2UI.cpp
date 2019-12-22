@@ -60,7 +60,7 @@ void Player2UI::initialize(Player *player)
 //==================================
 //•`‰æ
 //==================================
-void Player2UI::render()
+void Player2UI::render(float time)
 {
 	state = player->getState();
 	buttonUi->renderP2(state);
@@ -71,7 +71,7 @@ void Player2UI::render()
 	charaIcon->render();
 	mark->render();
 	green->render(state);
-	greenRate->render(basicUiNS::P2,state);
+	greenRate->render(basicUiNS::P2,state,time);
 }
 
 //==================================

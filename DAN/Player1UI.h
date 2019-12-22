@@ -64,7 +64,7 @@ public://ƒƒ“ƒo[ŠÖ”
 	Player1UI();
 	~Player1UI();
 	void initialize(Player *player);
-	void render();
+	void render(float time);
 	void update(float neRate);
 	void getFlag();
 

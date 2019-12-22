@@ -18,6 +18,7 @@
 #include "Title.h"
 #include "Sound.h"
 #include "SoundBase.h"
+#include "Finaletex.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -60,6 +61,8 @@ private:
 	Object* target;
 	//ツリーマネージャー
 	TreeManager* treeManager;
+	//テクスチャ
+	FinaleTex*  tex;
 
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度

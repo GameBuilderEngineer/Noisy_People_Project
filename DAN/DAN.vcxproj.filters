@@ -898,6 +898,9 @@
     <ClCompile Include="DamageUI.cpp">
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClCompile>
+    <ClCompile Include="FinaleTex.cpp">
+      <Filter>Game Layer\Scene\Finale</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1433,6 +1436,9 @@
     </ClInclude>
     <ClInclude Include="DamageUI.h">
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Finaletex.h">
+      <Filter>Game Layer\Scene\Finale</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

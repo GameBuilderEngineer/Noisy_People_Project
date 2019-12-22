@@ -116,6 +116,10 @@ void Finale::initialize()
 	// BGM再生開始
 	PLAY_PARAMETERS playParameter = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Finale, false,1.0f,false,NULL };
 	SoundInterface::BGM->playSound(&playParameter);
+
+	//テクスチャ
+	tex = new FinaleTex;
+	tex->initialize();
 }
 
 //============================================================================================================================================
@@ -145,6 +149,9 @@ void Finale::uninitialize(void)
 
 	// ツリーマネージャー
 	SAFE_DELETE(treeManager);
+
+	//テクスチャ
+	SAFE_DELETE(tex);
 }
 
 //============================================================================================================================================
@@ -309,7 +316,8 @@ void Finale::update(float _frameTime)
 			}
 		
 		}
-
+		//カメラの最終パターンでFinがフェードイン
+		tex->update();
 
 		break;
 	default:
@@ -433,6 +441,9 @@ void Finale::render3D(Camera* _currentCamera)
 //============================================================================================================================================
 void Finale::render2D()
 {
+	//テクスチャ
+	tex->render();
+
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
@@ -444,6 +455,7 @@ void Finale::render2D()
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
 }
 
 //============================================================================================================================================
