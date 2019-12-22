@@ -111,33 +111,28 @@ Reticle::Reticle()
 			uv[0][0] + D3DXVECTOR2(UNIT_U, 0.0),
 			uv[0][0] + D3DXVECTOR2(0.0, UNIT_V),
 			uv[0][0] + D3DXVECTOR2(UNIT_U, UNIT_V));
-	}
-
-	//
-	{using namespace EnergyEmpty2DNS;
-
-		energyEmpty2D = new Sprite();
-		//UI情報の設定
-		energyEmpty2D->initialize(
-			*textureNS::reference(textureNS::UI_EN_GUAGE_EMP_P1),	//テクスチャポインタ
-			SpriteNS::CENTER,								//原点
-			(int)((float)UNIT_WIDTH),						//幅
-			(int)((float)UNIT_HEIGHT),					//高さ
-			POSITION1,										//位置
-			ROTATION,										//回転
-			COLOR											//色
-		);
-		//描画UV値を設定
-		reticle2D->setUVCoord(
-			uv[0][0] + D3DXVECTOR2(0.0, 0.0),
-			uv[0][0] + D3DXVECTOR2(UNIT_U, 0.0),
-			uv[0][0] + D3DXVECTOR2(0.0, UNIT_V),
-			uv[0][0] + D3DXVECTOR2(UNIT_U, UNIT_V));
 		//残弾数
 		for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		{
 			remainingBullet[i] = 0;
 		}
+	}
+
+	//
+	{using namespace EnergyEmpty2DNS;
+		energyEmpty2D = new Sprite();
+		//UI情報の設定
+		energyEmpty2D->initialize(
+			*textureNS::reference(textureNS::UI_ENERGY_EMPTY_RETICLE),	//テクスチャポインタ
+			SpriteNS::CENTER,								//原点
+			(int)((float)WIDTH),							//幅
+			(int)((float)HEIGHT),							//高さ
+			POSITION1,										//位置
+			ROTATION,										//回転
+			COLOR											//色
+		);
+
+		displayTime = 0.0f;
 	}
 
 
@@ -178,7 +173,6 @@ void Reticle::setAnime(int playerState)
 			D3DXVECTOR2(1.0f, 0.0),
 			D3DXVECTOR2(0.0, 1.0f),
 			D3DXVECTOR2(1.0f, 1.0f));
-
 		break;
 	case playerNS::STATE::NORMAL:
 	case playerNS::STATE::DEATH:
@@ -229,8 +223,7 @@ void Reticle::setAimingPosition2(D3DXVECTOR3* position)
 //===================================================================================================================================
 void Reticle::update(float frameTime)
 {
-
-
+	displayTime += frameTime;
 	billboard->update(frameTime);
 }
 
@@ -262,6 +255,9 @@ void Reticle::render2D(Player* player)
 	//リロード中判定
 	bool onReload = false;
 
+	//電力フラグ
+	bool onEmpty = false;
+
 	//描画するテクスチャの切り替え
 	switch (player->getState())
 	{
@@ -276,8 +272,17 @@ void Reticle::render2D(Player* player)
 		else {
 			reticle2D->setTexturePointer(*textureNS::reference(textureNS::UI_SUB_DIGITAL_RETICLE));
 		}
-		break;
 
+		if (player->getPower() < playerNS::COST_SHIFT)
+		{
+			onEmpty = true;
+			energyEmpty2D->setAlphaAllVertex(255 * 0.5f*sinf(displayTime*10.0f) + 1.0f);
+		}
+		else {
+			onEmpty = false;
+		}
+
+		break;
 	case playerNS::STATE::NORMAL:
 	case playerNS::STATE::DEATH:
 		{
@@ -328,11 +333,13 @@ void Reticle::render2D(Player* player)
 	//1P
 	case gameMasterNS::PLAYER_1P:
 		reticle2D->setPosition(POSITION1);
+		if (onEmpty)energyEmpty2D->setPosition(EnergyEmpty2DNS::POSITION1);
 		if (onReload)reload2D->setPosition(POSITION1);
 		break;
 	//2P
 	case gameMasterNS::PLAYER_2P:
 		reticle2D->setPosition(POSITION2);
+		if (onEmpty)energyEmpty2D->setPosition(EnergyEmpty2DNS::POSITION2);
 		if (onReload)reload2D->setPosition(POSITION2);
 		break;
 	} 
@@ -341,10 +348,17 @@ void Reticle::render2D(Player* player)
 	reticle2D->setVertex();
 	reticle2D->render();
 	//描画
+	if (onEmpty)
+	{
+		energyEmpty2D->setVertex();
+		energyEmpty2D->render();
+	}
+	//描画
 	if (onReload)
 	{
 		reload2D->setVertex();
 		reload2D->render();
 	}
+
 }
 
