@@ -59,6 +59,7 @@ EffekseerManager::EffekseerManager()
 	fileName[TIGER_BULLET]		= { L"Enemy_Bullet.efk" };
 	fileName[FLOWER_SHOWER]		= { L"Flower_Shower.efk" };
 	fileName[FEATHER]			= { L"Feather.efk" };
+	fileName[BOSS_DEATH]		= { L"Boss_Death.efk" };
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }

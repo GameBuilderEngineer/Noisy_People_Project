@@ -87,6 +87,7 @@ namespace effekseerNS
 		TIGER_BULLET,
 		FLOWER_SHOWER,
 		FEATHER,
+		BOSS_DEATH,
 		MAX_EFFEKSEER,
 	};
 

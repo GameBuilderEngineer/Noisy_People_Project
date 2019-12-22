@@ -762,15 +762,27 @@ void Enemy::prepareAttackTree()
 void Enemy::prepareDie()
 {
 	// 死亡エフェクトの再生
-	deathEffect = new DeathEffect(&position);
+	if (enemyData->type == BEAR)
+	{
+		deathEffect = new DeathEffect(&center, effekseerNS::BOSS_DEATH);
+	}
+	else
+	{
+		deathEffect = new DeathEffect(&position, effekseerNS::ENEMY_DEATH);
+	}
 	deathEffect->scale *= DEATH_EFFECT_SCALE[enemyData->type];
 	effekseerNS::play(0, deathEffect);
+	
 
 	// 追跡マークの削除
 	deleteMark();
 
 	// 死亡アニメーションに切り替え
 	animationManager->switchDead();
+
+	// サウンド
+	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyDefeated, false, NULL, false, NULL };
+	SoundInterface::SE->playSound(&playParameters);
 }
 #pragma endregion
 

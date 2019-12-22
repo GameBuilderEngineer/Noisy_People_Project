@@ -109,6 +109,8 @@ private:
 
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
+	Object*							faceField;			//装飾フィールド 
+	StaticMeshRenderer*				faceFieldRenderer;	//装飾フィールドレンダラー
 
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面

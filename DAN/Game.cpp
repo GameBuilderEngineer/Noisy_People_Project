@@ -69,7 +69,7 @@ Game::~Game()
 //===================================================================================================================================
 void Game::initialize() {
 
-	//テストフィールド
+	//衝突判定フィールド
 	testField = new Object();
 #ifdef SAMPLE_NAVI
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
@@ -79,6 +79,11 @@ void Game::initialize() {
 #endif
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
+	// 装飾フィールド
+	faceField = new Object();
+	faceFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
+	faceFieldRenderer->registerObject(faceField);
+	faceField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
 	player				= new Player[gameMasterNS::PLAYER_NUM];
@@ -341,12 +346,6 @@ void Game::initialize() {
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 	SoundInterface::BGM->playSound(&playParameters[4]);	//オープニングBGM再生
-
-	for (int i = 0; i < treeManager->getTreeList().size(); i++)
-	{
-		treeManager->getTreeList()[i]->transState();
-	}
-
 }
 
 //===================================================================================================================================
@@ -363,6 +362,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
+	SAFE_DELETE(faceField);
+	SAFE_DELETE(faceFieldRenderer);
 	SAFE_DELETE(maleRenderer);
 	SAFE_DELETE(femaleRenderer);
 	SAFE_DELETE(sky);
@@ -442,6 +443,7 @@ void Game::update(float _frameTime) {
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
 		enemyManager->setUpdate(true);							//エネミー更新開始
+		telopManager->play(telopManagerNS::TELOP_TYPE6);
 	}
 	
 	//ゲームタイムの更新
@@ -928,6 +930,10 @@ void Game::update(float _frameTime) {
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
 
+	//装飾フィールドの更新
+	faceField->update();			//オブジェクト
+	faceFieldRenderer->update();	//レンダラー
+
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].update(frameTime);		//オブジェクト
@@ -1249,16 +1255,16 @@ void Game::render3D(Camera* currentCamera) {
 	//スカイドームの描画
 	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
-	//テストフィールドの描画
+	//装飾フィールドの描画
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
 	{
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE_BLACK));
+		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE_BLACK));
 	}
 	else {
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
+		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	}
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 
 	// プレイヤーの描画

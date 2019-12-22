@@ -56,6 +56,7 @@ Tiger::~Tiger()
 }
 
 
+#define TIGER_SOUND_MAX  (40)
 //=============================================================================
 // 更新処理
 //=============================================================================
@@ -99,9 +100,9 @@ void Tiger::update(float frameTime)
 			// ボリューム
 			float distance = D3DXVec3Length(&(position - player[i].position));
 			float volume = 0.0f;
-			if (distance < DISTANCE_MAX)
+			if (distance < TIGER_SOUND_MAX)
 			{
-				volume = (DISTANCE_MAX - distance) / DISTANCE_MAX;
+				volume = (TIGER_SOUND_MAX - distance) / TIGER_SOUND_MAX;
 			}
 			// ボリューム調整
 			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
