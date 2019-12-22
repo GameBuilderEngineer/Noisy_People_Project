@@ -496,7 +496,7 @@ void Game::update(float _frameTime) {
 		SoundInterface::S3D->playSound(&voiceStart);
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] = true;
 	}
-	else if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME -2.0f && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] == false)
+	else if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME -1.5f && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] == false)
 	{
 		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Start, false, NULL, true, gameMasterNS::PLAYER_2P };
 		SoundInterface::S3D->playSound(&voiceStart);
@@ -1251,13 +1251,6 @@ void Game::test()
 	//}
 
 
-	if (input->wasKeyPressed('6'))
-	{
-		//aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
-
-		aiDirector->eventMaker.makeEventBossEntry();
-	}
-
 	//if (input->wasKeyPressed('6'))
 	//{
 	//	aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
@@ -1282,11 +1275,6 @@ void Game::test()
 		treeData.initialPosition = *player->getPosition();
 		treeManager->createTree(treeData);
 	}
-	if (input->wasKeyPressed('4'))	// ƒŠ[ƒt3”Ô‚Ì‚Ý•`‰æ‚ðØ‚é
-	{
-		treeManager->unRegisterLeafRendering(treeManager->getTreeList()[3]->getLeaf(),
-			treeManager->getTreeList()[3]->getTreeData()->model);
-	}	
 	if (input->wasKeyPressed('3'))	// ‘S”jŠü
 	{
 		treeManager->destroyAllTree();

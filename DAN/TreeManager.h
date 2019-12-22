@@ -87,7 +87,6 @@ public:
 	void registerAnalog(Tree* tree);
 	void unRegisterAnalog(Tree* tree);
 
-
 	void destroyAllTree();
 	int	issueNewTreeID();
 	void outputGUI();
