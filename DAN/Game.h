@@ -53,6 +53,7 @@
 #include "Announcement.h"
 #include "Marker.h"
 #include "DamageUI.h"
+#include "Title.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -67,6 +68,22 @@ namespace gameNS
 
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f,0.0f,0.0f);
+
+	enum PHOTOGRAPH_LIST
+	{
+		CAMERA0,
+		CAMERA1,
+		CAMERA2,
+		CAMERA3,
+		CAMERA4,
+		CAMERA5,
+		CAMERA6,
+		CAMERA7,
+		CAMERA8,
+		CAMERA9,
+		MAX_CAMERA
+	};
+	
 }
 
 //===================================================================================================================================
@@ -98,6 +115,7 @@ private:
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
+
 
 	//ビルボード
 	//TestEffect*						testEffect;		//インスタンシングビルボードテスト
@@ -134,11 +152,47 @@ private:
 	
 	//オープニングカメラ
 	Camera* cameraOP;
+	//GameOPカメラターゲットオブジェクト
+	Object* target;
 
 	//BOSSカメラ
 	Camera* cameraBoss;
 
 	int count;
+
+	float moveTime;				//終点までの時間
+	float moveTimer;			//移動タイマー
+	float displayTime;
+	float displayTimer;
+	D3DXVECTOR3 startPos;		//ラープ始点
+
+	//GameOPカメラ操作変数
+	float rate;
+	float rateY;
+	float rateX;
+	float degreeY;
+	float degreeX;
+	float degreeTimer;
+	float degreeTime;
+	float distance;
+	float moveDistance;
+	
+	int stateCamera;
+	float frameDegree = 1.0f / 10.0f;		//自動速度
+	float inputDegree = 2.0f;				//入力速度
+
+	//カメラの軸取得変数
+	D3DXVECTOR3 cameraAxisX;			//カメラ回転軸X
+	D3DXVECTOR3 cameraAxisY;			//カメラ回転軸Y
+	D3DXVECTOR3 cameraAxisZ;			//カメラ回転軸Z
+	D3DXVECTOR3 fixedAxisX;				//固定X軸
+	D3DXVECTOR3 fixedAxisZ;				//固定Z軸
+	D3DXQUATERNION tmpCameraQ;			//カメラの相対位置ベクトルの一時保存
+	D3DXVECTOR3 BezierCurveS1;			//S字ベジェ曲線点１
+	D3DXVECTOR3 BezierCurveS2;			//S字ベジェ曲線点２
+	D3DXVECTOR3 targetDistance;
+	D3DXVECTOR3 newRelative;
+
 public:
 	Game();
 	~Game();
