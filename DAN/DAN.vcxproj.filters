@@ -895,6 +895,9 @@
     <ClCompile Include="Equipment.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClCompile>
+    <ClCompile Include="FinaleTex.cpp">
+      <Filter>Game Layer\Scene\Finale</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1427,6 +1430,9 @@
     </ClInclude>
     <ClInclude Include="Equipment.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Finaletex.h">
+      <Filter>Game Layer\Scene\Finale</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

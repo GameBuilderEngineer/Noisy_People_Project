@@ -140,6 +140,9 @@ namespace textureNS
 		COLOR_SCALE,
 		DATE_ALPHA,
 
+		//Finale
+		FIN,
+
 		MAX_TEXTURE,
 	};
 

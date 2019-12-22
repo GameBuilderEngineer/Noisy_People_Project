@@ -164,6 +164,7 @@
     <ClInclude Include="DigitalShiftEffect.h" />
     <ClInclude Include="DigitalShiftState.h" />
     <ClInclude Include="EnemyChaseMark.h" />
+    <ClInclude Include="Finaletex.h" />
     <ClInclude Include="Marker.h" />
     <ClInclude Include="PartsAnimation.h" />
     <ClInclude Include="PartsAnimationManager.h" />
@@ -340,6 +341,7 @@
     <ClCompile Include="Defeat_Moji.cpp" />
     <ClCompile Include="DigitalShiftEffect.cpp" />
     <ClCompile Include="DigitalShiftState.cpp" />
+    <ClCompile Include="FinaleTex.cpp" />
     <ClCompile Include="GreenRate.cpp" />
     <ClCompile Include="Mark.cpp" />
     <ClCompile Include="Persent.cpp" />

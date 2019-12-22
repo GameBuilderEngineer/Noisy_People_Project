@@ -150,6 +150,9 @@ TextureLoader::TextureLoader()
 	textureName[NEKO] = { "Chara_B.png" };
 	textureName[COLOR_SCALE] = { "colorScale.png" };
 	textureName[DATE_ALPHA] = { "DateAlpha.png" };
+
+	//Finale
+	textureName[FIN] = { "Fin.png" };
 }
 
 //===================================================================================================================================
