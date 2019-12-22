@@ -246,12 +246,73 @@ bool GameMaster::playActionStartCount(int countNum)
 bool GameMaster::playActionRamaining1Min()
 {
 	if (gameTimer > 60)return false;
+
 	if (whetherAchieved(PASSING_REMAINING_ONE_MINUTE))return false;
 
 	setProgress(PASSING_REMAINING_ONE_MINUTE);
 
 	return true;
 }
+//----------------
+// オーバーロード
+//----------------
+bool GameMaster::playActionRamaining1Min(const int action)
+{
+	if (gameTimer > 60)return false;
+
+	setProgress(PASSING_REMAINING_ONE_MINUTE);
+
+	switch (action)
+	{
+	case PASSING_TELOP_ACTIVITY_LIMIT:
+		if (whetherAchieved(PASSING_TELOP_ACTIVITY_LIMIT)) { return false; }
+		if (gameTimer < 60)
+		{
+			setProgress(PASSING_TELOP_ACTIVITY_LIMIT);
+			return true;
+		}
+		break;
+
+	case PASSING_TELOP_CANT_SENSE_GREEN:
+		if (whetherAchieved(PASSING_TELOP_CANT_SENSE_GREEN)) { return false; }
+		if (gameTimer < 56)
+		{
+			setProgress(PASSING_TELOP_CANT_SENSE_GREEN);
+			return true;
+		}
+		break;
+
+	case PASSING_SE_HURRY_UP:
+		if (whetherAchieved(PASSING_SE_HURRY_UP)) { return false; }
+		if (gameTimer < 59)
+		{
+			setProgress(PASSING_SE_HURRY_UP);
+			return true;
+		}
+		break;
+
+	case PASSING_BGM_TEMP_REPLAY:
+		if (whetherAchieved(PASSING_BGM_TEMP_REPLAY)) { return false; }
+		if (gameTimer < 54)
+		{
+			setProgress(PASSING_BGM_TEMP_REPLAY);
+			return true;
+		}
+		break;
+
+	case PASSING_SE_BGM_SPEED_UP:
+		//if (whetherAchieved(PASSING_SE_BGM_SPEED_UP)) { return false; }
+		if (gameTimer < 54)
+		{
+			setProgress(PASSING_SE_BGM_SPEED_UP);
+			return true;
+		}
+		break;
+	}
+
+	return false;
+}
+
 
 //===================================================================================================================================
 //【終了カウントダウン時のアクション】

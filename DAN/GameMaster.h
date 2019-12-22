@@ -82,6 +82,12 @@ namespace gameMasterNS {
 	const int	PASSING_GAME_FINISH				= 0x00080000;//ゲーム終了
 	const int	PASSING_GAME_ENDING				= 0x00100000;//ED終了
 	
+	const int	PASSING_TELOP_ACTIVITY_LIMIT	= 0x00200000;//活動限界テロップ
+	const int	PASSING_TELOP_CANT_SENSE_GREEN  = 0x00400000;//緑化率検知不能テロップ
+	const int	PASSING_SE_HURRY_UP				= 0x00800000;//急げジングル
+	const int	PASSING_BGM_TEMP_REPLAY			= 0x01000000;//一旦BGMストップ後の再開
+	const int	PASSING_SE_BGM_SPEED_UP			= 0x02000000;//BGMスピードアップ
+
 
 	enum EVENT_TYPE
 	{
@@ -162,6 +168,7 @@ public:
 	void updateEndingTime(float frameTime);							//エンディング時間の更新
 	bool paused();													//ポーズ処理
 	bool playActionRamaining1Min();									//残り1分経過時のアクション
+	bool playActionRamaining1Min(const int action);					//残り1分経過時のアクション
 	bool playActionStartCount(int countNum);						//開始カウント3時のアクション
 	bool playActionFinishCount(int countNum);						//終了カウント3時のアクション
 

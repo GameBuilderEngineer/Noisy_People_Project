@@ -95,11 +95,11 @@ private:
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面
 
-	StaticMeshRenderer*		MoveP;
-	MOVEP*					MoveP1;
+	StaticMeshRenderer*				MoveP;
+	MOVEP*							MoveP1;
 
 	//ビルボード
-	//TestEffect*						testEffect;			//インスタンシングビルボードテスト
+	//TestEffect*						testEffect;		//インスタンシングビルボードテスト
 	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
 	Advertisement*					ad;					//開発中広告
 
@@ -124,7 +124,7 @@ private:
 	MarkerRenderer*					markerRenderer;		//マーカー
 
 	//再生パラメータ
-	PLAY_PARAMETERS playParameters[4];
+	PLAY_PARAMETERS					playParameters[6];
 
 
 	//Network

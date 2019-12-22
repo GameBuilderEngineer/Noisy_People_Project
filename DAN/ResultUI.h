@@ -82,6 +82,9 @@ public: //メンバー関数
 	void decidionBGM();
 	int decisionRank(int greening, int greenNum, int defeat);
 	
+	// 中込追記部分
 	GameMaster* gameMaster;			// ゲームマスターのポインタ
+	PLAY_PARAMETERS seParameter;	// サウンドパラメータ
+	bool wasSEPlayed[2];			// サウンド鳴ったか
 };
 

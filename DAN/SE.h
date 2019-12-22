@@ -50,6 +50,8 @@ enum SE_LIST
 	SE_Result,
 	SE_HurryUp,
 	SE_CountDown,
+	SE_BossSpawning,
+	SE_Score2,
 	SE_MAX
 };
 
@@ -66,7 +68,7 @@ static const char *SEPathList[SE_LIST::SE_MAX] = {
 	"SE_EnemyAttack.wav","SE_EnemyAttackHit.wav","SE_EnemyDefeated.wav",
 	"SE_StartGame.wav","SE_AnnounceTelop.wav","SE_Telop.wav","SE_TimeUp.wav",
 	"SE_Bird0.wav","SE_Bird1.wav","SE_Wind.wav","SE_Result.wav","SE_HurryUp.wav",
-	"SE_CountDown.wav"
+	"SE_CountDown.wav", "SE_BossSpawning.wav","SE_Score2.wav"
 };
 
 //===================================================================================================================================

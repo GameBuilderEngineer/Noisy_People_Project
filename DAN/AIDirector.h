@@ -129,6 +129,7 @@ private:
 	//OperationGenerator opeGenerator;	// イベント実行モジュール
 	int frameCnt;						// フレームカウンタ
 
+
 	GameMaster* gameMaster;				// ゲーム管理オブジェクト
 	LPD3DXMESH fieldMesh;				// フィールドメッシュ
 	Player* player;						// プレイヤー

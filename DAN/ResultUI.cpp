@@ -23,7 +23,11 @@ ResultUI::ResultUI()
 	uiCharacter01 = new UIcharacter;//プレイヤー1
 	uiCharacter02 = new UIcharacter;;//プレイヤー2
 	uiRank = new UIrank;
-}
+
+	//中込追記
+	seParameter = { ENDPOINT_VOICE_LIST::ENDPOINT_SE,  SE_LIST::SE_Score2, false,NULL,false,NULL };
+	ZeroMemory(wasSEPlayed, sizeof(bool) * 2);
+} 
 
 //============================
 //デストラクタ
@@ -154,23 +158,36 @@ void ResultUI::update(float flameTime,bool texStart)
 
 		time += flameTime;
 
-		//フェイズの更新
-		if (time > PHASE_TIME)
+	//フェイズの更新
+	if (time > PHASE_TIME)
+	{
+		resultPhase = PHASE_02;
+		uiNumber[uiNumberNS::GREENIG_PERSENT].update(greenigPersent);
+	}
+	if (time > 5.0f)
+	{
+		resultPhase= PHASE_03;
+	}
+
+	// 中込追記部分（サウンド）
+	if (time > 8.2f && wasSEPlayed[0] == false)
+	{
+		wasSEPlayed[0] = true;
+		SoundInterface::SE->playSound(&seParameter);
+	}
+	if (time > 9.7f && wasSEPlayed[1] == false)
+	{
+		wasSEPlayed[1] = true;
+		SoundInterface::SE->playSound(&seParameter);
+	}
+
+	if (time > 10.0f)
+	{
+		resultPhase = PHASE_04;
+		//数字
+		int score[uiNumberNS::GREENIG_PERSENT] = { greeningNum01,greeningNum02,defeat01,defeat02 };
+		for (int i = 0; i < uiNumberNS::GREENIG_PERSENT; i++)
 		{
-			resultPhase = PHASE_02;
-			uiNumber[uiNumberNS::GREENIG_PERSENT].update(greenigPersent);
-		}
-		if (time > 5.0f)
-		{
-			resultPhase= PHASE_03;
-		}
-		if (time > 10.0f)
-		{
-			resultPhase = PHASE_04;
-			//数字
-			int score[uiNumberNS::GREENIG_PERSENT] = { greeningNum01,greeningNum02,defeat01,defeat02 };
-			for (int i = 0; i < uiNumberNS::GREENIG_PERSENT; i++)
-			{
 			uiNumber[i].update(score[i]);
 			}
 			
@@ -186,6 +203,8 @@ void ResultUI::update(float flameTime,bool texStart)
 			decidionBGM();
 		}
 	}
+
+	// 中込追記部分（ボイス）
 	if (time > 14.0f && gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_1P] == false && score > 70)
 	{
 		PLAY_PARAMETERS voiceFinish = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Male_Finish, false, NULL, true, gameMasterNS::PLAYER_1P };

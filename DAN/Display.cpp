@@ -71,7 +71,7 @@ void Display::initialize()
 	syncTimer = 0.0f;
 	//テストフィールド
 	testField = new Object();
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
@@ -105,6 +105,9 @@ void Display::initialize()
 	treeManager->createUsingTool();
 	treeManager->switchingNormalView(gameMasterNS::PLAYER_1P);
 
+	//スカイドームの初期化
+	sky = new Sky();
+
 	networkServer = new NETWORK_INTERFACE;
 }
 
@@ -119,6 +122,7 @@ void Display::uninitialize(void)
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(networkServer);
+	SAFE_DELETE(sky);
 }
 
 //===================================================================================================================================
@@ -189,6 +193,8 @@ void Display::update(float _frameTime)
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
 
+	//スカイドームの更新
+	sky->update();
 
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
@@ -275,6 +281,8 @@ void Display::render3D(Camera currentCamera)
 	//ツリーの描画
 	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	//スカイドームの描画
+	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 }
 
 //===================================================================================================================================

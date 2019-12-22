@@ -35,6 +35,10 @@ private:
 	ItemManager* itemManager;			// アイテム管理オブジェクト
 	TelopManager* telopManager;			// テロップ管理オブジェクト
 	Ray ray;
+
+	bool wasBossEntried;
+	bool wasTelopDisplayed[3];
+	float bossEntryTime;
 	
 public:
 	// 初期化
@@ -49,4 +53,5 @@ public:
 	void enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _attackTarget);
 	// 巨大環境破壊ロボが登場
 	void bossEntry(enemyNS::ENEMYSET _enemySet);
+	void updateBossEvent();
 };
