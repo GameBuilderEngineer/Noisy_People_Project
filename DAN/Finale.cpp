@@ -133,7 +133,6 @@ void Finale::uninitialize(void)
 	SAFE_DELETE(target);
 
 	// ツリーマネージャー
-	treeManager->uninitialize();
 	SAFE_DELETE(treeManager);
 }
 
@@ -395,7 +394,7 @@ void Finale::render()
 	effekseerNS::render(0);
 
 	// 3D
-	render3D(*camera);
+	render3D(camera);
 
 	// 2D
 	render2D();
@@ -405,17 +404,17 @@ void Finale::render()
 //============================================================================================================================================
 //【3D描画】
 //============================================================================================================================================
-void Finale::render3D(Camera _currentCamera)
+void Finale::render3D(Camera* _currentCamera)
 {
 
 	//フィナーレフィールド（テスト）
-	finaleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	finaleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
 	//スカイフィールドの描画
-	sky->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	sky->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
 	//ツリーの描画
-	treeManager->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	treeManager->render(_currentCamera);
 }
 
 //============================================================================================================================================

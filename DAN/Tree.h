@@ -148,6 +148,7 @@ private:
 	bool							selectShift[gameMasterNS::PLAYER_NUM];			//シフト先として選択されている
 public:
 	int								playerNo;
+	bool							culling;
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();

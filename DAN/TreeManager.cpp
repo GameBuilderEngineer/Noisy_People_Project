@@ -3,16 +3,24 @@
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
-// 更新日 : 2019/11/12 【菅野 樹】
+// 更新日 : 2019/12/22 【菅野 樹】
 //-----------------------------------------------------------------------------
+
+//=============================================================================
+//【インクルード】
+//=============================================================================
 #include "TreeManager.h"
 #include "ImguiManager.h"
 #include "TreeTools.h"
-using namespace treeNS;
-
+#include "UtilityFunction.h"
 
 //=============================================================================
-// 初期化
+//【using宣言】
+//=============================================================================
+using namespace treeNS;
+
+//=============================================================================
+//【初期化】
 //=============================================================================
 void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
@@ -30,26 +38,11 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	cTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_TRUNK));
 	cLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_LEAF));
 
-	// 描画オブジェクトの作成
-	//デジタルツリー
-	aDTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_TRUNK));
-	aDLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::A_LEAF));
-	bDTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_TRUNK));
-	bDLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::B_LEAF));
-	cDTrunkRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_TRUNK));
-	cDLeafRenderer	= new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::C_LEAF));
-
 	//アナログツリー(葉)
 	//透過処理を有効にする
 	aLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	bLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 	cLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-
-	//デジタルツリー(葉)
-	//透過処理を有効にする
-	aDLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bDLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cDLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
 
 	//デジタルツリーエフェクト
 	treeEffect = new TreeEffect();
@@ -58,11 +51,7 @@ void TreeManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 
 	gameMaster = NULL;
 
-#if 0	// ツリーツールのデータを読み込む
-
-#endif
 }
-
 
 //=============================================================================
 //【デストラクタ】
@@ -92,18 +81,10 @@ void TreeManager::uninitialize()
 	SAFE_DELETE(bTrunkRenderer);
 	SAFE_DELETE(aLeafRenderer);
 	SAFE_DELETE(aTrunkRenderer);
-	//デジタルツリー
-	SAFE_DELETE(cDLeafRenderer);
-	SAFE_DELETE(cDTrunkRenderer);
-	SAFE_DELETE(bDLeafRenderer);
-	SAFE_DELETE(bDTrunkRenderer);
-	SAFE_DELETE(aDLeafRenderer);
-	SAFE_DELETE(aDTrunkRenderer);
 
 	//デジタルツリーエフェクト
 	SAFE_DELETE(treeEffect);
 }
-
 
 //=============================================================================
 // 更新処理
@@ -112,6 +93,8 @@ void TreeManager::update(float frameTime)
 {
 	//緑化した本数を数えなおす
 	greeningTreeNum = 0;
+
+
 	//各ツリーの更新
 	for (size_t i = 0; i < treeList.size(); i++)
 	{
@@ -132,8 +115,6 @@ void TreeManager::update(float frameTime)
 		//レンダラーの切替
 		if (needSwap)
 		{
-			//レンダラーの切替
-			swapDA(tree, beforeType);
 
 			TreeData* data = tree->getTreeData();
 			TreeTable in;
@@ -183,32 +164,16 @@ void TreeManager::update(float frameTime)
 	}
 
 
-	//レンダラーの更新
-	aTrunkRenderer->update();
-	aLeafRenderer->update();
-	bTrunkRenderer->update();
-	bLeafRenderer->update();
-	cTrunkRenderer->update();
-	cLeafRenderer->update();
-
-	//レンダラーの更新
-	aDTrunkRenderer->update();
-	aDLeafRenderer->update();
-	bDTrunkRenderer->update();
-	bDLeafRenderer->update();
-	cDTrunkRenderer->update();
-	cDLeafRenderer->update();
 
 	//デジタルツリーエフェクトの更新
 	treeEffect->update(frameTime);
 
 }
 
-
 //=============================================================================
-// 描画処理
+//【描画】
 //=============================================================================
-void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+void TreeManager::render(Camera* camera)
 {
 #ifdef _DEBUG
 	for (size_t i = 0; i < treeList.size(); i++)
@@ -217,25 +182,277 @@ void TreeManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 	}
 #endif // _DEBUG
 
-	//アナログツリー
-	aTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	aLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	bTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	bLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	cTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	cLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	//カリング処理
+	//for (size_t i = 0; i < treeList.size(); i++)
+	//{
+	//	Tree* tree = treeList[i];
+	//	D3DXVECTOR3 center = tree->position;
+	//	float radius = tree->radius;
+	//	if (UtilityFunction::culling(
+	//		center, radius, camera[i].view, camera[i].fieldOfView,
+	//		camera[i].nearZ, camera[i].farZ, camera[i].aspect))
+	//	{
+	//		tree->culling = false;//カリングしない
+	//	}
+	//	else {
+	//		tree->culling = true;//カリングする
+	//	}
+	//}
+	
+	//全描画解除
+	allUnRegister();
 
-	//デジタルツリー
-	aDTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	aDLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	bDTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	bDLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	cDTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-	cDLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	//全描画登録
+	allRegister();
+
+	//アナログツリー
+	aTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), camera->view, camera->projection, camera->position);
+	aLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), camera->view, camera->projection, camera->position);
+	bTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), camera->view, camera->projection, camera->position);
+	bLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), camera->view, camera->projection, camera->position);
+	cTrunkRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), camera->view, camera->projection, camera->position);
+	cLeafRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), camera->view, camera->projection, camera->position);
 
 	//デジタルツリーエフェクトの描画
-	treeEffect->render(view, projection, cameraPosition);
+	treeEffect->render(camera->view, camera->projection, camera->position);
 }
+
+//=============================================================================
+//【ツールデータを使用してツリーを作成】
+//=============================================================================
+void TreeManager::createUsingTool()
+{
+	TREE_TOOLS* treeTools = new TREE_TOOLS;
+	for (int i = 0; i < treeTools->GetTreeMax(); i++)
+	{
+		createTree(treeTools->GetTreeSet(i));
+	}
+	SAFE_DELETE(treeTools);
+}
+
+//=============================================================================
+//【ツリーオブジェクトの作成】
+//=============================================================================
+void TreeManager::createTree(TreeData treeData)
+{
+	Tree* tree = new Tree(treeData);	// ツリー作成
+
+	//ビルボード（マーカー/標識）の作成
+	treeEffect->generateInstance(TreeEffectNS::INSTANCE_MARKER, tree);
+	treeEffect->generateInstance(TreeEffectNS::INSTANCE_SIGN, tree);
+
+	tree->setAttractor(attractorMesh, attractorMatrix);
+	treeList.push_back(tree);
+	treeNum = tree->getNumOfTree();
+}
+
+//=============================================================================
+//【全ツリーオブジェクトの破棄】
+//=============================================================================
+void TreeManager::destroyAllTree()
+{
+	// 描画全解除
+	allUnRegister();
+
+	//全削除
+	for (int i = 0; i < treeList.size(); i++)
+	{
+		SAFE_DELETE(treeList[i]);
+	}
+	treeList.clear();
+}
+
+//=============================================================================
+//【ツリー描画登録】
+//=============================================================================
+void TreeManager::registerTrunk(Tree* tree)
+{
+	//幹の登録
+	switch (tree->getTreeData()->model)
+	{
+	case A_MODEL:aTrunkRenderer->registerObject(tree);break;
+	case B_MODEL:bTrunkRenderer->registerObject(tree);break;
+	case C_MODEL:cTrunkRenderer->registerObject(tree);break;
+	}
+}
+
+//=============================================================================
+//【ツリー描画解除】
+//=============================================================================
+void TreeManager::unRegisterTrunk(Tree* tree)
+{
+	//幹の解除
+	switch (tree->getTreeData()->model)
+	{
+	case A_MODEL:aTrunkRenderer->unRegisterObjectByID(tree->id); break;
+	case B_MODEL:bTrunkRenderer->unRegisterObjectByID(tree->id); break;
+	case C_MODEL:cTrunkRenderer->unRegisterObjectByID(tree->id); break;
+	}
+}
+
+//=============================================================================
+// リーフ描画登録
+//=============================================================================
+void TreeManager::registerLeafRendering(Object* leaf, int _model)
+{
+	switch (_model)
+	{
+	case A_MODEL:	aLeafRenderer->registerObject(leaf);	break;
+	case B_MODEL:	bLeafRenderer->registerObject(leaf);	break;
+	case C_MODEL:	cLeafRenderer->registerObject(leaf);	break;
+	}
+}
+
+//=============================================================================
+// リーフ描画解除
+//=============================================================================
+void TreeManager::unRegisterLeafRendering(Object* leaf, int _model)
+{
+	switch (_model)
+	{
+	case A_MODEL:	aLeafRenderer->unRegisterObjectByID(leaf->id);	break;
+	case B_MODEL:	bLeafRenderer->unRegisterObjectByID(leaf->id);	break;
+	case C_MODEL:	cLeafRenderer->unRegisterObjectByID(leaf->id);	break;
+	}
+}
+
+
+//=============================================================================
+// 全ツリーの描画登録
+//=============================================================================
+void TreeManager::allRegister()
+{
+	Tree* tree = NULL;
+	TreeData data;
+	for (int i = 0; i < treeList.size(); i++)
+	{
+		tree = treeList[i];
+		data = *tree->getTreeData();
+
+		//カリング
+		if (tree->culling)continue;
+
+		//幹の登録
+		registerTrunk(tree);
+
+		//葉の登録
+		switch (data.type)
+		{
+		case treeNS::ANALOG_TREE:
+			//葉の登録
+			if(data.greenState == treeNS::GREEN)
+				registerLeafRendering(tree, data.model);
+			break;
+		case treeNS::DIGITAL_TREE:
+			//葉の登録
+			registerLeafRendering(tree, data.model);
+			break;
+		}
+	}
+
+	//レンダラーの更新
+	aTrunkRenderer->update();
+	aLeafRenderer->update();
+	bTrunkRenderer->update();
+	bLeafRenderer->update();
+	cTrunkRenderer->update();
+	cLeafRenderer->update();
+}
+
+//=============================================================================
+// 全ツリーの描画解除
+//=============================================================================
+void TreeManager::allUnRegister()
+{
+	//アナログ
+	aLeafRenderer->allUnRegister();
+	aTrunkRenderer->allUnRegister();
+	bLeafRenderer->allUnRegister();
+	bTrunkRenderer->allUnRegister();
+	cLeafRenderer->allUnRegister();
+	cTrunkRenderer->allUnRegister();
+
+}
+
+//=============================================================================
+//【通常ビューに切り替える】
+//=============================================================================
+void TreeManager::switchingNormalView(int playerNo)
+{
+	//アナログツリーの透過値の設定
+	aTrunkRenderer->setAlpha(1.0f);
+	aLeafRenderer->setAlpha(1.0f);
+	bTrunkRenderer->setAlpha(1.0f);
+	bLeafRenderer->setAlpha(1.0f);
+	cTrunkRenderer->setAlpha(1.0f);
+	cLeafRenderer->setAlpha(1.0f);
+
+	//アナログツリー
+	aTrunkRenderer->setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	aLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	bTrunkRenderer->setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	bLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+	cTrunkRenderer->setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
+	cLeafRenderer->setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
+
+	aTrunkRenderer->enableRender();
+	aLeafRenderer->enableRender();
+	bTrunkRenderer->enableRender();
+	bLeafRenderer->enableRender();
+	cTrunkRenderer->enableRender();
+	cLeafRenderer->enableRender();
+
+
+	//ツリーエフェクト
+	treeEffect->disableRender();
+
+	//デジタルツリーエフェクトの非表示
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+		{
+			//通常描画時は描画しない
+			tree->switchingShownDigitalEffect(false, playerNo);
+		}
+	}
+};
+
+//=============================================================================
+//【ビジョンビューに切り替える】
+//=============================================================================
+void TreeManager::switchingVisionView(int playerNo)
+{
+	//描画しない
+	aTrunkRenderer->disableRender();
+	aLeafRenderer->disableRender();
+	bTrunkRenderer->disableRender();
+	bLeafRenderer->disableRender();
+	cTrunkRenderer->disableRender();
+	cLeafRenderer->disableRender();
+
+	//ツリーエフェクト
+	treeEffect->enableRender();
+
+	//デジタルツリーエフェクトの表示
+	for (size_t i = 0; i < treeList.size(); i++)
+	{
+		Tree* tree = treeList[i];
+		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
+		{
+			if (tree->getSelected(playerNo))
+			{
+				//選択されている場合は、ライトを表示しない
+				tree->switchingShownDigitalEffect(false, playerNo);
+			}
+			else {
+				//選択されていなければデジタルツリーエフェクトを表示する
+				tree->switchingShownDigitalEffect(true, playerNo);
+			}
+		}
+	}
+
+};
 
 //=============================================================================
 //【デジタルツリー用のエフェクトを再生する】
@@ -276,394 +493,6 @@ void TreeManager::stopDigitalTreeEffect(int playerNo)
 	}
 }
 
-
-//=============================================================================
-//【通常ビューに切り替える】
-//=============================================================================
-void TreeManager::switchingNormalView(int playerNo)
-{
-	//アナログツリーの透過値の設定
-	aTrunkRenderer->setAlpha(1.0f);
-	aLeafRenderer->setAlpha(1.0f);
-	bTrunkRenderer->setAlpha(1.0f);
-	bLeafRenderer->setAlpha(1.0f);
-	cTrunkRenderer->setAlpha(1.0f);
-	cLeafRenderer->setAlpha(1.0f);
-
-	//アナログツリー
-	aTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
-	aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
-	bLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
-	cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-
-	aTrunkRenderer->	enableRender();
-	aLeafRenderer->		enableRender();
-	bTrunkRenderer->	enableRender();
-	bLeafRenderer->		enableRender();
-	cTrunkRenderer->	enableRender();
-	cLeafRenderer->		enableRender();
-
-	//デジタルツリー
-	aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
-	aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
-	bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::LAMBERT_PASS);
-	cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-
-	aDTrunkRenderer->	enableRender();
-	aDLeafRenderer->	enableRender();
-	bDTrunkRenderer->	enableRender();
-	bDLeafRenderer->	enableRender();
-	cDTrunkRenderer->	enableRender();
-	cDLeafRenderer->	enableRender();
-
-	//ツリーエフェクト
-	treeEffect->disableRender();
-
-	//デジタルツリーエフェクトの非表示
-	for (size_t i = 0; i < treeList.size(); i++)
-	{
-		Tree* tree = treeList[i];
-		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
-		{
-			//通常描画時は描画しない
-			tree->switchingShownDigitalEffect(false, playerNo);
-		}
-	}
-};
-
-//=============================================================================
-//【ビジョンビューに切り替える】
-//=============================================================================
-void TreeManager::switchingVisionView(int playerNo)
-{
-
-	//アナログツリーの透過値の設定
-	aTrunkRenderer->setAlpha(0.3f);
-	aLeafRenderer->setAlpha(0.3f);
-	bTrunkRenderer->setAlpha(0.3f);
-	bLeafRenderer->setAlpha(0.3f);
-	cTrunkRenderer->setAlpha(0.3f);
-	cLeafRenderer->setAlpha(0.3f);
-	//アナログツリー
-	//aTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//aLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//bTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//bLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//cTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//cLeafRenderer->		setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-
-	aTrunkRenderer->	disableRender();
-	aLeafRenderer->		disableRender();
-	bTrunkRenderer->	disableRender();
-	bLeafRenderer->		disableRender();
-	cTrunkRenderer->	disableRender();
-	cLeafRenderer->		disableRender();
-
-	//デジタルツリー
-	//aDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//aDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//bDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//bDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//cDTrunkRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-	//cDLeafRenderer->	setRenderPass(staticMeshRendererNS::TRANSPARENT_PASS);
-
-	aDTrunkRenderer->	disableRender();
-	aDLeafRenderer->	disableRender();
-	bDTrunkRenderer->	disableRender();
-	bDLeafRenderer->	disableRender();
-	cDTrunkRenderer->	disableRender();
-	cDLeafRenderer->	disableRender();
-
-	//ツリーエフェクト
-	treeEffect->enableRender();
-
-	//デジタルツリーエフェクトの表示
-	for (size_t i = 0; i < treeList.size(); i++)
-	{
-		Tree* tree = treeList[i];
-		if (tree->getTreeData()->type == treeNS::DIGITAL_TREE)
-		{
-			if (tree->getSelected(playerNo))
-			{
-				//選択されている場合は、ライトを表示しない
-				tree->switchingShownDigitalEffect(false,playerNo);
-			}
-			else {
-				//選択されていなければデジタルツリーエフェクトを表示する
-				tree->switchingShownDigitalEffect(true,playerNo);
-			}
-		}
-	}
-
-};
-
-//=============================================================================
-//【ワイヤーフレーム描画に切り替える】
-//=============================================================================
-void TreeManager::changeWireFrame()
-{
-	aTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
-	aLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
-	bTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
-	bLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
-	cTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
-	cLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
-	aTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
-	aLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
-	bTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
-	bLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
-	cTrunkRenderer->setFillMode(staticMeshRendererNS::WIREFRAME);
-	cLeafRenderer->	setFillMode(staticMeshRendererNS::WIREFRAME);
-
-};
-
-//=============================================================================
-//【ソリッド描画に切り替える】
-//=============================================================================
-void TreeManager::changeSolid()
-{
-	aTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
-	aLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
-	bTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
-	bLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
-	cTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
-	cLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
-	aTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
-	aLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
-	bTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
-	bLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
-	cTrunkRenderer->setFillMode(staticMeshRendererNS::SOLID);
-	cLeafRenderer->	setFillMode(staticMeshRendererNS::SOLID);
-};
-
-//=============================================================================
-//【ツールデータを使用してツリーを作成】
-//=============================================================================
-void TreeManager::createUsingTool()
-{
-	TREE_TOOLS* treeTools = new TREE_TOOLS;
-	for (int i = 0; i < treeTools->GetTreeMax(); i++)
-	{
-		createTree(treeTools->GetTreeSet(i));
-	}
-	SAFE_DELETE(treeTools);
-}
-
-//=============================================================================
-// ツリーオブジェクトの作成
-//=============================================================================
-void TreeManager::createTree(TreeData treeData)
-{
-	Tree* tree = new Tree(treeData);	// ツリー作成
-	
-	//アナログ/デジタル ツリーレンダラーへ登録
-	switch (tree->getTreeData()->type)
-	{
-	case ANALOG_TREE:
-		registerAnalog(tree);
-		break;
-	case DIGITAL_TREE:
-		registerDigital(tree);
-		break;
-	}
-
-	treeEffect->generateInstance(TreeEffectNS::INSTANCE_MARKER,tree);
-	treeEffect->generateInstance(TreeEffectNS::INSTANCE_SIGN,tree);
-
-	tree->setAttractor(attractorMesh, attractorMatrix);
-	treeList.push_back(tree);
-	treeNum = tree->getNumOfTree();
-}
-
-//=============================================================================
-//【(アナログ<->デジタル)レンダラーの交換】
-//=============================================================================
-void TreeManager::swapDA(Tree* tree,int beforeType)
-{
-	if (tree->getTreeData()->type == beforeType)
-	{
-		switch (tree->getTreeData()->type)
-		{
-		case ANALOG_TREE:
-			unRegisterAnalog(tree);
-			registerAnalog(tree);
-			break;
-		case DIGITAL_TREE:
-			unRegisterDigital(tree);
-			registerDigital(tree);
-			break;
-		}
-		return;
-	}
-
-	switch (tree->getTreeData()->type)
-	{
-	case ANALOG_TREE:
-		registerAnalog(tree);
-		unRegisterDigital(tree);
-		break;
-	case DIGITAL_TREE:
-		registerDigital(tree);
-		unRegisterAnalog(tree);
-		break;
-	}
-}
-
-
-//=============================================================================
-//【デジタルツリー描画登録】
-//=============================================================================
-void TreeManager::registerDigital(Tree* tree)
-{
-	//幹の登録
-	switch (tree->getTreeData()->model)
-	{
-	case A_MODEL:aDTrunkRenderer->registerObject(tree);break;
-	case B_MODEL:bDTrunkRenderer->registerObject(tree);break;
-	case C_MODEL:cDTrunkRenderer->registerObject(tree);break;
-	}
-
-	//葉の登録
-	tree->getLeaf()->onActive = true;
-	switch (tree->getTreeData()->model)
-	{
-	case A_MODEL:aDLeafRenderer->registerObject(tree->getLeaf());break;
-	case B_MODEL:bDLeafRenderer->registerObject(tree->getLeaf());break;
-	case C_MODEL:cDLeafRenderer->registerObject(tree->getLeaf());break;
-	}
-}
-
-//=============================================================================
-//【デジタルツリー描画解除】
-//=============================================================================
-void TreeManager::unRegisterDigital(Tree* tree)
-{
-	//幹の解除
-	switch (tree->getTreeData()->model)
-	{
-	case A_MODEL:aDTrunkRenderer->unRegisterObjectByID(tree->id); break;
-	case B_MODEL:bDTrunkRenderer->unRegisterObjectByID(tree->id); break;
-	case C_MODEL:cDTrunkRenderer->unRegisterObjectByID(tree->id); break;
-	}
-
-	//葉の解除
-	switch (tree->getTreeData()->model)
-	{
-	case A_MODEL:aDLeafRenderer->unRegisterObjectByID(tree->getLeaf()->id); break;
-	case B_MODEL:bDLeafRenderer->unRegisterObjectByID(tree->getLeaf()->id); break;
-	case C_MODEL:cDLeafRenderer->unRegisterObjectByID(tree->getLeaf()->id); break;
-	}
-}
-
-//=============================================================================
-//【アナログツリー描画登録】
-//=============================================================================
-void TreeManager::registerAnalog(Tree* tree)
-{
-	//幹の登録
-	switch (tree->getTreeData()->model)
-	{
-	case A_MODEL:aTrunkRenderer->registerObject(tree);break;
-	case B_MODEL:bTrunkRenderer->registerObject(tree);break;
-	case C_MODEL:cTrunkRenderer->registerObject(tree);break;
-	}
-
-	//葉の登録
-	if (tree->getTreeData()->greenState == GREEN) {
-		tree->getLeaf()->onActive = true;
-		switch (tree->getTreeData()->model)
-		{
-		case A_MODEL:aLeafRenderer->registerObject(tree->getLeaf());break;
-		case B_MODEL:bLeafRenderer->registerObject(tree->getLeaf());break;
-		case C_MODEL:cLeafRenderer->registerObject(tree->getLeaf());break;
-		}
-	}
-
-}
-
-//=============================================================================
-//【アナログツリー描画解除】
-//=============================================================================
-void TreeManager::unRegisterAnalog(Tree* tree)
-{
-	//幹の解除
-	switch (tree->getTreeData()->model)
-	{
-	case A_MODEL:aTrunkRenderer->unRegisterObjectByID(tree->id); break;
-	case B_MODEL:bTrunkRenderer->unRegisterObjectByID(tree->id); break;
-	case C_MODEL:cTrunkRenderer->unRegisterObjectByID(tree->id); break;
-	}
-
-	//葉の解除
-	switch (tree->getTreeData()->model)
-	{
-	case A_MODEL:aLeafRenderer->unRegisterObjectByID(tree->getLeaf()->id); break;
-	case B_MODEL:bLeafRenderer->unRegisterObjectByID(tree->getLeaf()->id); break;
-	case C_MODEL:cLeafRenderer->unRegisterObjectByID(tree->getLeaf()->id); break;
-	}
-}
-
-//=============================================================================
-// リーフ描画登録
-//=============================================================================
-void TreeManager::registerLeafRendering(Object* leaf, int _model)
-{
-	switch (_model)
-	{
-	case A_MODEL:	aLeafRenderer->registerObject(leaf);	break;
-	case B_MODEL:	bLeafRenderer->registerObject(leaf);	break;
-	case C_MODEL:	cLeafRenderer->registerObject(leaf);	break;
-	}
-}
-
-//=============================================================================
-// リーフ描画解除
-//=============================================================================
-void TreeManager::unRegisterLeafRendering(Object* leaf, int _model)
-{
-	switch (_model)
-	{
-	case A_MODEL:	aLeafRenderer->unRegisterObjectByID(leaf->id);	break;
-	case B_MODEL:	bLeafRenderer->unRegisterObjectByID(leaf->id);	break;
-	case C_MODEL:	cLeafRenderer->unRegisterObjectByID(leaf->id);	break;
-	}
-}
-
-
-//=============================================================================
-// 全ツリーオブジェクトの破棄
-//=============================================================================
-void TreeManager::destroyAllTree()
-{
-	// 描画全解除
-	//アナログ
-	aLeafRenderer->allUnRegister();
-	aTrunkRenderer->allUnRegister();
-	bLeafRenderer->allUnRegister();
-	bTrunkRenderer->allUnRegister();
-	cLeafRenderer->allUnRegister();
-	cTrunkRenderer->allUnRegister();
-
-	//デジタル
-	aDLeafRenderer->allUnRegister();
-	aDTrunkRenderer->allUnRegister();
-	bDLeafRenderer->allUnRegister();
-	bDTrunkRenderer->allUnRegister();
-	cDLeafRenderer->allUnRegister();
-	cDTrunkRenderer->allUnRegister();
-
-	for (int i = 0; i < treeList.size(); i++)
-	{
-		SAFE_DELETE(treeList[i]);
-	}
-	treeList.clear();
-}
-
-
 //=============================================================================
 // ツリーIDを発行する
 //=============================================================================
@@ -673,7 +502,6 @@ int TreeManager::issueNewTreeID()
 	nextID++;
 	return ans;
 }
-
 
 //=============================================================================
 // ImGuiに出力
@@ -689,19 +517,12 @@ void TreeManager::outputGUI()
 		ImGui::Text("numOfTree:%d", Tree::getNumOfTree());
 		ImGui::Text("greeningRate:%.02f%", greeningRate*100.0f);
 		
-		ImGui::Text("AnalogTrunkA[Num:%d]",	aTrunkRenderer->getObjectNum());
-		ImGui::Text("AnalogTrunkB[Num:%d]",	bTrunkRenderer->getObjectNum());
-		ImGui::Text("AnalogTrunkC[Num:%d]",	cTrunkRenderer->getObjectNum());
-		ImGui::Text("AnalogLeafA[Num:%d]",	aLeafRenderer->getObjectNum());
-		ImGui::Text("AnalogLeafB[Num:%d]",	bLeafRenderer->getObjectNum());
-		ImGui::Text("AnalogLeafC[Num:%d]",	cLeafRenderer->getObjectNum());
-
-		ImGui::Text("DigitalTrunkA[Num:%d]", aDTrunkRenderer->getObjectNum());
-		ImGui::Text("DigitalTrunkB[Num:%d]", bDTrunkRenderer->getObjectNum());
-		ImGui::Text("DigitalTrunkC[Num:%d]", cDTrunkRenderer->getObjectNum());
-		ImGui::Text("DigitalLeafA[Num:%d]", aDLeafRenderer->getObjectNum());
-		ImGui::Text("DigitalLeafB[Num:%d]", bDLeafRenderer->getObjectNum());
-		ImGui::Text("DigitalLeafC[Num:%d]", cDLeafRenderer->getObjectNum());
+		ImGui::Text("TrunkA[Num:%d]",	aTrunkRenderer->getObjectNum());
+		ImGui::Text("TrunkB[Num:%d]",	bTrunkRenderer->getObjectNum());
+		ImGui::Text("TrunkC[Num:%d]",	cTrunkRenderer->getObjectNum());
+		ImGui::Text("LeafA[Num:%d]",	aLeafRenderer->getObjectNum());
+		ImGui::Text("LeafB[Num:%d]",	bLeafRenderer->getObjectNum());
+		ImGui::Text("LeafC[Num:%d]",	cLeafRenderer->getObjectNum());
 
 	}
 #endif

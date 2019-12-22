@@ -252,7 +252,7 @@ void Display::render()
 	camera->renderReady();
 
 	//3D描画
-	render3D(*camera);
+	render3D(camera);
 
 	//エフェクシアーの描画
 	effekseerNS::setCameraMatrix(
@@ -273,16 +273,16 @@ void Display::render()
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Display::render3D(Camera currentCamera)
+void Display::render3D(Camera* currentCamera)
 {
 	//テストフィールドの描画
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ツリーの描画
-	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	treeManager->render(currentCamera);
 
 	//スカイドームの描画
-	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 }
 
 //===================================================================================================================================

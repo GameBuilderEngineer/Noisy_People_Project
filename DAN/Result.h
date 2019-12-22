@@ -64,7 +64,7 @@ public:
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
 
-	void render3D(Camera currentCamera);
+	void render3D(Camera* currentCamera);
 	void renderUI();
 
 #ifdef _DEBUG

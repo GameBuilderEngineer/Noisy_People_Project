@@ -86,12 +86,7 @@ StaticMeshRenderer::~StaticMeshRenderer()
 //===================================================================================================================================
 void StaticMeshRenderer::update()
 {
-	if (didRegister || didUnRegister)
-	{
-		objectList->listUpdate();
-		objectNum = objectList->nodeNum;
-	}
-
+	updateAccessList();
 	for (int i = 0; i < objectNum; i++)
 	{
 		unRegisterObject(i);							//‰ðœˆ—
@@ -245,8 +240,9 @@ void StaticMeshRenderer::allUnRegister()
 //===================================================================================================================================
 void StaticMeshRenderer::unRegisterObjectByID(int id)
 {
+	updateAccessList();
 	//‘“–‚½‚èŒŸõ
-	for (int i = 0; i < objectNum; i++)
+	for (int i = 0; i < objectList->nodeNum; i++)
 	{	
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//‚±‚±‚ÅŽ~‚Ü‚éƒoƒO‚ ‚è(2019/11/24)

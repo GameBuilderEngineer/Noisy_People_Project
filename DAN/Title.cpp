@@ -711,7 +711,7 @@ void Title::render3D(Camera* _currentCamera)
 	sky->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
 	//ツリーの描画
-	treeManager->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
+	treeManager->render(_currentCamera);
 
 
 	// タイトルプレイヤー描画
