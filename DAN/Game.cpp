@@ -98,6 +98,21 @@ void Game::initialize() {
 	cameraOP->setLimitRotationBottom(0.1f);
 	cameraOP->updateOrtho();
 
+	//オープニングカメラ
+	cameraBoss = new Camera;
+	//カメラの設定
+	cameraBoss->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	cameraBoss->setTarget(&testField->position);
+	cameraBoss->setRelative(D3DXVECTOR3(1.5f,3.0f,-3.0f));
+	cameraBoss->setGazeDistance(500.0f);
+	cameraBoss->setGaze(D3DXVECTOR3(0, 0, 0));
+	cameraBoss->setUpVector(D3DXVECTOR3(0, 1, 0));
+	cameraBoss->setFieldOfView((D3DX_PI / 180) * 90);
+	cameraBoss->setLimitRotationTop(0.1f);
+	cameraBoss->setLimitRotationBottom(0.1f);
+	cameraBoss->updateOrtho();
+
+
 
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
@@ -328,6 +343,7 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(cameraOP);
+	SAFE_DELETE(cameraBoss);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
@@ -650,6 +666,9 @@ void Game::update(float _frameTime) {
 	{
 		cameraOP->update();
 	}
+	//ボスカメラの更新
+	//cameraBoss->update();
+
 
 	//固定UIの更新
 	fixedUI->update(gameMaster->getGameTime());
@@ -734,7 +753,8 @@ void Game::render()
 		renderUI();
 		return;
 	}
-
+	//ボスカメラ
+	//cameraBoss->renderReady();
 
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;

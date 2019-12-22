@@ -151,9 +151,12 @@ void ResultUI::render(bool texFlag)
 //更新
 //フレームタイムをもたせて一定時間経過でフェイズを更新
 //============================
-void ResultUI::update(float flameTime)
+void ResultUI::update(float flameTime,bool texStart)
 {
-	time += flameTime;
+	if (texStart==true)
+	{
+
+		time += flameTime;
 
 	//フェイズの更新
 	if (time > PHASE_TIME)
@@ -186,15 +189,15 @@ void ResultUI::update(float flameTime)
 		for (int i = 0; i < uiNumberNS::GREENIG_PERSENT; i++)
 		{
 			uiNumber[i].update(score[i]);
+			}
+			
 		}
-		
-	}
-	if (time > 12.0f)
-	{
-		resultPhase = PHASE_05;
-		//ランク
-		uiRank->update(rank01, rank02);
-		//再生
+		if (time > 12.0f)
+		{
+			resultPhase = PHASE_05;
+			//ランク
+			uiRank->update(rank01, rank02);
+			//再生
 		if (playedBGM)
 		{
 			decidionBGM();
@@ -216,9 +219,10 @@ void ResultUI::update(float flameTime)
 		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
 
-	uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
-	uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
-	uiTexture.update(resultPhase);		//テクスチャの更新
+		uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
+		uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
+		uiTexture.update(resultPhase);		//テクスチャの更新
+	}
 	
 }
 

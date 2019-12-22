@@ -27,10 +27,7 @@ HRESULT InitMoveP1(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
 
-	//必要 1
-	MoveP1.pAllocateHier = new CAllocateHierarchy();
-	//必要 1
-
+	//※ここから
 
 	//初期設定
 	MoveP1.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -45,6 +42,10 @@ HRESULT InitMoveP1(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	// 初めて初期化
 	if (!initializedMoveP1)
 	{
+		//※ここに移動してみた
+		//必要 1
+		MoveP1.pAllocateHier = new CAllocateHierarchy();
+
 		// アニメーションオブジェクトを作る
 		MoveP1.Animation = (D3DXANIMATION*)calloc(1, sizeof(D3DXANIMATION));
 		MoveP1.Animation->Owner = "MoveP1";
@@ -168,7 +169,7 @@ void UpdateMoveP1(float f_TimeDelta)
 	if (!MoveP1.IsChange)
 	{
 		MoveP1.IsChangeRun = false;
-		MoveP1.Animation->NextAnimID = MoveP1_Idle;
+		MoveP1.Animation->NextAnimID = MoveP1_Idle;//※ここでAnimationのアドレスエラー
 
 		if (MoveP1.IsGround)
 		{

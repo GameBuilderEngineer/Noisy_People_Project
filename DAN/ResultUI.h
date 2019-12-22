@@ -77,7 +77,7 @@ public: //メンバー関数
 	~ResultUI();					//デストラクタ
 	void initialize(/*Player *player*/);//初期化
 	void render(bool texFlag);		//描画
-	void update(float flameTime);	//更新
+	void update(float flameTime, bool texStart);	//更新
 	void uninitialize();			//終了
 	void decidionBGM();
 	int decisionRank(int greening, int greenNum, int defeat);

@@ -80,8 +80,7 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
-	TestEffect* testEffect;
-	WaveBall *waveBall;
+	//WaveBall *waveBall;
 	//フィールド
 	Object*					titleField;
 	StaticMeshRenderer*		titleFieldRenderer;	

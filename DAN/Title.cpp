@@ -101,7 +101,7 @@ void Title::initialize()
 	sky = new Sky();
 
 	//WaveBall
-	waveBall = new WaveBall;
+	//waveBall = new WaveBall;
 
 	// Light
 	light = new Light;
@@ -109,9 +109,6 @@ void Title::initialize()
 
 	//タイトルUIの初期化
 	titleUI.initialize();
-
-	//エフェクト（インスタンシング）テスト
-	testEffect = new TestEffect();
 	
 	//タイトルフィールド（テスト）
 	titleField = new Object();
@@ -150,9 +147,6 @@ void Title::uninitialize(void)
 	// カメラ
 	SAFE_DELETE(camera);
 
-	//エフェクト（インスタンシング）テスト
-	SAFE_DELETE(testEffect);
-
 	//タイトルフィールド
 	SAFE_DELETE(titleField);
 	SAFE_DELETE(titleFieldRenderer);
@@ -164,7 +158,7 @@ void Title::uninitialize(void)
 	SAFE_DELETE(sky);
 
 	//WaveBall
-	SAFE_DELETE(waveBall);
+	//SAFE_DELETE(waveBall);
 
 	// タイトルUI
 	titleUI.uninitialize();
@@ -185,9 +179,6 @@ void Title::update(float _frameTime)
 
 	//スカイフィールドの更新
 	sky->update();
-
-	//エフェクト（インスタンシング）テスト
-	testEffect->update(frameTime);
 	
 	//タイトルフィールド（テスト）
 	titleField->update();	//オブジェクト
@@ -202,8 +193,8 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(0.0f);
 		SoundInterface::BGM->setEndPointVoiceVolume(0.0f);
 		SoundInterface::S3D->setEndPointVoiceVolume(0.0f);
-		waveBall->setVolume(0.0f);
-		waveBall->setOnCol(false);
+		//waveBall->setVolume(0.0f);
+		//waveBall->setOnCol(false);
 	}
 	//ミュート解除
 	if (input->isKeyDown('N'))
@@ -211,8 +202,8 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(1.0f);
 		SoundInterface::BGM->setEndPointVoiceVolume(1.0f);
 		SoundInterface::S3D->setEndPointVoiceVolume(1.0f);
-		waveBall->setVolume(1.0f);
-		waveBall->setOnCol(true);
+		//waveBall->setVolume(1.0f);
+		//waveBall->setOnCol(true);
 	}
 	//10%(test)
 	if (input->isKeyDown('B'))
@@ -220,8 +211,8 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(0.1f);
 		SoundInterface::BGM->setEndPointVoiceVolume(0.1f);
 		SoundInterface::S3D->setEndPointVoiceVolume(0.1f);
-		waveBall->setVolume(0.1f);
-		waveBall->setOnCol(true);
+		//waveBall->setVolume(0.1f);
+		//waveBall->setOnCol(true);
 	}
 
 	// タイトルUI
@@ -754,7 +745,7 @@ void Title::render2D()
 
 #if _DEBUG
 	//WaveBall
-	waveBall->draw();
+	//waveBall->draw();
 #endif
 
 	// αテストを無効に
@@ -807,7 +798,6 @@ void Title::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Checkbox("Create Scene", &createScene);
 	ImGui::SliderFloat("volume control", &tmpVolume, 0.0f, 1.0f);
 	ImGui::Text("CameraState %d", stateCamera);
@@ -815,7 +805,7 @@ void Title::createGUI()
 	if (backUpTmpVolume != tmpVolume)
 	{
 		backUpTmpVolume = tmpVolume;
-		waveBall->setVolume(tmpVolume);
+		//waveBall->setVolume(tmpVolume);
 	}
 
 	ImGui::Text("controller1 LStick(%.02f,%.02f)", 

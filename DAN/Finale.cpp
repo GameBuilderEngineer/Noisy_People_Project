@@ -133,6 +133,7 @@ void Finale::uninitialize(void)
 	SAFE_DELETE(target);
 
 	// ツリーマネージャー
+	treeManager->uninitialize();
 	SAFE_DELETE(treeManager);
 }
 

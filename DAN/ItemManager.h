@@ -38,6 +38,7 @@ private:
 public:
 	// 外部取得用
 	ItemManager() { instance = this; }	// ※シングルトンではない
+	~ItemManager();
 	static ItemManager* get() { return instance; }
 
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);

@@ -105,7 +105,17 @@ void GameMaster::startGame()
 	openingTimer	= OPENING_TIME;
 	endingTimer		= ENDING_TIME;
 	countDownTimer	= COUNT_DOWN_TIME;
+
+#ifdef _DEBUG
+#if 0
+	gameTimer		= DEBUG_GAME_TIME;
+#else
 	gameTimer		= GAME_TIME;
+#endif
+#else
+	//Release
+	gameTimer		= GAME_TIME;
+#endif
 	gameTimerStop	= false;
 	pause = false;
 	progress = 0x00000000;

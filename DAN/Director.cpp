@@ -24,7 +24,7 @@
 #include "LinearTreeCell.h"
 #include "DebugScene.h"
 #include "networkClient.h"
-
+#include "TreeManager.h"
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -189,6 +189,20 @@ HRESULT Director::initialize() {
 	fader->setShader(faderNS::BLUR);
 
 #pragma region MemoryTest
+#if 0
+	D3DXMATRIX m;
+	D3DXMatrixIdentity(&m);
+	int i = 200;					//この回数繰り返す
+	while (i >= 0)					//0回になったら終了
+	{
+		TreeManager* a = new TreeManager();
+		a->initialize(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL)->mesh, &m);
+		a->createUsingTool();
+		a->uninitialize();
+		SAFE_DELETE(a);
+		i--;
+	}
+#endif
 	////メモリ解放テスト
 	////削除（これは今シーン扱いたいから書いたもの）
 	//scene->uninitialize();
