@@ -109,7 +109,7 @@ public:
 	virtual void collisions() override;
 	virtual void AI() override;
 	virtual void uninitialize() override;
-	void render3D(Camera currentCamera, int playerID);
+	void render3D(Camera* currentCamera, int playerID);
 	void renderUI();
 
 	void tree8Reregister(Object* tmp);

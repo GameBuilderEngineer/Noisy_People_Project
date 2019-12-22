@@ -105,6 +105,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 		selectShift[i] = false;
 	}
 
+	culling = false;
 }
 
 
@@ -354,7 +355,7 @@ DigitalState::~DigitalState()
 void DigitalState::start()
 {
 	aroundGreenTimer = 0.0f;
-
+	//サイズに応じて緑化範囲を設定する
 	switch (tree->getTreeData()->size)
 	{
 	case treeNS::TREE_SIZE::STANDARD:
@@ -364,9 +365,10 @@ void DigitalState::start()
 	case treeNS::TREE_SIZE::VERY_LARGE:
 		aroundGreenRange = AROUND_GREEN_RANGE_V; break;
 	}
-
-	//
 	tree->getGreeningArea()->scale *= aroundGreenRange;
+
+	//葉をアクティブ状態にする
+	tree->getLeaf()->onActive = true;
 
 	//周囲への緑化を開始する
 	tree->greeningAround();
@@ -441,6 +443,7 @@ void AnalogState::start()
 {
 	tree->getTreeData()->type = treeNS::ANALOG_TREE;
 	tree->getTreeData()->greenState = treeNS::DEAD;
+	tree->getLeaf()->onActive = false;
 }
 
 //=============================================================================
@@ -509,6 +512,7 @@ void GreenState::start()
 	//緑化したアナログツリー
 	tree->getTreeData()->greenState = treeNS::GREEN;
 	tree->getTreeData()->type = treeNS::ANALOG_TREE;
+	tree->getLeaf()->onActive = true;
 }
 
 //=============================================================================

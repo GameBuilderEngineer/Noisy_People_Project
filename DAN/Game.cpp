@@ -205,7 +205,7 @@ void Game::initialize() {
 	//testEffect = new TestEffect();
 
 	//ディスプレイ用プレーンサンプル
-	samplePlane = new TestPlane();
+	//samplePlane = new TestPlane();
 	//開発中広告
 	//ad = new Advertisement();
 
@@ -316,12 +316,6 @@ void Game::initialize() {
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
 
-	//for (int i = 0; i < treeManager->getTreeList().size(); i++)
-	//{
-	//	treeManager->getTreeList()[i]->transState();
-	//}
-	//int unko = treeManager->getTreeNum();
-
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）5
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, testFieldRenderer->getStaticMesh()->mesh,
@@ -352,7 +346,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
 	//SAFE_DELETE(testEffect);
-	SAFE_DELETE(samplePlane);
+	//SAFE_DELETE(samplePlane);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
@@ -548,7 +542,7 @@ void Game::update(float _frameTime) {
 	{
 		mp->Quaternion = q;
 	}
-
+	
 	UpdateMoveP1(frameTime);
 	//キャラクターの場所と回転の連携
 	MOVEP1 *mp1 = GetMoveP1Adr();
@@ -651,7 +645,7 @@ void Game::update(float _frameTime) {
 	//testEffect->update(frameTime);
 
 	//ディスプレイ用プレーンサンプル
-	samplePlane->update(frameTime);
+	//samplePlane->update(frameTime);
 	// 開発中広告
 	//ad->update(frameTime);
 	
@@ -831,8 +825,7 @@ void Game::render3D(Camera* currentCamera) {
 	DrawMoveP();
 	DrawMoveP1();
 	//DrawEquipment();
-	//スカイドームの描画
-	//sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+
 	//海面の描画
 	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
@@ -848,7 +841,7 @@ void Game::render3D(Camera* currentCamera) {
 	else {
 		treeManager->switchingNormalView(nowRenderingWindow);
 	}
-	treeManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	treeManager->render(currentCamera);
 
 	// アイテムの描画
 	itemManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
@@ -863,7 +856,7 @@ void Game::render3D(Camera* currentCamera) {
 	//testEffect->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ディスプレイ用プレーンサンプル
-	samplePlane->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	//samplePlane->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// 開発中広告
 	//ad->render(currentCamera->view, currentCamera->projection, currentCamera->position);

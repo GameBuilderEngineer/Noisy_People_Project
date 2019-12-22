@@ -38,15 +38,6 @@ private:
 	StaticMeshRenderer* cTrunkRenderer;			// Cモデル幹描画オブジェクト
 	StaticMeshRenderer* cLeafRenderer;			// Cモデル葉描画オブジェクト
 
-	//レンダラー：デジタルツリー
-	StaticMeshRenderer* aDTrunkRenderer;		// Aモデル幹描画オブジェクト
-	StaticMeshRenderer* aDLeafRenderer;			// Aモデル葉描画オブジェクト
-	StaticMeshRenderer* bDTrunkRenderer;		// Bモデル幹描画オブジェクト
-	StaticMeshRenderer* bDLeafRenderer;			// Bモデル葉描画オブジェクト
-	StaticMeshRenderer* cDTrunkRenderer;		// Cモデル幹描画オブジェクト
-	StaticMeshRenderer* cDLeafRenderer;			// Cモデル葉描画オブジェクト
-
-
 	//エフェクト
 	TreeEffect*	treeEffect;		//デジタルツリーエフェクト
 
@@ -66,40 +57,35 @@ public:
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
 	void update(float frameTime);
-	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	void render(Camera* camera);
 
 	//ツリーの生成
 	void createTree(treeNS::TreeData treeData);
 	void createUsingTool();
+	//全てのツリーの削除
+	void destroyAllTree();
 
-	//アナログとデジタルの変換
-	void swapDA(Tree* tree,int beforeType);
-
-	//葉(アナログ)の描画登録/解除
+	//全ての描画登録/解除
+	void allRegister();
+	void allUnRegister();
+	//幹の描画登録/解除
+	void registerTrunk(Tree* tree);
+	void unRegisterTrunk(Tree* tree);
+	//葉の描画登録/解除
 	void registerLeafRendering(Object* leaf, int _model);
 	void unRegisterLeafRendering(Object* leaf, int _model);
+	//見た目の切替
+	void switchingVisionView(int playerNo);
+	void switchingNormalView(int playerNo);
 
-	//デジタルツリー描画登録/解除
-	void registerDigital(Tree* tree);
-	void unRegisterDigital(Tree* tree);
-
-	//アナログツリー描画登録/解除
-	void registerAnalog(Tree* tree);
-	void unRegisterAnalog(Tree* tree);
-
-
-	void destroyAllTree();
-	int	issueNewTreeID();
-	void outputGUI();
-
-	void switchingVisionView(int playerNo);;
-	void switchingNormalView(int playerNo);;
-
+	//デジタルツリーエフェクト
 	void playDigitalTreeEffect(int playerNo);
 	void stopDigitalTreeEffect(int playerNo);
 
-	void changeWireFrame();
-	void changeSolid();
+
+	//ツリーIDを発行する
+	int	issueNewTreeID();
+	void outputGUI();
 
 	//Setter
 	void setGameMaster(GameMaster* gameMaster);

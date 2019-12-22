@@ -110,7 +110,7 @@ public:
 	virtual void uninitialize(void) override;
 	virtual void update(float _frameTime) override;
 	virtual void render() override;
-	void render3D(Camera _currentCamera);
+	void render3D(Camera* _currentCamera);
 	void render2D();
 	virtual void collisions(void) override;
 	virtual void AI(void) override;

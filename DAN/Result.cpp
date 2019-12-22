@@ -121,7 +121,6 @@ void Result::initialize()
 //===================================================================================================================================
 void Result::uninitialize(void)
 {
-	treeManager->uninitialize();
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
@@ -265,7 +264,7 @@ void Result::render()
 	camera->renderReady();
 
 	//3D•`‰æ
-	render3D(*camera);
+	render3D(camera);
 
 	//ƒGƒtƒFƒNƒVƒA[‚Ì•`‰æ
 	effekseerNS::setCameraMatrix(
@@ -282,16 +281,16 @@ void Result::render()
 //===================================================================================================================================
 //y3D•`‰æz
 //===================================================================================================================================
-void Result::render3D(Camera currentCamera)
+void Result::render3D(Camera* currentCamera)
 {
 	//”wŒi‚Ì•`‰æ
-	backGround->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	backGround->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ƒeƒXƒgƒtƒB[ƒ‹ƒh‚Ì•`‰æ
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ƒcƒŠ[‚Ì•`‰æ
-	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	treeManager->render(currentCamera);
 
 }
 

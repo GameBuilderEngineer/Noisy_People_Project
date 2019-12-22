@@ -531,12 +531,6 @@
     <ClCompile Include="Tree.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
-    <ClCompile Include="DigitalTree.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="AnalogTree.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
     <ClCompile Include="TreeManager.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
@@ -551,15 +545,6 @@
     </ClCompile>
     <ClCompile Include="telop.cpp">
       <Filter>Game Layer\Tlop</Filter>
-    </ClCompile>
-    <ClCompile Include="DeadTree.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="TreeTypeA.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="TreeTypeB.cpp">
-      <Filter>Game Layer\Tree</Filter>
     </ClCompile>
     <ClCompile Include="Stone.cpp">
       <Filter>Game Layer\Stone</Filter>
@@ -1068,12 +1053,6 @@
     <ClInclude Include="Tree.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
-    <ClInclude Include="DigitalTree.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="AnalogTree.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="TreeManager.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
@@ -1088,15 +1067,6 @@
     </ClInclude>
     <ClInclude Include="telop.h">
       <Filter>Game Layer\Tlop</Filter>
-    </ClInclude>
-    <ClInclude Include="DeadTree.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeTypeA.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeTypeB.h">
-      <Filter>Game Layer\Tree</Filter>
     </ClInclude>
     <ClInclude Include="TextManager.h">
       <Filter>Loader Layer\TextLoader</Filter>
