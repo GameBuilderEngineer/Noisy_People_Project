@@ -120,6 +120,10 @@ void Finale::initialize()
 	//テクスチャ
 	tex = new FinaleTex;
 	tex->initialize();
+
+	//エフェクト
+	finaleEffect = new FinaleEffect();
+	finaleEffect->play();
 }
 
 //============================================================================================================================================
@@ -152,6 +156,9 @@ void Finale::uninitialize(void)
 
 	//テクスチャ
 	SAFE_DELETE(tex);
+
+	//フィナーレエフェクト
+	SAFE_DELETE(finaleEffect);
 }
 
 //============================================================================================================================================
@@ -170,6 +177,7 @@ void Finale::update(float _frameTime)
 	sky->update();
 
 	target->update();
+
 
 	// カメラ
 	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
@@ -308,7 +316,7 @@ void Finale::update(float _frameTime)
 	case CAMERA3:
 		if (moveTimer > 0)
 		{
-			if (input->wasKeyPressed('6') ||
+			if (input->wasKeyPressed(VK_RETURN) ||
 				input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A) ||
 				input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::A))
 			{
@@ -324,78 +332,20 @@ void Finale::update(float _frameTime)
 		break;
 	}
 
-
-
-	//カメラ移動
-	if (input->isKeyDown('W'))
-	{
-		fixedAxisZ *= 1.0f;
-		target->position += fixedAxisZ;
-	}
-	if (input->isKeyDown('S'))
-	{
-		fixedAxisZ *= -1.0f;
-		target->position += fixedAxisZ;
-	}
-	if (input->isKeyDown('A'))
-	{
-		cameraAxisX *= -1.0f;
-		target->position += cameraAxisX;
-	}
-	if (input->isKeyDown('D'))
-	{
-		cameraAxisX *= 1.0f;
-		target->position += cameraAxisX;
-	}
-	if (input->isKeyDown('Q'))
-	{
-		Y *= 1.0f;
-		target->position += camera->upVector;
-	}
-	if (input->isKeyDown('E'))
-	{
-		Y *= 1.0f;
-		target->position -= camera->upVector;
-
-	}
-
-	//カメラ回転
-	//camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
-	//Y軸
-	if (input->isKeyDown(VK_RIGHT))
-	{
-		
-		camera->rotation(camera->upVector, inputDegree);
-		//target->quaternion.y += 5.0f;
-	}
-	if (input->isKeyDown(VK_LEFT))
-	{
-		camera->rotation(-camera->upVector, inputDegree);
-		//target->quaternion.y -= 5.0f;
-	}
-	//X軸
-	if (input->isKeyDown(VK_UP))
-	{
-		camera->rotation(-fixedAxisX, inputDegree);
-	}
-	if (input->isKeyDown(VK_DOWN))
-	{
-		camera->rotation(fixedAxisX, inputDegree);
-	}
-	//ズーム
-	if (input->isKeyDown('Z'))
-	{
-		camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
-	}
-	if (input->isKeyDown('X'))
-	{
-		camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
-	}
-
-
-
 	//カメラ
 	camera->update();
+
+	//フィナーレエフェクトの更新
+	finaleEffect->update(camera);
+
+#ifdef _DEBUG
+	if (input->wasKeyPressed(VK_LSHIFT))
+	{
+		nextScene = SceneList::FINALE;
+		changeScene(nextScene);
+	}
+#endif // _DEBUG
+
 
 }
 
@@ -407,13 +357,16 @@ void Finale::render()
 	// カメラ・ウィンドウ
 	camera->renderReady();
 	direct3D9->changeViewportFullWindow();
-
-	//エフェクシアーテスト描画
-	effekseerNS::setCameraMatrix(0, camera->position, camera->gazePosition, camera->upVector);
-	effekseerNS::render(0);
-
 	// 3D
 	render3D(camera);
+
+	//エフェクシアー描画
+	effekseerNS::setCameraMatrix(
+		0,
+		camera->position, 
+		camera->gazePosition, 
+		camera->upVector);
+	effekseerNS::render(0);
 
 	// 2D
 	render2D();
@@ -478,18 +431,29 @@ void Finale::AI(void)
 //【GUI作成処理】
 //===================================================================================================================================
 #ifdef _DEBUG
+int playEffectNo = 0;
 void Finale::createGUI()
 {
+	bool playEffect = false;
 	bool createScene = false;
 	float limitTop = 1000;
 	float limitBottom = -1000;
 	camera->outputGUI();
-
+	
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Checkbox("Create Scene", &createScene);
+	
+	ImGui::Checkbox("playEffect", &playEffect);
+	ImGui::SliderInt("playEffectNo ",&playEffectNo,0,8);
+	if (playEffect)
+	{
+		finaleEffect->play(playEffectNo);
+	}
 
+	ImGui::Checkbox("Create Scene", &createScene);
+	ImGui::InputFloat("distanceFlower", &finaleEffect->distanceFlower);
+	ImGui::InputFloat("distanceFeather", &finaleEffect->distanceFeather);
 	ImGui::Text("controller1 LStick(%.02f,%.02f)",
 		input->getController()[inputNS::DINPUT_1P]->getLeftStick().x,
 		input->getController()[inputNS::DINPUT_1P]->getLeftStick().y);

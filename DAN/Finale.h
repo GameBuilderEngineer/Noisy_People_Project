@@ -19,6 +19,7 @@
 #include "Sound.h"
 #include "SoundBase.h"
 #include "Finaletex.h"
+#include "FinaleEffect.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -72,6 +73,7 @@ private:
 	float moveTimer;			//移動タイマー
 	D3DXVECTOR3 startPos;		//ラープ始点
 
+	FinaleEffect* finaleEffect;
 
 	float rate;
 	float rateY;
