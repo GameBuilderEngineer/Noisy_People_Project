@@ -157,7 +157,6 @@ void TreeManager::update(float frameTime)
 	}
 
 
-
 	//—Î‰»—¦‚ÌXV
 	if (treeList.size() != 0) {
 		greeningRate = (float)greeningTreeNum / (float)treeList.size();

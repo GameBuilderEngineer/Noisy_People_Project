@@ -475,7 +475,6 @@ AbstractState* AnalogState::transition()
 		//デジタル化
 		tree->getTreeData()->type = treeNS::DIGITAL_TREE;
 		return new DigitalState(tree);
-
 	}
 	else {
 		//アナログ状態のまま緑化

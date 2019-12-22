@@ -90,6 +90,7 @@ void Player::initialize(PlayerTable info)
 
 	// HPの設定
 	hp = MAX_HP;
+	damaged = false;
 
 	//電力の設定
 	power = MAX_POWER;							//キャラクター電力確認用
@@ -154,6 +155,7 @@ void Player::update(float frameTime)
 	onJump = false;
 	acceleration *= 0.0f;
 	onGroundBefore = onGround;
+	damaged = false;
 
 	//自動電力回復
 	recoveryPower();
@@ -1289,6 +1291,7 @@ void Player::pullpower(int pull)
 }
 void Player::damage(int _damage)
 {
+	damaged = true;
 	hp -= _damage;
 	if (hp < 0) hp = 0;
 	//サウンド再生
@@ -1314,6 +1317,7 @@ void Player::disableOperation(int value)
 //【getter】
 //===================================================================================================================================
 int Player::getHp() { return hp; }
+bool Player::getDamaged() { return damaged; }
 int Player::getPower() { return power; }
 int Player::getState() { return state->type; }
 bool Player::whetherValidOperation(int operation) {

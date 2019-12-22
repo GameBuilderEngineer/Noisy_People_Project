@@ -225,8 +225,16 @@ void Result::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
-		// シーン遷移
-		changeScene(nextScene);
+		if (resultUI.greenigPersent >= 70)
+		{
+			// フィナーレにシーン遷移
+			changeScene(SceneList::FINALE);
+		}
+		else
+		{
+			// タイトルにシーン遷移
+			changeScene(SceneList::TITLE);
+		}
 	}
 
 	//カメラの更新

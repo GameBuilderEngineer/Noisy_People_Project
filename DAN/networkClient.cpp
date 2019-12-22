@@ -12,6 +12,7 @@ int NETWORK_CLIENT::treeNum = 0;
 bool NETWORK_CLIENT::requestConnection = false;
 bool NETWORK_CLIENT::initialConnection = true;
 int NETWORK_CLIENT::connectionTarget = -1;
+bool NETWORK_CLIENT::success = false;
 //===================================================================================================================================
 //ÅyñºëOãÛä‘Åz
 //===================================================================================================================================
@@ -302,6 +303,9 @@ void NETWORK_CLIENT::outputGUI()
 //===================================================================================================================================
 void NETWORK_CLIENT::setSendTreeTable(const TreeTable inTreeTable)
 {
+	//ê⁄ë±Ç…é∏îsÇµÇƒÇ¢ÇÈÇÃÇ≈ÅAëóêMÇçsÇÌÇ»Ç¢
+	if (!success)return;
+
 	//if (treeNum == NULL)
 	//{
 	//	treeTable = new TreeTable;

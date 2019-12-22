@@ -116,11 +116,11 @@ void Title::initialize()
 	titleFieldRenderer->registerObject(titleField);
 	titleField->initialize(&D3DXVECTOR3(0, 0, 0));
 
-	 cameraAxisZ = D3DXVECTOR3(0, 0, 0);
-	 fixedAxisZ = D3DXVECTOR3(0, 0, 0);
-	 cameraAxisX = D3DXVECTOR3(0, 0, 0);
-	 cameraAxisY = D3DXVECTOR3(0, 0, 0);
-	 fixedAxisX = D3DXVECTOR3(0, 0, 0);
+	cameraAxisZ = D3DXVECTOR3(0, 0, 0);
+	fixedAxisZ = D3DXVECTOR3(0, 0, 0);
+	cameraAxisX = D3DXVECTOR3(0, 0, 0);
+	cameraAxisY = D3DXVECTOR3(0, 0, 0);
+	fixedAxisX = D3DXVECTOR3(0, 0, 0);
 	
 	 // ツリーの初期化
 	 treeManager = new TreeManager();
@@ -245,6 +245,9 @@ void Title::update(float _frameTime)
 
 	}
 
+	// ツリーの更新
+	treeManager->update(frameTime);
+	
 	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
 	cameraAxisZ = camera->getAxisZ();
 	fixedAxisZ = Base::slip(cameraAxisZ, camera->upVector);	//カメラの傾きに対応
@@ -256,8 +259,6 @@ void Title::update(float _frameTime)
 	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
 
-	// ツリーの更新
-	treeManager->update(frameTime);
 
 	switch (stateCamera)
 	{

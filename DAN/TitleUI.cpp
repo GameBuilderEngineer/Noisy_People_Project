@@ -210,6 +210,8 @@ void TitleUI::update(Input *input,float flametime)
 	{
 		ringSE(input);
 
+		UI[UI_LOGO]->setAlphaAllVertex(255);
+
 		if (selectState > EXIT)
 		{
 			selectState = TUTORIAL;

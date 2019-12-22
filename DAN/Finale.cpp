@@ -27,6 +27,15 @@ Finale::Finale()
 	//今のシーン(フィナーレ)
 	sceneName = ("Scene -Finale-");
 	nextScene = SceneList::TITLE;
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[1];//同時に再生したい数
+	memset(playParameters, 0, sizeof(playParameters));//
+	//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Finale, false,NULL,false,NULL };//SEの設定
+	//再生
+	SoundInterface::BGM->playSound(&playParameters[0]);
+
 }
 
 //============================================================================================================================================
@@ -34,6 +43,8 @@ Finale::Finale()
 //============================================================================================================================================
 Finale::~Finale()
 {
+	// サウンドの停止
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================
@@ -105,6 +116,10 @@ void Finale::initialize()
 	// BGM再生開始
 	PLAY_PARAMETERS playParameter = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Finale, false,1.0f,false,NULL };
 	SoundInterface::BGM->playSound(&playParameter);
+
+	//テクスチャ
+	tex = new FinaleTex;
+	tex->initialize();
 }
 
 //============================================================================================================================================
@@ -134,6 +149,9 @@ void Finale::uninitialize(void)
 
 	// ツリーマネージャー
 	SAFE_DELETE(treeManager);
+
+	//テクスチャ
+	SAFE_DELETE(tex);
 }
 
 //============================================================================================================================================
@@ -163,12 +181,12 @@ void Finale::update(float _frameTime)
 	//if(input->wasKeyPressed()
 
 
-	if (input->wasKeyPressed(VK_RETURN) ||
+	/*if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
 		changeScene(nextScene);
-	}
+	}*/
 
 	
 
@@ -290,15 +308,16 @@ void Finale::update(float _frameTime)
 	case CAMERA3:
 		if (moveTimer > 0)
 		{
-			moveTimer -= frameTime;
-			if (moveTimer <= 0)
+			if (input->wasKeyPressed('6') ||
+				input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A) ||
+				input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::A))
 			{
 				changeScene(nextScene);
 			}
-
-
+		
 		}
-
+		//カメラの最終パターンでFinがフェードイン
+		tex->update();
 
 		break;
 	default:
@@ -422,6 +441,9 @@ void Finale::render3D(Camera* _currentCamera)
 //============================================================================================================================================
 void Finale::render2D()
 {
+	//テクスチャ
+	tex->render();
+
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
@@ -433,6 +455,7 @@ void Finale::render2D()
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
 }
 
 //============================================================================================================================================
