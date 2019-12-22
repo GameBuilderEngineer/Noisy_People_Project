@@ -55,10 +55,10 @@ namespace titleUiNS
 	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);	//F
 
 	//ƒƒS‚Ì•‚‚«ã‚ª‚Á‚Ä‚­‚é‘¬“x
-	const float ALPHA_SPEED = 0.7f;
+	const float ALPHA_SPEED = 1.2f;
 
 	//ƒƒS‚ª•‚‚«ã‚ª‚Á‚Ä‚­‚éŠÔ
-	const float FLOAT_LOGO_TIME = 1.0f;
+	const float FLOAT_LOGO_TIME = 4.0f;
 
 	enum UI_TYPE
 	{
