@@ -895,6 +895,9 @@
     <ClCompile Include="Equipment.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClCompile>
+    <ClCompile Include="DamageUI.cpp">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1427,6 +1430,9 @@
     </ClInclude>
     <ClInclude Include="Equipment.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageUI.h">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

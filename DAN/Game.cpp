@@ -280,6 +280,9 @@ void Game::initialize() {
 		markerRenderer->playerPosition[i] = &player[i].center;
 	}
 
+	//ダメージUI
+	damageUI = new DamageUI();
+
 
 #pragma region Memory Test
 	////メモリテスト
@@ -364,6 +367,7 @@ void Game::uninitialize() {
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
+	SAFE_DELETE(damageUI);
 	//UninitMoveP();
 	//UninitMoveP1();
 	//UninitEquipment();
@@ -517,6 +521,16 @@ void Game::update(float _frameTime) {
 		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
 		aiDirector->eventMaker.makeEventBossEntry();
+		markerRenderer->bossEnemyPosition = &treeManager->getTreeList()[1]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		//markerRenderer->bossEnemyPosition = &enemyManager->getEnemyList()[enemyManager->getNextID()-1]->position;
+		//markerRenderer->bossEnemyPosition = /*ここにボスの位置情報ポインタを代入*/
+		//！死亡時にNULLを代入
+	}
+	if (input->wasKeyPressed('7'))
+	{
+		markerRenderer->attackedTree = &treeManager->getTreeList()[0]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		//markerRenderer->attackedTree = /*ここにボスの位置情報ポインタを代入*/
+		//！襲撃終了時にNULLを代入
 	}
 #endif
 
@@ -682,6 +696,9 @@ void Game::update(float _frameTime) {
 
 	//マーカーの更新
 	markerRenderer->update(frameTime);
+
+	//ダメージUIの更新
+	damageUI->update(frameTime);
 
 	//エンディングが終了したらシーン遷移
 	if(gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_ENDING))
@@ -948,6 +965,11 @@ void Game::renderUI()
 	//レティクルの描画
 	reticle->render2D(&player[gameMasterNS::PLAYER_1P]);
 	reticle->render2D(&player[gameMasterNS::PLAYER_2P]);
+
+	//ダメージUIの描画
+	damageUI->render(gameMasterNS::PLAYER_1P);
+	damageUI->render(gameMasterNS::PLAYER_2P);
+
 }
 
 //===================================================================================================================================
@@ -1036,6 +1058,15 @@ void Game::collisions()
 		tmp1 = root[i * 2];
 		tmp2 = root[i * 2 + 1];
 		CollisionManager::collision(tmp1, tmp2);//衝突処理
+	}
+
+	//プレイヤーのダメージUIの処理
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM;i++)
+	{
+		if (player[i].getDamaged())
+		{
+			damageUI->damaged(i);
+		}
 	}
 
 	// 風との当たり判定

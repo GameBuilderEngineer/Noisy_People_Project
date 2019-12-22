@@ -52,6 +52,7 @@
 #include "CountUI.h"
 #include "Announcement.h"
 #include "Marker.h"
+#include "DamageUI.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -122,7 +123,7 @@ private:
 	CountUI*						countUI;			//カウントUI
 	Announcement*					announcement;		//アナウンス
 	MarkerRenderer*					markerRenderer;		//マーカー
-
+	DamageUI*						damageUI;			//ダメージUI
 	//再生パラメータ
 	PLAY_PARAMETERS					playParameters[6];
 

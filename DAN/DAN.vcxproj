@@ -158,6 +158,7 @@
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="CountUI.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="DamageUI.h" />
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="Defeat_Chara.h" />
     <ClInclude Include="Defeat_Moji.h" />
@@ -335,6 +336,7 @@
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="CountUI.cpp" />
     <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="DamageUI.cpp" />
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="Defeat_Chara.cpp" />
     <ClCompile Include="Defeat_Moji.cpp" />

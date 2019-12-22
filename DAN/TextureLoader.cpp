@@ -102,11 +102,11 @@ TextureLoader::TextureLoader()
 	textureName[UI_EN_MARK] = { "Shiftable_Mark.png" };
 	textureName[UI_ENERGY_EMPTY_RETICLE] = { "Energy_Empty.png" };
 	textureName[MARK_BOSS] = { "icon_Boss.png" };
+	textureName[MARK_ATTAKED_TREE] = { "icon_Raid.png" };
 	textureName[MARK_2D_MALE] = { "Icon_M.png" };
-	textureName[MARK_3D_MALE] = { "Icon_M_sizedown.png" };
-	textureName[ALLOW_MALE] = { "Arrow_M.png" };
 	textureName[MARK_2D_FEMALE] = { "Icon_F.png" };
-	textureName[MARK_3D_FEMALE] = { "Icon_F_sizedown.png" };
+	textureName[MARK_3D_ALL] = { "Icon_All.png" };
+	textureName[ALLOW_MALE] = { "Arrow_M.png" };
 	textureName[ALLOW_FEMALE] = { "Arrow_M.png" };
 	textureName[UI_DAMAGE] = { "Damage.png" };
 
