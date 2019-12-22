@@ -16,6 +16,7 @@
 //===================================================================================================================================
 using namespace gameNS;
 
+bool FirstInit = true;
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -27,10 +28,10 @@ Game::Game()
 	//linear4TreeManager->initialize(5, -1000, 1000, 1000, -1000);	
 	//線形８分木空間分割管理クラス
 	linear8TreeManager = new Linear8TreeManager<Object>;
-	linear8TreeManager->initialize(5, D3DXVECTOR3(-3000,-2000,-3000),D3DXVECTOR3(3000,3000,3000));	
+	linear8TreeManager->initialize(5, D3DXVECTOR3(-3000, -2000, -3000), D3DXVECTOR3(3000, 3000, 3000));
 
 	//オブジェクトカウンターのリセット
-	objectNS::resetCounter();		
+	objectNS::resetCounter();
 
 	sceneName = "Scene -Game-";
 
@@ -39,13 +40,13 @@ Game::Game()
 	//再生パラメータ
 	PLAY_PARAMETERS playParameters[2];
 	memset(playParameters, 0, sizeof(playParameters));
-	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL};
-	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL};
-	
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL };
+	playParameters[1] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };
+
 	//再生
 	SoundInterface::SE->playSound(&playParameters[0]);
 	SoundInterface::BGM->playSound(&playParameters[1]);
-	
+
 }
 
 //===================================================================================================================================
@@ -70,16 +71,16 @@ void Game::initialize() {
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
-	player				= new Player[gameMasterNS::PLAYER_NUM];
-	maleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
-	femaleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
+	player = new Player[gameMasterNS::PLAYER_NUM];
+	maleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
+	femaleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
-		camera[i].initialize(WINDOW_WIDTH / 2,  WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -88,7 +89,7 @@ void Game::initialize() {
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(CAMERA_RELATIVE_GAZE);
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
-		camera[i].setFieldOfView( (D3DX_PI/180) * 91 );
+		camera[i].setFieldOfView((D3DX_PI / 180) * 91);
 		camera[i].setLimitRotationTop(0.1f);
 		camera[i].setLimitRotationBottom(0.3f);
 
@@ -102,8 +103,8 @@ void Game::initialize() {
 			player[i].initialize(infomation);
 			break;
 		case gameMasterNS::PLAYER_2P:
-			infomation.playerType	= gameMasterNS::PLAYER_2P;
-			infomation.modelType	= gameMasterNS::MODEL_FEMALE;
+			infomation.playerType = gameMasterNS::PLAYER_2P;
+			infomation.modelType = gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			break;
 		}
@@ -149,9 +150,12 @@ void Game::initialize() {
 	//海面の初期化
 	ocean = new Ocean();
 
+
 	//アニメションキャラの初期化
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
+
+	FirstInit = false;
 	//InitEquipment(TRUE);
 
 	// サウンドの再生
@@ -177,8 +181,8 @@ void Game::initialize() {
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player);
-	
+	enemyManager->initialize(*getSceneName(), testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player);
+
 	// ツリー
 	treeManager = new TreeManager;
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
@@ -296,7 +300,7 @@ void Game::initialize() {
 			D3DXVECTOR3((float)(rand() % 400), 150, (float)(rand() % 480));
 		treeData.initialPosition -= D3DXVECTOR3(200, 0, 240);
 		treeData.treeID = treeManager->issueNewTreeID();
-		
+
 		treeManager->createTree(treeData);
 	}
 
@@ -320,7 +324,7 @@ void Game::initialize() {
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, testFieldRenderer->getStaticMesh()->mesh,
 		player, enemyManager, treeManager, itemManager, telopManager);
-	
+
 	//ゲーム開始時処理
 	gameMaster->startGame();
 }
@@ -362,8 +366,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(player2UI);
 	SAFE_DELETE(ad);
 
-	UninitMoveP();
-	UninitMoveP1();
+	//UninitMoveP();
+	//UninitMoveP1();
 	//UninitEquipment();
 }
 
@@ -384,7 +388,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が10FPS時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 10.0f/60.0f)return;
+	if (frameTime > 10.0f / 60.0f)return;
 
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
@@ -419,7 +423,7 @@ void Game::update(float _frameTime) {
 	MOVEP *mp = GetMovePAdr();
 	mp->Pos = player[gameMasterNS::PLAYER_1P].position;
 	D3DXQUATERNION q = player[gameMasterNS::PLAYER_1P].quaternion;
-	Base::anyAxisRotation(&q,D3DXVECTOR3(0,1,0),180);
+	Base::anyAxisRotation(&q, D3DXVECTOR3(0, 1, 0), 180);
 	if (!mp->IsDie)
 	{
 		mp->Quaternion = q;
@@ -494,7 +498,7 @@ void Game::update(float _frameTime) {
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
 	//緑化状況10%
-	if (treeManager->getGreeningRate() >= 0.1 && 
+	if (treeManager->getGreeningRate() >= 0.1 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10))
 	{
 		telopManager->play(telopManagerNS::TELOP_TYPE0);
@@ -515,7 +519,7 @@ void Game::update(float _frameTime) {
 		telopManager->play(telopManagerNS::TELOP_TYPE2);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 	}
-	
+
 
 	//枯木の更新
 	deadTree->update();
@@ -537,7 +541,7 @@ void Game::update(float _frameTime) {
 	samplePlane->update(frameTime);
 	// 開発中広告
 	ad->update(frameTime);
-	
+
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		camera[i].update();
@@ -557,7 +561,7 @@ void Game::update(float _frameTime) {
 	//if (input->wasKeyPressed(VK_RETURN) ||
 	//	input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 	//	input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	if(gameMaster->getGameTime() <= 0)
+	if (gameMaster->getGameTime() <= 0)
 	{
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
@@ -586,8 +590,8 @@ void Game::render() {
 	direct3D9->changeViewport1PWindow();
 	render3D(camera[gameMasterNS::PLAYER_1P]);
 	effekseerNS::setCameraMatrix(
-		camera[gameMasterNS::PLAYER_1P].position, 
-		camera[gameMasterNS::PLAYER_1P].gazePosition, 
+		camera[gameMasterNS::PLAYER_1P].position,
+		camera[gameMasterNS::PLAYER_1P].gazePosition,
 		camera[gameMasterNS::PLAYER_1P].upVector);
 	effekseerNS::render();
 
@@ -685,8 +689,8 @@ void Game::render3D(Camera currentCamera) {
 	ad->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//レティクル3D描画
-	if(player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
-		reticle->render3D(nowRenderingWindow,currentCamera.view, currentCamera.projection, currentCamera.position);
+	if (player[nowRenderingWindow].getState() == playerNS::STATE::NORMAL)
+		reticle->render3D(nowRenderingWindow, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #if _DEBUG
 	//4分木空間分割のライン描画
@@ -733,9 +737,9 @@ void Game::renderUI() {
 	//Sprite実験
 	//spriteGauge->render();
 	//telop->render();
-	
+
 	// テロップマネージャーの描画
-	telopManager->render();	
+	telopManager->render();
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -775,7 +779,7 @@ void Game::tree8Reregister(Object* tmp)
 	//一度リストから外れる
 	tmp->treeCell.remove();
 	//再登録
-	linear8TreeManager->registerObject( &tmp->getMin(),&tmp->getMax(), &tmp->treeCell);
+	linear8TreeManager->registerObject(&tmp->getMin(), &tmp->getMax(), &tmp->treeCell);
 }
 
 //===================================================================================================================================
@@ -837,12 +841,12 @@ void Game::collisions()
 		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
 		D3DXMATRIX matrix = testField->matrixWorld;
 		//地面方向補正処理
-		player[i].grounding(mesh,matrix);
+		player[i].grounding(mesh, matrix);
 		//壁ずり処理
-		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
-		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
-		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
-		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2,testFieldRenderer->getStaticMesh()->mesh,testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_Z, player[i].size.z / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
+		player[i].insetCorrection(objectNS::AXIS_RZ, player[i].size.z / 2, testFieldRenderer->getStaticMesh()->mesh, testField->matrixWorld);
 		//照準レイ更新/姿勢更新/狙撃レイ更新
 		player[i].updateAiming(mesh, matrix);
 		player[i].updatePostureByAiming();
@@ -857,7 +861,7 @@ void Game::collisions()
 		player[i].disableOperation(playerNS::ENABLE_SHIFT);
 		if (player[i].getState() != playerNS::VISION &&
 			player[i].getState() != playerNS::SKY_VISION)continue;
-		
+
 		std::vector<Tree*> list = treeManager->getTreeList();
 		for (int num = 0; num < list.size(); num++)
 		{
@@ -879,9 +883,9 @@ void Game::collisions()
 			//player[i].collideShiftRay(mesh,matrix);
 			//player[i].collideShiftRay(list[num]->center);
 			Cylinder treeCylinder;
-			treeCylinder.centerLine.start	= tree->position;
-			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*tree->size.y;
-			treeCylinder.radius				= tree->size.x;
+			treeCylinder.centerLine.start = tree->position;
+			treeCylinder.centerLine.end = tree->position + tree->getAxisY()->direction*tree->size.y;
+			treeCylinder.radius = tree->size.x;
 			player[i].collideShiftRay(treeCylinder);
 		}
 		//エフェクトの再生/停止
@@ -895,12 +899,12 @@ void Game::collisions()
 
 	}
 
-	
+
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
 	for (size_t i = 0; i < itemList.size(); i++)
-	{	
+	{
 		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
 		{
 			if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
@@ -909,7 +913,7 @@ void Game::collisions()
 				player[j].addSpeed(D3DXVECTOR3(0, 10, 0));
 				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
 				//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyAttack, false ,NULL,false,NULL};
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyAttack, false ,NULL,false,NULL };
 				SoundInterface::SE->playSound(&playParameters);	//SE再生
 				itemManager->destroyAllItem();					//デリート(今は全消し)
 			}
@@ -943,10 +947,10 @@ void Game::createGUI()
 		for (int i = 0; i < collisionNum; i++)
 		{
 			tmp1 = root[i * 2];
-			tmp2 = root[i * 2 +1];
+			tmp2 = root[i * 2 + 1];
 			ImGui::Text("ID(%d):position(%.02f,%.02f,%.02f)<->ID(%d):position(%.02f,%.02f,%.02f)",
-				tmp1->id, tmp1->position.x,tmp1->position.y,tmp1->position.z,
-				tmp2->id, tmp2->position.x,tmp2->position.y,tmp2->position.z);
+				tmp1->id, tmp1->position.x, tmp1->position.y, tmp1->position.z,
+				tmp2->id, tmp2->position.x, tmp2->position.y, tmp2->position.z);
 		}
 	}
 
@@ -1023,7 +1027,7 @@ void Game::test()
 	{
 		treeManager->unRegisterLeafRendering(treeManager->getTreeList()[3]->getLeaf(),
 			treeManager->getTreeList()[3]->getTreeData()->model);
-	}	
+	}
 	if (input->wasKeyPressed('3'))	// 全破棄
 	{
 		treeManager->destroyAllTree();

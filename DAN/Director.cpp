@@ -21,6 +21,9 @@
 #include "SE.h"
 #include "LinearTreeCell.h"
 #include "DebugScene.h"
+#include "movep.h"
+#include "movep1.h"
+
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -68,6 +71,9 @@ Director::~Director() {
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
+
+	UninitMoveP();
+	UninitMoveP1();
 
 	// COMの終了処理
 	CoUninitialize();
