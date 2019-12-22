@@ -295,8 +295,8 @@ void Finale::update(float _frameTime)
 		if (moveTimer > 0)
 		{
 			if (input->wasKeyPressed('6') ||
-				input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB) ||
-				input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
+				input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A) ||
+				input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::A))
 			{
 				changeScene(nextScene);
 			}

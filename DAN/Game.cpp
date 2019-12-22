@@ -861,8 +861,8 @@ void Game::update(float _frameTime) {
 	enemyManager->update(frameTime);
 
 	if (input->wasKeyPressed('6')|| 
-		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A)||
-		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::A))
+		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB)||
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
 		aiDirector->eventMaker.makeEventBossEntry();
 	}
