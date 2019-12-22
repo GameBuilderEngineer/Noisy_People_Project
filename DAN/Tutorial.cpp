@@ -159,7 +159,7 @@ void Tutorial::initialize()
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),gameMaster,player);
+	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),gameMaster,player, NULL);
 	enemyNS::ENEMYSET enemySet = { 0 };
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	enemySet.defaultPosition = ENEMY_POSTITION;

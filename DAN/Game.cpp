@@ -229,9 +229,16 @@ void Game::initialize() {
 #endif
 	naviMesh->initialize();
 
+	//マーカー
+	markerRenderer = new MarkerRenderer;
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		markerRenderer->playerPosition[i] = &player[i].center;
+	}
+
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player);
+	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player, markerRenderer);
 	
 	// ツリー
 	treeManager = new TreeManager;
@@ -285,13 +292,6 @@ void Game::initialize() {
 	//OPアナウンス
 	announcement = new Announcement;
 
-	//マーカー
-	markerRenderer = new MarkerRenderer;
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		markerRenderer->playerPosition[i] = &player[i].center;
-	}
-
 	//ダメージUI
 	damageUI = new DamageUI();
 
@@ -334,12 +334,18 @@ void Game::initialize() {
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）5
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, testFieldRenderer->getStaticMesh()->mesh,
-		player, enemyManager, treeManager, itemManager, telopManager);
+		player, enemyManager, treeManager, itemManager, telopManager, markerRenderer);
 	
 	//ゲーム開始時処理
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 	SoundInterface::BGM->playSound(&playParameters[4]);	//オープニングBGM再生
+
+	for (int i = 0; i < treeManager->getTreeList().size(); i++)
+	{
+		treeManager->getTreeList()[i]->transState();
+	}
+
 }
 
 //===================================================================================================================================
@@ -936,15 +942,23 @@ void Game::update(float _frameTime) {
 		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB)||
 		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
-		aiDirector->eventMaker.makeEventBossEntry();
-		markerRenderer->bossEnemyPosition = &treeManager->getTreeList()[1]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		int enemyID = aiDirector->eventMaker.makeEventBossEntry();
+		//if (enemyID != -1)
+		//{
+		//	markerRenderer->bossEnemyPosition = &enemyManager->findEnemy(enemyID)->center;
+		//	Tree* tree = treeManager->findTree(244);
+		//	markerRenderer->attackedTree = &tree->center;
+		//}
+
+		//markerRenderer->bossEnemyPosition = &treeManager->getTreeList()[1]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
 		//markerRenderer->bossEnemyPosition = &enemyManager->getEnemyList()[enemyManager->getNextID()-1]->position;
 		//markerRenderer->bossEnemyPosition = /*ここにボスの位置情報ポインタを代入*/
 		//！死亡時にNULLを代入
 	}
 	if (input->wasKeyPressed('7'))
 	{
-		markerRenderer->attackedTree = &treeManager->getTreeList()[0]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		aiDirector->eventMaker.makeEventEnemyAttaksTree();
+		//&treeManager->getTreeList()[0]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
 		//markerRenderer->attackedTree = /*ここにボスの位置情報ポインタを代入*/
 		//！襲撃終了時にNULLを代入
 	}

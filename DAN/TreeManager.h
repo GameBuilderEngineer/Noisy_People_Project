@@ -82,10 +82,14 @@ public:
 	void playDigitalTreeEffect(int playerNo);
 	void stopDigitalTreeEffect(int playerNo);
 
-
 	//ツリーIDを発行する
 	int	issueNewTreeID();
+
+	// ツリーを探す
+	Tree* findTree(int _treeID);
+
 	void outputGUI();
+
 
 	//Setter
 	void setGameMaster(GameMaster* gameMaster);

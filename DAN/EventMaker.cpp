@@ -175,9 +175,9 @@ void EventMaker::makeEventEnemyAttaksTree()
 //=============================================================================
 // ‹‘åŠÂ‹«”j‰óƒƒ{“oêƒCƒxƒ“ƒg‚Ìì¬(BOSS_ENTRY)
 //=============================================================================
-void EventMaker::makeEventBossEntry()
+int EventMaker::makeEventBossEntry()
 {
-	if (isBossEntried == true) { return; }
+	if (isBossEntried == true) { return -1; }
 	isBossEntried = true;
 
 	enemyNS::ENEMYSET enemySet;
@@ -191,6 +191,8 @@ void EventMaker::makeEventBossEntry()
 	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f) - enemySet.defaultPosition;
 	enemySet.defaultState = stateMachineNS::PATROL;
 	opeGenerator->bossEntry(enemySet);
+
+	return enemySet.enemyID;
 }
 
 

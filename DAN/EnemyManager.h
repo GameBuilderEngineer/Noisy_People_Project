@@ -20,6 +20,7 @@
 #include "Sound.h"
 #include "SoundBase.h"
 #include "EnemyChaseMark.h"
+#include "Marker.h"
 
 
 //=============================================================================
@@ -71,9 +72,12 @@ public:
 	static StaticMeshRenderer* bearWaistRenderer;
 	static StaticMeshRenderer* bearLegLRenderer;
 	static StaticMeshRenderer* bearLegRRenderer;
-	static EnemyChaseMark* markRenderer;						// 追跡マーク描画
 
-	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player);
+	static EnemyChaseMark* markRenderer;		// 追跡マーク描画
+	MarkerRenderer*	markerRenderer;				//マーカー
+
+
+	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player, MarkerRenderer*	_markerRenderer);
 	void uninitialize();
 	void update(float frameTime);
 	void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
