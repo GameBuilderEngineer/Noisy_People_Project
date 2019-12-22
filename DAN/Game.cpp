@@ -84,19 +84,31 @@ void Game::initialize() {
 	maleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
 	femaleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
+	//OPカメラターゲットオブジェクト
+	target = new Object;
+	target->initialize(&D3DXVECTOR3(247.0f, 38.0f, 181.0f));		//ターゲットの初期位置設定
+
 	//オープニングカメラ
+	stateCamera = CAMERA0;		//初期フォトグラフ
 	cameraOP = new Camera;
 	//カメラの設定
 	cameraOP->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	cameraOP->setTarget(&testField->position);
-	cameraOP->setRelative(D3DXVECTOR3(1.5f,3.0f,-3.0f));
-	cameraOP->setGazeDistance(500.0f);
-	cameraOP->setGaze(D3DXVECTOR3(0, 0, 0));
+	cameraOP->setRelative(D3DXVECTOR3(0.0f,0.0f,1.0f));
+	cameraOP->setTarget(&target->position);
+	cameraOP->setGazeDistance(20.0f);
+	//cameraOP->setGaze(D3DXVECTOR3(0, 0, 0));
 	cameraOP->setUpVector(D3DXVECTOR3(0, 1, 0));
-	cameraOP->setFieldOfView((D3DX_PI / 180) * 90);
+	cameraOP->setFieldOfView((D3DX_PI) / 18 * 10);;
+	cameraOP->setViewProjection();
 	cameraOP->setLimitRotationTop(0.1f);
 	cameraOP->setLimitRotationBottom(0.1f);
 	cameraOP->updateOrtho();
+	//カメラ操作変数
+	cameraAxisZ = D3DXVECTOR3(0, 0, 0);
+	fixedAxisZ = D3DXVECTOR3(0, 0, 0);
+	cameraAxisX = D3DXVECTOR3(0, 0, 0);
+	cameraAxisY = D3DXVECTOR3(0, 0, 0);
+	fixedAxisX = D3DXVECTOR3(0, 0, 0);
 
 	//オープニングカメラ
 	cameraBoss = new Camera;
@@ -205,7 +217,7 @@ void Game::initialize() {
 	//testEffect = new TestEffect();
 
 	//ディスプレイ用プレーンサンプル
-	samplePlane = new TestPlane();
+	//samplePlane = new TestPlane();
 	//開発中広告
 	//ad = new Advertisement();
 
@@ -280,6 +292,9 @@ void Game::initialize() {
 		markerRenderer->playerPosition[i] = &player[i].center;
 	}
 
+	//ダメージUI
+	damageUI = new DamageUI();
+
 
 #pragma region Memory Test
 	////メモリテスト
@@ -316,12 +331,6 @@ void Game::initialize() {
 	// ツリーをツール情報を元に設置する
 	treeManager->createUsingTool();
 
-	//for (int i = 0; i < treeManager->getTreeList().size(); i++)
-	//{
-	//	treeManager->getTreeList()[i]->transState();
-	//}
-	//int unko = treeManager->getTreeNum();
-
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）5
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, testFieldRenderer->getStaticMesh()->mesh,
@@ -352,7 +361,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
 	//SAFE_DELETE(testEffect);
-	SAFE_DELETE(samplePlane);
+	//SAFE_DELETE(samplePlane);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
@@ -370,6 +379,9 @@ void Game::uninitialize() {
 	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
+	//ターゲットオブジェクト
+	SAFE_DELETE(target); 
+	SAFE_DELETE(damageUI);
 	//UninitMoveP();
 	//UninitMoveP1();
 	//UninitEquipment();
@@ -424,7 +436,7 @@ void Game::update(float _frameTime) {
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
 		enemyManager->setUpdate(true);							//エネミー更新開始
 	}
-
+	
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
 
@@ -503,6 +515,408 @@ void Game::update(float _frameTime) {
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
 
+	//OPカメラのターゲットの更新
+	target->update();
+
+	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
+	cameraAxisZ = cameraOP->getAxisZ();
+	fixedAxisZ = Base::slip(cameraAxisZ, cameraOP->upVector);	//カメラの傾きに対応
+	//カメラX軸ベクトル
+	D3DXVec3Cross(&cameraAxisX, &cameraOP->upVector, &cameraAxisZ);
+	//カメラY軸ベクトル（上方向の更新）
+	D3DXVECTOR3 Y = D3DXVECTOR3(0, 0, 0);
+	D3DXVec3Cross(&Y, &fixedAxisZ, &cameraAxisX);
+	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
+	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
+
+	//switch (stateCamera)
+	//{
+	//case CAMERA0:
+	//	if (sceneTimer > 0.0f)
+	//	{
+	//		startPos = target->position;	//ラープ始点
+	//		moveTime = 2.0f;				//終点までの時間
+	//		moveTimer = moveTime;			//移動タイマー
+	//		degreeTime = 2.0f;
+	//		degreeTimer = degreeTime;
+	//		stateCamera++;
+	//		
+	//		cameraOP->rotation(D3DXVECTOR3(0, 1, 0), 90.0f);
+	//		cameraOP->rotation(fixedAxisX, -55.0f);
+	//		tmpCameraQ = cameraOP->relativeQuaternion;
+	//		//カメラの相対位置を一時保存
+	//	}
+	//	break;
+	//case CAMERA1:
+	//	
+	//		moveTimer -= frameTime;
+	//		degreeTimer -= frameTime;
+	//		
+	//		rate = moveTimer / moveTime;
+	//		rateX = degreeTimer / degreeTime;
+
+	//		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(247.0f, 122.0f, 181.0f), 1.0f - rate);
+	//		degreeX = UtilityFunction::lerp(0, 40, 1.0f - rateX);
+	//		
+	//		if (degreeTimer > 0)
+	//		{
+	//			//前のカメラの相対位置に補正する
+	//			cameraOP->relativeQuaternion = tmpCameraQ;
+	//			cameraOP->rotation(fixedAxisX, degreeX);
+	//		}
+
+	//		if (moveTimer <= 0)
+	//		{
+	//			target->position = D3DXVECTOR3(105.0f, 73.0f, -250.0);
+	//			startPos = target->position;
+	//			moveTime = 2.0f;
+	//			moveTimer = moveTime;
+	//			degreeTime = 2.0f;
+	//			degreeTimer = degreeTime;
+	//			stateCamera = CAMERA9;
+	//			//stateCamera++;
+	//			//カメラの相対位置を一時保存
+	//			cameraOP->rotation(D3DXVECTOR3(0, 1, 0), 120.0f);
+	//			cameraOP->rotation(fixedAxisX, -40.0f);
+	//			tmpCameraQ = cameraOP->relativeQuaternion;
+	//		}
+	//		
+	//	
+	//	break;
+	//case CAMERA2:
+	//
+	//		//moveTimer -= frameTime;
+	//		//degreeTimer -= frameTime;
+	//		//rate = moveTimer / moveTime;
+	//		//rateY = degreeTimer / degreeTime;
+
+	//		////D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-64.0f, 73.0f, -232.0f), 1.0f - rate);
+	//		////degreeY = UtilityFunction::lerp(0, 20.0f, 1.0f - rateY);
+	//		////target->position = Title::BezierCurve(startPos, D3DXVECTOR3(-250.0f, 63.0f, -200.0), D3DXVECTOR3(-185.0f, 40.0f, 80.0f), rate);
+	//		//if (degreeTimer > 0)
+	//		//{
+	//		//	//前のカメラの相対位置に補正する
+	//		//	cameraOP->relativeQuaternion = tmpCameraQ;
+	//		//	//cameraOP->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+	//		//}
+
+	//		//if (moveTimer <= 0)
+	//		//{
+	//		//	/*target->position = D3DXVECTOR3(-305.0f, 75.0f, 45.0f);
+	//		//	startPos = target->position;
+	//		//	moveTime = 6.0f;
+	//		//	moveTimer = moveTime;
+	//		//	degreeTimer = 6.0f;
+	//		//	degreeTime = degreeTimer;*/
+	//		//	stateCamera = CAMERA9;
+	//		//	//stateCamera++;
+	//		//	//次ステート用に角度調整
+	//		//	//cameraOP->rotation(D3DXVECTOR3(0, 1, 0), -15.0f);
+	//		//	//cameraOP->rotation(fixedAxisX, 35.0f);
+	//		//	////カメラの相対位置を一時保存
+	//		//	tmpCameraQ = cameraOP->relativeQuaternion;
+	//		//}
+
+	//	
+	//	
+	//	break;
+
+
+	//case CAMERA3:
+	//	//moveTimer -= frameTime;
+	//	//degreeTimer -= frameTime;
+	//	//rate = moveTimer / moveTime;
+
+	//	//target->position = Title::BezierCurve(startPos, D3DXVECTOR3(-430.0f, 96.0f, 200.0f), D3DXVECTOR3(-290.0f, 156.0f, 265.0f), rate);
+
+	//	//rateY = degreeTimer / degreeTime;
+	//	//rateX = degreeTimer / degreeTime;
+	//	//degreeY = UtilityFunction::lerp(0, 140.0f, 1.0f - rateY);
+	//	//degreeX = UtilityFunction::lerp(0, 20.0f, 1.0f - rateX);
+	//	//if (degreeTimer > 0)
+	//	//{
+	//	//	//前のカメラの相対位置に補正する
+	//	//	cameraOP->relativeQuaternion = tmpCameraQ;
+	//	//	cameraOP->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+	//	//	cameraOP->rotation(fixedAxisX, degreeX);
+	//	//}
+	//	//if (moveTimer <= 0)
+	//	//{
+	//	//	target->position = D3DXVECTOR3(-65.0f, 75.0f, 225.0f);
+	//	//	startPos = target->position;
+	//	//	moveTime = 6.0f;
+	//	//	moveTimer = moveTime;
+	//	//	degreeTimer = 6.0f;
+	//	//	degreeTime = degreeTimer;
+	//	//	stateCamera++;
+	//	//	//次ステート用に角度調整
+	//	//	cameraOP->rotation(fixedAxisX, -25.0f);
+	//	//	//カメラの相対位置を一時保存
+	//	//	tmpCameraQ = cameraOP->relativeQuaternion;
+	//	//}
+	//	break;
+
+	//case CAMERA4:
+	//	//moveTimer -= frameTime;
+	//	//degreeTimer -= frameTime;
+	//	//rate = moveTimer / moveTime;
+
+	//	//target->position = Title::BezierCurve(startPos, D3DXVECTOR3(150.0f, 75.0f, 350.0f), D3DXVECTOR3(290.0f, 75.0f, 150.0f), rate);
+
+	//	//rateY = degreeTimer / degreeTime;
+	//	//degreeY = UtilityFunction::lerp(0, 120.0f, 1.0f - rateY);
+	//	//if (degreeTimer > 0)
+	//	//{
+	//	//	cameraOP->relativeQuaternion = tmpCameraQ;
+	//	//	cameraOP->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+	//	//}
+
+	//	//if (moveTimer <= 0)
+	//	//{
+	//	//	target->position = D3DXVECTOR3(185.0f, 67.0f, 11.0f);
+	//	//	startPos = target->position;
+	//	//	moveTime = 6.0f;
+	//	//	moveTimer = moveTime;
+	//	//	degreeTimer = 6.0f;
+	//	//	degreeTime = degreeTimer;
+	//	//	stateCamera++;
+	//	//	//次ステート用に角度調整
+	//	//	cameraOP->rotation(D3DXVECTOR3(0, 1, 0), -130.0f);
+	//	//	cameraOP->rotation(fixedAxisX, -25.0f);
+	//	//	//カメラの相対位置を一時保存
+	//	//	tmpCameraQ = cameraOP->relativeQuaternion;
+	//	//}
+
+	//	break;
+
+
+	//case CAMERA5:
+	//	//moveTimer -= frameTime;
+	//	//degreeTimer -= frameTime;
+	//	//rate = moveTimer / moveTime;
+
+	//	//target->position = Title::BezierCurve(startPos, D3DXVECTOR3(221.0f, 230.0f, -49.0f), D3DXVECTOR3(257.0f, 183.0f, -110.0f), rate);
+
+	//	//rateY = degreeTimer / degreeTime;
+	//	//rateX = degreeTimer / degreeTime;
+	//	//degreeY = UtilityFunction::lerp(0, 140.0f, 1.0f - rateY);
+
+	//	//if (degreeTimer > 0)
+	//	//{
+	//	//	cameraOP->relativeQuaternion = tmpCameraQ;
+	//	//	cameraOP->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+	//	//	//cameraOP->rotation(fixedAxisX, degreeX);
+	//	//}
+
+	//	//if (moveTimer <= 0)
+	//	//{
+	//	//	target->position = D3DXVECTOR3(-50.0f, 115.0f, -300.0f);
+	//	//	startPos = target->position;
+	//	//	moveTime = 5.0f;
+	//	//	moveTimer = moveTime;
+	//	//	degreeTimer = 4.0f;
+	//	//	degreeTime = degreeTimer;
+	//	//	stateCamera++;
+	//	//	//次ステート用に角度調整
+	//	//	cameraOP->rotation(D3DXVECTOR3(0, 1, 0), 75.0f);
+	//	//	//カメラの相対位置を一時保存
+	//	//	tmpCameraQ = cameraOP->relativeQuaternion;
+	//	//}
+
+	//	break;
+
+	//case CAMERA6:
+	//	//moveTimer -= frameTime;
+	//	//degreeTimer -= frameTime;
+	//	//rate = moveTimer / moveTime;
+
+	//	//rateX = degreeTimer / degreeTime;
+	//	//degreeX = UtilityFunction::lerp(0, -80.0f, 1.0f - rateX);
+
+	//	//BezierCurveS1 = Title::BezierCurve(startPos, D3DXVECTOR3(-43.0f, -50.0f, -200.0f), D3DXVECTOR3(-43.0f, 250.0f, 350.0f), rate);
+	//	//BezierCurveS2 = Title::BezierCurve(startPos, D3DXVECTOR3(-43.0f, 300.0f, 150.0f), D3DXVECTOR3(-43.0f, 250.0f, 350.0f), rate);
+	//	//D3DXVec3Lerp(&target->position, &BezierCurveS1, &BezierCurveS2, 1.0f - rate);
+	//	//if (degreeTimer > 0)
+	//	//{
+	//	//	cameraOP->relativeQuaternion = tmpCameraQ;
+	//	//	cameraOP->rotation(fixedAxisX, degreeX);
+	//	//}
+
+	//	//if (moveTimer <= 0)
+	//	//{
+	//	//	target->position = D3DXVECTOR3(-23.0f, 250.0f, 350.0f);
+	//	//	startPos = target->position;
+	//	//	moveTime = 3.0f;
+	//	//	moveTimer = moveTime;
+	//	//	degreeTimer = 3.0f;
+	//	//	degreeTime = degreeTimer;
+	//	//	stateCamera++;
+	//	//	//次ステート用に角度調整
+
+	//	//	//カメラの相対位置を一時保存
+	//	//	tmpCameraQ = cameraOP->relativeQuaternion;
+	//	//}
+
+
+	//	break;
+	//case CAMERA7:
+	//	//moveTimer -= frameTime;
+	//	//degreeTimer -= frameTime;
+	//	//rate = moveTimer / moveTime;
+	//	//
+	//	//targetDistance = D3DXVECTOR3(0, 100.0f, 0) - startPos;
+	//	//distance = D3DXVec3Length(&targetDistance);
+	//	////measurement = false;
+
+	//	//rateY = degreeTimer / degreeTime;
+	//	//rateX = degreeTimer / degreeTime;
+	//	//degreeY = UtilityFunction::lerp(0, 180.0f, 1.0f - rateY);
+	//	//degreeX = UtilityFunction::lerp(0, 75.0f, 1.0f - rateX);
+
+	//	//D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(0, 100.0f, 0), 1.0f - rate);
+
+	//	//moveDistance = UtilityFunction::lerp(0, distance, 1.0 - rate);
+
+	//	//cameraOP->setGazeDistance(moveDistance);
+	//	//if (degreeTimer > 0)
+	//	//{
+	//	//	//前のカメラの相対位置に補正する
+	//	//	cameraOP->relativeQuaternion = tmpCameraQ;
+	//	//	cameraOP->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+	//	//	cameraOP->rotation(fixedAxisX, degreeX);
+
+	//	//}
+
+	//	//if (moveTimer <= 0)
+	//	//{
+	//	//	target->position = D3DXVECTOR3(0, 100.0f, 0);
+	//	//	startPos = target->position;
+	//	//	moveTime = 6.0f;
+	//	//	moveTimer = moveTime;
+	//	//	degreeTimer = 30.0f;
+	//	//	degreeTime = degreeTimer;
+	//	//	stateCamera++;
+	//	//	//カメラの相対位置を一時保存
+	//	//	tmpCameraQ = cameraOP->relativeQuaternion;
+	//	//}
+
+	//	break;
+	//case CAMERA8:
+	//	//moveTimer -= frameTime;
+	//	//degreeTimer -= frameTime;
+	//	//rate = moveTimer / moveTime;
+	//	//rateY = degreeTimer / degreeTime;
+
+	//	//degreeY = UtilityFunction::lerp(0, 900.0f, 1.0 - rateY);
+	//	//if (degreeTimer > 0)
+	//	//{
+	//	//	cameraOP->relativeQuaternion = tmpCameraQ;
+	//	//	cameraOP->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
+	//	//}
+	//	//else if (degreeTimer <= 0)
+	//	//{
+	//	//	stateCamera = CAMERA0;
+	//	//	target->initialize(&D3DXVECTOR3(-34.0f, 180.0f, 100));		//ターゲットの初期位置設定
+	//	//	cameraOP->setRelative(D3DXQUATERNION(0.0f, 0.0f, 1.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
+	//	//	cameraOP->setGazeDistance(20.0f);
+	//	//	//stateCamera++;
+	//	//}
+
+	//	break;
+	//case CAMERA9:
+
+	//	//stateCamera = CAMERA0;
+	//	//target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
+	//	//cameraOP->setRelative(D3DXQUATERNION(0.0f, 0.0f, 20.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
+	//	/*moveTimer -= frameTime;
+	//	degreeTimer -= frameTime;
+	//	rate = moveTimer / moveTime;
+
+	//	D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(0, 0, 0), 1.0f - rate);
+	//	if (degreeTimer <= 0)
+	//	{
+	//		stateCamera++;
+	//	}*/
+	//	break;
+	//default:
+	//	break;
+	//}
+
+
+	////Base::anyAxisRotationSlerp(&cameraQ,D3DXVECTOR3(13.2f, 6.0f, -13.0f),);
+
+	////カメラ移動
+	//if (input->isKeyDown('W'))
+	//{
+	//	fixedAxisZ *= 1.0f;
+	//	target->position += fixedAxisZ;
+	//}
+	//if (input->isKeyDown('S'))
+	//{
+	//	fixedAxisZ *= -1.0f;
+	//	target->position += fixedAxisZ;
+	//}
+	//if (input->isKeyDown('A'))
+	//{
+	//	cameraAxisX *= -1.0f;
+	//	target->position += cameraAxisX;
+	//}
+	//if (input->isKeyDown('D'))
+	//{
+	//	cameraAxisX *= 1.0f;
+	//	target->position += cameraAxisX;
+	//}
+	//if (input->isKeyDown('Q'))
+	//{
+	//	Y *= 1.0f;
+	//	target->position += cameraOP->upVector;
+	//}
+	//if (input->isKeyDown('E'))
+	//{
+	//	Y *= 1.0f;
+	//	target->position -= cameraOP->upVector;
+
+	//}
+
+	////カメラ回転
+	////cameraOP->rotation(D3DXVECTOR3(0, -1, 0), degree);
+	////Y軸
+	//if (input->isKeyDown(VK_RIGHT))
+	//{
+	//	
+	//	cameraOP->rotation(cameraOP->upVector, inputDegree);
+	//	//target->quaternion.y += 5.0f;
+	//}
+	//if (input->isKeyDown(VK_LEFT))
+	//{
+	//	cameraOP->rotation(-cameraOP->upVector, inputDegree);
+	//	//target->quaternion.y -= 5.0f;
+	//}
+	////X軸
+	//if (input->isKeyDown(VK_UP))
+	//{
+	//	cameraOP->rotation(-fixedAxisX, inputDegree);
+	//}
+	//if (input->isKeyDown(VK_DOWN))
+	//{
+	//	cameraOP->rotation(fixedAxisX, inputDegree);
+	//}
+	////ズーム
+	//if (input->isKeyDown('Z'))
+	//{
+	//	cameraOP->relativeQuaternion -= cameraOP->relativeQuaternion * 0.05f;
+	//}
+	//if (input->isKeyDown('X'))
+	//{
+	//	cameraOP->relativeQuaternion += cameraOP->relativeQuaternion * 0.05f;
+	//}
+
+	//if (input->wasKeyPressed('P'))
+	//{
+	//	getFader()->setShader(faderNS::NORMAL);
+	//	getFader()->start();
+	//}
+
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
@@ -523,6 +937,16 @@ void Game::update(float _frameTime) {
 		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
 		aiDirector->eventMaker.makeEventBossEntry();
+		markerRenderer->bossEnemyPosition = &treeManager->getTreeList()[1]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		//markerRenderer->bossEnemyPosition = &enemyManager->getEnemyList()[enemyManager->getNextID()-1]->position;
+		//markerRenderer->bossEnemyPosition = /*ここにボスの位置情報ポインタを代入*/
+		//！死亡時にNULLを代入
+	}
+	if (input->wasKeyPressed('7'))
+	{
+		markerRenderer->attackedTree = &treeManager->getTreeList()[0]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		//markerRenderer->attackedTree = /*ここにボスの位置情報ポインタを代入*/
+		//！襲撃終了時にNULLを代入
 	}
 #endif
 
@@ -548,7 +972,7 @@ void Game::update(float _frameTime) {
 	{
 		mp->Quaternion = q;
 	}
-
+	
 	UpdateMoveP1(frameTime);
 	//キャラクターの場所と回転の連携
 	MOVEP1 *mp1 = GetMoveP1Adr();
@@ -651,7 +1075,7 @@ void Game::update(float _frameTime) {
 	//testEffect->update(frameTime);
 
 	//ディスプレイ用プレーンサンプル
-	samplePlane->update(frameTime);
+	//samplePlane->update(frameTime);
 	// 開発中広告
 	//ad->update(frameTime);
 	
@@ -688,6 +1112,9 @@ void Game::update(float _frameTime) {
 
 	//マーカーの更新
 	markerRenderer->update(frameTime);
+
+	//ダメージUIの更新
+	damageUI->update(frameTime);
 
 	//エンディングが終了したらシーン遷移
 	if(gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_ENDING))
@@ -831,8 +1258,7 @@ void Game::render3D(Camera* currentCamera) {
 	DrawMoveP();
 	DrawMoveP1();
 	//DrawEquipment();
-	//スカイドームの描画
-	//sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+
 	//海面の描画
 	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
@@ -848,7 +1274,7 @@ void Game::render3D(Camera* currentCamera) {
 	else {
 		treeManager->switchingNormalView(nowRenderingWindow);
 	}
-	treeManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	treeManager->render(currentCamera);
 
 	// アイテムの描画
 	itemManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
@@ -863,7 +1289,7 @@ void Game::render3D(Camera* currentCamera) {
 	//testEffect->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ディスプレイ用プレーンサンプル
-	samplePlane->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	//samplePlane->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// 開発中広告
 	//ad->render(currentCamera->view, currentCamera->projection, currentCamera->position);
@@ -944,10 +1370,10 @@ void Game::renderUI()
 	fixedUI->render();
 
 	//プレイヤー1周りのUIの描画
-	player1UI->render();
+	player1UI->render(gameMaster->getGameTime());
 
 	//プレイヤー2周りのUIの描画
-	player2UI->render();
+	player2UI->render(gameMaster->getGameTime());
 
 	//カウントUIの描画
 	countUI->render();
@@ -955,6 +1381,11 @@ void Game::renderUI()
 	//レティクルの描画
 	reticle->render2D(&player[gameMasterNS::PLAYER_1P]);
 	reticle->render2D(&player[gameMasterNS::PLAYER_2P]);
+
+	//ダメージUIの描画
+	damageUI->render(gameMasterNS::PLAYER_1P);
+	damageUI->render(gameMasterNS::PLAYER_2P);
+
 }
 
 //===================================================================================================================================
@@ -1043,6 +1474,15 @@ void Game::collisions()
 		tmp1 = root[i * 2];
 		tmp2 = root[i * 2 + 1];
 		CollisionManager::collision(tmp1, tmp2);//衝突処理
+	}
+
+	//プレイヤーのダメージUIの処理
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM;i++)
+	{
+		if (player[i].getDamaged())
+		{
+			damageUI->damaged(i);
+		}
 	}
 
 	// 風との当たり判定
@@ -1208,6 +1648,7 @@ void Game::createGUI()
 	treeManager->outputGUI();		//ツリーマネージャー
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
+	cameraOP->outputGUI();			//カメラ
 	naviMesh->outputGUI();			//ナビゲーションAI
 }
 #endif // _DEBUG

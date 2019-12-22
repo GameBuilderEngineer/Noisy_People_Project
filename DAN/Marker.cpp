@@ -23,7 +23,7 @@ using namespace MarkerNS;
 Marker::Marker(int type)
 {
 	sprite = new Sprite;
-		
+
 	switch (type)
 	{
 	case PLAYER1:
@@ -38,9 +38,10 @@ Marker::Marker(int type)
 				ROTATION,											//回転
 				COLOR												//色
 			);
+			uv.x = 0 * 1.0f / 4.0f;
+			uv.y = 0;
 			break;
 		}
-
 	case PLAYER2:
 		{
 			using namespace PlayerMarkerNS;
@@ -53,6 +54,8 @@ Marker::Marker(int type)
 				ROTATION,											//回転
 				COLOR												//色
 			);
+			uv.x = 1 * 1.0f / 4.0f;
+			uv.y = 0;
 			break;
 		}
 
@@ -68,6 +71,8 @@ Marker::Marker(int type)
 				ROTATION,											//回転
 				COLOR												//色
 			);
+			uv.x = 2 * 1.0f / 4.0f;
+			uv.y = 0;
 			break;
 		}
 
@@ -75,7 +80,7 @@ Marker::Marker(int type)
 		{
 			using namespace AttackedTreeNS;
 			sprite->initialize(
-				*textureNS::reference(textureNS::LIGHT_001),		//テクスチャポインタ
+				*textureNS::reference(textureNS::MARK_ATTAKED_TREE),//テクスチャポインタ
 				SpriteNS::CENTER,									//原点
 				WIDTH,												//幅
 				HEIGHT,												//高さ
@@ -83,11 +88,13 @@ Marker::Marker(int type)
 				ROTATION,											//回転
 				COLOR												//色
 			);
+			uv.x = 3 * 1.0f / 4.0f;
+			uv.y = 0;
 			break;
 		}
 	}
 
-	scale = D3DXVECTOR2(0.05f, 0.05f);
+	scale = D3DXVECTOR2(0.1f, 0.1f);
 
 
 }
@@ -136,7 +143,7 @@ MarkerRenderer::MarkerRenderer()
 
 	//インスタンシングビルボードの初期化
 	billboard = new InstancingBillboard();
-	billboard->initialize(*textureNS::reference(textureNS::COLOR_SCALE),7,7);
+	billboard->initialize(*textureNS::reference(textureNS::MARK_3D_ALL),3,0);
 	billboard->setRenderType(InstancingBillboardNS::FOREGROUND_PASS| InstancingBillboardNS::FIXED_SIZE_PASS);
 
 	//スプライトの初期化
@@ -184,7 +191,8 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 	float		radius;
 	float length = sqrtf((float)(WINDOW_WIDTH*WINDOW_WIDTH + WINDOW_HEIGHT * WINDOW_HEIGHT));
 	float xLimit = (float)(WINDOW_WIDTH / 4 - PlayerMarkerNS::WIDTH / 2);
-	float yLimit = (float)(WINDOW_HEIGHT / 2 - PlayerMarkerNS::HEIGHT / 2);
+	float topLimit = -(float)(WINDOW_HEIGHT / 2 - PlayerMarkerNS::HEIGHT / 2-256);
+	float bottomLimit = (float)(WINDOW_HEIGHT / 2 - PlayerMarkerNS::HEIGHT / 2);
 
 	//プレイヤーマーカー（どちらか一方のみを描画）
 	switch(playerNo)
@@ -209,7 +217,7 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 			camera->nearZ, camera->farZ, camera->aspect))
 		{
 			//視野内：ビルボードによる描画
-			marker[PLAYER2]->position = center+D3DXVECTOR3(0.0f,1.0f,0.0f);
+			marker[PLAYER2]->position = center+D3DXVECTOR3(0.0f,1.5f,0.0f);
 			marker[PLAYER2]->color = D3DCOLOR_RGBA(255, 255, 255, 255);
 		}
 		else {
@@ -226,7 +234,7 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 			D3DXVECTOR3 addVector = conversion2D(camera, center);
 			addVector *= length;
 			addVector.x = UtilityFunction::clamp(addVector.x, -xLimit, xLimit);
-			addVector.y = UtilityFunction::clamp(addVector.y, -yLimit, yLimit);
+			addVector.y = UtilityFunction::clamp(addVector.y, topLimit, bottomLimit);
 
 			//描画位置へ加算
 			renderPosition += addVector;
@@ -255,7 +263,7 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 			camera->nearZ, camera->farZ, camera->aspect))
 		{
 			//視野内：ビルボードによる描画
-			marker[PLAYER1]->position = center;
+			marker[PLAYER1]->position = center + D3DXVECTOR3(0.0f, 1.5f, 0.0f);
 			marker[PLAYER1]->color = D3DCOLOR_RGBA(255, 255, 255, 255);
 		}
 		else {
@@ -278,7 +286,7 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 			D3DXVECTOR3 addVector = conversion2D(camera, center);
 			addVector *= length;
 			addVector.x = UtilityFunction::clamp(addVector.x, -xLimit,xLimit);
-			addVector.y = UtilityFunction::clamp(addVector.y, -yLimit,yLimit);
+			addVector.y = UtilityFunction::clamp(addVector.y, topLimit, bottomLimit);
 
 			//描画位置へ加算
 			renderPosition += addVector;
@@ -321,7 +329,7 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 			camera->nearZ, camera->farZ, camera->aspect))
 		{
 			//視野内：ビルボードによる描画
-			marker[i]->position = center;
+			marker[i]->position = center + D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 			marker[i]->color = D3DCOLOR_RGBA(255, 255, 255, 255);
 		}
 		else {
@@ -346,9 +354,10 @@ void MarkerRenderer::render(int playerNo, Camera* camera)
 			D3DXVECTOR3 addVector = conversion2D(camera, center);
 			addVector *= length;
 			addVector.x = UtilityFunction::clamp(addVector.x, -xLimit, xLimit);
-			addVector.y = UtilityFunction::clamp(addVector.y, -yLimit, yLimit);
-			renderPosition.x += direction.x * (WINDOW_WIDTH / 4 - PlayerMarkerNS::WIDTH / 2);
-			renderPosition.y += -direction.z * (WINDOW_HEIGHT / 2 - PlayerMarkerNS::HEIGHT / 2);
+			addVector.y = UtilityFunction::clamp(addVector.y, topLimit, bottomLimit);
+
+			//描画位置へ加算
+			renderPosition += addVector;
 
 			marker[i]->render(renderPosition);
 		}

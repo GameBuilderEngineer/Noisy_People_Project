@@ -134,7 +134,7 @@ void BGMManager::outputGUI(void)
 				}
 
 				//テスト用@sai
-				WaveBall::SetWaveData(dataMax, fData);
+				//WaveBall::SetWaveData(dataMax, fData);
 
 				ImVec2 plotextent(ImGui::GetContentRegionAvailWidth(), 100);
 				ImGui::PlotLines("", fData, dataMax, 0, "Sound wave", FLT_MAX, FLT_MAX, plotextent);

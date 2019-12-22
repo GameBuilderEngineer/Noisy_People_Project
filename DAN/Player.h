@@ -256,6 +256,7 @@ private:
 	int							hp;								//HP
 	int							power;							//電力
 	int							validOperation;					//有効な操作ビットフラグ
+	bool						damaged;						//被ダメージフラグ
 
 	//タイマー
 	float						frameTime;						//フレームタイム
@@ -416,6 +417,7 @@ public:
 
 	//getter
 	int getHp();												// HPの取得
+	bool getDamaged();											// ダメージを受けているか
 	int getPower();												// 電力の取得
 	int getState();
 	bool whetherValidOperation(int operation);					//有効操作の確認

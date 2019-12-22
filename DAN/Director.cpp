@@ -154,31 +154,42 @@ HRESULT Director::initialize() {
 	//animationLoader->initialize(d3d->device);
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	bool debugMode = false;
+#ifdef _DEBUG
+	if (MessageBox(0, "はい(Y):Debugモード\nいいえ(N):次へ", "デバッグシーンへ遷移しますか？", MB_YESNO | MB_TOPMOST) == IDYES)
+	{
+		scene = new DebugScene();
+		debugMode = true;
+	}
 
+#endif // _DEBUG
 
 	//scene
 	//シーン選択
-	if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO| MB_TOPMOST) == IDYES)
+	if (debugMode == false)
 	{
-		scene = new Splash();
-		int msg = MessageBox(0,
-			"はい(Y):接続先を検索\nいいえ(N):インターネット接続を行わない",
-			"インターネット接続を行いますか?", MB_YESNO | MB_TOPMOST);
-		if (msg == IDYES)
+		if (MessageBox(0, "はい(Y):Gameモード\nいいえ(N):Displayモード", "アプリモード選択", MB_YESNO | MB_TOPMOST) == IDYES)
 		{
-			//はい
-			NETWORK_CLIENT::requestConnection = true;
-			MSG("接続テストをおこないます。");
-			NETWORK_CLIENT* test = new NETWORK_CLIENT();
-			SAFE_DELETE(test);
+			scene = new Splash();
+			int msg = MessageBox(0,
+				"はい(Y):接続先を検索\nいいえ(N):インターネット接続を行わない",
+				"インターネット接続を行いますか?", MB_YESNO | MB_TOPMOST);
+			if (msg == IDYES)
+			{
+				//はい
+				NETWORK_CLIENT::requestConnection = true;
+				MSG("接続テストをおこないます。");
+				NETWORK_CLIENT* test = new NETWORK_CLIENT();
+				SAFE_DELETE(test);
+			}
+			else {
+				//いいえ
+				NETWORK_CLIENT::requestConnection = false;
+			}
 		}
 		else {
-			//いいえ
-			NETWORK_CLIENT::requestConnection = false;
+			scene = new Display();
 		}
-	}
-	else {
-		scene = new Display();
 	}
 
 	scene->setGameMaster(gameMaster);

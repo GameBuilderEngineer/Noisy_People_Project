@@ -16,6 +16,9 @@
 #include "Sky.h"
 #include "TreeManager.h"
 #include "Title.h"
+#include "Sound.h"
+#include "SoundBase.h"
+#include "Finaletex.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -58,6 +61,8 @@ private:
 	Object* target;
 	//ツリーマネージャー
 	TreeManager* treeManager;
+	//テクスチャ
+	FinaleTex*  tex;
 
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
@@ -110,7 +115,7 @@ public:
 	virtual void uninitialize(void) override;
 	virtual void update(float _frameTime) override;
 	virtual void render() override;
-	void render3D(Camera _currentCamera);
+	void render3D(Camera* _currentCamera);
 	void render2D();
 	virtual void collisions(void) override;
 	virtual void AI(void) override;

@@ -376,7 +376,7 @@ void Tutorial::render()
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	camera[gameMasterNS::PLAYER_1P].renderReady();
 	direct3D9->changeViewport1PWindow();
-	render3D(camera[gameMasterNS::PLAYER_1P], gameMasterNS::PLAYER_1P);
+	render3D(&camera[gameMasterNS::PLAYER_1P], gameMasterNS::PLAYER_1P);
 	effekseerNS::setCameraMatrix(0,
 		camera[gameMasterNS::PLAYER_1P].position,
 		camera[gameMasterNS::PLAYER_1P].gazePosition,
@@ -391,7 +391,7 @@ void Tutorial::render()
 	//2Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	camera[gameMasterNS::PLAYER_2P].renderReady();
 	direct3D9->changeViewport2PWindow();
-	render3D(camera[gameMasterNS::PLAYER_2P], gameMasterNS::PLAYER_2P);
+	render3D(&camera[gameMasterNS::PLAYER_2P], gameMasterNS::PLAYER_2P);
 	effekseerNS::setCameraMatrix(0,
 		camera[gameMasterNS::PLAYER_2P].position,
 		camera[gameMasterNS::PLAYER_2P].gazePosition,
@@ -411,32 +411,32 @@ void Tutorial::render()
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Tutorial::render3D(Camera currentCamera, int playerID)
+void Tutorial::render3D(Camera* currentCamera, int playerID)
 {
 	//テストフィールドの描画
 //testField->setAlpha(0.1f); 
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// プレイヤーの描画
-	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
-	femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+	femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-		player[i].otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
+		player[i].otherRender(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//スカイドームの描画
-	sky->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	DrawMoveP();
 
 	// エネミーの描画
-	enemyManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ツリーの描画
-	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	treeManager->render(currentCamera);
 
 	//ディスプレイ用プレーンサンプル
-	plane[playerID]->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	plane[playerID]->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 #if _DEBUG
 	//4分木空間分割のライン描画

@@ -211,10 +211,11 @@ void BulletManager::update(float frameTime)
 	{
 		//バレットのポインタ取得
 		Bullet* bullet = (*bulletList->getValue(i));
+		float zeroDistance = Base::between2VectorLength(D3DXVECTOR3(0, 0, 0), bullet->position);
 
-		//生存時間切れ
+		//生存時間切れ||島（0,0,0）から一定距離離れた場合
 		//自然消滅処理
-		if (bullet->existenceTimer <= 0)
+		if (bullet->existenceTimer <= 0 || zeroDistance > LOST_DISTANCE)
 		{
 			destroy(bullet, i);
 		}

@@ -1,62 +1,47 @@
 //===================================================================================================================================
-//【network.h】
-// [作成者]HAL東京GP12A332 16 蔡 友剛
-// [作成日]2019/12/05
-// [更新日]2019/12/05
+//【DamageUI.h】
+// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成日]2019/12/22
+// [更新日]2019/12/22
 //===================================================================================================================================
 #pragma once
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 //===================================================================================================================================
-//【ライブラリのロード】
+//【インクルード】
 //===================================================================================================================================
 #include "Base.h"
-#include "networkServer.h"
-
-#include <WinSock.h>
-#include <conio.h>
-#pragma comment(lib, "ws2_32.lib")
-
+#include "Sprite.h"
+#include "GameMaster.h"
 
 //===================================================================================================================================
-//【定数定義】
+//【名前空間】
 //===================================================================================================================================
-//const char szServer[64] = "ths80619";				//菅野PC
-//const char szServer[64] = "DESKTOP-2C7Q2ME";		//中込PC
-//const char szServer[64] = "ths80214";				//伊達PC
-//const char szServer[64] = "INDES";					//サイ
-
-//===================================================================================================================================
-//【クライアント】
-//===================================================================================================================================
-class NETWORK_CLIENT
+namespace DamageUINS
 {
-//Method
-public:
-	NETWORK_CLIENT();
-	~NETWORK_CLIENT();
+	const int WIDTH		= WINDOW_WIDTH / 2;			//テクスチャ全体の幅
+	const int HEIGHT	= WINDOW_HEIGHT;			//テクスチャ全体の高さ	
+	const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2, 0.0f);
+	const D3DXVECTOR3 POSITION2 = D3DXVECTOR3((float)WINDOW_WIDTH / 4 * 3, (float)WINDOW_HEIGHT / 2, 0.0f);
+	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 0);
 
-	void send(float time);
-	void outputGUI();
-	static void setSendTreeTable(const TreeTable inTreeTable);
-	void resetDisplay();
-
-//Data
-public:
-	static bool requestConnection;//接続要求
-	static bool initialConnection;//初期接続
-	static int connectionTarget;//接続先
-	static bool success;
-	bool onResetDisplay;
+	const float DISPLAY_TIME = 0.8f;
+}
+//===================================================================================================================================
+//【ダメージUI】
+//===================================================================================================================================
+class DamageUI :public Base
+{
 private:
-	int packageID;
-	WSADATA wsaData;
-	SOCKET s;
-	SOCKADDR_IN addrin;
-	HOSTENT *lpHostEnt;
-	unsigned int addr;
-	int nRtn, nNo = 5;
+	Sprite* sprite;
+	float displayTime[gameMasterNS::PLAYER_NUM];
+public:
+	DamageUI();
+	~DamageUI();
 
-	static TreeTable treeTable[20];
-	static int treeNum;
+	void damaged(int playerNo);
+	void update(float frameTime);
+	void render(int playerNo);
+
 };
+

@@ -121,7 +121,6 @@ void Result::initialize()
 //===================================================================================================================================
 void Result::uninitialize(void)
 {
-	treeManager->uninitialize();
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
@@ -226,8 +225,16 @@ void Result::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
-		// シーン遷移
-		changeScene(nextScene);
+		if (resultUI.greenigPersent >= 70)
+		{
+			// フィナーレにシーン遷移
+			changeScene(SceneList::FINALE);
+		}
+		else
+		{
+			// タイトルにシーン遷移
+			changeScene(SceneList::TITLE);
+		}
 	}
 
 	//カメラの更新
@@ -257,7 +264,7 @@ void Result::render()
 	camera->renderReady();
 
 	//3D描画
-	render3D(*camera);
+	render3D(camera);
 
 	//エフェクシアーの描画
 	effekseerNS::setCameraMatrix(
@@ -274,16 +281,16 @@ void Result::render()
 //===================================================================================================================================
 //【3D描画】
 //===================================================================================================================================
-void Result::render3D(Camera currentCamera)
+void Result::render3D(Camera* currentCamera)
 {
 	//背景の描画
-	backGround->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	backGround->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//テストフィールドの描画
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
+	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//ツリーの描画
-	treeManager->render(currentCamera.view, currentCamera.projection, currentCamera.position);
+	treeManager->render(currentCamera);
 
 }
 

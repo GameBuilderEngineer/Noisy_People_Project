@@ -531,12 +531,6 @@
     <ClCompile Include="Tree.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
-    <ClCompile Include="DigitalTree.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="AnalogTree.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
     <ClCompile Include="TreeManager.cpp">
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
@@ -551,15 +545,6 @@
     </ClCompile>
     <ClCompile Include="telop.cpp">
       <Filter>Game Layer\Tlop</Filter>
-    </ClCompile>
-    <ClCompile Include="DeadTree.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="TreeTypeA.cpp">
-      <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="TreeTypeB.cpp">
-      <Filter>Game Layer\Tree</Filter>
     </ClCompile>
     <ClCompile Include="Stone.cpp">
       <Filter>Game Layer\Stone</Filter>
@@ -910,6 +895,12 @@
     <ClCompile Include="Equipment.cpp">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
     </ClCompile>
+    <ClCompile Include="DamageUI.cpp">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="FinaleTex.cpp">
+      <Filter>Game Layer\Scene\Finale</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1068,12 +1059,6 @@
     <ClInclude Include="Tree.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
-    <ClInclude Include="DigitalTree.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="AnalogTree.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
     <ClInclude Include="TreeManager.h">
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
@@ -1088,15 +1073,6 @@
     </ClInclude>
     <ClInclude Include="telop.h">
       <Filter>Game Layer\Tlop</Filter>
-    </ClInclude>
-    <ClInclude Include="DeadTree.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeTypeA.h">
-      <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeTypeB.h">
-      <Filter>Game Layer\Tree</Filter>
     </ClInclude>
     <ClInclude Include="TextManager.h">
       <Filter>Loader Layer\TextLoader</Filter>
@@ -1457,6 +1433,12 @@
     </ClInclude>
     <ClInclude Include="Equipment.h">
       <Filter>Loader Layer\SkinMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageUI.h">
+      <Filter>Game Layer\GameUI\PlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Finaletex.h">
+      <Filter>Game Layer\Scene\Finale</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
