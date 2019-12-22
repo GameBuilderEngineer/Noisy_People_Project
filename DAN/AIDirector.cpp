@@ -32,7 +32,7 @@ AIDirector::~AIDirector()
 //=============================================================================
 void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Player* _player,
 	EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager,
-	TelopManager* _telopManager)
+	TelopManager* _telopManager, MarkerRenderer* marker)
 {
 	gameMaster = _gameMaster;
 	fieldMesh = _fieldMesh;
@@ -41,10 +41,11 @@ void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Play
 	treeManager = _treeManager;
 	itemManager = _itemManager;
 	telopManager = _telopManager;
+	markerRenderer = marker;
 
 	sensor.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager);
 	eventMaker.initialize(&data, &opeGenerator, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
-	opeGenerator.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager);
+	opeGenerator.initialize(&data, gameMaster, player, enemyManager, treeManager, itemManager, _telopManager, markerRenderer);
 	frameCnt = 0;
 
 	// ‰ğÍƒf[ƒ^‚Ì‰Šú‰»

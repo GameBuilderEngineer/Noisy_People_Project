@@ -13,9 +13,9 @@ using namespace aiNS;
 //=============================================================================
 // 初期化
 //=============================================================================
-void OperationGenerator::initialize(aiNS::AnalyticalData* _data, GameMaster* _gameMaster, 
+void OperationGenerator::initialize(aiNS::AnalyticalData* _data, GameMaster* _gameMaster,
 	Player* _player, EnemyManager* _enemyManager, TreeManager* _treeManager,
-	ItemManager* _itemManager, TelopManager* _telopManager)
+	ItemManager* _itemManager, TelopManager* _telopManager, MarkerRenderer* marker)
 {
 	data			= _data;
 	gameMaster		= _gameMaster;
@@ -24,7 +24,7 @@ void OperationGenerator::initialize(aiNS::AnalyticalData* _data, GameMaster* _ga
 	treeManager		= _treeManager;
 	itemManager		= _itemManager;
 	telopManager	= _telopManager;
-
+	markerRenderer = marker;
 	wasBossEntried	= false;
 	ZeroMemory(wasTelopDisplayed, sizeof(bool) * 3);
 	bossEntryTime	= 1000.0f;
@@ -62,6 +62,9 @@ void OperationGenerator::enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _att
 	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
 	p->targetTree = _attackTarget;
 	enemyManager->createEnemy(p);
+
+	// マーカー
+	markerRenderer->attackedTree = &p->targetTree->center;
 }
 
 
@@ -80,6 +83,9 @@ void OperationGenerator::bossEntry(enemyNS::ENEMYSET _enemySet)
 	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
 	p->isGeneratedBySpawnEvent = true;
 	enemyManager->createEnemy(p);
+
+	// マーカー
+	markerRenderer->bossEnemyPosition = &enemyManager->findEnemy(p->enemyID)->center;
 }
 
 void OperationGenerator::updateBossEvent()

@@ -762,15 +762,27 @@ void Enemy::prepareAttackTree()
 void Enemy::prepareDie()
 {
 	// 死亡エフェクトの再生
-	deathEffect = new DeathEffect(&position);
+	if (enemyData->type == BEAR)
+	{
+		deathEffect = new DeathEffect(&center, effekseerNS::BOSS_DEATH);
+	}
+	else
+	{
+		deathEffect = new DeathEffect(&position, effekseerNS::ENEMY_DEATH);
+	}
 	deathEffect->scale *= DEATH_EFFECT_SCALE[enemyData->type];
 	effekseerNS::play(0, deathEffect);
+	
 
 	// 追跡マークの削除
 	deleteMark();
 
 	// 死亡アニメーションに切り替え
 	animationManager->switchDead();
+
+	// サウンド
+	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_EnemyDefeated, false, NULL, false, NULL };
+	SoundInterface::SE->playSound(&playParameters);
 }
 #pragma endregion
 
@@ -947,15 +959,15 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 		switch (enemyType)
 		{
 		case WOLF:
-			parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// 仮
+			parameter.soundId = S3D_LIST::S3D_Wolf_Foot_Step;// 仮
 			break;
 
 		case TIGER:
-			parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// 仮
+			parameter.soundId = S3D_LIST::S3D_Tiger_Foot_Step;// 仮
 			break;
 
 		case BEAR:
-			parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// 仮
+			parameter.soundId = S3D_LIST::S3D_Bear_Foot_Step;// 仮
 			break;
 		}
 		break;
@@ -965,7 +977,7 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 	//--------
 	case ATTACK_SE:
 	{
-		parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// 仮
+		parameter.soundId = S3D_LIST::S3D_ShiftStart;// 仮
 	}
 	break;
 
@@ -974,7 +986,7 @@ PLAY_PARAMETERS Enemy::getPlayParameters(SE_3D soundType, int enemyType)
 	//--------
 	case DIE_SE:
 	{
-		parameter.soundId = S3D_LIST::S3D_PLAYER_WALK;// 仮
+		parameter.soundId = S3D_LIST::S3D_ShiftStart;// 仮
 	}
 	break;
 

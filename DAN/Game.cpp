@@ -60,6 +60,7 @@ Game::~Game()
 {
 	// サウンドの停止
 	SoundInterface::BGM->uninitSoundStop();
+	SoundInterface::S3D->uninitSoundStop();
 }
 
 //#define SAMPLE_NAVI	// ビルドスイッチ　このdefine周辺は近々で消しますが一旦残しておいてもらえると助かります中込
@@ -68,7 +69,7 @@ Game::~Game()
 //===================================================================================================================================
 void Game::initialize() {
 
-	//テストフィールド
+	//衝突判定フィールド
 	testField = new Object();
 #ifdef SAMPLE_NAVI
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
@@ -78,6 +79,11 @@ void Game::initialize() {
 #endif
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
+	// 装飾フィールド
+	faceField = new Object();
+	faceFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
+	faceFieldRenderer->registerObject(faceField);
+	faceField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
 	player				= new Player[gameMasterNS::PLAYER_NUM];
@@ -230,9 +236,16 @@ void Game::initialize() {
 #endif
 	naviMesh->initialize();
 
+	//マーカー
+	markerRenderer = new MarkerRenderer;
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		markerRenderer->playerPosition[i] = &player[i].center;
+	}
+
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player);
+	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player, markerRenderer);
 	
 	// ツリー
 	treeManager = new TreeManager;
@@ -286,13 +299,6 @@ void Game::initialize() {
 	//OPアナウンス
 	announcement = new Announcement;
 
-	//マーカー
-	markerRenderer = new MarkerRenderer;
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		markerRenderer->playerPosition[i] = &player[i].center;
-	}
-
 	//ダメージUI
 	damageUI = new DamageUI();
 
@@ -335,7 +341,7 @@ void Game::initialize() {
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）5
 	aiDirector = new AIDirector;
 	aiDirector->initialize(gameMaster, testFieldRenderer->getStaticMesh()->mesh,
-		player, enemyManager, treeManager, itemManager, telopManager);
+		player, enemyManager, treeManager, itemManager, telopManager, markerRenderer);
 	
 	//ゲーム開始時処理
 	gameMaster->startGame();
@@ -357,6 +363,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
+	SAFE_DELETE(faceField);
+	SAFE_DELETE(faceFieldRenderer);
 	SAFE_DELETE(maleRenderer);
 	SAFE_DELETE(femaleRenderer);
 	SAFE_DELETE(sky);
@@ -438,6 +446,7 @@ void Game::update(float _frameTime) {
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
 		enemyManager->setUpdate(true);							//エネミー更新開始
+		telopManager->play(telopManagerNS::TELOP_TYPE6);
 	}
 	
 	//ゲームタイムの更新
@@ -514,7 +523,7 @@ void Game::update(float _frameTime) {
 		SoundInterface::S3D->playSound(&voiceStart);
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] = true;
 	}
-	else if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME -2.0f && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] == false)
+	else if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME -1.5f && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] == false)
 	{
 		PLAY_PARAMETERS voiceStart = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::Voice_Female_Start, false, NULL, true, gameMasterNS::PLAYER_2P };
 		SoundInterface::S3D->playSound(&voiceStart);
@@ -722,6 +731,10 @@ void Game::update(float _frameTime) {
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
 
+	//装飾フィールドの更新
+	faceField->update();			//オブジェクト
+	faceFieldRenderer->update();	//レンダラー
+
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].update(frameTime);		//オブジェクト
@@ -737,15 +750,23 @@ void Game::update(float _frameTime) {
 		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB)||
 		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 	{
-		aiDirector->eventMaker.makeEventBossEntry();
-		markerRenderer->bossEnemyPosition = &treeManager->getTreeList()[1]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		int enemyID = aiDirector->eventMaker.makeEventBossEntry();
+		//if (enemyID != -1)
+		//{
+		//	markerRenderer->bossEnemyPosition = &enemyManager->findEnemy(enemyID)->center;
+		//	Tree* tree = treeManager->findTree(244);
+		//	markerRenderer->attackedTree = &tree->center;
+		//}
+
+		//markerRenderer->bossEnemyPosition = &treeManager->getTreeList()[1]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
 		//markerRenderer->bossEnemyPosition = &enemyManager->getEnemyList()[enemyManager->getNextID()-1]->position;
 		//markerRenderer->bossEnemyPosition = /*ここにボスの位置情報ポインタを代入*/
 		//！死亡時にNULLを代入
 	}
 	if (input->wasKeyPressed('7'))
 	{
-		markerRenderer->attackedTree = &treeManager->getTreeList()[0]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
+		aiDirector->eventMaker.makeEventEnemyAttaksTree();
+		//&treeManager->getTreeList()[0]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
 		//markerRenderer->attackedTree = /*ここにボスの位置情報ポインタを代入*/
 		//！襲撃終了時にNULLを代入
 	}
@@ -1035,16 +1056,16 @@ void Game::render3D(Camera* currentCamera) {
 	//スカイドームの描画
 	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
-	//テストフィールドの描画
+	//装飾フィールドの描画
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
 		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
 	{
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE_BLACK));
+		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE_BLACK));
 	}
 	else {
-		testFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
+		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	}
-	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 
 	// プレイヤーの描画
@@ -1493,13 +1514,6 @@ void Game::test()
 	//}
 
 
-	if (input->wasKeyPressed('6'))
-	{
-		//aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
-
-		aiDirector->eventMaker.makeEventBossEntry();
-	}
-
 	//if (input->wasKeyPressed('6'))
 	//{
 	//	aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
@@ -1524,11 +1538,6 @@ void Game::test()
 		treeData.initialPosition = *player->getPosition();
 		treeManager->createTree(treeData);
 	}
-	if (input->wasKeyPressed('4'))	// リーフ3番のみ描画を切る
-	{
-		treeManager->unRegisterLeafRendering(treeManager->getTreeList()[3]->getLeaf(),
-			treeManager->getTreeList()[3]->getTreeData()->model);
-	}	
 	if (input->wasKeyPressed('3'))	// 全破棄
 	{
 		treeManager->destroyAllTree();

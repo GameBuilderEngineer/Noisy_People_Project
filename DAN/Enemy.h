@@ -181,17 +181,17 @@ namespace enemyNS
 	{
 		0.85f,		// WOLF
 		1.5f,		// TIGER
-		8.0f,		// BEAR
+		5.0f,		// BEAR
 	};
 
 	class DeathEffect :public effekseerNS::Instance
 	{
 	public:
 		D3DXVECTOR3 * syncPosition;
-		DeathEffect(D3DXVECTOR3* sync)
+		DeathEffect(D3DXVECTOR3* sync, int _effectNo)
 		{
 			syncPosition = sync;
-			effectNo = effekseerNS::ENEMY_DEATH;
+			effectNo = _effectNo;
 		}
 		virtual void update()
 		{

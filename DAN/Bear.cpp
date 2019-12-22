@@ -39,10 +39,9 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 //=============================================================================
 Bear::~Bear()
 {
-
 }
 
-
+#define BEAR_SOUND_MAX (150)
 //=============================================================================
 // 更新処理
 //=============================================================================
@@ -66,14 +65,24 @@ void Bear::update(float frameTime)
 	{
 		animationManager->canPlayMoveSound = false;
 
-		
-		getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+		PLAY_PARAMETERS tmpPlayParmeters =
+			getPlayParameters(FOOT_STEPS_SE, enemyData->type);
 
 		// ここで再生
-		// プレイヤーの座標は取得できている
-		player[gameMasterNS::PLAYER_1P].position;
-		player[gameMasterNS::PLAYER_2P].position;
-		// 後よろしく。
+		for (int i = 0; i < 2; i++)
+		{
+			tmpPlayParmeters.playerID = i;
+			SoundInterface::S3D->playSound(&tmpPlayParmeters);
+			// ボリューム
+			float distance = D3DXVec3Length(&(position - player[i].position));
+			float volume = 0.0f;
+			if (distance < BEAR_SOUND_MAX)
+			{
+				volume = (BEAR_SOUND_MAX - distance) / BEAR_SOUND_MAX;
+			}
+			// ボリューム調整
+			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
+		}
 	}
 }
 

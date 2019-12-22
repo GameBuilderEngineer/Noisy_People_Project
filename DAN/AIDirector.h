@@ -14,6 +14,7 @@
 #include "ItemManager.h"
 #include "TelopManager.h"
 #include "LinkedList.h"
+#include "Marker.h"
 
 
 //=============================================================================
@@ -138,6 +139,9 @@ private:
 	ItemManager* itemManager;			// アイテム管理オブジェクト
 	TelopManager* telopManager;			// テロップ管理オブジェクト
 
+	MarkerRenderer*					markerRenderer;		//マーカー
+
+
 public:
 	//●
 	Sensor sensor;						// センサーモジュール
@@ -150,7 +154,7 @@ public:
 	// 初期化
 	void initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Player* _player,
 		EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager,
-		TelopManager* _telopManager);
+		TelopManager* _telopManager, MarkerRenderer* marker);
 
 	// 終了処理
 	void uninitialize();

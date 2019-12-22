@@ -30,13 +30,14 @@ EnemyChaseMark* EnemyManager::markRenderer;					// 追跡マーク描画
 // 初期化
 //=============================================================================
 void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
-	D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player)
+	D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player, MarkerRenderer*	_markerRenderer)
 {
 	nextID = 0;								// 次回発行IDを0に初期化
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
 	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
 	cntTimeDataList = 0.0f;
 	canUpdate = false;						// アップデートされない
+	markerRenderer = _markerRenderer;
 
 	// 接地フィールドとプレイヤーをセット
 	attractorMesh = _attractorMesh;
@@ -191,6 +192,12 @@ void EnemyManager::update(float frameTime)
 				destroyTargetEnemyData = (*itr)->getEnemyID();
 				//ゲームマスターへ記録
 				gameMaster->addKillEnemyNum((*itr)->getPlayerNo());
+			}
+
+			// Bearならマーカーを破棄する
+			if ((*itr)->getEnemyData()->type == enemyNS::BEAR)
+			{
+				markerRenderer->bossEnemyPosition = NULL;
 			}
 
 			// エネミーオブジェクトの破棄

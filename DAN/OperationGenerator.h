@@ -34,6 +34,8 @@ private:
 	TreeManager* treeManager;			// ツリー管理オブジェクト
 	ItemManager* itemManager;			// アイテム管理オブジェクト
 	TelopManager* telopManager;			// テロップ管理オブジェクト
+	MarkerRenderer*					markerRenderer;		//マーカー
+
 	Ray ray;
 
 	bool wasBossEntried;
@@ -44,7 +46,7 @@ public:
 	// 初期化
 	void initialize(aiNS::AnalyticalData* _data, GameMaster* _gameMaster,
 		Player* _player, EnemyManager* _enemyManager, TreeManager* _treeManager,
-		ItemManager* _itemManager, TelopManager* _telopManager);
+		ItemManager* _itemManager, TelopManager* _telopManager, MarkerRenderer* marker);
 	// エネミー動的作成
 	void spawnEnemy(enemyNS::ENEMYSET _enemySet);
 	// エネミーリスポーン

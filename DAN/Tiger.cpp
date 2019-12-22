@@ -56,6 +56,7 @@ Tiger::~Tiger()
 }
 
 
+#define TIGER_SOUND_MAX  (40)
 //=============================================================================
 // 更新処理
 //=============================================================================
@@ -88,11 +89,24 @@ void Tiger::update(float frameTime)
 	{
 		animationManager->canPlayMoveSound = false;
 
+		PLAY_PARAMETERS tmpPlayParmeters =
+			getPlayParameters(FOOT_STEPS_SE, enemyData->type);
+
 		// ここで再生
-		// プレイヤーの座標は取得できている
-		player[gameMasterNS::PLAYER_1P].position;
-		player[gameMasterNS::PLAYER_2P].position;
-		// 後よろしく。
+		for (int i = 0; i < 2; i++)
+		{
+			tmpPlayParmeters.playerID = i;
+			SoundInterface::S3D->playSound(&tmpPlayParmeters);
+			// ボリューム
+			float distance = D3DXVec3Length(&(position - player[i].position));
+			float volume = 0.0f;
+			if (distance < TIGER_SOUND_MAX)
+			{
+				volume = (TIGER_SOUND_MAX - distance) / TIGER_SOUND_MAX;
+			}
+			// ボリューム調整
+			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
+		}
 	}
 
 	// バレットの更新
