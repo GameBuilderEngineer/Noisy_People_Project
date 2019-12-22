@@ -302,6 +302,9 @@ void NETWORK_CLIENT::outputGUI()
 //===================================================================================================================================
 void NETWORK_CLIENT::setSendTreeTable(const TreeTable inTreeTable)
 {
+	//Ú‘±‚É¸”s‚µ‚Ä‚¢‚é‚Ì‚ÅA‘—M‚ğs‚í‚È‚¢
+	if (!success)return;
+
 	//if (treeNum == NULL)
 	//{
 	//	treeTable = new TreeTable;

@@ -46,7 +46,7 @@ public:
 	static bool requestConnection;//Ú‘±—v‹
 	static bool initialConnection;//‰ŠúÚ‘±
 	static int connectionTarget;//Ú‘±æ
-	bool success;
+	static bool success;
 	bool onResetDisplay;
 private:
 	int packageID;
