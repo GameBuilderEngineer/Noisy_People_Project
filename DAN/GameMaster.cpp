@@ -107,7 +107,7 @@ void GameMaster::startGame()
 	countDownTimer	= COUNT_DOWN_TIME;
 
 #ifdef _DEBUG
-#if 1
+#if 0
 	gameTimer		= DEBUG_GAME_TIME;
 #else
 	gameTimer		= GAME_TIME;

@@ -27,11 +27,6 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
 
-	//必要 1
-	MoveP.pAllocateHier = new CAllocateHierarchy();
-	//必要 1
-
-
 	//初期設定
 	MoveP.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	MoveP.Rot = Rot;
@@ -46,6 +41,9 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	//if (FirstInit == true)
 	if(!initializedMoveP)
 	{
+		//必要 1
+		MoveP.pAllocateHier = new CAllocateHierarchy();
+
 		// アニメーションオブジェクトを作る
 		MoveP.Animation = (D3DXANIMATION*)calloc(1, sizeof(D3DXANIMATION));
 		MoveP.Animation->Owner = "MoveP";

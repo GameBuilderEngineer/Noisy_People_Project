@@ -117,6 +117,7 @@ void Result::initialize()
 //===================================================================================================================================
 void Result::uninitialize(void)
 {
+	treeManager->uninitialize();
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);

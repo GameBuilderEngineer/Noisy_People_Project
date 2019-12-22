@@ -62,6 +62,7 @@ private:
 	GameMaster*			gameMaster;				//ゲームマスターへのポインタ
 
 public:
+	~TreeManager();
 	void initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void uninitialize();
 	void update(float frameTime);

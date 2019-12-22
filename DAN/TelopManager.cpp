@@ -17,6 +17,7 @@ TelopManager::TelopManager()
 
 TelopManager::~TelopManager()
 {
+	uninitialize();
 }
 
 //=============================================================================

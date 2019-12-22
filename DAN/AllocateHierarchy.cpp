@@ -240,7 +240,9 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(LPCSTR Name,
 	pMeshContainer = NULL;
 
 e_Exit:
-	SAFE_RELEASE(pd3dDevice);
+	//2019/12/22 菅野memo:コメントアウトしました。
+	//ここに入るタイミングがわからないけど、デバイスのリリースは危険では？
+	//SAFE_RELEASE(pd3dDevice);
 
 	// call Destroy function to properly clean up the memory allocated 
 	if (pMeshContainer != NULL)

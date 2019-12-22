@@ -52,6 +52,7 @@ private:
 
 public:
 	NavigationMesh(StaticMesh* staticMesh);
+	~NavigationMesh();
 	void initialize();
 	void uninitialize();
 	void update();
