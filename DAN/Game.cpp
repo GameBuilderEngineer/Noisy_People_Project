@@ -944,10 +944,10 @@ void Game::renderUI()
 	fixedUI->render();
 
 	//プレイヤー1周りのUIの描画
-	player1UI->render();
+	player1UI->render(gameMaster->getGameTime());
 
 	//プレイヤー2周りのUIの描画
-	player2UI->render();
+	player2UI->render(gameMaster->getGameTime());
 
 	//カウントUIの描画
 	countUI->render();
