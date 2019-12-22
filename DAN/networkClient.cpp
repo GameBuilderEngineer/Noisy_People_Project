@@ -12,6 +12,7 @@ int NETWORK_CLIENT::treeNum = 0;
 bool NETWORK_CLIENT::requestConnection = false;
 bool NETWORK_CLIENT::initialConnection = true;
 int NETWORK_CLIENT::connectionTarget = -1;
+bool NETWORK_CLIENT::success = false;
 //===================================================================================================================================
 //ÅyñºëOãÛä‘Åz
 //===================================================================================================================================
