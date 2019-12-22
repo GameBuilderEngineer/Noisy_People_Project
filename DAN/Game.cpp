@@ -60,6 +60,7 @@ Game::~Game()
 {
 	// サウンドの停止
 	SoundInterface::BGM->uninitSoundStop();
+	SoundInterface::S3D->uninitSoundStop();
 }
 
 //#define SAMPLE_NAVI	// ビルドスイッチ　このdefine周辺は近々で消しますが一旦残しておいてもらえると助かります中込
