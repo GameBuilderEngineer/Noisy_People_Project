@@ -27,6 +27,15 @@ Finale::Finale()
 	//今のシーン(フィナーレ)
 	sceneName = ("Scene -Finale-");
 	nextScene = SceneList::TITLE;
+
+	//再生パラメータ
+	PLAY_PARAMETERS playParameters[1];//同時に再生したい数
+	memset(playParameters, 0, sizeof(playParameters));//
+	//再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
+	playParameters[0] = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Finale, false,NULL,false,NULL };//SEの設定
+	//再生
+	SoundInterface::BGM->playSound(&playParameters[0]);
+
 }
 
 //============================================================================================================================================
@@ -34,6 +43,8 @@ Finale::Finale()
 //============================================================================================================================================
 Finale::~Finale()
 {
+	// サウンドの停止
+	SoundInterface::BGM->uninitSoundStop();
 }
 
 //============================================================================================================================================
@@ -156,12 +167,12 @@ void Finale::update(float _frameTime)
 	//if(input->wasKeyPressed()
 
 
-	if (input->wasKeyPressed(VK_RETURN) ||
+	/*if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
 	{
 		changeScene(nextScene);
-	}
+	}*/
 
 	
 
@@ -283,13 +294,13 @@ void Finale::update(float _frameTime)
 	case CAMERA3:
 		if (moveTimer > 0)
 		{
-			moveTimer -= frameTime;
-			if (moveTimer <= 0)
+			if (input->wasKeyPressed('6') ||
+				input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB) ||
+				input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
 			{
 				changeScene(nextScene);
 			}
-
-
+		
 		}
 
 

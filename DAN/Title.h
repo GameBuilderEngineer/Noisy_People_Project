@@ -95,6 +95,7 @@ private:
 	int selectStateMemory;
 
 	int titleState;
+
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度

@@ -28,6 +28,8 @@ enum BGM_LIST
 	BGM_Tutorial,
 	BGM_Clear,
 	BGM_Failed,
+	BGM_Opening,
+	BGM_Finale,
 	BGM_MAX
 };
 
@@ -37,7 +39,8 @@ enum BGM_LIST
 static const char *BGMPathList[] = {
 	"BGM_Title.wav","BGM_Credit.wav",
 	"BGM_Game.wav","BGM_Tutorial.wav",
-	"BGM_Clear.wav" ,"BGM_Failed.wav" };
+	"BGM_Clear.wav" ,"BGM_Failed.wav" ,
+	"BGM_Opening.wav","BGM_Finale.wav"};
 
 //===================================================================================================================================
 //ÅyÉTÉEÉìÉh(XAudio2)Åz
