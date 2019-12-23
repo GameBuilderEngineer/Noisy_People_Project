@@ -66,7 +66,7 @@ Reticle::Reticle()
 			*textureNS::reference(textureNS::UI_SUB_RETICLE),	//テクスチャポインタ
 			SpriteNS::CENTER,								//原点
 			(int)((float)UNIT_WIDTH),						//幅
-			(int)((float)UNIT_HEIGHT),					//高さ
+			(int)((float)UNIT_HEIGHT),						//高さ
 			POSITION1,										//位置
 			ROTATION,										//回転
 			COLOR											//色

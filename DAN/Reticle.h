@@ -58,8 +58,8 @@ namespace reticleNS
 		const int	NUM_V			= 1;
 		const float UNIT_U			= 1.0f/NUM_U;//単位U
 		const float UNIT_V			= 1.0f/NUM_V;//単位V
-		const int WIDTH				= 256/6;//テクスチャ全体の幅
-		const int HEIGHT			= 128/6;//テクスチャ全体の高さ	
+		const int WIDTH				= 256/2;//テクスチャ全体の幅
+		const int HEIGHT			= 128/2;//テクスチャ全体の高さ	
 		const int UNIT_WIDTH		= (int)(WIDTH/NUM_U);//単位幅
 		const int UNIT_HEIGHT		= (int)(HEIGHT/NUM_V);//単位高さ
 		const D3DXVECTOR3 POSITION1 = D3DXVECTOR3((float)WINDOW_WIDTH / 4, (float)WINDOW_HEIGHT / 2-64, 0.0f);
