@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【FinaleEffect.cpp】
+//【PlayerEffect.cpp】
 // [作成者] HAL東京GP12A332 11 菅野 樹
 // [作成日] 2019/12/23
 // [更新日] 2019/12/23
@@ -8,25 +8,28 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "FinaleEffect.h"
+#include "PlayerEffect.h"
 
 //===================================================================================================================================
 //【using宣言】
 //===================================================================================================================================
-using namespace FinaleEffectNS;
+using namespace PlayerEffectNS;
+
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-FinaleEffect::FinaleEffect()
+PlayerEffect::PlayerEffect(int managerNo)
 {
-	//フラワーエフェクト
-	flowerObj = new Object();
-	flowerObj->initialize(&D3DXVECTOR3(0, 0, 0));
-	distanceFlower  = 15.0f;
-	//羽エフェクト
-	featherObj = new Object();
-	featherObj->initialize(&D3DXVECTOR3(0, 0, 0));
+	//プレイヤーのポインタ
+	this->player = NULL;
+	//スカイポジションのポインタ
+	this->skyPosition = NULL;
+
+	//エフェクシアーのマネージャー番号
+	this->managerNo = managerNo;
+
+	distanceFlower = 15.0f;
 	distanceFeather = 15.0f;
 }
 
@@ -34,61 +37,84 @@ FinaleEffect::FinaleEffect()
 //===================================================================================================================================
 //【デストラクタ】
 //===================================================================================================================================
-FinaleEffect::~FinaleEffect()
+PlayerEffect::~PlayerEffect()
 {
-	SAFE_DELETE(flowerObj);
-	SAFE_DELETE(featherObj);
 }
 
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
-void FinaleEffect::update(Camera* camera)
+void PlayerEffect::update(float frameTime)
 {
-	//フラワーエフェクト
-	flowerObj->position =  camera->position + camera->getDirectionZ()*distanceFlower;
-	flowerObj->postureControl(flowerObj->getAxisX()->direction, -camera->getDirectionZ(),0.1f);
-	flowerObj->update();
-	//羽エフェクト
-	featherObj->position =  camera->position + camera->getDirectionZ()*distanceFeather;
-	featherObj->postureControl(featherObj->getAxisX()->direction, -camera->getDirectionZ(),0.01f);
-	featherObj->update();
+
+}
+
+//===================================================================================================================================
+//【更新】
+//===================================================================================================================================
+void PlayerEffect::setPointer(Object* player, D3DXVECTOR3* skyPosition)
+{
+	//プレイヤーのポインタ
+	this->player = player;
+	//シフトラインのポインタ
+	this->skyPosition = skyPosition;
+
 }
 
 //===================================================================================================================================
 //【再生】
 //===================================================================================================================================
-void FinaleEffect::play()
-{
-	//花びらエフェクトの再生
-	flowerShower = new FlowerShower(&flowerObj->matrixWorld);
-	effekseerNS::play(0, flowerShower);
-	//羽エフェクトの再生
-	feather = new Feather(&featherObj->matrixWorld);
-	effekseerNS::play(0, feather);
-}
-
-#ifdef _DEBUG
-
-//===================================================================================================================================
-//【再生】
-//===================================================================================================================================
-void FinaleEffect::play(int i)
+void PlayerEffect::play(int i)
 {
 	switch (i)
 	{
-	case 0:
-		//花びらエフェクトの再生
-		flowerShower = new FlowerShower(&flowerObj->matrixWorld);
+	case EFFECT_LIST::DIGHITAL_SHIFT:
+		digitalShift = new DigitalShiftEffect(&player->matrixCenter, managerNo);
+		effekseerNS::play(managerNo, digitalShift);
 		break;
-	case 1:
-		//羽エフェクトの再生
-		feather = new Feather(&featherObj->matrixWorld);
+	case EFFECT_LIST::DIGIT_MODE:
+		digitMode = new DigitMode(&player->matrixCenter,managerNo);
+		effekseerNS::play(managerNo, digitMode);
+		break;
+	case EFFECT_LIST::SHIFT_TERMINATE:
+		shiftTerminate = new ShiftTerminateEffect(&player->matrixCenter,managerNo);
+		effekseerNS::play(managerNo, shiftTerminate);
+		break;
+	case EFFECT_LIST::SKY_JUMP:
+		skyJump= new SkyJumpEffect(&player->matrixCenter,skyPosition,managerNo);
+		effekseerNS::play(managerNo, skyJump);
+		break;
+	case EFFECT_LIST::SKY_VISION:
+		skyVision = new SkyVisionEffect(&player->matrixCenter,skyPosition,managerNo);
+		effekseerNS::play(managerNo, skyVision);
 		break;
 	}
-	effekseerNS::play(0, flowerShower);
 
 }
-#endif // _DEBUG
 
+//===================================================================================================================================
+//【停止】
+//===================================================================================================================================
+void PlayerEffect::stop(int i)
+{
+	switch (i)
+	{
+	case EFFECT_LIST::DIGHITAL_SHIFT:
+		effekseerNS::stop(managerNo, digitalShift);
+		break;
+	case EFFECT_LIST::DIGIT_MODE:
+		effekseerNS::stop(managerNo, digitMode);
+		break;
+	case EFFECT_LIST::SHIFT_TERMINATE:
+		effekseerNS::stop(managerNo, shiftTerminate);
+		break;
+	case EFFECT_LIST::SKY_JUMP:
+		effekseerNS::stop(managerNo, skyJump);
+		break;
+	case EFFECT_LIST::SKY_VISION:
+		effekseerNS::stop(managerNo, skyVision);
+		break;
+	}
+
+}
 

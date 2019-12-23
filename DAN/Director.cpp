@@ -158,7 +158,7 @@ HRESULT Director::initialize() {
 #ifdef _DEBUG
 	if (MessageBox(0, "はい(Y):Debugモード\nいいえ(N):次へ", "デバッグシーンへ遷移しますか？", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
-		scene = new Debug();
+		scene = new DebugScene();
 		debugMode = true;
 	}
 	else if (MessageBox(0, "はい(Y):Finaleシーン\nいいえ(N):次へ", "Finaleシーンを確認しますか", MB_YESNO | MB_TOPMOST) == IDYES)

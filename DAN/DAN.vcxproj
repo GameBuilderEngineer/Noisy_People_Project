@@ -170,6 +170,7 @@
     <ClInclude Include="Marker.h" />
     <ClInclude Include="PartsAnimation.h" />
     <ClInclude Include="PartsAnimationManager.h" />
+    <ClInclude Include="PlayerEffect.h" />
     <ClInclude Include="TigerAnimation.h" />
     <ClInclude Include="TigerBullet.h" />
     <ClInclude Include="Display.h" />
@@ -354,6 +355,7 @@
     <ClCompile Include="Marker.cpp" />
     <ClCompile Include="PartsAnimation.cpp" />
     <ClCompile Include="PartsAnimationManager.cpp" />
+    <ClCompile Include="PlayerEffect.cpp" />
     <ClCompile Include="TigerAnimation.cpp" />
     <ClCompile Include="TigerBullet.cpp" />
     <ClCompile Include="networkServer.cpp" />

@@ -26,6 +26,7 @@
 #include "Bullet.h"
 #include "DigitalShiftEffect.h"
 #include "Sound.h"
+#include "PlayerEffect.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -311,6 +312,7 @@ private:
 	float						shiftDistance;
 	D3DXVECTOR3					shiftPosition;
 
+
 	//再生パラメータ
 	PLAY_PARAMETERS shiftStartSE;
 	PLAY_PARAMETERS shiftFinishSE;
@@ -328,6 +330,9 @@ private:
 	//debug
 	float dot;
 	bool collideAxisX;
+public:
+	//プレイヤーエフェクト
+	PlayerEffect*				effect;							//プレイヤーエフェクト
 
 public:
 	Player();
