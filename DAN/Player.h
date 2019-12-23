@@ -303,7 +303,7 @@ private:
 	D3DXVECTOR3					shootingPosition;				//衝突位置(プレイヤーレイ準拠）
 	float						collideDistance;				//照射距離
 	BulletManager*				bulletManager;					//バレットマネージャー
-	
+	D3DXMATRIX*					dummyLHand;						//モデルが合うまでのダミー
 
 	//デジタルアクション
 	DigitalShiftEffect*			digitalShiftEffect;				//デジタルシフトエフェクト

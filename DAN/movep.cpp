@@ -331,8 +331,10 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.AnimeChange = true;
 	}
 
-	MoveP.RHand = GetBoneMatrix(MoveP.Animation, "right_hand");
+	MoveP.RHand = GetBoneMatrix(MoveP.Animation, "mixamorig_RightHand");
 	MoveP.RHandPos = D3DXVECTOR3(MoveP.RHand._41, MoveP.RHand._42, MoveP.RHand._43);
+	MoveP.LHand = GetBoneMatrix(MoveP.Animation, "mixamorig_LeftHand");
+	MoveP.LHandPos = D3DXVECTOR3(MoveP.LHand._41, MoveP.LHand._42, MoveP.LHand._43);
 	// アニメーションを更新 
 	//必ず入れてください、さもないと、動画が動けない
 	UpdateAnimation(MoveP.Animation, f_TimeDelta * MoveP.ActionSpeed);

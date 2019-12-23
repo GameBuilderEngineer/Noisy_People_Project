@@ -802,8 +802,16 @@ bool Player::shot()
 	//弾の発射
 	if (bulletManager->launch(shootingRay,infomation.playerType))
 	{
+		D3DXMATRIX* syncMatrix = NULL;
 		//エフェクトの再生
-		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&matrixWorld);
+		switch (infomation.playerType)
+		{
+		case gameMasterNS::PLAYER_1P:syncMatrix = &MoveP->LHand;	break;
+		case gameMasterNS::PLAYER_2P:syncMatrix = &MoveP1->LHand;	break;
+		}
+
+		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(syncMatrix);
+
 		effekseerNS::play(0, muzzle);
 		return true;
 	}
@@ -1169,9 +1177,15 @@ void Player::updatePostureByAiming()
 void Player::updateShooting(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
 	MOVEP *MoveP = GetMovePAdr();
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
 
 	//発射位置の更新
-	launchPosition = center;// +axisZ.direction*radius;
+	switch (infomation.playerType)
+	{
+	case gameMasterNS::PLAYER_1P:launchPosition = MoveP->LHandPos; break;
+	case gameMasterNS::PLAYER_2P:launchPosition = MoveP1->LHandPos; break;
+	}
+
 	//狙撃レイの更新
 	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
 	shootingRay.update(launchPosition, shootingRay.direction);
