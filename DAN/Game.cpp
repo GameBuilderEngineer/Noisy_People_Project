@@ -246,6 +246,10 @@ void Game::initialize() {
 	// エネミー
 	enemyManager = new EnemyManager;
 	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player, markerRenderer);
+	enemyManager->setUpdate(true);							//エネミー更新開始
+	//enemyManager->update(0.0f);
+	//enemyManager->setUpdate(false);
+
 	
 	// ツリー
 	treeManager = new TreeManager;
