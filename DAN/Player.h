@@ -26,6 +26,7 @@
 #include "Bullet.h"
 #include "DigitalShiftEffect.h"
 #include "Sound.h"
+#include "PlayerEffect.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -152,7 +153,7 @@ namespace playerNS{
 	const int	MAX_HP						= 100;									//ＨＰ最大値
 	const int	FULL_POWER					= 100;									//電力ゲージ一本分の電力量
 	const int	MAX_POWER					= FULL_POWER * 3;						//電力ゲージ最大値
-	const int	AUTO_RECOVERY_POWER			= (int)((float)FULL_POWER/30.0f);		//自動回復電力（1秒あたりの回復量:30秒で1本分全回復）
+	const int	AUTO_RECOVERY_POWER			= (int)((float)FULL_POWER/10.0f);		//自動回復電力（1秒あたりの回復量:30秒で1本分全回復）
 	const int	MIN_POWER					= 0;									//電力ゲージ最低値
 	const float INVINCIBLE_TIME				= 3.0f;									//無敵時間
 
@@ -302,7 +303,7 @@ private:
 	D3DXVECTOR3					shootingPosition;				//衝突位置(プレイヤーレイ準拠）
 	float						collideDistance;				//照射距離
 	BulletManager*				bulletManager;					//バレットマネージャー
-	
+	D3DXMATRIX*					dummyLHand;						//モデルが合うまでのダミー
 
 	//デジタルアクション
 	DigitalShiftEffect*			digitalShiftEffect;				//デジタルシフトエフェクト
@@ -310,6 +311,7 @@ private:
 	Ray							shiftRay;						//デジタルシフトレイ
 	float						shiftDistance;
 	D3DXVECTOR3					shiftPosition;
+
 
 	//再生パラメータ
 	PLAY_PARAMETERS shiftStartSE;
@@ -328,6 +330,9 @@ private:
 	//debug
 	float dot;
 	bool collideAxisX;
+public:
+	//プレイヤーエフェクト
+	PlayerEffect*				effect;							//プレイヤーエフェクト
 
 public:
 	Player();

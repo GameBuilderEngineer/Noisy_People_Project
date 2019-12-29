@@ -45,6 +45,7 @@ EffekseerManager::EffekseerManager()
 	fileName[DIGIT_TREE_BASE]	= { L"Digit_Tree_Base.efk" };
 	fileName[DIGIT_TREE_SELECT]	= { L"Digit_Tree_Sel_Lightver.efk" };
 	fileName[DIGIT_TREE_RAID]	= { L"Digit_Tree_Select.efk" };
+	fileName[DIGIT_TREE_NEAR]	= { L"Digit_Tree_near.efk" };
 	fileName[DAC]				= { L"DAC.efk" };
 	fileName[DAC_BULLET]		= { L"DAC_Bullet.efk" };
 	fileName[GREENING]			= { L"Greening.efk" };

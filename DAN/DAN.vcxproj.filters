@@ -385,6 +385,15 @@
     <Filter Include="SerialCommunication">
       <UniqueIdentifier>{27094aec-2858-4e07-af46-390a562c548b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Layer\FinaleEffect">
+      <UniqueIdentifier>{25e515a2-53cb-489d-b1ec-40416cfff498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\OPState">
+      <UniqueIdentifier>{4a16b2c9-774f-4653-93bb-4eaa885ecdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Player\State\EDState">
+      <UniqueIdentifier>{f05b29c7-453d-438b-afca-8d47ffc4d7ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -900,6 +909,12 @@
     </ClCompile>
     <ClCompile Include="FinaleTex.cpp">
       <Filter>Game Layer\Scene\Finale</Filter>
+    </ClCompile>
+    <ClCompile Include="FinaleEffect.cpp">
+      <Filter>Game Layer\FinaleEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerEffect.cpp">
+      <Filter>Game Layer\Player\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1439,6 +1454,12 @@
     </ClInclude>
     <ClInclude Include="Finaletex.h">
       <Filter>Game Layer\Scene\Finale</Filter>
+    </ClInclude>
+    <ClInclude Include="FinaleEffect.h">
+      <Filter>Game Layer\FinaleEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerEffect.h">
+      <Filter>Game Layer\Player\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

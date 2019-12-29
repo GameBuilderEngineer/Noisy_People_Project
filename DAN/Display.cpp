@@ -116,7 +116,6 @@ void Display::initialize()
 //===================================================================================================================================
 void Display::uninitialize(void)
 {
-	treeManager->uninitialize();
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);

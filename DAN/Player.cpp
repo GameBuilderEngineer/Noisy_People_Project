@@ -67,6 +67,7 @@ Player::~Player()
 	SAFE_DELETE(bulletManager);
 	SAFE_DELETE(digitalShiftEffect);
 	SAFE_DELETE(state);
+	SAFE_DELETE(effect);
 }
 
 //===================================================================================================================================
@@ -110,6 +111,10 @@ void Player::initialize(PlayerTable info)
 	//選択ライトを再生状態にしておく。
 	digitalShiftEffect	= new DigitalShiftEffect;
 	playSelectLight();
+	
+	//エフェクト
+	effect = new PlayerEffect(infomation.playerType + 1);
+	effect->setPointer(this, &cameraGaze);
 	
 
 	//再生パラメータの作成
@@ -205,6 +210,8 @@ void Player::update(float frameTime)
 	// オブジェクトの更新
 	Object::update();
 
+	//エフェクトの更新
+	effect->update(frameTime);
 }
 
 //===================================================================================================================================
@@ -230,9 +237,11 @@ void Player::otherRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 void Player::transState(int next)
 {
 	state->nextType = next;
+	state->end();
 	AbstractState* nextState = state->transition();
 	SAFE_DELETE(state);
 	state = nextState;
+	state->start();
 }
 #pragma endregion
 
@@ -793,8 +802,16 @@ bool Player::shot()
 	//弾の発射
 	if (bulletManager->launch(shootingRay,infomation.playerType))
 	{
+		D3DXMATRIX* syncMatrix = NULL;
 		//エフェクトの再生
-		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(&matrixWorld);
+		switch (infomation.playerType)
+		{
+		case gameMasterNS::PLAYER_1P:syncMatrix = &MoveP->LHand;	break;
+		case gameMasterNS::PLAYER_2P:syncMatrix = &MoveP1->LHand;	break;
+		}
+
+		bulletNS::Muzzle* muzzle = new bulletNS::Muzzle(syncMatrix);
+
 		effekseerNS::play(0, muzzle);
 		return true;
 	}
@@ -827,7 +844,7 @@ bool Player::digitalShift()
 	startTransitionCamera(SKY_TRANSITION_TIME, cameraGaze, nextGaze);
 
 	//デジタルシフトの開始エフェクトを再生
-	digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT, center);
+	//digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT, center);
 
 	//ボイス再生
 	SoundInterface::S3D->playSound(&voiceShift[rand() % NUM_SHIFT_VOICE]);
@@ -1023,7 +1040,7 @@ bool Player::executionDigitalShift()
 	center = position + D3DXVECTOR3(0.0f, size.y / 2, 0.0f);
 
 	//デジタルシフトの終了エフェクトを再生
-	digitalShiftEffect->play(DigitalShiftEffectNS::END_SHIFT, center);
+	//digitalShiftEffect->play(DigitalShiftEffectNS::END_SHIFT, center);
 
 	return true;
 }
@@ -1160,9 +1177,15 @@ void Player::updatePostureByAiming()
 void Player::updateShooting(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
 	MOVEP *MoveP = GetMovePAdr();
+	MOVEP1 *MoveP1 = GetMoveP1Adr();
 
 	//発射位置の更新
-	launchPosition = center;// +axisZ.direction*radius;
+	switch (infomation.playerType)
+	{
+	case gameMasterNS::PLAYER_1P:launchPosition = MoveP->LHandPos; break;
+	case gameMasterNS::PLAYER_2P:launchPosition = MoveP1->LHandPos; break;
+	}
+
 	//狙撃レイの更新
 	Base::between2VectorDirection(&shootingRay.direction, launchPosition, aimingPosition);
 	shootingRay.update(launchPosition, shootingRay.direction);

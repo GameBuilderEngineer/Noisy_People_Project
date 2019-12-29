@@ -161,6 +161,11 @@ HRESULT Director::initialize() {
 		scene = new DebugScene();
 		debugMode = true;
 	}
+	else if (MessageBox(0, "はい(Y):Finaleシーン\nいいえ(N):次へ", "Finaleシーンを確認しますか", MB_YESNO | MB_TOPMOST) == IDYES)
+	{
+		scene = new Finale();
+		debugMode = true;
+	}
 
 #endif // _DEBUG
 

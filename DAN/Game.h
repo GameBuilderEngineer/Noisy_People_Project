@@ -69,7 +69,7 @@ namespace gameNS
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
-	enum PHOTOGRAPH_LIST
+	enum OPENING_CAMERA_LIST
 	{
 		CAMERA0,
 		CAMERA1,
@@ -179,8 +179,11 @@ private:
 	float distance;
 	float moveDistance;
 	
+	float degreeTimerX;
+	float degreeTimeX;
+
 	int stateCamera;
-	float frameDegree = 1.0f / 10.0f;		//自動速度
+	float frameDegree = 1.0f / 5.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度
 
 	//カメラの軸取得変数
@@ -194,6 +197,20 @@ private:
 	D3DXVECTOR3 BezierCurveS2;			//S字ベジェ曲線点２
 	D3DXVECTOR3 targetDistance;
 	D3DXVECTOR3 newRelative;
+
+	D3DXVECTOR3 BezierPoint1;			//S字ベジェ曲線点１
+	D3DXVECTOR3 BezierPoint2;			//S字ベジェ曲線点２
+	D3DXVECTOR3 BezierPoint3;			//S字ベジェ曲線点２
+	D3DXVECTOR3 BezierPoint4;			//S字ベジェ曲線点２
+	D3DXVECTOR3 BezierPoint5;			//S字ベジェ曲線点２
+	D3DXVECTOR3 BezierPoint6;			//S字ベジェ曲線点２
+
+	D3DXVECTOR3 Curve1;			//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve2;			//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve3;			//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve4;			//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve5;			//S字ベジェ曲線点２
+	bool measurement = true;
 
 public:
 	Game();

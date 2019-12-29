@@ -49,6 +49,8 @@ DigitalShiftState::~DigitalShiftState()
 //===================================================================================================================================
 void DigitalShiftState::start()
 {
+	player->effect->play(PlayerEffectNS::DIGHITAL_SHIFT);
+
 }
 
 //===================================================================================================================================
@@ -121,7 +123,8 @@ AbstractState* DigitalShiftState::transition()
 //===================================================================================================================================
 void DigitalShiftState::end()
 {
-
+	player->effect->stop(PlayerEffectNS::DIGHITAL_SHIFT);
+	player->effect->play(PlayerEffectNS::SHIFT_TERMINATE);
 }
 
 

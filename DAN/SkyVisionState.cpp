@@ -48,6 +48,8 @@ SkyVisionState::~SkyVisionState()
 //===================================================================================================================================
 void SkyVisionState::start()
 {
+	player->effect->play(PlayerEffectNS::EFFECT_LIST::SKY_VISION);
+	player->effect->play(PlayerEffectNS::EFFECT_LIST::SKY_JUMP);
 }
 
 //===================================================================================================================================
@@ -126,6 +128,7 @@ AbstractState* SkyVisionState::transition()
 //===================================================================================================================================
 void SkyVisionState::end()
 {
-
+	player->effect->stop(PlayerEffectNS::EFFECT_LIST::SKY_VISION);
+	player->effect->stop(PlayerEffectNS::EFFECT_LIST::SKY_JUMP);
 }
 

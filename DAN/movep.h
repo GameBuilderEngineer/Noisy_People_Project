@@ -44,7 +44,9 @@ typedef struct
 	float				ActionSpeed;		// 全体アクションの速度
 	float				fTimeDelta = 0.0f;
 	D3DXMATRIX			RHand;
+	D3DXMATRIX			LHand;
 	D3DXVECTOR3			RHandPos;
+	D3DXVECTOR3			LHandPos;
 D3DXVECTOR3			PrePos;				// 1フレイム前の座標
 D3DXVECTOR3			CenterPos;			// プレイヤーの中心座標
 D3DXVECTOR3			NextPos;			// 次の座標
