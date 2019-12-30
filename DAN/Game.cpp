@@ -225,8 +225,6 @@ void Game::initialize() {
 
 	//ディスプレイ用プレーンサンプル
 	//samplePlane = new TestPlane();
-	//開発中広告
-	//ad = new Advertisement();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 #ifdef SAMPLE_NAVI
@@ -246,7 +244,7 @@ void Game::initialize() {
 	// エネミー
 	enemyManager = new EnemyManager;
 	enemyManager->initialize(*getSceneName(),testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(), gameMaster, player, markerRenderer);
-	
+
 	// ツリー
 	treeManager = new TreeManager;
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
@@ -385,7 +383,6 @@ void Game::uninitialize() {
 	SAFE_DELETE(player1UI);
 	SAFE_DELETE(player2UI);
 	SAFE_DELETE(countUI);
-	//SAFE_DELETE(ad);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
 	//ターゲットオブジェクト
@@ -415,8 +412,6 @@ void Game::update(float _frameTime) {
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 10.0f/60.0f)return;
 
-
-
 	//オープニング時間の更新
 	gameMaster->updateOpeningTime(frameTime);
 
@@ -427,6 +422,7 @@ void Game::update(float _frameTime) {
 	//開始カウントダウン
 	if (gameMaster->playActionStartCount(3))
 	{
+		enemyManager->setUpdate(true);				//エネミー更新開始
 		countUI->startCount(3);
 		SoundInterface::SE->playSound(&playParameters[1]);
 	}
@@ -445,8 +441,7 @@ void Game::update(float _frameTime) {
 		countUI->startCount(0);									//ゲーム開始
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
-		enemyManager->setUpdate(true);							//エネミー更新開始
-		telopManager->play(telopManagerNS::TELOP_TYPE6);
+		telopManager->play(telopManagerNS::TELOP_TYPE6);		//テロップ
 	}
 	
 	//ゲームタイムの更新
@@ -529,8 +524,6 @@ void Game::update(float _frameTime) {
 		SoundInterface::S3D->playSound(&voiceStart);
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
-
-	
 
 	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
 	cameraAxisZ = cameraOP->getAxisZ();
@@ -744,34 +737,6 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 
-#ifdef CHEAT_PRESENTATION
-	// プレゼン用チート機能
-	if (input->wasKeyPressed('6') || 
-		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::SPECIAL_SUB)||
-		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::SPECIAL_SUB))
-	{
-		int enemyID = aiDirector->eventMaker.makeEventBossEntry();
-		//if (enemyID != -1)
-		//{
-		//	markerRenderer->bossEnemyPosition = &enemyManager->findEnemy(enemyID)->center;
-		//	Tree* tree = treeManager->findTree(244);
-		//	markerRenderer->attackedTree = &tree->center;
-		//}
-
-		//markerRenderer->bossEnemyPosition = &treeManager->getTreeList()[1]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
-		//markerRenderer->bossEnemyPosition = &enemyManager->getEnemyList()[enemyManager->getNextID()-1]->position;
-		//markerRenderer->bossEnemyPosition = /*ここにボスの位置情報ポインタを代入*/
-		//！死亡時にNULLを代入
-	}
-	if (input->wasKeyPressed('7'))
-	{
-		aiDirector->eventMaker.makeEventEnemyAttaksTree();
-		//&treeManager->getTreeList()[0]->position;/*ここに襲撃ツリーの位置情報ポインタを代入*/
-		//markerRenderer->attackedTree = /*ここにボスの位置情報ポインタを代入*/
-		//！襲撃終了時にNULLを代入
-	}
-#endif
-
 	// ツリーの更新
 	treeManager->update(frameTime);
 
@@ -898,8 +863,6 @@ void Game::update(float _frameTime) {
 
 	//ディスプレイ用プレーンサンプル
 	//samplePlane->update(frameTime);
-	// 開発中広告
-	//ad->update(frameTime);
 	
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -1112,9 +1075,6 @@ void Game::render3D(Camera* currentCamera) {
 
 	//ディスプレイ用プレーンサンプル
 	//samplePlane->render(currentCamera->view, currentCamera->projection, currentCamera->position);
-
-	// 開発中広告
-	//ad->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//3DUI
 	if (gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))

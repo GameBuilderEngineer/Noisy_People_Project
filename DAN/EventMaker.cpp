@@ -93,15 +93,12 @@ void EventMaker::update()
 		}
 	}
 
-
-#ifndef CHEAT_PRESENTATION
 	// 巨大環境破壊ロボイベント
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
 	{
 		data->wasBossEntried = true;
 		makeEventBossEntry();
 	}
-#endif
 }
 
 
