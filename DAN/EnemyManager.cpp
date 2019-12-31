@@ -59,41 +59,25 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	bearLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_R));
 	markRenderer = new EnemyChaseMark;
 
-	// チュートリアルシーンでの初期化処理
-	if (_sceneName == "Scene -Tutorial-")
+	if (_sceneName == "Scene -Game-")
 	{
-		return;
-	}
+		// ツールファイルからエネミーを作成
+		ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+		for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+		{
+			createEnemyData(enemyTools->GetEnemySet(i));
+		}
+		SAFE_DELETE(enemyTools);
+		for (int i = 0; i < enemyDataList.nodeNum; i++)
+		{
+			createEnemy(enemyDataList.getValue(i));
+		}
 
-	//----------------------------------------------------
-	// 以下のビルドスイッチが有効の場合にエネミーツールの
-	// データを読み込みエネミーを作成→配置する
-	//----------------------------------------------------
-#if 1	
-	ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-	for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-	{
-		createEnemyData(enemyTools->GetEnemySet(i));
+		// エネミーをを事前更新しておく。これを行わないとパーツのワールドマトリクスが
+		// 更新されないため更新処理が入るまでエネミーの姿（パーツ）が行方不明！
+		updateEnemyWithoutTime();
+		updatePartsRenderer();	// ←描画前に一度はこれを入れないと描画に支障があると思われる
 	}
-	SAFE_DELETE(enemyTools);
-	for (int i = 0; i < enemyDataList.nodeNum; i++)
-	{
-		createEnemy(enemyDataList.getValue(i));
-	}
-#endif
-
-	//----------------------------------------------------------------------------
-	// エネミーをを事前更新しておく。これを行わないとパーツのワールドマトリクスが
-	// 更新されないため更新処理が入るまでエネミーの姿（パーツ）が行方不明！
-	//----------------------------------------------------------------------------
-	vector<Enemy*>::iterator itr = enemyList.begin();
-	while (itr != enemyList.end())
-	{
-		(*itr)->update(0);
-		itr++;
-	}
-	updatePartsRenderer();	// ←描画前に一度はこれを入れないと描画に支障があると思われる
-							// プレゼン時はこれが無かった！
 }
 
 
@@ -550,10 +534,7 @@ void EnemyManager::assertDestructionOrder()
 			}
 		}
 	}
-	if (cnt != enemyList.size())
-	{
-		int unko = 1;
-	}
+
 	assert(cnt == enemyList.size());
 	assert(enemyDataList.nodeNum >= enemyList.size());
 }
@@ -590,6 +571,20 @@ Enemy* EnemyManager::findEnemy(int _enemyID)
 	}
 
 	return NULL;
+}
+
+
+//=============================================================================
+// エネミーをフレーム時間を無視して更新する
+//=============================================================================
+void EnemyManager::updateEnemyWithoutTime()
+{
+	vector<Enemy*>::iterator itr = enemyList.begin();
+	while (itr != enemyList.end())
+	{
+		(*itr)->update(0);
+		itr++;
+	}
 }
 
 

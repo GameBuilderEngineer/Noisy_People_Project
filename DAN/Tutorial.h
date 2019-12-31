@@ -18,7 +18,16 @@
 #include "Sky.h"
 #include "Timer.h"
 #include "movep.h"
+#include "movep1.h"
 #include "TutorialUI.h"
+#include "UtilityFunction.h"
+#include "DamageUI.h"
+#include "Player1UI.h"
+#include "Player2UI.h"
+#include "Reticle.h"
+#include "FixedUI.h"
+
+
 
 //===================================================================================================================================
 //【マクロ定義】
@@ -45,13 +54,13 @@ namespace tutorialNS
 	const D3DXVECTOR3 ENEMY_POSTITION = D3DXVECTOR3(0, 0, 0);
 
 	//ツリー初期位置
-	const D3DXVECTOR3 FIRST_TREE_POSTITION = D3DXVECTOR3(-20, 50, -50);
+	const D3DXVECTOR3 FIRST_TREE_POSTITION = D3DXVECTOR3(-20, 0, -50);
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 5.0f, -5.0f, 0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 0.0f, -1.5f, 0.0f);
 
 	//カメラ相対注視位置
-	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0, 2.0f, 0);
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //===================================================================================================================================
@@ -60,45 +69,48 @@ namespace tutorialNS
 class Tutorial : public AbstractScene
 {
 private:
+
 	//チュートリアル2D
 	TutorialTex tutorialTex;
 
-	Linear8TreeManager<Object>*		linear8TreeManager;	//線形８分木管理クラス
-	ObjectTree<Object>*				objectTreeArray;		//オブジェクトツリー
-	DWORD							collisionNum;		//衝突判定回数
-	CollisionList<Object>*			collisionList;		//衝突判定リスト
-
-	Player*							player;				//プレイヤー
-	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
-	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
-	Object*							testField;			//フィールド
-	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
-
-	Sky*							sky;					//スカイドーム
-
-	StaticMeshRenderer*				MoveP;
-	MOVEP*							MoveP1;
-
-	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
-	EnemyManager*					enemyManager;		// エネミーマネージャー
-
-	TreeManager*					treeManager;			// ツリーマネージャー
-
-	//UI
-	TutorialUI *tutorialUI;
-
 	//ディスプレイプレーン
 	TutorialPlane **plane;
-
-	//タイマー
-	Timer *timer;
 
 	//データ
 	enemyNS::EnemyData* enemyData;
 
 	//進捗
+	float tutorialTimer;								// チュートリアル時間
 	int planeStep[gameMasterNS::PLAYER_NUM];
 	int step[gameMasterNS::PLAYER_NUM];
+
+
+	//System
+	int								nowRenderingWindow;	//現在の描画ウィンドウ識別子
+	Linear8TreeManager<Object>*		linear8TreeManager;	//線形８分木管理クラス
+	ObjectTree<Object>*				objectTreeArray;	//オブジェクトツリー
+	DWORD							collisionNum;		//衝突判定回数
+	CollisionList<Object>*			collisionList;		//衝突判定リスト
+
+	//3DObject
+	Player*							player;				//プレイヤー
+	Object*							testField;			//フィールド
+	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
+	Sky*							sky;				//スカイドーム
+	StaticMeshRenderer*				MoveP;
+	MOVEP*							MoveP1;
+	EnemyManager*					enemyManager;		// エネミーマネージャー
+	TreeManager*					treeManager;		// ツリーマネージャー
+	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
+
+	//UI
+	TutorialUI *tutorialUI;
+	Reticle*						reticle;			//レティクル
+	FixedUI*						fixedUI;			//固定されたUI
+	Player1UI*						player1UI;			//プレイヤー周りのUI
+	Player2UI*						player2UI;			//プレイヤー２周りのUI
+	MarkerRenderer*					markerRenderer;		//マーカー
+	DamageUI*						damageUI;			//ダメージUI
 
 public:
 	Tutorial();
@@ -109,7 +121,7 @@ public:
 	virtual void collisions() override;
 	virtual void AI() override;
 	virtual void uninitialize() override;
-	void render3D(Camera* currentCamera, int playerID);
+	void render3D(Camera* currentCamera);
 	void renderUI();
 
 	void tree8Reregister(Object* tmp);

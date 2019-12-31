@@ -196,7 +196,7 @@ void Player::update(float frameTime)
 	}
 
 	//ƒŠƒXƒ|[ƒ“
-	if (position.y < 0)
+	if (position.y < -1.0f)
 	{
 		reset();
 	}

@@ -1085,7 +1085,6 @@ void Game::render3D(Camera* currentCamera) {
 
 		//マーカーの描画(2D/3D)両方とも描画
 		markerRenderer->render(nowRenderingWindow, currentCamera);
-
 	}
 
 #if _DEBUG
@@ -1216,7 +1215,7 @@ void Game::collisions()
 		// エネミー本体
 		tree8Reregister(enemy);
 
-		// エネミ―のバレット
+		// TIGERのバレット
 		if (enemy->getEnemyData()->type == enemyNS::TIGER)
 		{
 			Tiger* tiger = (Tiger*)enemy;

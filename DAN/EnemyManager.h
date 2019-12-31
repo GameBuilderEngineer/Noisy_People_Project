@@ -89,6 +89,7 @@ public:
 	void assertDestructionOrder();
 	enemyNS::EnemyData* findEnemyData(int _enemyID);
 	Enemy* findEnemy(int _enemyID);
+	void updateEnemyWithoutTime();
 	void updatePartsRenderer();
 	int issueNewEnemyID();
 	void outputGUI();
