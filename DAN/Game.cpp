@@ -1224,6 +1224,15 @@ void Game::collisions()
 				tree8Reregister(*tiger->getBulletMangaer()->getBulletList()->getValue(k));
 			}
 		}
+		//// BEAR‚Ìƒp[ƒc
+		//if (enemy->getEnemyData()->type == enemyNS::BEAR)
+		//{
+		//	Bear* bear = (Bear*)enemy;
+		//	for (int k = 0; k < bearNS::PARTS_MAX; k++)
+		//	{
+		//		tree8Reregister(bear->getParts(k));
+		//	}
+		//}
 	}
 	//–Ø‚Ì“o˜^
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)

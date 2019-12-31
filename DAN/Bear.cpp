@@ -28,9 +28,10 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 		parts[i] = new Object;
 		parts[i]->position = PARTS_OFFSET_POS[i];
 	}
-
+	
 	// アニメーションマネージャを初期化
 	animationManager = new BearAnimationManager(PARTS_MAX, this, &parts[0]);
+
 }
 
 
