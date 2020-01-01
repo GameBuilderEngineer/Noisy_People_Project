@@ -36,6 +36,7 @@ Window::Window()
 {
 	initialized = false;
 	windowActivate = true;
+	fullScreen = false;
 }
 
 //===================================================================================================================================
@@ -200,6 +201,25 @@ BOOL Window::setWindowCenter(HWND _windowHandle)
 		(SWP_NOZORDER | SWP_NOOWNERZORDER)	//	ウィンドウ位置のオプション：ウィンドウのサイズや、位置の変更に関するフラグを指定
 	);
 
+
+}
+
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void Window::changeDisplayMode(bool fullScreen)
+{
+	if (this->fullScreen == fullScreen)	return;
+
+	this->fullScreen = fullScreen;
+
+	if (this->fullScreen)
+	{
+
+	}
+	else {
+		setWindowCenter(wnd);
+	}
 
 }
 

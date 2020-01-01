@@ -45,16 +45,16 @@ Fader::Fader()
 	surface			= NULL;
 
 	//テクスチャオブジェクトの作成
-	D3DXCreateTexture(getDevice(), WINDOW_WIDTH, WINDOW_HEIGHT, 1,
-		D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &targetTexture);
+	//D3DXCreateTexture(getDevice(), WINDOW_WIDTH, WINDOW_HEIGHT, 1,
+	//	D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &targetTexture);
 	//サーフェースの取得
-	targetTexture->GetSurfaceLevel(0, &surface);
+	//targetTexture->GetSurfaceLevel(0, &surface);
 
 	//テクスチャをレンダリングターゲットする際のZバッファを作成
 	D3DSURFACE_DESC desc;
-	targetTexture->GetLevelDesc(0, &desc);
-	getDevice()->CreateDepthStencilSurface(desc.Width, desc.Height,
-		D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, true, &textureZBuffer, NULL);
+	//targetTexture->GetLevelDesc(0, &desc);
+	//getDevice()->CreateDepthStencilSurface(desc.Width, desc.Height,
+	//	D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, true, &textureZBuffer, NULL);
 
 	//フェード描画頂点構造体
 	point[0] = {-1,1,0,0,0 };

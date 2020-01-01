@@ -24,6 +24,7 @@ Direct3D9::Direct3D9()
 	ZeroMemory(this, sizeof(Direct3D9));
 	pointerDevice = &this->device;
 	pointerDirect3D9 = this;
+	fullScreen = false;
 }
 
 //===================================================================================================================================
@@ -48,34 +49,89 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 		MSG("Direct3Dの作成に失敗しました");
 		return E_FAIL;
 	}
-	//「DIRECT3Dデバイス」オブジェクトの作成
-	D3DPRESENT_PARAMETERS d3dpp;
-	ZeroMemory(&d3dpp, sizeof(d3dpp));
-	//d3dpp.BackBufferFormat			= D3DFMT_UNKNOWN;
+	//ディスプレイモードの取得
 	D3DDISPLAYMODE dMode;
 	d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dMode);
-	d3dpp.BackBufferFormat			= dMode.Format;
-	d3dpp.BackBufferCount			= 1;
-	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
+
+	//--------------------------------------
+	//「DIRECT3Dデバイス」オブジェクトの作成
+	//--------------------------------------
+
+	//Windowモードのパラメータの作成
+	ZeroMemory(&d3dppWindow, sizeof(d3dppWindow));
+	d3dppWindow.BackBufferFormat				= dMode.Format;
+	d3dppWindow.BackBufferCount					= 1;
+	d3dppWindow.SwapEffect						= D3DSWAPEFFECT_DISCARD;
+	//==============================================================================
+	d3dppWindow.Windowed						= true;
+	d3dppWindow.PresentationInterval			= D3DPRESENT_INTERVAL_DEFAULT;
+	//d3dppWindow.PresentationInterval			= D3DPRESENT_INTERVAL_IMMEDIATE;
+	//==============================================================================
+	d3dppWindow.BackBufferWidth					= WINDOW_WIDTH;
+	d3dppWindow.BackBufferHeight				= WINDOW_HEIGHT;
+	d3dppWindow.EnableAutoDepthStencil			= true;
+	d3dppWindow.AutoDepthStencilFormat			= D3DFMT_D24S8;
+	d3dppWindow.MultiSampleType					= D3DMULTISAMPLE_NONE;
+
+	//FullScreenモードのパラメータの作成
+	ZeroMemory(&d3dppFullScreen, sizeof(d3dppFullScreen));
+	d3dppFullScreen.BackBufferFormat			= dMode.Format;
+	d3dppFullScreen.BackBufferCount				= 1;
+	d3dppFullScreen.SwapEffect					= D3DSWAPEFFECT_DISCARD;
+	//==============================================================================
+	d3dppFullScreen.FullScreen_RefreshRateInHz	= dMode.RefreshRate;
+	d3dppFullScreen.Windowed					= false;
+	d3dppFullScreen.PresentationInterval		= D3DPRESENT_INTERVAL_DEFAULT;
+	//==============================================================================
+	d3dppFullScreen.BackBufferWidth				= WINDOW_WIDTH;
+	d3dppFullScreen.BackBufferHeight			= WINDOW_HEIGHT;
+	d3dppFullScreen.EnableAutoDepthStencil		= true;
+	d3dppFullScreen.AutoDepthStencilFormat		= D3DFMT_D24S8;
+	d3dppFullScreen.MultiSampleType				= D3DMULTISAMPLE_NONE;
+
+
+//	D3DPRESENT_PARAMETERS d3dpp;
+//	ZeroMemory(&d3dpp, sizeof(d3dpp));
+//	d3dpp.BackBufferFormat			= dMode.Format;
+//	d3dpp.BackBufferCount			= 1;
+//	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
+//#ifdef _DEBUG
+//#if 1
+//	d3dpp.Windowed					= true;
+//	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
+//#else
+//	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
+//	d3dpp.Windowed = false;
+//	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+//#endif
+//#else
+//	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
+//	d3dpp.Windowed					= false;
+//	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_DEFAULT;
+//#endif // _DEBUG
+//	d3dpp.BackBufferWidth			= WINDOW_WIDTH;
+//	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
+//	d3dpp.EnableAutoDepthStencil	= true;
+//	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;
+//	d3dpp.MultiSampleType			= D3DMULTISAMPLE_NONE;
+
 #ifdef _DEBUG
 #if 1
-	d3dpp.Windowed					= true;
-	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
+	fullScreen = false;
 #else
-	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
-	d3dpp.Windowed = false;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	fullScreen = true;
 #endif
 #else
-	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
-	d3dpp.Windowed					= false;
-	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_DEFAULT;
+	fullScreen = true;
 #endif // _DEBUG
-	d3dpp.BackBufferWidth			= WINDOW_WIDTH;
-	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
-	d3dpp.EnableAutoDepthStencil	= true;
-	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;
-	d3dpp.MultiSampleType			= D3DMULTISAMPLE_NONE;
+
+	if (fullScreen)
+	{
+		d3dpp = d3dppFullScreen;
+	}
+	else {
+		d3dpp = d3dppWindow;
+	}
 
 	if (FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, targetWnd,
 		D3DCREATE_HARDWARE_VERTEXPROCESSING,
@@ -244,6 +300,87 @@ void Direct3D9::setRenderBackBuffer(DWORD index)
 {
 	device->SetRenderTarget(index, backBuffer);
 	device->SetDepthStencilSurface(zBuffer);
+}
+
+//===================================================================================================================================
+//【画面モード切替】
+//===================================================================================================================================
+void Direct3D9::changeDisplayMode(bool fullScreen)
+{
+	if (this->fullScreen == fullScreen)	return;
+
+	this->fullScreen = fullScreen;
+
+	if (this->fullScreen)
+	{
+		d3dpp = d3dppFullScreen;
+	}
+	else {
+		d3dpp = d3dppWindow;
+	}
+	bool deviceLost = false;
+	HRESULT hr = device->Reset(&d3dpp);
+	if (FAILED(hr))
+	{
+		switch (hr)
+		{
+		case D3DERR_WRONGTEXTUREFORMAT        :
+			break;
+		case D3DERR_UNSUPPORTEDCOLOROPERATION :
+			break;
+		case D3DERR_UNSUPPORTEDCOLORARG       :
+			break;
+		case D3DERR_UNSUPPORTEDALPHAOPERATION :
+			break;
+		case D3DERR_UNSUPPORTEDALPHAARG       :
+			break;
+		case D3DERR_TOOMANYOPERATIONS         :
+			break;
+		case D3DERR_CONFLICTINGTEXTUREFILTER  :
+			break;
+		case D3DERR_UNSUPPORTEDFACTORVALUE    :
+			break;
+		case D3DERR_CONFLICTINGRENDERSTATE    :
+			break;
+		case D3DERR_UNSUPPORTEDTEXTUREFILTER  :
+			break;
+		case D3DERR_CONFLICTINGTEXTUREPALETTE :
+			break;
+		case D3DERR_DRIVERINTERNALERROR       :
+			break;
+		case D3DERR_NOTFOUND                  :
+			break;
+		case D3DERR_MOREDATA                  :
+			break;
+		case D3DERR_DEVICELOST                :
+			break;
+		case D3DERR_DEVICENOTRESET            :
+			deviceLost = true;break;
+		case D3DERR_NOTAVAILABLE              :
+			break;
+		case D3DERR_OUTOFVIDEOMEMORY          :
+			break;
+		case D3DERR_INVALIDDEVICE             :
+			break;
+		case D3DERR_INVALIDCALL               :
+			break;
+		case D3DERR_DRIVERINVALIDCALL         :
+			break;
+		case D3DERR_WASSTILLDRAWING           :
+			break;
+		case D3DOK_NOAUTOGEN                  :
+			break;
+		default:
+			MSG("ERROR:ChangeDisplayMode Reset");
+			break;
+		}
+
+	}
+
+	if (this->fullScreen)
+	{
+
+	}
 }
 
 //===================================================================================================================================
