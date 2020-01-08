@@ -62,17 +62,20 @@ Tutorial::~Tutorial()
 void Tutorial::initialize()
 {
 	//テストフィールド
-	testField = new Object();
+	testField = new Object*[NUM_PLAYER];
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TUTORIAL_FILED));
-	testFieldRenderer->registerObject(testField);
-	testField->initialize(&D3DXVECTOR3(0, 0, 0));
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		testField[i] = new Object();
+		testFieldRenderer->registerObject(testField[i]);
+		testField[i]->initialize(&D3DXVECTOR3(-1000 * i, 0, 0));
+	}
 
 	//player
 	player = new Player[gameMasterNS::PLAYER_NUM];
 
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
-
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
@@ -152,7 +155,7 @@ void Tutorial::initialize()
 
 	// エネミー
 	enemyManager = new EnemyManager;
-	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),gameMaster,player, NULL);
+	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField[0]->getMatrixWorld(),gameMaster,player, NULL);
 
 	enemyNS::ENEMYSET enemySet;
 	enemySet.enemyID = enemyManager->issueNewEnemyID();
@@ -170,7 +173,7 @@ void Tutorial::initialize()
 
 	//ツリー
 	treeManager = new TreeManager;
-	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
+	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField[0]->getMatrixWorld());
 	treeManager->setGameMaster(gameMaster);
 
 	const int treeMax = 20;
@@ -240,7 +243,6 @@ void Tutorial::uninitialize()
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(light);
-	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
@@ -255,8 +257,10 @@ void Tutorial::uninitialize()
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		SAFE_DELETE(plane[i]);
+		SAFE_DELETE(testField[i]);
 	}
 	SAFE_DELETE_ARRAY(plane);
+	SAFE_DELETE_ARRAY(testField);
 
 	tutorialTex.uninitialize();
 }
@@ -343,8 +347,11 @@ void Tutorial::update(float _frameTime)
 		mp1->Quaternion = q1;
 	}
 
-	//テストフィールドの更新
-	testField->update();			//オブジェクト
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		//テストフィールドの更新
+		testField[i]->update();			//オブジェクト
+	}
 	testFieldRenderer->update();	//レンダラー
 
 	//エネミーの更新
@@ -609,7 +616,7 @@ void Tutorial::collisions()
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
-		D3DXMATRIX matrix = testField->matrixWorld;
+		D3DXMATRIX matrix = testField[i]->matrixWorld;
 		//カメラのめり込み補正
 		camera[i].insetCorrection(mesh, matrix);
 	}
@@ -618,7 +625,7 @@ void Tutorial::collisions()
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
-		D3DXMATRIX matrix = testField->matrixWorld;
+		D3DXMATRIX matrix = testField[i]->matrixWorld;
 		//地面方向補正処理
 		player[i].grounding(mesh, matrix);
 		//壁ずり処理

@@ -47,8 +47,8 @@ namespace tutorialNS
 	};
 
 	//プレイヤー初期位置
-	const D3DXVECTOR3 PLAYER_P1_POSITION = D3DXVECTOR3(-20, 20, -45);
-	const D3DXVECTOR3 PLAYER_P2_POSITION = D3DXVECTOR3(20, 20, -45);
+	const D3DXVECTOR3 PLAYER_P1_POSITION = D3DXVECTOR3(0, 20, -45);
+	const D3DXVECTOR3 PLAYER_P2_POSITION = D3DXVECTOR3(-1000, 20, -45);
 
 	//エネミー初期位置
 	const D3DXVECTOR3 ENEMY_POSTITION = D3DXVECTOR3(0, 0, 0);
@@ -94,7 +94,7 @@ private:
 
 	//3DObject
 	Player*							player;				//プレイヤー
-	Object*							testField;			//フィールド
+	Object**						testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 	Sky*							sky;				//スカイドーム
 	StaticMeshRenderer*				MoveP;
