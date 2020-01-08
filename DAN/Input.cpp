@@ -417,6 +417,8 @@ void Input::update(bool windowActivate)
 {
 	(GetAsyncKeyState(VK_LSHIFT) & 0x8000)?keyDown(VK_LSHIFT):keyUp(VK_LSHIFT);
 	(GetAsyncKeyState(VK_RSHIFT) & 0x8000)?keyDown(VK_RSHIFT):keyUp(VK_RSHIFT);
+	(GetAsyncKeyState(VK_LMENU)  & 0x8000)?keyDown(VK_LMENU) :keyUp(VK_LMENU);
+	(GetAsyncKeyState(VK_RMENU)  & 0x8000)?keyDown(VK_RMENU) :keyUp(VK_RMENU);
 	int connectNum = 0;
 	for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
 	{
