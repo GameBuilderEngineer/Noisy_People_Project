@@ -413,7 +413,17 @@ void Game::update(float _frameTime) {
 	if (frameTime > 10.0f/60.0f)return;
 
 	//オープニング時間の更新
-	gameMaster->updateOpeningTime(frameTime);
+	if (input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::B) ||
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::B))
+	{
+		//スキップ
+		gameMaster->updateOpeningTime(gameMasterNS::OPENING_TIME);
+	}
+	else {
+		gameMaster->updateOpeningTime(frameTime);
+	}
 
 	//カウントダウンの更新
 	gameMaster->updateStartCountDown(frameTime);	//開始カウント
@@ -1045,7 +1055,7 @@ void Game::render3D(Camera* currentCamera) {
 	//DrawEquipment();
 
 	//海面の描画
-	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// エネミーの描画
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
