@@ -69,9 +69,9 @@ namespace treeNS
 	//’è”
 	const int	MAX_HP					= 100;		//Å‘åHP
 	const float	AROUND_GREEN_TIME		= 2.0f;		//ü•Ó‚Ö‚Ì—Î‰»ŠÔ
-	const float	AROUND_GREEN_RANGE_S	= 50.0f;	//ü•Ó‚Ö‚Ì—Î‰»”ÍˆÍ
-	const float	AROUND_GREEN_RANGE_L	= 100.0f;	//ü•Ó‚Ö‚Ì—Î‰»”ÍˆÍ
-	const float	AROUND_GREEN_RANGE_V	= 200.0f;	//ü•Ó‚Ö‚Ì—Î‰»”ÍˆÍ
+	const float	AROUND_GREEN_RANGE_S	= 35.0f;	//ü•Ó‚Ö‚Ì—Î‰»”ÍˆÍ
+	const float	AROUND_GREEN_RANGE_L	= 70.0f;	//ü•Ó‚Ö‚Ì—Î‰»”ÍˆÍ
+	const float	AROUND_GREEN_RANGE_V	= 120.0f;	//ü•Ó‚Ö‚Ì—Î‰»”ÍˆÍ
 
 
 	//=============================================================================

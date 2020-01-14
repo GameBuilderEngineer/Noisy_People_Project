@@ -114,9 +114,9 @@ namespace enemyNS
 	// エネミーの攻撃力テーブル
 	const int ATTACK_DAMAGE[TYPE_MAX] =
 	{
-		5,			// WOLF
-		12,			// TIGER
-		20,			// BEAR
+		10,			// WOLF
+		20,			// TIGER
+		30,			// BEAR
 	};
 
 	// エネミーの攻撃移動速度テーブル
