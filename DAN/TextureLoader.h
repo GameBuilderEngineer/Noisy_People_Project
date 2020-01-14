@@ -139,6 +139,8 @@ namespace textureNS
 		NEKO,
 		COLOR_SCALE,
 		DATE_ALPHA,
+		OCEAN,
+		OCEAN_BUMP,
 
 		//Finale
 		FIN,

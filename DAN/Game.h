@@ -101,8 +101,6 @@ private:
 
 	//3Dオブジェクト
 	Player*							player;				//プレイヤー
-	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
-	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
 
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー

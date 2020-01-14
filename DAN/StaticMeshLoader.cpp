@@ -69,7 +69,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[B_LEAF]								= { "Tree_B_Leaf.x" };						//11
 	fileName[C_TRUNK]								= { "Tree_C_Branch.x" };					//10
 	fileName[C_LEAF]								= { "Tree_C_Leaf.x" };						//11
-	fileName[OCEAN]									= { "Water4.x" };							//12
+	fileName[OCEAN]									= { "ocean.x" };							//12
 
 	fileName[ITEM_BRANCH]							= { "Bllue_branch.x" };
 
@@ -156,6 +156,9 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		//属性テーブルの取得
 		staticMesh[i].mesh->GetAttributeTable(staticMesh[i].attributeTable, &staticMesh[i].attributeTableSize);
 
+		//法線と接線の付記
+		withNormalTangent(device, &staticMesh[i].mesh);
+
 		//頂点属性の取得・設定
 		D3DVERTEXELEMENT9 vertexElement[65];
 		staticMesh[i].mesh->GetDeclaration(vertexElement);
@@ -169,6 +172,8 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		
 		//頂点バッファの取得
 		staticMesh[i].mesh->GetVertexBuffer(&staticMesh[i].vertexBuffer);
+
+
 	}
 
 	return S_OK;
@@ -195,6 +200,43 @@ void StaticMeshLoader::release(void)
 		SAFE_DELETE_ARRAY(staticMesh[i].materials);
 		SAFE_DELETE_ARRAY(staticMesh[i].bufferMaterial);
 	}
+}
+
+//===================================================================================================================================
+//【NormalとTangentの情報を付記する関数】
+//===================================================================================================================================
+HRESULT StaticMeshLoader::withNormalTangent(
+	LPDIRECT3DDEVICE9 device,	//描画デバイス
+	LPD3DXMESH* sourceMesh		//元のメッシュ
+) 
+{
+	//頂点宣言
+	const D3DVERTEXELEMENT9 vertexDeclaration[] =
+	{
+		{0,0,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_POSITION,0},
+		{0,12,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0},
+		{0,20,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,0},
+		{0,32,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TANGENT,0},
+		//{0,44,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_BINORMAL,0},//頂点シェーダー上で算出
+		D3DDECL_END()
+	};
+
+	LPD3DXMESH cloneMesh = NULL;		//クローンメッシュ
+	//クローンメッシュ生成
+	if (FAILED((*sourceMesh)->CloneMesh((*sourceMesh)->GetOptions(), vertexDeclaration, device, &cloneMesh)))
+	{
+		return E_FAIL;
+	}
+	//接線情報を追加
+	//Normal算出
+	if (FAILED(D3DXComputeNormals(cloneMesh, NULL)))MSG("D3DXComuteNormals");
+	//Tangent算出
+	if (FAILED(D3DXComputeTangent(cloneMesh,0,0,D3DX_DEFAULT,true,NULL)))MSG("D3DXComputeTangent");
+	//
+	SAFE_RELEASE(*sourceMesh);
+	*sourceMesh = cloneMesh;
+
+	return D3D_OK;
 }
 
 //===================================================================================================================================

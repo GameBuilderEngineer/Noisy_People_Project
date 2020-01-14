@@ -44,6 +44,7 @@ VS_OUT VS(
 	float4 position		: POSITION,
 	float2 localUV		: TEXCOORD0,
 	float3 normal		: NORMAL,
+	float3 tangent		: TANGENT0,
 	float4 matrix1		: TEXCOORD1,
 	float4 matrix2		: TEXCOORD2,
 	float4 matrix3		: TEXCOORD3,

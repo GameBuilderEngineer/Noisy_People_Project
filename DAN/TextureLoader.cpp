@@ -140,16 +140,18 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_BG] = { "Result_BG.png" };
 
 	// etc
-	textureName[NUMBER] = { "num.png" };
-	textureName[TOON_OUT_LINE] = { "Outline.bmp" };
-	textureName[TOON_SHADE] = { "Shade.bmp" };
-	textureName[LIGHT_001] = { "Light_001.png" };
-	textureName[TARGET] = { "stencil.png" };
-	textureName[SAMPLE_TREE] = { "tree.png" };
-	textureName[SAMPLE_GRASS] = { "middleGrass.png" };
-	textureName[NEKO] = { "Chara_B.png" };
-	textureName[COLOR_SCALE] = { "colorScale.png" };
-	textureName[DATE_ALPHA] = { "DateAlpha.png" };
+	textureName[NUMBER]			= { "num.png" };
+	textureName[TOON_OUT_LINE]	= { "Outline.bmp" };
+	textureName[TOON_SHADE]		= { "Shade.bmp" };
+	textureName[LIGHT_001]		= { "Light_001.png" };
+	textureName[TARGET]			= { "stencil.png" };
+	textureName[SAMPLE_TREE]	= { "tree.png" };
+	textureName[SAMPLE_GRASS]	= { "middleGrass.png" };
+	textureName[NEKO]			= { "Chara_B.png" };
+	textureName[COLOR_SCALE]	= { "colorScale.png" };
+	textureName[DATE_ALPHA]		= { "DateAlpha.png" };
+	textureName[OCEAN]			= { "sea.png" };
+	textureName[OCEAN_BUMP]		= { "ocean.png" };
 
 	//Finale
 	textureName[FIN] = { "Fin.png" };
