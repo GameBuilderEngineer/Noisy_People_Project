@@ -63,7 +63,7 @@ Game::~Game()
 	SoundInterface::S3D->uninitSoundStop();
 }
 
-//#define SAMPLE_NAVI	// ビルドスイッチ　このdefine周辺は近々で消しますが一旦残しておいてもらえると助かります中込
+#define SAMPLE_NAVI	// ビルドスイッチ　このdefine周辺は近々で消しますが一旦残しておいてもらえると助かります中込
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
@@ -73,6 +73,7 @@ void Game::initialize() {
 	testField = new Object();
 #ifdef SAMPLE_NAVI
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::NAV_TEST1));
 #else
 	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
@@ -229,6 +230,7 @@ void Game::initialize() {
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 #ifdef SAMPLE_NAVI
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::NAV_TEST1));
 #else
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
 #endif
@@ -261,7 +263,6 @@ void Game::initialize() {
 	// マップオブジェクト
 	mapObjectManager = new MapObjectManager;
 	mapObjectManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
-
 
 	//テロップマネージャー
 	telopManager = new TelopManager;
@@ -300,7 +301,6 @@ void Game::initialize() {
 	//ダメージUI
 	damageUI = new DamageUI();
 
-
 #pragma region Memory Test
 	////メモリテスト
 
@@ -334,7 +334,7 @@ void Game::initialize() {
 #endif // _DEBUG
 
 	// ツリーをツール情報を元に設置する
-	treeManager->createUsingTool();
+	//treeManager->createUsingTool();
 
 	// メタAI（メタAIはツリーの数が確定した後に初期化する）5
 	aiDirector = new AIDirector;
@@ -737,6 +737,11 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 
+	if (input->wasKeyPressed('6'))
+	{
+		aiDirector->eventMaker.makeEventBossEntry();
+	}
+
 	// ツリーの更新
 	treeManager->update(frameTime);
 
@@ -1019,16 +1024,16 @@ void Game::render3D(Camera* currentCamera) {
 	//スカイドームの描画
 	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
-	//装飾フィールドの描画
-	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
-		player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
-	{
-		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE_BLACK));
-	}
-	else {
-		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
-	}
-	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+	////装飾フィールドの描画
+	//if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
+	//	player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
+	//{
+	//	faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE_BLACK));
+	//}
+	//else {
+	//	faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
+	//}
+	//faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 
 	// プレイヤーの描画
@@ -1110,7 +1115,7 @@ void Game::render3D(Camera* currentCamera) {
 #endif
 
 #ifdef _DEBUG
-#if 0	// ナビゲーションメッシュのデバッグ描画
+#if 1	// ナビゲーションメッシュのデバッグ描画
 	naviMesh->debugRender(currentCamera->view, currentCamera->projection, currentCamera->position);
 #endif
 #endif //_DEBUG
@@ -1166,7 +1171,6 @@ void Game::renderUI()
 	//ダメージUIの描画
 	damageUI->render(gameMasterNS::PLAYER_1P);
 	damageUI->render(gameMasterNS::PLAYER_2P);
-
 }
 
 //===================================================================================================================================
@@ -1224,15 +1228,15 @@ void Game::collisions()
 				tree8Reregister(*tiger->getBulletMangaer()->getBulletList()->getValue(k));
 			}
 		}
-		//// BEARのパーツ
-		//if (enemy->getEnemyData()->type == enemyNS::BEAR)
-		//{
-		//	Bear* bear = (Bear*)enemy;
-		//	for (int k = 0; k < bearNS::PARTS_MAX; k++)
-		//	{
-		//		tree8Reregister(bear->getParts(k));
-		//	}
-		//}
+		// BEARのパーツ
+		if (enemy->getEnemyData()->type == enemyNS::BEAR)
+		{
+			Bear* bear = (Bear*)enemy;
+			for (int k = 0; k < bearNS::PARTS_MAX; k++)
+			{
+				tree8Reregister(bear->getParts(k));
+			}
+		}
 	}
 	//木の登録
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)
@@ -1376,8 +1380,6 @@ void Game::collisions()
 		}
 	}
 
-	
-
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
 	for (size_t i = 0; i < itemList.size(); i++)
@@ -1402,7 +1404,7 @@ void Game::collisions()
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-	aiDirector->run();		// メタAI実行
+	//aiDirector->run();		// メタAI実行
 }
 
 //===================================================================================================================================

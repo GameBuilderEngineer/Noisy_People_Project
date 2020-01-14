@@ -46,7 +46,7 @@ Bullet::Bullet(Ray shootingRay,int playerNo)
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = BULLET;
-		treeCell.target = ENEMY | TREE;
+		treeCell.target = ENEMY_PARTS | ENEMY | TREE;
 	}
 
 	Object::initialize(&launchPosition);							//バレットモデルの初期化

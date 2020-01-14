@@ -22,7 +22,7 @@ StaticMeshRenderer* EnemyManager::bearArmRRenderer;
 StaticMeshRenderer* EnemyManager::bearWaistRenderer;
 StaticMeshRenderer* EnemyManager::bearLegLRenderer;
 StaticMeshRenderer* EnemyManager::bearLegRRenderer;
-EnemyChaseMark* EnemyManager::markRenderer;	
+EnemyChaseMark*		EnemyManager::markRenderer;	
 
 //=============================================================================
 // 初期化
@@ -61,17 +61,17 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 
 	if (_sceneName == "Scene -Game-")
 	{
-		// ツールファイルからエネミーを作成
-		ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-		for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-		{
-			createEnemyData(enemyTools->GetEnemySet(i));
-		}
-		SAFE_DELETE(enemyTools);
-		for (int i = 0; i < enemyDataList.nodeNum; i++)
-		{
-			createEnemy(enemyDataList.getValue(i));
-		}
+		//// ツールファイルからエネミーを作成
+		//ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+		//for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+		//{
+		//	createEnemyData(enemyTools->GetEnemySet(i));
+		//}
+		//SAFE_DELETE(enemyTools);
+		//for (int i = 0; i < enemyDataList.nodeNum; i++)
+		//{
+		//	createEnemy(enemyDataList.getValue(i));
+		//}
 
 		// エネミーをを事前更新しておく。これを行わないとパーツのワールドマトリクスが
 		// 更新されないため更新処理が入るまでエネミーの姿（パーツ）が行方不明！
@@ -665,6 +665,20 @@ void EnemyManager::outputGUI()
 				}	
 			}
 		}
+
+		//// BEAR
+		//for (size_t i = 0; i < enemyList.size(); i++)
+		//{
+		//	if (enemyList[i]->getEnemyData()->type == enemyNS::BEAR)
+		//	{
+		//		ImGui::Text("durability-body : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::BODY)->durability);
+		//		ImGui::Text("durability-armL : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::ARM_L)->durability);
+		//		ImGui::Text("durability-armR : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::ARM_R)->durability);
+		//		ImGui::Text("durability-waist : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::WAIST)->durability);
+		//		ImGui::Text("durability-legL : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::LEG_L)->durability);
+		//		ImGui::Text("durability-legR : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::LEG_R)->durability);
+		//	}
+		//}
 	}
 
 	if (createFlag)
@@ -694,7 +708,8 @@ void EnemyManager::outputGUI()
 			camera->setTargetY(&debugEnemy->getAxisY()->direction);
 			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
 			playerRelativeQuaternion = camera->relativeQuaternion;
-			camera->setRelative(D3DXQUATERNION(0.0f, 30.0f, -30.5f, 0.0f));
+			camera->setRelative(D3DXQUATERNION(0.0f, 300.0f, -300.5f, 0.0f));
+			camera->setGazeDistance(30.0f);
 			debugEnemy->setCamera(&camera[0]);
 			debugEnemy->setDebugEnvironment();
 		}

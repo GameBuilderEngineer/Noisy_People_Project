@@ -12,11 +12,13 @@
 using namespace enemyNS;
 using namespace stateMachineNS;
 
+
 // 静的メンバ変数
 int Enemy::numOfEnemy = 0;			// エネミーの総数
 #ifdef _DEBUG
 int Enemy::debugEnemyID = -1;		// デバッグするエネミーのID
 #endif//_DEBUG
+
 
 #pragma region [Basic Process]
 //=============================================================================
@@ -99,7 +101,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	{// オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = ENEMY;
-		treeCell.target = PLAYER | ENEMY | BULLET | TREE;
+		treeCell.target = PLAYER | ENEMY | ENEMY_BEAR | BULLET | TREE;
 	}
 
 	// 初期ステートごとのセットアップ
@@ -139,6 +141,9 @@ Enemy::~Enemy()
 		edgeList->terminate();
 		SAFE_DELETE(edgeList);
 	}
+#ifdef _DEBUG
+	naviMesh->debugEdgeList = NULL;
+#endif
 
 	// 追跡マークの削除
 	deleteMark();
@@ -211,8 +216,8 @@ void Enemy::preprocess(float frameTime)
 	// デバッグエネミーモード
 	if (enemyData->enemyID == debugEnemyID)
 	{
-		controlCamera(frameTime);
-		moveOperation();
+		//controlCamera(frameTime);
+		//moveOperation();
 		enemyData->state = stateMachineNS::ENEMY_STATE::REST;
 
 		if (input->wasKeyPressed('8'))
@@ -268,11 +273,6 @@ void Enemy::postprocess(float frameTime)
 	enemyData->direction = axisZ.direction;
 	// 自動破棄を行うか確認
 	checkAutoDestruction();
-
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	footsteps(player[i].position, i);
-	//}
 }
 #pragma endregion
 
@@ -309,7 +309,7 @@ void Enemy::searchPath()
 	// 移動ターゲットの現在位置までのエッジリストを取得
 	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	// 移動ターゲットの現在位置を目的地に設定
-	destination = *movingTarget;
+	//destination = *movingTarget;
 
 #ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)
@@ -861,7 +861,7 @@ void Enemy::rest(float frameTime)
 {
 	if (canSense)
 	{
-		sensor();
+		//sensor();
 	}
 
 	// isPayingNewAttentionの後に一回だけここを通る

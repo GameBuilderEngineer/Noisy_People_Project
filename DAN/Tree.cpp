@@ -32,7 +32,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = TREE;
-		treeCell.target = PLAYER|ENEMY|BULLET;
+		treeCell.target = PLAYER|ENEMY| ENEMY_BEAR |BULLET;
 	}
 
 	treeData = _treeData;

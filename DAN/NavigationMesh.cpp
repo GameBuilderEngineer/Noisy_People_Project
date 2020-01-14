@@ -41,7 +41,7 @@ void NavigationMesh::initialize()
 	gravityDirection = D3DXVECTOR3(0.0f, -1.0f, 0.0f);	// 重力方向を設定
 
 #ifdef _DEBUG
-	//position = D3DXVECTOR3(0.0f, FLOATING_HEIGHT, 0.0f);// 少し浮かせる
+	//position = D3DXVECTOR3(0.0f, FLOATING_HEIGHT, 0.0f);	// 少し浮かせる
 	//renderer = new StaticMeshRenderer(staticMesh);		// 描画オブジェクトを作成
 	//renderer->registerObject(this);						// 描画オブジェクトに登録する
 	//changeColor();										// メッシュの色を変える
@@ -118,7 +118,7 @@ NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** edgeList,
 	// エッジリストを更新（コピー）し返却する
 	*edgeList = temp;
 	(*edgeList)->listUpdate();
-
+	cntEdge = 0;
 	return NAVI_OK;
 }
 
@@ -129,11 +129,13 @@ NAVIRESULT NavigationMesh::pathSearch(LinkedList<meshDataNS::Index2>** edgeList,
 NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECTOR3 from, D3DXVECTOR3 dest,
 	LinkedList<meshDataNS::Index2>** edgeList)
 {
-	//--------------------------------------------------------------------
-	// エッジリストが空(= 同一面に目的地がある)場合に目的地に直線移動する
-	// 面に平行にスリップした正規化ベクトルを返却する
-	//--------------------------------------------------------------------
-	if (*edgeList != NULL && (*edgeList)->isEnpty())
+	//-------------------------------------------------------------------
+	// エッジが0個(= 同一面に目的地がある)
+	// エッジが1個(= 次の面にある目的地までの直線は、他の面をまたがない)
+	// 以上のケースでは目的地までの直線ベクトルで移動すればよい
+	// よって面に平行にスリップした直線正規化ベクトルを返却する
+	//-------------------------------------------------------------------
+	if (*edgeList != NULL && (*edgeList)->nodeNum < 2)
 	{
 		(*edgeList)->terminate();
 		SAFE_DELETE(*edgeList);
@@ -159,20 +161,72 @@ NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECT
 	if (currentIndex != *faceIndex)
 	{
 		*faceIndex = currentIndex;
-		(*edgeList)->removeFront();
-		(*edgeList)->listUpdate();
+		//cntEdge++;
+		//if (cntEdge >= 2)
+		{
+			//(*edgeList)->removeFront();
+			(*edgeList)->removeFront();
+			(*edgeList)->listUpdate();
+		}
+
+		if (*edgeList != NULL && (*edgeList)->nodeNum < 2) return NAVI_OK;	// ●
 	}
 
 	// ポリゴン面インデックスがおかしくなったら再度経路探索して再実行
 	// 落下の押し戻し
 	// A*の経路確認
-	  
+
 	// 接地座標をもとにパスフォローイングを実行
 	D3DXVECTOR3 surfaceIntersection = from + gravityDirection * distance;
 	pathFollowing.createVector(out, surfaceIntersection, faceIndex, *edgeList);
-	
 
 	return NAVI_OK;
+
+
+	////--------------------------------------------------------------------
+	//// エッジリストが空(= 同一面に目的地がある)場合に目的地に直線移動する
+	//// 面に平行にスリップした正規化ベクトルを返却する
+	////--------------------------------------------------------------------
+	//if (*edgeList != NULL && (*edgeList)->isEnpty())
+	//{
+	//	(*edgeList)->terminate();
+	//	SAFE_DELETE(*edgeList);
+	//}
+	//if (*edgeList == NULL)
+	//{
+	//	D3DXVECTOR3 straightDirection = dest - from;
+	//	slip(straightDirection, meshData.getFaceArray()->nor);
+	//	D3DXVec3Normalize(&straightDirection, &straightDirection);
+	//	*out = straightDirection;
+	//	return NAVI_OK;
+	//}
+
+	//// 現在地の面インデックスと面までの距離を取得する
+	//DWORD currentIndex;
+	//float distance;
+	//if (isHitGrounding(&distance, &currentIndex, from) == false)
+	//{
+	//	return CURRENT_NOT_ON_MESH;			// 現在地がナビメッシュ上ではない
+	//}
+
+	//// ポリゴン面インデックスが変わればエッジをリストからノードを削除後に更新
+	//if (currentIndex != *faceIndex)
+	//{
+	//	*faceIndex = currentIndex;
+	//	(*edgeList)->removeFront();
+	//	(*edgeList)->listUpdate();
+	//}
+
+	//// ポリゴン面インデックスがおかしくなったら再度経路探索して再実行
+	//// 落下の押し戻し
+	//// A*の経路確認
+	//  
+	//// 接地座標をもとにパスフォローイングを実行
+	//D3DXVECTOR3 surfaceIntersection = from + gravityDirection * distance;
+	//pathFollowing.createVector(out, surfaceIntersection, faceIndex, *edgeList);
+	//
+
+	//return NAVI_OK;
 }
 
 
@@ -331,7 +385,14 @@ void NavigationMesh::debugRenderEdge(LinkedList<meshDataNS::Index2>** edgeList)
 		line[i].direction = tempPos2 - tempPos1;
 		D3DXVec3Normalize(&line[i].direction, &line[i].direction);
 		float len = D3DXVec3Length(&(tempPos2 - tempPos1));
-		line[i].color = D3DXCOLOR(0, 0, 255, 255);
+		if (i % 2 == 1)
+		{
+			line[i].color = D3DXCOLOR(0, 0, 255, 255);
+		}
+		else
+		{
+			line[i].color = D3DXCOLOR(255, 255, 255, 255);
+		}
 		// 描画
 		line[i].render(len);
 	}
@@ -378,6 +439,7 @@ void NavigationMesh::affectToEdgeVertex(LinkedList<meshDataNS::Index2>** edgeLis
 {
 	if ((*edgeList) == NULL) return;
 	(*edgeList)->listUpdate();
+
 	D3DCOLOR red = D3DCOLOR_RGBA(255, 0, 0, 255);
 
 	// 頂点バッファの準備

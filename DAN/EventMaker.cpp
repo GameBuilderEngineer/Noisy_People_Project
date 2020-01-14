@@ -185,7 +185,7 @@ int EventMaker::makeEventBossEntry()
 	// ‚µ‚©‚µŽŠ‹ß‹——£‚É‚¢‚È‚¢‚±‚Æ‚ªðŒ‚Å‚ ‚é
 	enemySet.defaultPosition = decideBossEntryPoint();
 	// ˆÉ’BŽR‚Ì‚Ù‚¤‚ðŒü‚­
-	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f) - enemySet.defaultPosition;
+	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, 0.9999f);/* - enemySet.defaultPosition;*/
 	enemySet.defaultState = stateMachineNS::PATROL;
 	opeGenerator->bossEntry(enemySet);
 

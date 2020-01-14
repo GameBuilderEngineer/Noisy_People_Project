@@ -30,7 +30,7 @@ Player::Player()
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = PLAYER;
-		treeCell.target = PLAYER | ENEMY | TREE;
+		treeCell.target = PLAYER | ENEMY | ENEMY_BEAR | TREE;
 	}
 
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
@@ -195,11 +195,11 @@ void Player::update(float frameTime)
 		reset();
 	}
 
-	//リスポーン
-	if (position.y < -1.0f)
-	{
-		reset();
-	}
+	////リスポーン
+	//if (position.y < -1.0f)
+	//{
+	//	reset();
+	//}
 
 	//物理更新(状態別)
 	state->physics();

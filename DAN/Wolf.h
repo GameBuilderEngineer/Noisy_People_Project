@@ -20,7 +20,6 @@ namespace wolfNS
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 胴体
 		D3DXVECTOR3(0.0f, 1.00f, -0.264f),	// 腕
 	};
-
 }
 
 
@@ -30,9 +29,11 @@ namespace wolfNS
 class Wolf: public Enemy
 {
 private:
-	Object* parts[wolfNS::PARTS_MAX];			// パーツオブジェクト
-// ※パーツオブジェクトはObjectクラスの更新処理を行わない.
-// ※ワールド変換等の処理はアニメーションマネージャが代替する.
+	enemyNS::EnemyParts* parts[wolfNS::PARTS_MAX];
+
+// ※パーツオブジェクトはObjectクラスの更新処理を行わない
+// ※ワールド変換等の処理はアニメーションマネージャが代替する
+
 	// Sound
 	PLAY_PARAMETERS playParmeters[2];
 
@@ -48,7 +49,7 @@ public:
 	void die(float frameTime) override;			// 死亡ステート
 
 	// Getter
-	Object* getParts(int type);
+	enemyNS::EnemyParts* getParts(int type);
 
 	// Setter
 };

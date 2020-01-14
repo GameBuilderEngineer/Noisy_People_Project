@@ -56,7 +56,10 @@ bool Ray::rayIntersect(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix)
 	//レイを出すメッシュの位置・回転をレイに適用
 	//レイを当てるメッシュが動いていたり回転している場合でも対象のワールド行列の逆行列を用いれば正しくレイが当たる
 	D3DXMatrixInverse(&Inv, NULL, &targetMatrix);
+	D3DXVECTOR3 destination = start + direction;				// 中込追記：レイ終端
+	D3DXVec3TransformCoord(&destination, &destination, &Inv);	// 中込追記：ローカル座標系のレイ終端
 	D3DXVec3TransformCoord(&start, &start, &Inv);
+	direction = destination - start;							// 中込追記：ローカル座標系のレイ方向
 
 	D3DXVec3Normalize(&direction, &direction);
 	DWORD index = 0;//ポリゴンのインデックス保存変数
