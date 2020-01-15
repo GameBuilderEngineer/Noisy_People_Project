@@ -72,6 +72,9 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	isAttacking = false;
 	attackTime = 0.0f;
 	attackDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	wasHittingTree = false;
+	treeAttackTime = 0.0f;
+	canDamageTree = true;
 
 	// 移動の初期化
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -218,7 +221,7 @@ void Enemy::preprocess(float frameTime)
 	{
 		//controlCamera(frameTime);
 		//moveOperation();
-		enemyData->state = stateMachineNS::ENEMY_STATE::REST;
+		//enemyData->state = stateMachineNS::ENEMY_STATE::REST;
 
 		if (input->wasKeyPressed('8'))
 		{
@@ -307,9 +310,9 @@ void Enemy::searchPath()
 	isArraved = false;
 
 	// 移動ターゲットの現在位置までのエッジリストを取得
-	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+	naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	// 移動ターゲットの現在位置を目的地に設定
-	//destination = *movingTarget;
+	destination = *movingTarget;
 
 #ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)
@@ -835,6 +838,7 @@ void Enemy::chase(float frameTime)
 //=============================================================================
 void Enemy::patrol(float frameTime)
 {
+
 	if (canSense)
 	{
 		sensor();
@@ -849,8 +853,6 @@ void Enemy::patrol(float frameTime)
 		setMovingTarget(&destination);
 		searchPath();
 	}
-
-	move(frameTime);
 }
 
 
@@ -891,13 +893,41 @@ void Enemy::attackTree(float frameTime)
 		sensor();
 	}
 
-	if (canSearch)
+	if (isPayingNewAttention)
 	{
-		//setPlayerChaseTarget();
+		static const float TEMP_DISTANCE = 20.0f;
+		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
+		destination = position + attentionDirection * TEMP_DISTANCE;
+		isDestinationLost = false;
+		setMovingTarget(&destination);
 		searchPath();
 	}
 
-	move(frameTime);
+	// 木にダメージを与える時間間隔をあける
+	treeAttackTime += frameTime;
+	if (treeAttackTime > 3.0f)
+	{
+		treeAttackTime = 0.0f;
+		canDamageTree = true;
+	}
+
+	// 移動と攻撃
+	destination = enemyData->targetTree->position;
+	setMovingTarget(&destination);
+	if (wasHittingTree)
+	{
+		animationManager->switchAttack();
+	}
+	else
+	{
+		move(frameTime);
+	}
+
+	// ツリーのHPがゼロになりアナログに戻った場合にステートを終了する
+	if (enemyData->targetTree->getTreeData()->isAttaked == false)
+	{
+		enemyData->targetTree = NULL;	// ステートマシンでPatrolになる
+	}
 }
 
 
@@ -1175,6 +1205,7 @@ bool Enemy::getIsAttacking() { return isAttacking; }
 int Enemy::getChasingPlayer() { return chasingPlayer; };
 int Enemy::getPlayerNo() { return playerNo; };
 bool Enemy::getIsPayingNewAttention() { return isPayingNewAttention; }
+bool Enemy::getCanDamageTree() { return canDamageTree; }
 
 //=============================================================================
 // Setter
@@ -1220,6 +1251,16 @@ void Enemy::setAttackTarget(Object* _target)
 void Enemy::setPlayerNo(int playerNo)
 {
 	this->playerNo = playerNo;
+}
+
+void Enemy::setTreeHit(bool setting)
+{
+	wasHittingTree = setting;
+}
+
+void Enemy::setCanDamageTree(bool setting)
+{
+	canDamageTree = setting;
 }
 #pragma endregion
 

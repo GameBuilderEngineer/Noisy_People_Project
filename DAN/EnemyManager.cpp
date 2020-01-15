@@ -61,7 +61,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 
 	if (_sceneName == "Scene -Game-")
 	{
-		//// ツールファイルからエネミーを作成
+		// ツールファイルからエネミーを作成
 		//ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
 		//for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
 		//{

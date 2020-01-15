@@ -42,37 +42,37 @@ void EventMaker::uninitialize()
 //=============================================================================
 void EventMaker::update()
 {
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-	{
-		// エネミーをプレイヤー周りにスポーンすべきか解析
-		if (enemyManager->getEnemyList().size() < enemyNS::ENEMY_OBJECT_MAX &&				// 同時存在数チェック
-			data->lastSpawnTime[i] - gameMaster->getGameTime() > MANDATORY_SPAWN_INTERVAL)	// スポーン間隔チェック
-		{
-			// ファジー論理演算 
-			float tmp1 = fuzzy.reverseGrade((float)data->numChasingPlayer[i], 0.0f, 4.0f);		
-			float tmp2 = fuzzy.reverseGrade((float)data->numKilledRecently, 0.0f, 7.0f);
-			data->weightSpawn[i] = fuzzy.AND(tmp1, tmp2);
+	//for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	//{
+	//	// エネミーをプレイヤー周りにスポーンすべきか解析
+	//	if (enemyManager->getEnemyList().size() < enemyNS::ENEMY_OBJECT_MAX &&				// 同時存在数チェック
+	//		data->lastSpawnTime[i] - gameMaster->getGameTime() > MANDATORY_SPAWN_INTERVAL)	// スポーン間隔チェック
+	//	{
+	//		// ファジー論理演算 
+	//		float tmp1 = fuzzy.reverseGrade((float)data->numChasingPlayer[i], 0.0f, 4.0f);		
+	//		float tmp2 = fuzzy.reverseGrade((float)data->numKilledRecently, 0.0f, 7.0f);
+	//		data->weightSpawn[i] = fuzzy.AND(tmp1, tmp2);
 
-			// エネミー動的作成イベントの最終的な実行判断（プレイヤーごとに判断される）
-			if (data->weightSpawn[i] > WEIGHT_SPAWN)
-			{
-				/*具体例 WEIGHT_SPAWN = 0.7のとき
-					[1]
-					エネミーに追跡されていない→	temp1 = 1.0  ◎
-					エネミー1体に追跡されている→	temp1 = 0.75 ◎
-					エネミー2体に追跡されている→	temp1 = 0.5　×
-					[2]
-					最近1体も倒していない→			temp2 = 1.0   ◎
-					最近1体倒した→					temp2 = 0.857 ◎
-					最近2体倒した→					temp2 = 0.714 ◎
-					最近3体倒した→					temp2 = 0.571 ×
-					[1][2]で低い方の数値で判定される
-				*/
-				makeEventSpawningEnemyAroundPlayer(i);
-				data->lastSpawnTime[i] = gameMaster->getGameTime();
-			}
-		}
-	}
+	//		// エネミー動的作成イベントの最終的な実行判断（プレイヤーごとに判断される）
+	//		if (data->weightSpawn[i] > WEIGHT_SPAWN)
+	//		{
+	//			/*具体例 WEIGHT_SPAWN = 0.7のとき
+	//				[1]
+	//				エネミーに追跡されていない→	temp1 = 1.0  ◎
+	//				エネミー1体に追跡されている→	temp1 = 0.75 ◎
+	//				エネミー2体に追跡されている→	temp1 = 0.5　×
+	//				[2]
+	//				最近1体も倒していない→			temp2 = 1.0   ◎
+	//				最近1体倒した→					temp2 = 0.857 ◎
+	//				最近2体倒した→					temp2 = 0.714 ◎
+	//				最近3体倒した→					temp2 = 0.571 ×
+	//				[1][2]で低い方の数値で判定される
+	//			*/
+	//			makeEventSpawningEnemyAroundPlayer(i);
+	//			data->lastSpawnTime[i] = gameMaster->getGameTime();
+	//		}
+	//	}
+	//}
 
 	// デジタルツリー襲撃イベント
 	if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE)
@@ -93,12 +93,12 @@ void EventMaker::update()
 		}
 	}
 
-	// 巨大環境破壊ロボイベント
-	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
-	{
-		data->wasBossEntried = true;
-		makeEventBossEntry();
-	}
+	//// 巨大環境破壊ロボイベント
+	//if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
+	//{
+	//	data->wasBossEntried = true;
+	//	makeEventBossEntry();
+	//}
 }
 
 

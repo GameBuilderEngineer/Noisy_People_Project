@@ -281,7 +281,7 @@ void NavigationMesh::debugRender(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	debugRenderMesh(view, projection, cameraPosition);
 #endif
 
-#if 1	// ƒGƒbƒWŠÖŒW‚ð•`‰æ‚·‚é
+#if 0	// ƒGƒbƒWŠÖŒW‚ð•`‰æ‚·‚é
 	if (debugEdgeList != NULL)
 	{
 		affectToEdgeVertex(debugEdgeList);

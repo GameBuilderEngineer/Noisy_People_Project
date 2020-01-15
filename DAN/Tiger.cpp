@@ -70,10 +70,11 @@ void Tiger::update(float frameTime)
 	Enemy::preprocess(frameTime);
 	switch (enemyData->state)
 	{
-	case CHASE:  chase(frameTime);  break;
-	case PATROL: patrol(frameTime); break;
-	case REST:   rest(frameTime);   break;
-	case DIE:    die(frameTime);    break;
+	case CHASE:			chase(frameTime);		break;
+	case PATROL:		patrol(frameTime);		break;
+	case REST:			rest(frameTime);		break;
+	case ATTACK_TREE:	attackTree(frameTime);	break;
+	case DIE:			die(frameTime);			break;
 	}
 #ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)

@@ -146,14 +146,6 @@ void Tree::update(float frameTime)
 		onTransState = false;
 	}
 
-	// ●●●中込追記●●●
-	if (treeData.hp <= 0)
-	{
-		treeData.isAttaked = false;
-		// アナログツリーに戻し、
-		// 緑化範囲を枯れ木に戻してください！
-	}
-	
 	// オブジェクトのアップデート
 	leaf.update();
 	this->Object::update();
@@ -293,6 +285,20 @@ void Tree::addHp(int value,int playerNo) {
 
 		//状態遷移
 		transState();
+	}
+}
+void Tree::reduceHp(int value)
+{
+	if (treeData.greenState == treeNS::DEAD)return; //枯れ木は対象外
+	treeData.hp -= value;
+	if (treeData.hp <= 0)
+	{
+		//状態遷移
+		transState();
+		
+		//
+		treeData.isAttaked = false;
+		MarkerRenderer::get()->attackedTree = NULL;
 	}
 }
 //緑化エリアのスケールを設定

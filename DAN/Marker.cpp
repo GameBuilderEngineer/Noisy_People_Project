@@ -128,11 +128,23 @@ void Marker::render(D3DXVECTOR3 position)
 
 
 //レンダラー
+
+// 取得用ポインタ 
+MarkerRenderer* MarkerRenderer::markerRenderer;
+
+// Getter
+MarkerRenderer* MarkerRenderer::get()
+{
+	return markerRenderer;
+}
+
 //===================================================================================================================================
 //【マーカーレンダラー：コンストラクタ】
 //===================================================================================================================================
 MarkerRenderer::MarkerRenderer()
 {
+	markerRenderer = this;
+
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		playerPosition[i] = NULL;

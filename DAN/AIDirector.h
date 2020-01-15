@@ -138,9 +138,8 @@ private:
 	TreeManager* treeManager;			// ツリー管理オブジェクト
 	ItemManager* itemManager;			// アイテム管理オブジェクト
 	TelopManager* telopManager;			// テロップ管理オブジェクト
-
-	MarkerRenderer*					markerRenderer;		//マーカー
-
+	MarkerRenderer*	markerRenderer;		// マーカー
+	static AIDirector* pointer;			// ポインタ
 
 public:
 	//●
@@ -155,12 +154,13 @@ public:
 	void initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Player* _player,
 		EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager,
 		TelopManager* _telopManager, MarkerRenderer* marker);
-
 	// 終了処理
 	void uninitialize();
-	
 	// 実行
 	void run();
 	// ImGuiに表示
 	void outputGUI();
+
+	static AIDirector* get() { return pointer; }
 };
+

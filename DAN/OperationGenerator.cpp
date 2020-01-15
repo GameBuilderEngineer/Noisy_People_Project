@@ -109,3 +109,12 @@ void OperationGenerator::updateBossEvent()
 		telopManager->play(telopManagerNS::BOSS_ENTRY3);
 	}
 }
+
+
+//=============================================================================
+// エネミーツリー襲撃マーカーを消す
+//=============================================================================
+void OperationGenerator::destroyMarkerEnemyAttaksTree()
+{
+	markerRenderer->attackedTree = NULL;
+}

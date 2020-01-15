@@ -67,7 +67,7 @@ public:
 class AttackTree : public stateMachineNS::State
 {
 private:
-	AttackTree() { number = stateMachineNS::REST; }
+	AttackTree() { number = stateMachineNS::ATTACK_TREE; }
 
 public:
 	static State* getInstance(void)

@@ -8,13 +8,15 @@
 #include "ImguiManager.h"
 using namespace aiNS;
 
+// Staticメンバ変数
+AIDirector* AIDirector::pointer = NULL;
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 AIDirector::AIDirector()
 {
-
+	pointer = this;
 }
 
 

@@ -428,6 +428,9 @@ public:
 	bool isAttacking;								// 攻撃中フラグ
 	float attackTime;								// 攻撃中時間（秒）
 	D3DXVECTOR3 attackDirection;					// 攻撃方向ベクトル
+	bool wasHittingTree;							// ツリーを攻撃した			
+	float treeAttackTime;							// ツリー攻撃時間
+	bool canDamageTree;								// ツリーにダメージが入るか
 
 	// 移動
 	D3DXVECTOR3 destination;						// 目的地
@@ -581,6 +584,7 @@ public:
 	int getChasingPlayer();
 	int getPlayerNo();
 	bool getIsPayingNewAttention();
+	bool getCanDamageTree();
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();
 	// ダメージ処理
@@ -595,6 +599,10 @@ public:
 	void setAttackTarget(Object* _target);
 	// 倒されたプレイヤーを設定
 	void setPlayerNo(int playerNo);
+	// ツリーに攻撃がヒットしたか設定
+	void setTreeHit(bool setting);
+	// ツリーに攻撃がヒットしたか設定
+	void setCanDamageTree(bool setting);
 
 #ifdef _DEBUG
 	//-----------

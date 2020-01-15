@@ -475,9 +475,16 @@ bool CollisionManager::enemyAndEnemy(Enemy* enemy1, Enemy* enemy2)
 //===================================================================================================================================
 bool CollisionManager::enemyAndTree(Enemy* enemy, Tree* tree)
 {
+	enemy->setTreeHit(false);
 	if (collisionCylinder(enemy, tree))
 	{
+		enemy->setTreeHit(true);
 		horizontalCorrection(enemy, tree, 1.0f);
+		if (enemy->enemyData->state == stateMachineNS::ATTACK_TREE && enemy->getCanDamageTree())
+		{
+			enemy->setCanDamageTree(false);
+			tree->reduceHp(5);
+		}
 		return true;
 	}
 	return false;
