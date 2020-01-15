@@ -34,6 +34,30 @@ namespace GreeningAreaNS
 			Instance::update();
 		};
 	};
+
+	//枯木化エフェクト
+	class DeadingEffect :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3* syncPosition;
+		D3DXVECTOR3* syncScale;
+		DeadingEffect(D3DXVECTOR3* syncPosition,D3DXVECTOR3* syncScale) {
+			this->syncPosition = syncPosition;
+			this->syncScale = syncScale;
+			effectNo = effekseerNS::DEADING;
+		}
+		virtual void update() {
+			position = *syncPosition;
+			scale = *syncScale;
+			Instance::update();
+		};
+	};
+
+	enum MODE
+	{
+		GREENING_MODE,
+		DEAD_MODE,
+	};
 }
 
 
@@ -47,6 +71,7 @@ private:
 
 public:
 	int playerNo;
+	int mode;
 	GreeningArea();
 	~GreeningArea();
 	void update(float frameTime);

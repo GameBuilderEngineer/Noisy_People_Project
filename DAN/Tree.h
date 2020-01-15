@@ -70,6 +70,7 @@ namespace treeNS
 	//定数
 	const int	MAX_HP					= 100;		//最大HP
 	const float	AROUND_GREEN_TIME		= 2.0f;		//周辺への緑化時間
+	const float	AROUND_DEAD_TIME		= 2.0f;		//周辺への枯木時間
 	const float	AROUND_GREEN_RANGE_S	= 50.0f;	//周辺への緑化範囲
 	const float	AROUND_GREEN_RANGE_L	= 100.0f;	//周辺への緑化範囲
 	const float	AROUND_GREEN_RANGE_V	= 200.0f;	//周辺への緑化範囲
@@ -149,6 +150,7 @@ private:
 public:
 	int								playerNo;
 	bool							culling;
+	bool							beforeDigital;
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();
@@ -159,6 +161,7 @@ public:
 	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void grounding();																// 接地処理
 	void greeningAround();															//周辺の緑化(デジタル化時)
+	void deadAround();																//周辺の枯木化(枯木化時)
 	void transState();																//状態遷移
 	void playDigitalEffect();														//デジタルエフェクトの再生
 	void stopDigitalEffect();														//デジタルエフェクトの停止
@@ -218,6 +221,8 @@ namespace treeNS
 	{
 	private:
 		Tree* tree;
+		float aroundDeadTimer;//周囲への枯木タイマー
+		float aroundDeadRange;
 	public:
 		AnalogState(Tree* target);
 		~AnalogState();

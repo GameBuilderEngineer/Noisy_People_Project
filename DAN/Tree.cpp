@@ -34,6 +34,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 		treeCell.type = TREE;
 		treeCell.target = PLAYER|ENEMY| ENEMY_BEAR |BULLET;
 	}
+	beforeDigital = false;
 
 	treeData = _treeData;
 	this->position = treeData.initialPosition;
@@ -95,7 +96,6 @@ Tree::Tree(treeNS::TreeData _treeData)
 		disableAroundGreening();//最初は緑化処理をしない
 	}
 		
-
 	onTransState = false;
 	numOfTree++;
 
@@ -172,10 +172,26 @@ void Tree::greeningAround()
 	greeningArea.initialize(&center);
 	greeningArea.setRadius(1.0f);
 	greeningArea.playerNo = playerNo;
+	greeningArea.mode = GreeningAreaNS::GREENING_MODE;
 	//エフェクトの再生
 	GreeningAreaNS::GreeningEffect* greeningEffect 
 		= new GreeningAreaNS::GreeningEffect(&greeningArea.position,&greeningArea.scale);
 	effekseerNS::play(0, greeningEffect);
+	nowAroundGreening = true;
+}
+
+//=============================================================================
+//【周辺の枯木処理（枯木化時）】
+//=============================================================================
+void Tree::deadAround()
+{
+	greeningArea.initialize(&center);
+	greeningArea.setRadius(1.0f);
+	greeningArea.mode = GreeningAreaNS::DEAD_MODE;
+	//エフェクトの再生
+	GreeningAreaNS::DeadingEffect* deadingEffect 
+		= new GreeningAreaNS::DeadingEffect(&greeningArea.position,&greeningArea.scale);
+	effekseerNS::play(0, deadingEffect);
 	nowAroundGreening = true;
 }
 
@@ -307,7 +323,7 @@ void Tree::setGreeningArea(float value)
 	greeningArea.size = D3DXVECTOR3(value, value, value);
 	greeningArea.sphere->setScale(value);
 }
-//周囲への緑化を終了
+//周囲への緑化を終了：（枯木化も内包）
 void Tree::disableAroundGreening()	{ 
 	nowAroundGreening = false; 
 	greeningArea.treeCell.remove();//衝突空間から離脱
@@ -371,8 +387,8 @@ void DigitalState::start()
 	case treeNS::TREE_SIZE::VERY_LARGE:
 		aroundGreenRange = AROUND_GREEN_RANGE_V; break;
 	}
-	tree->getGreeningArea()->scale *= aroundGreenRange;
-
+	tree->getGreeningArea()->scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f)*aroundGreenRange;
+	tree->beforeDigital = true;
 	//葉をアクティブ状態にする
 	tree->getLeaf()->onActive = true;
 
@@ -450,6 +466,28 @@ void AnalogState::start()
 	tree->getTreeData()->type = treeNS::ANALOG_TREE;
 	tree->getTreeData()->greenState = treeNS::DEAD;
 	tree->getLeaf()->onActive = false;
+	aroundDeadTimer = AROUND_DEAD_TIME;//デフォルトは周囲への枯木化を行わない
+
+	//前の状態がデジタルツリーで枯木に状態遷移してきた場合
+	//周囲へ枯木処理を行う
+	if (tree->beforeDigital)
+	{
+		aroundDeadTimer = 0.0f;
+		//サイズに応じて緑化範囲を設定する
+		switch (tree->getTreeData()->size)
+		{
+		case treeNS::TREE_SIZE::STANDARD:
+			aroundDeadRange = AROUND_GREEN_RANGE_S; break;
+		case treeNS::TREE_SIZE::LARGE:
+			aroundDeadRange = AROUND_GREEN_RANGE_L; break;
+		case treeNS::TREE_SIZE::VERY_LARGE:
+			aroundDeadRange = AROUND_GREEN_RANGE_V; break;
+		}
+		tree->getGreeningArea()->scale = D3DXVECTOR3(1.0f,1.0f,1.0f)*aroundDeadRange;
+
+		tree->deadAround();
+		tree->beforeDigital = false;
+	}
 }
 
 //=============================================================================
@@ -465,6 +503,23 @@ void AnalogState::end()
 //=============================================================================
 void AnalogState::update(float frameTime)
 {
+	if (aroundDeadTimer < AROUND_DEAD_TIME)
+	{
+		aroundDeadTimer += frameTime;
+		//枯木時間終了
+		if (aroundDeadTimer > AROUND_DEAD_TIME)
+		{
+			aroundDeadTimer = AROUND_DEAD_TIME;	//タイマー停止
+			tree->disableAroundGreening();		//周囲枯木化フラグを切る
+		}
+	}
+
+	//
+	if (tree->isAroundGreening())
+	{
+		float rate = aroundDeadTimer / AROUND_DEAD_TIME;
+		tree->setGreeningArea(UtilityFunction::lerp(1.0f, aroundDeadRange, rate));
+	}
 
 }
 

@@ -1243,8 +1243,7 @@ void Game::collisions()
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)
 	{
 		tree8Reregister(treeManager->getTreeList()[i]);
-		if (treeManager->getTreeList()[i]->getTreeData()->type == treeNS::DIGITAL_TREE
-			&&treeManager->getTreeList()[i]->isAroundGreening())
+		if (treeManager->getTreeList()[i]->isAroundGreening())
 		{
 			//緑化エリアオブジェクトの登録
 			tree8Reregister(treeManager->getTreeList()[i]->getGreeningArea());
