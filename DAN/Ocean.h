@@ -31,6 +31,8 @@ private:
 	D3DXVECTOR2							waveMove;				//”g‚ÌˆÚ“®ˆÊ’u
 	float								height;					//”g‚Ì‚‚³
 	float								deltaHeight;			//”g‚Ì‘Œ¸’l
+	D3DXMATRIX							worldInverseTranspose;	//ƒ[ƒ‹ƒh‹t“]’us—ñ
+
 
 	bool needUpdate;
 

@@ -118,6 +118,10 @@ void Ocean::update()
 		deltaHeight = -0.002;
 	}
 
+	//ワールド行列の逆転置行列
+	D3DXMatrixInverse(&worldInverseTranspose, NULL, &object->matrixWorld);	//逆行列
+	D3DXMatrixTranspose(&worldInverseTranspose, &worldInverseTranspose);	//転置行列
+
 }
 
 //===================================================================================================================================
@@ -142,7 +146,22 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 	effect->SetTechnique("mainTechnique");
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);
-	
+	effect->SetMatrixTranspose("WIT", &worldInverseTranspose);	//ワールド逆転置行列
+
+	//ライトの方向ベクトルのセット
+	D3DXMATRIX m;
+	D3DXVECTOR4 v;
+	D3DXVECTOR4 lightPosition = D3DXVECTOR4(0, -10.1, -0.1, 0);
+	D3DXMatrixInverse(&m, NULL, &object->matrixWorld);
+	D3DXVec4Transform(&v, &lightPosition, &m);
+	D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);
+	//effect->SetVector("lightDirection", &v);
+
+	//ビューの逆行列
+	D3DXMATRIX inverseView;
+	D3DXMatrixInverse(&inverseView, NULL, &view);
+	effect->SetMatrix("inverseView", &inverseView);
+
 	//カメラの位置ベクトル
 	//考察：引数cameraPositionでいけそう　↓はビュー行列の逆行列で求めている・オブジェクトのワールド空間も使用しているのでダメかも
 	D3DXMATRIX worldView = object->matrixWorld * view;
