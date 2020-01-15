@@ -194,6 +194,8 @@ void Game::initialize() {
 	sky = new Sky();
 	//海面の初期化
 	ocean = new Ocean();
+	//海面(仮)の初期化
+	//tmpOcean = new TmpOcean();
 
 	//アニメションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
@@ -339,6 +341,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(faceFieldRenderer);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
+	//SAFE_DELETE(tmpOcean);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
@@ -920,7 +923,7 @@ void Game::render3D(Camera* currentCamera) {
 	else {
 		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	}
-	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+	//faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -933,7 +936,7 @@ void Game::render3D(Camera* currentCamera) {
 
 	//海面の描画
 	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
-
+	//tmpOcean->render(currentCamera->view, currentCamera->projection);
 	// エネミーの描画
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 

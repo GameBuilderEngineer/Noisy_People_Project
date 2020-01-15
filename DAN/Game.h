@@ -51,6 +51,7 @@
 #include "Marker.h"
 #include "DamageUI.h"
 #include "Title.h"
+#include "tmpOcean.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -109,6 +110,7 @@ private:
 
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面
+	//TmpOcean*						tmpOcean;			//仮海面
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;

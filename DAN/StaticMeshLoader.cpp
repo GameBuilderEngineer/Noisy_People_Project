@@ -93,7 +93,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[DATE_ISLAND_FINAL_NAVIMESH]			= { "DateIsland_Final_NavMesh.x" };			//17
 	//fileName[DATE_ISLAND_FINAL_NAVIMESH] = { "NavTest.x" };									//いったんこのままで
 	fileName[DATE_ISLAND_FINAL_FACE]				= { "DateIsland_Final_Face.x" };			//15
-	fileName[DATE_ISLAND_FINAL_FACE_BLACK]				= { "DateIsland_Final_Face_Black.x" };	//16
+	fileName[DATE_ISLAND_FINAL_FACE_BLACK]			= { "DateIsland_Final_Face_Black.x" };	//16
 	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };					//01
 }
 
@@ -217,7 +217,7 @@ HRESULT StaticMeshLoader::withNormalTangent(
 		{0,12,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0},
 		{0,20,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,0},
 		{0,32,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TANGENT,0},
-		//{0,44,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_BINORMAL,0},//頂点シェーダー上で算出
+		{0,44,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_BINORMAL,0},//頂点シェーダー上で算出
 		D3DDECL_END()
 	};
 
@@ -231,7 +231,8 @@ HRESULT StaticMeshLoader::withNormalTangent(
 	//Normal算出
 	if (FAILED(D3DXComputeNormals(cloneMesh, NULL)))MSG("D3DXComuteNormals");
 	//Tangent算出
-	if (FAILED(D3DXComputeTangent(cloneMesh,0,0,D3DX_DEFAULT,true,NULL)))MSG("D3DXComputeTangent");
+	//if (FAILED(D3DXComputeTangent(cloneMesh,0,0,D3DX_DEFAULT,true,NULL)))MSG("D3DXComputeTangent");
+	if (FAILED(D3DXComputeTangent(cloneMesh,0,0,0,true,NULL)))MSG("D3DXComputeTangent");
 	//
 	SAFE_RELEASE(*sourceMesh);
 	*sourceMesh = cloneMesh;

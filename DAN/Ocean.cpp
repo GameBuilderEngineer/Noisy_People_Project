@@ -2,7 +2,7 @@
 //【Ocean.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/11/07
-// [更新日]2019/11/07
+// [更新日]2020/01/15
 //===================================================================================================================================
 
 //===================================================================================================================================
@@ -34,7 +34,7 @@ Ocean::~Ocean() {
 //===================================================================================================================================
 void Ocean::initialize() {
 	object = new Object();
-	object->initialize(&D3DXVECTOR3(0, 0, 0));
+	object->initialize(&D3DXVECTOR3(0, 10, -180));
 	object->scale = D3DXVECTOR3(1, 1, 1);
 
 	device = getDevice();
@@ -80,13 +80,27 @@ void Ocean::initialize() {
 	LPDIRECT3DTEXTURE9 heightTexture = *textureNS::reference(textureNS::OCEAN_BUMP);//ハイトマップテクスチャ
 	D3DSURFACE_DESC desc;
 	heightTexture->GetLevelDesc(0, &desc);
-	if (FAILED(	D3DXCreateTexture(
-			device, desc.Width, desc.Height, 0, 0, D3DFMT_X8B8G8R8, D3DPOOL_MANAGED, &bumpTexture)))
+	if (FAILED(
+		D3DXCreateTexture(
+			device, 
+			desc.Width, 
+			desc.Height, 
+			0, 
+			0, 
+			D3DFMT_X8B8G8R8, 
+			D3DPOOL_MANAGED, 
+			&bumpTexture)))
 	{
 		MSG("バンプマッピング用のテクスチャイメージの作成に失敗しました。");
 	}
-	if (FAILED(D3DXComputeNormalMap(
-			bumpTexture, heightTexture, NULL, 0, D3DX_CHANNEL_LUMINANCE, 20.0f)))
+	if (FAILED(
+		D3DXComputeNormalMap(
+			bumpTexture, 
+			heightTexture, 
+			NULL, 
+			0, 
+			D3DX_CHANNEL_LUMINANCE,//D3DX_CHANNEL_RED,
+			20.0f)))//1.0f)))
 	{
 		MSG("バンプマッピング用テクスチャの法線の算出に失敗しました。");
 	}
@@ -151,18 +165,18 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 	//ライトの方向ベクトルのセット
 	D3DXMATRIX m;
 	D3DXVECTOR4 v;
-	D3DXVECTOR4 lightPosition = D3DXVECTOR4(0, -10.1, -0.1, 0);
+	D3DXVECTOR4 lightPosition = D3DXVECTOR4(0, 100.0, -100.0, 0);
 	D3DXMatrixInverse(&m, NULL, &object->matrixWorld);
 	D3DXVec4Transform(&v, &lightPosition, &m);
 	D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);
-	//effect->SetVector("lightDirection", &v);
+	effect->SetVector("lightDirection", &v);
 
 	//ビューの逆行列
 	D3DXMATRIX inverseView;
 	D3DXMatrixInverse(&inverseView, NULL, &view);
 	effect->SetMatrix("inverseView", &inverseView);
 
-	//カメラの位置ベクトル
+	//カメラの位置
 	//考察：引数cameraPositionでいけそう　↓はビュー行列の逆行列で求めている・オブジェクトのワールド空間も使用しているのでダメかも
 	D3DXMATRIX worldView = object->matrixWorld * view;
 	D3DXMatrixInverse(&worldView, NULL, &worldView);//逆行列
@@ -181,6 +195,7 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 		//effect->SetTexture("textureDecal", staticMesh->textures[i]);
 		effect->SetTexture("textureDecal", *textureNS::reference(textureNS::OCEAN));
 		effect->SetTexture("normalMap", bumpTexture);
+		//effect->SetTexture("normalMap", *textureNS::reference(textureNS::OCEAN_BUMP));
 
 
 		//シェーダー更新

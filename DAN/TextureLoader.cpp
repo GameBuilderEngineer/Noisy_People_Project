@@ -151,7 +151,8 @@ TextureLoader::TextureLoader()
 	textureName[COLOR_SCALE]	= { "colorScale.png" };
 	textureName[DATE_ALPHA]		= { "DateAlpha.png" };
 	textureName[OCEAN]			= { "sea.png" };
-	textureName[OCEAN_BUMP]		= { "WaterBump.tga" };
+	//textureName[OCEAN_BUMP]		= { "NormalMap.bmp" };
+	textureName[OCEAN_BUMP]		= { "ocean.png" };
 
 	//Finale
 	textureName[FIN] = { "Fin.png" };

@@ -916,6 +916,7 @@
     <ClCompile Include="PlayerEffect.cpp">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="tmpOcean.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1461,6 +1462,7 @@
     <ClInclude Include="PlayerEffect.h">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="tmpOcean.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
