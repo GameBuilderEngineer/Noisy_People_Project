@@ -27,7 +27,9 @@ HRESULT InitMoveP1(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
 
-	//※ここから
+	////必要 1
+	//MoveP1.pAllocateHier = new CAllocateHierarchy();
+	////必要 1
 
 	//初期設定
 	MoveP1.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

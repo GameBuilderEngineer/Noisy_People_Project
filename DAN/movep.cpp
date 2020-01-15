@@ -27,6 +27,11 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
 
+	////必要 1
+	//MoveP.pAllocateHier = new CAllocateHierarchy();
+	////必要 1
+
+
 	//初期設定
 	MoveP.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	MoveP.Rot = Rot;
@@ -723,14 +728,16 @@ HRESULT InitCallbackKeys_MoveP(void)
 		// キーデータをクリアする
 		memset(&AES->Keydata[0], 0, sizeof(KEYDATA) * Keydata_Max);
 		AES->Keydata_No = 0;
+		float AnimationFlame = 0.0f;
 
 		switch (Set_No)
 		{
 		case MoveP_Idle:
 			break;
 		case MoveP_Run:
-			AddKeydata(0.33f, MovePMoveVoice);
-			AddKeydata(0.68f, MovePMoveVoice);
+			AnimationFlame = 0.7f;
+			AddKeydata(0.01f/ AnimationFlame, MovePMoveVoice);
+			AddKeydata(0.37f/ AnimationFlame, MovePMoveVoice);
 			AddKeydata(0.95f, MotionEnd);
 			break;
 		case MoveP_FireIdle:

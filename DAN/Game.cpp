@@ -24,6 +24,7 @@
 //===================================================================================================================================
 using namespace gameNS;
 
+bool FirstInit = true;
 
 //===================================================================================================================================
 //【コンストラクタ】
@@ -35,10 +36,10 @@ Game::Game()
 	//linear4TreeManager->initialize(5, -1000, 1000, 1000, -1000);	
 	//線形８分木空間分割管理クラス
 	linear8TreeManager = new Linear8TreeManager<Object>;
-	linear8TreeManager->initialize(5, D3DXVECTOR3(-3000,-2000,-3000),D3DXVECTOR3(3000,3000,3000));	
+	linear8TreeManager->initialize(5, D3DXVECTOR3(-3000, -2000, -3000), D3DXVECTOR3(3000, 3000, 3000));
 
 	//オブジェクトカウンターのリセット
-	objectNS::resetCounter();		
+	objectNS::resetCounter();
 
 	sceneName = "Scene -Game-";
 
@@ -86,9 +87,9 @@ void Game::initialize() {
 	faceField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
-	player				= new Player[gameMasterNS::PLAYER_NUM];
-	maleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
-	femaleRenderer		= new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
+	player = new Player[gameMasterNS::PLAYER_NUM];
+	maleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
+	femaleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
 
 	//OPカメラターゲットオブジェクト
 	target = new Object;
@@ -138,7 +139,7 @@ void Game::initialize() {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
-		camera[i].initialize(WINDOW_WIDTH / 2,  WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getCameraGaze());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -162,8 +163,8 @@ void Game::initialize() {
 			player[i].initialize(infomation);
 			break;
 		case gameMasterNS::PLAYER_2P:
-			infomation.playerType	= gameMasterNS::PLAYER_2P;
-			infomation.modelType	= gameMasterNS::MODEL_FEMALE;
+			infomation.playerType = gameMasterNS::PLAYER_2P;
+			infomation.modelType = gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			break;
 		}
@@ -208,9 +209,12 @@ void Game::initialize() {
 	//海面の初期化
 	ocean = new Ocean();
 
+
 	//アニメションキャラの初期化
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
+
+	FirstInit = false;
 	//InitEquipment(TRUE);
 
 	// サウンドの再生
@@ -413,7 +417,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が10FPS時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 10.0f/60.0f)return;
+	if (frameTime > 10.0f / 60.0f)return;
 
 
 
@@ -789,7 +793,7 @@ void Game::update(float _frameTime) {
 	MOVEP *mp = GetMovePAdr();
 	mp->Pos = player[gameMasterNS::PLAYER_1P].position;
 	D3DXQUATERNION q = player[gameMasterNS::PLAYER_1P].quaternion;
-	Base::anyAxisRotation(&q,D3DXVECTOR3(0,1,0),180);
+	Base::anyAxisRotation(&q, D3DXVECTOR3(0, 1, 0), 180);
 	if (!mp->IsDie)
 	{
 		mp->Quaternion = q;
@@ -886,7 +890,7 @@ void Game::update(float _frameTime) {
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
-	
+
 
 	//スカイドームの更新
 	sky->update();
@@ -1181,9 +1185,9 @@ void Game::renderUI()
 	//Sprite実験
 	//spriteGauge->render();
 	//telop->render();
-	
+
 	// テロップマネージャーの描画
-	telopManager->render();	
+	telopManager->render();
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -1231,7 +1235,7 @@ void Game::tree8Reregister(Object* tmp)
 	//一度リストから外れる
 	tmp->treeCell.remove();
 	//再登録
-	linear8TreeManager->registerObject( &tmp->getMin(),&tmp->getMax(), &tmp->treeCell);
+	linear8TreeManager->registerObject(&tmp->getMin(), &tmp->getMax(), &tmp->treeCell);
 }
 
 //===================================================================================================================================
@@ -1326,7 +1330,7 @@ void Game::collisions()
 		LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
 		D3DXMATRIX matrix = testField->matrixWorld;
 		//地面方向補正処理
-		player[i].grounding(mesh,matrix);
+		player[i].grounding(mesh, matrix);
 		//壁ずり処理
 		player[i].insetCorrection(objectNS::AXIS_X, player[i].size.x / 2,mesh,matrix);
 		player[i].insetCorrection(objectNS::AXIS_RX, player[i].size.x / 2, mesh, matrix);
@@ -1408,12 +1412,12 @@ void Game::collisions()
 		}
 	}
 
-	
+
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
 	for (size_t i = 0; i < itemList.size(); i++)
-	{	
+	{
 		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
 		{
 			if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
@@ -1457,10 +1461,10 @@ void Game::createGUI()
 		for (int i = 0; i < collisionNum; i++)
 		{
 			tmp1 = root[i * 2];
-			tmp2 = root[i * 2 +1];
+			tmp2 = root[i * 2 + 1];
 			ImGui::Text("ID(%d):position(%.02f,%.02f,%.02f)<->ID(%d):position(%.02f,%.02f,%.02f)",
-				tmp1->id, tmp1->position.x,tmp1->position.y,tmp1->position.z,
-				tmp2->id, tmp2->position.x,tmp2->position.y,tmp2->position.z);
+				tmp1->id, tmp1->position.x, tmp1->position.y, tmp1->position.z,
+				tmp2->id, tmp2->position.x, tmp2->position.y, tmp2->position.z);
 		}
 	}
 	networkClient->outputGUI();
