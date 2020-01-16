@@ -312,7 +312,8 @@ void Tree::reduceHp(int value)
 		//状態遷移
 		transState();
 		
-		//
+		// デジタルツリーが破壊された場合の、ツリー攻撃中フラグとマーカーを切る
+		// ツリーが破壊されずエネミー起因で処理する場合はEventMakaerに記載
 		treeData.isAttaked = false;
 		MarkerRenderer::get()->attackedTree = NULL;
 	}

@@ -62,16 +62,16 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	if (_sceneName == "Scene -Game-")
 	{
 		// ツールファイルからエネミーを作成
-		//ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-		//for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-		//{
-		//	createEnemyData(enemyTools->GetEnemySet(i));
-		//}
-		//SAFE_DELETE(enemyTools);
-		//for (int i = 0; i < enemyDataList.nodeNum; i++)
-		//{
-		//	createEnemy(enemyDataList.getValue(i));
-		//}
+		ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+		for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+		{
+			createEnemyData(enemyTools->GetEnemySet(i));
+		}
+		SAFE_DELETE(enemyTools);
+		for (int i = 0; i < enemyDataList.nodeNum; i++)
+		{
+			createEnemy(enemyDataList.getValue(i));
+		}
 
 		// エネミーをを事前更新しておく。これを行わないとパーツのワールドマトリクスが
 		// 更新されないため更新処理が入るまでエネミーの姿（パーツ）が行方不明！
@@ -167,7 +167,9 @@ void EnemyManager::update(float frameTime)
 		// 遠距離エネミーを破棄する
 		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
 		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
-		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2) && (*itr)->getEnemyData()->type != enemyNS::BEAR)
+		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2)
+			&& (*itr)->getEnemyData()->type != enemyNS::BEAR
+			&& (*itr)->getEnemyData()->state != stateMachineNS::ATTACK_TREE)
 		{
 			isDestroyTarget = true;
 		}
@@ -649,6 +651,11 @@ void EnemyManager::outputGUI()
 		ImGui::Checkbox("Return Player", &returnPlayer);
 		ImGui::Checkbox("Delete All Enemy", &destroyAllFlag);
 
+		int cntChase = 0;
+		int cntPatrol = 0;
+		int cntRest = 0;
+		int cntTreeAttack = 0;
+
 		// デバッグエネミー
 		for (size_t i = 0; i < enemyList.size(); i++)
 		{
@@ -664,7 +671,18 @@ void EnemyManager::outputGUI()
 						enemyList[i]->edgeList->getValue(cnt)->index[1]);
 				}	
 			}
+
+			switch (enemyList[i]->getEnemyData()->state)
+			{
+			case stateMachineNS::CHASE:			cntChase++;			break;
+			case stateMachineNS::PATROL:		cntPatrol++;		break;
+			case stateMachineNS::REST:			cntRest++;			break;
+			case stateMachineNS::ATTACK_TREE:	cntTreeAttack++;	break;
+			}
 		}
+
+		// ステートの数
+		ImGui::Text("chase:%d, patrol:%d, rest:%d, tree:%d\n",cntChase, cntPatrol, cntRest, cntTreeAttack);
 
 		//// BEAR
 		//for (size_t i = 0; i < enemyList.size(); i++)
