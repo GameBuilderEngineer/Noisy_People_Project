@@ -74,23 +74,40 @@ void EventMaker::update()
 	//	}
 	//}
 
-	// デジタルツリー襲撃イベント
-	if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE)
-	{// 最低経過時間チェック
-		float tmp1 = fuzzy.reverseGrade(gameMaster->getGameTime(), 120.0f, 180.0f);
-		float tmp2 = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 6.0f, 20.0f);
-		data->weightEnemyAttacksTree = fuzzy.OR(tmp1, tmp2);
-		data->weightEnemyAttacksTree *= (float)(rand() % 5 - 2);	// ランダム補正
+	//// デジタルツリー襲撃イベント
+	//if (data->numBeingAttackedTree > 0)
+	//{
+	//	//data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
 
-		if (data->lastTimeCheckedWeightEnemyAttacksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_CHECKING_WEIGHT)
-		{// 評価値（重み）のチェック間隔を空ける
-			data->lastTimeCheckedWeightEnemyAttacksTree = gameMaster->getGameTime();
-			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
-			{
-				data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
-				makeEventEnemyAttaksTree();
-			}
-		}
+	//	if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE)
+	//	{// 最低経過時間チェック
+	//		float tmp1 = fuzzy.reverseGrade(gameMaster->getGameTime(), 120.0f, 180.0f);
+	//		float tmp2 = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 6.0f, 20.0f);
+	//		data->weightEnemyAttacksTree = fuzzy.OR(tmp1, tmp2);
+	//		data->weightEnemyAttacksTree *= (float)(rand() % 5 - 2);	// ランダム補正
+
+	//		if (data->lastTimeCheckedWeightEnemyAttacksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_CHECKING_WEIGHT)
+	//		{// 評価値（重み）のチェック間隔を空ける
+	//			data->lastTimeCheckedWeightEnemyAttacksTree = gameMaster->getGameTime();
+	//			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
+	//			{
+	//				data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
+	//				makeEventEnemyAttaksTree();
+	//			}
+	//		}
+	//	}
+	//}
+
+	if (data->numTreeAttackingEnemy == 0 && data->attackedTree != NULL)
+	{
+		// マーカーを破棄
+		opeGenerator->destroyMarkerEnemyAttaksTree();
+
+		// ツリーの攻撃中フラグをOff
+		data->attackedTree->getTreeData()->isAttaked = false;
+
+		// メタAIからツリーの記録を消すぴょん
+		data->attackedTree = NULL;
 	}
 
 	//// 巨大環境破壊ロボイベント
@@ -145,6 +162,7 @@ void EventMaker::makeEventEnemyAttaksTree()
 		if (treeList[i]->getTreeData()->treeID == treeID)
 		{
 			attackTarget = treeList[i];						// 攻撃対象ツリーを記録
+			data->attackedTree = attackTarget;				// AI側で保存
 			treeList[i]->getTreeData()->isAttaked = true;	// ツリーの攻撃中フラグをOn
 			treePosition = treeList[i]->position;			// ツリーの座標を取得
 		}

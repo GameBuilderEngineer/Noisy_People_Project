@@ -806,6 +806,7 @@ void Enemy::chase(float frameTime)
 		searchPath();
 	}
 
+
 	//D3DXQUATERNION quaternion;
 	//D3DXQuaternionIdentity(&quaternion);
 	//Base::postureControl(&quaternion, D3DXVECTOR3(0, 0, 0), player[chasingPlayer].position - position, 1.0f);
@@ -838,7 +839,6 @@ void Enemy::chase(float frameTime)
 //=============================================================================
 void Enemy::patrol(float frameTime)
 {
-
 	if (canSense)
 	{
 		sensor();
@@ -853,6 +853,8 @@ void Enemy::patrol(float frameTime)
 		setMovingTarget(&destination);
 		searchPath();
 	}
+
+	move(frameTime);
 }
 
 
@@ -888,21 +890,6 @@ void Enemy::rest(float frameTime)
 //=============================================================================
 void Enemy::attackTree(float frameTime)
 {
-	if (canSense)
-	{
-		sensor();
-	}
-
-	if (isPayingNewAttention)
-	{
-		static const float TEMP_DISTANCE = 20.0f;
-		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
-		destination = position + attentionDirection * TEMP_DISTANCE;
-		isDestinationLost = false;
-		setMovingTarget(&destination);
-		searchPath();
-	}
-
 	// 木にダメージを与える時間間隔をあける
 	treeAttackTime += frameTime;
 	if (treeAttackTime > 3.0f)
@@ -911,7 +898,7 @@ void Enemy::attackTree(float frameTime)
 		canDamageTree = true;
 	}
 
-	// 移動と攻撃
+	// 移動と攻撃の処理
 	destination = enemyData->targetTree->position;
 	setMovingTarget(&destination);
 	if (wasHittingTree)
@@ -926,7 +913,12 @@ void Enemy::attackTree(float frameTime)
 	// ツリーのHPがゼロになりアナログに戻った場合にステートを終了する
 	if (enemyData->targetTree->getTreeData()->isAttaked == false)
 	{
-		enemyData->targetTree = NULL;	// ステートマシンでPatrolになる
+		// ステートマシンでPatrolにするための処理
+		enemyData->targetTree = NULL;
+		// エネミーデータに残らないようにすることで
+		// 遠距離破棄を有効化し近距離再作成を防止する
+		// こうしないとtreeData中のtree情報はリセットされているためバグる
+		enemyData->isGeneratedBySpawnEvent = true;
 	}
 }
 

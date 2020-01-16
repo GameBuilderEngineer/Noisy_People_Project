@@ -475,10 +475,20 @@ bool CollisionManager::enemyAndEnemy(Enemy* enemy1, Enemy* enemy2)
 //===================================================================================================================================
 bool CollisionManager::enemyAndTree(Enemy* enemy, Tree* tree)
 {
-	enemy->setTreeHit(false);
+	// 判定を攻撃中のツリーと取る場合のみフラグをオフにする
+	if (enemy->getEnemyData()->targetTree == tree)
+	{
+		enemy->setTreeHit(false);
+	}
+
 	if (collisionCylinder(enemy, tree))
 	{
-		enemy->setTreeHit(true);
+		// 判定を攻撃中のツリーと取る場合のみフラグをオンにする
+		if (enemy->getEnemyData()->targetTree == tree)
+		{
+			enemy->setTreeHit(true);
+		}
+
 		horizontalCorrection(enemy, tree, 1.0f);
 		if (enemy->enemyData->state == stateMachineNS::ATTACK_TREE && enemy->getCanDamageTree())
 		{
