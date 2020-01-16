@@ -919,16 +919,17 @@ void Enemy::die(float frameTime)
 		enemyData->deadTime = gameMaster->getGameTime();
 
 		// アイテムドロップ
-		if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
-		{
-			ItemManager* itemManager = ItemManager::get();
-			itemNS::ItemData itemData;
-			itemData.itemID = itemManager->issueNewItemID();
-			itemData.type = itemNS::BATTERY;
-			itemData.defaultPosition = position;
-			itemData.defaultDirection = axisZ.direction;
-			itemManager->createItem(itemData);
-		}
+		// Saiテスト
+		//if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
+		//{
+		//	ItemManager* itemManager = ItemManager::get();
+		//	itemNS::ItemData itemData;
+		//	itemData.itemID = itemManager->issueNewItemID();
+		//	itemData.type = itemNS::BATTERY;
+		//	itemData.defaultPosition = position;
+		//	itemData.defaultDirection = axisZ.direction;
+		//	itemManager->createItem(itemData);
+		//}
 	}
 
 	// 死亡ステート時間のカウントアップ
@@ -1220,6 +1221,11 @@ void Enemy::setAttackTarget(Object* _target)
 void Enemy::setPlayerNo(int playerNo)
 {
 	this->playerNo = playerNo;
+}
+
+void Enemy::setFieldMatrix(D3DXMATRIX *matrix)
+{
+	this->attractorMatrix = matrix;
 }
 #pragma endregion
 

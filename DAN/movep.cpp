@@ -729,14 +729,36 @@ HRESULT InitCallbackKeys_MoveP(void)
 		case MoveP_Idle:
 			break;
 		case MoveP_Run:
-			AddKeydata(0.33f, MovePMoveVoice);
-			AddKeydata(0.68f, MovePMoveVoice);
+			AnimLoopTime = 0.7f;
+			AddKeydata(0.01f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(0.37f / AnimLoopTime, MovePMoveVoice);
 			AddKeydata(0.95f, MotionEnd);
 			break;
 		case MoveP_FireIdle:
 			break;
 		case MoveP_FireRun:
+			AnimLoopTime = 0.73f;
+			AddKeydata(0.01f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(0.37f / AnimLoopTime, MovePMoveVoice);
 			AddKeydata(0.95f, MotionEnd);
+			break;
+		case MoveP_WalkBackwards:
+			AnimLoopTime = 1.4f;
+			AddKeydata(0.42f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(1.11f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(0.99f, MotionEnd);
+			break;
+		case MoveP_WalkLeft:
+			AnimLoopTime = 1.03f;
+			AddKeydata(0.31f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(0.88f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(0.99f, MotionEnd);
+			break;
+		case MoveP_WalkRight:
+			AnimLoopTime = 1.43f;
+			AddKeydata(0.60f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(1.29f / AnimLoopTime, MovePMoveVoice);
+			AddKeydata(0.99f, MotionEnd);
 			break;
 		case MoveP_JumpFire:
 			AddKeydata(0.01f, MovePJumpFireStart);

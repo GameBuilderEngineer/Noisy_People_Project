@@ -62,4 +62,9 @@ public:
 
 	int getPlaneStep(void) { return planeStep; }
 	void update(float frameTime, int inPlaneStep);
+	void setPos(D3DXVECTOR3 pos) 
+	{ 
+		(*instanceList->getValue(0))->position = pos;
+		InstancingBillboard::updatePosition();
+	}
 };
