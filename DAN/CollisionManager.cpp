@@ -523,10 +523,28 @@ bool CollisionManager::greeningAreaAndTree(GreeningArea* area, Tree* tree)
 
 	if (hit)
 	{
-		if (tree->getTreeData()->greenState == treeNS::DEAD)
+		switch (area->mode)
 		{
-			tree->transState();//状態遷移
-			tree->playerNo = area->playerNo;
+		case GreeningAreaNS::GREENING_MODE://緑化エリア：緑化モード
+			if (tree->getTreeData()->greenState == treeNS::DEAD)
+			{
+				tree->transState();//状態遷移
+				tree->playerNo = area->playerNo;
+			}
+			break;
+		case GreeningAreaNS::DEAD_MODE://緑化エリア：枯木モード
+			if (tree->getTreeData()->greenState == treeNS::GREEN)
+			{
+				switch (tree->getTreeData()->type)
+				{
+				case treeNS::DIGITAL_TREE:
+					break;
+				case treeNS::ANALOG_TREE:
+					tree->transState();//状態遷移
+					break;
+				}
+			}
+			break;
 		}
 	}
 

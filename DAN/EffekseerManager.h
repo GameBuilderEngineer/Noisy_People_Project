@@ -77,6 +77,7 @@ namespace effekseerNS
 		DAC_BULLET,
 		DAC,
 		GREENING,
+		DEADING,
 		DIGIT_MODE,
 		DIGITAL_SHIFT,
 		SKY_VISION,

@@ -49,6 +49,7 @@ EffekseerManager::EffekseerManager()
 	fileName[DAC]				= { L"DAC.efk" };
 	fileName[DAC_BULLET]		= { L"DAC_Bullet.efk" };
 	fileName[GREENING]			= { L"Greening.efk" };
+	fileName[DEADING]			= { L"Greening.efk" };
 	fileName[DIGIT_MODE]		= { L"Digit_mode.efk" };
 	fileName[DIGITAL_SHIFT]		= { L"Digital_Shift.efk" };
 	fileName[SKY_VISION]		= { L"Sky_Vision_Core.efk" };
