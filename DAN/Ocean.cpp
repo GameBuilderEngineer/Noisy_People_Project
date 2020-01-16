@@ -194,8 +194,8 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 		effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
 		//effect->SetTexture("textureDecal", staticMesh->textures[i]);
 		effect->SetTexture("textureDecal", *textureNS::reference(textureNS::OCEAN));
-		effect->SetTexture("normalMap", bumpTexture);
-		//effect->SetTexture("normalMap", *textureNS::reference(textureNS::OCEAN_BUMP));
+		//effect->SetTexture("normalMap", bumpTexture);
+		effect->SetTexture("normalMap", *textureNS::reference(textureNS::OCEAN_BUMP));
 
 
 		//シェーダー更新
