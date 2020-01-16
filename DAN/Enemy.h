@@ -227,6 +227,21 @@ namespace enemyNS
 	const float DIE_STATE_TIME = 4.0f;					// 死亡ステートの時間
 	const float DIE_STATE_RENDERING_TIME = 2.8f;		// 死亡ステートのうち描画が続く時間
 
+	// EnemyParts
+	class EnemyParts : public Object
+	{
+	private:
+		Enemy* enemy;
+	public:
+		EnemyParts()
+		{
+			using namespace ObjectType;
+			treeCell.type = ENEMY_PARTS;
+			treeCell.target = BULLET;
+		}
+		Enemy* getEnemy() { return enemy; }
+	};
+
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
 	// 新規エネミー作成やエネミー配置ツールとのデータ交換に使用する
@@ -543,6 +558,9 @@ public:
 	void setAttackTarget(Object* _target);
 	// 倒されたプレイヤーを設定
 	void setPlayerNo(int playerNo);
+	// フィールドワールドマトリクスを設定
+	void setFieldMatrix(D3DXMATRIX *matrix);
+
 #ifdef _DEBUG
 	//-----------
 	// Debug Use

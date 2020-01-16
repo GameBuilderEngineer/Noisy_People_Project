@@ -647,6 +647,7 @@ void Enemy::updatePhysics(float frameTime)
 void Enemy::updatePosture(float frameTime)
 {
 	moveDirection = slip(moveDirection, axisY.direction);
+	moveDirection = slip(moveDirection, -axisY.direction);
 	// moveDirectionは移動関数で更新される
 	postureControl(axisZ.direction, moveDirection, frameTime * 6/*1秒の6倍を指定 = 0.1秒で姿勢変更*/);
 }
@@ -726,8 +727,6 @@ void Enemy::prepareChase()
 //=============================================================================
 void Enemy::preparePatrol()
 {
-	isDestinationLost = true;
-
 	// 追跡マークの削除
 	deleteMark();
 }
@@ -846,7 +845,6 @@ void Enemy::patrol(float frameTime)
 		static const float TEMP_DISTANCE = 20.0f;
 		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
 		destination = position + attentionDirection * TEMP_DISTANCE;
-
 		isDestinationLost = false;
 		setMovingTarget(&destination);
 		searchPath();
@@ -870,11 +868,15 @@ void Enemy::rest(float frameTime)
 	// その後ステート遷移ですぐに追跡に変わる
 	if (isPayingNewAttention)
 	{
+		static const float TEMP_DISTANCE = 20.0f;
 		D3DXVec3Normalize(&attentionDirection, &attentionDirection);
-		destination = position + attentionDirection;
+		destination = position + attentionDirection * TEMP_DISTANCE;
 		isDestinationLost = false;
+		isArraved = false;
 		setMovingTarget(&destination);
-		postureControl(axisZ.direction, attentionDirection, 1);
+
+		//moveDirection = slip(attentionDirection, axisY.direction);
+		//postureControl(axisZ.direction, attentionDirection, 1);
 	}
 }
 
@@ -917,16 +919,17 @@ void Enemy::die(float frameTime)
 		enemyData->deadTime = gameMaster->getGameTime();
 
 		// アイテムドロップ
-		if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
-		{
-			ItemManager* itemManager = ItemManager::get();
-			itemNS::ItemData itemData;
-			itemData.itemID = itemManager->issueNewItemID();
-			itemData.type = itemNS::BATTERY;
-			itemData.defaultPosition = position;
-			itemData.defaultDirection = axisZ.direction;
-			itemManager->createItem(itemData);
-		}
+		// Saiテスト
+		//if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
+		//{
+		//	ItemManager* itemManager = ItemManager::get();
+		//	itemNS::ItemData itemData;
+		//	itemData.itemID = itemManager->issueNewItemID();
+		//	itemData.type = itemNS::BATTERY;
+		//	itemData.defaultPosition = position;
+		//	itemData.defaultDirection = axisZ.direction;
+		//	itemManager->createItem(itemData);
+		//}
 	}
 
 	// 死亡ステート時間のカウントアップ
@@ -1218,6 +1221,11 @@ void Enemy::setAttackTarget(Object* _target)
 void Enemy::setPlayerNo(int playerNo)
 {
 	this->playerNo = playerNo;
+}
+
+void Enemy::setFieldMatrix(D3DXMATRIX *matrix)
+{
+	this->attractorMatrix = matrix;
 }
 #pragma endregion
 

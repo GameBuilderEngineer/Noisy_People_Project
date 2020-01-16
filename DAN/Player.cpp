@@ -107,7 +107,7 @@ void Player::initialize(PlayerTable info)
 	//デジタルアクション
 	//デジタルシフト
 	shiftLine.start		= position;
-	shiftLine.end		= position+axisZ.direction;
+	shiftLine.end		= position + axisZ.direction;
 	//選択ライトを再生状態にしておく。
 	digitalShiftEffect	= new DigitalShiftEffect;
 	playSelectLight();
@@ -195,15 +195,11 @@ void Player::update(float frameTime)
 		reset();
 	}
 
-	//リスポーン
-	if (position.y < 0)
-	{
-		reset();
-	}
-	if (hp < 0)
-	{
-		reset();
-	}
+	////リスポーン
+	//if (position.y < -1.0f)
+	//{
+	//	reset();
+	//}
 
 	//物理更新(状態別)
 	state->physics();
