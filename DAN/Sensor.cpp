@@ -93,10 +93,16 @@ void Sensor::enemySensor()
 	data->numChasingPlayer[gameMasterNS::PLAYER_2P] = 0;
 	data->numKilled = 0;
 	data->numKilledRecently = 0;
+	data->numTreeAttackingEnemy = 0;
 
 	for (int i = 0; i < enemyManager->getEnemyDataList()->nodeNum; i++)
 	{
 		enemyNS::EnemyData* enemyData = enemyManager->getEnemyDataList()->getValue(i);
+		
+		if (enemyData->state == stateMachineNS::ATTACK_TREE)
+		{// ツリー攻撃ステートに入っているエネミーの数
+			data->numTreeAttackingEnemy++;
+		}
 
 		if (enemyData->isObjectExists && enemyData->state == stateMachineNS::CHASE)
 		{// 追跡ステートに入っているエネミーの数
@@ -110,6 +116,7 @@ void Sensor::enemySensor()
 				data->numChasingPlayer[gameMasterNS::PLAYER_2P]++;
 			}
 		}
+
 		if (enemyData->isAlive == false)
 		{
 			// 倒されたエネミーの数

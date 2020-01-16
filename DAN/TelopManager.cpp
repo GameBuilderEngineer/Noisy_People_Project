@@ -3,6 +3,8 @@
 // Author : 新里　将士
 // 作成開始日 : 2019/10/31
 //-----------------------------------------------------------------------------
+// 更新日 : 2020/01/16 【菅野 樹】
+//-----------------------------------------------------------------------------
 #include "TelopManager.h"
 
 using namespace telopManagerNS;
@@ -172,11 +174,30 @@ void TelopManager::uninitialize()
 //=============================================================================
 void TelopManager::update(float _frameTime)
 {
+	//再生中でない
+	if (!playFlag)
+	{
+		//再生命令の要求を確認
+		if (orderList[orderNum].request)
+		{
+			//再生
+			play(orderList[orderNum].telopType);
+		}
+	}
+	//各テロップの更新
 	for (int i = 0; i < MAX_TELOP; i++)
 	{
 		telop[i]->update(_frameTime);
 	}
-	
+
+	//テロップの更新後再生が完了されていて、現在指す命令が要求状態
+	if (!playFlag && orderList[orderNum].request)
+	{
+		//再生されていたテロップ命令を再生済みにする
+		orderList[orderNum].played = true;
+		//命令リストを一つ進める
+		orderNum = (orderNum+1) % 100;//ラップ0～99
+	}
 }
 
 //=============================================================================
@@ -203,4 +224,29 @@ void TelopManager::play(int type)
 		telop[TELOP_INFO_BAR]->playTelopBar();
 		playFlag = true;
 	}
+}
+
+//=============================================================================
+// 再生要求処理
+//=============================================================================
+void TelopManager::playOrder(int type)
+{
+	orderList[requestNum].request = true;
+	orderList[requestNum].telopType = type;
+	requestNum++;
+	if (requestNum >= 100)
+	{
+		//配列のリフレッシュ
+		for (int i = 0; i < 100; i++)
+		{
+			if (orderList[i].played)
+			{
+				orderList[i].played = false;
+				orderList[i].request = false;
+				orderList[i].telopType = -1;
+			}
+		}
+		requestNum = 0;
+	}
+
 }

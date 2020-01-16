@@ -12,11 +12,13 @@
 using namespace enemyNS;
 using namespace stateMachineNS;
 
+
 // 静的メンバ変数
 int Enemy::numOfEnemy = 0;			// エネミーの総数
 #ifdef _DEBUG
 int Enemy::debugEnemyID = -1;		// デバッグするエネミーのID
 #endif//_DEBUG
+
 
 #pragma region [Basic Process]
 //=============================================================================
@@ -70,6 +72,9 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	isAttacking = false;
 	attackTime = 0.0f;
 	attackDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	wasHittingTree = false;
+	treeAttackTime = 0.0f;
+	canDamageTree = true;
 
 	// 移動の初期化
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -99,7 +104,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	{// オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = ENEMY;
-		treeCell.target = PLAYER | ENEMY | BULLET | TREE;
+		treeCell.target = PLAYER | ENEMY | ENEMY_BEAR | BULLET | TREE;
 	}
 
 	// 初期ステートごとのセットアップ
@@ -139,6 +144,9 @@ Enemy::~Enemy()
 		edgeList->terminate();
 		SAFE_DELETE(edgeList);
 	}
+#ifdef _DEBUG
+	naviMesh->debugEdgeList = NULL;
+#endif
 
 	// 追跡マークの削除
 	deleteMark();
@@ -211,9 +219,9 @@ void Enemy::preprocess(float frameTime)
 	// デバッグエネミーモード
 	if (enemyData->enemyID == debugEnemyID)
 	{
-		controlCamera(frameTime);
-		moveOperation();
-		enemyData->state = stateMachineNS::ENEMY_STATE::REST;
+		//controlCamera(frameTime);
+		//moveOperation();
+		//enemyData->state = stateMachineNS::ENEMY_STATE::REST;
 
 		if (input->wasKeyPressed('8'))
 		{
@@ -268,11 +276,6 @@ void Enemy::postprocess(float frameTime)
 	enemyData->direction = axisZ.direction;
 	// 自動破棄を行うか確認
 	checkAutoDestruction();
-
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	footsteps(player[i].position, i);
-	//}
 }
 #pragma endregion
 
@@ -307,7 +310,7 @@ void Enemy::searchPath()
 	isArraved = false;
 
 	// 移動ターゲットの現在位置までのエッジリストを取得
-	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+	naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	// 移動ターゲットの現在位置を目的地に設定
 	destination = *movingTarget;
 
@@ -803,6 +806,7 @@ void Enemy::chase(float frameTime)
 		searchPath();
 	}
 
+
 	//D3DXQUATERNION quaternion;
 	//D3DXQuaternionIdentity(&quaternion);
 	//Base::postureControl(&quaternion, D3DXVECTOR3(0, 0, 0), player[chasingPlayer].position - position, 1.0f);
@@ -861,7 +865,7 @@ void Enemy::rest(float frameTime)
 {
 	if (canSense)
 	{
-		sensor();
+		//sensor();
 	}
 
 	// isPayingNewAttentionの後に一回だけここを通る
@@ -886,18 +890,36 @@ void Enemy::rest(float frameTime)
 //=============================================================================
 void Enemy::attackTree(float frameTime)
 {
-	if (canSense)
+	// 木にダメージを与える時間間隔をあける
+	treeAttackTime += frameTime;
+	if (treeAttackTime > 3.0f)
 	{
-		sensor();
+		treeAttackTime = 0.0f;
+		canDamageTree = true;
 	}
 
-	if (canSearch)
+	// 移動と攻撃の処理
+	destination = enemyData->targetTree->position;
+	setMovingTarget(&destination);
+	if (wasHittingTree)
 	{
-		//setPlayerChaseTarget();
-		searchPath();
+		animationManager->switchAttack();
+	}
+	else
+	{
+		move(frameTime);
 	}
 
-	move(frameTime);
+	// ツリーのHPがゼロになりアナログに戻った場合にステートを終了する
+	if (enemyData->targetTree->getTreeData()->isAttaked == false)
+	{
+		// ステートマシンでPatrolにするための処理
+		enemyData->targetTree = NULL;
+		// エネミーデータに残らないようにすることで
+		// 遠距離破棄を有効化し近距離再作成を防止する
+		// こうしないとtreeData中のtree情報はリセットされているためバグる
+		enemyData->isGeneratedBySpawnEvent = true;
+	}
 }
 
 
@@ -1176,6 +1198,7 @@ bool Enemy::getIsAttacking() { return isAttacking; }
 int Enemy::getChasingPlayer() { return chasingPlayer; };
 int Enemy::getPlayerNo() { return playerNo; };
 bool Enemy::getIsPayingNewAttention() { return isPayingNewAttention; }
+bool Enemy::getCanDamageTree() { return canDamageTree; }
 
 //=============================================================================
 // Setter
@@ -1221,6 +1244,16 @@ void Enemy::setAttackTarget(Object* _target)
 void Enemy::setPlayerNo(int playerNo)
 {
 	this->playerNo = playerNo;
+}
+
+void Enemy::setTreeHit(bool setting)
+{
+	wasHittingTree = setting;
+}
+
+void Enemy::setCanDamageTree(bool setting)
+{
+	canDamageTree = setting;
 }
 
 void Enemy::setFieldMatrix(D3DXMATRIX *matrix)

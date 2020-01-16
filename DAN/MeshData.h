@@ -54,6 +54,7 @@ private:
 	DWORD numFaces;						// 3角形ポリゴン面の数
 	DWORD fvf;							// FVF(柔軟な頂点フォーマット)
 
+
 public:
 	// 初期化
 	void initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor);

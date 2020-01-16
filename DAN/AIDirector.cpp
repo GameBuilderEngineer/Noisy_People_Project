@@ -8,13 +8,15 @@
 #include "ImguiManager.h"
 using namespace aiNS;
 
+// Staticメンバ変数
+AIDirector* AIDirector::pointer = NULL;
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 AIDirector::AIDirector()
 {
-
+	pointer = this;
 }
 
 
@@ -56,6 +58,7 @@ void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Play
 	data.lastTimeEnemyAttaksTree = gameMasterNS::GAME_TIME;
 	data.lastTimeCheckedWeightEnemyAttacksTree = gameMasterNS::GAME_TIME;
 	data.wasBossEntried = false;
+	data.attackedTree = NULL;
 
 	BoundingSphere temp;
 	temp.initialize(NULL, fieldMesh);
@@ -81,11 +84,14 @@ void AIDirector::run()
 	if (frameCnt % 2 == 0)
 	{
 		sensor.update();
-	}
-	else// frameCnt % 2 == 1
-	{
 		eventMaker.update();
 	}
+	// 初期構想では1フレーム毎に処理を分けるつもりでいたが、
+	// ツリー攻撃イベントのフラグ処理の支障になることから
+	// 1フレームに2つの処理をまとめることにした
+	//else// frameCnt % 2 == 1
+	//{
+	//}
 
 	frameCnt++;
 

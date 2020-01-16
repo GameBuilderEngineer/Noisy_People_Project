@@ -74,6 +74,7 @@ void Game::initialize() {
 	testField = new Object();
 #ifdef SAMPLE_NAVI
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::NAV_TEST1));
 #else
 	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
@@ -233,8 +234,10 @@ void Game::initialize() {
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 #ifdef SAMPLE_NAVI
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::NAV_TEST1));
 #else
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 #endif
 	naviMesh->initialize();
 
@@ -265,7 +268,6 @@ void Game::initialize() {
 	// マップオブジェクト
 	mapObjectManager = new MapObjectManager;
 	mapObjectManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
-
 
 	//テロップマネージャー
 	telopManager = new TelopManager;
@@ -304,7 +306,6 @@ void Game::initialize() {
 	//ダメージUI
 	damageUI = new DamageUI();
 
-
 #pragma region Memory Test
 	////メモリテスト
 
@@ -330,7 +331,6 @@ void Game::initialize() {
 	//treeManager = new TreeManager();
 	//treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 #pragma endregion
-
 
 #ifdef _DEBUG
 	// デバッグエネミーモードにするための準備
@@ -445,7 +445,7 @@ void Game::update(float _frameTime) {
 		countUI->startCount(0);									//ゲーム開始
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
-		telopManager->play(telopManagerNS::TELOP_TYPE6);		//テロップ
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE6);		//テロップ
 	}
 	
 	//ゲームタイムの更新
@@ -740,6 +740,16 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
+#ifdef CHEAT_PREZEN
+	if (input->wasKeyPressed('6') || input->getController()[0]->wasButton(virtualControllerNS::UP))
+	{
+		aiDirector->eventMaker.makeEventEnemyAttaksTree();
+	}
+	if (input->wasKeyPressed('7') || input->getController()[0]->wasButton(virtualControllerNS::DOWN))
+	{
+		aiDirector->eventMaker.makeEventBossEntry();
+	}
+#endif
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -835,7 +845,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.1 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE0);
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_10);
 	}
@@ -843,7 +853,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.3 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE1);
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE1);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_30);
 	}
@@ -851,7 +861,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.5 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE2);
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE2);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
@@ -915,11 +925,11 @@ void Game::update(float _frameTime) {
 	//残り時間１分
 	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_TELOP_ACTIVITY_LIMIT))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE4);	// 活動限界～
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE4);	// 活動限界～
 	}
 	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_TELOP_CANT_SENSE_GREEN))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE5);	// 緑化率が分からなくなってしまった～
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE5);	// 緑化率が分からなくなってしまった～
 	}
 	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_SE_HURRY_UP))
 	{
@@ -1114,7 +1124,7 @@ void Game::render3D(Camera* currentCamera) {
 #endif
 
 #ifdef _DEBUG
-#if 0	// ナビゲーションメッシュのデバッグ描画
+#if 1	// ナビゲーションメッシュのデバッグ描画
 	naviMesh->debugRender(currentCamera->view, currentCamera->projection, currentCamera->position);
 #endif
 #endif //_DEBUG
@@ -1170,7 +1180,6 @@ void Game::renderUI()
 	//ダメージUIの描画
 	damageUI->render(gameMasterNS::PLAYER_1P);
 	damageUI->render(gameMasterNS::PLAYER_2P);
-
 }
 
 //===================================================================================================================================
@@ -1228,22 +1237,21 @@ void Game::collisions()
 				tree8Reregister(*tiger->getBulletMangaer()->getBulletList()->getValue(k));
 			}
 		}
-		//// BEARのパーツ
-		//if (enemy->getEnemyData()->type == enemyNS::BEAR)
-		//{
-		//	Bear* bear = (Bear*)enemy;
-		//	for (int k = 0; k < bearNS::PARTS_MAX; k++)
-		//	{
-		//		tree8Reregister(bear->getParts(k));
-		//	}
-		//}
+		// BEARのパーツ
+		if (enemy->getEnemyData()->type == enemyNS::BEAR)
+		{
+			Bear* bear = (Bear*)enemy;
+			for (int k = 0; k < bearNS::PARTS_MAX; k++)
+			{
+				tree8Reregister(bear->getParts(k));
+			}
+		}
 	}
 	//木の登録
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)
 	{
 		tree8Reregister(treeManager->getTreeList()[i]);
-		if (treeManager->getTreeList()[i]->getTreeData()->type == treeNS::DIGITAL_TREE
-			&&treeManager->getTreeList()[i]->isAroundGreening())
+		if (treeManager->getTreeList()[i]->isAroundGreening())
 		{
 			//緑化エリアオブジェクトの登録
 			tree8Reregister(treeManager->getTreeList()[i]->getGreeningArea());
@@ -1469,7 +1477,7 @@ void Game::test()
 
 	if (input->wasKeyPressed('9'))
 	{
-		itemManager->destroyAllItem();
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
 		//itemManager->destroyItem(3);
 	}
 

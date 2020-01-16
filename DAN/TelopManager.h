@@ -3,6 +3,9 @@
 // Author : 新里　将士
 // 作成開始日 : 2019/10/31
 //-----------------------------------------------------------------------------
+// 更新日 : 2020/01/16 【菅野 樹】
+//-----------------------------------------------------------------------------
+
 #pragma once
 #include "Telop.h"
 #include "Sprite.h"
@@ -37,6 +40,13 @@ namespace telopManagerNS
 		MAX_TELOP
 	};
 
+	struct OrderItem
+	{
+		bool request	= false;	//要求確認
+		bool played		= false;	//再生が完了したか
+		int telopType	= -1;		//再生するテロップタイプ
+	};
+
 }
 
 class TelopManager
@@ -46,7 +56,11 @@ private:
 
 	bool playFlag;
 
-	
+	telopManagerNS::OrderItem	orderList[100];//命令リスト
+	int							orderNum	= 0;//現在の再生対象ナンバー
+	int							requestNum	= 0;//命令要求シーク
+
+
 	PLAY_PARAMETERS announceTelop;
 
 public:
@@ -58,5 +72,8 @@ public:
 	void update(float _frameTime);
 	void render();
 	void play(int type);
+
+	void playOrder(int type);//再生要求
+
 };
 

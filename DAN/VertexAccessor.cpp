@@ -16,8 +16,8 @@ void VertexAccessor::initialize(StaticMesh* staticMesh)
 	int i = 0;
 
 	// 参照対象ごとに頂点アドレスからのオフセット値を計算する
-	//while (staticMesh->vertexElement[i].Type != MAXD3DDECLTYPE)
-	while (i < 65)
+	while (staticMesh->vertexElement[i].Type != MAXD3DDECLTYPE)
+	//while (i < 65)
 	{
 		switch (staticMesh->vertexElement[i].Usage)
 		{

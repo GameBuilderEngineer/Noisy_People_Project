@@ -22,7 +22,7 @@ StaticMeshRenderer* EnemyManager::bearArmRRenderer;
 StaticMeshRenderer* EnemyManager::bearWaistRenderer;
 StaticMeshRenderer* EnemyManager::bearLegLRenderer;
 StaticMeshRenderer* EnemyManager::bearLegRRenderer;
-EnemyChaseMark* EnemyManager::markRenderer;	
+EnemyChaseMark*		EnemyManager::markRenderer;	
 
 //=============================================================================
 // 初期化
@@ -167,7 +167,9 @@ void EnemyManager::update(float frameTime)
 		// 遠距離エネミーを破棄する
 		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
 		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
-		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2) && (*itr)->getEnemyData()->type != enemyNS::BEAR)
+		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2)
+			&& (*itr)->getEnemyData()->type != enemyNS::BEAR
+			&& (*itr)->getEnemyData()->state != stateMachineNS::ATTACK_TREE)
 		{
 			isDestroyTarget = true;
 		}
@@ -649,6 +651,11 @@ void EnemyManager::outputGUI()
 		ImGui::Checkbox("Return Player", &returnPlayer);
 		ImGui::Checkbox("Delete All Enemy", &destroyAllFlag);
 
+		int cntChase = 0;
+		int cntPatrol = 0;
+		int cntRest = 0;
+		int cntTreeAttack = 0;
+
 		// デバッグエネミー
 		for (size_t i = 0; i < enemyList.size(); i++)
 		{
@@ -664,7 +671,32 @@ void EnemyManager::outputGUI()
 						enemyList[i]->edgeList->getValue(cnt)->index[1]);
 				}	
 			}
+
+			switch (enemyList[i]->getEnemyData()->state)
+			{
+			case stateMachineNS::CHASE:			cntChase++;			break;
+			case stateMachineNS::PATROL:		cntPatrol++;		break;
+			case stateMachineNS::REST:			cntRest++;			break;
+			case stateMachineNS::ATTACK_TREE:	cntTreeAttack++;	break;
+			}
 		}
+
+		// ステートの数
+		ImGui::Text("chase:%d, patrol:%d, rest:%d, tree:%d\n",cntChase, cntPatrol, cntRest, cntTreeAttack);
+
+		//// BEAR
+		//for (size_t i = 0; i < enemyList.size(); i++)
+		//{
+		//	if (enemyList[i]->getEnemyData()->type == enemyNS::BEAR)
+		//	{
+		//		ImGui::Text("durability-body : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::BODY)->durability);
+		//		ImGui::Text("durability-armL : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::ARM_L)->durability);
+		//		ImGui::Text("durability-armR : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::ARM_R)->durability);
+		//		ImGui::Text("durability-waist : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::WAIST)->durability);
+		//		ImGui::Text("durability-legL : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::LEG_L)->durability);
+		//		ImGui::Text("durability-legR : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::LEG_R)->durability);
+		//	}
+		//}
 	}
 
 	if (createFlag)
@@ -694,7 +726,8 @@ void EnemyManager::outputGUI()
 			camera->setTargetY(&debugEnemy->getAxisY()->direction);
 			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
 			playerRelativeQuaternion = camera->relativeQuaternion;
-			camera->setRelative(D3DXQUATERNION(0.0f, 30.0f, -30.5f, 0.0f));
+			camera->setRelative(D3DXQUATERNION(0.0f, 300.0f, -300.5f, 0.0f));
+			camera->setGazeDistance(30.0f);
 			debugEnemy->setCamera(&camera[0]);
 			debugEnemy->setDebugEnvironment();
 		}
