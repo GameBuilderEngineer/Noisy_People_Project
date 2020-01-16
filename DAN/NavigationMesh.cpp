@@ -135,52 +135,52 @@ NAVIRESULT NavigationMesh::steering(D3DXVECTOR3* out, DWORD* faceIndex, D3DXVECT
 	// 以上のケースでは目的地までの直線ベクトルで移動すればよい
 	// よって面に平行にスリップした直線正規化ベクトルを返却する
 	//-------------------------------------------------------------------
-	if (*edgeList != NULL && (*edgeList)->nodeNum < 2)
-	{
-		(*edgeList)->terminate();
-		SAFE_DELETE(*edgeList);
-	}
-	if (*edgeList == NULL)
-	{
+	//if (*edgeList != NULL && (*edgeList)->nodeNum < 2)
+	//{
+	//	(*edgeList)->terminate();
+	//	SAFE_DELETE(*edgeList);
+	//}
+	//if (*edgeList == NULL)
+	//{
 		D3DXVECTOR3 straightDirection = dest - from;
 		slip(straightDirection, meshData.getFaceArray()->nor);
 		D3DXVec3Normalize(&straightDirection, &straightDirection);
 		*out = straightDirection;
 		return NAVI_OK;
-	}
+	//}
 
-	// 現在地の面インデックスと面までの距離を取得する
-	DWORD currentIndex;
-	float distance;
-	if (isHitGrounding(&distance, &currentIndex, from) == false)
-	{
-		return CURRENT_NOT_ON_MESH;			// 現在地がナビメッシュ上ではない
-	}
+	//// 現在地の面インデックスと面までの距離を取得する
+	//DWORD currentIndex;
+	//float distance;
+	//if (isHitGrounding(&distance, &currentIndex, from) == false)
+	//{
+	//	return CURRENT_NOT_ON_MESH;			// 現在地がナビメッシュ上ではない
+	//}
 
-	// ポリゴン面インデックスが変わればエッジをリストからノードを削除後に更新
-	if (currentIndex != *faceIndex)
-	{
-		*faceIndex = currentIndex;
-		//cntEdge++;
-		//if (cntEdge >= 2)
-		{
-			//(*edgeList)->removeFront();
-			(*edgeList)->removeFront();
-			(*edgeList)->listUpdate();
-		}
+	//// ポリゴン面インデックスが変わればエッジをリストからノードを削除後に更新
+	//if (currentIndex != *faceIndex)
+	//{
+	//	*faceIndex = currentIndex;
+	//	//cntEdge++;
+	//	//if (cntEdge >= 2)
+	//	{
+	//		//(*edgeList)->removeFront();
+	//		(*edgeList)->removeFront();
+	//		(*edgeList)->listUpdate();
+	//	}
 
-		if (*edgeList != NULL && (*edgeList)->nodeNum < 2) return NAVI_OK;	// ●
-	}
+	//	if (*edgeList != NULL && (*edgeList)->nodeNum < 2) return NAVI_OK;	// ●
+	//}
 
 	// ポリゴン面インデックスがおかしくなったら再度経路探索して再実行
 	// 落下の押し戻し
 	// A*の経路確認
 
-	// 接地座標をもとにパスフォローイングを実行
-	D3DXVECTOR3 surfaceIntersection = from + gravityDirection * distance;
-	pathFollowing.createVector(out, surfaceIntersection, faceIndex, *edgeList);
+	//// 接地座標をもとにパスフォローイングを実行
+	//D3DXVECTOR3 surfaceIntersection = from + gravityDirection * distance;
+	//pathFollowing.createVector(out, surfaceIntersection, faceIndex, *edgeList);
 
-	return NAVI_OK;
+	//return NAVI_OK;
 
 
 	////--------------------------------------------------------------------

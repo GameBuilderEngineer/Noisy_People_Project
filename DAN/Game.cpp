@@ -720,8 +720,8 @@ void Game::update(float _frameTime) {
 
 	if (input->wasKeyPressed('P'))
 	{
-		getFader()->setShader(faderNS::NORMAL);
-		getFader()->start();
+		//getFader()->setShader(faderNS::NORMAL);
+		//getFader()->start();
 	}
 
 	//テストフィールドの更新
@@ -951,8 +951,8 @@ void Game::update(float _frameTime) {
 	//フェーダーテスト
 	if (input->wasKeyPressed('P'))
 	{
-		getFader()->setShader(faderNS::NORMAL);
-		getFader()->start();
+		//getFader()->setShader(faderNS::NORMAL);
+		//getFader()->start();
 	}
 
 #ifdef _DEBUG
