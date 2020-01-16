@@ -1511,7 +1511,6 @@ void Game::createGUI()
 	camera->outputGUI();			//カメラ
 	cameraOP->outputGUI();			//カメラ
 	naviMesh->outputGUI();			//ナビゲーションAI
-	bulletManager->bulletGUI();
 }
 #endif // _DEBUG
 

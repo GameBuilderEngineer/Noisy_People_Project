@@ -140,8 +140,6 @@ private:
 	AIDirector*						aiDirector;			// AI
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 
-	BulletManager*					bulletManager;
-
 	//UI
 	SpriteGauge*					spriteGauge;		//Sprite実験
 	Reticle*						reticle;			//レティクル
