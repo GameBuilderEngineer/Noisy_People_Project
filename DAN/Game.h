@@ -84,6 +84,14 @@ namespace gameNS
 		MAX_CAMERA
 	};
 	
+	enum ITEM_TYPE
+	{
+		BATTERY,
+		EXAMPLE,
+		POWER_UP,
+		ITEM_TYPE_MAX
+	};
+
 }
 
 //===================================================================================================================================
@@ -132,6 +140,8 @@ private:
 
 	AIDirector*						aiDirector;			// AI
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
+
+	BulletManager*					bulletManager;
 
 	//UI
 	SpriteGauge*					spriteGauge;		//Sprite実験

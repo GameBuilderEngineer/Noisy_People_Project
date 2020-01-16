@@ -1270,6 +1270,8 @@ void Player::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
+	
+		//ImGui::Text("digitalPower = %f", bulletManager->digital )
 	}
 #endif // _DEBUG
 }
@@ -1311,6 +1313,10 @@ void Player::addpower(int add)
 void Player::pullpower(int pull)
 {
 	power = UtilityFunction::clamp(power - pull, MIN_POWER, MAX_POWER);		//電力消費
+}
+void Player::powerup(float value)
+{
+	bulletManager->setPowerRate(value);
 }
 void Player::damage(int _damage)
 {

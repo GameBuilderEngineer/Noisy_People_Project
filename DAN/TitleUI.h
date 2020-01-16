@@ -82,7 +82,8 @@ namespace titleUiNS
 		CREDIT,
 		EXIT,
 		MENU_MAX,
-		CREATE
+		CREATE,
+		PHOTOGRAPH
 	};
 }
 //============================
