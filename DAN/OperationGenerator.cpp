@@ -58,7 +58,7 @@ void OperationGenerator::respawnEnemy(int _enemyID)
 //=============================================================================
 void OperationGenerator::enemyAttaksTree(enemyNS::ENEMYSET _enemySet, Tree* _attackTarget)
 {
-	telopManager->play(telopManagerNS::TELOP_TYPE3);
+	telopManager->playOrder(telopManagerNS::TELOP_TYPE3);
 	enemyNS::EnemyData* p = enemyManager->createEnemyData(_enemySet);
 	p->targetTree = _attackTarget;
 	enemyManager->createEnemy(p);
@@ -96,17 +96,17 @@ void OperationGenerator::updateBossEvent()
 	if (wasTelopDisplayed[0] == false)
 	{
 		wasTelopDisplayed[0] = true;
-		telopManager->play(telopManagerNS::BOSS_ENTRY);
+		telopManager->playOrder(telopManagerNS::BOSS_ENTRY);
 	}
 	if (time < bossEntryTime - 4.0f && wasTelopDisplayed[1] == false)
 	{
 		wasTelopDisplayed[1] = true;
-		telopManager->play(telopManagerNS::BOSS_ENTRY2);
+		telopManager->playOrder(telopManagerNS::BOSS_ENTRY2);
 	}
 	if (time < bossEntryTime - 8.0f && wasTelopDisplayed[2] == false)
 	{
 		wasTelopDisplayed[2] = true;
-		telopManager->play(telopManagerNS::BOSS_ENTRY3);
+		telopManager->playOrder(telopManagerNS::BOSS_ENTRY3);
 	}
 }
 
