@@ -118,7 +118,6 @@ void EventMaker::update()
 		data->wasBossEntried = true;
 		makeEventBossEntry();
 	}
-#ifndef CHEAT_PRESENTATION
 #endif
 }
 
