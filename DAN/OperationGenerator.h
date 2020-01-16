@@ -56,4 +56,6 @@ public:
 	// 巨大環境破壊ロボが登場
 	void bossEntry(enemyNS::ENEMYSET _enemySet);
 	void updateBossEvent();
+	// エネミーツリー襲撃マーカーを消す
+	void destroyMarkerEnemyAttaksTree();
 };

@@ -60,22 +60,20 @@ private:
 
 public:
 	// 描画オブジェクト
-	static StaticMeshRenderer* wolfBodyRenderer;
-	static StaticMeshRenderer* wolfArmRenderer;
-	static StaticMeshRenderer* tigerBodyRenderer;
-	static StaticMeshRenderer* tigerGunRenderer;
-	static StaticMeshRenderer* tigerLegLRenderer;
-	static StaticMeshRenderer* tigerLegRRenderer;
-	static StaticMeshRenderer* bearBodyRenderer;
-	static StaticMeshRenderer* bearArmLRenderer;
-	static StaticMeshRenderer* bearArmRRenderer;
-	static StaticMeshRenderer* bearWaistRenderer;
-	static StaticMeshRenderer* bearLegLRenderer;
-	static StaticMeshRenderer* bearLegRRenderer;
-
-	static EnemyChaseMark* markRenderer;		// 追跡マーク描画
-	MarkerRenderer*	markerRenderer;				//マーカー
-
+	static StaticMeshRenderer* wolfBodyRenderer;		// WOLFの胴体
+	static StaticMeshRenderer* wolfArmRenderer;			// WOLFの腕
+	static StaticMeshRenderer* tigerBodyRenderer;		// TIGERの胴体
+	static StaticMeshRenderer* tigerGunRenderer;		// TIGERの銃口
+	static StaticMeshRenderer* tigerLegLRenderer;		// TIGERの左足
+	static StaticMeshRenderer* tigerLegRRenderer;		// TIGERの右足
+	static StaticMeshRenderer* bearBodyRenderer;		// BEARの胴体
+	static StaticMeshRenderer* bearArmLRenderer;		// BEARの左腕
+	static StaticMeshRenderer* bearArmRRenderer;		// BEARの右腕
+	static StaticMeshRenderer* bearWaistRenderer;		// BEARの腰
+	static StaticMeshRenderer* bearLegLRenderer;		// BEARの左足
+	static StaticMeshRenderer* bearLegRRenderer;		// BEARの右足
+	static EnemyChaseMark* markRenderer;				// 追跡マーク描画
+	MarkerRenderer*	markerRenderer;						// マーカー（BEAR位置表示用）
 
 	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player, MarkerRenderer*	_markerRenderer);
 	void uninitialize();
@@ -91,6 +89,8 @@ public:
 	void assertDestructionOrder();
 	enemyNS::EnemyData* findEnemyData(int _enemyID);
 	Enemy* findEnemy(int _enemyID);
+	void updateEnemyWithoutTime();
+	void updatePartsRenderer();
 	int issueNewEnemyID();
 	void outputGUI();
 	void relocateEnemyAccordingToFile();

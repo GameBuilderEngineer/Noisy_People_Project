@@ -95,6 +95,13 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[DATE_ISLAND_FINAL_FACE]				= { "DateIsland_Final_Face.x" };			//15
 	fileName[DATE_ISLAND_FINAL_FACE_BLACK]				= { "DateIsland_Final_Face_Black.x" };	//16
 	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };					//01
+
+	fileName[NAV_TEST1]								= { "BlenderNavimeshTest.x" };
+	fileName[NAV_TEST2]								= { "Test2.x" };
+	fileName[NAV_TEST3]								= { "Test3.x" };
+	fileName[NAV_TEST4]								= { "Test4.x" };
+	fileName[NAV_TEST5]								= { "Test5.x" };
+	fileName[NAV_TEST6]								= { "Test6.x" };
 }
 
 //===================================================================================================================================

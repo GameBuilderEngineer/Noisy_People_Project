@@ -24,12 +24,17 @@ Tiger::Tiger(ConstructionPackage constructionPackage) : Enemy(constructionPackag
 	// パーツの作成
 	for (int i = 0; i < PARTS_MAX; i++)
 	{
-		parts[i] = new Object;
+		parts[i] = new EnemyParts;
 		parts[i]->position = PARTS_OFFSET_POS[i];
+		parts[i]->setEnemy(this);
 	}
+	parts[BODY]->setRenderer(EnemyManager::tigerBodyRenderer);
+	parts[GUN]->setRenderer(EnemyManager::tigerGunRenderer);
+	parts[LEG_L]->setRenderer(EnemyManager::tigerLegLRenderer);
+	parts[LEG_R]->setRenderer(EnemyManager::tigerLegRRenderer);
 
 	// アニメーションマネージャを初期化
-	animationManager = new TigerAnimationManager(PARTS_MAX, this, &parts[0]);
+	animationManager = new TigerAnimationManager(PARTS_MAX, this, (Object**)&parts[0]);
 
 	// バレットマネージャを作成
 	bulletManager = new TigerBulletManager(player);
@@ -65,10 +70,11 @@ void Tiger::update(float frameTime)
 	Enemy::preprocess(frameTime);
 	switch (enemyData->state)
 	{
-	case CHASE:  chase(frameTime);  break;
-	case PATROL: patrol(frameTime); break;
-	case REST:   rest(frameTime);   break;
-	case DIE:    die(frameTime);    break;
+	case CHASE:			chase(frameTime);		break;
+	case PATROL:		patrol(frameTime);		break;
+	case REST:			rest(frameTime);		break;
+	case ATTACK_TREE:	attackTree(frameTime);	break;
+	case DIE:			die(frameTime);			break;
 	}
 #ifdef _DEBUG
 	if (enemyData->enemyID == debugEnemyID)
@@ -232,7 +238,7 @@ void::Tiger::die(float frameTime)
 //=============================================================================
 // Getter
 //=============================================================================
-Object* Tiger::getParts(int type)
+EnemyParts* Tiger::getParts(int type)
 {
 	return parts[type];
 }

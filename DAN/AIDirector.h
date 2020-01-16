@@ -87,6 +87,7 @@ namespace aiNS
 
 		// エネミー
 		int numChase;										// 追跡ステートに入っているエネミーの数
+		int numTreeAttackingEnemy;							// 
 		int numChasingPlayer[gameMasterNS::PLAYER_NUM];		// 追跡しているプレイヤーの数
 		int numKilled;										// 倒されたエネミーの数
 		int numKilledRecently;								// 最近倒されたエネミーの数
@@ -97,6 +98,7 @@ namespace aiNS
 		int numGreen;										// 緑化されている木の数	
 		int numBeingAttackedTree;							// 襲撃されている木の数
 		float* treeDistanceFromPlayer[2];
+		Tree* attackedTree;									// 襲撃されている木
 
 		// フィールド
 		float fieldRadius;									// フィールド半径サイズ
@@ -138,9 +140,8 @@ private:
 	TreeManager* treeManager;			// ツリー管理オブジェクト
 	ItemManager* itemManager;			// アイテム管理オブジェクト
 	TelopManager* telopManager;			// テロップ管理オブジェクト
-
-	MarkerRenderer*					markerRenderer;		//マーカー
-
+	MarkerRenderer*	markerRenderer;		// マーカー
+	static AIDirector* pointer;			// ポインタ
 
 public:
 	//●
@@ -155,12 +156,13 @@ public:
 	void initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Player* _player,
 		EnemyManager* _enemyManager, TreeManager* _treeManager, ItemManager* _itemManager,
 		TelopManager* _telopManager, MarkerRenderer* marker);
-
 	// 終了処理
 	void uninitialize();
-	
 	// 実行
 	void run();
 	// ImGuiに表示
 	void outputGUI();
+
+	static AIDirector* get() { return pointer; }
 };
+

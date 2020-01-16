@@ -30,7 +30,7 @@ Player::Player()
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = PLAYER;
-		treeCell.target = PLAYER | ENEMY | TREE;
+		treeCell.target = PLAYER | ENEMY | ENEMY_BEAR | TREE;
 	}
 
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
@@ -107,7 +107,7 @@ void Player::initialize(PlayerTable info)
 	//デジタルアクション
 	//デジタルシフト
 	shiftLine.start		= position;
-	shiftLine.end		= position+axisZ.direction;
+	shiftLine.end		= position + axisZ.direction;
 	//選択ライトを再生状態にしておく。
 	digitalShiftEffect	= new DigitalShiftEffect;
 	playSelectLight();
@@ -195,11 +195,11 @@ void Player::update(float frameTime)
 		reset();
 	}
 
-	//リスポーン
-	if (position.y < 0)
-	{
-		reset();
-	}
+	////リスポーン
+	//if (position.y < -1.0f)
+	//{
+	//	reset();
+	//}
 
 	//物理更新(状態別)
 	state->physics();
@@ -1291,6 +1291,7 @@ void Player::reset()
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
 	Object::update();
+	hp = MAX_HP;
 }
 #pragma endregion
 

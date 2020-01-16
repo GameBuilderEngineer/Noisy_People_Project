@@ -11,6 +11,7 @@
 #include "GreeningArea.h"
 #include "EffekseerManager.h"
 #include "GameMaster.h"
+#include "Marker.h"
 
 //=============================================================================
 // 名前空間
@@ -69,9 +70,10 @@ namespace treeNS
 	//定数
 	const int	MAX_HP					= 100;		//最大HP
 	const float	AROUND_GREEN_TIME		= 2.0f;		//周辺への緑化時間
-	const float	AROUND_GREEN_RANGE_S	= 50.0f;	//周辺への緑化範囲
-	const float	AROUND_GREEN_RANGE_L	= 100.0f;	//周辺への緑化範囲
-	const float	AROUND_GREEN_RANGE_V	= 200.0f;	//周辺への緑化範囲
+	const float	AROUND_DEAD_TIME		= 2.0f;		//周辺への枯木時間
+	const float	AROUND_GREEN_RANGE_S	= 35.0f;	//周辺への緑化範囲
+	const float	AROUND_GREEN_RANGE_L	= 70.0f;	//周辺への緑化範囲
+	const float	AROUND_GREEN_RANGE_V	= 120.0f;	//周辺への緑化範囲
 
 
 	//=============================================================================
@@ -144,11 +146,11 @@ private:
 	bool							nowAroundGreening;								//現在周囲を緑化中
 	treeNS::DigitTree*				digitalEffect[gameMasterNS::PLAYER_NUM];		//デジタルシフトエフェクト
 	treeNS::DigitFront*				frontDigitalEffect[gameMasterNS::PLAYER_NUM];	//デジタルシフトエフェクト
-
 	bool							selectShift[gameMasterNS::PLAYER_NUM];			//シフト先として選択されている
 public:
 	int								playerNo;
 	bool							culling;
+	bool							beforeDigital;
 public:
 	Tree(treeNS::TreeData _treeData);
 	~Tree();
@@ -159,6 +161,7 @@ public:
 	void setAttractor(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix);
 	void grounding();																// 接地処理
 	void greeningAround();															//周辺の緑化(デジタル化時)
+	void deadAround();																//周辺の枯木化(枯木化時)
 	void transState();																//状態遷移
 	void playDigitalEffect();														//デジタルエフェクトの再生
 	void stopDigitalEffect();														//デジタルエフェクトの停止
@@ -181,10 +184,10 @@ public:
 
 	// Setter
 	void setDataToTree(treeNS::TreeData _treeData);	
-	void addHp(int value,int playerNo);							//デジタル化するHPの増加
+	void addHp(int value,int playerNo);				//デジタル化するHPの増加
+	void reduceHp(int value);						//デジタル化するHPの減少
 	void setGreeningArea(float value);				//緑化エリアのスケールを設定
 	void disableAroundGreening();					//周囲への緑化を終了
-
 };
 
 //=============================================================================
@@ -218,6 +221,8 @@ namespace treeNS
 	{
 	private:
 		Tree* tree;
+		float aroundDeadTimer;//周囲への枯木タイマー
+		float aroundDeadRange;
 	public:
 		AnalogState(Tree* target);
 		~AnalogState();

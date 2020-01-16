@@ -26,6 +26,10 @@
 #include "DebugScene.h"
 #include "networkClient.h"
 #include "TreeManager.h"
+#include "movep.h"
+#include "movep1.h"
+
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -336,12 +340,21 @@ void Director::mainLoop() {
 //===================================================================================================================================
 void Director::update() {
 	input->update(window->windowActivate);
+	//フルスクリーン切替
+	//if (input->isKeyDown(VK_LMENU) && input->wasKeyPressed(VK_RETURN))
+	//{
+	//	bool fullScreen = !d3d->fullScreen;
+	//	imgui->reset();
+	//	d3d->changeDisplayMode(fullScreen);
+	//	window->changeDisplayMode(fullScreen);
+	//}
 #ifdef _DEBUG
 	memory->update();
 	imgui->beginFrame();
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
+	//マウスカーソル表示切り替え
 	if (input->wasKeyPressed(VK_F1))
 	{
 		hiddenCursor = !hiddenCursor;
@@ -352,6 +365,7 @@ void Director::update() {
 			ShowCursor(TRUE);
 		}
 	}
+	//マウスカーソル固定切り替え
 	if (input->wasKeyPressed(VK_F2))
 		lockCursor = !lockCursor;
 	if (lockCursor)
@@ -383,6 +397,8 @@ void Director::update() {
 		}
 	}
 #endif // _DEBUG
+
+
 	effekseerManager[0]->update();
 	effekseerManager[1]->update();
 	effekseerManager[2]->update();
@@ -454,11 +470,11 @@ void Director::render() {
 	{
 		if (fader->nowProcessing())
 		{
-
+		
 			fader->setRenderTexture();
 			d3d->clear(imgui->getClearColor());
 			scene->render();
-
+		
 			d3d->setRenderBackBuffer(0);
 			d3d->clear(imgui->getClearColor());
 			fader->render();
