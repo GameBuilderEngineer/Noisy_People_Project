@@ -107,7 +107,7 @@ void Game::initialize() {
 	cameraOP->setGazeDistance(20.0f);
 	//cameraOP->setGaze(D3DXVECTOR3(0, 0, 0));
 	cameraOP->setUpVector(D3DXVECTOR3(0, 1, 0));
-	cameraOP->setFieldOfView((D3DX_PI) / 18 * 10);;
+	cameraOP->setFieldOfView((D3DX_PI) / 18 * 10);
 	cameraOP->setViewProjection();
 	cameraOP->setLimitRotationTop(0.1f);
 	cameraOP->setLimitRotationBottom(0.1f);
@@ -305,6 +305,7 @@ void Game::initialize() {
 
 	//ダメージUI
 	damageUI = new DamageUI();
+
 
 #pragma region Memory Test
 	////メモリテスト
@@ -805,7 +806,7 @@ void Game::update(float _frameTime) {
 		class Fire :public effekseerNS::Instance
 		{
 		public:
-			D3DXVECTOR3 * syncPosition;
+			D3DXVECTOR3* syncPosition;
 			Fire() {
 				effectNo = effekseerNS::BLOW;
 				deltaRadian = D3DXVECTOR3(0, 0.3, 0);
@@ -1392,22 +1393,80 @@ void Game::collisions()
 
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
+	//for (size_t i = 0; i < itemList.size(); i++)
+	//{	
+	//	for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+	//	{
+	//		if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
+	//			player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
+	//		{
+	//			player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
+	//			//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+	//			PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL};
+	//			SoundInterface::SE->playSound(&playParameters);	//SE再生
+	//			//itemManager->destroyAllItem();					//デリート(今は全消し)
+	//			itemManager->destroyItem(itemList[i]->getItemData()->itemID);					//デリート(今は全消し)
+	//		}
+	//	}
+	//}
+
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
 		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
 		{
-			if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
-				player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
+			// 描画の解除
+			switch (itemList[i]->getItemData()->type)
 			{
-				player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
-				//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL};
+			case BATTERY:
+				if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
+					player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
+				{
+					player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
+					//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
+					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
+					SoundInterface::SE->playSound(&playParameters);	//SE再生
+					//itemManager->destroyAllItem();					//デリート(今は全消し)
+					itemManager->destroyItem(itemList[i]->getItemData()->itemID);					//デリート(今は全消し)
+				}
+				break;
+			case EXAMPLE:
+				
+				break;
+			case POWER_UP:
+				if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
+					player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
+				{
+					player[j].powerup(2.0f);//パワーアップ
+					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
+					SoundInterface::SE->playSound(&playParameters);	//SE再生
+					itemManager->destroyItem(itemList[i]->getItemData()->itemID);
+				}
+				break;
+			}
+			
+		}
+	}
+	/*if (itemList[i]->getItemData()->itemID == _itemID)
+	{
+	}*/
+
+	//パワーアップ
+	std::vector<Item*> powerupItemList = itemManager->getItemList();
+	for (size_t i = 0; i < powerupItemList.size(); i++)
+	{
+		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+		{
+			if (powerupItemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
+				player[j].getRadius(), *powerupItemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
+			{
+				player[j].powerup(2.0f);//パワーアップ
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
 				SoundInterface::SE->playSound(&playParameters);	//SE再生
-				//itemManager->destroyAllItem();					//デリート(今は全消し)
-				itemManager->destroyItem(itemList[i]->getItemData()->itemID);					//デリート(今は全消し)
+				itemManager->destroyItem(powerupItemList[i]->getItemData()->itemID);
 			}
 		}
 	}
+
 }
 
 //===================================================================================================================================
@@ -1452,6 +1511,7 @@ void Game::createGUI()
 	camera->outputGUI();			//カメラ
 	cameraOP->outputGUI();			//カメラ
 	naviMesh->outputGUI();			//ナビゲーションAI
+	bulletManager->bulletGUI();
 }
 #endif // _DEBUG
 
@@ -1465,15 +1525,18 @@ void Game::test()
 	// アイテムマネージャのテスト
 	if (input->wasKeyPressed('0'))
 	{
-		itemNS::ItemData unko = { itemManager->issueNewItemID(), itemNS::BATTERY, *player->getPosition() };
-		itemManager->createItem(unko);
+		itemNS::ItemData power = { itemManager->issueNewItemID(),itemNS::POWER_UP, *player->getPosition() };
+		itemManager->createItem(power);
+		//itemNS::ItemData unko = { itemManager->issueNewItemID(), itemNS::BATTERY, *player->getPosition() };
+		//itemManager->createItem(unko);
+	}
+	if (input->wasKeyPressed('M'))
+	{
+		itemNS::ItemData power = { itemManager->issueNewItemID(),itemNS::POWER_UP, *player->getPosition() };
+		itemManager->createItem(power);
 	}
 	// 3Dモデル表示確認用（アイテムの更新）
-	if (input->wasKeyPressed('N'))
-	{
-		itemNS::ItemData abc = { 1, itemNS::EXAMPLE, *player->getPosition() };
-		itemManager->createItem(abc);
-	}
+
 
 	if (input->wasKeyPressed('9'))
 	{

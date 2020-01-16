@@ -21,6 +21,7 @@ void ItemManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMa
 	// 描画オブジェクトを作成
 	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::ITEM_BRANCH));
 	exampleItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+	powerupItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
 
 #if 1	// アイテムツールのデータを読み込む
 	ITEM_TOOLS* itemTools = new ITEM_TOOLS;
@@ -56,6 +57,7 @@ void ItemManager::uninitialize()
 	// 描画オブジェクトの破棄
 	SAFE_DELETE(batteryRenderer);
 	SAFE_DELETE(exampleItemRender);
+	SAFE_DELETE(powerupItemRender);
 }
 
 
@@ -71,6 +73,7 @@ void ItemManager::update(float frameTime)
 
 	batteryRenderer->update();
 	exampleItemRender->update();
+	powerupItemRender->update();
 }
 
 
@@ -81,6 +84,7 @@ void ItemManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cam
 {
 	batteryRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	exampleItemRender->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
+	powerupItemRender->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 
@@ -100,12 +104,17 @@ void ItemManager::createItem(ItemData itemData)
 		batteryRenderer->registerObject(item);
 		break;
 	case EXAMPLE:
-		item = new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData);
+		item = new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT), itemData);
 		item->setAttractor(attractorMesh, attractorMatrix);
 		itemList.emplace_back(item);
 		exampleItemRender->registerObject(item);
 		//itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
-
+		break;
+	case POWER_UP:
+		item = new Powerup(staticMeshNS::reference(staticMeshNS:: YAMADA_ROBOT2), itemData);
+		item->setAttractor(attractorMesh, attractorMatrix);
+		itemList.emplace_back(item);
+		powerupItemRender->registerObject(item);
 		break;
 	}
 }
@@ -126,6 +135,12 @@ void ItemManager::destroyItem(int _itemID)
 			case BATTERY:
 				batteryRenderer->unRegisterObjectByID(itemList[i]->id);
 				break;
+			case EXAMPLE:
+				exampleItemRender->unRegisterObjectByID(itemList[i]->id);
+				break;
+			case POWER_UP:
+				powerupItemRender->unRegisterObjectByID(itemList[i]->id);
+				break;
 			}
 			SAFE_DELETE(itemList[i]);				// インスタンス破棄
 			itemList.erase(itemList.begin() + i);	// ベクター要素を消去
@@ -143,6 +158,7 @@ void ItemManager::destroyAllItem()
 	// 描画を全解除
 	batteryRenderer->allUnRegister();
 	exampleItemRender->allUnRegister();
+	powerupItemRender->allUnRegister();
 
 	for (size_t i = 0; i < itemList.size(); i++)
 	{

@@ -18,6 +18,7 @@ namespace itemNS
 	{
 		BATTERY,
 		EXAMPLE,
+		POWER_UP,
 		ITEM_TYPE_MAX
 	};
 
