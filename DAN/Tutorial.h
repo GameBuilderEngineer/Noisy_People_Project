@@ -9,6 +9,7 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
+#include <time.h>
 #include "AbstractScene.h"
 #include "Player.h"
 #include "TutorialTex.h"
@@ -47,17 +48,23 @@ namespace tutorialNS
 	};
 
 	//プレイヤー初期位置
-	const D3DXVECTOR3 PLAYER_P1_POSITION = D3DXVECTOR3(0, 20, -45);
-	const D3DXVECTOR3 PLAYER_P2_POSITION = D3DXVECTOR3(-1000, 20, -45);
+	const D3DXVECTOR3 PLAYER_P1_POSITION = D3DXVECTOR3(75, 20, -25);
+	const D3DXVECTOR3 PLAYER_P2_POSITION = D3DXVECTOR3(-25, 20, -25);
 
 	//エネミー初期位置
-	const D3DXVECTOR3 ENEMY_POSTITION = D3DXVECTOR3(0, 0, 0);
+	const D3DXVECTOR3 ENEMY_POSTITION[2] = { D3DXVECTOR3(50, 0, -25),D3DXVECTOR3(-50, 0, -25) };
+
+	// plane
+	const D3DXVECTOR3 PLANE_POS_5_5[2] = { D3DXVECTOR3(50, 33, 5),D3DXVECTOR3(-50, 33, 5) };
+	const D3DXVECTOR3 PLANE_POS_FIN[2] = { D3DXVECTOR3(50, 40, 25),D3DXVECTOR3(-50, 40, 25) };
+	const D3DXVECTOR3 FIN_POS[2] = { D3DXVECTOR3(50, 25, 25),D3DXVECTOR3(-50, 25, 25) };
 
 	//ツリー初期位置
-	const D3DXVECTOR3 FIRST_TREE_POSTITION = D3DXVECTOR3(-20, 0, -50);
+	const D3DXVECTOR3 FIRST_TREE_POSTITION[2] = { D3DXVECTOR3(30, 0, -45),D3DXVECTOR3(-70, 0, -45) };
+	const D3DXVECTOR3 MID_TREE_POSTITION[2] = { D3DXVECTOR3(50, 30, 10),D3DXVECTOR3(-50, 30, 10) };
 
 	//カメラ相対位置
-	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(0.0f, 0.0f, -1.5f, 0.0f);
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION = D3DXQUATERNION(1.5f, 0.0f, 0.0f, 0.0f);
 
 	//カメラ相対注視位置
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -76,14 +83,13 @@ private:
 	//ディスプレイプレーン
 	TutorialPlane **plane;
 
-	//データ
-	enemyNS::EnemyData* enemyData;
-
 	//進捗
 	float tutorialTimer;								// チュートリアル時間
 	int planeStep[gameMasterNS::PLAYER_NUM];
 	int step[gameMasterNS::PLAYER_NUM];
-
+	int timeCnt[gameMasterNS::PLAYER_NUM];
+	bool shift[gameMasterNS::PLAYER_NUM];
+	bool play[gameMasterNS::PLAYER_NUM];
 
 	//System
 	int								nowRenderingWindow;	//現在の描画ウィンドウ識別子
@@ -94,7 +100,7 @@ private:
 
 	//3DObject
 	Player*							player;				//プレイヤー
-	Object**						testField;			//フィールド
+	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 	Sky*							sky;				//スカイドーム
 	StaticMeshRenderer*				MoveP;
@@ -106,9 +112,9 @@ private:
 	//UI
 	TutorialUI *tutorialUI;
 	Reticle*						reticle;			//レティクル
-	FixedUI*						fixedUI;			//固定されたUI
-	Player1UI*						player1UI;			//プレイヤー周りのUI
-	Player2UI*						player2UI;			//プレイヤー２周りのUI
+	//FixedUI*						fixedUI;			//固定されたUI
+	//Player1UI*						player1UI;			//プレイヤー周りのUI
+	//Player2UI*						player2UI;			//プレイヤー２周りのUI
 	MarkerRenderer*					markerRenderer;		//マーカー
 	DamageUI*						damageUI;			//ダメージUI
 

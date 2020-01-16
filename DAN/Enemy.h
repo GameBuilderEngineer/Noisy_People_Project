@@ -558,6 +558,9 @@ public:
 	void setAttackTarget(Object* _target);
 	// 倒されたプレイヤーを設定
 	void setPlayerNo(int playerNo);
+	// フィールドワールドマトリクスを設定
+	void setFieldMatrix(D3DXMATRIX *matrix);
+
 #ifdef _DEBUG
 	//-----------
 	// Debug Use
