@@ -360,17 +360,17 @@ void BulletManager::setPowerRate(float value)
 	powerRate = value;
 }
 
-//===================================================================================================================================
-//ÅyGUIçÏê¨èàóùÅz
-//===================================================================================================================================
-#ifdef _DEBUG
-void BulletManager::bulletGUI()
-{
-	//float ditpw = Bullet::getDigitalPower();
-	//ImGui::Text("digitalPower = %f", &Bullet::getDigitalPower());
-	ImGui::Text("powerRate= %f", powerRate);
-}
-#endif
-
-
-#pragma endregion
+////===================================================================================================================================
+////ÅyGUIçÏê¨èàóùÅz
+////===================================================================================================================================
+//#ifdef _DEBUG
+//void BulletManager::bulletGUI()
+//{
+//	//float ditpw = Bullet::getDigitalPower();
+//	//ImGui::Text("digitalPower = %f", &Bullet::getDigitalPower());
+//	ImGui::Text("powerRate= %f", powerRate);
+//}
+//#endif
+//
+//
+//#pragma endregion
