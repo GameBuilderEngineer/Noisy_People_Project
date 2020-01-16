@@ -232,8 +232,8 @@ void Game::initialize() {
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
 	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::NAV_TEST1));
 #else
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
-	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
+	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
+	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 #endif
 	naviMesh->initialize();
 
@@ -736,12 +736,16 @@ void Game::update(float _frameTime) {
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
-
-	if (input->wasKeyPressed('6'))
+#ifdef CHEAT_PREZEN
+	if (input->wasKeyPressed('6') || input->getController()[0]->wasButton(virtualControllerNS::UP))
 	{
-		//aiDirector->eventMaker.makeEventBossEntry();
 		aiDirector->eventMaker.makeEventEnemyAttaksTree();
 	}
+	if (input->wasKeyPressed('7') || input->getController()[0]->wasButton(virtualControllerNS::DOWN))
+	{
+		aiDirector->eventMaker.makeEventBossEntry();
+	}
+#endif
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -1116,7 +1120,7 @@ void Game::render3D(Camera* currentCamera) {
 #endif
 
 #ifdef _DEBUG
-#if 0	// ナビゲーションメッシュのデバッグ描画
+#if 1	// ナビゲーションメッシュのデバッグ描画
 	naviMesh->debugRender(currentCamera->view, currentCamera->projection, currentCamera->position);
 #endif
 #endif //_DEBUG

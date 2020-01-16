@@ -62,16 +62,16 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	if (_sceneName == "Scene -Game-")
 	{
 		// ツールファイルからエネミーを作成
-		//ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-		//for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-		//{
-		//	createEnemyData(enemyTools->GetEnemySet(i));
-		//}
-		//SAFE_DELETE(enemyTools);
-		//for (int i = 0; i < enemyDataList.nodeNum; i++)
-		//{
-		//	createEnemy(enemyDataList.getValue(i));
-		//}
+		ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+		for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+		{
+			createEnemyData(enemyTools->GetEnemySet(i));
+		}
+		SAFE_DELETE(enemyTools);
+		for (int i = 0; i < enemyDataList.nodeNum; i++)
+		{
+			createEnemy(enemyDataList.getValue(i));
+		}
 
 		// エネミーをを事前更新しておく。これを行わないとパーツのワールドマトリクスが
 		// 更新されないため更新処理が入るまでエネミーの姿（パーツ）が行方不明！
