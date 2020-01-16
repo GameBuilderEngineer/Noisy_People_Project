@@ -441,7 +441,7 @@ void Game::update(float _frameTime) {
 		countUI->startCount(0);									//ゲーム開始
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
-		telopManager->play(telopManagerNS::TELOP_TYPE6);		//テロップ
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE6);		//テロップ
 	}
 	
 	//ゲームタイムの更新
@@ -837,7 +837,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.1 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE0);
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_10);
 	}
@@ -845,7 +845,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.3 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE1);
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE1);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_30);
 	}
@@ -853,7 +853,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.5 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE2);
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE2);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
@@ -917,11 +917,11 @@ void Game::update(float _frameTime) {
 	//残り時間１分
 	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_TELOP_ACTIVITY_LIMIT))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE4);	// 活動限界～
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE4);	// 活動限界～
 	}
 	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_TELOP_CANT_SENSE_GREEN))
 	{
-		telopManager->play(telopManagerNS::TELOP_TYPE5);	// 緑化率が分からなくなってしまった～
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE5);	// 緑化率が分からなくなってしまった～
 	}
 	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_SE_HURRY_UP))
 	{
@@ -1467,7 +1467,7 @@ void Game::test()
 
 	if (input->wasKeyPressed('9'))
 	{
-		itemManager->destroyAllItem();
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
 		//itemManager->destroyItem(3);
 	}
 
