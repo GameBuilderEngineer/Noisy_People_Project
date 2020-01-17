@@ -79,15 +79,21 @@ void Ocean::initialize() {
 	//バンプマッピング用のテクスチャイメージの作成
 	LPDIRECT3DTEXTURE9 heightTexture = *textureNS::reference(textureNS::OCEAN_BUMP);//ハイトマップテクスチャ
 	D3DSURFACE_DESC desc;
+	//setTextureDirectory();
+	//if (FAILED(D3DXCreateTextureFromFile(device, "ocean.png", &heightTexture)))
+	//{
+	//	MessageBox(NULL, "テクスチャの読み込みに失敗しました", NULL, MB_OK);
+	//}
+
 	heightTexture->GetLevelDesc(0, &desc);
 	if (FAILED(
 		D3DXCreateTexture(
 			device, 
 			desc.Width, 
 			desc.Height, 
+			0,
 			0, 
-			0, 
-			D3DFMT_X8B8G8R8, 
+			D3DFMT_X8R8G8B8,
 			D3DPOOL_MANAGED, 
 			&bumpTexture)))
 	{
@@ -98,13 +104,16 @@ void Ocean::initialize() {
 			bumpTexture, 
 			heightTexture, 
 			NULL, 
-			0, 
-			D3DX_CHANNEL_LUMINANCE,//D3DX_CHANNEL_RED,
-			20.0f)))//1.0f)))
+			0,
+			D3DX_CHANNEL_LUMINANCE,
+			//D3DX_CHANNEL_RED,
+			20.0f)))
+			//1.0f)))
 	{
 		MSG("バンプマッピング用テクスチャの法線の算出に失敗しました。");
 	}
 
+	//SAFE_RELEASE(heightTexture);
 
 };
 
@@ -194,9 +203,8 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 		effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
 		//effect->SetTexture("textureDecal", staticMesh->textures[i]);
 		effect->SetTexture("textureDecal", *textureNS::reference(textureNS::OCEAN));
-		//effect->SetTexture("normalMap", bumpTexture);
-		effect->SetTexture("normalMap", *textureNS::reference(textureNS::OCEAN_BUMP));
-
+		effect->SetTexture("normalMap", bumpTexture);
+		//effect->SetTexture("normalMap", *textureNS::reference(textureNS::OCEAN_BUMP));
 
 		//シェーダー更新
 		effect->CommitChanges();

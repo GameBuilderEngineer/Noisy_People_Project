@@ -208,11 +208,12 @@ float4 PS(VS_OUT In) : COLOR
 	intensity = color * bright;
 	intensity.xyz += specular;
 
-	return intensity; 
+	//return intensity; 
 
-	float4 texel = tex2D(normalSampler, In.bumpUV);
+	//float4 texel = tex2D(normalSampler, In.bumpUV);
+	float4 texel = tex2D(normalSampler, In.uv);
 	float4 finalColor = texel;// *In.diffuse;
-	//return finalColor;
+	return finalColor;
 
 }
 ///////////////////////////////////////////////////////////////////////////////////
