@@ -52,7 +52,7 @@
 #include "DamageUI.h"
 #include "Title.h"
 
-#if 1
+#if 0
 #define CHEAT_PREZEN
 #endif
 

@@ -66,6 +66,9 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 
 	// アニメーションマネージャを初期化
 	animationManager = new BearAnimationManager(PARTS_MAX, this, (Object**)&parts[0]);
+
+	// 枯れ木化実行前に設定
+	wasDeadAroundStarted = false;
 }
 
 
@@ -136,6 +139,9 @@ void Bear::update(float frameTime)
 			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
 		}
 	}
+
+	// 枯れ木化の更新
+	updateDeadArea(frameTime);
 }
 
 
@@ -217,12 +223,69 @@ void::Bear::die(float frameTime)
 
 
 //=============================================================================
+// 周辺の枯木化
+//=============================================================================
+void Bear::deadAround()
+{
+	aroundDeadTimer = 0.0f;
+	isMakingTreeDead = true;
+
+	deadArea.position = position;
+	deadArea.initialize(&position);
+	deadArea.setSize(D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+	deadArea.setRadius(1.0f);
+	deadArea.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f) * AROUND_DEAD_RANGE;
+	deadArea.mode = GreeningAreaNS::DEAD_MODE;
+	//エフェクトの再生
+	GreeningAreaNS::DeadingEffect* deadingEffect
+		= new GreeningAreaNS::DeadingEffect(&deadArea.position, &deadArea.scale);
+	effekseerNS::play(0, deadingEffect);
+}
+
+
+//=============================================================================
+// 枯れ木エリアの更新
+//=============================================================================
+void Bear::updateDeadArea(float frameTime)
+{
+	deadArea.update(frameTime);
+
+	if (isMakingTreeDead != false) { return; }
+
+	if (aroundDeadTimer < AROUND_DEAD_TIME)
+	{
+		aroundDeadTimer += frameTime;
+		// 枯木時間終了
+		if (aroundDeadTimer > AROUND_DEAD_TIME)
+		{
+			aroundDeadTimer = AROUND_DEAD_TIME;	// タイマー停止
+			isMakingTreeDead = false;
+		}
+	}
+
+	float rate = aroundDeadTimer / AROUND_DEAD_TIME;
+	setDeadArea(UtilityFunction::lerp(1.0f, AROUND_DEAD_RANGE, rate));
+}
+
+
+//=============================================================================
 // Getter
 //=============================================================================
 EnemyParts* Bear::getParts(int type)
 {
 	return parts[type];
 }
+
+GreeningArea* Bear::getDeadArea()
+{
+	return &deadArea;
+}
+
+bool Bear::getIsMakingTreeDead()
+{
+	return isMakingTreeDead;
+}
+
 
 //=============================================================================
 // Setter

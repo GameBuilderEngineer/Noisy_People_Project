@@ -86,7 +86,8 @@ void EventMaker::update()
 		// メタAIからツリーの記録を消すぴょん
 		data->attackedTree = NULL;
 	}
-#ifdef CHEAT_PREZEN
+
+#ifndef CHEAT_PREZEN
 	// デジタルツリー襲撃イベント
 	if (data->numBeingAttackedTree > 0)
 	{
@@ -117,7 +118,6 @@ void EventMaker::update()
 		data->wasBossEntried = true;
 		makeEventBossEntry();
 	}
-
 #endif
 }
 

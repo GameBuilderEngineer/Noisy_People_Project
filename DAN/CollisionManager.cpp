@@ -490,7 +490,7 @@ bool CollisionManager::enemyAndTree(Enemy* enemy, Tree* tree)
 		}
 
 		horizontalCorrection(enemy, tree, 1.0f);
-		if (enemy->enemyData->state == stateMachineNS::ATTACK_TREE && enemy->getCanDamageTree())
+		if (enemy->getEnemyData()->state == stateMachineNS::ATTACK_TREE && enemy->getCanDamageTree())
 		{
 			enemy->setCanDamageTree(false);
 			tree->reduceHp(5);

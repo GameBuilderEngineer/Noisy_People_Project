@@ -4,7 +4,8 @@
 // 作成開始日 : 2019/10/21
 //-----------------------------------------------------------------------------
 #pragma once
-#include"Enemy.h"
+#include "Enemy.h"
+#include "UtilityFunction.h"
 
 //=============================================================================
 // 名前空間
@@ -31,6 +32,9 @@ namespace bearNS
 		D3DXVECTOR3(-1.99f, 16.01f, -1.05f),// 左足
 		D3DXVECTOR3(1.99f, 16.01f, -1.05f),	// 右足
 	};
+
+	const float AROUND_DEAD_TIME = 2.0f;
+	const float AROUND_DEAD_RANGE = 200.0f;
 }
 
 
@@ -43,6 +47,11 @@ private:
 	enemyNS::EnemyParts* parts[bearNS::PARTS_MAX];
 	// ※パーツオブジェクトはObjectクラスの更新処理を行わない.
 	// ※ワールド変換等の処理はアニメーションマネージャが代替する.
+
+	// 枯れ木戻し
+	GreeningArea deadArea;						// 枯れ木にする範囲
+	float aroundDeadTimer;						// 枯れ木にしている最中の経過時間
+	bool isMakingTreeDead;						// 枯れ木にしている最中か
 
 	// Sound
 	//LinkedList<int>*soundIDList;
@@ -58,9 +67,20 @@ public:
 	void attackTree(float frameTime) override;	// ツリー攻撃ステート
 	void die(float frameTime) override;			// 死亡ステート
 
+	// 枯れ木戻し
+	bool wasDeadAroundStarted;
+	void deadAround();
+	void updateDeadArea(float frameTime);
+	void setDeadArea(float value)
+	{
+		deadArea.size = D3DXVECTOR3(value, value, value);
+		deadArea.sphere->setScale(value);
+	}
+
 	// Getter
-	
 	enemyNS::EnemyParts* getParts(int type);
+	GreeningArea* getDeadArea();
+	bool getIsMakingTreeDead();
 
 	// Setter
 };

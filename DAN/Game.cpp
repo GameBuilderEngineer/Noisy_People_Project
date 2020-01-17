@@ -1238,10 +1238,14 @@ void Game::collisions()
 				tree8Reregister(*tiger->getBulletMangaer()->getBulletList()->getValue(k));
 			}
 		}
-		// BEARのパーツ
+		// BEARのパーツと枯れ木化範囲
 		if (enemy->getEnemyData()->type == enemyNS::BEAR)
 		{
 			Bear* bear = (Bear*)enemy;
+			if (bear->getIsMakingTreeDead())
+			{
+				tree8Reregister(bear->getDeadArea());
+			}
 			for (int k = 0; k < bearNS::PARTS_MAX; k++)
 			{
 				tree8Reregister(bear->getParts(k));

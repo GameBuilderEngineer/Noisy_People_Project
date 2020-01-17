@@ -161,6 +161,17 @@ void EnemyManager::update(float frameTime)
 		// エネミーの更新
 		(*itr)->update(frameTime);
 
+		// Bearの枯れ木化処理を発動する
+		//if ((gameMaster->getGameTime() < 220) && ((*itr)->getEnemyData()->type == enemyNS::BEAR))
+		//{
+		//	Bear* bear = (Bear*)(&*itr);
+		//	if (bear->wasDeadAroundStarted == false)
+		//	{
+		//		bear->wasDeadAroundStarted = true;
+		//		bear->deadAround();
+		//	}
+		//}
+
 		// 破棄フラグ
 		bool isDestroyTarget = false;
 

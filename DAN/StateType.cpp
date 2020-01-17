@@ -110,11 +110,6 @@ State* AttackTree::transition(stateMachineNS::TransitionTimeChecker* checker, En
 		return PatrolState::getInstance();
 	}
 
-	if (enemy->getEnemyData()->targetTree == NULL)
-	{
-		int unko = 0;
-	}
-
 	if (enemy->getEnemyData()->hp == 0)
 	{
 		return DieState::getInstance();
