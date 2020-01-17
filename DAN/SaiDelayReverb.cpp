@@ -94,15 +94,6 @@ void SAI_DELAY_REVERB_APO::OnSetParameters
 	XAPOASSERT(tmpParameters->wetVol <= 1.0f);
 	XAPOASSERT(tmpParameters->reverbVol <= 0.5f);
 	XAPOASSERT(tmpParameters->delayTime <= 2.0f);
-
-	// ‰Šú‰»
-	memset(backupBuf, 0, sizeof(float) * delaySample);
-
-	// “Ç‚Ýž‚ÝˆÊ’u‚Ì‰Šú‰»
-	readPos = 0;
-
-	// ‘‚«o‚µˆÊ’u‚Ì‰Šú‰»
-	writePos = 0;
 }
 
 //=============================================================================

@@ -20,6 +20,24 @@ const D3DXVECTOR3 tunnalPos = D3DXVECTOR3(0, 0, 0);
 S3DManager::S3DManager()
 {
 #if(XADUIO2_STATE)
+
+	//エフェクト
+	saiApoDelayParameters = { 0 };
+	saiApoDelayParameters.reverbVol = 0.5f;
+	saiApoDelayParameters.delayTime = 2.0f;
+	saiApoDelayParameters.dryVol = 0.5f;
+	saiApoDelayParameters.wetVol = 0.5f;
+
+	// ディスクリプタ
+	XAUDIO2_EFFECT_DESCRIPTOR sourceDescriptorMid = { 0 };
+	sourceDescriptorMid.pEffect = SaiDelayApo;
+	sourceDescriptorMid.InitialState = false;
+	sourceDescriptorMid.OutputChannels = ENDPOINT_INPUT_CHANNEL;
+
+	// エフェクトチェン
+	chainMid.EffectCount = 1;
+	chainMid.pEffectDescriptors = &sourceDescriptorMid;
+
 	//ミッドポイントボイスの作成(P1)
 	if (FAILED(SoundInterface::GetXAudio2Interface()->CreateSubmixVoice(
 		&MidpointVoice[playerNS::PLAYER1],									//サブミックスボイス
@@ -28,7 +46,7 @@ S3DManager::S3DManager()
 		XAUDIO2_VOICE_USEFILTER,												//フィルター機能
 		0,																	//プロセスステージ
 		&SendList,															//送信リスト(S3D)
-		NULL)))																//エフェクトチェーン
+		&chainMid)))																//エフェクトチェーン
 	{
 		return;
 	}
@@ -40,7 +58,7 @@ S3DManager::S3DManager()
 		XAUDIO2_VOICE_USEFILTER,												//フィルター機能
 		0,																	//プロセスステージ
 		&SendList,															//送信リスト(S3D)
-		NULL)))																//エフェクトチェーン
+		&chainMid)))																//エフェクトチェーン
 	{
 		return;
 	}
@@ -58,6 +76,13 @@ S3DManager::S3DManager()
 	MidpointVoice[playerNS::PLAYER2]->SetOutputMatrix(EndpointVoice, ENDPOINT_INPUT_CHANNEL, ENDPOINT_INPUT_CHANNEL, p2Matrix);
 
 	this->loadBuffer();
+
+	PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_noSound, true,NULL,true,0 };
+	this->playSound(&playParameters);
+	playParameters.playerID = 1;
+	this->playSound(&playParameters);
+	//MidpointVoice[0]->EnableEffect(0);
+	//MidpointVoice[1]->EnableEffect(0);
 #endif
 }
 
@@ -267,6 +292,48 @@ void S3DManager::loadBuffer(void)
 		S3DManager::bufferList[i].buffer.Flags = XAUDIO2_END_OF_STREAM;
 
 		fclose(fp);
+	}
+#endif
+}
+
+//===================================================================================================================================
+//【ディレイリバーブ】
+//===================================================================================================================================
+void S3DManager::setDelayReverb(D3DXVECTOR3 pos,int playerID)
+{
+#if(XADUIO2_STATE)
+	float distance = D3DXVec3Length(&(DELAY_REVERB_POS - pos));
+	const int distanceeeeeeee = 100;
+	if (distance <= distanceeeeeeee)
+	{
+		BOOL enabled = false;
+		MidpointVoice[playerID]->GetEffectState(0, &enabled);
+		if (!enabled)
+		{
+			MidpointVoice[playerID]->EnableEffect(0);
+		}
+
+		// パラメータ
+		float yeah = (distanceeeeeeee - distance) / distanceeeeeeee;
+		if (yeah > (distanceeeeeeee / 2))
+		{
+			yeah = (distanceeeeeeee / 2);
+		}
+		saiApoDelayParameters.reverbVol = 0.25f * yeah;
+		saiApoDelayParameters.delayTime = 0.75f * yeah;
+		saiApoDelayParameters.wetVol = 0.5f * yeah;
+		saiApoDelayParameters.dryVol = 1.0f - saiApoDelayParameters.wetVol;
+
+		MidpointVoice[playerID]->SetEffectParameters(0, &saiApoDelayParameters, sizeof(saiApoDelayParameters));
+	}
+	else
+	{
+		BOOL enabled = false;
+		MidpointVoice[playerID]->GetEffectState(0, &enabled);
+		if (enabled)
+		{
+			MidpointVoice[playerID]->DisableEffect(0);
+		}
 	}
 #endif
 }

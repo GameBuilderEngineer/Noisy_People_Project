@@ -159,8 +159,8 @@ BulletManager::BulletManager()
 	launchFactTime	= 0.0f;
 
 	//サウンドの設定
-	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Shot, false ,NULL,false,NULL};
-	reroadSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Reload, false ,NULL,false,NULL};
+	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_Shot, false ,NULL,true,NULL};
+	reroadSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_Reload, false ,NULL,true,NULL};
 }
 
 //===================================================================================================================================
@@ -275,7 +275,7 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 	//残段数が0：自動リロード
 	if (remaining <= 0)
 	{
-		reload();
+		reload(playerNo);
 		return false;
 	}
 
@@ -298,7 +298,8 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 	intervalTimer = INTERVAL_TIME;
 
 	//サウンドの再生
-	SoundInterface::SE->playSound(&shotSE);
+	shotSE.playerID = playerNo;
+	SoundInterface::S3D->playSound(&shotSE);
 	
 
 	//ゲーム中に発射事実を残す
@@ -311,7 +312,7 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 //===================================================================================================================================
 //【リロード：バレットマネージャー】
 //===================================================================================================================================
-void BulletManager::reload()
+void BulletManager::reload(int playerNo)
 {
 	//残段数が最大：リロードしない
 	if (remaining >= MAGAZINE_NUM)return;
@@ -319,7 +320,8 @@ void BulletManager::reload()
 	if (reloading)return;
 	reloading = true;							//リロード開始
 	reloadTimer = RELOAD_TIME;					//リロードタイムの設定
-	SoundInterface::SE->playSound(&reroadSE);	//サウンドの再生
+	reroadSE.playerID = playerNo;
+	SoundInterface::S3D->playSound(&reroadSE);	//サウンドの再生
 
 }
 

@@ -518,7 +518,7 @@ HRESULT InitCallbackKeys_MoveP1(void)
 			AddKeydata(0.22f / AnimLoopTime, MoveP1MoveVoice);
 			AddKeydata(0.54f / AnimLoopTime, MoveP1MoveVoice);
 			AddKeydata(0.99f, MotionEnd);
-		break;		
+			break;
 		case MoveP1_FireIdle:
 			break;
 		case MoveP1_JumpFire:

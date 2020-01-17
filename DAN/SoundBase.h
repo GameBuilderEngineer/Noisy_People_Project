@@ -27,6 +27,7 @@
 
 //3D
 #define DISTANCE_MAX			(10)		//偽サウンドコン
+#define DELAY_REVERB_POS		D3DXVECTOR3(245,15,-185)
 
 //===================================================================================================================================
 //【構造体】
@@ -144,7 +145,7 @@ public:
 	virtual void	 SwitchAudioBuffer(int scene) {};			//ステージ遷移に合わせて必要なサウンドバッファを用意する
 	void uninitSoundStop(void);								//停止(全部のサウンド)
 	void setEndPointVoiceVolume(float volume);				//エンドポイントボイスのボリューム
-	void setDelay(D3DXVECTOR3 pos);							//ディレイ
+	void setDelayReverb(D3DXVECTOR3 pos);					//ディレイリバーブ
 protected:
 #if(XADUIO2_STATE)
 	//エンドポイントボイス

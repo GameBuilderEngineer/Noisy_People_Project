@@ -156,7 +156,7 @@ public:
 	//”­Ë
 	bool launch(Ray shootingRay,int playerNo);
 	//ƒŠƒ[ƒh
-	void reload();
+	void reload(int playerNo);
 	//’eíœ
 	void destroy(Bullet* bullet,int nodeNumber);
 

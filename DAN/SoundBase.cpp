@@ -364,3 +364,47 @@ void SoundBase::setEndPointVoiceVolume(float volume)
 	EndpointVoice->SetVolume(volume);
 #endif
 }
+
+//===================================================================================================================================
+//【ディレイリバーブ】
+//===================================================================================================================================
+void SoundBase::setDelayReverb(D3DXVECTOR3 pos)
+{
+#if(XADUIO2_STATE)
+	//float distance = D3DXVec3Length(&(DELAY_REVERB_POS - pos));
+	//if (distance <= 60)
+	//{
+	//	BOOL enabled = false;
+	//	EndpointVoice->GetEffectState(0, &enabled);
+	//	if (!enabled)
+	//	{
+	//		EndpointVoice->EnableEffect(0);
+	//	}
+
+	//	//// パラメータ
+	//	//saiApoDelayParameters.reverbVol = (0.5f / 60)*distance;
+	//	//saiApoDelayParameters.delayTime = (0.5f / 60)*distance;
+	//	//saiApoDelayParameters.wetVol = (1.0f / 60)*distance;
+	//	//saiApoDelayParameters.dryVol = 1.0f - saiApoDelayParameters.wetVol;
+
+	//			// パラメータ
+	//	saiApoDelayParameters.reverbVol = 0.5f;
+	//	saiApoDelayParameters.delayTime = 2.0f;
+	//	saiApoDelayParameters.wetVol = 0.5f;
+	//	saiApoDelayParameters.dryVol = 0.5f;
+
+
+	//	EndpointVoice->SetEffectParameters(0, &saiApoDelayParameters, sizeof(saiApoDelayParameters));
+	//}
+	//else
+	//{
+	//	BOOL enabled = false;
+	//	EndpointVoice->GetEffectState(0, &enabled);
+	//	if (enabled)
+	//	{
+	//		EndpointVoice->DisableEffect(0);
+	//	}
+	//}
+
+#endif
+}

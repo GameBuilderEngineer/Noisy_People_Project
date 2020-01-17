@@ -28,8 +28,6 @@ enum SE_LIST
 	SE_Cancel,
 	SE_AddTree,
 	SE_Score,
-	SE_Shot,
-	SE_Reload,
 	SE_Getlem,
 	SE_RecoverPower,
 	SE_BanOperation,
@@ -64,7 +62,7 @@ enum SE_LIST
 static const char *SEPathList[SE_LIST::SE_MAX] = {
 	"SE_Cursor.wav","SE_Decision.wav" ,"SE_Cancel.wav",
 	"SE_AddTree.wav","SE_Score.wav",
-	"SE_Shot.wav","SE_Reload.wav" ,"SE_Getlem.wav","SE_RecoverPower.wav",
+	"SE_Getlem.wav","SE_RecoverPower.wav",
 	"SE_BanOperation.wav",
 	"SE_HitBulletTree.wav",
 	"SE_Convert.wav","SE_Greening.wav","SE_EnemyActive.wav",

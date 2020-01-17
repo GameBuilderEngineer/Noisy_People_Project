@@ -50,6 +50,9 @@ enum S3D_LIST
 	Voice_Female_Jump2,
 	Voice_Female_Shift1,
 	Voice_Female_Shift2,
+	S3D_Shot,
+	S3D_Reload,
+	S3D_noSound,
 	S3D_MAX
 };
 
@@ -64,7 +67,8 @@ static const char *S3DPathList[] = { "3D_ShiftStart.wav", "3D_ShiftFinish.wav","
 									"Voice_Male_Shift1.wav","Voice_Male_Shift2.wav","Voice_Male_Jump1.wav",
 									"Voice_Male_Jump2.wav","Voice_Male_Damage1.wav","Voice_Male_Damage2.wav",
 									"Voice_Female_Damage1.wav","Voice_Female_Damage2.wav","Voice_Female_Jump1.wav",
-									"Voice_Female_Jump2.wav","Voice_Female_Shift1.wav","Voice_Female_Shift2.wav" };
+									"Voice_Female_Jump2.wav","Voice_Female_Shift1.wav","Voice_Female_Shift2.wav",
+									"3D_Shot.wav","3D_Reload.wav","3D_noSound.wav" };
 
 //===================================================================================================================================
 //【サウンド(XAudio2)】
@@ -78,6 +82,7 @@ public:
 
 	//基本機能
 	void SetVolume(const PLAY_PARAMETERS playParameters, float volume);	//ボリューム
+	void setDelayReverb(D3DXVECTOR3 pos, int playID);
 
 	//debug用
 #if _DEBUG
@@ -95,5 +100,7 @@ private:
 	void MakeSourceVoice(PLAY_PARAMETERS *playParameters, LIST_BUFFER *listBuffer)override;
 
 	void loadBuffer(void)override;
+	
+	XAUDIO2_EFFECT_CHAIN chainMid;
 #endif
 };

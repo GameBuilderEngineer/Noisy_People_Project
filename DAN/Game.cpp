@@ -734,7 +734,9 @@ void Game::update(float _frameTime) {
 
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
-		player[i].update(frameTime);		//オブジェクト
+		player[i].update(frameTime),		//オブジェクト
+		SoundInterface::S3D->setDelayReverb(*player[i].getPosition(), i);
+		//SoundInterface::BGM->setDelayReverb(*player[i].getPosition());
 	maleRenderer->update();					//レンダラー
 	femaleRenderer->update();				//レンダラー
 
@@ -934,7 +936,7 @@ void Game::update(float _frameTime) {
 	{
 		SoundInterface::BGM->SetSpeed();					// BGM加速
 	}
-
+	
 	//ディスプレイPCへ送信
 	networkClient->send(gameMaster->getGameTime());
 
