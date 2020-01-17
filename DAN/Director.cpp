@@ -14,6 +14,7 @@
 #include "Tutorial.h"
 #if _DEBUG
 #include "Create.h"
+#include "Photograph.h"
 #endif
 #include "Game.h"
 #include "Result.h"
@@ -25,6 +26,10 @@
 #include "DebugScene.h"
 #include "networkClient.h"
 #include "TreeManager.h"
+#include "movep.h"
+#include "movep1.h"
+
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -609,6 +614,7 @@ void Director::changeNextScene() {
 	case SceneList::FINALE:					scene = new Finale();	break;
 #if _DEBUG 
 	case SceneList::CREATE:					scene = new Create();	break; 
+	case SceneList::PHOTOGRAPH:				scene = new Photograph();	break; 
 #endif
 	case SceneList::DISPLAY:				scene = new Display();	break;
 	case SceneList::NONE_SCENE:				break;

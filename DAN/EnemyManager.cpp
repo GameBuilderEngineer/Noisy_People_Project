@@ -22,9 +22,7 @@ StaticMeshRenderer* EnemyManager::bearArmRRenderer;
 StaticMeshRenderer* EnemyManager::bearWaistRenderer;
 StaticMeshRenderer* EnemyManager::bearLegLRenderer;
 StaticMeshRenderer* EnemyManager::bearLegRRenderer;
-
-EnemyChaseMark* EnemyManager::markRenderer;					// 追跡マーク描画
-
+EnemyChaseMark*		EnemyManager::markRenderer;	
 
 //=============================================================================
 // 初期化
@@ -32,18 +30,19 @@ EnemyChaseMark* EnemyManager::markRenderer;					// 追跡マーク描画
 void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player, MarkerRenderer*	_markerRenderer)
 {
+	// メンバ初期化
 	nextID = 0;								// 次回発行IDを0に初期化
 	Enemy::resetNumOfEnemy();				// エネミーオブジェクトの数を初期化
 	enemyList.reserve(ENEMY_OBJECT_MAX);	// update()で動的な確保をせず済むようメモリを増やしておく
-	cntTimeDataList = 0.0f;
-	canUpdate = false;						// アップデートされない
-	markerRenderer = _markerRenderer;
+	cntTimeDataList = 0.0f;					// 時間カウンタの初期化
+	canUpdate = false;						// これがtrueになるまでupdate()の中身が無効
 
-	// 接地フィールドとプレイヤーをセット
+	// 引数のセット
 	attractorMesh = _attractorMesh;
 	attractorMatrix = _attractorMatrix;
 	gameMaster = _gameMaster;
 	player = _player;
+	markerRenderer = _markerRenderer;
 
 	// 描画オブジェクトの作成
 	wolfBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF_BODY));
@@ -58,30 +57,27 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	bearWaistRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_WAIST));
 	bearLegLRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_L));
 	bearLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_R));
-
 	markRenderer = new EnemyChaseMark;
 
-// チュートリアルシーンでの初期化処理
-if (_sceneName == "Scene -Tutorial-")
-{
-	return;
-}
+	if (_sceneName == "Scene -Game-")
+	{
+		// ツールファイルからエネミーを作成
+		ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
+		for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
+		{
+			createEnemyData(enemyTools->GetEnemySet(i));
+		}
+		SAFE_DELETE(enemyTools);
+		for (int i = 0; i < enemyDataList.nodeNum; i++)
+		{
+			createEnemy(enemyDataList.getValue(i));
+		}
 
-#if 1	// エネミーツールのデータを読み込む
-ENEMY_TOOLS* enemyTools = new ENEMY_TOOLS;
-for (int i = 0; i < enemyTools->GetEnemyMax(); i++)
-{
-	createEnemyData(enemyTools->GetEnemySet(i));
-}
-SAFE_DELETE(enemyTools);
-#endif
-
-#if 1	// エネミーオブジェクトをツールデータを元に作成する
-for (int i = 0; i < enemyDataList.nodeNum; i++)
-{
-	createEnemy(enemyDataList.getValue(i));
-}
-#endif
+		// エネミーをを事前更新しておく。これを行わないとパーツのワールドマトリクスが
+		// 更新されないため更新処理が入るまでエネミーの姿（パーツ）が行方不明！
+		updateEnemyWithoutTime();
+		updatePartsRenderer();	// ←描画前に一度はこれを入れないと描画に支障があると思われる
+	}
 }
 
 
@@ -171,7 +167,9 @@ void EnemyManager::update(float frameTime)
 		// 遠距離エネミーを破棄する
 		float dist1 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_1P].position));
 		float dist2 = D3DXVec3LengthSq(&((*itr)->position - player[gameMasterNS::PLAYER_2P].position));
-		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2) && (*itr)->getEnemyData()->type != enemyNS::BEAR)
+		if ((dist1 > FAR_DISTANCE2 && dist2 > FAR_DISTANCE2)
+			&& (*itr)->getEnemyData()->type != enemyNS::BEAR
+			&& (*itr)->getEnemyData()->state != stateMachineNS::ATTACK_TREE)
 		{
 			isDestroyTarget = true;
 		}
@@ -217,19 +215,8 @@ void EnemyManager::update(float frameTime)
 		}
 	}
 
-	wolfBodyRenderer->update();
-	wolfArmRenderer->update();
-	tigerBodyRenderer->update();
-	tigerGunRenderer->update();
-	tigerLegLRenderer->update();
-	tigerLegRRenderer->update();
-	bearBodyRenderer->update();
-	bearArmLRenderer->update();
-	bearArmRRenderer->update();
-	bearWaistRenderer->update();
-	bearLegLRenderer->update();
-	bearLegRRenderer->update();
-
+	// 描画オブジェクトの更新
+	updatePartsRenderer();
 	markRenderer->update(frameTime);
 }
 
@@ -239,6 +226,7 @@ void EnemyManager::update(float frameTime)
 //=============================================================================
 void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
+	// 描画オブジェクトによる描画
 	wolfBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	wolfArmRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	tigerBodyRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
@@ -251,7 +239,6 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	bearWaistRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	bearLegLRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	bearLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
-
 	markRenderer->render(view, projection, cameraPosition);
 
 #ifdef _DEBUG
@@ -549,10 +536,7 @@ void EnemyManager::assertDestructionOrder()
 			}
 		}
 	}
-	if (cnt != enemyList.size())
-	{
-		int unko = 1;
-	}
+
 	assert(cnt == enemyList.size());
 	assert(enemyDataList.nodeNum >= enemyList.size());
 }
@@ -589,6 +573,40 @@ Enemy* EnemyManager::findEnemy(int _enemyID)
 	}
 
 	return NULL;
+}
+
+
+//=============================================================================
+// エネミーをフレーム時間を無視して更新する
+//=============================================================================
+void EnemyManager::updateEnemyWithoutTime()
+{
+	vector<Enemy*>::iterator itr = enemyList.begin();
+	while (itr != enemyList.end())
+	{
+		(*itr)->update(0);
+		itr++;
+	}
+}
+
+
+//=============================================================================
+// パーツの描画オブジェクトを更新
+//=============================================================================
+void EnemyManager::updatePartsRenderer()
+{
+	wolfBodyRenderer->update();
+	wolfArmRenderer->update();
+	tigerBodyRenderer->update();
+	tigerGunRenderer->update();
+	tigerLegLRenderer->update();
+	tigerLegRRenderer->update();
+	bearBodyRenderer->update();
+	bearArmLRenderer->update();
+	bearArmRRenderer->update();
+	bearWaistRenderer->update();
+	bearLegLRenderer->update();
+	bearLegRRenderer->update();
 }
 
 
@@ -633,6 +651,11 @@ void EnemyManager::outputGUI()
 		ImGui::Checkbox("Return Player", &returnPlayer);
 		ImGui::Checkbox("Delete All Enemy", &destroyAllFlag);
 
+		int cntChase = 0;
+		int cntPatrol = 0;
+		int cntRest = 0;
+		int cntTreeAttack = 0;
+
 		// デバッグエネミー
 		for (size_t i = 0; i < enemyList.size(); i++)
 		{
@@ -648,7 +671,32 @@ void EnemyManager::outputGUI()
 						enemyList[i]->edgeList->getValue(cnt)->index[1]);
 				}	
 			}
+
+			switch (enemyList[i]->getEnemyData()->state)
+			{
+			case stateMachineNS::CHASE:			cntChase++;			break;
+			case stateMachineNS::PATROL:		cntPatrol++;		break;
+			case stateMachineNS::REST:			cntRest++;			break;
+			case stateMachineNS::ATTACK_TREE:	cntTreeAttack++;	break;
+			}
 		}
+
+		// ステートの数
+		ImGui::Text("chase:%d, patrol:%d, rest:%d, tree:%d\n",cntChase, cntPatrol, cntRest, cntTreeAttack);
+
+		//// BEAR
+		//for (size_t i = 0; i < enemyList.size(); i++)
+		//{
+		//	if (enemyList[i]->getEnemyData()->type == enemyNS::BEAR)
+		//	{
+		//		ImGui::Text("durability-body : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::BODY)->durability);
+		//		ImGui::Text("durability-armL : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::ARM_L)->durability);
+		//		ImGui::Text("durability-armR : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::ARM_R)->durability);
+		//		ImGui::Text("durability-waist : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::WAIST)->durability);
+		//		ImGui::Text("durability-legL : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::LEG_L)->durability);
+		//		ImGui::Text("durability-legR : %d\n", ((Bear*)enemyList[i])->getParts(bearNS::LEG_R)->durability);
+		//	}
+		//}
 	}
 
 	if (createFlag)
@@ -678,7 +726,8 @@ void EnemyManager::outputGUI()
 			camera->setTargetY(&debugEnemy->getAxisY()->direction);
 			camera->setTargetZ(&debugEnemy->getAxisZ()->direction);
 			playerRelativeQuaternion = camera->relativeQuaternion;
-			camera->setRelative(D3DXQUATERNION(0.0f, 30.0f, -30.5f, 0.0f));
+			camera->setRelative(D3DXQUATERNION(0.0f, 300.0f, -300.5f, 0.0f));
+			camera->setGazeDistance(30.0f);
 			debugEnemy->setCamera(&camera[0]);
 			debugEnemy->setDebugEnvironment();
 		}

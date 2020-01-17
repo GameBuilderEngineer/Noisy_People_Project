@@ -21,7 +21,7 @@ GreeningArea::GreeningArea()
 		treeCell.target = TREE;
 	}
 
-
+	mode = GreeningAreaNS::GREENING_MODE;
 }
 
 //===================================================================================================================================

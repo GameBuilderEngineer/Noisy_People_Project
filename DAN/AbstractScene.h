@@ -41,7 +41,8 @@ namespace SceneList
 		RESULT,			//リザルト
 		FINALE,			//フィナーレ
 		CREATE,			//クリエイト
-		DISPLAY,		//ディスプレイ
+		DISPLAY,	//ディスプレイ
+		PHOTOGRAPH,		//フォトグラフ
 	};
 }
 

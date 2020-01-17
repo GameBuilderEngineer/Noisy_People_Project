@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7A53624F-B978-43BC-BDE6-B56B5AA52812}</ProjectGuid>
     <RootNamespace>DAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -157,6 +157,7 @@
     <ClInclude Include="BearAnimation.h" />
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="CountUI.h" />
+    <ClInclude Include="Photograph.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DamageUI.h" />
     <ClInclude Include="DeathState.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="PartsAnimation.h" />
     <ClInclude Include="PartsAnimationManager.h" />
     <ClInclude Include="PlayerEffect.h" />
+    <ClInclude Include="Powerup.h" />
     <ClInclude Include="TigerAnimation.h" />
     <ClInclude Include="TigerBullet.h" />
     <ClInclude Include="Display.h" />
@@ -338,6 +340,7 @@
     <ClCompile Include="BearAnimation.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="CountUI.cpp" />
+    <ClCompile Include="Photograph.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DamageUI.cpp" />
     <ClCompile Include="DeathState.cpp" />
@@ -356,6 +359,7 @@
     <ClCompile Include="PartsAnimation.cpp" />
     <ClCompile Include="PartsAnimationManager.cpp" />
     <ClCompile Include="PlayerEffect.cpp" />
+    <ClCompile Include="Powerup.cpp" />
     <ClCompile Include="TigerAnimation.cpp" />
     <ClCompile Include="TigerBullet.cpp" />
     <ClCompile Include="networkServer.cpp" />

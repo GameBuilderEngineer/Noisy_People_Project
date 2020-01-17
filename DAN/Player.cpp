@@ -30,7 +30,7 @@ Player::Player()
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = PLAYER;
-		treeCell.target = PLAYER | ENEMY | TREE;
+		treeCell.target = PLAYER | ENEMY | ENEMY_BEAR | TREE;
 	}
 
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
@@ -107,7 +107,7 @@ void Player::initialize(PlayerTable info)
 	//デジタルアクション
 	//デジタルシフト
 	shiftLine.start		= position;
-	shiftLine.end		= position+axisZ.direction;
+	shiftLine.end		= position + axisZ.direction;
 	//選択ライトを再生状態にしておく。
 	digitalShiftEffect	= new DigitalShiftEffect;
 	playSelectLight();
@@ -195,11 +195,11 @@ void Player::update(float frameTime)
 		reset();
 	}
 
-	//リスポーン
-	if (position.y < 0)
-	{
-		reset();
-	}
+	////リスポーン
+	//if (position.y < -1.0f)
+	//{
+	//	reset();
+	//}
 
 	//物理更新(状態別)
 	state->physics();
@@ -1270,6 +1270,8 @@ void Player::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
+	
+		//ImGui::Text("digitalPower = %f", bulletManager->digital )
 	}
 #endif // _DEBUG
 }
@@ -1289,6 +1291,7 @@ void Player::reset()
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
 	Object::update();
+	hp = MAX_HP;
 }
 #pragma endregion
 
@@ -1311,6 +1314,10 @@ void Player::addpower(int add)
 void Player::pullpower(int pull)
 {
 	power = UtilityFunction::clamp(power - pull, MIN_POWER, MAX_POWER);		//電力消費
+}
+void Player::powerup(float value)
+{
+	bulletManager->setPowerRate(value);
 }
 void Player::damage(int _damage)
 {

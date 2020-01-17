@@ -40,7 +40,7 @@ namespace bearNS
 class Bear: public Enemy
 {
 private:
-	Object* parts[bearNS::PARTS_MAX];			// パーツオブジェクト
+	enemyNS::EnemyParts* parts[bearNS::PARTS_MAX];
 	// ※パーツオブジェクトはObjectクラスの更新処理を行わない.
 	// ※ワールド変換等の処理はアニメーションマネージャが代替する.
 
@@ -59,7 +59,8 @@ public:
 	void die(float frameTime) override;			// 死亡ステート
 
 	// Getter
-	Object* getParts(int type);
+	
+	enemyNS::EnemyParts* getParts(int type);
 
 	// Setter
 };
