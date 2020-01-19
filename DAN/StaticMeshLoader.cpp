@@ -28,16 +28,16 @@ StaticMeshLoader::StaticMeshLoader()
 	//外部参照用ポインタへ代入
 	pointerStaticMeshLoader = this;
 
-	fileName[FIELD]									= { "angleTest.x" };					//01
-	fileName[CUBE]									= { "cube.x" };								//02
-	fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };			//03
-	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
-	fileName[STAR_REGULAR_POLYHEDRON_X100]			= { "x100starRegularPolyhedron.x" };		//05
+	//fileName[FIELD]									= { "angleTest.x" };					//01
+	//fileName[CUBE]									= { "cube.x" };								//02
+	//fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };			//03
+	//fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
+	//fileName[STAR_REGULAR_POLYHEDRON_X100]			= { "x100starRegularPolyhedron.x" };		//05
 
-	fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
+	//fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
 	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
-	fileName[ENEMY_01]								= { "Enemy01.x" };
-	fileName[ENEMY_02]								= { "Enemy02.x" };
+	//fileName[ENEMY_01]								= { "Enemy01.x" };
+	//fileName[ENEMY_02]								= { "Enemy02.x" };
 	fileName[WOLF]									= { "Wolf.x" };
 	fileName[TIGER]									= { "Tiger.x" };
 	fileName[BEAR]									= { "Bear.x" };
@@ -56,12 +56,12 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[BEAR_LEG_R] = { "Bear_LegR.x" };
 
 
-	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
-	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
+	//fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
+	//fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
 	fileName[GREEN_TREE_002]						= { "greenTree002.x" };						//03
 	fileName[GRASS]									= { "grass001.x" };							//04
-	fileName[STONE_001]								= { "stone001.x" };							//05
-	fileName[STONE_002]								= { "stone002.x" };							//06
+	//fileName[STONE_001]								= { "stone001.x" };							//05
+	//fileName[STONE_002]								= { "stone002.x" };							//06
 	fileName[STONE_003]								= { "Rocks.x" };							//07
 	fileName[A_TRUNK]								= { "Tree_A_Branch.x" };					//08
 	fileName[A_LEAF]								= { "Tree_A_Leaf.x" };						//09
@@ -73,29 +73,36 @@ StaticMeshLoader::StaticMeshLoader()
 
 	fileName[ITEM_BRANCH]							= { "Bllue_branch.x" };
 
-	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
-	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
+	//fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
+	//fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
 	fileName[YAMADA_ROBOT]							= { "SandBox_03_Robot.x" };					//03
-	fileName[SAMPLE_NAVMESH]						= { "SandBox_02_NavMesh.x" };				//04
+	//fileName[SAMPLE_NAVMESH]						= { "SandBox_02_NavMesh.x" };				//04
 	//fileName[SAMPLE_NAVMESH]						= { "unko.x" };								//いったんこのままで
-	fileName[DICE]									= { "dice.x" };								//05
-	fileName[YAMADA_PLANE]							= { "plane.x" };							//06
+	//fileName[DICE]									= { "dice.x" };								//05
+	//fileName[YAMADA_PLANE]							= { "plane.x" };							//06
 	fileName[YAMADA_ROBOT2]							= { "Robot.x" };							//07
-	fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
+	//fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
 	fileName[SKY_DOME]								= { "domebase.x" };							//09
 	fileName[TUTORIAL_FILED]						= { "Tutorial_Stage.x" };					//10
-	fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
-	fileName[DATE_ISLAND_V2]						= { "DateIsland_v2.x" };					//12
-	fileName[DATE_ISLAND_V2_NAVI_MESH]				= { "mesh.x" };								//13
-	fileName[DATE_ISLAND_V2_BLACK]					= { "DateIsland_v2_Black.x" };				//14
+	
+	//fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
+	//fileName[DATE_ISLAND_V2]						= { "DateIsland_v2.x" };					//12
+	//fileName[DATE_ISLAND_V2_NAVI_MESH]				= { "mesh.x" };								//13
+	//fileName[DATE_ISLAND_V2_BLACK]					= { "DateIsland_v2_Black.x" };				//14
 	fileName[DATE_ISLAND_FINAL]						= { "DateIsland_Final.x" };					//15
-	fileName[DATE_ISLAND_FINAL_BLACK]				= { "DateIsland_Final_Black.x" };			//16
-	fileName[DATE_ISLAND_FINAL_NAVIMESH]			= { "DateIsland_Final_NavMesh.x" };			//17
+	//fileName[DATE_ISLAND_FINAL_BLACK]				= { "DateIsland_Final_Black.x" };			//16
+	//fileName[DATE_ISLAND_FINAL_NAVIMESH]			= { "DateIsland_Final_NavMesh.x" };			//17
 	//fileName[DATE_ISLAND_FINAL_NAVIMESH] = { "NavTest.x" };									//いったんこのままで
 	fileName[DATE_ISLAND_FINAL_FACE]				= { "DateIsland_Final_Face.x" };			//15
 	fileName[DATE_ISLAND_FINAL_FACE_BLACK]				= { "DateIsland_Final_Face_Black.x" };	//16
 	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };					//01
 
+	//fileName[NAV_TEST1]								= { "BlenderNavimeshTest.x" };
+	//fileName[NAV_TEST2]								= { "Test2.x" };
+	//fileName[NAV_TEST3]								= { "Test3.x" };
+	//fileName[NAV_TEST4]								= { "Test4.x" };
+	//fileName[NAV_TEST5]								= { "Test5.x" };
+	//fileName[NAV_TEST6]								= { "Test6.x" };
 	fileName[NAV_TEST1]								= { "BlenderNavimeshTest.x" };
 	fileName[NAV_TEST2]								= { "Test2.x" };
 	fileName[NAV_TEST3]								= { "Test3.x" };

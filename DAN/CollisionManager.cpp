@@ -450,7 +450,7 @@ bool CollisionManager::bulletAndEnemyParts(Bullet* bullet, enemyNS::EnemyParts* 
 		enemyParts->getEnemy()->setAttention(-bullet->getBulletSpeed());				// 注意を引く
 		bullet->destroy();
 
-		if (enemyParts->getEnemy()->cntDestroyParts >= 2)
+		if (enemyParts->getEnemy()->getCntDestroyParts() >= 2)
 		{
 			enemyParts->getEnemy()->damage(bullet->getDigitalPower(), bullet->playerNo);	// エネミー本体へのダメージ
 		}

@@ -597,6 +597,7 @@ public:
 	int getPlayerNo();
 	bool getIsPayingNewAttention();
 	bool getCanDamageTree();
+	int getCntDestroyParts();
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();
 	// ダメージ処理
@@ -617,7 +618,7 @@ public:
 	void setCanDamageTree(bool setting);
 	// フィールドワールドマトリクスを設定
 	void setFieldMatrix(D3DXMATRIX *matrix);
-
+	
 #ifdef _DEBUG
 	//-----------
 	// Debug Use

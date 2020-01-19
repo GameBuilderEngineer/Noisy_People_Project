@@ -1206,6 +1206,7 @@ int Enemy::getChasingPlayer() { return chasingPlayer; };
 int Enemy::getPlayerNo() { return playerNo; };
 bool Enemy::getIsPayingNewAttention() { return isPayingNewAttention; }
 bool Enemy::getCanDamageTree() { return canDamageTree; }
+int Enemy::getCntDestroyParts() { return cntDestroyParts; }
 
 //=============================================================================
 // Setter

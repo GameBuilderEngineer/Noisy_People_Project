@@ -132,9 +132,7 @@ HRESULT Director::initialize() {
 	input->initialize(instance, window->wnd, true);
 	window->setInput();
 
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-
+	
 	//textureLoader
 	textureLoader = new TextureLoader;
 	textureLoader->load(getDevice());
@@ -156,6 +154,10 @@ HRESULT Director::initialize() {
 
 	//ゲーム管理クラス
 	gameMaster = new GameMaster();
+
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+
 
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
