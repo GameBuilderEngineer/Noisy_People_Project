@@ -14,11 +14,11 @@
 //【コンストラクタ】
 //===================================================================================================================================
 Ocean::Ocean() {
-	initialize();
 	bumpTexture = NULL;
 	waveMove	= D3DXVECTOR2(0,0);
 	height		= 1.0f;
 	deltaHeight = 0.01f;
+	initialize();
 };
 
 //===================================================================================================================================
@@ -34,7 +34,7 @@ Ocean::~Ocean() {
 //===================================================================================================================================
 void Ocean::initialize() {
 	object = new Object();
-	object->initialize(&D3DXVECTOR3(0, 10, -180));
+	object->initialize(&D3DXVECTOR3(0, 0, 0));
 	object->scale = D3DXVECTOR3(1, 1, 1);
 
 	device = getDevice();
@@ -79,11 +79,6 @@ void Ocean::initialize() {
 	//バンプマッピング用のテクスチャイメージの作成
 	LPDIRECT3DTEXTURE9 heightTexture = *textureNS::reference(textureNS::OCEAN_BUMP);//ハイトマップテクスチャ
 	D3DSURFACE_DESC desc;
-	//setTextureDirectory();
-	//if (FAILED(D3DXCreateTextureFromFile(device, "ocean.png", &heightTexture)))
-	//{
-	//	MessageBox(NULL, "テクスチャの読み込みに失敗しました", NULL, MB_OK);
-	//}
 
 	heightTexture->GetLevelDesc(0, &desc);
 	if (FAILED(
@@ -113,8 +108,6 @@ void Ocean::initialize() {
 		MSG("バンプマッピング用テクスチャの法線の算出に失敗しました。");
 	}
 
-	//SAFE_RELEASE(heightTexture);
-
 };
 
 //===================================================================================================================================
@@ -142,8 +135,8 @@ void Ocean::update()
 	}
 
 	//ワールド行列の逆転置行列
-	D3DXMatrixInverse(&worldInverseTranspose, NULL, &object->matrixWorld);	//逆行列
-	D3DXMatrixTranspose(&worldInverseTranspose, &worldInverseTranspose);	//転置行列
+	//D3DXMatrixInverse(&worldInverseTranspose, NULL, &object->matrixWorld);	//逆行列
+	//D3DXMatrixTranspose(&worldInverseTranspose, &worldInverseTranspose);	//転置行列
 
 }
 
@@ -166,24 +159,24 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 	device->SetIndices(staticMesh->indexBuffer);
 
 	//シェーダへ値をセット
-	effect->SetTechnique("mainTechnique");
+	effect->SetTechnique("tecOcean");
 	effect->SetMatrix("matrixProjection", &projection);
 	effect->SetMatrix("matrixView", &view);
-	effect->SetMatrixTranspose("WIT", &worldInverseTranspose);	//ワールド逆転置行列
+	//effect->SetMatrixTranspose("WIT", &worldInverseTranspose);	//ワールド逆転置行列
 
 	//ライトの方向ベクトルのセット
 	D3DXMATRIX m;
 	D3DXVECTOR4 v;
-	D3DXVECTOR4 lightPosition = D3DXVECTOR4(0, 100.0, -100.0, 0);
+	D3DXVECTOR4 lightPosition = D3DXVECTOR4(0, -10.1, -0.1, 0);
 	D3DXMatrixInverse(&m, NULL, &object->matrixWorld);
 	D3DXVec4Transform(&v, &lightPosition, &m);
 	D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);
 	effect->SetVector("lightDirection", &v);
 
 	//ビューの逆行列
-	D3DXMATRIX inverseView;
-	D3DXMatrixInverse(&inverseView, NULL, &view);
-	effect->SetMatrix("inverseView", &inverseView);
+	//D3DXMATRIX inverseView;
+	//D3DXMatrixInverse(&inverseView, NULL, &view);
+	//effect->SetMatrix("inverseView", &inverseView);
 
 	//カメラの位置
 	//考察：引数cameraPositionでいけそう　↓はビュー行列の逆行列で求めている・オブジェクトのワールド空間も使用しているのでダメかも
@@ -196,22 +189,19 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 	//波の値
 	effect->SetValue("waveMove", &waveMove, sizeof(waveMove));	//移動値
 	effect->SetValue("height", &height, sizeof(FLOAT));	//高さ
-
+	
 	// レンダリング
+	effect->Begin(0, 0);
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
-		effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
-		//effect->SetTexture("textureDecal", staticMesh->textures[i]);
-		effect->SetTexture("textureDecal", *textureNS::reference(textureNS::OCEAN));
+		//effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
+		//effect->SetTexture("textureDecal", *textureNS::reference(textureNS::OCEAN));
 		effect->SetTexture("normalMap", bumpTexture);
-		//effect->SetTexture("normalMap", *textureNS::reference(textureNS::OCEAN_BUMP));
 
 		//シェーダー更新
-		effect->CommitChanges();
-		effect->Begin(0, 0);
+		//effect->CommitChanges();
 
 		effect->BeginPass(0);
-	
 		//Drawコール
 		device->DrawIndexedPrimitive(
 			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type				:描画タイプ
@@ -222,8 +212,8 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 			staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount				:ポリゴン数
 
 		effect->EndPass();
-		effect->End();
 	}
+	effect->End();
 
 	device->SetStreamSource(0, NULL, 0, NULL);
 	device->SetStreamSource(1, NULL, 0, NULL);

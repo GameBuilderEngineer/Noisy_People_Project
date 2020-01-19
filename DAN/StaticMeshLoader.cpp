@@ -132,6 +132,9 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 			&staticMesh[i].numMaterial,
 			&staticMesh[i].mesh);
 
+		//法線と接線の付記
+		withNormalTangent(device, &staticMesh[i].mesh);
+
 		D3DXMATERIAL* materials = (D3DXMATERIAL*)staticMesh[i].bufferMaterial->GetBufferPointer();
 		staticMesh[i].materials = new D3DMATERIAL9[staticMesh[i].numMaterial];
 		staticMesh[i].textures = new LPDIRECT3DTEXTURE9[staticMesh[i].numMaterial];
@@ -163,8 +166,6 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		//属性テーブルの取得
 		staticMesh[i].mesh->GetAttributeTable(staticMesh[i].attributeTable, &staticMesh[i].attributeTableSize);
 
-		//法線と接線の付記
-		withNormalTangent(device, &staticMesh[i].mesh);
 
 		//頂点属性の取得・設定
 		D3DVERTEXELEMENT9 vertexElement[65];
@@ -220,11 +221,11 @@ HRESULT StaticMeshLoader::withNormalTangent(
 	//頂点宣言
 	const D3DVERTEXELEMENT9 vertexDeclaration[] =
 	{
-		{0,0,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_POSITION,0},
-		{0,12,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0},
-		{0,20,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,0},
-		{0,32,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TANGENT,0},
-		{0,44,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_BINORMAL,0},//頂点シェーダー上で算出
+		{0,  0, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL,	0},
+		{0, 24, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT,	0},
+		{0, 36, D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+		//{0,44,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_BINORMAL,0},//頂点シェーダー上で算出
 		D3DDECL_END()
 	};
 
@@ -238,8 +239,8 @@ HRESULT StaticMeshLoader::withNormalTangent(
 	//Normal算出
 	if (FAILED(D3DXComputeNormals(cloneMesh, NULL)))MSG("D3DXComuteNormals");
 	//Tangent算出
-	//if (FAILED(D3DXComputeTangent(cloneMesh,0,0,D3DX_DEFAULT,true,NULL)))MSG("D3DXComputeTangent");
-	if (FAILED(D3DXComputeTangent(cloneMesh,0,0,0,true,NULL)))MSG("D3DXComputeTangent");
+	if (FAILED(D3DXComputeTangent(cloneMesh,0,0,D3DX_DEFAULT,true,NULL)))MSG("D3DXComputeTangent");
+	//if (FAILED(D3DXComputeTangent(cloneMesh,0,0,0,true,NULL)))MSG("D3DXComputeTangent");
 	//
 	SAFE_RELEASE(*sourceMesh);
 	*sourceMesh = cloneMesh;

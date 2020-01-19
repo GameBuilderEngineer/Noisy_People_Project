@@ -196,9 +196,6 @@ void Game::initialize() {
 	sky = new Sky();
 	//ŠC–Ê‚Ì‰Šú‰»
 	ocean = new Ocean();
-	//ŠC–Ê(‰¼)‚Ì‰Šú‰»
-	//tmpOcean = new TmpOcean();
-
 
 	//ƒAƒjƒƒVƒ‡ƒ“ƒLƒƒƒ‰‚Ì‰Šú‰»
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
@@ -346,7 +343,6 @@ void Game::uninitialize() {
 	SAFE_DELETE(faceFieldRenderer);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
-	//SAFE_DELETE(tmpOcean);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
@@ -931,6 +927,9 @@ void Game::render()
 //===================================================================================================================================
 void Game::render3D(Camera* currentCamera) {
 
+	//ŠC–Ê‚Ì•`‰æ
+	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	return;
 	//ƒXƒJƒCƒh[ƒ€‚Ì•`‰æ
 	//sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
@@ -956,7 +955,6 @@ void Game::render3D(Camera* currentCamera) {
 
 	//ŠC–Ê‚Ì•`‰æ
 	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
-	//tmpOcean->render(currentCamera->view, currentCamera->projection);
 	// ƒGƒlƒ~[‚Ì•`‰æ
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
