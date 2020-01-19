@@ -313,7 +313,8 @@ void Director::mainLoop() {
 	//ƒŠƒZƒbƒg
 	if (input->wasKeyPressed(VK_F5))
 	{
-		scene->changeScene(SceneList::SPLASH);
+		//scene->changeScene(SceneList::SPLASH);
+		scene->changeScene(SceneList::RESULT);
 		changeNextScene();
 	}
 
