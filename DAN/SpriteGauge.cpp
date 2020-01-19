@@ -33,7 +33,7 @@ void SpriteGauge::initialize()
 //		SpriteNS::CENTER, WIDTH, HEIGHT, POSITION,
 //		ROTATION, COLOR);
 	gauge->initialize(
-		*textureNS::reference(textureNS::SAMPLE_TREE),
+		*textureNS::reference(textureNS::FIN),
 		SpriteNS::CENTER,
 		WIDTH, 
 		HEIGHT, 

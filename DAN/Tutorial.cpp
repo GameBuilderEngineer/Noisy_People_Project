@@ -62,17 +62,17 @@ Tutorial::~Tutorial()
 void Tutorial::initialize()
 {
 	//テストフィールド
-	testField = new Object();
+	testField = new Object;
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::TUTORIAL_FILED));
+	testField = new Object();
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
-
+	
 	//player
 	player = new Player[gameMasterNS::PLAYER_NUM];
 
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
-
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//カメラの設定
@@ -99,12 +99,14 @@ void Tutorial::initialize()
 			infomation.modelType = gameMasterNS::MODEL_MALE;
 			player[i].initialize(infomation);
 			player[i].setPosition(tutorialNS::PLAYER_P1_POSITION);
+
 			break;
 		case gameMasterNS::PLAYER_2P:
 			infomation.playerType = gameMasterNS::PLAYER_2P;
 			infomation.modelType = gameMasterNS::MODEL_FEMALE;
 			player[i].initialize(infomation);
 			player[i].setPosition(tutorialNS::PLAYER_P2_POSITION);
+			
 			break;
 		}
 		//カメラポインタのセット
@@ -113,6 +115,9 @@ void Tutorial::initialize()
 		//進捗
 		step[i] = tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1;
 		planeStep[i] = tutorialPlaneNS::TUTORIAL_PLANE_ID::PLANE_ENEMY;
+		timeCnt[i] = 0;
+		shift[i] = false;
+		play[i] = false;
 	}
 
 	//アニメションキャラの初期化
@@ -154,15 +159,21 @@ void Tutorial::initialize()
 	enemyManager = new EnemyManager;
 	enemyManager->initialize(sceneName,testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld(),gameMaster,player, NULL);
 
-	enemyNS::ENEMYSET enemySet;
-	enemySet.enemyID = enemyManager->issueNewEnemyID();
-	enemySet.type = enemyNS::ENEMY_TYPE::TIGER;
-	enemySet.defaultPosition = ENEMY_POSTITION;
-	enemySet.defaultDirection = D3DXVECTOR3(0.001f, 0.0f, -1.0f);
-	enemySet.defaultState = stateMachineNS::ENEMY_STATE::REST;
+	for (int i = 0; i < 2; i++)
+	{
+		enemyNS::EnemyData* enemyData;
+		enemyNS::ENEMYSET enemySet;
+		enemySet.enemyID = enemyManager->issueNewEnemyID();
+		enemySet.type = enemyNS::ENEMY_TYPE::TIGER;
+		enemySet.defaultPosition = ENEMY_POSTITION[i];
+		enemySet.defaultDirection = D3DXVECTOR3(0.001f, 0.0f, -1.0f);
+		enemySet.defaultState = stateMachineNS::ENEMY_STATE::REST;
 
-	enemyData = enemyManager->createEnemyData(enemySet);
-	enemyManager->createEnemy(enemyData);	
+		enemyData = enemyManager->createEnemyData(enemySet);
+		enemyManager->createEnemy(enemyData);
+		Enemy *tmpEnemy = enemyManager->findEnemy(enemySet.enemyID);
+		tmpEnemy->setFieldMatrix(testField->getMatrixWorld());
+	}
 
 	enemyManager->updateEnemyWithoutTime();	// 事前更新
 	enemyManager->updatePartsRenderer();	// レンダラー事前更新
@@ -173,25 +184,50 @@ void Tutorial::initialize()
 	treeManager->initialize(testFieldRenderer->getStaticMesh()->mesh, testField->getMatrixWorld());
 	treeManager->setGameMaster(gameMaster);
 
-	const int treeMax = 20;
-	treeNS::TreeData treeData[treeMax] = { 0 };
-	for (int i = 0; i < treeMax; i++)
+	const int treeMaxW = 5;
+	const int treeMaxH = 2;
+
+	for (int j = 0; j < 2; j++)
 	{
-		treeData[i].zeroClear();
-		treeData[i].treeID = treeManager->issueNewTreeID();
-		treeData[i].initialDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		treeData[i].initialPosition = FIRST_TREE_POSTITION;
-		treeData[i].initialPosition.z += (65 / treeMax) * i;
-		treeData[i].greenState = treeNS::GREEN_STATE::DEAD;
-		treeData[i].model = treeNS::TREE_MODEL::B_MODEL;
-		treeData[i].type = treeNS::TREE_TYPE::ANALOG_TREE;
-		treeData[i].size = treeNS::TREE_SIZE::STANDARD;
-		treeData[i].hp = 0;
-		treeManager->createTree(treeData[i]);
+		for (int i = 0; i < treeMaxH; i++)
+		{
+			for (int k = 0; k < treeMaxW; k++)
+			{
+				treeNS::TreeData treeData;
+				treeData.zeroClear();
+				treeData.treeID = treeManager->issueNewTreeID();
+				treeData.initialDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+				treeData.initialPosition = FIRST_TREE_POSTITION[j];
+				treeData.initialPosition.x += 5 * i;
+				treeData.initialPosition.z += (50 / treeMaxW) * k;
+				treeData.greenState = treeNS::GREEN_STATE::DEAD;
+				treeData.model = treeNS::TREE_MODEL::B_MODEL;
+				treeData.type = treeNS::TREE_TYPE::ANALOG_TREE;
+				treeData.size = treeNS::TREE_SIZE::STANDARD;
+				treeData.hp = 0;
+				treeManager->createTree(treeData);
+			}
+		}
+	}
+
+	for (int j = 0; j < 2; j++)
+	{
+		// Up Tree
+		treeNS::TreeData treeData;
+		treeData.zeroClear();
+		treeData.treeID = treeManager->issueNewTreeID();
+		treeData.initialDirection = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+		treeData.initialPosition = MID_TREE_POSTITION[j];
+		treeData.greenState = treeNS::GREEN_STATE::GREEN;
+		treeData.model = treeNS::TREE_MODEL::B_MODEL;
+		treeData.type = treeNS::TREE_TYPE::DIGITAL_TREE;
+		treeData.size = treeNS::TREE_SIZE::STANDARD;
+		treeData.hp = 0;
+		treeManager->createTree(treeData);
 	}
 
 	//ディスプレイプレーン
-	D3DXVECTOR3 enemyPlanePos = enemySet.defaultPosition;
+	D3DXVECTOR3 enemyPlanePos = ENEMY_POSTITION[0];
 	enemyPlanePos.y += 10;	//差分
 	plane = new TutorialPlane*[gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -202,17 +238,17 @@ void Tutorial::initialize()
 	//UI
 	tutorialUI = new TutorialUI;
 
-	//固定されたUI
-	fixedUI = new FixedUI;
-	fixedUI->initialize();
+	////固定されたUI
+	//fixedUI = new FixedUI;
+	//fixedUI->initialize();
 
-	//プレイヤー1周りのUI
-	player1UI = new Player1UI;
-	player1UI->initialize(&player[gameMasterNS::PLAYER_1P]);
+	////プレイヤー1周りのUI
+	//player1UI = new Player1UI;
+	//player1UI->initialize(&player[gameMasterNS::PLAYER_1P]);
 
-	//プレイヤー２周りのUI
-	player2UI = new Player2UI;
-	player2UI->initialize(&player[gameMasterNS::PLAYER_2P]);
+	////プレイヤー２周りのUI
+	//player2UI = new Player2UI;
+	//player2UI->initialize(&player[gameMasterNS::PLAYER_2P]);
 
 	//レティクル
 	reticle = new Reticle();
@@ -239,17 +275,17 @@ void Tutorial::uninitialize()
 	SAFE_DELETE(linear8TreeManager);
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
-	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
+	SAFE_DELETE(light);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(tutorialUI);
 	SAFE_DELETE(reticle);
-	SAFE_DELETE(fixedUI);
-	SAFE_DELETE(player1UI);
-	SAFE_DELETE(player2UI);
+	//SAFE_DELETE(fixedUI);
+	//SAFE_DELETE(player1UI);
+	//SAFE_DELETE(player2UI);
 	SAFE_DELETE(damageUI);
 
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -320,6 +356,12 @@ void Tutorial::update(float _frameTime)
 			plane[i]->update(frameTime, planeStep[i]);
 		}
 	}
+	//プレイヤーの更新
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		//ディスプレイプレーン
+		plane[i]->update(frameTime, planeStep[i]);
+	}
 
 	UpdateMoveP(frameTime);
 	//キャラクターの場所と回転の連携
@@ -362,12 +404,12 @@ void Tutorial::update(float _frameTime)
 		camera[i].update();
 	}
 
-	//固定UIの更新
-	fixedUI->update(tutorialTimer);
+	////固定UIの更新
+	//fixedUI->update(tutorialTimer);
 
-	//プレイヤー周りのUIの更新
-	player1UI->update(treeManager->getGreeningRate() * 100);
-	player2UI->update(treeManager->getGreeningRate() * 100);
+	////プレイヤー周りのUIの更新
+	//player1UI->update(treeManager->getGreeningRate() * 100);
+	//player2UI->update(treeManager->getGreeningRate() * 100);
 
 	//レティクルの更新
 	reticle->update(frameTime);
@@ -397,6 +439,113 @@ void Tutorial::update(float _frameTime)
 			changeScene(nextScene);
 		}
 	}
+
+	float distance = 0;
+
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		switch (step[i])
+		{
+		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_1:	//enemy
+			if (enemyManager->findEnemy(i) == NULL)
+			{
+				step[i]++;
+				planeStep[i]++;
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_STEP_CLEAR };
+				SoundInterface::SE->playSound(&playParameters);
+				D3DXVECTOR3 planePos = treeManager->findTree(7 + (10 * i))->position;
+				planePos.y += 15;
+				plane[i]->setPos(planePos);
+			}
+			else
+			{
+				D3DXVECTOR3 planePos = enemyManager->findEnemy(i)->position;
+				planePos.y += 10;
+				plane[i]->setPos(planePos);
+			}
+			break;
+		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_2: //tree
+			if (treeManager->findTree(7 + (10 * i))->getTreeData()->greenState == treeNS::GREEN)
+			{
+				step[i]++;
+				planeStep[i]++;
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_STEP_CLEAR };
+				SoundInterface::SE->playSound(&playParameters);
+			}
+			break;
+		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_3:
+			if (input->wasKeyPressed(VK_LSHIFT) ||
+				input->getController()[i]->wasButton(virtualControllerNS::Y))
+			{
+				step[i]++;
+				planeStep[i]++;
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_STEP_CLEAR };
+				SoundInterface::SE->playSound(&playParameters);
+			}
+			break;
+		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_4:
+			if (input->wasKeyPressed(VK_SPACE) ||
+				input->getController()[i]->wasButton(virtualControllerNS::X))
+			{
+				step[i]++;
+				planeStep[i]++;
+				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_STEP_CLEAR };
+				SoundInterface::SE->playSound(&playParameters);
+				D3DXVECTOR3 planePos = treeManager->findTree(7 + (10 * i))->position;
+				planePos.y += 100;
+				plane[i]->setPos(planePos);
+			}
+			break;
+		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_5:
+			if (player[i].getState() == playerNS::DIGITAL_SHIFT)
+			{
+				//デジタルシフト中→フラグ切換え
+				shift[i] = true;
+			}
+			if (shift[i] == true)
+			{
+				if (player[i].getState() == playerNS::NORMAL)
+				{
+					step[i]++;
+					planeStep[i]++;
+					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_CLEAR };
+					SoundInterface::SE->playSound(&playParameters);
+					plane[i]->setPos(PLANE_POS_5_5[i]);
+					timeCnt[i] = clock() + 5000;
+				}
+			}
+			break;
+		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_END:
+			if (clock() >= timeCnt[i])
+			{
+				planeStep[i]++;
+				plane[i]->setPos(PLANE_POS_FIN[i]);
+			}
+			if (!play[i])
+			{
+				distance = D3DXVec3Length(&(FIN_POS[i] - *player[i].getPosition()));
+				if (distance < 5)
+				{
+					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_END };
+					SoundInterface::SE->playSound(&playParameters);
+					play[i] = true;
+				}
+			}
+			break;
+		default:
+			break;
+		}
+
+		if (tutorialUI->getStep(i) != step[i])
+		{
+			tutorialUI->setStep(i, step[i]);
+		}
+		if (plane[i]->getPlaneStep() != planeStep[i])
+		{
+			plane[i]->update(frameTime, planeStep[i]);
+		}
+	}
+
 
 	// チュートリアル2D更新
 	tutorialTex.update();
@@ -505,14 +654,14 @@ void Tutorial::renderUI()
 	//UI
 	tutorialUI->render();
 
-	//固定UIの描画
-	fixedUI->render();
+	////固定UIの描画
+	//fixedUI->render();
 
-	//プレイヤー1周りのUIの描画
-	player1UI->render(gameMaster->getGameTime());
+	////プレイヤー1周りのUIの描画
+	//player1UI->render(gameMaster->getGameTime());
 
-	//プレイヤー2周りのUIの描画
-	player2UI->render(gameMaster->getGameTime());
+	////プレイヤー2周りのUIの描画
+	//player2UI->render(gameMaster->getGameTime());
 
 	//レティクルの描画
 	reticle->render2D(&player[gameMasterNS::PLAYER_1P]);

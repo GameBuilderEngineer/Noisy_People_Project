@@ -18,13 +18,16 @@ class Direct3D9 :public Base
 {
 public:
 	//Data
-	HWND				wnd;
-	LPDIRECT3D9			d3d;
-	D3DVIEWPORT9		viewPort;
-	LPDIRECT3DDEVICE9	device;
-	LPDIRECT3DSURFACE9	backBuffer;		//バックバッファへのポインタ
-	LPDIRECT3DSURFACE9	zBuffer;
-
+	HWND					wnd;
+	LPDIRECT3D9				d3d;
+	D3DPRESENT_PARAMETERS	d3dpp;
+	D3DPRESENT_PARAMETERS	d3dppWindow;
+	D3DPRESENT_PARAMETERS	d3dppFullScreen;
+	D3DVIEWPORT9			viewPort;
+	LPDIRECT3DDEVICE9		device;
+	LPDIRECT3DSURFACE9		backBuffer;		//バックバッファへのポインタ
+	LPDIRECT3DSURFACE9		zBuffer;
+	bool					fullScreen;
 public:
 	//Method
 	Direct3D9();
@@ -41,7 +44,7 @@ public:
 	HRESULT changeViewport1PWindow();
 	HRESULT changeViewport2PWindow();
 	void setRenderBackBuffer(DWORD index);
-	//HRESULT initShader();
+	void changeDisplayMode(bool fullScreen);
 };
 
 //===================================================================================================================================

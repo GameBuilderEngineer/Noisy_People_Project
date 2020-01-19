@@ -14,6 +14,7 @@
 #include "Tutorial.h"
 #if _DEBUG
 #include "Create.h"
+#include "Photograph.h"
 #endif
 #include "Game.h"
 #include "Result.h"
@@ -25,6 +26,10 @@
 #include "DebugScene.h"
 #include "networkClient.h"
 #include "TreeManager.h"
+#include "movep.h"
+#include "movep1.h"
+
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -127,6 +132,9 @@ HRESULT Director::initialize() {
 	input->initialize(instance, window->wnd, true);
 	window->setInput();
 
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+
 	//textureLoader
 	textureLoader = new TextureLoader;
 	textureLoader->load(getDevice());
@@ -152,8 +160,6 @@ HRESULT Director::initialize() {
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
 	//animationLoader->initialize(d3d->device);
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 	bool debugMode = false;
 #ifdef _DEBUG
 	if (MessageBox(0, "はい(Y):Debugモード\nいいえ(N):次へ", "デバッグシーンへ遷移しますか？", MB_YESNO | MB_TOPMOST) == IDYES)
@@ -335,12 +341,21 @@ void Director::mainLoop() {
 //===================================================================================================================================
 void Director::update() {
 	input->update(window->windowActivate);
+	//フルスクリーン切替
+	//if (input->isKeyDown(VK_LMENU) && input->wasKeyPressed(VK_RETURN))
+	//{
+	//	bool fullScreen = !d3d->fullScreen;
+	//	imgui->reset();
+	//	d3d->changeDisplayMode(fullScreen);
+	//	window->changeDisplayMode(fullScreen);
+	//}
 #ifdef _DEBUG
 	memory->update();
 	imgui->beginFrame();
 	imgui->beginImGui("DirectorGUI");
 	createGUI();
 	imgui->endImGui();
+	//マウスカーソル表示切り替え
 	if (input->wasKeyPressed(VK_F1))
 	{
 		hiddenCursor = !hiddenCursor;
@@ -351,6 +366,7 @@ void Director::update() {
 			ShowCursor(TRUE);
 		}
 	}
+	//マウスカーソル固定切り替え
 	if (input->wasKeyPressed(VK_F2))
 		lockCursor = !lockCursor;
 	if (lockCursor)
@@ -382,6 +398,8 @@ void Director::update() {
 		}
 	}
 #endif // _DEBUG
+
+
 	effekseerManager[0]->update();
 	effekseerManager[1]->update();
 	effekseerManager[2]->update();
@@ -453,11 +471,11 @@ void Director::render() {
 	{
 		if (fader->nowProcessing())
 		{
-
+		
 			fader->setRenderTexture();
 			d3d->clear(imgui->getClearColor());
 			scene->render();
-
+		
 			d3d->setRenderBackBuffer(0);
 			d3d->clear(imgui->getClearColor());
 			fader->render();
@@ -597,6 +615,7 @@ void Director::changeNextScene() {
 	case SceneList::FINALE:					scene = new Finale();	break;
 #if _DEBUG 
 	case SceneList::CREATE:					scene = new Create();	break; 
+	case SceneList::PHOTOGRAPH:				scene = new Photograph();	break; 
 #endif
 	case SceneList::DISPLAY:				scene = new Display();	break;
 	case SceneList::NONE_SCENE:				break;

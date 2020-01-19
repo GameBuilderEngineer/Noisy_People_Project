@@ -6,6 +6,7 @@
 #include "Bear.h"
 #include "EnemyManager.h"
 #include "BearAnimation.h"
+#include "TelopManager.h"
 using namespace enemyNS;
 using namespace stateMachineNS;
 using namespace bearNS;
@@ -22,16 +23,56 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 	enemyData->defaultDirection = slip(enemyData->defaultDirection, axisY.direction);
 	postureControl(axisZ.direction, enemyData->defaultDirection, 1);
 
+	{	// オブジェクトタイプと衝突対象を初期化する
+		// 通常のエネミーと異なりパーツだけを衝突対象
+		using namespace ObjectType;
+		treeCell.type = ENEMY_BEAR;
+		treeCell.target = PLAYER | ENEMY | TREE;
+	}
+
 	// パーツの作成
 	for (int i = 0; i < PARTS_MAX; i++)
 	{
-		parts[i] = new Object;
+		parts[i] = new EnemyParts;
 		parts[i]->position = PARTS_OFFSET_POS[i];
+		parts[i]->setEnemy(this);
+		parts[i]->wasEffectPlayed = false;
+		{// オブジェクトタイプと衝突対象の指定
+			using namespace ObjectType;
+			parts[i]->treeCell.type = ENEMY_PARTS;
+			parts[i]->treeCell.target = BULLET;
+		}
 	}
-	
-	// アニメーションマネージャを初期化
-	animationManager = new BearAnimationManager(PARTS_MAX, this, &parts[0]);
+	parts[BODY]->setRenderer(EnemyManager::bearBodyRenderer);
+	parts[ARM_L]->setRenderer(EnemyManager::bearArmLRenderer);
+	parts[ARM_R]->setRenderer(EnemyManager::bearArmRRenderer);
+	parts[WAIST]->setRenderer(EnemyManager::bearWaistRenderer);
+	parts[LEG_L]->setRenderer(EnemyManager::bearLegLRenderer);
+	parts[LEG_R]->setRenderer(EnemyManager::bearLegRRenderer);
 
+	parts[BODY]->setSize(D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+	parts[ARM_L]->setSize(D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+	parts[ARM_R]->setSize(D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+	parts[WAIST]->setSize(D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+	parts[LEG_L]->setSize(D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+	parts[LEG_R]->setSize(D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+
+	// パーツに耐久度を設定
+	parts[BODY]->durability = 999;
+	parts[ARM_L]->durability = 150;
+	parts[ARM_R]->durability = 150;
+	parts[WAIST]->durability = 999;
+	parts[LEG_L]->durability = 999;
+	parts[LEG_R]->durability = 999;
+
+	// ゲージ
+	gauge = EnemyManager::bearGauge;
+
+	// アニメーションマネージャを初期化
+	animationManager = new BearAnimationManager(PARTS_MAX, this, (Object**)&parts[0]);
+
+	// 枯れ木化実行前に設定
+	wasDeadAroundStarted = false;
 }
 
 
@@ -40,6 +81,13 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 //=============================================================================
 Bear::~Bear()
 {
+	// パーツの破棄
+	for (int i = 0; i < PARTS_MAX; i++)
+	{
+		SAFE_DELETE(parts[i]);
+	}
+	// アニメーションマネージャの破棄
+	SAFE_DELETE(animationManager);
 }
 
 #define BEAR_SOUND_MAX (150)
@@ -51,15 +99,33 @@ void Bear::update(float frameTime)
 	Enemy::preprocess(frameTime);
 	switch (enemyData->state)
 	{
-	case CHASE:  chase(frameTime);  break;
-	case PATROL: patrol(frameTime); break;
-	case REST:   rest(frameTime);   break;
-	case DIE:    die(frameTime);    break;
+	case CHASE:			chase(frameTime);		break;
+	case PATROL:		patrol(frameTime);		break;
+	case REST:			rest(frameTime);		break;
+	case ATTACK_TREE:	attackTree(frameTime);	break;
+	case DIE:			die(frameTime);			break;
 	}
 	Enemy::postprocess(frameTime);
 
 	// パーツアニメーションの更新
 	animationManager->update(frameTime);
+
+	// パーツの更新
+	cntDestroyParts = 0;
+	for (int i = 0; i < PARTS_MAX; i++)
+	{
+		// 接合部座標の更新
+		D3DXVec3TransformCoord(&parts[i]->jointPosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[i]->matrixWorld);
+
+		// パーツ破壊チェック
+		parts[i]->checkDurability(frameTime);
+		if (parts[i]->durability == 0) { cntDestroyParts++; }
+	}
+
+	// ゲージの更新
+	gauge->getInstance(BearGaugeNS::HP)->update(frameTime, &matrixWorld, enemyData->hp);
+	gauge->getInstance(BearGaugeNS::LEFT_ARM)->update(frameTime, &parts[ARM_L]->matrixWorld, parts[ARM_L]->durability);
+	gauge->getInstance(BearGaugeNS::RIGHT_ARM)->update(frameTime, &parts[ARM_R]->matrixWorld, parts[ARM_R]->durability);
 
 	// 3Dサウンド（移動音）の再生
 	if (animationManager->canPlayMoveSound)
@@ -85,6 +151,9 @@ void Bear::update(float frameTime)
 			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
 		}
 	}
+
+	// 枯れ木化の更新
+	updateDeadArea(frameTime);
 }
 
 
@@ -166,12 +235,77 @@ void::Bear::die(float frameTime)
 
 
 //=============================================================================
+// 周辺の枯木化
+//=============================================================================
+void Bear::deadAround()
+{
+	aroundDeadTimer = 0.0f;
+	isMakingTreeDead = true;
+	wasTelopDisplayed = false;
+
+	// DeadAreaの初期化
+	deadArea.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f) * AROUND_DEAD_RANGE;
+	deadArea.initialize(&position);
+	deadArea.setRadius(1.0f);
+	deadArea.mode = GreeningAreaNS::DEAD_MODE;
+
+	// エフェクトの再生
+	GreeningAreaNS::DeadingEffect* deadingEffect
+		= new GreeningAreaNS::DeadingEffect(&deadArea.position, &deadArea.scale);
+	effekseerNS::play(0, deadingEffect);
+}
+
+
+//=============================================================================
+// 枯れ木エリアの更新
+//=============================================================================
+void Bear::updateDeadArea(float frameTime)
+{
+	if (isMakingTreeDead == false) { return; }
+
+	if (aroundDeadTimer < AROUND_DEAD_TIME)
+	{
+		aroundDeadTimer += frameTime;
+
+		// 枯木時間終了
+		if (aroundDeadTimer > AROUND_DEAD_TIME / 2 && wasTelopDisplayed == false)
+		{// タイミングを適当に合わせているだけ
+			TelopManager* telopManager = TelopManager::get();
+			telopManager->playOrder(telopManagerNS::WITHER);
+			wasTelopDisplayed = true;
+		}
+
+		if (aroundDeadTimer > AROUND_DEAD_TIME)
+		{
+			aroundDeadTimer = AROUND_DEAD_TIME;	// タイマー停止
+			isMakingTreeDead = false;
+			deadArea.treeCell.remove();			// 衝突空間から離脱
+		}
+	}
+
+	float rate = aroundDeadTimer / AROUND_DEAD_TIME;
+	setDeadArea(UtilityFunction::lerp(1.0f, AROUND_DEAD_RANGE, rate));
+}
+
+
+//=============================================================================
 // Getter
 //=============================================================================
-Object* Bear::getParts(int type)
+EnemyParts* Bear::getParts(int type)
 {
 	return parts[type];
 }
+
+GreeningArea* Bear::getDeadArea()
+{
+	return &deadArea;
+}
+
+bool Bear::getIsMakingTreeDead()
+{
+	return isMakingTreeDead;
+}
+
 
 //=============================================================================
 // Setter

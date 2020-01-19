@@ -83,6 +83,7 @@ class MarkerRenderer :	public Base
 private:
 	Marker* marker[MarkerNS::MARKER_NUM];
 	InstancingBillboard* billboard;
+	static MarkerRenderer* markerRenderer;	// 取得用ポインタ
 public:
 	//各位置ポインタ
 	D3DXVECTOR3* playerPosition[gameMasterNS::PLAYER_NUM];
@@ -96,6 +97,5 @@ public:
 	void update(float frameTime);
 	void render(int playerNo,Camera* camera);
 	D3DXVECTOR3 conversion2D(Camera* camera, D3DXVECTOR3 target);//3D座標方向を2D変換
-
+	static MarkerRenderer* get();					// 取得
 };
-

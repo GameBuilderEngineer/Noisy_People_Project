@@ -17,13 +17,13 @@
 #include "EnemyChaseMark.h"
 #include "PartsAnimationManager.h"
 
+
 //=============================================================================
 // ビルドスイッチ
 //=============================================================================
 #if 1	// センサーを描画
 #define RENDER_SENSOR
 #endif
-
 
 //=============================================================================
 // 名前空間
@@ -40,6 +40,9 @@ namespace enemyNS
 		TYPE_MAX,
 	};
 
+	///////////////////////////////////////////////////////////////////////////
+	////////////////////////////ENEMY_TYPEごとの定数 //////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	// エネミーの最大HPテーブル
 	const int ENEMY_HP_MAX[TYPE_MAX] =
 	{
@@ -114,9 +117,9 @@ namespace enemyNS
 	// エネミーの攻撃力テーブル
 	const int ATTACK_DAMAGE[TYPE_MAX] =
 	{
-		5,			// WOLF
-		12,			// TIGER
-		20,			// BEAR
+		10,			// WOLF
+		20,			// TIGER
+		30,			// BEAR
 	};
 
 	// エネミーの攻撃移動速度テーブル
@@ -163,20 +166,7 @@ namespace enemyNS
 		1			// BEAR
 	};
 
-	//------------
-	// 3Dサウンド
-	//------------
-	enum SE_3D
-	{
-		FOOT_STEPS_SE,	// 足音
-		ATTACK_SE,		// 攻撃音
-		DIE_SE,			// 死亡音
-		SE_3D_MAX
-	};
-
-	//-----------
-	// Effekseer
-	//-----------
+	// エフェクトサイズ
 	const float DEATH_EFFECT_SCALE[TYPE_MAX] =
 	{
 		0.85f,		// WOLF
@@ -184,22 +174,9 @@ namespace enemyNS
 		5.0f,		// BEAR
 	};
 
-	class DeathEffect :public effekseerNS::Instance
-	{
-	public:
-		D3DXVECTOR3 * syncPosition;
-		DeathEffect(D3DXVECTOR3* sync, int _effectNo)
-		{
-			syncPosition = sync;
-			effectNo = _effectNo;
-		}
-		virtual void update()
-		{
-			position = *syncPosition;
-			Instance::update();
-		};
-	};
-
+	///////////////////////////////////////////////////////////////////////////
+	///////////////////////////エネミー共通定数 ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	// Physics Constant
 	const float AIR_MOVE_ACC_MAGNIFICATION = 0.12f;		// 空中移動加速度倍率
 	const float STOP_SPEED = 0.5f;						// 移動停止速度
@@ -214,6 +191,7 @@ namespace enemyNS
 	const float ARRIVAL_DISTANCE = 0.5f;				// 到着距離
 	const float MOVE_LIMIT_TIME = 10.0f;				// 移動リミット時間
 	const float PATH_SEARCH_INTERVAL_WHEN_CHASE = 0.3f;	// 追跡ステート時のパス検索間隔
+	const float TIME_BEFORE_TREE_COLLISION = 10.0f;		// ツリー攻撃ステートでツリーに触れないままでいられる時間
 
 	// Other Constant
 	const float DIFFERENCE_FIELD = 0.05f;				// フィールド補正差分
@@ -227,21 +205,18 @@ namespace enemyNS
 	const float DIE_STATE_TIME = 4.0f;					// 死亡ステートの時間
 	const float DIE_STATE_RENDERING_TIME = 2.8f;		// 死亡ステートのうち描画が続く時間
 
-	// EnemyParts
-	class EnemyParts : public Object
+	// 3DSound
+	enum SE_3D
 	{
-	private:
-		Enemy* enemy;
-	public:
-		EnemyParts()
-		{
-			using namespace ObjectType;
-			treeCell.type = ENEMY_PARTS;
-			treeCell.target = BULLET;
-		}
-		Enemy* getEnemy() { return enemy; }
+		FOOT_STEPS_SE,	// 足音
+		ATTACK_SE,		// 攻撃音
+		DIE_SE,			// 死亡音
+		SE_3D_MAX
 	};
 
+	///////////////////////////////////////////////////////////////////////////
+	/////////////////////////////// クラス定義 ////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	//-----------------------------------------------------------------
 	// EnemyInitialSettingDataクラスはエネミー初期ステータスを保持する
 	// 新規エネミー作成やエネミー配置ツールとのデータ交換に使用する
@@ -309,6 +284,81 @@ namespace enemyNS
 		//StaticMeshRenderer* tigerBulletRender;
 	};
 
+	//----------------------
+	// 死亡エフェクトクラス
+	//----------------------
+	class DeathEffect :public effekseerNS::Instance
+	{
+	public:
+		D3DXVECTOR3 * syncPosition;
+		DeathEffect(D3DXVECTOR3* sync, int _effectNo)
+		{
+			syncPosition = sync;
+			effectNo = _effectNo;
+		}
+		virtual void update()
+		{
+			position = *syncPosition;
+			Instance::update();
+		};
+	};
+
+	//----------------------------------------------------------------
+	// EnemyPartsクラスはエネミーパーツアニメの各パーツである
+	// エネミーである自分自身のポインタとメッシュ情報のポインタを持つ
+	//----------------------------------------------------------------
+	class EnemyParts: public Object
+	{
+	private:
+		Enemy* enemy;					// エネミー
+		StaticMeshRenderer* renderer;	// 描画オブジェクト
+		float cntDestroyTime = 0.0f;	// パーツが破壊される時間をカウント
+
+	public:
+		int durability;					// 耐久度
+		D3DXVECTOR3 jointPosition;		// 接合部座標（= オフセット * パーツのワールドマトリクス）
+		bool wasEffectPlayed;			// エフェクト再生されたか
+
+		Enemy* getEnemy() { return enemy; }
+		void setEnemy(Enemy* setting) { enemy = setting; }
+		StaticMeshRenderer* getRenderer() { return renderer; }
+		void setRenderer(StaticMeshRenderer* setting) { renderer = setting; }
+
+		// 耐久度へのダメージ処理
+		void damage(int value)
+		{
+			durability -= value;
+
+			if (durability < 0)
+			{
+				durability = 0;
+			}
+		}
+
+		// 耐久度チェック
+		void checkDurability(float frameTime)
+		{
+			if (durability != 0) return;
+
+			if (wasEffectPlayed == false)
+			{
+				// エフェクト
+				DeathEffect* effect = new DeathEffect(&jointPosition, effekseerNS::ENEMY_DEATH);
+				effect->scale *= 5.0f;//エフェクトサイズ
+				effekseerNS::play(0, effect);
+				wasEffectPlayed = true;
+			}
+
+			cntDestroyTime += frameTime;
+			if (cntDestroyTime > 2.0f)
+			{
+				// 描画と衝突判定から取り除く（インスタンス破棄自体はエネミーのデストラクタ）
+				renderer->unRegisterObjectByID(this->id);
+				treeCell.remove();
+			}
+		}
+	};
+
 #if _DEBUG
 	struct OperationKeyTable
 	{
@@ -337,7 +387,7 @@ namespace enemyNS
 
 
 //=============================================================================
-// クラス定義
+// Enemyクラス定義
 //=============================================================================
 #pragma region [Class]
 class Enemy: public Object
@@ -363,8 +413,7 @@ public:
 	D3DXVECTOR3* movingTarget;						// 移動ターゲット
 	Object* attackTarget;							// 攻撃対象（プレイヤー,ツリー）
 	D3DXVECTOR3 attentionDirection;					// 注目方向
-	//一時publicへ移動（2019/12/21:菅野）
-	//bool isPayingNewAttention;						// 新規注目フラグ
+	bool isPayingNewAttention;						// 新規注目フラグ
 	int nextIndexOfRoute;							// 警戒ステート時の次の巡回座標（リングバッファ添え字）
 	float tacticsTime;								// 戦術時間（AIの先頭行動分岐に汎用的に使用）
 	int tacticsPersonality;							// 戦術個性
@@ -388,6 +437,11 @@ public:
 	bool isAttacking;								// 攻撃中フラグ
 	float attackTime;								// 攻撃中時間（秒）
 	D3DXVECTOR3 attackDirection;					// 攻撃方向ベクトル
+	bool wasHittingTree;							// ツリーを攻撃した			
+	float treeAttackTime;							// ツリー攻撃時間
+	bool canDamageTree;								// ツリーにダメージが入るか
+	float cntBeforeTreeCollision;					// ツリー攻撃ステートでツリーに接触するまでの時間
+	int cntDestroyParts;							// 破壊されたパーツの数
 
 	// 移動
 	D3DXVECTOR3 destination;						// 目的地
@@ -504,8 +558,6 @@ public:
 	void deleteMark();
 
 public:
-	//一時publicへ移動（2019/12/21:菅野）
-	bool isPayingNewAttention;						// 新規注目フラグ
 	//----------
 	// 基本処理
 	//----------
@@ -533,6 +585,7 @@ public:
 	//-----------------
 	// Getter & Setter
 	//-----------------
+	Enemy* getAdr() { return this; }
 	int getEnemyID();
 	static int getNumOfEnemy();
 	enemyNS::EnemyData* getEnemyData();
@@ -543,7 +596,7 @@ public:
 	int getChasingPlayer();
 	int getPlayerNo();
 	bool getIsPayingNewAttention();
-
+	bool getCanDamageTree();
 	// エネミーのオブジェクトの数を初期化
 	static void resetNumOfEnemy();
 	// ダメージ処理
@@ -558,6 +611,13 @@ public:
 	void setAttackTarget(Object* _target);
 	// 倒されたプレイヤーを設定
 	void setPlayerNo(int playerNo);
+	// ツリーに攻撃がヒットしたか設定
+	void setTreeHit(bool setting);
+	// ツリーに攻撃がヒットしたか設定
+	void setCanDamageTree(bool setting);
+	// フィールドワールドマトリクスを設定
+	void setFieldMatrix(D3DXMATRIX *matrix);
+
 #ifdef _DEBUG
 	//-----------
 	// Debug Use

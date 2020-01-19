@@ -100,6 +100,13 @@ namespace staticMeshNS {
 		DATE_ISLAND_FINAL_FACE_BLACK,			//19
 		DIGITAL_SPHERE,							//01
 
+		NAV_TEST1,
+		NAV_TEST2,
+		NAV_TEST3,
+		NAV_TEST4,
+		NAV_TEST5,
+		NAV_TEST6,
+
 		MESH_NUM,								//NUM
 	};
 

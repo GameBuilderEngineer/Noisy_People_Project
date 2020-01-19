@@ -74,20 +74,34 @@ void EventMaker::update()
 		}
 	}
 
-	// デジタルツリー襲撃イベント
-	if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE)
-	{// 最低経過時間チェック
-		float tmp1 = fuzzy.reverseGrade(gameMaster->getGameTime(), 120.0f, 180.0f);
-		float tmp2 = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 6.0f, 20.0f);
-		data->weightEnemyAttacksTree = fuzzy.OR(tmp1, tmp2);
-		data->weightEnemyAttacksTree *= (float)(rand() % 5 - 2);	// ランダム補正
+	if (data->numTreeAttackingEnemy == 0 && data->attackedTree != NULL)
+	{
+		// マーカーを破棄
+		opeGenerator->destroyMarkerEnemyAttaksTree();
 
-		if (data->lastTimeCheckedWeightEnemyAttacksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_CHECKING_WEIGHT)
-		{// 評価値（重み）のチェック間隔を空ける
-			data->lastTimeCheckedWeightEnemyAttacksTree = gameMaster->getGameTime();
+		// ツリーの攻撃中フラグをOff
+		data->attackedTree->getTreeData()->isAttaked = false;
+
+		// メタAIからツリーの記録を消すぴょん
+		data->attackedTree = NULL;
+
+		// 襲撃時間を記録
+		data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
+	}
+
+#ifndef CHEAT_PREZEN
+	// デジタルツリー襲撃イベント
+	if (data->numBeingAttackedTree == 0)
+	{
+		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE + data->ajustTimeEnemyAttaksTree)
+		{
+			// 最低経過時間チェック
+			data->weightEnemyAttacksTree = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 4.0f, 10.0f);
+			data->weightEnemyAttacksTree *= (1.0f + (float)(rand() % 5 - 2) * 0.1f);	// ランダム補正
+
 			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
 			{
-				data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
+				data->ajustTimeEnemyAttaksTree = rand() % 10;// ランダムで間隔調整を入れる
 				makeEventEnemyAttaksTree();
 			}
 		}
@@ -99,6 +113,7 @@ void EventMaker::update()
 		data->wasBossEntried = true;
 		makeEventBossEntry();
 	}
+#endif
 }
 
 
@@ -145,6 +160,7 @@ void EventMaker::makeEventEnemyAttaksTree()
 		if (treeList[i]->getTreeData()->treeID == treeID)
 		{
 			attackTarget = treeList[i];						// 攻撃対象ツリーを記録
+			data->attackedTree = attackTarget;				// AI側で保存
 			treeList[i]->getTreeData()->isAttaked = true;	// ツリーの攻撃中フラグをOn
 			treePosition = treeList[i]->position;			// ツリーの座標を取得
 		}
@@ -166,6 +182,8 @@ void EventMaker::makeEventEnemyAttaksTree()
 		// 実行
 		opeGenerator->enemyAttaksTree(enemySet, attackTarget);
 	}	
+	telopManager->playOrder(telopManagerNS::ENEMY_ASSULT);
+	telopManager->playOrder(telopManagerNS::ENEMY_ASSULT2);
 }
 
 
@@ -185,7 +203,7 @@ int EventMaker::makeEventBossEntry()
 	// しかし至近距離にいないことが条件である
 	enemySet.defaultPosition = decideBossEntryPoint();
 	// 伊達山のほうを向く
-	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f) - enemySet.defaultPosition;
+	enemySet.defaultDirection = D3DXVECTOR3(0.0f, 0.0f, 0.9999f);/* - enemySet.defaultPosition;*/
 	enemySet.defaultState = stateMachineNS::PATROL;
 	opeGenerator->bossEntry(enemySet);
 
@@ -335,15 +353,18 @@ int EventMaker::decideAttackTargetTree()
 //=============================================================================
 D3DXVECTOR3 EventMaker::decideBossEntryPoint()
 {
-	////●とりあえず
-	//switch (rand() % 2)
-	//{
-	//case 0:
-		return D3DXVECTOR3(186.0f, 100.0f, -165.0f); // 東の台地
+#ifndef CHEAT_PREZEN
+	switch (rand() % 2)
+	{
+	case 0:
+		return D3DXVECTOR3(186.0f, 100.0f, -165.0f);	// 東の台地
 
-	//case 1:
-	//	return D3DXVECTOR3(-204.0f, 86.0f, 197.0f);	// 北の台地
-	//}
+	case 1:
+		return D3DXVECTOR3(-204.0f, 86.0f, 197.0f);		// 北の台地
+	}
+#else
+	return D3DXVECTOR3(186.0f, 100.0f, -165.0f);		// 東の台地
+#endif
 }
 
 

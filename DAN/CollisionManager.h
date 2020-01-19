@@ -61,17 +61,18 @@ public:
 	static bool playerAndEnemyBullet(Player* player, TigerBullet* bullet);	//PLAYER<->ENEMY_BULLET
 	
 	//BULLET
-	static bool bulletAndBullet(Bullet* bullet1, Bullet* bullet2);		//BULLET<->BULLET
-	static bool bulletAndEnemy(Bullet* player, Enemy* enemy);			//BULLET<->ENEMY
-	static bool bulletAndTree(Bullet* player, Tree* tree);				//BULLET<->TREE
+	static bool bulletAndBullet(Bullet* bullet1, Bullet* bullet2);			//BULLET<->BULLET
+	static bool bulletAndEnemy(Bullet* player, Enemy* enemy);				//BULLET<->ENEMY
+	static bool bulletAndTree(Bullet* player, Tree* tree);					//BULLET<->TREE
+	static bool bulletAndEnemyParts(Bullet* bullet, enemyNS::EnemyParts* enemyParts);	//BULLET<->ENEMY_PARTS
 
 	//ENEMY
-	static bool enemyAndEnemy(Enemy* enemy1, Enemy* enemy2);			//ENEMY<->ENEMY
-	static bool enemyAndTree(Enemy* player, Tree* tree);				//ENEMY<->TREE
+	static bool enemyAndEnemy(Enemy* enemy1, Enemy* enemy2);				//ENEMY<->ENEMY
+	static bool enemyAndTree(Enemy* player, Tree* tree);					//ENEMY<->TREE
 	
 	//TREE
-	static bool treeAndTree(Tree* tree1, Tree* tree2);					//ENEMY<->TREE
+	static bool treeAndTree(Tree* tree1, Tree* tree2);						//ENEMY<->TREE
 
 	//GREENING_AREA
-	static bool greeningAreaAndTree(GreeningArea* area, Tree* tree);	//GREENING_AREA<->TREE
+	static bool greeningAreaAndTree(GreeningArea* area, Tree* tree);		//GREENING_AREA<->TREE
 };

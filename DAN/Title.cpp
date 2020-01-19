@@ -790,6 +790,7 @@ D3DXVECTOR3 Title::BezierCurve(D3DXVECTOR3 startpoint, D3DXVECTOR3 curvepoint, D
 void Title::createGUI()
 {
 	bool createScene = false;
+	bool photographScene = false;
 	float backUpTmpVolume = tmpVolume;
 	float limitTop = 1000;
 	float limitBottom = -1000;
@@ -800,6 +801,7 @@ void Title::createGUI()
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::Checkbox("Create Scene", &createScene);
+	ImGui::Checkbox("Photograph Scene", &photographScene);
 	ImGui::SliderFloat("volume control", &tmpVolume, 0.0f, 1.0f);
 	ImGui::Text("CameraState %d", stateCamera);
 
@@ -823,5 +825,15 @@ void Title::createGUI()
 		nextScene = (SceneList::CREATE);
 		changeScene(nextScene);
 	}
+	//撮影ツール用シーン
+	if (photographScene)
+	{
+		selectStateMemory = titleUiNS::PHOTOGRAPH;
+		nextScene = (SceneList::PHOTOGRAPH);
+		changeScene(nextScene);
+	}
+
+
+
 }
 #endif // _DEBUG

@@ -46,7 +46,7 @@ Bullet::Bullet(Ray shootingRay,int playerNo)
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = BULLET;
-		treeCell.target = ENEMY | TREE;
+		treeCell.target = ENEMY_PARTS | ENEMY | TREE;
 	}
 
 	Object::initialize(&launchPosition);							//バレットモデルの初期化
@@ -120,6 +120,14 @@ bool Bullet::isCollideInitial() {
 	return now >= initial; 
 }
 D3DXVECTOR3 Bullet::getBulletSpeed() { return this->speed; }
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void Bullet::setDigitalPower(float value)
+{
+	digitalPower = digitalPower * value;
+}
+
 
 
 //===================================================================================================================================
@@ -157,6 +165,7 @@ BulletManager::BulletManager()
 	reloading		= false;
 	isLaunched		= false;
 	launchFactTime	= 0.0f;
+	powerRate		= 1.0f;
 
 	//サウンドの設定
 	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Shot, false ,NULL,false,NULL};
@@ -281,6 +290,7 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 
 	//バレットリストへ新たに生成
 	Bullet* newBullet = new Bullet(shootingRay,playerNo);
+	newBullet->setDigitalPower(getPowerRate());
 
 	//リストへ追加
 	bulletList->insertFront(newBullet);
@@ -341,4 +351,26 @@ float BulletManager::getReloadTime() { return reloadTimer; }
 Bullet* BulletManager::getBullet(int i) { return *bulletList->getValue(i); }
 int BulletManager::getNum() { return bulletList->nodeNum; }
 bool BulletManager::getIsLaunched() { return isLaunched; }
-#pragma endregion
+float BulletManager::getPowerRate() { return powerRate; }
+//===================================================================================================================================
+//【getter：バレットマネージャー】
+//===================================================================================================================================
+void BulletManager::setPowerRate(float value)
+{
+	powerRate = value;
+}
+
+////===================================================================================================================================
+////【GUI作成処理】
+////===================================================================================================================================
+//#ifdef _DEBUG
+//void BulletManager::bulletGUI()
+//{
+//	//float ditpw = Bullet::getDigitalPower();
+//	//ImGui::Text("digitalPower = %f", &Bullet::getDigitalPower());
+//	ImGui::Text("powerRate= %f", powerRate);
+//}
+//#endif
+//
+//
+//#pragma endregion

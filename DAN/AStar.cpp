@@ -48,7 +48,7 @@ LinkedList<meshDataNS::Index2>* AStar::pathSearch(
 	startNode.status = INVALID;
 	startNode.cost = startNode.heuristic = startNode.score = 0.0f;
 	startNode.edge.index[0] = startNode.edge.index[1] = -1;
-	startNode.pos = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
+	startNode.pos = startPos;
 	startNode.parent = startNode.next = NULL;
 	addAStarNode(work, startNode);
 
@@ -65,13 +65,27 @@ LinkedList<meshDataNS::Index2>* AStar::pathSearch(
 			break;
 		}
 
+		// ●const == 0 or cost == tempDistanceどちらがいいかの一旦の折衷案
+		// 上手く動いてはいない
+		bool flag = false;
+		//for (int i = 0; i < 3; i++)
+		//{
+		//	DWORD adjacentIndex = meshData->getFaceArray()[work->faceIndex].adjacency[i];
+		//	D3DXVECTOR3 temp;
+		//	culcDistanceToEdge(NULL, &temp, work->pos, work->faceIndex, adjacentIndex);
+		//	if (temp == work->pos)
+		//	{
+		//		flag = true;
+		//	}
+		//}
+
 		// 基準ノードの周りをオープン
 		for (int i = 0; i < 3; i++)
 		{
 			DWORD adjacentIndex = meshData->getFaceArray()[work->faceIndex].adjacency[i];
-			if (adjacentIndex == (DWORD)-1){ continue; }						// 隣接面がない
+			if (adjacentIndex == (DWORD)-1) { continue; }	// 隣接面がない
 			if (searchNodeByFaceIndex(adjacentIndex) != NULL) { continue; }		// リストに既出
-			//（いままできた面を省いてもいる）
+			//（今まできた面を省いてもいる）
 
 			// 新しいノードをリストに追加
 			AStarNode data;
@@ -81,7 +95,14 @@ LinkedList<meshDataNS::Index2>* AStar::pathSearch(
 			// ここが経路選択に関わる
 			float tempDistance = 0.0f;
 			culcDistanceToEdge(&tempDistance, &data.pos, work->pos, work->faceIndex, adjacentIndex);
-			data.cost = 0;// work->cost + tempDistance;
+			if (flag)
+			{
+				data.cost = 0;
+			}
+			else
+			{
+				data.cost = /*work->cost +*/ tempDistance;
+			}
 			data.heuristic = D3DXVec3Length(&(destPos - data.pos));
 			data.score = data.cost + data.heuristic;
 			//------------------------------------------------------------------------------
@@ -277,6 +298,11 @@ float AStar::culcDistanceToEdge(float* outLen, D3DXVECTOR3* outPos, D3DXVECTOR3 
 	D3DXVECTOR3 nearestPoint = nearestPointOnLine(*pos1, *pos2, inPos);
 	if(outPos != NULL) *outPos = nearestPoint;
 
+	if (outLen == NULL)
+	{
+		return -2;// 距離を求めない
+	}
+
 	// 交点までの距離を求める
 	float ans;
 	if (nearestPoint == *pos1)
@@ -292,6 +318,6 @@ float AStar::culcDistanceToEdge(float* outLen, D3DXVECTOR3* outPos, D3DXVECTOR3 
 		ans = D3DXVec3Length(&(nearestPoint - inPos));
 	}
 
-	if(outLen != NULL) *outLen = ans;
+	*outLen = ans;
 	return ans;
 }

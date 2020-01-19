@@ -111,7 +111,6 @@ void Finale::initialize()
 	{
 		treeManager->getTreeList()[i]->transState();
 	}
-	int unko = treeManager->getTreeNum();
 
 	// BGMçƒê∂äJén
 	PLAY_PARAMETERS playParameter = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Finale, false,1.0f,false,NULL };

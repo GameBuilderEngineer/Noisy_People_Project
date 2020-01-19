@@ -75,7 +75,7 @@ void TestEffectInstance::update(float frameTime)
 //===================================================================================================================================
 TestEffect::TestEffect():InstancingBillboard::InstancingBillboard()
 {
-	InstancingBillboard::initialize(*textureNS::reference(textureNS::NEKO));
+	InstancingBillboard::initialize(*textureNS::reference(textureNS::DATE_ALPHA));
 }
 
 //===================================================================================================================================

@@ -21,7 +21,6 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 	// 配列を確保
 	vtxArray = new BYTE[numVertices * stride];
 	indexArray = new WORD[numFaces * 3];
-	//indexArray = new WORD[numVertices];
 	adjacencyArray = new DWORD[numFaces * 3];
 	faceArray = new Face[getNumFaces()];
 
@@ -44,15 +43,6 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 	WORD* pIndex;
 	staticMesh->mesh->LockIndexBuffer(D3DLOCK_READONLY, (void**)&pIndex);
 	memcpy(indexArray, pIndex, sizeof(WORD) * numFaces * 3);
-	//memcpy(indexArray, pIndex, sizeof(WORD) * numVertices);
-	//for (int i = 0; i < numFaces; i++)
-	//{
-	//	for (int k = 0; k < 3; k++)
-	//	{
-	//		WORD temp = pIndex[i * 3 + k];
-	//		indexArray[i * 3 + k] = temp;
-	//	}
-	//}
 	staticMesh->mesh->UnlockIndexBuffer();
 
 	// 隣接性情報を配列にコピーする
@@ -84,7 +74,6 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 		D3DXVec3Normalize(&faceArray[i].nor, &faceArray[i].nor);
 	}
 
-
 #if 0	// 頂点バッファにアクセスしてメッシュを操作するテスト
 	D3DCOLOR red = D3DCOLOR_RGBA(255, 120, 0, 100);
 
@@ -106,7 +95,7 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 	}
 #endif
 
-#if 0// 配列の中身をファイルにダンプ
+#if 0	// 配列の中身をファイルにダンプ
 	FILE* fp;
 	setDataDirectory();
 
@@ -136,8 +125,8 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 	fprintf(fp, "インデックスバッファ配列の中身\n出力元：MeshData.cpp\n");
 	fprintf(fp, "ポリゴンインデックス : ポリゴンを構成する頂点インデックス1, 2, 3\n\n");
 	for (int i = 0; i < numFaces * 3; i++)
-	//for (int i = 0; i < numVertices; i++)
 	{
+		int unko = indexArray[i];
 		fprintf(fp, "%d,", indexArray[i]);
 		if(i % 3 == 2) fprintf(fp, "\n");
 	}

@@ -15,6 +15,7 @@
 #include "Ray.h"
 #include "Sound.h"
 #include "EffekseerManager.h"
+#include "ImguiManager.h"
 
 namespace bulletNS{
 	const float		SPEED			= 100.0f;	//弾速
@@ -105,6 +106,7 @@ private:
 	D3DXVECTOR3		initialCollide;			//初期衝突地点
 	D3DXVECTOR3		collidePosition;		//衝突位置
 	int				digitalPower;			//デジタルパワー
+
 	effekseerNS::Instance* effect;			//弾エフェクト
 public:
 	int playerNo;
@@ -120,6 +122,10 @@ public:
 	int	getDigitalPower();
 	bool isCollideInitial();
 	D3DXVECTOR3	getBulletSpeed();
+	//setter
+	void setDigitalPower(float value);
+
+
 };
 
 //===================================================================================================================================
@@ -136,6 +142,7 @@ private:
 	bool					reloading;		//リロード中
 	bool					isLaunched;		//発射したか
 	float					launchFactTime;	//発射事実残存時間（発射した事実をゲーム中に残す時間.更新頻度の低いエネミーセンサにのせるため）
+	float                   powerRate;
 
 	PLAY_PARAMETERS shotSE;
 	PLAY_PARAMETERS reroadSE;
@@ -166,4 +173,12 @@ public:
 	Bullet* getBullet(int i);
 	int getNum();
 	bool getIsLaunched();
+	float getPowerRate();
+//[setter]
+	void setPowerRate(float value);
+
+
+#ifdef _DEBUG
+	//void bulletGUI();
+#endif
 };
