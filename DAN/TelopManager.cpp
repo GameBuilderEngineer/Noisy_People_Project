@@ -9,6 +9,7 @@
 
 using namespace telopManagerNS;
 
+TelopManager* TelopManager::pointer = NULL;
 
 TelopManager::TelopManager()
 {
@@ -27,8 +28,8 @@ TelopManager::~TelopManager()
 //=============================================================================
 void TelopManager::initialize()
 {
-
 	playFlag = false;
+	pointer = this;
 
 	for (int i = 0; i < MAX_TELOP; i++)
 	{
@@ -81,8 +82,19 @@ void TelopManager::initialize()
 	);
 
 	//テロップ3の初期化
-	telop[TELOP_TYPE3]->initialize(
+	telop[ENEMY_ASSULT]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_ASSULT),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
+
+	// デジタルツリーが破壊される前に撃退せよ！
+	telop[ENEMY_ASSULT2]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_ASSULT2),
 		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,
@@ -135,7 +147,7 @@ void TelopManager::initialize()
 		telopNS::COLOR
 	);
 
-	// このままではデジタルツリーが壊されてしまう
+	// 緑化した木が枯らされる前に撃退せよ！
 	telop[BOSS_ENTRY2]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_BOSS2),
 		SpriteNS::CENTER,
@@ -146,9 +158,31 @@ void TelopManager::initialize()
 		telopNS::COLOR
 	);
 
-	// 出動せよ！
-	telop[BOSS_ENTRY3]->initialize(
-		*textureNS::reference(textureNS::UI_INFO_BOSS3),
+	// デジタルツリーが壊れ周辺が枯れ木に戻った
+	telop[WITHER]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_WITHER),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
+
+	// 巨大環境破壊ロボに、周辺を枯れ木に戻された！
+	telop[WITHER_BOSS]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_WITHER2),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
+
+	// ショット強化アイテムが島に投下された！
+	telop[POWER_UP]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_POWERUP),
 		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,

@@ -6,6 +6,7 @@
 #include "Bear.h"
 #include "EnemyManager.h"
 #include "BearAnimation.h"
+#include "TelopManager.h"
 using namespace enemyNS;
 using namespace stateMachineNS;
 using namespace bearNS;
@@ -58,14 +59,20 @@ Bear::Bear(ConstructionPackage constructionPackage) : Enemy(constructionPackage)
 
 	// パーツに耐久度を設定
 	parts[BODY]->durability = 999;
-	parts[ARM_L]->durability = 50;
-	parts[ARM_R]->durability = 50;
+	parts[ARM_L]->durability = 150;
+	parts[ARM_R]->durability = 150;
 	parts[WAIST]->durability = 999;
 	parts[LEG_L]->durability = 999;
 	parts[LEG_R]->durability = 999;
 
+	// ゲージ
+	gauge = EnemyManager::bearGauge;
+
 	// アニメーションマネージャを初期化
 	animationManager = new BearAnimationManager(PARTS_MAX, this, (Object**)&parts[0]);
+
+	// 枯れ木化実行前に設定
+	wasDeadAroundStarted = false;
 }
 
 
@@ -103,14 +110,22 @@ void Bear::update(float frameTime)
 	// パーツアニメーションの更新
 	animationManager->update(frameTime);
 
+	// パーツの更新
+	cntDestroyParts = 0;
 	for (int i = 0; i < PARTS_MAX; i++)
 	{
 		// 接合部座標の更新
 		D3DXVec3TransformCoord(&parts[i]->jointPosition, &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &parts[i]->matrixWorld);
 
 		// パーツ破壊チェック
-		parts[i]->checkDurability();
+		parts[i]->checkDurability(frameTime);
+		if (parts[i]->durability == 0) { cntDestroyParts++; }
 	}
+
+	// ゲージの更新
+	gauge->getInstance(BearGaugeNS::HP)->update(frameTime, &matrixWorld, enemyData->hp);
+	gauge->getInstance(BearGaugeNS::LEFT_ARM)->update(frameTime, &parts[ARM_L]->matrixWorld, parts[ARM_L]->durability);
+	gauge->getInstance(BearGaugeNS::RIGHT_ARM)->update(frameTime, &parts[ARM_R]->matrixWorld, parts[ARM_R]->durability);
 
 	// 3Dサウンド（移動音）の再生
 	if (animationManager->canPlayMoveSound)
@@ -136,6 +151,9 @@ void Bear::update(float frameTime)
 			SoundInterface::S3D->SetVolume(tmpPlayParmeters, volume);
 		}
 	}
+
+	// 枯れ木化の更新
+	updateDeadArea(frameTime);
 }
 
 
@@ -217,12 +235,77 @@ void::Bear::die(float frameTime)
 
 
 //=============================================================================
+// 周辺の枯木化
+//=============================================================================
+void Bear::deadAround()
+{
+	aroundDeadTimer = 0.0f;
+	isMakingTreeDead = true;
+	wasTelopDisplayed = false;
+
+	// DeadAreaの初期化
+	deadArea.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f) * AROUND_DEAD_RANGE;
+	deadArea.initialize(&position);
+	deadArea.setRadius(1.0f);
+	deadArea.mode = GreeningAreaNS::DEAD_MODE;
+
+	// エフェクトの再生
+	GreeningAreaNS::DeadingEffect* deadingEffect
+		= new GreeningAreaNS::DeadingEffect(&deadArea.position, &deadArea.scale);
+	effekseerNS::play(0, deadingEffect);
+}
+
+
+//=============================================================================
+// 枯れ木エリアの更新
+//=============================================================================
+void Bear::updateDeadArea(float frameTime)
+{
+	if (isMakingTreeDead == false) { return; }
+
+	if (aroundDeadTimer < AROUND_DEAD_TIME)
+	{
+		aroundDeadTimer += frameTime;
+
+		// 枯木時間終了
+		if (aroundDeadTimer > AROUND_DEAD_TIME / 2 && wasTelopDisplayed == false)
+		{// タイミングを適当に合わせているだけ
+			TelopManager* telopManager = TelopManager::get();
+			telopManager->playOrder(telopManagerNS::WITHER_BOSS);
+			wasTelopDisplayed = true;
+		}
+
+		if (aroundDeadTimer > AROUND_DEAD_TIME)
+		{
+			aroundDeadTimer = AROUND_DEAD_TIME;	// タイマー停止
+			isMakingTreeDead = false;
+			deadArea.treeCell.remove();			// 衝突空間から離脱
+		}
+	}
+
+	float rate = aroundDeadTimer / AROUND_DEAD_TIME;
+	setDeadArea(UtilityFunction::lerp(1.0f, AROUND_DEAD_RANGE, rate));
+}
+
+
+//=============================================================================
 // Getter
 //=============================================================================
 EnemyParts* Bear::getParts(int type)
 {
 	return parts[type];
 }
+
+GreeningArea* Bear::getDeadArea()
+{
+	return &deadArea;
+}
+
+bool Bear::getIsMakingTreeDead()
+{
+	return isMakingTreeDead;
+}
+
 
 //=============================================================================
 // Setter

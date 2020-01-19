@@ -155,6 +155,7 @@
     <ClInclude Include="AStar.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BearAnimation.h" />
+    <ClInclude Include="BearGauge.h" />
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="CountUI.h" />
     <ClInclude Include="OPState.h" />
@@ -339,6 +340,7 @@
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BearAnimation.cpp" />
+    <ClCompile Include="BearGauge.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="CountUI.cpp" />
     <ClCompile Include="OPState.cpp" />

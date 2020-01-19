@@ -921,6 +921,9 @@
       <Filter>Game Layer\Item</Filter>
     </ClCompile>
     <ClCompile Include="OPState.cpp" />
+    <ClCompile Include="BearGauge.cpp">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1471,6 +1474,9 @@
       <Filter>Game Layer\Item</Filter>
     </ClInclude>
     <ClInclude Include="OPState.h" />
+    <ClInclude Include="BearGauge.h">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">

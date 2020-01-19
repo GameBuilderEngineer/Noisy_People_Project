@@ -58,12 +58,15 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_30] = { "Info_30.png" };
 	textureName[UI_INFO_50] = { "Info_50.png" };
 	textureName[UI_INFO_ASSULT] = { "Info_Assult.png" };
+	textureName[UI_INFO_ASSULT2] = { "Info_Assult2.png" };
 	textureName[UI_INFO_LIMIT1] = { "Info_Limit1.png" };
 	textureName[UI_INFO_LIMIT2] = { "Info_Limit2.png" };
 	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
 	textureName[UI_INFO_BOSS] = { "Info_Boss.png" };
-	textureName[UI_INFO_BOSS2] = { "Info_Boss_2.png" };
-	textureName[UI_INFO_BOSS3] = { "Info_Boss_3.png" };
+	textureName[UI_INFO_BOSS2] = { "Info_Boss2.png" };
+	textureName[UI_INFO_WITHER] = {"Info_Withering.png"};
+	textureName[UI_INFO_WITHER2] = { "Info_Withering2.png" };
+	textureName[UI_INFO_POWERUP] = { "Info_PowerUp.png" };
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
 	textureName[UI_MAIN_RETICLE] = { "Reticle_Target.png" };
 	textureName[UI_SUB_RETICLE] = { "Reticle.png" };
@@ -83,6 +86,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_HP_GUAGE_P2] = { "HPGuage2.png" };
 	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
 	textureName[UI_HP_GUAGE_EMP_P2] = { "HPGuage_Emp2.png" };
+	textureName[UI_HP_GUAGE_ENEMY] = { "White.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
 	textureName[UI_ICON_P2] = { "Chara_2.png" };
 	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Empty_1.png" };
@@ -106,8 +110,6 @@ TextureLoader::TextureLoader()
 	textureName[MARK_2D_MALE] = { "Icon_M.png" };
 	textureName[MARK_2D_FEMALE] = { "Icon_F.png" };
 	textureName[MARK_3D_ALL] = { "Icon_All.png" };
-	textureName[ALLOW_MALE] = { "Arrow_M.png" };
-	textureName[ALLOW_FEMALE] = { "Arrow_M.png" };
 	textureName[UI_DAMAGE] = { "Damage.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
@@ -141,14 +143,7 @@ TextureLoader::TextureLoader()
 
 	// etc
 	textureName[NUMBER] = { "num.png" };
-	textureName[TOON_OUT_LINE] = { "Outline.bmp" };
-	textureName[TOON_SHADE] = { "Shade.bmp" };
-	textureName[LIGHT_001] = { "Light_001.png" };
 	textureName[TARGET] = { "stencil.png" };
-	textureName[SAMPLE_TREE] = { "tree.png" };
-	textureName[SAMPLE_GRASS] = { "middleGrass.png" };
-	textureName[NEKO] = { "Chara_B.png" };
-	textureName[COLOR_SCALE] = { "colorScale.png" };
 	textureName[DATE_ALPHA] = { "DateAlpha.png" };
 
 	//Finale

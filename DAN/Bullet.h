@@ -179,6 +179,6 @@ public:
 
 
 #ifdef _DEBUG
-	void bulletGUI();
+	//void bulletGUI();
 #endif
 };

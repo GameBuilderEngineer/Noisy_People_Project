@@ -95,7 +95,7 @@ void MeshData::initialize(StaticMesh* _staticMesh, VertexAccessor* _vtxAccessor)
 	}
 #endif
 
-#if 1	// 配列の中身をファイルにダンプ
+#if 0	// 配列の中身をファイルにダンプ
 	FILE* fp;
 	setDataDirectory();
 

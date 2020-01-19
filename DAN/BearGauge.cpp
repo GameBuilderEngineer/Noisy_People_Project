@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【TestPlane.cpp】
+//【BearGauge.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/10/29
 // [更新日]2019/10/29
@@ -8,72 +8,89 @@
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
-#include "TestPlane.h"
+#include "BearGauge.h"
 #include "ShaderLoader.h"
 #include "TextureLoader.h"
+#include "Bear.h"
 
 //===================================================================================================================================
 //【using宣言】
 //===================================================================================================================================
-using namespace testPlaneNS;
+using namespace BearGaugeNS;
 
 //===================================================================================================================================
 //【インスタンスクラス：コンストラクタ】
 //===================================================================================================================================
-TestPlaneInstance::TestPlaneInstance(D3DXVECTOR3 position) : InstancingBillboardNS::Instance()
+BearGaugeInstance::BearGaugeInstance(D3DXVECTOR3 position, int _hitPointMax) : InstancingBillboardNS::Instance()
 {
 	//初期値の設定
 	this->position	= position;
 	this->rotation	= D3DXVECTOR3(0, 0, 0);
-	this->scale		= D3DXVECTOR2(2.0f, 2.0f);
+	this->scale		= D3DXVECTOR2(1.0f, 0.2f) * SCALE_X;
 	this->speed		= D3DXVECTOR3(0, 0, 0);
-	this->limitTime	= 1.0f;
-	this->uv.x		= 0.125f*7;
-	this->uv.y		= 0.125f*7;
+	this->limitTime	= 1000.0f;
+	this->uv.x		= 0.0f;
+	this->uv.y		= 0.0f;
+	this->color		=  D3DCOLOR_RGBA(0, 255, 0, 255);
+
+	hitPointMax		= _hitPointMax;
+	offSet			= position;
 }
 
 //===================================================================================================================================
 //【インスタンスクラス：更新】
 //===================================================================================================================================
-void TestPlaneInstance::update(float frameTime)
+void BearGaugeInstance::update(float frameTime, D3DXMATRIX* _worldMatrix, int hitPoint)
 {
-	//lifeTimer += frameTime;
-	if (lifeTimer >= limitTime)return;
+	lifeTimer = 0;
+	if (hitPoint == 0) { lifeTimer = limitTime; }
+
+	D3DXVec3TransformCoord(&position, &offSet, _worldMatrix);
+
+	scale.x = (float)hitPoint / (float)hitPointMax * SCALE_X;
+	if (scale.x < 0.4 * SCALE_X) color = D3DCOLOR_RGBA(255, 255, 0, 255);
+	if (scale.x < 0.2 * SCALE_X) color = D3DCOLOR_RGBA(255, 0, 0, 255);
 }
+/////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+// 静的メンバ
+BearGauge* BearGauge::pointer = NULL;
 
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-TestPlane::TestPlane() :InstancingBillboard::InstancingBillboard()
+BearGauge::BearGauge(int hitPoint1, int hitPoint2, int hitPoint3) :InstancingBillboard::InstancingBillboard()
 {
-	InstancingBillboard::initialize(*textureNS::reference(textureNS::SPLASH),7,7);
+	pointer = this;
 
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(0, 10, 30)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(0, 20, -220)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -210)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-10, 15, -210)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-5,  15, -210)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(0,   15,  -210)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(5,   15,  -210)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -220)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -215)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -210)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -205)));
-	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(-15, 15, -200)));
+	using namespace InstancingBillboardNS;
+	InstancingBillboard::initialize(*textureNS::reference(textureNS::UI_HP_GUAGE_ENEMY),0,0);
+	//setRenderType(FOREGROUND_PASS | OFF_BILLBOARD_PASS);
 
+	instancePointer[HP] =  new BearGaugeInstance(D3DXVECTOR3(0, 50, 0), hitPoint1);
+	instancePointer[LEFT_ARM] = new BearGaugeInstance(D3DXVECTOR3(-20, 0, 0), hitPoint2);
+	instancePointer[RIGHT_ARM] = new BearGaugeInstance(D3DXVECTOR3(20, 0, 0), hitPoint3);
+
+	generateInstance(instancePointer[HP]);
+	updateAccessList();
+	generateInstance(instancePointer[LEFT_ARM]);
+	updateAccessList();
+	generateInstance(instancePointer[RIGHT_ARM]);
+	updateAccessList();
 }
 
 //===================================================================================================================================
 //【デストラクタ】
 //===================================================================================================================================
-TestPlane::~TestPlane()
+BearGauge::~BearGauge()
 {
 }
 
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
-void TestPlane::update(float frameTime)
+void BearGauge::update(float frameTime)
 {
 	InstancingBillboard::update(frameTime);
 }

@@ -50,7 +50,7 @@ Object::Object()
 	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));	//-xé≤
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));	//-yé≤
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));	//-zé≤
-	sphere = new BoundingSphere(&center, radius);
+	sphere				= new BoundingSphere(&center, radius);
 	box					= new DebugBox(size);
 #ifdef _DEBUG
 	axisX.color			= D3DXCOLOR(255, 0, 0, 255);						//xé≤ÉJÉâÅ[
