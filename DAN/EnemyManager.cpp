@@ -188,14 +188,18 @@ void EnemyManager::update(float frameTime)
 			if ((*itr)->getEnemyData()->isGeneratedBySpawnEvent)
 			{
 				destroyTargetEnemyData = (*itr)->getEnemyID();
-				//ゲームマスターへ記録
-				gameMaster->addKillEnemyNum((*itr)->getPlayerNo());
 			}
 
 			// Bearならマーカーを破棄する
 			if ((*itr)->getEnemyData()->type == enemyNS::BEAR)
 			{
 				markerRenderer->bossEnemyPosition = NULL;
+			}
+
+			//ゲームマスターへ記録
+			if ((*itr)->getEnemyData()->isAlive == false && (*itr)->getEnemyData()->wasAutoDetroy == false)
+			{
+				gameMaster->addKillEnemyNum((*itr)->getPlayerNo());
 			}
 
 			// エネミーオブジェクトの破棄
