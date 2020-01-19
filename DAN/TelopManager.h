@@ -35,8 +35,11 @@ namespace telopManagerNS
 		TELOP_TYPE5,	// ～感知できなくなってしまった
 		TELOP_TYPE6,	// 制限時間以内に島の枯れ木を緑化せよ！
 		BOSS_ENTRY,		// 巨大環境破壊ロボが現れた！
-		BOSS_ENTRY2,	// デジタルツリーが破壊される前に撃退せよ！
+		BOSS_ENTRY2,	// 緑化した木が枯らされる前に撃退せよ！
 		WITHER,			// デジタルツリーが壊れ周辺が枯れ木に戻った！
+		WITHER_BOSS,	// 巨大環境破壊ロボに、周辺を枯れ木に戻された！
+		POWER_UP,		// ショット強化アイテムが島に投下された！
+
 		MAX_TELOP
 	};
 

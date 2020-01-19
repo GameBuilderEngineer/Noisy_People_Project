@@ -64,7 +64,9 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
 	textureName[UI_INFO_BOSS] = { "Info_Boss.png" };
 	textureName[UI_INFO_BOSS2] = { "Info_Boss2.png" };
-	textureName[UI_INDO_WITHER] = {"Info_Withering.png"};
+	textureName[UI_INFO_WITHER] = {"Info_Withering.png"};
+	textureName[UI_INFO_WITHER2] = { "Info_Withering2.png" };
+	textureName[UI_INFO_POWERUP] = { "Info_PowerUp.png" };
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
 	textureName[UI_MAIN_RETICLE] = { "Reticle_Target.png" };
 	textureName[UI_SUB_RETICLE] = { "Reticle.png" };
@@ -84,7 +86,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_HP_GUAGE_P2] = { "HPGuage2.png" };
 	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
 	textureName[UI_HP_GUAGE_EMP_P2] = { "HPGuage_Emp2.png" };
-	textureName[UI_HP_GUAGE_ENEMY] = { "HPGuage1.png" };
+	textureName[UI_HP_GUAGE_ENEMY] = { "White.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
 	textureName[UI_ICON_P2] = { "Chara_2.png" };
 	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Empty_1.png" };
