@@ -132,6 +132,9 @@ HRESULT Director::initialize() {
 	input->initialize(instance, window->wnd, true);
 	window->setInput();
 
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+
 	//textureLoader
 	textureLoader = new TextureLoader;
 	textureLoader->load(getDevice());
@@ -157,8 +160,6 @@ HRESULT Director::initialize() {
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
 	//animationLoader->initialize(d3d->device);
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 	bool debugMode = false;
 #ifdef _DEBUG
 	if (MessageBox(0, "はい(Y):Debugモード\nいいえ(N):次へ", "デバッグシーンへ遷移しますか？", MB_YESNO | MB_TOPMOST) == IDYES)
