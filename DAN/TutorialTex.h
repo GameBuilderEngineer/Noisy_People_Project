@@ -23,7 +23,7 @@ namespace tutorialTex
 	};
 
 	const int WIDTH = WINDOW_WIDTH;								//â°ïù
-	const int HEIGHT = WINDOW_HEIGHT;						//ècïù
+	const int HEIGHT = WINDOW_HEIGHT;							//ècïù
 	const D3DXVECTOR3 POSITION = D3DXVECTOR3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0);//à íu
 	const D3DXVECTOR3 ROTATION = D3DXVECTOR3(0, 0, 0);			//âÒì]
 	const D3DCOLOR COLOR = D3DCOLOR_RGBA(255, 255, 255, 255);	//êF

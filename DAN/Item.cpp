@@ -36,7 +36,7 @@ Item::Item(StaticMesh* _staticMesh, ItemData _itemData)
 	itemEffect = new itemNS::ItemEffect(0, &position);
 	if (itemData.type == POWER_UP)
 	{
-		itemEffect->scale *= 2;
+		itemEffect->scale = D3DXVECTOR3(1,2,1) * 2;
 	}
 	effekseerNS::play(0, itemEffect);
 	//itemDestroyEffect = new itemNS::ItemDestroyEffect(0, &position);

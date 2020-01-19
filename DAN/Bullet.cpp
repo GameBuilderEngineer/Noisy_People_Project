@@ -24,7 +24,7 @@ using namespace bulletNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Bullet::Bullet(Ray shootingRay,int playerNo)
+Bullet::Bullet(Ray shootingRay,int playerNo, bool isPowUp)
 {
 	this->playerNo = playerNo;
 	//パラメータの初期化
@@ -40,7 +40,14 @@ Bullet::Bullet(Ray shootingRay,int playerNo)
 	ballisticRay.color = D3DXCOLOR(0, 255, 120, 255);
 
 	//弾本体
-	effect = new BulletBody(&matrixWorld);
+	if (isPowUp)
+	{
+		effect = new BulletBody2(&matrixWorld);
+	}
+	else
+	{
+		effect = new BulletBody(&matrixWorld);
+	}
 	effekseerNS::play(0, effect);
 
 	{//オブジェクトタイプと衝突対象の指定
@@ -166,6 +173,7 @@ BulletManager::BulletManager()
 	isLaunched		= false;
 	launchFactTime	= 0.0f;
 	powerRate		= 1.0f;
+	isPowerUp		= false;
 
 	//サウンドの設定
 	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Shot, false ,NULL,false,NULL};
@@ -224,7 +232,7 @@ void BulletManager::update(float frameTime)
 
 		//生存時間切れ||島（0,0,0）から一定距離離れた場合
 		//自然消滅処理
-		if (bullet->existenceTimer <= 0 || zeroDistance > LOST_DISTANCE)
+		if (bullet->existenceTimer <= 0 || (zeroDistance > LOST_DISTANCE && currentScene != "Scene -Tutorial-"))
 		{
 			destroy(bullet, i);
 		}
@@ -289,7 +297,7 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 	}
 
 	//バレットリストへ新たに生成
-	Bullet* newBullet = new Bullet(shootingRay,playerNo);
+	Bullet* newBullet = new Bullet(shootingRay,playerNo,isPowerUp);
 	newBullet->setDigitalPower(getPowerRate());
 
 	//リストへ追加
@@ -353,11 +361,17 @@ int BulletManager::getNum() { return bulletList->nodeNum; }
 bool BulletManager::getIsLaunched() { return isLaunched; }
 float BulletManager::getPowerRate() { return powerRate; }
 //===================================================================================================================================
-//【getter：バレットマネージャー】
+//【setter：バレットマネージャー】
 //===================================================================================================================================
 void BulletManager::setPowerRate(float value)
 {
 	powerRate = value;
+	isPowerUp = true;
+}
+
+void BulletManager::setCurrentScene(std::string scene)
+{
+	currentScene = scene;
 }
 
 ////===================================================================================================================================

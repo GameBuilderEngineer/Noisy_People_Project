@@ -51,6 +51,7 @@
 #include "Marker.h"
 #include "DamageUI.h"
 #include "Title.h"
+#include "PowerUp.h"
 
 #if 1
 #define CHEAT_PREZEN
