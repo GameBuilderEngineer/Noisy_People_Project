@@ -7,6 +7,7 @@
 #include "EnemyManager.h"
 #include "ImguiManager.h"
 #include "EnemyTools.h"
+#include "Game.h"
 using namespace enemyNS;
 
 // Staticメンバ変数
@@ -22,7 +23,9 @@ StaticMeshRenderer* EnemyManager::bearArmRRenderer;
 StaticMeshRenderer* EnemyManager::bearWaistRenderer;
 StaticMeshRenderer* EnemyManager::bearLegLRenderer;
 StaticMeshRenderer* EnemyManager::bearLegRRenderer;
-EnemyChaseMark*		EnemyManager::markRenderer;	
+EnemyChaseMark*		EnemyManager::markRenderer;
+BearGauge*			EnemyManager::bearGauge;
+std::string EnemyManager::sceneName;
 
 //=============================================================================
 // 初期化
@@ -43,6 +46,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	gameMaster = _gameMaster;
 	player = _player;
 	markerRenderer = _markerRenderer;
+	sceneName = _sceneName;
 
 	// 描画オブジェクトの作成
 	wolfBodyRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF_BODY));
@@ -58,6 +62,7 @@ void EnemyManager::initialize(std::string _sceneName, LPD3DXMESH _attractorMesh,
 	bearLegLRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_L));
 	bearLegRRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::BEAR_LEG_R));
 	markRenderer = new EnemyChaseMark;
+	bearGauge = new BearGauge(450, 150, 150);
 
 	if (_sceneName == "Scene -Game-")
 	{
@@ -114,6 +119,8 @@ void EnemyManager::uninitialize()
 	// LinkedListのポインタの入ったノードもその中の実体も破棄
 	// しているのでレンダラーの破棄のみで良い
 	SAFE_DELETE(markRenderer);
+
+	SAFE_DELETE(bearGauge);
 }
 
 
@@ -162,15 +169,15 @@ void EnemyManager::update(float frameTime)
 		(*itr)->update(frameTime);
 
 		// Bearの枯れ木化処理を発動する
-		//if ((gameMaster->getGameTime() < 220) && ((*itr)->getEnemyData()->type == enemyNS::BEAR))
-		//{
-		//	Bear* bear = (Bear*)(&*itr);
-		//	if (bear->wasDeadAroundStarted == false)
-		//	{
-		//		bear->wasDeadAroundStarted = true;
-		//		bear->deadAround();
-		//	}
-		//}
+		if ((gameMaster->getGameTime() < 25) && ((*itr)->getEnemyData()->type == enemyNS::BEAR))
+		{
+			Bear* bear = (Bear*)(*itr)->getAdr();
+			if (bear->wasDeadAroundStarted == false)
+			{
+				bear->wasDeadAroundStarted = true;
+				bear->deadAround();
+			}
+		}
 
 		// 破棄フラグ
 		bool isDestroyTarget = false;
@@ -229,6 +236,7 @@ void EnemyManager::update(float frameTime)
 	// 描画オブジェクトの更新
 	updatePartsRenderer();
 	markRenderer->update(frameTime);
+	bearGauge->update(frameTime);
 }
 
 
@@ -251,6 +259,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	bearLegLRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	bearLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	markRenderer->render(view, projection, cameraPosition);
+	bearGauge->render(view, projection, cameraPosition);
 
 #ifdef _DEBUG
 
@@ -795,6 +804,7 @@ void EnemyManager::relocateEnemyAccordingToFile()
 LinkedList<enemyNS::EnemyData>* EnemyManager::getEnemyDataList() { return &enemyDataList; }
 std::vector<Enemy*>& EnemyManager::getEnemyList() { return enemyList; }
 int EnemyManager::getNextID() { return nextID; }
+std::string EnemyManager::getSceneName() { return sceneName; }
 
 
 //=============================================================================

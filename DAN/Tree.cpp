@@ -12,6 +12,7 @@
 #include "Tree.h"
 #include "ImguiManager.h"
 #include "UtilityFunction.h"
+#include "TelopManager.h"
 
 //=============================================================================
 //yusingéŒ¾z
@@ -512,6 +513,9 @@ void AnalogState::update(float frameTime)
 		{
 			aroundDeadTimer = AROUND_DEAD_TIME;	//ƒ^ƒCƒ}[’âŽ~
 			tree->disableAroundGreening();		//ŽüˆÍŒÍ–Ø‰»ƒtƒ‰ƒO‚ðØ‚é
+
+			TelopManager* telopManager = TelopManager::get();
+			telopManager->playOrder(telopManagerNS::WITHER);
 		}
 	}
 

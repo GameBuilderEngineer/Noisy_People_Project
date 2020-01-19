@@ -50,13 +50,12 @@ namespace aiNS
 	// Event Maker
 	//-------------
 	// イベント発生の評価値定数（下記値を上回ればイベントが実行される）
-	const float WEIGHT_SPAWN = 0.7f;				// SPAWN_ENEMY_AROUND_PLAYER
+	const float WEIGHT_SPAWN = 0.6f;				// SPAWN_ENEMY_AROUND_PLAYER
 	const float WEIGHT_RESPAWN = 0.7f;				// RESPAWN_ENEMY
-	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.8f;	// ENEMY_ATTACKS_TREE
+	const float WEIGHT_ENEMY_ATTACKS_TREE = 0.5f;	// ENEMY_ATTACKS_TREE
 
-	const float MANDATORY_SPAWN_INTERVAL = 20.0f;				// エネミースポーンのための最低経過間隔秒
-	const float MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE = 40.0f;	// ツリー襲撃イベントの最低経過間隔秒
-	const float MANDATOEY_INTERVAL_CHECKING_WEIGHT = 8.0f;		// ツリー襲撃イベントの発生評価値チェック間隔
+	const float MANDATORY_SPAWN_INTERVAL = 35.0f;				// エネミースポーンのための最低経過間隔秒
+	const float MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE = 20.0f;	// ツリー襲撃イベントの最低経過間隔秒
 
 	// ツリー襲撃イベントの例外となる木のID
 	const int EXCEPTION_TREE_MAX = 3;// ●
@@ -105,7 +104,7 @@ namespace aiNS
 
 		// イベント
 		float lastTimeEnemyAttaksTree;						// 最後にツリー襲撃イベントが発生した時間
-		float lastTimeCheckedWeightEnemyAttacksTree;		// 最後にツリー襲撃イベントの発生評価値をチェックした時間
+		float ajustTimeEnemyAttaksTree;						// ツリー襲撃イベントの調整時間
 		bool wasBossEntried;								// 環境破壊ロボが登場したか
 
 		// イベント発生の評価値（0.0～1.0）

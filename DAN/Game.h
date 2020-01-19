@@ -52,7 +52,7 @@
 #include "DamageUI.h"
 #include "Title.h"
 
-#if 0
+#if 1
 #define CHEAT_PREZEN
 #endif
 
@@ -126,7 +126,6 @@ private:
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
-
 
 	//ビルボード
 	//TestEffect*						testEffect;		//インスタンシングビルボードテスト
@@ -212,11 +211,11 @@ private:
 	D3DXVECTOR3 BezierPoint5;			//S字ベジェ曲線点２
 	D3DXVECTOR3 BezierPoint6;			//S字ベジェ曲線点２
 
-	D3DXVECTOR3 Curve1;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve2;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve3;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve4;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve5;			//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve1;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve2;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve3;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve4;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve5;					//S字ベジェ曲線点２
 	bool measurement = true;
 
 public:

@@ -920,6 +920,9 @@
     <ClCompile Include="Powerup.cpp">
       <Filter>Game Layer\Item</Filter>
     </ClCompile>
+    <ClCompile Include="BearGauge.cpp">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1468,6 +1471,9 @@
     <ClInclude Include="Photograph.h" />
     <ClInclude Include="Powerup.h">
       <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="BearGauge.h">
+      <Filter>Game Layer\Enemy\Bear</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

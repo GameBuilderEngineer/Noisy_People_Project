@@ -427,7 +427,6 @@ void Game::update(float _frameTime) {
 	//開始カウントダウン
 	if (gameMaster->playActionStartCount(3))
 	{
-		enemyManager->setUpdate(true);				//エネミー更新開始
 		countUI->startCount(3);
 		SoundInterface::SE->playSound(&playParameters[1]);
 	}
@@ -446,7 +445,8 @@ void Game::update(float _frameTime) {
 		countUI->startCount(0);									//ゲーム開始
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE6);		//テロップ
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE6);	//テロップ
+		enemyManager->setUpdate(true);							//エネミー更新開始
 	}
 	
 	//ゲームタイムの更新
@@ -735,7 +735,13 @@ void Game::update(float _frameTime) {
 
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
 		player[i].update(frameTime);		//オブジェクト
+		if (player[i].position.y < 0.0f)
+		{
+			player[i].reset();
+		}
+	}
 	maleRenderer->update();					//レンダラー
 	femaleRenderer->update();				//レンダラー
 
@@ -866,7 +872,6 @@ void Game::update(float _frameTime) {
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
-
 
 	//スカイドームの更新
 	sky->update();

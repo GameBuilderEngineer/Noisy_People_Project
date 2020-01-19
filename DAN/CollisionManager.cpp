@@ -447,9 +447,13 @@ bool CollisionManager::bulletAndEnemyParts(Bullet* bullet, enemyNS::EnemyParts* 
 	if (hit)
 	{
 		enemyParts->damage(bullet->getDigitalPower());									// パーツへのダメージ
-		//enemyParts->getEnemy()->damage(bullet->getDigitalPower(), bullet->playerNo);	// エネミー本体へのダメージ
 		enemyParts->getEnemy()->setAttention(-bullet->getBulletSpeed());				// 注意を引く
 		bullet->destroy();
+
+		if (enemyParts->getEnemy()->cntDestroyParts >= 2)
+		{
+			enemyParts->getEnemy()->damage(bullet->getDigitalPower(), bullet->playerNo);	// エネミー本体へのダメージ
+		}
 	}
 
 	return hit;
@@ -471,7 +475,7 @@ bool CollisionManager::enemyAndEnemy(Enemy* enemy1, Enemy* enemy2)
 }
 
 //===================================================================================================================================
-//【エネミー<-> ツリー】
+//【エネミー<->ツリー】
 //===================================================================================================================================
 bool CollisionManager::enemyAndTree(Enemy* enemy, Tree* tree)
 {

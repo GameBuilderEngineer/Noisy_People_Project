@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Enemy.h"
+#include "BearGauge.h"
 #include "UtilityFunction.h"
 
 //=============================================================================
@@ -33,8 +34,8 @@ namespace bearNS
 		D3DXVECTOR3(1.99f, 16.01f, -1.05f),	// 右足
 	};
 
-	const float AROUND_DEAD_TIME = 2.0f;
-	const float AROUND_DEAD_RANGE = 200.0f;
+	const float AROUND_DEAD_TIME = 5.0f;
+	const float AROUND_DEAD_RANGE = 280.0f;
 }
 
 
@@ -44,14 +45,17 @@ namespace bearNS
 class Bear: public Enemy
 {
 private:
+	// パーツ
 	enemyNS::EnemyParts* parts[bearNS::PARTS_MAX];
 	// ※パーツオブジェクトはObjectクラスの更新処理を行わない.
 	// ※ワールド変換等の処理はアニメーションマネージャが代替する.
+	BearGauge* gauge;
 
 	// 枯れ木戻し
 	GreeningArea deadArea;						// 枯れ木にする範囲
 	float aroundDeadTimer;						// 枯れ木にしている最中の経過時間
 	bool isMakingTreeDead;						// 枯れ木にしている最中か
+	bool wasTelopDisplayed;						// テロップだしたか
 
 	// Sound
 	//LinkedList<int>*soundIDList;

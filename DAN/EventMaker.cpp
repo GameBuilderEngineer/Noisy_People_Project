@@ -74,7 +74,6 @@ void EventMaker::update()
 		}
 	}
 
-
 	if (data->numTreeAttackingEnemy == 0 && data->attackedTree != NULL)
 	{
 		// マーカーを破棄
@@ -85,29 +84,25 @@ void EventMaker::update()
 
 		// メタAIからツリーの記録を消すぴょん
 		data->attackedTree = NULL;
+
+		// 襲撃時間を記録
+		data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
 	}
 
 #ifndef CHEAT_PREZEN
 	// デジタルツリー襲撃イベント
-	if (data->numBeingAttackedTree > 0)
+	if (data->numBeingAttackedTree == 0)
 	{
-		//data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
+		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE + data->ajustTimeEnemyAttaksTree)
+		{
+			// 最低経過時間チェック
+			data->weightEnemyAttacksTree = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 4.0f, 10.0f);
+			data->weightEnemyAttacksTree *= (1.0f + (float)(rand() % 5 - 2) * 0.1f);	// ランダム補正
 
-		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_ENEMY_ATTAKS_TREE)
-		{// 最低経過時間チェック
-			float tmp1 = fuzzy.reverseGrade(gameMaster->getGameTime(), 120.0f, 180.0f);
-			float tmp2 = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 6.0f, 20.0f);
-			data->weightEnemyAttacksTree = fuzzy.OR(tmp1, tmp2);
-			data->weightEnemyAttacksTree *= (float)(rand() % 5 - 2);	// ランダム補正
-
-			if (data->lastTimeCheckedWeightEnemyAttacksTree - gameMaster->getGameTime() > MANDATOEY_INTERVAL_CHECKING_WEIGHT)
-			{// 評価値（重み）のチェック間隔を空ける
-				data->lastTimeCheckedWeightEnemyAttacksTree = gameMaster->getGameTime();
-				if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
-				{
-					data->lastTimeEnemyAttaksTree = gameMaster->getGameTime();
-					makeEventEnemyAttaksTree();
-				}
+			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
+			{
+				data->ajustTimeEnemyAttaksTree = rand() % 10;// ランダムで間隔調整を入れる
+				makeEventEnemyAttaksTree();
 			}
 		}
 	}
@@ -187,6 +182,8 @@ void EventMaker::makeEventEnemyAttaksTree()
 		// 実行
 		opeGenerator->enemyAttaksTree(enemySet, attackTarget);
 	}	
+	telopManager->playOrder(telopManagerNS::ENEMY_ASSULT);
+	telopManager->playOrder(telopManagerNS::ENEMY_ASSULT2);
 }
 
 
@@ -356,15 +353,18 @@ int EventMaker::decideAttackTargetTree()
 //=============================================================================
 D3DXVECTOR3 EventMaker::decideBossEntryPoint()
 {
-	////●とりあえず
-	//switch (rand() % 2)
-	//{
-	//case 0:
-		return D3DXVECTOR3(186.0f, 100.0f, -165.0f); // 東の台地
+#ifndef CHEAT_PREZEN
+	switch (rand() % 2)
+	{
+	case 0:
+		return D3DXVECTOR3(186.0f, 100.0f, -165.0f);	// 東の台地
 
-	//case 1:
-	//	return D3DXVECTOR3(-204.0f, 86.0f, 197.0f);	// 北の台地
-	//}
+	case 1:
+		return D3DXVECTOR3(-204.0f, 86.0f, 197.0f);		// 北の台地
+	}
+#else
+	return D3DXVECTOR3(186.0f, 100.0f, -165.0f);		// 東の台地
+#endif
 }
 
 

@@ -25,7 +25,6 @@
 #define RENDER_SENSOR
 #endif
 
-
 //=============================================================================
 // 名前空間
 //=============================================================================
@@ -192,6 +191,7 @@ namespace enemyNS
 	const float ARRIVAL_DISTANCE = 0.5f;				// 到着距離
 	const float MOVE_LIMIT_TIME = 10.0f;				// 移動リミット時間
 	const float PATH_SEARCH_INTERVAL_WHEN_CHASE = 0.3f;	// 追跡ステート時のパス検索間隔
+	const float TIME_BEFORE_TREE_COLLISION = 10.0f;		// ツリー攻撃ステートでツリーに触れないままでいられる時間
 
 	// Other Constant
 	const float DIFFERENCE_FIELD = 0.05f;				// フィールド補正差分
@@ -312,6 +312,7 @@ namespace enemyNS
 	private:
 		Enemy* enemy;					// エネミー
 		StaticMeshRenderer* renderer;	// 描画オブジェクト
+		float cntDestroyTime = 0.0f;	// パーツが破壊される時間をカウント
 
 	public:
 		int durability;					// 耐久度
@@ -327,6 +328,7 @@ namespace enemyNS
 		void damage(int value)
 		{
 			durability -= value;
+
 			if (durability < 0)
 			{
 				durability = 0;
@@ -334,18 +336,25 @@ namespace enemyNS
 		}
 
 		// 耐久度チェック
-		void checkDurability()
+		void checkDurability(float frameTime)
 		{
-			if (durability == 0 && wasEffectPlayed == false)
+			if (durability != 0) return;
+
+			if (wasEffectPlayed == false)
+			{
+				// エフェクト
+				DeathEffect* effect = new DeathEffect(&jointPosition, effekseerNS::ENEMY_DEATH);
+				effect->scale *= 5.0f;//エフェクトサイズ
+				effekseerNS::play(0, effect);
+				wasEffectPlayed = true;
+			}
+
+			cntDestroyTime += frameTime;
+			if (cntDestroyTime > 2.0f)
 			{
 				// 描画と衝突判定から取り除く（インスタンス破棄自体はエネミーのデストラクタ）
 				renderer->unRegisterObjectByID(this->id);
 				treeCell.remove();
-				// エフェクト
-				DeathEffect* effect = new DeathEffect(&jointPosition, effekseerNS::ENEMY_DEATH);
-				effect->scale *= 3.0f;//エフェクトサイズ
-				effekseerNS::play(0, effect);
-				wasEffectPlayed = true;
 			}
 		}
 	};
@@ -431,6 +440,8 @@ public:
 	bool wasHittingTree;							// ツリーを攻撃した			
 	float treeAttackTime;							// ツリー攻撃時間
 	bool canDamageTree;								// ツリーにダメージが入るか
+	float cntBeforeTreeCollision;					// ツリー攻撃ステートでツリーに接触するまでの時間
+	int cntDestroyParts;							// 破壊されたパーツの数
 
 	// 移動
 	D3DXVECTOR3 destination;						// 目的地
@@ -574,6 +585,7 @@ public:
 	//-----------------
 	// Getter & Setter
 	//-----------------
+	Enemy* getAdr() { return this; }
 	int getEnemyID();
 	static int getNumOfEnemy();
 	enemyNS::EnemyData* getEnemyData();
@@ -603,7 +615,6 @@ public:
 	void setTreeHit(bool setting);
 	// ツリーに攻撃がヒットしたか設定
 	void setCanDamageTree(bool setting);
-
 	// フィールドワールドマトリクスを設定
 	void setFieldMatrix(D3DXMATRIX *matrix);
 

@@ -75,6 +75,8 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	wasHittingTree = false;
 	treeAttackTime = 0.0f;
 	canDamageTree = true;
+	cntBeforeTreeCollision = 0.0f;
+	cntDestroyParts = 0.0f;
 
 	// 移動の初期化
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -865,7 +867,7 @@ void Enemy::rest(float frameTime)
 {
 	if (canSense)
 	{
-		//sensor();
+		sensor();
 	}
 
 	// isPayingNewAttentionの後に一回だけここを通る
@@ -878,9 +880,7 @@ void Enemy::rest(float frameTime)
 		isDestinationLost = false;
 		isArraved = false;
 		setMovingTarget(&destination);
-
-		//moveDirection = slip(attentionDirection, axisY.direction);
-		//postureControl(axisZ.direction, attentionDirection, 1);
+		searchPath();
 	}
 }
 
@@ -903,15 +903,20 @@ void Enemy::attackTree(float frameTime)
 	setMovingTarget(&destination);
 	if (wasHittingTree)
 	{
+		cntBeforeTreeCollision = 0.0f;
 		animationManager->switchAttack();
 	}
 	else
 	{
+		cntBeforeTreeCollision += frameTime;
 		move(frameTime);
 	}
 
-	// ツリーのHPがゼロになりアナログに戻った場合にステートを終了する
-	if (enemyData->targetTree->getTreeData()->isAttaked == false)
+	// ステート終了
+	// ツリーのHPがゼロになりアナログに戻った場合に
+	// またはツリーに触れられないまま指定秒数経ったとき
+	if (enemyData->targetTree->getTreeData()->isAttaked == false
+		|| cntBeforeTreeCollision > TIME_BEFORE_TREE_COLLISION)
 	{
 		// ステートマシンでPatrolにするための処理
 		enemyData->targetTree = NULL;
@@ -940,18 +945,20 @@ void Enemy::die(float frameTime)
 		enemyData->isAlive = false;
 		enemyData->deadTime = gameMaster->getGameTime();
 
-		// アイテムドロップ
-		// Saiテスト
-		//if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
-		//{
-		//	ItemManager* itemManager = ItemManager::get();
-		//	itemNS::ItemData itemData;
-		//	itemData.itemID = itemManager->issueNewItemID();
-		//	itemData.type = itemNS::BATTERY;
-		//	itemData.defaultPosition = position;
-		//	itemData.defaultDirection = axisZ.direction;
-		//	itemManager->createItem(itemData);
-		//}
+		 // アイテムドロップ 
+		if (EnemyManager::getSceneName() == "Scene -Game-")
+		{
+			if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
+			{
+				ItemManager* itemManager = ItemManager::get();
+				itemNS::ItemData itemData;
+				itemData.itemID = itemManager->issueNewItemID();
+				itemData.type = itemNS::BATTERY;
+				itemData.defaultPosition = position;
+				itemData.defaultDirection = axisZ.direction;
+				itemManager->createItem(itemData);
+			}
+		}
 	}
 
 	// 死亡ステート時間のカウントアップ
