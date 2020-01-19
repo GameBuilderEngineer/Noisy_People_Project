@@ -271,7 +271,7 @@ void Bear::updateDeadArea(float frameTime)
 		if (aroundDeadTimer > AROUND_DEAD_TIME / 2 && wasTelopDisplayed == false)
 		{// タイミングを適当に合わせているだけ
 			TelopManager* telopManager = TelopManager::get();
-			telopManager->playOrder(telopManagerNS::WITHER);
+			telopManager->playOrder(telopManagerNS::WITHER_BOSS);
 			wasTelopDisplayed = true;
 		}
 

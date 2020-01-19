@@ -65,7 +65,7 @@ BearGauge::BearGauge(int hitPoint1, int hitPoint2, int hitPoint3) :InstancingBil
 	pointer = this;
 
 	using namespace InstancingBillboardNS;
-	InstancingBillboard::initialize(*textureNS::reference(textureNS::TUTORIAL_UI_0),0,0);
+	InstancingBillboard::initialize(*textureNS::reference(textureNS::UI_HP_GUAGE_ENEMY),0,0);
 	//setRenderType(FOREGROUND_PASS | OFF_BILLBOARD_PASS);
 
 	instancePointer[HP] =  new BearGaugeInstance(D3DXVECTOR3(0, 50, 0), hitPoint1);
