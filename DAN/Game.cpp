@@ -446,7 +446,12 @@ void Game::update(float _frameTime) {
 		countUI->startCount(0);									//ゲーム開始
 		SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE6);		//テロップ
+		telopManager->playOrder(telopManagerNS::TELOP_TYPE6);	//テロップ
+		//プレイヤーを通常状態へ
+		player[gameMasterNS::PLAYER_1P].transState(playerNS::NORMAL);
+		player[gameMasterNS::PLAYER_1P].enableOperation(playerNS::ENABLE_CAMERA);
+		player[gameMasterNS::PLAYER_2P].transState(playerNS::NORMAL);
+		player[gameMasterNS::PLAYER_2P].enableOperation(playerNS::ENABLE_CAMERA);
 	}
 	
 	//ゲームタイムの更新

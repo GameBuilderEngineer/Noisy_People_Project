@@ -920,6 +920,7 @@
     <ClCompile Include="Powerup.cpp">
       <Filter>Game Layer\Item</Filter>
     </ClCompile>
+    <ClCompile Include="OPState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1469,6 +1470,7 @@
     <ClInclude Include="Powerup.h">
       <Filter>Game Layer\Item</Filter>
     </ClInclude>
+    <ClInclude Include="OPState.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icon.ico">
