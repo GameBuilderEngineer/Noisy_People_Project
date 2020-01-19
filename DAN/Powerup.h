@@ -7,14 +7,16 @@
 #include "Item.h"
 class Powerup:public Item
 {
+	bool flag;
+	Ray ray;
+	D3DXVECTOR3 fieldFacePosition;
 public:
 	Powerup(StaticMesh* _staticMesh, itemNS::ItemData _itemData);
 	~Powerup();
 
 	static void initialize(StaticMesh* staticMesh);
+	void initialize();
 	virtual void update(float frameTime);
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-
-
 };
 

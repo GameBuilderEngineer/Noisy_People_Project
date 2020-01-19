@@ -21,8 +21,23 @@ Item::Item(StaticMesh* _staticMesh, ItemData _itemData)
 	itemData = _itemData;
 	position = itemData.defaultPosition;
 	Object::initialize(&position);
-	sphereCollider.initialize(&position, _staticMesh->mesh);
+
+	if (itemData.type == POWER_UP)
+	{
+		sphereCollider.initialize(&position, 5.0f);
+		// ‚Ä‚©ƒfƒJ‚·‚¬‚¾
+		scale *= 0.0002f;
+	}
+	else
+	{
+		sphereCollider.initialize(&position, _staticMesh->mesh);
+	}
+
 	itemEffect = new itemNS::ItemEffect(0, &position);
+	if (itemData.type == POWER_UP)
+	{
+		itemEffect->scale *= 2;
+	}
 	effekseerNS::play(0, itemEffect);
 	//itemDestroyEffect = new itemNS::ItemDestroyEffect(0, &position);
 }

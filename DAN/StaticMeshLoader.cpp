@@ -102,6 +102,8 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[NAV_TEST4]								= { "Test4.x" };
 	fileName[NAV_TEST5]								= { "Test5.x" };
 	fileName[NAV_TEST6]								= { "Test6.x" };
+
+	fileName[POWER_UP_ITEM]							= { "powup.x" };
 }
 
 //===================================================================================================================================

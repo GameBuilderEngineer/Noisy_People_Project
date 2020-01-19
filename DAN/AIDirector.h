@@ -29,6 +29,7 @@ namespace aiNS
 		RESPAWN_ENEMY,					// 一度倒したエネミーを初期位置にリスポーンする
 		ENEMY_ATTACKS_TREE,				// エネミーがツリーを襲撃するイベントが発生する
 		BOSS_ENTRY,						// 巨大環境破壊ロボが登場
+		POWER_UP_ITEM,					// パワーアップアイテム登場
 		NUM_EVENT_LIST
 	};
 
@@ -106,6 +107,8 @@ namespace aiNS
 		float lastTimeEnemyAttaksTree;						// 最後にツリー襲撃イベントが発生した時間
 		float ajustTimeEnemyAttaksTree;						// ツリー襲撃イベントの調整時間
 		bool wasBossEntried;								// 環境破壊ロボが登場したか
+		bool wasPowerUpEntried;								// パワーアップアイテムが登場したか
+		float powerUpEntryAdjustTime;						// パワーアップアイテムが登場するための調整時間
 
 		// イベント発生の評価値（0.0～1.0）
 		float weightSpawn[gameMasterNS::PLAYER_NUM];		// SPAWN_ENEMY_AROUND_PLAYER

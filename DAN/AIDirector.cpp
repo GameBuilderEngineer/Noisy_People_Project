@@ -59,6 +59,8 @@ void AIDirector::initialize(GameMaster* _gameMaster, LPD3DXMESH _fieldMesh, Play
 	data.ajustTimeEnemyAttaksTree = 0.0f;
 	data.wasBossEntried = false;
 	data.attackedTree = NULL;
+	data.wasPowerUpEntried = false;
+	data.powerUpEntryAdjustTime = rand() % 120;
 
 	BoundingSphere temp;
 	temp.initialize(NULL, fieldMesh);
