@@ -35,7 +35,7 @@ public://ƒƒ“ƒo[ŠÖ”
 	Green();
 	~Green();
 	void initialize(int playerType);
-	void render(int state);
+	void render(int state, float time);
 	
 private:
 };
