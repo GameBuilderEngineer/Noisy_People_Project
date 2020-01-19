@@ -39,7 +39,7 @@ namespace textureNS
 		TITLE_INFO_GAME,
 		TITLE_INFO_CREDIT,
 		TITLE_INFO_EXIT,
-		TITLE_COPYRIGHT,			
+		TITLE_COPYRIGHT,
 		TITLE_BAR,
 		TITLE_PRESS,
 
@@ -102,8 +102,6 @@ namespace textureNS
 		MARK_2D_MALE,
 		MARK_2D_FEMALE,
 		MARK_3D_ALL,
-		ALLOW_MALE,
-		ALLOW_FEMALE,
 		UI_DAMAGE,
 
 		// Result
@@ -132,14 +130,7 @@ namespace textureNS
 
 		// etc
 		NUMBER,
-		TOON_OUT_LINE,
-		TOON_SHADE,
-		LIGHT_001,
 		TARGET,
-		SAMPLE_TREE,
-		SAMPLE_GRASS,
-		NEKO,
-		COLOR_SCALE,
 		DATE_ALPHA,
 
 		//Finale

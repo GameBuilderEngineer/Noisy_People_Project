@@ -108,8 +108,6 @@ TextureLoader::TextureLoader()
 	textureName[MARK_2D_MALE] = { "Icon_M.png" };
 	textureName[MARK_2D_FEMALE] = { "Icon_F.png" };
 	textureName[MARK_3D_ALL] = { "Icon_All.png" };
-	textureName[ALLOW_MALE] = { "Arrow_M.png" };
-	textureName[ALLOW_FEMALE] = { "Arrow_M.png" };
 	textureName[UI_DAMAGE] = { "Damage.png" };
 
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
@@ -143,14 +141,7 @@ TextureLoader::TextureLoader()
 
 	// etc
 	textureName[NUMBER] = { "num.png" };
-	textureName[TOON_OUT_LINE] = { "Outline.bmp" };
-	textureName[TOON_SHADE] = { "Shade.bmp" };
-	textureName[LIGHT_001] = { "Light_001.png" };
 	textureName[TARGET] = { "stencil.png" };
-	textureName[SAMPLE_TREE] = { "tree.png" };
-	textureName[SAMPLE_GRASS] = { "middleGrass.png" };
-	textureName[NEKO] = { "Chara_B.png" };
-	textureName[COLOR_SCALE] = { "colorScale.png" };
 	textureName[DATE_ALPHA] = { "DateAlpha.png" };
 
 	//Finale

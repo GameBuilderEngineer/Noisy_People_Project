@@ -46,7 +46,7 @@ void TestPlaneInstance::update(float frameTime)
 //===================================================================================================================================
 TestPlane::TestPlane() :InstancingBillboard::InstancingBillboard()
 {
-	InstancingBillboard::initialize(*textureNS::reference(textureNS::COLOR_SCALE),7,7);
+	InstancingBillboard::initialize(*textureNS::reference(textureNS::SPLASH),7,7);
 
 	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(0, 10, 30)));
 	//generateInstance(new TestPlaneInstance(D3DXVECTOR3(0, 20, -220)));
