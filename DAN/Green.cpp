@@ -51,16 +51,20 @@ void Green::initialize(int playerType)
 //==========================================
 //•`‰æˆ—
 //==========================================
-void Green::render(int state)
+void Green::render(int state, float time)
 {
-	switch (state)
+	float gametime = time;
+	if (gametime > 60)//c‚èŠÔ‚ª60ˆÈã‚Ì‚Ì‚İ•\¦
 	{
-	case 2:
-		green->render();
-		break;
-	case 3:
-		green->render();
-		break;
+		switch (state)
+		{
+		case 2:
+			green->render();
+			break;
+		case 3:
+			green->render();
+			break;
+		}
 	}
 	
 }
