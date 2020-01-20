@@ -254,6 +254,7 @@ namespace enemyNS
 		bool isAlive;					// 生存フラグ
 		bool isGeneratedBySpawnEvent;	// イベントによる生成フラグ(データ作成後オブジェクト作成前にtrueに設定)
 		bool isObjectExists;			// オブジェクト存在フラグ（オブジェクト作成破棄に合わせて設定）				
+		bool wasAutoDetroy;				// 自動削除フラグ
 
 		//~EnemyData() { SAFE_DELETE_ARRAY(patrolRoute); }
 		void zeroClear() { ZeroMemory(this, sizeof(EnemyData)); }

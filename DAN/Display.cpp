@@ -144,6 +144,8 @@ void Display::update(float _frameTime)
 			//パッケージ内のイベントを呼び出す
 			for (int i = 0; i < package->treeMax; i++)
 			{
+				//記録されていない場合スルー
+				if (!package->treeTable[i].onRecord)continue;
 				//イベント対象のツリー
 				Tree* selectTree = NULL;
 				//イベント対象のツリーを検索する
@@ -161,23 +163,13 @@ void Display::update(float _frameTime)
 				if (selectTree == NULL)continue;
 
 				//イベント別にアクションする
-				switch (package->treeTable[i].eventType)
+				if(package->treeTable[i].greenState != selectTree->getTreeData()->greenState)
 				{
-				case gameMasterNS::TO_DEAD:
 					selectTree->transState();
-					break;
-				case gameMasterNS::TO_GREEN_WITH_ANALOG:
-					selectTree->transState();
-					break;
-				case gameMasterNS::TO_GREEN_WITH_DIGITAL:
-					selectTree->transState();
-					break;
 				}
 			}
 			////パッケージ内のイベントを解放する
 			//SAFE_DELETE_ARRAY(package->treeTable);
-
-
 		}
 
 		bool transition = package->sceneReset;

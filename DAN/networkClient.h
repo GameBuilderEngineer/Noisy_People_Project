@@ -38,6 +38,7 @@ public:
 
 	void send(float time);
 	void outputGUI();
+	static void recordTreeTable(const TreeTable inTreeTable, int tableNo);
 	static void setSendTreeTable(const TreeTable inTreeTable);
 	void resetDisplay();
 
@@ -57,6 +58,6 @@ private:
 	unsigned int addr;
 	int nRtn, nNo = 5;
 
-	static TreeTable treeTable[20];
+	static TreeTable treeTable[500];
 	static int treeNum;
 };

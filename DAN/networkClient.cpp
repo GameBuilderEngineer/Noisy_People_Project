@@ -7,7 +7,7 @@
 #include "networkClient.h"
 #include "ImguiManager.h"
 
-TreeTable NETWORK_CLIENT::treeTable[20] = { 0 };
+TreeTable NETWORK_CLIENT::treeTable[500] = { 0 };
 int NETWORK_CLIENT::treeNum = 0;
 bool NETWORK_CLIENT::requestConnection = false;
 bool NETWORK_CLIENT::initialConnection = true;
@@ -299,6 +299,16 @@ void NETWORK_CLIENT::outputGUI()
 }
 
 //===================================================================================================================================
+//【ツリーテーブルへの記録】
+//===================================================================================================================================
+void NETWORK_CLIENT::recordTreeTable(const TreeTable inTreeTable, int tableNo)
+{
+	//接続に失敗しているので、記録を行わない
+	if (!success)return;
+	treeTable[tableNo] = inTreeTable;
+}
+
+//===================================================================================================================================
 //【送信】
 //===================================================================================================================================
 void NETWORK_CLIENT::setSendTreeTable(const TreeTable inTreeTable)
@@ -306,22 +316,6 @@ void NETWORK_CLIENT::setSendTreeTable(const TreeTable inTreeTable)
 	//接続に失敗しているので、送信を行わない
 	if (!success)return;
 
-	//if (treeNum == NULL)
-	//{
-	//	treeTable = new TreeTable;
-	//	memcpy(treeTable, &inTreeTable, sizeof(TreeTable));
-	//}
-	//else
-	//{
-	//	TreeTable *tmpTreeTable;
-	//	tmpTreeTable = new TreeTable[treeNum];
-	//	memcpy(tmpTreeTable, treeTable, sizeof(TreeTable)*treeNum);
-	//	SAFE_DELETE_ARRAY(treeTable);
-	//	treeTable = new TreeTable[treeNum + 1];
-	//	memcpy(treeTable, tmpTreeTable, sizeof(TreeTable)*treeNum);
-	//	SAFE_DELETE_ARRAY(tmpTreeTable);
-	//	memcpy(&treeTable[treeNum], &inTreeTable, sizeof(TreeTable));
-	//}
 	treeTable[treeNum] = inTreeTable;
 
 	treeNum++;

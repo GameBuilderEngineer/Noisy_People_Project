@@ -28,22 +28,22 @@ namespace PlayerEffectNS
 			syncMatrix = sync;
 			managerNo = no;
 			effectNo = effekseerNS::DIGIT_MODE;
-			scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+			scale = D3DXVECTOR3(0.25f, 0.25f, 0.25f);
 		}
 		virtual void update() {
 			D3DXMATRIX M = *syncMatrix;
 
 			::Effekseer::Manager*	manager = getEffekseerManager(managerNo)->manager;
 			::Effekseer::Matrix43 matrix;
-			matrix.Value[0][0] = M._11;
+			matrix.Value[0][0] = M._11*scale.x;
 			matrix.Value[0][1] = M._12;
 			matrix.Value[0][2] = M._13;
 			matrix.Value[1][0] = M._21;
-			matrix.Value[1][1] = M._22;
+			matrix.Value[1][1] = M._22*scale.y;
 			matrix.Value[1][2] = M._23;
 			matrix.Value[2][0] = M._31;
 			matrix.Value[2][1] = M._32;
-			matrix.Value[2][2] = M._33;
+			matrix.Value[2][2] = M._33*scale.z;
 			matrix.Value[3][0] = M._41;
 			matrix.Value[3][1] = M._42;
 			matrix.Value[3][2] = M._43;

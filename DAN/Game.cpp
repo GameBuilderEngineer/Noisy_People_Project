@@ -88,9 +88,7 @@ void Game::initialize() {
 	faceField->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//player
-	player = new Player[gameMasterNS::PLAYER_NUM];
-	maleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_MALE));
-	femaleRenderer = new StaticMeshRenderer(staticMeshNS::reference(gameMasterNS::MODEL_FEMALE));
+	player				= new Player[gameMasterNS::PLAYER_NUM];
 
 	//OPカメラターゲットオブジェクト
 	target = new Object;
@@ -172,17 +170,6 @@ void Game::initialize() {
 		//カメラポインタのセット
 		player[i].setCamera(&camera[i]);
 
-		//モデルの設定
-		switch (player[i].getInfomation()->modelType)
-		{
-		case gameMasterNS::MODEL_MALE:
-			maleRenderer->registerObject(&player[i]);
-			break;
-		case gameMasterNS::MODEL_FEMALE:
-			femaleRenderer->registerObject(&player[i]);
-			break;
-		}
-
 		//エフェクシアーの設定
 		effekseerNS::setProjectionMatrix(i+1,
 			camera[i].fieldOfView,
@@ -210,26 +197,12 @@ void Game::initialize() {
 	//海面の初期化
 	ocean = new Ocean();
 
-
 	//アニメションキャラの初期化
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
 	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
 
 	FirstInit = false;
 	//InitEquipment(TRUE);
-
-	// サウンドの再生
-	//sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
-
-	//テキストの初期化
-	//text.initialize(direct3D9->device,10,10, 0xff00ff00);
-	//text2.initialize(direct3D9->device,11,11, 0xff0000ff);
-
-	//エフェクト（インスタンシング）テスト
-	//testEffect = new TestEffect();
-
-	//ディスプレイ用プレーンサンプル
-	//samplePlane = new TestPlane();
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 #ifdef SAMPLE_NAVI
@@ -368,18 +341,13 @@ void Game::uninitialize() {
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(faceField);
 	SAFE_DELETE(faceFieldRenderer);
-	SAFE_DELETE(maleRenderer);
-	SAFE_DELETE(femaleRenderer);
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
-	//SAFE_DELETE(testEffect);
-	//SAFE_DELETE(samplePlane);
 	SAFE_DELETE(enemyManager);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(itemManager);
 	SAFE_DELETE(windManager);
 	SAFE_DELETE(mapObjectManager);
-	/*SAFE_DELETE(telop);*/
 	SAFE_DELETE(telopManager);
 	SAFE_DELETE(aiDirector);
 	SAFE_DELETE(spriteGauge);
@@ -390,12 +358,8 @@ void Game::uninitialize() {
 	SAFE_DELETE(countUI);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
-	//ターゲットオブジェクト
-	SAFE_DELETE(target); 
+	SAFE_DELETE(target); 	//ターゲットオブジェクト
 	SAFE_DELETE(damageUI);
-	//UninitMoveP();
-	//UninitMoveP1();
-	//UninitEquipment();
 }
 
 //===================================================================================================================================
@@ -418,7 +382,18 @@ void Game::update(float _frameTime) {
 	if (frameTime > 10.0f / 60.0f)return;
 
 	//オープニング時間の更新
-	gameMaster->updateOpeningTime(frameTime);
+	if (input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::B) ||
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::B) ||
+		input->wasKeyPressed(VK_RETURN))
+	{
+		//スキップ
+		gameMaster->updateOpeningTime(gameMasterNS::OPENING_TIME);
+	}
+	else {
+		gameMaster->updateOpeningTime(frameTime);
+	}
 
 	//カウントダウンの更新
 	gameMaster->updateStartCountDown(frameTime);	//開始カウント
@@ -447,6 +422,11 @@ void Game::update(float _frameTime) {
 		SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
 		telopManager->playOrder(telopManagerNS::TELOP_TYPE6);	//テロップ
 		enemyManager->setUpdate(true);							//エネミー更新開始
+		//プレイヤーを通常状態へ
+		player[gameMasterNS::PLAYER_1P].transState(playerNS::NORMAL);
+		player[gameMasterNS::PLAYER_1P].enableOperation(playerNS::ENABLE_CAMERA);
+		player[gameMasterNS::PLAYER_2P].transState(playerNS::NORMAL);
+		player[gameMasterNS::PLAYER_2P].enableOperation(playerNS::ENABLE_CAMERA);
 	}
 	
 	//ゲームタイムの更新
@@ -649,82 +629,7 @@ void Game::update(float _frameTime) {
 	default:
 		break;
 	}
-
-
-	//Base::anyAxisRotationSlerp(&cameraQ,D3DXVECTOR3(13.2f, 6.0f, -13.0f),);
-
-	////カメラ移動
-	//if (input->isKeyDown('W'))
-	//{
-	//	fixedAxisZ *= 1.0f;
-	//	target->position += fixedAxisZ;
-	//}
-	//if (input->isKeyDown('S'))
-	//{
-	//	fixedAxisZ *= -1.0f;
-	//	target->position += fixedAxisZ;
-	//}
-	//if (input->isKeyDown('A'))
-	//{
-	//	cameraAxisX *= -1.0f;
-	//	target->position += cameraAxisX;
-	//}
-	//if (input->isKeyDown('D'))
-	//{
-	//	cameraAxisX *= 1.0f;
-	//	target->position += cameraAxisX;
-	//}
-	//if (input->isKeyDown('Q'))
-	//{
-	//	Y *= 1.0f;
-	//	target->position += cameraOP->upVector;
-	//}
-	//if (input->isKeyDown('E'))
-	//{
-	//	Y *= 1.0f;
-	//	target->position -= cameraOP->upVector;
-
-	//}
-
-	////カメラ回転
-	////cameraOP->rotation(D3DXVECTOR3(0, -1, 0), degree);
-	////Y軸
-	//if (input->isKeyDown(VK_RIGHT))
-	//{
-	//	
-	//	cameraOP->rotation(cameraOP->upVector, inputDegree);
-	//	//target->quaternion.y += 5.0f;
-	//}
-	//if (input->isKeyDown(VK_LEFT))
-	//{
-	//	cameraOP->rotation(-cameraOP->upVector, inputDegree);
-	//	//target->quaternion.y -= 5.0f;
-	//}
-	////X軸
-	//if (input->isKeyDown(VK_UP))
-	//{
-	//	cameraOP->rotation(-fixedAxisX, inputDegree);
-	//}
-	//if (input->isKeyDown(VK_DOWN))
-	//{
-	//	cameraOP->rotation(fixedAxisX, inputDegree);
-	//}
-	////ズーム
-	//if (input->isKeyDown('Z'))
-	//{
-	//	cameraOP->relativeQuaternion -= cameraOP->relativeQuaternion * 0.05f;
-	//}
-	//if (input->isKeyDown('X'))
-	//{
-	//	cameraOP->relativeQuaternion += cameraOP->relativeQuaternion * 0.05f;
-	//}
-
-	if (input->wasKeyPressed('P'))
-	{
-		//getFader()->setShader(faderNS::NORMAL);
-		//getFader()->start();
-	}
-
+	
 	//テストフィールドの更新
 	testField->update();			//オブジェクト
 	testFieldRenderer->update();	//レンダラー
@@ -742,8 +647,6 @@ void Game::update(float _frameTime) {
 			player[i].reset();
 		}
 	}
-	maleRenderer->update();					//レンダラー
-	femaleRenderer->update();				//レンダラー
 
 	// エネミーの更新
 	enemyManager->update(frameTime);
@@ -877,12 +780,6 @@ void Game::update(float _frameTime) {
 	sky->update();
 	//海面の更新
 	ocean->update();
-
-	//エフェクト（インスタンシング）テスト
-	//testEffect->update(frameTime);
-
-	//ディスプレイ用プレーンサンプル
-	//samplePlane->update(frameTime);
 	
 	//カメラの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -895,9 +792,9 @@ void Game::update(float _frameTime) {
 	{
 		cameraOP->update();
 	}
+
 	//ボスカメラの更新
 	//cameraBoss->update();
-
 
 	//固定UIの更新
 	fixedUI->update(gameMaster->getGameTime());
@@ -1050,11 +947,6 @@ void Game::render3D(Camera* currentCamera) {
 	}
 	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
-
-	// プレイヤーの描画
-	//maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
-	//femaleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
-
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].otherRender(currentCamera->view, currentCamera->projection, currentCamera->position);
@@ -1066,7 +958,6 @@ void Game::render3D(Camera* currentCamera) {
 
 	//海面の描画
 	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
-
 	// エネミーの描画
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
@@ -1089,12 +980,6 @@ void Game::render3D(Camera* currentCamera) {
 
 	// マップオブジェクトの描画
 	mapObjectManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
-
-	//エフェクト（インスタンシング）テスト
-	//testEffect->render(currentCamera->view, currentCamera->projection, currentCamera->position);
-
-	//ディスプレイ用プレーンサンプル
-	//samplePlane->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//3DUI
 	if (gameMaster->whetherAchieved(gameMasterNS::PASSING_GAME_OPENING))

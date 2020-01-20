@@ -122,6 +122,8 @@ namespace playerNS{
 
 	enum STATE {
 		NONE,
+		OP,
+		ED,
 		NORMAL,
 		VISION,
 		SKY_VISION,

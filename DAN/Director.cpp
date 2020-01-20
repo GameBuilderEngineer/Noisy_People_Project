@@ -79,7 +79,6 @@ Director::~Director() {
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
-
 	UninitMoveP();
 	UninitMoveP1();
 
@@ -113,6 +112,11 @@ HRESULT Director::initialize() {
 	imgui = new ImguiManager(wnd);
 #endif // _DEBUG
 
+	//シェーダー読込
+	//Shader
+	shaderLoader = new ShaderLoader;
+	shaderLoader->load(getDevice());
+
 	//シリアル通信クラス
 	serialCommunication = new SerialCommunication();
 
@@ -142,11 +146,6 @@ HRESULT Director::initialize() {
 	//StaticMesh
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(getDevice());
-
-	//シェーダー読込
-	//Shader
-	shaderLoader = new ShaderLoader;
-	shaderLoader->load(getDevice());
 
 	//テキストデータ読込
 	textManager = new TextManager();

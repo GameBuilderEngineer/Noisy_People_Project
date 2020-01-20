@@ -88,10 +88,10 @@ void EffekseerManager::initialize()
 #endif
 
 	// 描画用インスタンスの生成
-	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 20000);
+	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 40000);
 
 	// エフェクト管理用インスタンスの生成
-	manager = ::Effekseer::Manager::Create(20000);
+	manager = ::Effekseer::Manager::Create(40000);
 
 	// 描画用インスタンスから描画機能を設定
 	manager->SetSpriteRenderer(renderer->CreateSpriteRenderer());
