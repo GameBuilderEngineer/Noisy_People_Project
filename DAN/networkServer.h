@@ -18,7 +18,10 @@ typedef struct
 {
 	bool networkTester;
 	int num;
-	D3DXVECTOR3 tmpPos;
+	D3DXVECTOR3 pos1P; 
+	bool record1P;
+	D3DXVECTOR3 pos2P;
+	bool record2P;
 	float timer;
 	int treeMax;
 	bool sceneReset;

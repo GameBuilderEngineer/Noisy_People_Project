@@ -108,6 +108,14 @@ void Display::initialize()
 	//スカイドームの初期化
 	sky = new Sky();
 
+	//マーカー
+	markerRenderer = new MarkerRenderer;
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		playerPosition[i] = D3DXVECTOR3(0, 0, 0);
+		markerRenderer->playerPosition[i] = &playerPosition[i];
+	}
+
 	networkServer = new NETWORK_INTERFACE;
 }
 
@@ -122,6 +130,7 @@ void Display::uninitialize(void)
 	SAFE_DELETE(testField);
 	SAFE_DELETE(networkServer);
 	SAFE_DELETE(sky);
+	SAFE_DELETE(markerRenderer);
 }
 
 //===================================================================================================================================
@@ -137,7 +146,12 @@ void Display::update(float _frameTime)
 	//同期タイマー：ゲームプレイ（クライアント）時更新
 	if (package->networkTester == true)
 	{
+		//タイマーの同期
 		syncTimer = package->timer;
+
+		//プレイヤー位置情報の同期
+		if (package->record1P)playerPosition[gameMasterNS::PLAYER_1P] = package->pos1P;
+		if (package->record2P)playerPosition[gameMasterNS::PLAYER_2P] = package->pos2P;
 
 		if (package->treeMax != 0)
 		{
@@ -189,6 +203,9 @@ void Display::update(float _frameTime)
 
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
+
+	//マーカーの更新
+	markerRenderer->update(frameTime);
 
 	//OFF
 	if (input->wasKeyPressed('0'))
@@ -274,16 +291,21 @@ void Display::render3D(Camera* currentCamera)
 
 	//スカイドームの描画
 	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+
+	//マーカーの描画
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		markerRenderer->render(i, currentCamera);
+	}
 }
 
 //===================================================================================================================================
 //【2D[UI]描画】
 //===================================================================================================================================
-//void Display::renderUI()
-//{
-//	// リザルトUI
-//	resultUI.render();
-//}
+void Display::renderUI()
+{
+	
+}
 
 //===================================================================================================================================
 //【衝突処理】

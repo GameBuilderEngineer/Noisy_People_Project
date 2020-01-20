@@ -360,6 +360,7 @@ void Game::uninitialize() {
 	SAFE_DELETE(announcement);
 	SAFE_DELETE(target); 	//ターゲットオブジェクト
 	SAFE_DELETE(damageUI);
+	SAFE_DELETE(markerRenderer);
 }
 
 //===================================================================================================================================
@@ -846,6 +847,12 @@ void Game::update(float _frameTime) {
 	if (gameMaster->playActionRamaining1Min(gameMasterNS::PASSING_SE_BGM_SPEED_UP))
 	{
 		SoundInterface::BGM->SetSpeed();					// BGM加速
+	}
+
+	//プレイヤー位置情報の送信
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		NETWORK_CLIENT::recordPlayerPosition(player[i].position, i);
 	}
 
 	//ディスプレイPCへ送信

@@ -920,11 +920,13 @@
     <ClCompile Include="Powerup.cpp">
       <Filter>Game Layer\Item</Filter>
     </ClCompile>
-    <ClCompile Include="OPState.cpp" />
     <ClCompile Include="BearGauge.cpp">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClCompile>
     <ClCompile Include="tmpOcean.cpp" />
+    <ClCompile Include="OPState.cpp">
+      <Filter>Game Layer\Player\State\OPState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1475,9 +1477,11 @@
     <ClInclude Include="Powerup.h">
       <Filter>Game Layer\Item</Filter>
     </ClInclude>
-    <ClInclude Include="OPState.h" />
     <ClInclude Include="BearGauge.h">
       <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClInclude>
+    <ClInclude Include="OPState.h">
+      <Filter>Game Layer\Player\State\OPState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

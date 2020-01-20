@@ -8,6 +8,10 @@
 #include "ImguiManager.h"
 
 TreeTable NETWORK_CLIENT::treeTable[300] = { 0 };
+D3DXVECTOR3 NETWORK_CLIENT::pos1P = D3DXVECTOR3(0, 0, 0);
+D3DXVECTOR3 NETWORK_CLIENT::pos2P = D3DXVECTOR3(0, 0, 0);
+bool NETWORK_CLIENT::record1P = false;
+bool NETWORK_CLIENT::record2P = false;
 int NETWORK_CLIENT::treeNum = 0;
 bool NETWORK_CLIENT::requestConnection = false;
 bool NETWORK_CLIENT::initialConnection = true;
@@ -250,7 +254,10 @@ void NETWORK_CLIENT::send(float time)
 	PACKAGE tmpPackage;
 	memset(&tmpPackage, 0, sizeof(tmpPackage));
 	tmpPackage.num = 10;
-	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
+	tmpPackage.pos1P = pos1P;
+	tmpPackage.record1P = record1P;
+	tmpPackage.pos2P = pos2P;
+	tmpPackage.record2P = record2P;
 	tmpPackage.networkTester = true;
 	tmpPackage.treeMax = 300;
 	tmpPackage.sceneReset = onResetDisplay;
@@ -272,6 +279,8 @@ void NETWORK_CLIENT::send(float time)
 	//TreeTableの実体
 	memset(treeTable, 0, sizeof(treeTable));
 	treeNum = 0;	//0クリア
+	record1P = false;
+	record2P = false;
 }
 
 
@@ -298,6 +307,23 @@ void NETWORK_CLIENT::outputGUI()
 #endif
 }
 
+//===================================================================================================================================
+//【プレイヤー位置情報の記録】
+//===================================================================================================================================
+void NETWORK_CLIENT::recordPlayerPosition(const D3DXVECTOR3 position, int playerNo)
+{
+	switch (playerNo)
+	{
+	case gameMasterNS::PLAYER_1P:
+		pos1P = position;
+		record1P = true;
+		break;
+	case gameMasterNS::PLAYER_2P:
+		pos2P = position;
+		record2P = true;
+		break;
+	}
+}
 //===================================================================================================================================
 //【ツリーテーブルへの記録】
 //===================================================================================================================================
