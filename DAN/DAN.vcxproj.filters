@@ -924,6 +924,7 @@
     <ClCompile Include="BearGauge.cpp">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClCompile>
+    <ClCompile Include="tmpOcean.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1469,6 +1470,7 @@
     <ClInclude Include="PlayerEffect.h">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="tmpOcean.h" />
     <ClInclude Include="Photograph.h" />
     <ClInclude Include="Powerup.h">
       <Filter>Game Layer\Item</Filter>

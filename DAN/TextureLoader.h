@@ -134,6 +134,8 @@ namespace textureNS
 		NUMBER,
 		TARGET,
 		DATE_ALPHA,
+		OCEAN,
+		OCEAN_BUMP,
 
 		//Finale
 		FIN,
