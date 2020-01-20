@@ -1333,7 +1333,7 @@ void Game::collisions()
 					player[j].powerup(2.0f);//パワーアップ
 					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
 					SoundInterface::SE->playSound(&playParameters);	//SE再生
-					// エフェクト再生 うまくいかん！
+					// エフェクト再生 うまくいかん！うんちっち
 					//((Powerup*)itemList[i])->powUpEffect = new PowUpEffect(&player[j].position, effekseerNS::POW_UP_EFFECT);
 					//effekseerNS::play(0, ((Powerup*)itemList[i])->powUpEffect);
 
@@ -1462,7 +1462,10 @@ void Game::test()
 	//}
 	if (input->wasKeyPressed('Z'))
 	{
-		player->position = D3DXVECTOR3(20, 5, 0);
+		//player->position = D3DXVECTOR3(20, 5, 0);
+		//((Powerup*)itemList[i])->powUpEffect = 
+		effekseerNS::play(0, new PowUpEffect(&player[0].position));
+
 	}
 
 	// ツリーマネージャのテスト

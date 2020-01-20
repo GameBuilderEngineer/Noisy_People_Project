@@ -25,7 +25,7 @@ namespace bulletNS{
 	const float		EXIST_TIME		= 30.0f;	//存在時間
 	const int		DIGITAL_POWER	= 20;		//デジタルパワー
 	const float		LAUNCH_FACT_TIME = 0.333f;	//発射事実残存時間
-	const float		LOST_DISTANCE	= 400.0f;
+	const float		LOST_DISTANCE	= 500.0f;
 
 	//銃口エフェクト
 	class Muzzle :public effekseerNS::Instance
