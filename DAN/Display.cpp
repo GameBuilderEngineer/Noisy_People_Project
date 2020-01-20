@@ -124,13 +124,13 @@ void Display::initialize()
 //===================================================================================================================================
 void Display::uninitialize(void)
 {
+	SAFE_DELETE(markerRenderer);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(networkServer);
 	SAFE_DELETE(sky);
-	SAFE_DELETE(markerRenderer);
 }
 
 //===================================================================================================================================
