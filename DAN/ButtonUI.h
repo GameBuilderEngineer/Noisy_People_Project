@@ -27,6 +27,8 @@ namespace uiButtonNS
 
 	enum STATE {
 		NONE,
+		OP,
+		ED,
 		NORMAL,
 		VISION,
 		SKY_VISION,
