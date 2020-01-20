@@ -255,10 +255,10 @@ void NETWORK_CLIENT::send(float time)
 	tmpPackage.treeMax = treeNum;
 	tmpPackage.sceneReset = onResetDisplay;
 	onResetDisplay = false;
-	if (tmpPackage.treeMax > 0)
-	{
-		memcpy(tmpPackage.treeTable, treeTable, sizeof(treeTable));
-	}
+	//if (tmpPackage.treeMax > 0)
+	//{
+	memcpy(tmpPackage.treeTable, treeTable, sizeof(treeTable));
+	//}
 	tmpPackage.timer = time;
 
 	//PACKAGE‚Ìî•ñ‚Ì‚İ
