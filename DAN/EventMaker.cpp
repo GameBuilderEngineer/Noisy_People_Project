@@ -114,6 +114,13 @@ void EventMaker::update()
 		makeEventBossEntry();
 	}
 #endif
+
+	if (gameMaster->getGameTime() < (180 - data->powerUpEntryAdjustTime)
+		&& data->wasPowerUpEntried == false)
+	{
+		makeEventPowerUpItem();
+		data->wasPowerUpEntried = true;
+	}
 }
 
 
@@ -208,6 +215,38 @@ int EventMaker::makeEventBossEntry()
 	opeGenerator->bossEntry(enemySet);
 
 	return enemySet.enemyID;
+}
+
+
+//=============================================================================
+// パワーアップアイテム登場イベントの作成(POWER_UP_ITEM)
+//=============================================================================
+void EventMaker::makeEventPowerUpItem()
+{
+	using namespace itemNS;
+	ItemData itemData;
+	itemData.itemID = itemManager->issueNewItemID();
+	itemData.type = POWER_UP;
+	itemData.defaultPosition = D3DXVECTOR3(0, 450, 0);
+	itemData.defaultDirection = D3DXVECTOR3(0, 0, 0);
+
+	// 以下で落ちたら接地するかを確かめる
+	NavigationMesh* naviMesh = NavigationMesh::getNaviMesh();
+	bool isFinish = false;
+
+	while (isFinish == false)
+	{
+		itemData.defaultPosition.x = rand() % 401 - 200.0f;
+		itemData.defaultPosition.z = rand() % 401 - 200.0f;
+
+		if (naviMesh->isHitGrounding(NULL, NULL, itemData.defaultPosition))
+		{
+			isFinish = true;
+		}
+	}
+
+	telopManager->playOrder(telopManagerNS::POWER_UP);	// テロップ再生
+	itemManager->createItem(itemData);					// アイテム作成
 }
 
 

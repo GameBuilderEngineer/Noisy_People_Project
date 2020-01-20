@@ -657,7 +657,7 @@ void Game::update(float _frameTime) {
 	}
 	if (input->wasKeyPressed('7') || input->getController()[0]->wasButton(virtualControllerNS::DOWN))
 	{
-		aiDirector->eventMaker.makeEventBossEntry();
+		aiDirector->eventMaker.makeEventPowerUpItem();
 	}
 #endif
 
@@ -1333,6 +1333,10 @@ void Game::collisions()
 					player[j].powerup(2.0f);//パワーアップ
 					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
 					SoundInterface::SE->playSound(&playParameters);	//SE再生
+					// エフェクト再生 うまくいかん！
+					//((Powerup*)itemList[i])->powUpEffect = new PowUpEffect(&player[j].position, effekseerNS::POW_UP_EFFECT);
+					//effekseerNS::play(0, ((Powerup*)itemList[i])->powUpEffect);
+
 					itemManager->destroyItem(itemList[i]->getItemData()->itemID);
 				}
 				break;
@@ -1344,22 +1348,22 @@ void Game::collisions()
 	{
 	}*/
 
-	//パワーアップ
-	std::vector<Item*> powerupItemList = itemManager->getItemList();
-	for (size_t i = 0; i < powerupItemList.size(); i++)
-	{
-		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
-		{
-			if (powerupItemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
-				player[j].getRadius(), *powerupItemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
-			{
-				player[j].powerup(2.0f);//パワーアップ
-				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
-				SoundInterface::SE->playSound(&playParameters);	//SE再生
-				itemManager->destroyItem(powerupItemList[i]->getItemData()->itemID);
-			}
-		}
-	}
+	////パワーアップ
+	//std::vector<Item*> powerupItemList = itemManager->getItemList();
+	//for (size_t i = 0; i < powerupItemList.size(); i++)
+	//{
+	//	for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
+	//	{
+	//		if (powerupItemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
+	//			player[j].getRadius(), *powerupItemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
+	//		{
+	//			player[j].powerup(2.0f);//パワーアップ
+	//			PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
+	//			SoundInterface::SE->playSound(&playParameters);	//SE再生
+	//			itemManager->destroyItem(powerupItemList[i]->getItemData()->itemID);
+	//		}
+	//	}
+	//}
 
 }
 

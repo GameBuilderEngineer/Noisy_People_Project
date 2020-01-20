@@ -90,6 +90,9 @@ namespace effekseerNS
 		FLOWER_SHOWER,
 		FEATHER,
 		BOSS_DEATH,
+		POW_BULLET,
+		POW_UP_EFFECT,
+
 		MAX_EFFEKSEER,
 	};
 

@@ -62,6 +62,8 @@ EffekseerManager::EffekseerManager()
 	fileName[FLOWER_SHOWER]		= { L"Flower_Shower.efk" };
 	fileName[FEATHER]			= { L"Feather.efk" };
 	fileName[BOSS_DEATH]		= { L"Boss_Death.efk" };
+	fileName[POW_BULLET]		= { L"Pow_Bullet.efk" };
+	fileName[POW_UP_EFFECT]		= { L"PowUp.efk" };
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }

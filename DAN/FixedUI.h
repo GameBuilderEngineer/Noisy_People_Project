@@ -39,5 +39,7 @@ public://ƒƒ“ƒo[ŠÖ”
 	void render();
 	void update(float gametime);
 	void uninitialize();
+	Timer* getTimer() { return timer; }
+	TimerFlame* getTimerFlame() { return timerFlame; }
 private:
 };

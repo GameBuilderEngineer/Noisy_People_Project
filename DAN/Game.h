@@ -52,6 +52,7 @@
 #include "DamageUI.h"
 #include "Title.h"
 #include "tmpOcean.h"
+#include "PowerUp.h"
 
 #if 1
 #define CHEAT_PREZEN
