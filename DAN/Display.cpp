@@ -168,8 +168,8 @@ void Display::update(float _frameTime)
 					selectTree->transState();
 				}
 			}
-			////パッケージ内のイベントを解放する
-			//SAFE_DELETE_ARRAY(package->treeTable);
+		////パッケージ内のイベントを解放する
+		//SAFE_DELETE_ARRAY(package->treeTable);
 		}
 
 		bool transition = package->sceneReset;

@@ -252,7 +252,7 @@ void NETWORK_CLIENT::send(float time)
 	tmpPackage.num = 10;
 	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
 	tmpPackage.networkTester = true;
-	tmpPackage.treeMax = treeNum;
+	tmpPackage.treeMax = 300;
 	tmpPackage.sceneReset = onResetDisplay;
 	onResetDisplay = false;
 	//if (tmpPackage.treeMax > 0)
