@@ -58,6 +58,6 @@ private:
 	unsigned int addr;
 	int nRtn, nNo = 5;
 
-	static TreeTable treeTable[500];
+	static TreeTable treeTable[300];
 	static int treeNum;
 };

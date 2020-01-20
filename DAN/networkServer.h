@@ -22,7 +22,7 @@ typedef struct
 	float timer;
 	int treeMax;
 	bool sceneReset;
-	TreeTable treeTable[500];
+	TreeTable treeTable[300];
 }PACKAGE;
 
 //ƒNƒ‰ƒX

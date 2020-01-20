@@ -51,6 +51,8 @@
 #include "Marker.h"
 #include "DamageUI.h"
 #include "Title.h"
+#include "tmpOcean.h"
+#include "PowerUp.h"
 
 #if 1
 #define CHEAT_PREZEN
@@ -113,8 +115,6 @@ private:
 
 	//3Dオブジェクト
 	Player*							player;				//プレイヤー
-	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
-	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
 
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
@@ -123,6 +123,7 @@ private:
 
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面
+	//TmpOcean*						tmpOcean;			//仮海面
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;

@@ -185,6 +185,7 @@
     <ClInclude Include="Mark.h" />
     <ClInclude Include="Persent.h" />
     <ClInclude Include="SerialCommunication.h" />
+    <ClInclude Include="tmpOcean.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
@@ -370,6 +371,7 @@
     <ClCompile Include="SaiDelayReverb.cpp" />
     <ClCompile Include="SaiFadeIn.cpp" />
     <ClCompile Include="SerialCommunication.cpp" />
+    <ClCompile Include="tmpOcean.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
