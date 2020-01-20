@@ -7,7 +7,7 @@
 #include "networkClient.h"
 #include "ImguiManager.h"
 
-TreeTable NETWORK_CLIENT::treeTable[500] = { 0 };
+TreeTable NETWORK_CLIENT::treeTable[300] = { 0 };
 int NETWORK_CLIENT::treeNum = 0;
 bool NETWORK_CLIENT::requestConnection = false;
 bool NETWORK_CLIENT::initialConnection = true;
