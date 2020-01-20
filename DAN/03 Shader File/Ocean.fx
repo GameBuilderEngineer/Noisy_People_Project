@@ -8,7 +8,7 @@ float3		eyePosition;		//頂点からカメラへのベクトル
 float2		waveMove;			//波の移動位置(UV)
 float		height;				//波の高さ
 texture		textureDecal;
-texture normalMap;
+texture		normalMap;
 //float4		diffuse;
 //float		alphaValue;
 //float4		lightDirection = float4(-1.0f, 1.0f, -1.0f, 0.2f);
@@ -41,7 +41,7 @@ struct VS_OUT
 {
     float4 position			: POSITION;
 	float2 uv				: TEXCOORD0;
-	//float4 diffuse			: COLOR0;
+	//float4 diffuse		: COLOR0;
 	//float4 color			: COLOR1;
     //float3 lightDirection	: TEXCOORD1;//ライトの方向（バーテックスシェーダーで反転して保存）
     float3 eye				: TEXCOORD2;//頂点からカメラへのベクトル（接空間投影）
@@ -197,8 +197,8 @@ float4 PS(VS_OUT In) : COLOR
 	//float4 intensity = dot(light, normal);							//ディフューズ項
 	//float4 intensity;// = bright;							//ディフューズ項
 	//					+ pow(dot(reflectVector,sightVector),12);	// スペキュラー項(照明モデルは　フォン phong)
-	float4 intensity = dot(light, normalVector)
-		+pow(dot(reflectVector, sightVector), 12);
+	float4 intensity = dot(light, normalVector);
+		+ pow(dot(reflectVector, sightVector), 12);
 	intensity += colorValue;
 	return intensity;
 	//intensity = color * bright;

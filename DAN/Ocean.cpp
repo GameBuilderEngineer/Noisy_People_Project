@@ -167,7 +167,7 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 	//ライトの方向ベクトルのセット
 	D3DXMATRIX m;
 	D3DXVECTOR4 v;
-	D3DXVECTOR4 lightPosition = D3DXVECTOR4(0, -10.1, -0.1, 0);
+	D3DXVECTOR4 lightPosition = D3DXVECTOR4(-10, 100.1, -0.01, 0);
 	D3DXMatrixInverse(&m, NULL, &object->matrixWorld);
 	D3DXVec4Transform(&v, &lightPosition, &m);
 	D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);

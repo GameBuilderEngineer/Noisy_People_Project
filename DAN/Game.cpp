@@ -385,7 +385,8 @@ void Game::update(float _frameTime) {
 	if (input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::A) ||
 		input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::B) ||
-		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::B))
+		input->getController()[gameMasterNS::PLAYER_2P]->wasButton(virtualControllerNS::B) ||
+		input->wasKeyPressed(VK_RETURN))
 	{
 		//スキップ
 		gameMaster->updateOpeningTime(gameMasterNS::OPENING_TIME);
@@ -927,11 +928,8 @@ void Game::render()
 //===================================================================================================================================
 void Game::render3D(Camera* currentCamera) {
 
-	//海面の描画
-	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
-	return;
 	//スカイドームの描画
-	//sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//装飾フィールドの描画
 	if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
@@ -942,7 +940,7 @@ void Game::render3D(Camera* currentCamera) {
 	else {
 		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	}
-	//faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -954,7 +952,7 @@ void Game::render3D(Camera* currentCamera) {
 	//DrawEquipment();
 
 	//海面の描画
-	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 	// エネミーの描画
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
