@@ -865,6 +865,15 @@ void Game::update(float _frameTime) {
 		//getFader()->start();
 	}
 
+	//リザルトへ強制遷移
+	//後でプレゼンテーションフラグ判定を追加
+	if (input->wasKeyPressed('1') || 
+		input->getController()[0]->wasButton(virtualControllerNS::HOME)||
+		input->getController()[1]->wasButton(virtualControllerNS::HOME))
+	{
+		changeScene(SceneList::RESULT);
+	}
+
 #ifdef _DEBUG
 	if (input->wasKeyPressed('1'))
 	{
