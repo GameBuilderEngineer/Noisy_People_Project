@@ -25,12 +25,15 @@ Wolf::Wolf(ConstructionPackage constructionPackage): Enemy(constructionPackage)
 	// パーツの作成
 	for (int i = 0; i < PARTS_MAX; i++)
 	{
-		parts[i] = new Object;
+		parts[i] = new EnemyParts;
 		parts[i]->position = PARTS_OFFSET_POS[i];
+		parts[i]->setEnemy(this);
 	}
+	parts[BODY]->setRenderer(EnemyManager::wolfBodyRenderer);
+	parts[ARM]->setRenderer(EnemyManager::wolfArmRenderer);
 
 	// アニメーションマネージャを初期化
-	animationManager = new WolfAnimationManager(PARTS_MAX, this, &parts[0]);
+	animationManager = new WolfAnimationManager(PARTS_MAX, this, (Object**)&parts[0]);
 	
 	for (int i = 0; i < 2; i++)
 	{
@@ -49,6 +52,14 @@ Wolf::Wolf(ConstructionPackage constructionPackage): Enemy(constructionPackage)
 //=============================================================================
 Wolf::~Wolf()
 {
+	// パーツの破棄
+	for (int i = 0; i < PARTS_MAX; i++)
+	{
+		SAFE_DELETE(parts[i]);
+	}
+	// アニメーションマネージャの破棄
+	SAFE_DELETE(animationManager);
+
 	for (int i = 0; i < 2; i++)
 	{
 		SoundInterface::S3D->stopSound(playParmeters[i]);
@@ -64,10 +75,11 @@ void Wolf::update(float frameTime)
 	Enemy::preprocess(frameTime);
 	switch (enemyData->state)
 	{
-	case CHASE:  chase(frameTime);  break;
-	case PATROL: patrol(frameTime); break;
-	case REST:   rest(frameTime);   break;
-	case DIE:    die(frameTime);    break;
+	case CHASE:			chase(frameTime);		break;
+	case PATROL:		patrol(frameTime);		break;
+	case REST:			rest(frameTime);		break;
+	case ATTACK_TREE:	attackTree(frameTime);	break;
+	case DIE:			die(frameTime);			break;
 	}
 	Enemy::postprocess(frameTime);
 
@@ -181,7 +193,7 @@ void::Wolf::die(float frameTime)
 //=============================================================================
 // Getter
 //=============================================================================
-Object* Wolf::getParts(int type)
+EnemyParts* Wolf::getParts(int type)
 {
 	return parts[type];
 }

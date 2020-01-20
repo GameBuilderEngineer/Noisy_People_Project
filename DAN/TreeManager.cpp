@@ -112,41 +112,43 @@ void TreeManager::update(float frameTime)
 		//更新
 		tree->update(frameTime);
 
+		TreeData* data = tree->getTreeData();
+		TreeTable in;
+		in.id = data->treeID;
+		in.position = tree->position;
+		in.rotation = tree->quaternion;
+		in.scale = tree->scale;
+		in.modelType = data->model;
+		in.playBacked = false;
+		in.onRecord = true;
+		//プレイヤーNOの記録
+		in.player = tree->playerNo;
+
+		//あとで場合分け
+		in.greenState = data->greenState;
+		
+		//ネットワークの送信情報へ記録
+		NETWORK_CLIENT::recordTreeTable(in,i);
+
 		//レンダラーの切替
 		if (needSwap)
 		{
-
-			TreeData* data = tree->getTreeData();
-			TreeTable in;
-			in.id			= data->treeID;
-			in.position		= tree->position;
-			in.rotation		= tree->quaternion;
-			in.scale		= tree->scale;
-			in.modelType	= data->model;
-			in.playBacked	= false;
-
-			//あとで場合分け
-			in.player		= tree->playerNo;
-
-			//あとで場合分け
-			in.eventType	= gameMasterNS::TO_DEAD;
-			in.eventType	= gameMasterNS::TO_GREEN_WITH_DIGITAL;
-			in.eventType	= gameMasterNS::TO_GREEN_WITH_ANALOG;
-
 			//ゲームマスターへ記録
 			if (gameMaster)
 			{
-				NETWORK_CLIENT::setSendTreeTable(in);
 				gameMaster->recordTreeTable(in);
 			}
-
 		}
+
+
 
 		//緑化している木をカウント
 		if (treeList[i]->getTreeData()->greenState == treeNS::GREEN)
 		{
 			greeningTreeNum++;
 		}
+
+		
 
 		//デジタルツリーの周囲にエフェクトを発生
 		//if (treeList[i]->getTreeData()->type == treeNS::DIGITAL_TREE)

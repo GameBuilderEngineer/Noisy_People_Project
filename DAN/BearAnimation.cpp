@@ -26,11 +26,11 @@ static const D3DXVECTOR3 DEFAULT_ANIMATION_BODY[] =
 };
 static const D3DXVECTOR3 DEFAULT_ANIMATION_ARM_L[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, -0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, -0.0f),
 };
 static const D3DXVECTOR3 DEFAULT_ANIMATION_ARM_R[] =
 {
-	D3DXVECTOR3(0.0f, 0.0f, 0.5f),
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 };
 static const D3DXVECTOR3 DEFAULT_ANIMATION_WAIST[] =
 {
@@ -55,12 +55,12 @@ DefaultAnimation::DefaultAnimation(DWORD _flag):PartsAnimation(_flag)
 void DefaultAnimation::update(D3DXVECTOR3* rot, Object** parts, float t)
 {
 	PartsAnimation::updateTimeAndKeyFrame(t);
-	rot[BODY] = updateRotation(DEFAULT_ANIMATION_BODY);
-	rot[ARM_L] = updateRotation(DEFAULT_ANIMATION_ARM_L);
-	rot[ARM_R] = updateRotation(DEFAULT_ANIMATION_ARM_R);
-	rot[WAIST] = updateRotation(DEFAULT_ANIMATION_WAIST);
-	rot[LEG_L] = updateRotation(DEFAULT_ANIMATION_LEG_L);
-	rot[LEG_R] = updateRotation(DEFAULT_ANIMATION_LEG_R);
+	rot[BODY] = DEFAULT_ANIMATION_BODY[0];
+	rot[ARM_L] = DEFAULT_ANIMATION_ARM_L[0];
+	rot[ARM_R] = DEFAULT_ANIMATION_ARM_R[0];
+	rot[WAIST] = DEFAULT_ANIMATION_WAIST[0];
+	rot[LEG_L] = DEFAULT_ANIMATION_LEG_L[0];
+	rot[LEG_R] = DEFAULT_ANIMATION_LEG_R[0];
 }
 
 
@@ -277,9 +277,6 @@ void DeadAnimation::update(D3DXVECTOR3* rot, Object** parts, float t)
 	rot[LEG_L] = updateRotation(DEAD_ANIMATION_LEG_L);
 	rot[LEG_R] = updateRotation(DEAD_ANIMATION_LEG_R);
 }
-
-
-//=============================================================================
 #pragma endregion
 
 
@@ -396,13 +393,11 @@ void BearAnimationManager::culcPartsMatrix()
 	{
 		// パーツのワールドマトリクスを初期化する
 		D3DXMatrixIdentity(&parts[i]->matrixWorld);
+
 		// 回転ベクトルから回転マトリクスを作成する
 		D3DXMatrixRotationYawPitchRoll(&parts[i]->matrixRotation, rot[i].y, rot[i].x, rot[i].z);
-		// 位置から位置マトリクスを作成する
-		D3DXMatrixTranslation(&parts[i]->matrixPosition, parts[i]->position.x, parts[i]->position.y, parts[i]->position.z);
 		// 回転マトリクスをワールドマトリクスに掛ける
 		D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[i]->matrixRotation);
-
 		// 子パーツのワールドマトリクスに親パーツの回転マトリクスを掛ける
 		if (i == ARM_L || i == ARM_R)
 		{
@@ -413,6 +408,8 @@ void BearAnimationManager::culcPartsMatrix()
 			D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[WAIST]->matrixRotation);
 		}
 
+		// 位置から位置マトリクスを作成する
+		D3DXMatrixTranslation(&parts[i]->matrixPosition, parts[i]->position.x, parts[i]->position.y, parts[i]->position.z);
 		// 位置マトリクスをワールドマトリクスに掛ける
 		D3DXMatrixMultiply(&parts[i]->matrixWorld, &parts[i]->matrixWorld, &parts[i]->matrixPosition);
 

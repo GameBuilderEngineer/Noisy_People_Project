@@ -14,6 +14,7 @@
 #include "Tutorial.h"
 #if _DEBUG
 #include "Create.h"
+#include "Photograph.h"
 #endif
 #include "Game.h"
 #include "Result.h"
@@ -78,7 +79,6 @@ Director::~Director() {
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
-
 	UninitMoveP();
 	UninitMoveP1();
 
@@ -112,6 +112,11 @@ HRESULT Director::initialize() {
 	imgui = new ImguiManager(wnd);
 #endif // _DEBUG
 
+	//シェーダー読込
+	//Shader
+	shaderLoader = new ShaderLoader;
+	shaderLoader->load(getDevice());
+
 	//シリアル通信クラス
 	serialCommunication = new SerialCommunication();
 
@@ -131,6 +136,7 @@ HRESULT Director::initialize() {
 	input->initialize(instance, window->wnd, true);
 	window->setInput();
 
+	
 	//textureLoader
 	textureLoader = new TextureLoader;
 	textureLoader->load(getDevice());
@@ -141,11 +147,6 @@ HRESULT Director::initialize() {
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(getDevice());
 
-	//シェーダー読込
-	//Shader
-	shaderLoader = new ShaderLoader;
-	shaderLoader->load(getDevice());
-
 	//テキストデータ読込
 	textManager = new TextManager();
 	textManager->initialize();
@@ -153,11 +154,13 @@ HRESULT Director::initialize() {
 	//ゲーム管理クラス
 	gameMaster = new GameMaster();
 
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+
+
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();
 	//animationLoader->initialize(d3d->device);
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 	bool debugMode = false;
 #ifdef _DEBUG
 	if (MessageBox(0, "はい(Y):Debugモード\nいいえ(N):次へ", "デバッグシーンへ遷移しますか？", MB_YESNO | MB_TOPMOST) == IDYES)
@@ -613,6 +616,7 @@ void Director::changeNextScene() {
 	case SceneList::FINALE:					scene = new Finale();	break;
 #if _DEBUG 
 	case SceneList::CREATE:					scene = new Create();	break; 
+	case SceneList::PHOTOGRAPH:				scene = new Photograph();	break; 
 #endif
 	case SceneList::DISPLAY:				scene = new Display();	break;
 	case SceneList::NONE_SCENE:				break;

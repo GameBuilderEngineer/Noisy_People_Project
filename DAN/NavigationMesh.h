@@ -50,6 +50,8 @@ private:
 	D3DXVECTOR3 gravityDirection;				// 重力方向
 	static NavigationMesh* pointer;				// 取得用ポインタ
 
+	int cntEdge;
+
 public:
 	NavigationMesh(StaticMesh* staticMesh);
 	~NavigationMesh();

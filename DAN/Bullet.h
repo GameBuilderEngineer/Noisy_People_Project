@@ -15,6 +15,7 @@
 #include "Ray.h"
 #include "Sound.h"
 #include "EffekseerManager.h"
+#include "ImguiManager.h"
 
 namespace bulletNS{
 	const float		SPEED			= 100.0f;	//弾速
@@ -90,6 +91,37 @@ namespace bulletNS{
 		};
 	};
 
+	class BulletBody2 :public effekseerNS::Instance
+	{
+	public:
+		D3DXMATRIX* syncMatrix;
+		BulletBody2(D3DXMATRIX* syncMatrix) {
+			this->syncMatrix = syncMatrix;
+			effectNo = effekseerNS::POW_BULLET;
+			scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+		}
+		virtual void update() {
+
+			D3DXMATRIX M = *syncMatrix;
+
+			::Effekseer::Manager*	manager = getEffekseerManager(managerNo)->manager;
+			::Effekseer::Matrix43 matrix;
+			matrix.Value[0][0] = M._11;
+			matrix.Value[0][1] = M._12;
+			matrix.Value[0][2] = M._13;
+			matrix.Value[1][0] = M._21;
+			matrix.Value[1][1] = M._22;
+			matrix.Value[1][2] = M._23;
+			matrix.Value[2][0] = M._31;
+			matrix.Value[2][1] = M._32;
+			matrix.Value[2][2] = M._33;
+			matrix.Value[3][0] = M._41;
+			matrix.Value[3][1] = M._42;
+			matrix.Value[3][2] = M._43;
+			manager->SetMatrix(handle, matrix);
+		};
+	};
+
 }
 
 //===================================================================================================================================
@@ -106,11 +138,12 @@ private:
 	D3DXVECTOR3		collidePosition;		//衝突位置
 	int				digitalPower;			//デジタルパワー
 	effekseerNS::Instance* effect;			//弾エフェクト
+
 public:
 	int playerNo;
 public:
 //[基本処理]
-	Bullet(Ray shootingRay,int playerNo);
+	Bullet(Ray shootingRay,int playerNo, bool isPowUp);
 	~Bullet();
 	void update(float frameTime);
 	void render();
@@ -120,6 +153,10 @@ public:
 	int	getDigitalPower();
 	bool isCollideInitial();
 	D3DXVECTOR3	getBulletSpeed();
+	//setter
+	void setDigitalPower(float value);
+
+
 };
 
 //===================================================================================================================================
@@ -136,9 +173,11 @@ private:
 	bool					reloading;		//リロード中
 	bool					isLaunched;		//発射したか
 	float					launchFactTime;	//発射事実残存時間（発射した事実をゲーム中に残す時間.更新頻度の低いエネミーセンサにのせるため）
-
+	float                   powerRate;
+	bool					isPowerUp;		// アイテムを取りパワーアップしている
 	PLAY_PARAMETERS shotSE;
 	PLAY_PARAMETERS reroadSE;
+	std::string		currentScene;			//現在のシーン
 
 public:
 
@@ -166,4 +205,12 @@ public:
 	Bullet* getBullet(int i);
 	int getNum();
 	bool getIsLaunched();
+	float getPowerRate();
+//[setter]
+	void setPowerRate(float value);
+	void setCurrentScene(std::string _scene);
+
+#ifdef _DEBUG
+	//void bulletGUI();
+#endif
 };

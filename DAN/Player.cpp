@@ -13,6 +13,7 @@
 #include "UtilityFunction.h"
 #include "MoveP.h"
 #include "MoveP1.h"
+#include "OPState.h"
 #include "NormalState.h"
 
 //===================================================================================================================================
@@ -30,7 +31,7 @@ Player::Player()
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = PLAYER;
-		treeCell.target = PLAYER | ENEMY | TREE;
+		treeCell.target = PLAYER | ENEMY | ENEMY_BEAR | TREE;
 	}
 
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
@@ -97,8 +98,7 @@ void Player::initialize(PlayerTable info)
 	power = MAX_POWER;							//キャラクター電力確認用
 
 	//通常状態
-	state = new normalNS::NormalState(this);
-	enableOperation(ENABLE_CAMERA);
+	state = new OPStateNS::OPState(this);
 
 	//シューティングアクション
 	bulletManager = new BulletManager;
@@ -1270,6 +1270,8 @@ void Player::outputGUI()
 
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
+	
+		//ImGui::Text("digitalPower = %f", bulletManager->digital )
 	}
 #endif // _DEBUG
 }
@@ -1312,6 +1314,10 @@ void Player::addpower(int add)
 void Player::pullpower(int pull)
 {
 	power = UtilityFunction::clamp(power - pull, MIN_POWER, MAX_POWER);		//電力消費
+}
+void Player::powerup(float value)
+{
+	bulletManager->setPowerRate(value);
 }
 void Player::damage(int _damage)
 {

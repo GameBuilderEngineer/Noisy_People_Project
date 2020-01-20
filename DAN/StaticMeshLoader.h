@@ -35,16 +35,16 @@ struct StaticMesh
 //===================================================================================================================================
 namespace staticMeshNS {
 	enum MESH_NUMBER {
-		FIELD,									//01
-		CUBE,									//02
-		STAR_REGULAR_POLYHEDRON,				//03
-		STAR_REGULAR_POLYHEDRON_X10,			//04
-		STAR_REGULAR_POLYHEDRON_X100,			//05
+		//FIELD,									//01
+		//CUBE,									//02
+		//STAR_REGULAR_POLYHEDRON,				//03
+		//STAR_REGULAR_POLYHEDRON_X10,			//04
+		//STAR_REGULAR_POLYHEDRON_X100,			//05
 
-		SAMPLE_REDBULL,							//03
+		//SAMPLE_REDBULL,							//03
 		SAMPLE_SCISSORS,						//08
-		ENEMY_01,
-		ENEMY_02,
+		//ENEMY_01,
+		//ENEMY_02,
 		WOLF,
 		TIGER,
 		BEAR,
@@ -61,12 +61,12 @@ namespace staticMeshNS {
 		BEAR_LEG_L,
 		BEAR_LEG_R,
 
-		DEAD_TREE,								//01
-		GREEN_TREE_001,							//02
+		//DEAD_TREE,								//01
+		//GREEN_TREE_001,							//02
 		GREEN_TREE_002,							//03
 		GRASS,									//04
-		STONE_001,								//05
-		STONE_002,								//06
+		//STONE_001,								//05
+		//STONE_002,								//06
 		STONE_003,								//07
 		A_TRUNK,								//08
 		A_LEAF,									//09
@@ -79,26 +79,35 @@ namespace staticMeshNS {
 		ITEM_BRANCH,
 
 
-		YAMADA_LAND,							//01
-		NAKAGOMI_LAND,							//02
+		//YAMADA_LAND,							//01
+		//NAKAGOMI_LAND,							//02
 		YAMADA_ROBOT,							//03
-		SAMPLE_NAVMESH,							//04
+		//SAMPLE_NAVMESH,							//04
 		YAMADA_ROBOT2,							//05
-		YAMADA_PLANE,							//06
-		DICE,									//07
-		YAMADA_TEST_ZONE,						//08
+		//YAMADA_PLANE,							//06
+		//DICE,									//07
+		//YAMADA_TEST_ZONE,						//08
 		SKY_DOME,								//09
 		TUTORIAL_FILED,							//10
-		DATE_ISLAND,							//11
-		DATE_ISLAND_V2,							//12
-		DATE_ISLAND_V2_NAVI_MESH,				//13
-		DATE_ISLAND_V2_BLACK,					//14
+		//DATE_ISLAND,							//11
+		//DATE_ISLAND_V2,							//12
+		//DATE_ISLAND_V2_NAVI_MESH,				//13
+		//DATE_ISLAND_V2_BLACK,					//14
 		DATE_ISLAND_FINAL,						//15
-		DATE_ISLAND_FINAL_BLACK,				//16
-		DATE_ISLAND_FINAL_NAVIMESH,				//17
+		//DATE_ISLAND_FINAL_BLACK,				//16
+		//DATE_ISLAND_FINAL_NAVIMESH,				//17
 		DATE_ISLAND_FINAL_FACE,					//18
 		DATE_ISLAND_FINAL_FACE_BLACK,			//19
 		DIGITAL_SPHERE,							//01
+
+		//NAV_TEST1,
+		//NAV_TEST2,
+		//NAV_TEST3,
+		//NAV_TEST4,
+		//NAV_TEST5,
+		//NAV_TEST6,
+
+		POWER_UP_ITEM,
 
 		MESH_NUM,								//NUM
 	};
@@ -122,5 +131,12 @@ public:
 
 	HRESULT load(LPDIRECT3DDEVICE9 device);
 	void release(void);
+
+	//NormalとTangentの情報を付記する関数
+	HRESULT withNormalTangent(
+		LPDIRECT3DDEVICE9 device,	//描画デバイス
+		LPD3DXMESH* sourceMesh		//元のメッシュ
+		);
+
 };
 

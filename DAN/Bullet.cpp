@@ -24,7 +24,7 @@ using namespace bulletNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
-Bullet::Bullet(Ray shootingRay,int playerNo)
+Bullet::Bullet(Ray shootingRay,int playerNo, bool isPowUp)
 {
 	this->playerNo = playerNo;
 	//パラメータの初期化
@@ -40,13 +40,20 @@ Bullet::Bullet(Ray shootingRay,int playerNo)
 	ballisticRay.color = D3DXCOLOR(0, 255, 120, 255);
 
 	//弾本体
-	effect = new BulletBody(&matrixWorld);
+	if (isPowUp)
+	{
+		effect = new BulletBody2(&matrixWorld);
+	}
+	else
+	{
+		effect = new BulletBody(&matrixWorld);
+	}
 	effekseerNS::play(0, effect);
 
 	{//オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = BULLET;
-		treeCell.target = ENEMY | TREE;
+		treeCell.target = ENEMY_PARTS | ENEMY | TREE;
 	}
 
 	Object::initialize(&launchPosition);							//バレットモデルの初期化
@@ -120,6 +127,14 @@ bool Bullet::isCollideInitial() {
 	return now >= initial; 
 }
 D3DXVECTOR3 Bullet::getBulletSpeed() { return this->speed; }
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void Bullet::setDigitalPower(float value)
+{
+	digitalPower = digitalPower * value;
+}
+
 
 
 //===================================================================================================================================
@@ -157,6 +172,8 @@ BulletManager::BulletManager()
 	reloading		= false;
 	isLaunched		= false;
 	launchFactTime	= 0.0f;
+	powerRate		= 1.0f;
+	isPowerUp		= false;
 
 	//サウンドの設定
 	shotSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_Shot, false ,NULL,true,NULL};
@@ -215,7 +232,7 @@ void BulletManager::update(float frameTime)
 
 		//生存時間切れ||島（0,0,0）から一定距離離れた場合
 		//自然消滅処理
-		if (bullet->existenceTimer <= 0 || zeroDistance > LOST_DISTANCE)
+		if (bullet->existenceTimer <= 0 || (zeroDistance > LOST_DISTANCE && currentScene != "Scene -Tutorial-"))
 		{
 			destroy(bullet, i);
 		}
@@ -280,7 +297,8 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 	}
 
 	//バレットリストへ新たに生成
-	Bullet* newBullet = new Bullet(shootingRay,playerNo);
+	Bullet* newBullet = new Bullet(shootingRay,playerNo,isPowerUp);
+	newBullet->setDigitalPower(getPowerRate());
 
 	//リストへ追加
 	bulletList->insertFront(newBullet);
@@ -343,4 +361,32 @@ float BulletManager::getReloadTime() { return reloadTimer; }
 Bullet* BulletManager::getBullet(int i) { return *bulletList->getValue(i); }
 int BulletManager::getNum() { return bulletList->nodeNum; }
 bool BulletManager::getIsLaunched() { return isLaunched; }
-#pragma endregion
+float BulletManager::getPowerRate() { return powerRate; }
+//===================================================================================================================================
+//【setter：バレットマネージャー】
+//===================================================================================================================================
+void BulletManager::setPowerRate(float value)
+{
+	powerRate = value;
+	isPowerUp = true;
+}
+
+void BulletManager::setCurrentScene(std::string scene)
+{
+	currentScene = scene;
+}
+
+////===================================================================================================================================
+////【GUI作成処理】
+////===================================================================================================================================
+//#ifdef _DEBUG
+//void BulletManager::bulletGUI()
+//{
+//	//float ditpw = Bullet::getDigitalPower();
+//	//ImGui::Text("digitalPower = %f", &Bullet::getDigitalPower());
+//	ImGui::Text("powerRate= %f", powerRate);
+//}
+//#endif
+//
+//
+//#pragma endregion

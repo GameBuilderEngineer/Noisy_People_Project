@@ -1,22 +1,21 @@
 ///////////////////////////////////////////////////////////////////////////////////
 //グローバル
 ///////////////////////////////////////////////////////////////////////////////////
-float4x4 mWorld: World;
-float4x4 mWorldViewProj : WorldViewProjection;	
-float4x4 mWorldInverseTranspose : WorldInverseTranspose;
-float4x4 mViewInverse: ViewInverse;
-float3 LightPos = {100.0f, 100.0f, -100.0f};
-float4 vLightDir;
-float4 vColor;
-float3 vEyePos;
-float2 f2Wave;
-float g_fHeight;
-texture DecaleTex;
-texture NormalMap;
+float4x4	matrixProjection;
+float4x4	matrixView;
+float4		lightDirection;
+float3		eyePosition;		//頂点からカメラへのベクトル
+float2		waveMove;			//波の移動位置(UV)
+float		height;				//波の高さ
+texture		textureDecal;
+texture		normalMap;
+//float4		diffuse;
+//float		alphaValue;
+//float4		lightDirection = float4(-1.0f, 1.0f, -1.0f, 0.2f);
 
-sampler DecaleSamp = sampler_state
+sampler textureSampler = sampler_state
 {
-    Texture = <DecaleTex>;
+    Texture = <textureDecal>;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
     MipFilter = NONE;
@@ -24,9 +23,9 @@ sampler DecaleSamp = sampler_state
     AddressU = Clamp;
     AddressV = Clamp;
 };
-sampler NormalSamp = sampler_state
+sampler normalSampler = sampler_state
 {
-    Texture = <NormalMap>;
+    Texture = <normalMap>;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
     MipFilter = NONE;
@@ -38,82 +37,179 @@ sampler NormalSamp = sampler_state
 ///////////////////////////////////////////////////////////////////////////////////
 //型定義
 ///////////////////////////////////////////////////////////////////////////////////
-struct VS_OUTPUT
+struct VS_OUT
 {
-    float4 Pos: POSITION;
-    float4 Color: COLOR0;    
-    float2 Tex: TEXCOORD0;
-    float3 L: TEXCOORD1;
-    float3 E: TEXCOORD2;
-    float2 TexCoord: TEXCOORD3;
-    float3 LightVec: TEXCOORD4;
-    float3 WorldNormal: TEXCOORD5;
-    float3 WorldView: TEXCOORD6;
+    float4 position			: POSITION;
+	float2 uv				: TEXCOORD0;
+	//float4 diffuse		: COLOR0;
+	//float4 color			: COLOR1;
+    //float3 lightDirection	: TEXCOORD1;//ライトの方向（バーテックスシェーダーで反転して保存）
+    float3 eye				: TEXCOORD2;//頂点からカメラへのベクトル（接空間投影）
+    float2 bumpUV			: TEXCOORD3;//バンプテクスチャUV
 };
 
 ///////////////////////////////////////////////////////////////////////////////////
 //バーテックス・シェーダー
 ///////////////////////////////////////////////////////////////////////////////////
-VS_OUTPUT VS(float4 Pos: POSITION0,float3 Normal: NORMAL,float3 Tangent  : TANGENT0,float2 Texcoord : TEXCOORD0)
+VS_OUT VS(
+	float4 position		: POSITION0,
+	float3 normal		: NORMAL,
+	float3 tangent		: TANGENT0,
+	float2 localUV		: TEXCOORD0,
+	float4 matrix1		: TEXCOORD1,
+	float4 matrix2		: TEXCOORD2,
+	float4 matrix3		: TEXCOORD3,
+	float4 matrix4		: TEXCOORD4
+)
 {
-	VS_OUTPUT Out=(VS_OUTPUT)0;
-	Out.Pos = mul(Pos, mWorldViewProj);
-	Out.Color = vColor;
-	Out.Tex = Texcoord;
-	Normal.y+=g_fHeight;
-	float3 N = Normal;
-	float3 T = Tangent;
-	float3 B = cross(N,T);
-	float3 E = vEyePos - Pos.xyz;	
-	Out.E.x = dot(E,T);
-	Out.E.y = dot(E,B);
-	Out.E.z = dot(E,N);
-	float3 L = -vLightDir.xyz;		
-	Out.L.x = dot(L,T);
-	Out.L.y = dot(L,B);
-	Out.L.z = dot(L,N);
-	
-	Out.Tex+=f2Wave;
+	VS_OUT Out=(VS_OUT)0;
 
-	float3 normal = normalize(Normal);
-    Out.WorldNormal = mul(normal, mWorldInverseTranspose).xyz;
-    float4 Po = float4(Pos.xyz,1);
-    float3 Pw = mul(Po, mWorld).xyz;
-    Out.LightVec = normalize(LightPos - Pw);
-    Out.TexCoord = Texcoord;
-    Out.WorldView = normalize(mViewInverse[3].xyz - Pw);
-	
+	//頂点を保存
+	Out.position = position;
+
+	//ワールド行列を用意する。
+	float4x4 worldMatrix = float4x4(
+		matrix1,
+		matrix2,
+		matrix3,
+		matrix4);
+
+	//*ビュー行列
+	worldMatrix = mul(worldMatrix, matrixView);
+	//*プロジェクション行列
+	worldMatrix = mul(worldMatrix, matrixProjection);
+	//*ワールド行列
+	Out.position = mul(Out.position, worldMatrix);
+
+	//UV座標
+	Out.uv = localUV;
+
+	//アンビエントカラー
+	//float ambient = lightDirection.w;
+
+	//ランバート演算カラー
+	//float4 lambert = max(ambient, saturate(dot(normal, lightDirection)));
+	//Out.diffuse = lambert * diffuse;
+	//Out.color = color;
+	//Out.Color = vColor;
+
+	//Out.Tex = Texcoord;
+
+	//①視線ベクトルを計算
+	//float3 eye = normalize(eyePos.xyz - pos.xyz);
+	//②視線ベクトルを頂点座標系に変換する
+	//Out.eye.x = dot(eye, tangent);
+	//Out.eye.y = dot(eye, binormal);
+	//Out.eye.z = dot(eye, normal);
+	//Out.eye = normalize(Out.eye);
+	//③頂点座標->ライトの位置ベクトル
+	//float3 light = -lightDirection.xyz;
+	//④ライトベクトルを頂点座標系に変換する
+	//Out.light.x = dot(light, tangent);
+	//Out.light.y = dot(light, binormal);
+	//Out.light.z = dot(light, normal);
+	//Out.light = normalize(Out.light);
+
+
+	//接空間の作成
+	float3 N = normal;			//法線
+	N.y += height;				//波の高さを追加
+	float3 T = tangent;			//接線
+	float3 B = cross(N,T);		//従法線
+	//float3 B = binormal;		//従法線
+
+	//頂点からカメラへのベクトル
+	float3 eye = eyePosition - position.xyz;	
+	//カメラへのベクトルを接空間へ投影する
+	Out.eye.x = dot(eye,T);
+	Out.eye.y = dot(eye,B);
+	Out.eye.z = dot(eye,N);
+	//Out.eye = normalize(Out.eye);
+
+	//ライトの向きを保存
+	//float3 L = -lightDirection.xyz;//ライトの向きを反転
+	//ライトの方向を接空間へ投影
+	//Out.lightDirection.x = dot(L,T);
+	//Out.lightDirection.y = dot(L,B);
+	//Out.lightDirection.z = dot(L,N);
+	//Out.lightDirection = normalize(Out.lightDirection);
+
+	//バンプマップテクスチャUV座標
+	Out.bumpUV	=	localUV;
+	Out.bumpUV	+=	waveMove;		//波の移動
+
 	return Out;
 }
 ///////////////////////////////////////////////////////////////////////////////////
 //ピクセル・シェーダー
 ///////////////////////////////////////////////////////////////////////////////////
-float4 PS(VS_OUTPUT In) : COLOR
+float4 PS(VS_OUT In) : COLOR
 {   
-	float4 f4Color=(float4)0;
-	float3 f3Light=(float3)0;
-	float3 f3Reflect=(float3)0;
-	float3 f3Normal=(float3)0;
-	float3 f3Sight=(float3)0;
-	float fK=0;
+	//①法線マップを参照し、法線を取得する
+	//法線マップは0.0f～1.0fの範囲に保存してあるので-1.0f～1.0fの範囲に変換する
+	//float3 normal = 2.0f * tex2D(normalSampler,In.bumpUV).xyz -1.0f;
+	//②フォンシェーディングによるスペキュラーの色を計算する
+	//ハーフベクトルの計算
+	//float3 H = normalize(In.light + In.eye);
+	//③スペキュラーカラーを計算する
+	//float3 S = pow(max(0.0f,dot(normal,H)),specular)* specularPower
+	//④合成する
+	//return tex2D(textureSampler, In.localUV)*max(ambient,dot(normal,In.light))+S;
 
-	f4Color=In.Color;
-	f3Light=vLightDir.xyz;
-	f3Normal=tex2D( NormalSamp, In.Tex ).xyz;
-	f3Normal.y=(1-f3Normal.y)*g_fHeight;
-	f3Normal=f3Normal*2-1;
-	f3Reflect=reflect(-normalize(In.E), f3Normal);
+	float4 colorValue		= (float4)0;
+	float3 light			= (float3)0;
+	float3 reflectVector	= (float3)0;
+	float3 normalVector		= (float3)0;
+	float3 sightVector		= (float3)0;
+
+	colorValue = float4(0.2, 0.2, 0.7, 1);							//青
+
+	light = lightDirection.xyz;
+
+	normalVector = tex2D(normalSampler, In.bumpUV).xyz;
+	normalVector.y = (1 - normalVector.y) * height;
+	normalVector = normalVector * 2 - 1;
+	//normal = normalVector;
+	//normal			= tex2D( normalSampler, In.bumpUV).xyz;	//バンプテクスチャの読み取り
+	//normal.y		= (1-normal.y)*height;					//波の高さの設定
+	//normal			= normal*2-1;							//-1.0f～1.0fの範囲に変換
+
+	//明るさ(ディフューズ項)
+	//float bright = saturate(dot(light, normal));
+
+	//スペキュラの計算
+	//float3 H = normalize(In.eye + light);		//ハーフベクトル
+	//float specular = max(0, dot(H, normal));	//反射光
+	//specular = pow(specular, 12);
+
+
+
+	//反射ベクトルを算出する
+	//reflect関数:反射ベクトルvを返す 
+	//→ i:入射ベクトル,n:サーフェス法線 reflect(i,n){ v = i - 2*dot(i,n)*n }
+	reflectVector	= reflect(-normalize(In.eye), normalVector);
 	
-	f3Sight=In.E- vEyePos;
-	fK=0.1;	
-	
-	float4 f4Intensity=dot(f3Light,f3Normal) //ディフューズ項
-			+ pow(dot(f3Reflect,f3Sight),12);// スペキュラー項(照明モデルは　フォン phong)
-			
-			f4Color=float4(0.2,0.2,0.7,1);//青
-			f4Intensity+=f4Color;
-			
-	return f4Intensity; 
+	//視線ベクトル
+	sightVector = In.eye - eyePosition;
+
+	//色の演算
+	//反射強度
+	//float4 intensity = dot(light, normal);							//ディフューズ項
+	//float4 intensity;// = bright;							//ディフューズ項
+	//					+ pow(dot(reflectVector,sightVector),12);	// スペキュラー項(照明モデルは　フォン phong)
+	float4 intensity = dot(light, normalVector);
+		+ pow(dot(reflectVector, sightVector), 12);
+	intensity += colorValue;
+	return intensity;
+	//intensity = color * bright;
+	//intensity.xyz += specular;
+
+	//return intensity; 
+
+	//float4 texel = tex2D(normalSampler, In.bumpUV);
+	//float4 texel = tex2D(normalSampler, In.uv);
+	//float4 finalColor = texel;// *In.diffuse;
+	//return finalColor;
 
 }
 ///////////////////////////////////////////////////////////////////////////////////

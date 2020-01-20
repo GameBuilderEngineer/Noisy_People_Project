@@ -23,6 +23,7 @@ ITEM_TOOLS::ITEM_TOOLS()
 	//レンダラーの初期化
 	Model[itemNS::ITEM_TYPE::BATTERY] = staticMeshNS::SAMPLE_SCISSORS;
 	Model[itemNS::ITEM_TYPE::EXAMPLE] = staticMeshNS::YAMADA_ROBOT;
+	Model[itemNS::ITEM_TYPE::POWER_UP] = staticMeshNS::YAMADA_ROBOT2;
 	initRender();
 #endif
 
@@ -149,7 +150,7 @@ void ITEM_TOOLS::outputItemToolsGUI(int GUIid, const D3DXVECTOR3 pos, const D3DX
 		ImGui::Checkbox("Delete", &deleteFlag);
 
 		//アイテムの種類
-		const char* listboxItemType[] = { "BATTERY" ,"EXAMPLE" };
+		const char* listboxItemType[] = { "BATTERY" ,"EXAMPLE", "POWER_UP" };
 		ImGui::ListBox("Item Type", &ItemListboxType, listboxItemType, itemNS::ITEM_TYPE::ITEM_TYPE_MAX);
 
 		//アイテムの情報

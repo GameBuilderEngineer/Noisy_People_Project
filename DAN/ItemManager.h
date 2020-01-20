@@ -9,6 +9,7 @@
 #include "Item.h"
 #include "Battery.h"
 #include "exampleItem.h"
+#include "Powerup.h"
 
 
 //=============================================================================
@@ -29,8 +30,9 @@ class ItemManager
 private:
 	static ItemManager* instance;				// 外部取得用ポインタ
 	std::vector<Item*> itemList;				// アイテムポインタリスト
-	StaticMeshRenderer* batteryRenderer;		// 描画オブジェクト
+	StaticMeshRenderer* batteryRenderer;		// 描画オブジェクト（バッテリー）
 	StaticMeshRenderer* exampleItemRender;		// テスト用アイテム
+	StaticMeshRenderer* powerupItemRender;		//パワーアップアイテム
 	int nextID;									// 次回ツリー発行ID
 	LPD3DXMESH	attractorMesh;					// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;				// 重力（引力）発生オブジェクトマトリックス

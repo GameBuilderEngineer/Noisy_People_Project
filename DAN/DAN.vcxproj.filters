@@ -916,6 +916,15 @@
     <ClCompile Include="PlayerEffect.cpp">
       <Filter>Game Layer\Player\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="Photograph.cpp" />
+    <ClCompile Include="Powerup.cpp">
+      <Filter>Game Layer\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="OPState.cpp" />
+    <ClCompile Include="BearGauge.cpp">
+      <Filter>Game Layer\Enemy\Bear</Filter>
+    </ClCompile>
+    <ClCompile Include="tmpOcean.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1460,6 +1469,15 @@
     </ClInclude>
     <ClInclude Include="PlayerEffect.h">
       <Filter>Game Layer\Player\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="tmpOcean.h" />
+    <ClInclude Include="Photograph.h" />
+    <ClInclude Include="Powerup.h">
+      <Filter>Game Layer\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="OPState.h" />
+    <ClInclude Include="BearGauge.h">
+      <Filter>Game Layer\Enemy\Bear</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -77,6 +77,7 @@ namespace effekseerNS
 		DAC_BULLET,
 		DAC,
 		GREENING,
+		DEADING,
 		DIGIT_MODE,
 		DIGITAL_SHIFT,
 		SKY_VISION,
@@ -89,6 +90,9 @@ namespace effekseerNS
 		FLOWER_SHOWER,
 		FEATHER,
 		BOSS_DEATH,
+		POW_BULLET,
+		POW_UP_EFFECT,
+
 		MAX_EFFEKSEER,
 	};
 

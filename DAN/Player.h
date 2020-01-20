@@ -27,6 +27,7 @@
 #include "DigitalShiftEffect.h"
 #include "Sound.h"
 #include "PlayerEffect.h"
+#include "Bullet.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -121,6 +122,8 @@ namespace playerNS{
 
 	enum STATE {
 		NONE,
+		OP,
+		ED,
 		NORMAL,
 		VISION,
 		SKY_VISION,
@@ -326,7 +329,7 @@ private:
 	PLAY_PARAMETERS voiceDamage[2];
 	PLAY_PARAMETERS voiceShift[2];
 
-
+	
 	//debug
 	float dot;
 	bool collideAxisX;
@@ -413,6 +416,7 @@ public:
 	void	setCamera(Camera* _camera);							//操作対象カメラのセット
 	void	addpower(int add);									//電力加算
 	void	pullpower(int pull);								//電力減算
+	void    powerup(float rate);
 	void	setInfomation(PlayerTable info);					//プレイヤー情報のセット
 	void	damage(int _damage);								//ダメージ処理
 	void	setValidOperation(int value);						//有効操作の設定

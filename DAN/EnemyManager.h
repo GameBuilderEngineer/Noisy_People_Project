@@ -57,6 +57,7 @@ private:
 	Player* player;										// プレイヤー
 	float cntTimeDataList;								// エネミーデータリストのチェック時間カウンタ
 	bool canUpdate;										// アップデート実行フラグ
+	static std::string sceneName;						// 実行されているシーンの名称
 
 public:
 	// 描画オブジェクト
@@ -74,6 +75,7 @@ public:
 	static StaticMeshRenderer* bearLegRRenderer;		// BEARの右足
 	static EnemyChaseMark* markRenderer;				// 追跡マーク描画
 	MarkerRenderer*	markerRenderer;						// マーカー（BEAR位置表示用）
+	static BearGauge* bearGauge;						// BEARのゲージ
 
 	void initialize(std::string _sceneName, LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix, GameMaster* _gameMaster, Player* _player, MarkerRenderer*	_markerRenderer);
 	void uninitialize();
@@ -99,6 +101,7 @@ public:
 	LinkedList<enemyNS::EnemyData>* getEnemyDataList();
 	std::vector<Enemy*>& getEnemyList();
 	int getNextID();
+	static std::string getSceneName();
 
 	// Setter
 	void setUpdate(bool setting);

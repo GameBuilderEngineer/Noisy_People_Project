@@ -91,6 +91,7 @@ namespace gameMasterNS {
 
 	enum EVENT_TYPE
 	{
+		DEFAULT,				//特に変化しない
 		TO_DEAD,				//枯木へ戻る
 		TO_GREEN_WITH_DIGITAL,	//緑化(デジタル)
 		TO_GREEN_WITH_ANALOG,	//緑化(アナログ)
@@ -113,14 +114,15 @@ struct TreeTable
 {
 	int							id;					//ツリーID
 	gameMasterNS::EVENT_TYPE	eventType;			//ANALOG|DIGITAL
+	int							greenState;			//緑化状態
 	int							modelType;			//モデルタイプ
 	int							player;				//緑化したプレイヤー
 	float						eventTime;			//緑化された時間
 	bool						playBacked;			//リザルト再生(完了:true)
+	bool						onRecord;			//
 	D3DXVECTOR3					position;			//位置
 	D3DXQUATERNION				rotation;			//回転
 	D3DXVECTOR3					scale;				//スケール
-	
 };
 
 //===================================================================================================================================

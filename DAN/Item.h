@@ -18,6 +18,7 @@ namespace itemNS
 	{
 		BATTERY,
 		EXAMPLE,
+		POWER_UP,
 		ITEM_TYPE_MAX
 	};
 
@@ -75,7 +76,7 @@ namespace itemNS
 //=============================================================================
 class Item: public Object
 {
-private:
+protected:
 	itemNS::ItemData itemData;
 	LPD3DXMESH	attractorMesh;				// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;			// 重力（引力）発生オブジェクトマトリックス

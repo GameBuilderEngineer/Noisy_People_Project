@@ -77,7 +77,7 @@ void Player1UI::render(float time)
 	electGuage->render();
 	charaIcon->render();
 	mark->render();
-	green->render(state);
+	green->render(state,time);
 	greenRate->render(basicUiNS::P1,state,time);
 }
 

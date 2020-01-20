@@ -41,7 +41,7 @@ namespace tigerNS
 class Tiger: public Enemy
 {
 private:
-	Object* parts[tigerNS::PARTS_MAX];			// パーツオブジェクト
+	enemyNS::EnemyParts* parts[tigerNS::PARTS_MAX];
 	// ※パーツオブジェクトはObjectクラスの更新処理を行わない.
 	// ※ワールド変換等の処理はアニメーションマネージャが代替する.
 
@@ -61,7 +61,7 @@ public:
 	void shot();
 
 	// Getter
-	Object* getParts(int type);
+	enemyNS::EnemyParts* getParts(int type);
 	TigerBulletManager* getBulletMangaer();
 
 	// Setter

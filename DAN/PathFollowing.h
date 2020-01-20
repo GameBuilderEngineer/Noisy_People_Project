@@ -34,6 +34,7 @@ private:
 	D3DXVECTOR3 nor;							// 現在地ポリゴンの法線
 	bool isProtrude;							// はみ出し判定
 	int nearPos;								//
+	D3DXVECTOR3 vecToEdge;
 	D3DXVECTOR3 subGoal;						// サブゴール
 
 	// Method

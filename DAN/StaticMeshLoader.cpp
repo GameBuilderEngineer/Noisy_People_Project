@@ -28,16 +28,16 @@ StaticMeshLoader::StaticMeshLoader()
 	//外部参照用ポインタへ代入
 	pointerStaticMeshLoader = this;
 
-	fileName[FIELD]									= { "angleTest.x" };					//01
-	fileName[CUBE]									= { "cube.x" };								//02
-	fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };			//03
-	fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
-	fileName[STAR_REGULAR_POLYHEDRON_X100]			= { "x100starRegularPolyhedron.x" };		//05
+	//fileName[FIELD]									= { "angleTest.x" };					//01
+	//fileName[CUBE]									= { "cube.x" };								//02
+	//fileName[STAR_REGULAR_POLYHEDRON]				= { "starRegularPolyhedron.x" };			//03
+	//fileName[STAR_REGULAR_POLYHEDRON_X10]			= { "x10starRegularPolyhedron.x" };			//04
+	//fileName[STAR_REGULAR_POLYHEDRON_X100]			= { "x100starRegularPolyhedron.x" };		//05
 
-	fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
+	//fileName[SAMPLE_REDBULL]						= { "Enemy01.x" };							//03
 	fileName[SAMPLE_SCISSORS]						= { "scissors.x" };							//08
-	fileName[ENEMY_01]								= { "Enemy01.x" };
-	fileName[ENEMY_02]								= { "Enemy02.x" };
+	//fileName[ENEMY_01]								= { "Enemy01.x" };
+	//fileName[ENEMY_02]								= { "Enemy02.x" };
 	fileName[WOLF]									= { "Wolf.x" };
 	fileName[TIGER]									= { "Tiger.x" };
 	fileName[BEAR]									= { "Bear.x" };
@@ -56,12 +56,12 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[BEAR_LEG_R] = { "Bear_LegR.x" };
 
 
-	fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
-	fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
+	//fileName[DEAD_TREE]								= { "deadTree001.x" };						//01
+	//fileName[GREEN_TREE_001]						= { "greenTree001.x" };						//02
 	fileName[GREEN_TREE_002]						= { "greenTree002.x" };						//03
 	fileName[GRASS]									= { "grass001.x" };							//04
-	fileName[STONE_001]								= { "stone001.x" };							//05
-	fileName[STONE_002]								= { "stone002.x" };							//06
+	//fileName[STONE_001]								= { "stone001.x" };							//05
+	//fileName[STONE_002]								= { "stone002.x" };							//06
 	fileName[STONE_003]								= { "Rocks.x" };							//07
 	fileName[A_TRUNK]								= { "Tree_A_Branch.x" };					//08
 	fileName[A_LEAF]								= { "Tree_A_Leaf.x" };						//09
@@ -69,32 +69,42 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[B_LEAF]								= { "Tree_B_Leaf.x" };						//11
 	fileName[C_TRUNK]								= { "Tree_C_Branch.x" };					//10
 	fileName[C_LEAF]								= { "Tree_C_Leaf.x" };						//11
-	fileName[OCEAN]									= { "Water4.x" };							//12
+	fileName[OCEAN]									= { "ocean.x" };							//12
 
 	fileName[ITEM_BRANCH]							= { "Bllue_branch.x" };
 
-	fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
-	fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
+	//fileName[YAMADA_LAND]							= { "SandBox_01_TestIsland.x" };			//01
+	//fileName[NAKAGOMI_LAND]							= { "nakagomiLand.x" };						//02
 	fileName[YAMADA_ROBOT]							= { "SandBox_03_Robot.x" };					//03
-	fileName[SAMPLE_NAVMESH]						= { "SandBox_02_NavMesh.x" };				//04
+	//fileName[SAMPLE_NAVMESH]						= { "SandBox_02_NavMesh.x" };				//04
 	//fileName[SAMPLE_NAVMESH]						= { "unko.x" };								//いったんこのままで
-	fileName[DICE]									= { "dice.x" };								//05
-	fileName[YAMADA_PLANE]							= { "plane.x" };							//06
+	//fileName[DICE]									= { "dice.x" };								//05
+	//fileName[YAMADA_PLANE]							= { "plane.x" };							//06
 	fileName[YAMADA_ROBOT2]							= { "Robot.x" };							//07
-	fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
+	//fileName[YAMADA_TEST_ZONE]						= { "SandBox.x" };							//08
 	fileName[SKY_DOME]								= { "domebase.x" };							//09
 	fileName[TUTORIAL_FILED]						= { "Tutorial_Stage.x" };					//10
-	fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
-	fileName[DATE_ISLAND_V2]						= { "DateIsland_v2.x" };					//12
-	fileName[DATE_ISLAND_V2_NAVI_MESH]				= { "mesh.x" };								//13
-	fileName[DATE_ISLAND_V2_BLACK]					= { "DateIsland_v2_Black.x" };				//14
+	
+	//fileName[DATE_ISLAND]							= { "DateIsland_prev.x" };					//11
+	//fileName[DATE_ISLAND_V2]						= { "DateIsland_v2.x" };					//12
+	//fileName[DATE_ISLAND_V2_NAVI_MESH]				= { "mesh.x" };								//13
+	//fileName[DATE_ISLAND_V2_BLACK]					= { "DateIsland_v2_Black.x" };				//14
 	fileName[DATE_ISLAND_FINAL]						= { "DateIsland_Final.x" };					//15
-	fileName[DATE_ISLAND_FINAL_BLACK]				= { "DateIsland_Final_Black.x" };			//16
-	fileName[DATE_ISLAND_FINAL_NAVIMESH]			= { "DateIsland_Final_NavMesh.x" };			//17
+	//fileName[DATE_ISLAND_FINAL_BLACK]				= { "DateIsland_Final_Black.x" };			//16
+	//fileName[DATE_ISLAND_FINAL_NAVIMESH]			= { "DateIsland_Final_NavMesh.x" };			//17
 	//fileName[DATE_ISLAND_FINAL_NAVIMESH] = { "NavTest.x" };									//いったんこのままで
 	fileName[DATE_ISLAND_FINAL_FACE]				= { "DateIsland_Final_Face.x" };			//15
-	fileName[DATE_ISLAND_FINAL_FACE_BLACK]				= { "DateIsland_Final_Face_Black.x" };	//16
+	fileName[DATE_ISLAND_FINAL_FACE_BLACK]			= { "DateIsland_Final_Face_Black.x" };	//16
 	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };					//01
+
+	//fileName[NAV_TEST1]								= { "BlenderNavimeshTest.x" };
+	//fileName[NAV_TEST2]								= { "Test2.x" };
+	//fileName[NAV_TEST3]								= { "Test3.x" };
+	//fileName[NAV_TEST4]								= { "Test4.x" };
+	//fileName[NAV_TEST5]								= { "Test5.x" };
+	//fileName[NAV_TEST6]								= { "Test6.x" };
+
+	fileName[POWER_UP_ITEM]							= { "powup.x" };
 }
 
 //===================================================================================================================================
@@ -124,6 +134,9 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 			NULL,
 			&staticMesh[i].numMaterial,
 			&staticMesh[i].mesh);
+
+		//法線と接線の付記
+		withNormalTangent(device, &staticMesh[i].mesh);
 
 		D3DXMATERIAL* materials = (D3DXMATERIAL*)staticMesh[i].bufferMaterial->GetBufferPointer();
 		staticMesh[i].materials = new D3DMATERIAL9[staticMesh[i].numMaterial];
@@ -156,6 +169,7 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		//属性テーブルの取得
 		staticMesh[i].mesh->GetAttributeTable(staticMesh[i].attributeTable, &staticMesh[i].attributeTableSize);
 
+
 		//頂点属性の取得・設定
 		D3DVERTEXELEMENT9 vertexElement[65];
 		staticMesh[i].mesh->GetDeclaration(vertexElement);
@@ -169,6 +183,8 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		
 		//頂点バッファの取得
 		staticMesh[i].mesh->GetVertexBuffer(&staticMesh[i].vertexBuffer);
+
+
 	}
 
 	return S_OK;
@@ -195,6 +211,44 @@ void StaticMeshLoader::release(void)
 		SAFE_DELETE_ARRAY(staticMesh[i].materials);
 		SAFE_DELETE_ARRAY(staticMesh[i].bufferMaterial);
 	}
+}
+
+//===================================================================================================================================
+//【NormalとTangentの情報を付記する関数】
+//===================================================================================================================================
+HRESULT StaticMeshLoader::withNormalTangent(
+	LPDIRECT3DDEVICE9 device,	//描画デバイス
+	LPD3DXMESH* sourceMesh		//元のメッシュ
+) 
+{
+	//頂点宣言
+	const D3DVERTEXELEMENT9 vertexDeclaration[] =
+	{
+		{0,  0, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL,	0},
+		{0, 24, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT,	0},
+		{0, 36, D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+		//{0,44,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_BINORMAL,0},//頂点シェーダー上で算出
+		D3DDECL_END()
+	};
+
+	LPD3DXMESH cloneMesh = NULL;		//クローンメッシュ
+	//クローンメッシュ生成
+	if (FAILED((*sourceMesh)->CloneMesh((*sourceMesh)->GetOptions(), vertexDeclaration, device, &cloneMesh)))
+	{
+		return E_FAIL;
+	}
+	//接線情報を追加
+	//Normal算出
+	if (FAILED(D3DXComputeNormals(cloneMesh, NULL)))MSG("D3DXComuteNormals");
+	//Tangent算出
+	if (FAILED(D3DXComputeTangent(cloneMesh,0,0,D3DX_DEFAULT,true,NULL)))MSG("D3DXComputeTangent");
+	//if (FAILED(D3DXComputeTangent(cloneMesh,0,0,0,true,NULL)))MSG("D3DXComputeTangent");
+	//
+	SAFE_RELEASE(*sourceMesh);
+	*sourceMesh = cloneMesh;
+
+	return D3D_OK;
 }
 
 //===================================================================================================================================

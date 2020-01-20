@@ -101,8 +101,18 @@ State* AttackTree::transition(stateMachineNS::TransitionTimeChecker* checker, En
 		}
 	}
 
+	if (enemy->getEnemyData()->targetTree == NULL &&
+		enemy->getNoticedOfPlayer(gameMasterNS::PLAYER_1P) == false &&
+		enemy->getNoticedOfPlayer(gameMasterNS::PLAYER_2P) == false &&
+		checker[PATROL].executable)
+	{
+		enemy->preparePatrol();
+		return PatrolState::getInstance();
+	}
+
 	if (enemy->getEnemyData()->hp == 0)
 	{
+		enemy->prepareDie();
 		return DieState::getInstance();
 	}
 

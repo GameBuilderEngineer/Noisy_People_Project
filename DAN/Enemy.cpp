@@ -12,11 +12,13 @@
 using namespace enemyNS;
 using namespace stateMachineNS;
 
+
 // 静的メンバ変数
 int Enemy::numOfEnemy = 0;			// エネミーの総数
 #ifdef _DEBUG
 int Enemy::debugEnemyID = -1;		// デバッグするエネミーのID
 #endif//_DEBUG
+
 
 #pragma region [Basic Process]
 //=============================================================================
@@ -70,6 +72,11 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	isAttacking = false;
 	attackTime = 0.0f;
 	attackDirection = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	wasHittingTree = false;
+	treeAttackTime = 0.0f;
+	canDamageTree = true;
+	cntBeforeTreeCollision = 0.0f;
+	cntDestroyParts = 0.0f;
 
 	// 移動の初期化
 	destination = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -99,7 +106,7 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	{// オブジェクトタイプと衝突対象の指定
 		using namespace ObjectType;
 		treeCell.type = ENEMY;
-		treeCell.target = PLAYER | ENEMY | BULLET | TREE;
+		treeCell.target = PLAYER | ENEMY | ENEMY_BEAR | BULLET | TREE;
 	}
 
 	// 初期ステートごとのセットアップ
@@ -119,6 +126,8 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	case DIE:
 		break;
 	}
+	
+	enemyData->wasAutoDetroy = false;//自動削除処理
 
 #ifdef _DEBUG
 #ifdef RENDER_SENSOR
@@ -139,6 +148,9 @@ Enemy::~Enemy()
 		edgeList->terminate();
 		SAFE_DELETE(edgeList);
 	}
+#ifdef _DEBUG
+	naviMesh->debugEdgeList = NULL;
+#endif
 
 	// 追跡マークの削除
 	deleteMark();
@@ -211,9 +223,9 @@ void Enemy::preprocess(float frameTime)
 	// デバッグエネミーモード
 	if (enemyData->enemyID == debugEnemyID)
 	{
-		controlCamera(frameTime);
-		moveOperation();
-		enemyData->state = stateMachineNS::ENEMY_STATE::REST;
+		//controlCamera(frameTime);
+		//moveOperation();
+		//enemyData->state = stateMachineNS::ENEMY_STATE::REST;
 
 		if (input->wasKeyPressed('8'))
 		{
@@ -268,11 +280,6 @@ void Enemy::postprocess(float frameTime)
 	enemyData->direction = axisZ.direction;
 	// 自動破棄を行うか確認
 	checkAutoDestruction();
-
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	footsteps(player[i].position, i);
-	//}
 }
 #pragma endregion
 
@@ -307,7 +314,7 @@ void Enemy::searchPath()
 	isArraved = false;
 
 	// 移動ターゲットの現在位置までのエッジリストを取得
-	//naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
+	naviMesh->pathSearch(&edgeList, &naviFaceIndex, center, *movingTarget);
 	// 移動ターゲットの現在位置を目的地に設定
 	destination = *movingTarget;
 
@@ -803,6 +810,7 @@ void Enemy::chase(float frameTime)
 		searchPath();
 	}
 
+
 	//D3DXQUATERNION quaternion;
 	//D3DXQuaternionIdentity(&quaternion);
 	//Base::postureControl(&quaternion, D3DXVECTOR3(0, 0, 0), player[chasingPlayer].position - position, 1.0f);
@@ -874,9 +882,7 @@ void Enemy::rest(float frameTime)
 		isDestinationLost = false;
 		isArraved = false;
 		setMovingTarget(&destination);
-
-		//moveDirection = slip(attentionDirection, axisY.direction);
-		//postureControl(axisZ.direction, attentionDirection, 1);
+		searchPath();
 	}
 }
 
@@ -886,18 +892,41 @@ void Enemy::rest(float frameTime)
 //=============================================================================
 void Enemy::attackTree(float frameTime)
 {
-	if (canSense)
+	// 木にダメージを与える時間間隔をあける
+	treeAttackTime += frameTime;
+	if (treeAttackTime > 3.0f)
 	{
-		sensor();
+		treeAttackTime = 0.0f;
+		canDamageTree = true;
 	}
 
-	if (canSearch)
+	// 移動と攻撃の処理
+	destination = enemyData->targetTree->position;
+	setMovingTarget(&destination);
+	if (wasHittingTree)
 	{
-		//setPlayerChaseTarget();
-		searchPath();
+		cntBeforeTreeCollision = 0.0f;
+		animationManager->switchAttack();
+	}
+	else
+	{
+		cntBeforeTreeCollision += frameTime;
+		move(frameTime);
 	}
 
-	move(frameTime);
+	// ステート終了
+	// ツリーのHPがゼロになりアナログに戻った場合に
+	// またはツリーに触れられないまま指定秒数経ったとき
+	if (enemyData->targetTree->getTreeData()->isAttaked == false
+		|| cntBeforeTreeCollision > TIME_BEFORE_TREE_COLLISION)
+	{
+		// ステートマシンでPatrolにするための処理
+		enemyData->targetTree = NULL;
+		// エネミーデータに残らないようにすることで
+		// 遠距離破棄を有効化し近距離再作成を防止する
+		// こうしないとtreeData中のtree情報はリセットされているためバグる
+		enemyData->isGeneratedBySpawnEvent = true;
+	}
 }
 
 
@@ -918,18 +947,20 @@ void Enemy::die(float frameTime)
 		enemyData->isAlive = false;
 		enemyData->deadTime = gameMaster->getGameTime();
 
-		// アイテムドロップ
-		// Saiテスト
-		//if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
-		//{
-		//	ItemManager* itemManager = ItemManager::get();
-		//	itemNS::ItemData itemData;
-		//	itemData.itemID = itemManager->issueNewItemID();
-		//	itemData.type = itemNS::BATTERY;
-		//	itemData.defaultPosition = position;
-		//	itemData.defaultDirection = axisZ.direction;
-		//	itemManager->createItem(itemData);
-		//}
+		 // アイテムドロップ 
+		if (EnemyManager::getSceneName() == "Scene -Game-")
+		{
+			if (rand() % ITEM_DROP_PROBABILITY_DENOMINATOR[enemyData->type] == 0)
+			{
+				ItemManager* itemManager = ItemManager::get();
+				itemNS::ItemData itemData;
+				itemData.itemID = itemManager->issueNewItemID();
+				itemData.type = itemNS::BATTERY;
+				itemData.defaultPosition = position;
+				itemData.defaultDirection = axisZ.direction;
+				itemManager->createItem(itemData);
+			}
+		}
 	}
 
 	// 死亡ステート時間のカウントアップ
@@ -1045,7 +1076,8 @@ void Enemy::checkAutoDestruction()
 {
 	if (position.y <= AUTO_DESTRUCTION_HEIGHT)
 	{// 島の下に落下した場合
-		enemyData->isAlive = false;
+		enemyData->isAlive			= false;
+		enemyData->wasAutoDetroy	= true;
 	}
 }
 
@@ -1176,6 +1208,8 @@ bool Enemy::getIsAttacking() { return isAttacking; }
 int Enemy::getChasingPlayer() { return chasingPlayer; };
 int Enemy::getPlayerNo() { return playerNo; };
 bool Enemy::getIsPayingNewAttention() { return isPayingNewAttention; }
+bool Enemy::getCanDamageTree() { return canDamageTree; }
+int Enemy::getCntDestroyParts() { return cntDestroyParts; }
 
 //=============================================================================
 // Setter
@@ -1221,6 +1255,16 @@ void Enemy::setAttackTarget(Object* _target)
 void Enemy::setPlayerNo(int playerNo)
 {
 	this->playerNo = playerNo;
+}
+
+void Enemy::setTreeHit(bool setting)
+{
+	wasHittingTree = setting;
+}
+
+void Enemy::setCanDamageTree(bool setting)
+{
+	canDamageTree = setting;
 }
 
 void Enemy::setFieldMatrix(D3DXMATRIX *matrix)

@@ -51,6 +51,12 @@
 #include "Marker.h"
 #include "DamageUI.h"
 #include "Title.h"
+#include "tmpOcean.h"
+#include "PowerUp.h"
+
+#if 1
+#define CHEAT_PREZEN
+#endif
 
 //===================================================================================================================================
 //【名前空間】
@@ -81,6 +87,14 @@ namespace gameNS
 		MAX_CAMERA
 	};
 	
+	enum ITEM_TYPE
+	{
+		BATTERY,
+		EXAMPLE,
+		POWER_UP,
+		ITEM_TYPE_MAX
+	};
+
 }
 
 //===================================================================================================================================
@@ -101,8 +115,6 @@ private:
 
 	//3Dオブジェクト
 	Player*							player;				//プレイヤー
-	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
-	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
 
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
@@ -111,10 +123,10 @@ private:
 
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面
+	//TmpOcean*						tmpOcean;			//仮海面
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
-
 
 	//ビルボード
 	//TestEffect*						testEffect;		//インスタンシングビルボードテスト
@@ -200,11 +212,11 @@ private:
 	D3DXVECTOR3 BezierPoint5;			//S字ベジェ曲線点２
 	D3DXVECTOR3 BezierPoint6;			//S字ベジェ曲線点２
 
-	D3DXVECTOR3 Curve1;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve2;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve3;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve4;			//S字ベジェ曲線点２
-	D3DXVECTOR3 Curve5;			//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve1;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve2;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve3;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve4;					//S字ベジェ曲線点２
+	D3DXVECTOR3 Curve5;					//S字ベジェ曲線点２
 	bool measurement = true;
 
 public:
