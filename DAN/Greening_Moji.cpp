@@ -63,10 +63,10 @@ void Greening_Moji::render()
 //==========================================
 //XV
 //==========================================
-void Greening_Moji::update(int playerType)
+void Greening_Moji::update(int playerType, float flametime)
 {
 	if (BasicUI::position.y > END_POS_RYOKUKA)
 	{
-		BasicUI::changePostion(greening, slideUp);
+		BasicUI::changePostion(greening, slideUp,flametime);
 	}
 }

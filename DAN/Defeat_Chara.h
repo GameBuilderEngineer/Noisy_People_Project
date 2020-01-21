@@ -36,6 +36,6 @@ public:
 	~Defeat_Chara();	//デストラクタ
 	void initialize(int playerType);
 	void render();
-	void update(int playerType);
+	void update(int playerType,float flametime);
 private:
 };

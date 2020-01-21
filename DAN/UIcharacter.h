@@ -67,7 +67,7 @@ public: //メンバー関数
 	~UIcharacter();						//デストラクタ
 	void initialize(int playerType);	//初期化
 	void render(int resultPhase);		//描画
-	void update(int resultPhase, int playerType);		//更新
+	void update(int resultPhase, int playerType,float flametime);		//更新
 	
 };
 
