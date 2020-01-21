@@ -7,11 +7,13 @@
 //インクルード
 //==========================================
 #include "Green.h"
+#include "Player.h"
 
 //==========================================
 // using宣言
 //==========================================
 using namespace greenNS;
+using namespace playerNS;
 
 //==========================================
 //コンストラクタ
@@ -58,10 +60,10 @@ void Green::render(int state, float time)
 	{
 		switch (state)
 		{
-		case 2:
+		case STATE::VISION:
 			green->render();
 			break;
-		case 3:
+		case STATE::SKY_VISION:
 			green->render();
 			break;
 		}

@@ -22,6 +22,7 @@
 #include "Fader.h"
 #include "GameMaster.h"
 #include "SerialCommunication.h"
+#include "ModeFlag.h"
 //#include "TextManager.h"
 
 //===================================================================================================================================

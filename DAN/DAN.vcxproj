@@ -158,6 +158,7 @@
     <ClInclude Include="BearGauge.h" />
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="CountUI.h" />
+    <ClInclude Include="ModeFlag.h" />
     <ClInclude Include="OPState.h" />
     <ClInclude Include="Photograph.h" />
     <ClInclude Include="Cylinder.h" />
@@ -344,6 +345,7 @@
     <ClCompile Include="BearGauge.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="CountUI.cpp" />
+    <ClCompile Include="ModeFlag.cpp" />
     <ClCompile Include="OPState.cpp" />
     <ClCompile Include="Photograph.cpp" />
     <ClCompile Include="Cylinder.cpp" />

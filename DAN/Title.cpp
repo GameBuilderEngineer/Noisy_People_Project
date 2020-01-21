@@ -218,6 +218,16 @@ void Title::update(float _frameTime)
 	// タイトルUI
 	titleUI.update(input,frameTime);
 
+	//プレゼンテーションモードの切替
+	if (input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::HOME) ||
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::HOME) )
+	{
+		setModeFlag(MODE_PRESENTATION, true);
+	}
+	else {
+		setModeFlag(MODE_PRESENTATION, false);
+	}
+
 	//タイトルシーンの更新
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->wasKeyPressed(VK_SPACE) ||
@@ -227,23 +237,23 @@ void Title::update(float _frameTime)
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_MAIN)
 		)
 	{
-		PLAY_PARAMETERS playParameters = { 0 };
-		playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL };
-		SoundInterface::SE->playSound(&playParameters);
-		titleState++;
-	}
-	//シーン遷移
-	if (titleState == TITLE03)
-	{
-		if (input->wasKeyPressed(VK_RETURN) ||
-			input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-			input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+		PLAY_PARAMETERS playDesicion = { 0 };
+		switch (titleState)
 		{
+		case TITLE01:
+			playDesicion = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Decision, false ,NULL,false,NULL };
+			SoundInterface::SE->playSound(&playDesicion);
+			break;
+		case TITLE02:
+			//シーン遷移
 			updateInput();
 			changeScene(nextScene);
+			break;
 		}
-
+		titleState++;
 	}
+
+
 
 	// ツリーの更新
 	treeManager->update(frameTime);
@@ -562,81 +572,6 @@ void Title::update(float _frameTime)
 	default:
 		break;
 	}
-
-
-	//Base::anyAxisRotationSlerp(&cameraQ,D3DXVECTOR3(13.2f, 6.0f, -13.0f),);
-
-	////カメラ移動
-	//if (input->isKeyDown('W'))
-	//{
-	//	fixedAxisZ *= 1.0f;
-	//	target->position += fixedAxisZ;
-	//}
-	//if (input->isKeyDown('S'))
-	//{
-	//	fixedAxisZ *= -1.0f;
-	//	target->position += fixedAxisZ;
-	//}
-	//if (input->isKeyDown('A'))
-	//{
-	//	cameraAxisX *= -1.0f;
-	//	target->position += cameraAxisX;
-	//}
-	//if (input->isKeyDown('D'))
-	//{
-	//	cameraAxisX *= 1.0f;
-	//	target->position += cameraAxisX;
-	//}
-	//if (input->isKeyDown('Q'))
-	//{
-	//	Y *= 1.0f;
-	//	target->position += camera->upVector;
-	//}
-	//if (input->isKeyDown('E'))
-	//{
-	//	Y *= 1.0f;
-	//	target->position -= camera->upVector;
-
-	//}
-
-	////カメラ回転
-	////camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
-	////Y軸
-	//if (input->isKeyDown(VK_RIGHT))
-	//{
-	//	
-	//	camera->rotation(camera->upVector, inputDegree);
-	//	//target->quaternion.y += 5.0f;
-	//}
-	//if (input->isKeyDown(VK_LEFT))
-	//{
-	//	camera->rotation(-camera->upVector, inputDegree);
-	//	//target->quaternion.y -= 5.0f;
-	//}
-	////X軸
-	//if (input->isKeyDown(VK_UP))
-	//{
-	//	camera->rotation(-fixedAxisX, inputDegree);
-	//}
-	//if (input->isKeyDown(VK_DOWN))
-	//{
-	//	camera->rotation(fixedAxisX, inputDegree);
-	//}
-	////ズーム
-	//if (input->isKeyDown('Z'))
-	//{
-	//	camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
-	//}
-	//if (input->isKeyDown('X'))
-	//{
-	//	camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
-	//}
-
-	//if (input->wasKeyPressed('P'))
-	//{
-	//	getFader()->setShader(faderNS::NORMAL);
-	//	getFader()->start();
-	//}
 
 	//カメラ
 	camera->update();

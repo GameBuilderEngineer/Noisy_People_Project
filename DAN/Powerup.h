@@ -10,10 +10,10 @@ class PowUpEffect :public effekseerNS::Instance
 {
 public:
 	D3DXVECTOR3 * syncPosition;
-	PowUpEffect(D3DXVECTOR3* sync, int _effectNo)
+	PowUpEffect(D3DXVECTOR3* sync)
 	{
 		syncPosition = sync;
-		effectNo = _effectNo;
+		effectNo = effekseerNS::POW_UP_EFFECT;
 	}
 	virtual void update()
 	{
