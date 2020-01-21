@@ -51,10 +51,10 @@ void Result_Chara::render()
 //==========================================
 //XV
 //==========================================
-void Result_Chara::update()
+void Result_Chara::update(float flametime)
 {
 	if (BasicUI::position.x > END_POS_RESULT)
 	{
-		BasicUI::changePostion(result, slideLeft);
+		BasicUI::changePostion(result, slideLeft,flametime);
 	}
 }
