@@ -195,12 +195,6 @@ void Player::update(float frameTime)
 		reset();
 	}
 
-	////リスポーン
-	//if (position.y < -1.0f)
-	//{
-	//	reset();
-	//}
-
 	//物理更新(状態別)
 	state->physics();
 

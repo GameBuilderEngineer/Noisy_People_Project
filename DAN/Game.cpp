@@ -322,7 +322,7 @@ void Game::initialize() {
 	//ゲーム開始時処理
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
-	SoundInterface::BGM->playSound(&playParameters[4]);	//オープニングBGM再生
+	if (!getModeFlag(MODE_PRESENTATION))SoundInterface::BGM->playSound(&playParameters[4]);	//オープニングBGM再生
 }
 
 //===================================================================================================================================
@@ -364,23 +364,32 @@ void Game::uninitialize() {
 }
 
 //===================================================================================================================================
-//【更新】
+//【OP更新】
 //===================================================================================================================================
-void Game::update(float _frameTime) {
-
-	sceneTimer += _frameTime;
-	frameTime = _frameTime;
-
-	//gameMaster処理落ちやポーズに関わらない更新
-	gameMaster->update(frameTime);
-
-	//ポーズ中ならリターン
-	if (gameMaster->paused())return;
-
-	//【処理落ち】
-	//フレーム時間が10FPS時の時間より長い場合は、処理落ち（更新しない）
-	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 10.0f / 60.0f)return;
+void Game::updateOP()
+{
+	//プレゼンテーションモード時冒頭処理
+	if (getModeFlag(MODE_PRESENTATION))
+	{
+		//OPのスキップ
+		gameMaster->updateOpeningTime(gameMasterNS::OPENING_TIME);
+		//開始カウントダウンのスキップ
+		gameMaster->updateStartCountDown(gameMasterNS::COUNT_DOWN_TIME);
+		if (gameMaster->playActionStartCount(0))
+		{
+			countUI->startCount(0);									//ゲーム開始
+			SoundInterface::SE->playSound(&playParameters[2]);		//開始サウンド
+			SoundInterface::BGM->playSound(&playParameters[0]);		//BGM再生
+			telopManager->playOrder(telopManagerNS::TELOP_TYPE6);	//テロップ
+			enemyManager->setUpdate(true);							//エネミー更新開始
+			//プレイヤーを通常状態へ
+			player[gameMasterNS::PLAYER_1P].transState(playerNS::NORMAL);
+			player[gameMasterNS::PLAYER_1P].enableOperation(playerNS::ENABLE_CAMERA);
+			player[gameMasterNS::PLAYER_2P].transState(playerNS::NORMAL);
+			player[gameMasterNS::PLAYER_2P].enableOperation(playerNS::ENABLE_CAMERA);
+		}
+		return;
+	}
 
 	//オープニング時間の更新
 	if (input->getController()[gameMasterNS::PLAYER_1P]->wasButton(virtualControllerNS::A) ||
@@ -429,7 +438,30 @@ void Game::update(float _frameTime) {
 		player[gameMasterNS::PLAYER_2P].transState(playerNS::NORMAL);
 		player[gameMasterNS::PLAYER_2P].enableOperation(playerNS::ENABLE_CAMERA);
 	}
-	
+}
+
+//===================================================================================================================================
+//【更新】
+//===================================================================================================================================
+void Game::update(float _frameTime) {
+
+	sceneTimer += _frameTime;
+	frameTime = _frameTime;
+
+	//gameMaster処理落ちやポーズに関わらない更新
+	gameMaster->update(frameTime);
+
+	//ポーズ中ならリターン
+	if (gameMaster->paused())return;
+
+	//【処理落ち】
+	//フレーム時間が10FPS時の時間より長い場合は、処理落ち（更新しない）
+	//※フレーム時間に準拠している処理が正常に機能しないため
+	if (frameTime > 10.0f / 60.0f)return;
+
+	//OPの更新処理
+	updateOP();
+
 	//ゲームタイムの更新
 	gameMaster->updateGameTime(frameTime);
 
@@ -643,7 +675,7 @@ void Game::update(float _frameTime) {
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		player[i].update(frameTime);		//オブジェクト
-		if (player[i].position.y < 0.0f)
+		if (player[i].position.y < -10.0f)
 		{
 			player[i].reset();
 		}
@@ -652,6 +684,10 @@ void Game::update(float _frameTime) {
 	// エネミーの更新
 	enemyManager->update(frameTime);
 #ifdef CHEAT_PREZEN
+	if (input->getController()[0]->wasButton(virtualControllerNS::RIGHT))
+	{
+		aiDirector->eventMaker.makeEventBossEntry();
+	}
 	if (input->wasKeyPressed('6') || input->getController()[0]->wasButton(virtualControllerNS::UP))
 	{
 		aiDirector->eventMaker.makeEventEnemyAttaksTree();

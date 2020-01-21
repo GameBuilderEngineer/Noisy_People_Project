@@ -927,6 +927,9 @@
     <ClCompile Include="OPState.cpp">
       <Filter>Game Layer\Player\State\OPState</Filter>
     </ClCompile>
+    <ClCompile Include="ModeFlag.cpp">
+      <Filter>Game Layer\Scene\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h">
@@ -1482,6 +1485,9 @@
     </ClInclude>
     <ClInclude Include="OPState.h">
       <Filter>Game Layer\Player\State\OPState</Filter>
+    </ClInclude>
+    <ClInclude Include="ModeFlag.h">
+      <Filter>Game Layer\Scene\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
