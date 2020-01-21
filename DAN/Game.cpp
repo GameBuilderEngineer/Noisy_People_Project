@@ -521,6 +521,14 @@ void Game::update(float _frameTime) {
 	{
 		countUI->finishCount(0);	//ゲーム終了
 		SoundInterface::SE->playSound(&playParameters[3]);	// タイムアップサウンド
+		for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		{
+			player[i].disableOperation(
+				playerNS::ENABLE_SHOT |
+				playerNS::ENABLE_SKY_VISION |
+				playerNS::ENABLE_VISION);
+		}
+
 	}
 
 	//OPカメラのターゲットの更新
@@ -528,6 +536,7 @@ void Game::update(float _frameTime) {
 
 	//エンディング時間の更新
 	gameMaster->updateEndingTime(frameTime);
+
 
 	//ゲーム開始時ボイス
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] == false)
