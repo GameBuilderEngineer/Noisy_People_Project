@@ -149,12 +149,12 @@ namespace playerNS{
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		//初期ゲームスタート
-		//D3DXVECTOR3(0, 20, -180),				//1P
-		//D3DXVECTOR3(130, 20, 195)				//2P
+		D3DXVECTOR3(0, 20, -180),				//1P
+		D3DXVECTOR3(130, 20, 195)				//2P
 
-		//プレゼン用
-		D3DXVECTOR3(103, 15, -181),				//1P
-		D3DXVECTOR3(-181, 35, -97)				//2P
+		////プレゼン用
+		//D3DXVECTOR3(103, 15, -181),				//1P
+		//D3DXVECTOR3(-181, 35, -97)				//2P
 	};
 
 	// StatusParameter

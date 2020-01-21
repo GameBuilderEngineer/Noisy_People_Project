@@ -53,7 +53,7 @@
 #include "Title.h"
 #include "tmpOcean.h"
 #include "PowerUp.h"
-#if 1
+#if 0
 #define CHEAT_PREZEN
 #endif
 
