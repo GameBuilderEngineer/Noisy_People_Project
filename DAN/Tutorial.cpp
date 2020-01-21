@@ -316,15 +316,7 @@ void Tutorial::update(float _frameTime)
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	// チュートリアルのタイマーを進める
-	if (tutorialTimer != 0.0f)
-	{
-		tutorialTimer -= frameTime;
-	}
-	if (tutorialTimer < 0.0f)
-	{
-		tutorialTimer = 0.0f;
-	}
+
 
 	//Enterまたは〇ボタンで次へ
 	if (input->wasKeyPressed(VK_RETURN) ||
@@ -360,11 +352,11 @@ void Tutorial::update(float _frameTime)
 			player[i].update(frameTime);	//オブジェクト
 		}
 	}
-
+	// 落下防止
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		if (step[i] != tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_END
-			&& player[i].position.y < 0)
+			&& player[i].position.y < -1.0)
 		{
 			player[i].setPosition(i ? tutorialNS::PLAYER_P2_POSITION : tutorialNS::PLAYER_P1_POSITION);
 		}
@@ -445,6 +437,11 @@ void Tutorial::update(float _frameTime)
 	{
 		if (clock() > timeCnt[0] + 2000 && clock() > timeCnt[1] + 2000)
 		{
+			MOVEP *MoveP = GetMovePAdr();
+			MOVEP1 *MoveP1 = GetMoveP1Adr();
+
+			MoveP->IsGround = true;
+			MoveP1->IsGround = true;
 			changeScene(nextScene);
 		}
 	}
@@ -504,7 +501,7 @@ void Tutorial::update(float _frameTime)
 					planeStep[i]++;
 					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_STEP_CLEAR };
 					SoundInterface::SE->playSound(&playParameters);
-					plane[i]->setPos(plane[i]->getPos() + D3DXVECTOR3(0, 0, 0));
+					plane[i]->setPos(plane[i]->getPos());
 					tutorialTex.setRender(i, true);
 				}
 			}
@@ -518,7 +515,19 @@ void Tutorial::update(float _frameTime)
 				planeStep[i]++;
 				PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_STEP_CLEAR };
 				SoundInterface::SE->playSound(&playParameters);
-				plane[i]->setPos(plane[i]->getPos() + D3DXVECTOR3(0, 80, 0));
+
+				Ray tempRay;
+				tempRay.initialize(player[i].position, plane[i]->getPos() - player[i].position);
+				tempRay.distance = between2VectorLength(plane[i]->getPos(), player[i].position);
+				tempRay.direction = Base::slip(tempRay.direction, D3DXVECTOR3(0,1,0));
+				//D3DXVec3Normalize(&tempRay.direction, &tempRay.direction);
+				D3DXMATRIX tempRot;
+				D3DXMatrixRotationYawPitchRoll(&tempRot, 0.5f, 0.0f, 0.0f);
+				D3DXVec3TransformCoord(&tempRay.direction, &tempRay.direction, &tempRot);
+				
+				plane[i]->setPos(D3DXVECTOR3(0,plane[i]->getPos().y,0) + player[i].position + tempRay.direction + D3DXVECTOR3(0, 80, 0));
+
+
 			}
 			break;
 
@@ -553,7 +562,7 @@ void Tutorial::update(float _frameTime)
 		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_END:
 			if (clock() > timeCnt[i] && play[i] == false)
 			{
-				if (clear55flag == false)
+				if (clear55flag[i] == false)
 				{
 					planeStep[i]++;
 				}
