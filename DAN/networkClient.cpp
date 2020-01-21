@@ -7,7 +7,7 @@
 #include "networkClient.h"
 #include "ImguiManager.h"
 
-TreeTable NETWORK_CLIENT::treeTable[300] = { 0 };
+TreeTable NETWORK_CLIENT::treeTable[270] = { 0 };
 D3DXVECTOR3 NETWORK_CLIENT::pos1P = D3DXVECTOR3(0, 0, 0);
 D3DXVECTOR3 NETWORK_CLIENT::pos2P = D3DXVECTOR3(0, 0, 0);
 bool NETWORK_CLIENT::record1P = false;

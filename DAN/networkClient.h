@@ -60,7 +60,7 @@ private:
 	int nRtn, nNo = 5;
 
 	//ツリー情報
-	static TreeTable treeTable[300];
+	static TreeTable treeTable[270];
 	static int treeNum;
 
 	//プレイヤー位置情報
