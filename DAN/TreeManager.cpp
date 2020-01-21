@@ -102,6 +102,7 @@ void TreeManager::update(float frameTime)
 
 		bool needSwap = false;
 		int beforeType = tree->getTreeData()->type;
+		int beforeGreenState = tree->getTreeData()->greenState;
 		//状態遷移を行おうとしている場合
 		if (tree->getTransState())
 		{
@@ -130,9 +131,26 @@ void TreeManager::update(float frameTime)
 		//ネットワークの送信情報へ記録
 		NETWORK_CLIENT::recordTreeTable(in,i);
 
-		//レンダラーの切替
+		//ツリーのステート切替イベント発生
 		if (needSwap)
 		{
+			//イベントのタイプの識別
+			if (beforeGreenState == treeNS::DEAD)
+			{
+				switch (tree->getTreeData()->type)
+				{
+				case treeNS::DIGITAL_TREE:
+					in.eventType = gameMasterNS::TO_GREEN_WITH_DIGITAL;
+					break;
+				case treeNS::ANALOG_TREE:
+					in.eventType = gameMasterNS::TO_GREEN_WITH_ANALOG;
+					break;
+				}
+			}
+			else if (beforeGreenState == treeNS::GREEN){
+				in.eventType = gameMasterNS::TO_DEAD;
+			}
+
 			//ゲームマスターへ記録
 			if (gameMaster)
 			{

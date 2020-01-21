@@ -171,10 +171,10 @@ MarkerRenderer::MarkerRenderer()
 //===================================================================================================================================
 MarkerRenderer::~MarkerRenderer()
 {
-	for (int i = 0; i < MARKER_NUM; i++)
-	{
-		SAFE_DELETE(marker[i]);
-	}
+	//for (int i = 0; i < MARKER_NUM; i++)
+	//{
+	//	SAFE_DELETE(marker[i]);
+	//}
 	SAFE_DELETE(billboard);
 }
 
