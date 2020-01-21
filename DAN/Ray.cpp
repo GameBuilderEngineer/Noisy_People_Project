@@ -147,6 +147,34 @@ void Ray::render(float length)
 
 #endif // _DEBUG
 }
+// 中込追記　リリース版でうごくやつ　Tutorial用でした
+void Ray::renderOnRelease(float length)
+{
+	LPDIRECT3DDEVICE9 device = getDevice();
+	device->SetFVF(D3DFVF_XYZ);
+	D3DXVECTOR3 vPnt[2];
+	vPnt[0] = start;
+	vPnt[1] = start + (direction * length);
+
+	D3DXMATRIX mWorld;
+	D3DXMatrixIdentity(&mWorld);
+	device->SetTransform(D3DTS_WORLD, &mWorld);
+
+	// アルファ・ブレンディングを行う
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
+	//レイのマテリアル設定
+	D3DMATERIAL9 mtrl;
+	ZeroMemory(&mtrl, sizeof(mtrl));
+	mtrl.Ambient =
+		mtrl.Diffuse = color;
+	device->SetMaterial(&mtrl);
+	device->SetTexture(0, NULL);
+	device->SetRenderState(D3DRS_LIGHTING, true);
+
+	//レイのレンダリング
+	device->DrawPrimitiveUP(D3DPT_LINELIST, 1, vPnt, sizeof(D3DXVECTOR3));
+}
 
 //===================================================================================================================================
 //【メッシュ上のポリゴンの頂点探査】

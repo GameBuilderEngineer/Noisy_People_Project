@@ -45,6 +45,8 @@ Tutorial::Tutorial()
 
 	// チュートリアル時間の設定
 	tutorialTimer = 60.0f;
+
+	clear55flag[0] = clear55flag[1] = false;
 }
 
 //===================================================================================================================================
@@ -326,8 +328,7 @@ void Tutorial::update(float _frameTime)
 
 	//Enterまたは〇ボタンで次へ
 	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A))
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A))
 	{
 		// サウンドの再生
 		//sound->play(soundNS::TYPE::SE_PAPER, soundNS::METHOD::PLAY);
@@ -356,10 +357,21 @@ void Tutorial::update(float _frameTime)
 		//プレイヤーの更新
 		for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		{
-			player[i].update(frameTime);		//オブジェクト
-
+			player[i].update(frameTime);	//オブジェクト
 		}
 	}
+
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		if (step[i] != tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_END
+			&& player[i].position.y < 0)
+		{
+			player[i].setPosition(i ? tutorialNS::PLAYER_P2_POSITION : tutorialNS::PLAYER_P1_POSITION);
+		}
+	}
+
+
+
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
 		//ディスプレイプレーン
@@ -550,7 +562,7 @@ void Tutorial::update(float _frameTime)
 					planeStep[i]--;
 				}
 				plane[i]->setPos(PLANE_POS_FIN[i]);
-				clear55flag = clear55flag ? false : true;
+				clear55flag[i] = clear55flag[i] ? false : true;
 				timeCnt[i] = clock() + 5000;
 			}
 
@@ -657,7 +669,7 @@ void Tutorial::render3D(Camera* currentCamera)
 		player[i].otherRender(currentCamera->view, currentCamera->projection, currentCamera->position);
 		if (step[i] == tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_5)
 		{
-			ray[i].render(ray[i].distance);
+			ray[i].renderOnRelease(ray[i].distance);
 		}
 	}
 

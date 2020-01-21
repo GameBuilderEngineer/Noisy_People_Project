@@ -31,7 +31,7 @@ public:
 	void initialize(D3DXVECTOR3 _start,D3DXVECTOR3 _direction);
 	void update(D3DXVECTOR3 _start,D3DXVECTOR3 _direction);
 	void render(float length);
-	
+	void renderOnRelease(float length);	// íÜçûí«ãL
 	bool rayIntersect(LPD3DXMESH targetMesh, D3DXMATRIX targetMatrix);
 	D3DXVECTOR3 slip(D3DXVECTOR3 L, D3DXVECTOR3 N);
 	//HRESULT findVerticesOnPoly(LPD3DXMESH, DWORD, D3DXVECTOR3*);

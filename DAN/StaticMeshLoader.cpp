@@ -135,8 +135,8 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 			&staticMesh[i].numMaterial,
 			&staticMesh[i].mesh);
 
-		//法線と接線の付記
-		withNormalTangent(device, &staticMesh[i].mesh);
+		////法線と接線の付記
+		//withNormalTangent(device, &staticMesh[i].mesh);
 
 		D3DXMATERIAL* materials = (D3DXMATERIAL*)staticMesh[i].bufferMaterial->GetBufferPointer();
 		staticMesh[i].materials = new D3DMATERIAL9[staticMesh[i].numMaterial];
