@@ -13,6 +13,7 @@
 #include "UtilityFunction.h"
 #include "MoveP.h"
 #include "MoveP1.h"
+#include "OPState.h"
 #include "NormalState.h"
 
 //===================================================================================================================================
@@ -97,8 +98,7 @@ void Player::initialize(PlayerTable info)
 	power = MAX_POWER;							//キャラクター電力確認用
 
 	//通常状態
-	state = new normalNS::NormalState(this);
-	enableOperation(ENABLE_CAMERA);
+	state = new OPStateNS::OPState(this);
 
 	//シューティングアクション
 	bulletManager = new BulletManager;
@@ -194,12 +194,6 @@ void Player::update(float frameTime)
 	{// リセット
 		reset();
 	}
-
-	////リスポーン
-	//if (position.y < -1.0f)
-	//{
-	//	reset();
-	//}
 
 	//物理更新(状態別)
 	state->physics();

@@ -7,12 +7,13 @@
 //インクルード
 //====================================
 #include "GreenRate.h"
-
+#include "Player.h"
 
 //====================================
 //	[using宣言]
 //====================================
 using namespace greenRateNS;
+using namespace playerNS;
 
 //====================================
 //コンストラクタ
@@ -90,7 +91,7 @@ void GreenRate::render(int playerType,int state,float time)
 	{
 		switch (state)
 		{
-		case 2:
+		case STATE::VISION:
 			if (playerType == basicUiNS::P1)
 			{
 				for (int i = 0; i < DIGIT_GREEN_RATE; i++)
@@ -113,7 +114,7 @@ void GreenRate::render(int playerType,int state,float time)
 			}
 			break;
 
-		case 3:
+		case STATE::SKY_VISION:
 			if (playerType == basicUiNS::P1)
 			{
 				for (int i = 0; i < DIGIT_GREEN_RATE; i++)

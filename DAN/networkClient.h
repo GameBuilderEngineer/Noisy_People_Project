@@ -38,7 +38,9 @@ public:
 
 	void send(float time);
 	void outputGUI();
+	static void recordTreeTable(const TreeTable inTreeTable, int tableNo);
 	static void setSendTreeTable(const TreeTable inTreeTable);
+	static void recordPlayerPosition(const D3DXVECTOR3 position, int playerNo);
 	void resetDisplay();
 
 //Data
@@ -57,6 +59,14 @@ private:
 	unsigned int addr;
 	int nRtn, nNo = 5;
 
-	static TreeTable treeTable[20];
+	//ツリー情報
+	static TreeTable treeTable[270];
 	static int treeNum;
+
+	//プレイヤー位置情報
+	static D3DXVECTOR3 pos1P;
+	static bool record1P;
+	static D3DXVECTOR3 pos2P;
+	static bool record2P;
+
 };

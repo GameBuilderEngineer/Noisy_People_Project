@@ -16,12 +16,14 @@ ItemManager* ItemManager::instance;
 //=============================================================================
 void ItemManager::initialize(LPD3DXMESH _attractorMesh, D3DXMATRIX* _attractorMatrix)
 {
-	nextID = 0;		// 次回発行IDを0に初期化
+	nextID = 0;						// 次回発行IDを0に初期化
+	attractorMesh = _attractorMesh;
+	attractorMatrix = _attractorMatrix;
 
 	// 描画オブジェクトを作成
 	batteryRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::ITEM_BRANCH));
 	exampleItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
-	powerupItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2));
+	powerupItemRender = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::POWER_UP_ITEM));
 
 #if 1	// アイテムツールのデータを読み込む
 	ITEM_TOOLS* itemTools = new ITEM_TOOLS;
@@ -111,8 +113,9 @@ void ItemManager::createItem(ItemData itemData)
 		//itemList.emplace_back(new exampleItem(staticMeshNS::reference(staticMeshNS::YAMADA_ROBOT2), itemData));
 		break;
 	case POWER_UP:
-		item = new Powerup(staticMeshNS::reference(staticMeshNS:: YAMADA_ROBOT2), itemData);
+		item = new Powerup(staticMeshNS::reference(staticMeshNS::POWER_UP_ITEM), itemData);
 		item->setAttractor(attractorMesh, attractorMatrix);
+		((Powerup*)item)->initialize();
 		itemList.emplace_back(item);
 		powerupItemRender->registerObject(item);
 		break;

@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7A53624F-B978-43BC-BDE6-B56B5AA52812}</ProjectGuid>
     <RootNamespace>DAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -158,6 +158,8 @@
     <ClInclude Include="BearGauge.h" />
     <ClInclude Include="CharaIcon.h" />
     <ClInclude Include="CountUI.h" />
+    <ClInclude Include="ModeFlag.h" />
+    <ClInclude Include="OPState.h" />
     <ClInclude Include="Photograph.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DamageUI.h" />
@@ -184,6 +186,7 @@
     <ClInclude Include="Mark.h" />
     <ClInclude Include="Persent.h" />
     <ClInclude Include="SerialCommunication.h" />
+    <ClInclude Include="tmpOcean.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
@@ -342,6 +345,8 @@
     <ClCompile Include="BearGauge.cpp" />
     <ClCompile Include="CharaIcon.cpp" />
     <ClCompile Include="CountUI.cpp" />
+    <ClCompile Include="ModeFlag.cpp" />
+    <ClCompile Include="OPState.cpp" />
     <ClCompile Include="Photograph.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DamageUI.cpp" />
@@ -368,6 +373,7 @@
     <ClCompile Include="SaiDelayReverb.cpp" />
     <ClCompile Include="SaiFadeIn.cpp" />
     <ClCompile Include="SerialCommunication.cpp" />
+    <ClCompile Include="tmpOcean.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />

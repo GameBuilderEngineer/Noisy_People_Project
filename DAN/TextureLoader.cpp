@@ -34,8 +34,12 @@ TextureLoader::TextureLoader()
 	// Tutorial
 	textureName[TUTORIAL1] = { "Slide_01.png" };
 	textureName[TUTORIAL2] = { "Slide_02.png" };
+	textureName[TUTORIAL3] = { "Slide_03.png"};
 	textureName[TUTORIAL_UI_0] = { "steplist.png" };
 	textureName[TUTORIAL_UI_1] = { "check.png" };
+	textureName[TUTORIAL_UI_PLANE] = { "comment.png" };
+	textureName[TUTORIAL_STANDBY_1] = { "Standby_p1.png" };
+	textureName[TUTORIAL_STANDBY_2] = { "Standby_p2.png" };
 	textureName[TUTORIAL_UI_PLANE] = { "comment.png" };
 
 	// Title
@@ -145,6 +149,10 @@ TextureLoader::TextureLoader()
 	textureName[NUMBER] = { "num.png" };
 	textureName[TARGET] = { "stencil.png" };
 	textureName[DATE_ALPHA] = { "DateAlpha.png" };
+	textureName[OCEAN] = { "sea.png" };
+	//textureName[OCEAN_BUMP]		= { "NormalMap.bmp" };
+	textureName[OCEAN_BUMP] = { "ocean.png" };
+
 
 	//Finale
 	textureName[FIN] = { "Fin.png" };

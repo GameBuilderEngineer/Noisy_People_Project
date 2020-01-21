@@ -14,6 +14,7 @@
 #include "TreeManager.h"
 #include "networkServer.h"
 #include "Sky.h"
+#include "Marker.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -40,7 +41,10 @@ private:
 	NETWORK_INTERFACE*				networkServer;
 	TreeManager*					treeManager;		//ツリー
 	Sky*							sky;				//スカイドーム
+	MarkerRenderer*					markerRenderer;		//マーカーレンダラー
 
+	//プレイヤー位置情報
+	D3DXVECTOR3						playerPosition[gameMasterNS::PLAYER_NUM];
 
 	float							syncTimer;			//同期タイマー
 
@@ -58,7 +62,7 @@ public:
 	virtual void AI(void) override;
 
 	void render3D(Camera* currentCamera);
-	//void renderUI();
+	void renderUI();
 
 #ifdef _DEBUG
 	virtual void createGUI() override;

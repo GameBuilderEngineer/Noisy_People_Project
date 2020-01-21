@@ -27,7 +27,7 @@ namespace resultNS
 	const float				CAMERA_SPEED				= 30.0f;
 
 	//çƒê∂éûä‘
-	const float				PLAYBACK_TIME				= 10.0f;
+	const float				PLAYBACK_TIME				= 3.0f;
 
 	//çƒê∂ë¨ìx
 	const float				PLAYBACK_SPEED				= (gameMasterNS::GAME_TIME + gameMasterNS::ENDING_TIME) / PLAYBACK_TIME;

@@ -7,11 +7,13 @@
 //インクルード
 //==========================================
 #include "Green.h"
+#include "Player.h"
 
 //==========================================
 // using宣言
 //==========================================
 using namespace greenNS;
+using namespace playerNS;
 
 //==========================================
 //コンストラクタ
@@ -51,16 +53,20 @@ void Green::initialize(int playerType)
 //==========================================
 //描画処理
 //==========================================
-void Green::render(int state)
+void Green::render(int state, float time)
 {
-	switch (state)
+	float gametime = time;
+	if (gametime > 60)//残り時間が60以上の時のみ表示
 	{
-	case 2:
-		green->render();
-		break;
-	case 3:
-		green->render();
-		break;
+		switch (state)
+		{
+		case STATE::VISION:
+			green->render();
+			break;
+		case STATE::SKY_VISION:
+			green->render();
+			break;
+		}
 	}
 	
 }

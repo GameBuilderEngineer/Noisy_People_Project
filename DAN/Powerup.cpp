@@ -21,12 +21,39 @@ Powerup::~Powerup()
 {
 }
 
+//‰Šú‰»
+void Powerup::initialize()
+{
+	flag = true;
+	ray.initialize(position, D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+	if (ray.rayIntersect(attractorMesh, *attractorMatrix))
+	{
+		fieldFacePosition = position + ray.direction * ray.distance;
+	}
+}
+
 //=============================================================================
 // XVˆ—
 //=============================================================================
 void Powerup::update(float frameTime)
 {
+	// 
 	Item::update(frameTime);
+	if (flag == false) { return; }
+
+	if (ray.rayIntersect(attractorMesh, *attractorMatrix))
+	{
+
+		if (position.y > fieldFacePosition.y)
+		{
+			position += D3DXVECTOR3(0.0f, -1.0f, 0.0f) * 30.0f * frameTime;
+		}
+		else
+		{
+			position = fieldFacePosition;
+			flag = false;
+		}
+	}
 }
 
 //=============================================================================

@@ -25,6 +25,8 @@ namespace playerUiNS
 {
 	enum STATE {
 		NONE,
+		OP,
+		ED,
 		NORMAL,
 		VISION,
 		SKY_VISION,

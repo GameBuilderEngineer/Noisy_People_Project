@@ -54,6 +54,14 @@ void Result::initialize()
 	resultUI.defeat01 = gameMaster->getKillEnemyNum(basicUiNS::P1);//player1の撃破数
 	resultUI.defeat02 = gameMaster->getKillEnemyNum(basicUiNS::P2);//player2の撃破数
 
+	if (getModeFlag(MODE_PRESENTATION))
+	{
+		resultUI.greenigPersent = 75;//全体緑化率
+		resultUI.greeningNum01 = 94;//player1の緑化本数
+		resultUI.greeningNum02 = 100;//player2の緑化本数
+
+	}
+
 	//テストフィールド
 	testField = new Object();
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));

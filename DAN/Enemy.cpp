@@ -126,6 +126,8 @@ Enemy::Enemy(ConstructionPackage constructionPackage)
 	case DIE:
 		break;
 	}
+	
+	enemyData->wasAutoDetroy = false;//©“®íœˆ—
 
 #ifdef _DEBUG
 #ifdef RENDER_SENSOR
@@ -1074,7 +1076,8 @@ void Enemy::checkAutoDestruction()
 {
 	if (position.y <= AUTO_DESTRUCTION_HEIGHT)
 	{// “‡‚Ì‰º‚É—‰º‚µ‚½ê‡
-		enemyData->isAlive = false;
+		enemyData->isAlive			= false;
+		enemyData->wasAutoDetroy	= true;
 	}
 }
 

@@ -107,6 +107,8 @@ namespace staticMeshNS {
 		//NAV_TEST5,
 		//NAV_TEST6,
 
+		POWER_UP_ITEM,
+
 		MESH_NUM,								//NUM
 	};
 
@@ -129,5 +131,12 @@ public:
 
 	HRESULT load(LPDIRECT3DDEVICE9 device);
 	void release(void);
+
+	//NormalとTangentの情報を付記する関数
+	HRESULT withNormalTangent(
+		LPDIRECT3DDEVICE9 device,	//描画デバイス
+		LPD3DXMESH* sourceMesh		//元のメッシュ
+		);
+
 };
 
