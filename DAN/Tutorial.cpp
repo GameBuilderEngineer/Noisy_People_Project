@@ -333,22 +333,22 @@ void Tutorial::update(float _frameTime)
 
 		return;
 	}
-	//Backまたは×ボタンで前へ
-	else if (input->wasKeyPressed(VK_BACK) ||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
+	////Backまたは×ボタンで前へ
+	//else if (input->wasKeyPressed(VK_BACK) ||
+	//	input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+	//	input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
 
-	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+	//{
+	//	// サウンドの再生
+	//	//sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
 
-		if (tutorialTex.nextPage > 0)
-		{
-			// チュートリアルを前へ
-			tutorialTex.nextPage--;
-		}
-		return;
-	}
+	//	if (tutorialTex.nextPage > 0)
+	//	{
+	//		// チュートリアルを前へ
+	//		tutorialTex.nextPage--;
+	//	}
+	//	return;
+	//}
 
 	if (tutorialTex.nextPage >= 2)
 	{
@@ -431,15 +431,19 @@ void Tutorial::update(float _frameTime)
 	int flag = 0;
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
-		if (player[i].getPosition()->y <= -10)
-		{
-			flag++;
-		}
+		//if (player[i].getPosition()->y <= -10)
+		//{
+		//	flag++;
+		//}
 
-		if (flag == gameMasterNS::PLAYER_NUM)
-		{
-			changeScene(nextScene);
-		}
+		//if (flag == gameMasterNS::PLAYER_NUM)
+		//{
+		//	changeScene(nextScene);
+		//}
+	}
+	if (play[0] && play[1])
+	{
+		changeScene(nextScene);
 	}
 
 	float distance = 0;
@@ -534,16 +538,27 @@ void Tutorial::update(float _frameTime)
 					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_TUTORIAL_CLEAR };
 					SoundInterface::SE->playSound(&playParameters);
 					plane[i]->setPos(PLANE_POS_5_5[i]);
-					timeCnt[i] = clock() + 20000;
+					timeCnt[i] = clock() + 5000;
 				}
 			}
 			break;
+
 		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_END:
-			if (clock() >= timeCnt[i])
+			if (clock() > timeCnt[i])
 			{
-				planeStep[i]++;
+				if (clear55flag == false)
+				{
+					planeStep[i]++;
+				}
+				else
+				{
+					planeStep[i]--;
+				}
 				plane[i]->setPos(PLANE_POS_FIN[i]);
+				clear55flag = clear55flag ? false : true;
+				timeCnt[i] = clock() + 5000;
 			}
+
 			if (!play[i])
 			{
 				distance = D3DXVec3Length(&(FIN_POS[i] - *player[i].getPosition()));
@@ -568,7 +583,6 @@ void Tutorial::update(float _frameTime)
 			plane[i]->update(frameTime, planeStep[i]);
 		}
 	}
-
 
 	// チュートリアル2D更新
 	tutorialTex.update();

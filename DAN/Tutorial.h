@@ -55,7 +55,7 @@ namespace tutorialNS
 	const D3DXVECTOR3 ENEMY_POSTITION[2] = { D3DXVECTOR3(525, 0, -25),D3DXVECTOR3(-525, 0, -25) };
 
 	// plane
-	const D3DXVECTOR3 PLANE_POS_5_5[2] = { D3DXVECTOR3(550, 30, 10),D3DXVECTOR3(-550, 30, 10) };
+	const D3DXVECTOR3 PLANE_POS_5_5[2] = { D3DXVECTOR3(525, 35, 25),D3DXVECTOR3(-525, 35, 25) };
 	const D3DXVECTOR3 PLANE_POS_FIN[2] = { D3DXVECTOR3(525, 35, 25),D3DXVECTOR3(-525, 35, 25) };
 	const D3DXVECTOR3 FIN_POS[2] = { D3DXVECTOR3(525, 25, 25),D3DXVECTOR3(-525, 25, 25) };
 
@@ -109,6 +109,7 @@ private:
 	TreeManager*					treeManager;		// ツリーマネージャー
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 	Ray 							ray[2];				// レイ
+	bool							clear55flag = false;
 
 	//UI
 	TutorialUI *tutorialUI;
