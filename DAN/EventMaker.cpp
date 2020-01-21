@@ -90,6 +90,67 @@ void EventMaker::update()
 	}
 
 #ifndef CHEAT_PREZEN
+#ifdef EASY_MODE
+	// デジタルツリー襲撃イベント
+	if (data->numBeingAttackedTree == 0 && data->existsBoss == false && data->wasBossEntried == false)
+	{
+		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > 20 + data->ajustTimeEnemyAttaksTree
+			&& data->cntEnemyAttacksTree == 0)
+		{
+			// 最低経過時間チェック
+			data->weightEnemyAttacksTree = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 4.0f, 10.0f);
+			data->weightEnemyAttacksTree *= (1.0f + (float)(rand() % 5 - 2) * 0.1f);	// ランダム補正
+
+			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
+			{
+				data->ajustTimeEnemyAttaksTree = rand() % 10;// ランダムで間隔調整を入れる
+				makeEventEnemyAttaksTree();
+			}
+		}
+
+		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > 35 + data->ajustTimeEnemyAttaksTree
+			&& data->cntEnemyAttacksTree >= 1)
+		{
+			// 最低経過時間チェック
+			data->weightEnemyAttacksTree = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 4.0f, 10.0f);
+			data->weightEnemyAttacksTree *= (1.0f + (float)(rand() % 5 - 2) * 0.1f);	// ランダム補正
+
+			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
+			{
+				data->ajustTimeEnemyAttaksTree = rand() % 10;// ランダムで間隔調整を入れる
+				makeEventEnemyAttaksTree();
+			}
+		}
+
+	}
+
+	// 巨大環境破壊ロボイベント
+	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
+	{
+		data->wasBossEntried = true;
+		data->existsBoss = true;
+		makeEventBossEntry();
+	}
+
+	if (gameMaster->getGameTime() < (180 - data->powerUpEntryAdjustTime)
+		&& data->cntPowerUpEntry == 0)
+	{
+		data->cntPowerUpEntry++;
+		makeEventPowerUpItem();
+		data->wasPowerUpEntried = true;
+	}
+
+	if (gameMaster->getGameTime() < (80 - data->powerUpEntryAdjustTime)
+		&& data->cntPowerUpEntry == 1)
+	{
+		data->cntPowerUpEntry++;
+		makeEventPowerUpItem();
+		data->wasPowerUpEntried = true;
+	}
+
+
+#else
+
 	// デジタルツリー襲撃イベント
 	if (data->numBeingAttackedTree == 0)
 	{
@@ -111,9 +172,9 @@ void EventMaker::update()
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
 	{
 		data->wasBossEntried = true;
+		data->existsBoss = true;
 		makeEventBossEntry();
 	}
-#endif
 
 	if (gameMaster->getGameTime() < (180 - data->powerUpEntryAdjustTime)
 		&& data->wasPowerUpEntried == false)
@@ -121,6 +182,10 @@ void EventMaker::update()
 		makeEventPowerUpItem();
 		data->wasPowerUpEntried = true;
 	}
+
+#endif// EASY_MODE
+#endif
+
 }
 
 

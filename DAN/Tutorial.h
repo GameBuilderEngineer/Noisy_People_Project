@@ -109,7 +109,7 @@ private:
 	TreeManager*					treeManager;		// ツリーマネージャー
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 	Ray 							ray[2];				// レイ
-	bool							clear55flag = false;
+	bool							clear55flag[2];
 
 	//UI
 	TutorialUI *tutorialUI;

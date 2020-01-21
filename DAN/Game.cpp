@@ -1386,8 +1386,8 @@ void Game::collisions()
 					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
 					SoundInterface::SE->playSound(&playParameters);	//SE再生
 					// エフェクト再生 うまくいかん！うんちっち
-					//((Powerup*)itemList[i])->powUpEffect = new PowUpEffect(&player[j].position, effekseerNS::POW_UP_EFFECT);
-					//effekseerNS::play(0, ((Powerup*)itemList[i])->powUpEffect);
+					((Powerup*)itemList[i])->powUpEffect = new PowUpEffect(&player[j].position);
+					effekseerNS::play(0, ((Powerup*)itemList[i])->powUpEffect);
 
 					itemManager->destroyItem(itemList[i]->getItemData()->itemID);
 				}
