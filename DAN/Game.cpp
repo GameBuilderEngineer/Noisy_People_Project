@@ -679,6 +679,10 @@ void Game::update(float _frameTime) {
 		{
 			player[i].reset();
 		}
+		if (player[i].getHp() <= 0)
+		{
+			player[i].reset();
+		}
 	}
 
 	// エネミーの更新
