@@ -106,8 +106,11 @@ namespace aiNS
 		// イベント
 		float lastTimeEnemyAttaksTree;						// 最後にツリー襲撃イベントが発生した時間
 		float ajustTimeEnemyAttaksTree;						// ツリー襲撃イベントの調整時間
+		int cntEnemyAttacksTree;							// ツリー襲撃イベントの回数
 		bool wasBossEntried;								// 環境破壊ロボが登場したか
+		bool existsBoss;									// 環境破壊ロボが出現中か
 		bool wasPowerUpEntried;								// パワーアップアイテムが登場したか
+		int cntPowerUpEntry;								// パワーアップアイテムの登場回数
 		float powerUpEntryAdjustTime;						// パワーアップアイテムが登場するための調整時間
 
 		// イベント発生の評価値（0.0～1.0）
@@ -165,6 +168,7 @@ public:
 	// ImGuiに表示
 	void outputGUI();
 
+	aiNS::AnalyticalData* getAnalyticalData() { return &data; }
 	static AIDirector* get() { return pointer; }
 };
 

@@ -8,6 +8,7 @@
 #include "ImguiManager.h"
 #include "EnemyTools.h"
 #include "Game.h"
+#include "AiDirector.h"
 using namespace enemyNS;
 
 // Staticメンバ変数
@@ -208,10 +209,11 @@ void EnemyManager::update(float frameTime)
 				destroyTargetEnemyData = (*itr)->getEnemyID();
 			}
 
-			// Bearならマーカーを破棄する
+			// Bearならマーカーを破棄など行う
 			if ((*itr)->getEnemyData()->type == enemyNS::BEAR)
 			{
 				markerRenderer->bossEnemyPosition = NULL;
+				AIDirector::get()->getAnalyticalData()->existsBoss = false;
 			}
 
 			//ゲームマスターへ記録
@@ -263,7 +265,7 @@ void EnemyManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 ca
 	bearLegLRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	bearLegRRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 	markRenderer->render(view, projection, cameraPosition);
-	bearGauge->render(view, projection, cameraPosition);
+	if (sceneName == "Scene -Game-") { bearGauge->render(view, projection, cameraPosition); }
 
 #ifdef _DEBUG
 
