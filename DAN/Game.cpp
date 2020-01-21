@@ -797,7 +797,7 @@ void Game::update(float _frameTime) {
 	}
 #pragma endregion
 
-
+	bool passing1Min = (gameMaster->getGameTime() <= 60.0f);
 	//テロップマネージャーの更新
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
@@ -805,7 +805,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.1 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
+		if(!passing1Min)telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_10);
 	}
@@ -813,7 +813,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.3 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30))
 	{
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE1);
+		if (!passing1Min)telopManager->playOrder(telopManagerNS::TELOP_TYPE1);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_30);
 	}
@@ -821,7 +821,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.5 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50))
 	{
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE2);
+		if (!passing1Min)telopManager->playOrder(telopManagerNS::TELOP_TYPE2);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
