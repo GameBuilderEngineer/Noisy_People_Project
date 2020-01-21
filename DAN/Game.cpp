@@ -1329,7 +1329,7 @@ void Game::collisions()
 			//シフトレイの更新
 			Cylinder treeCylinder;
 			treeCylinder.centerLine.start	= tree->position;
-			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*tree->size.y;
+			treeCylinder.centerLine.end		= tree->position + tree->getAxisY()->direction*10000.0f;//tree->size.y;
 			treeCylinder.height				= tree->size.y/2;
 			treeCylinder.radius				= tree->size.x;
 			//衝突時
