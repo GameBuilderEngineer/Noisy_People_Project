@@ -25,7 +25,7 @@
 using namespace gameNS;
 
 bool FirstInit = true;
-
+bool reticleFlag = false;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -330,6 +330,8 @@ void Game::initialize() {
 	gameMaster->startGame();
 	gameMaster->setTreeNum(treeManager->getTreeNum());
 	if (!getModeFlag(MODE_PRESENTATION))SoundInterface::BGM->playSound(&playParameters[4]);	//オープニングBGM再生
+
+	reticleFlag = false;
 }
 
 //===================================================================================================================================
@@ -447,6 +449,7 @@ void Game::updateOP()
 		player[gameMasterNS::PLAYER_1P].enableOperation(playerNS::ENABLE_CAMERA);
 		player[gameMasterNS::PLAYER_2P].transState(playerNS::NORMAL);
 		player[gameMasterNS::PLAYER_2P].enableOperation(playerNS::ENABLE_CAMERA);
+		reticleFlag = true;
 	}
 }
 
@@ -1175,10 +1178,12 @@ void Game::renderUI()
 
 	//カウントUIの描画
 	countUI->render();
-
-	//レティクルの描画
-	reticle->render2D(&player[gameMasterNS::PLAYER_1P]);
-	reticle->render2D(&player[gameMasterNS::PLAYER_2P]);
+	if (reticleFlag)
+	{
+		//レティクルの描画
+		reticle->render2D(&player[gameMasterNS::PLAYER_1P]);
+		reticle->render2D(&player[gameMasterNS::PLAYER_2P]);
+	}
 
 	//ダメージUIの描画
 	damageUI->render(gameMasterNS::PLAYER_1P);
