@@ -105,6 +105,8 @@ StaticMeshLoader::StaticMeshLoader()
 	//fileName[NAV_TEST6]								= { "Test6.x" };
 
 	fileName[POWER_UP_ITEM]							= { "powup.x" };
+	fileName[DISTANT_VIEW] = { "Far_Island.x" };
+
 }
 
 //===================================================================================================================================

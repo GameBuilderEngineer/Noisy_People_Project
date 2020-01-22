@@ -1299,8 +1299,6 @@ void Player::reset()
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
 	Object::update();
-	hp = MAX_HP;
-	power = COST_SHIFT * 1.5f;
 }
 #pragma endregion
 

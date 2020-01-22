@@ -452,4 +452,6 @@ public:
 	BulletManager*  getBulletManager();							//バレットマネージャを取得
 	bool			getOnGround();								//接地しているか取得
 	D3DXVECTOR3*	getGroundNormal();							//接地面法線を取得
+	void setHp(int _hp) { hp = _hp; }
+	void setPower(int _pow) { power = _pow; }
 };
