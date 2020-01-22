@@ -123,7 +123,7 @@ void BasicUI::changePivot(int pivotType)
 //À•W‚Ì•ÏX
 //ˆø”FˆÚ“®‚Ìí—Ş
 //==================================
-void BasicUI::changePostion(Sprite *sprite,int movetype)
+void BasicUI::changePostion(Sprite *sprite,int movetype,float flametime)
 {
 	switch (movetype)
 	{

@@ -109,7 +109,7 @@ void EventMaker::update()
 		}
 
 		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > 35 + data->ajustTimeEnemyAttaksTree
-			&& data->cntEnemyAttacksTree >= 1)
+			&& data->cntEnemyAttacksTree >= 1 && data->cntEnemyAttacksTree <= 4)
 		{
 			// 最低経過時間チェック
 			data->weightEnemyAttacksTree = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 4.0f, 10.0f);

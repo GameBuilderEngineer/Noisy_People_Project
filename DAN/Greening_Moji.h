@@ -36,6 +36,6 @@ public:
 	~Greening_Moji();	//デストラクタ
 	void initialize(int playerType);
 	void render();
-	void update(int playerType);
+	void update(int playerType, float flametime);
 private:
 };

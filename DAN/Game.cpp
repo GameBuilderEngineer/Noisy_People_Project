@@ -86,6 +86,13 @@ void Game::initialize() {
 	faceFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	faceFieldRenderer->registerObject(faceField);
 	faceField->initialize(&D3DXVECTOR3(0, 0, 0));
+	// 遠景
+	distantView = new Object();
+	viewRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DISTANT_VIEW));
+	viewRenderer->registerObject(distantView);
+	distantView->initialize(&D3DXVECTOR3(0, 0, 0));
+	//distantView->scale *= 10.0f;
+
 
 	//player
 	player				= new Player[gameMasterNS::PLAYER_NUM];
@@ -361,6 +368,9 @@ void Game::uninitialize() {
 	SAFE_DELETE(target); 	//ターゲットオブジェクト
 	SAFE_DELETE(damageUI);
 	SAFE_DELETE(markerRenderer);
+	SAFE_DELETE(distantView);
+	SAFE_DELETE(viewRenderer);
+
 }
 
 //===================================================================================================================================
@@ -521,6 +531,14 @@ void Game::update(float _frameTime) {
 	{
 		countUI->finishCount(0);	//ゲーム終了
 		SoundInterface::SE->playSound(&playParameters[3]);	// タイムアップサウンド
+		for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+		{
+			player[i].disableOperation(
+				playerNS::ENABLE_SHOT |
+				playerNS::ENABLE_SKY_VISION |
+				playerNS::ENABLE_VISION);
+		}
+
 	}
 
 	//OPカメラのターゲットの更新
@@ -528,6 +546,7 @@ void Game::update(float _frameTime) {
 
 	//エンディング時間の更新
 	gameMaster->updateEndingTime(frameTime);
+
 
 	//ゲーム開始時ボイス
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME && gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_1P] == false)
@@ -671,6 +690,10 @@ void Game::update(float _frameTime) {
 	faceField->update();			//オブジェクト
 	faceFieldRenderer->update();	//レンダラー
 
+	//遠景の更新
+	distantView->update();
+	viewRenderer->update();
+
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
@@ -678,6 +701,40 @@ void Game::update(float _frameTime) {
 		if (player[i].position.y < -10.0f)
 		{
 			player[i].reset();
+		}
+		// 死亡時
+		if (player[i].getHp() <= 0)
+		{
+			player[i].enableOperation(playerNS::DISABLE_OPERATION);
+
+			if (player1UI->hpGuage->widthSize <= 0 && i == playerNS::PLAYER1)
+			{
+
+				// リンポーンとペナルティ処理
+				player[i].enableOperation(playerNS::ALL_OPERATION);
+				player[i].reset();
+				player[i].setHp(playerNS::MAX_HP);
+				player[i].setPower(playerNS::COST_SHIFT * 1.5f);
+
+				player1UI->hpGuage->widthSize = hpGuageNS::WIDTH_HP_GUAGE;
+				player1UI->hpGuage->hpGuage->setSize(hpGuageNS::WIDTH_HP_GUAGE, hpGuageNS::HEIGHT_HP_GUAGE);
+				player1UI->hpGuage->hpGuage->setVertex();
+				player1UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
+			}
+			else if((player2UI->hpGuage->widthSize <= 0 && i == playerNS::PLAYER2))
+			{
+				// リンポーンとペナルティ処理
+				player[i].enableOperation(playerNS::ALL_OPERATION);
+				player[i].reset();
+				player[i].setHp(playerNS::MAX_HP);
+				player[i].setPower(playerNS::COST_SHIFT * 1.5f);
+
+				player2UI->hpGuage->initialize();
+				//player2UI->hpGuage->widthSize = 0;
+				//player2UI->hpGuage->hpGuage->setSize(0, hpGuageNS::HEIGHT_HP_GUAGE);
+				//player2UI->hpGuage->hpGuage->setVertex();
+				player2UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
+			}
 		}
 	}
 
@@ -784,7 +841,7 @@ void Game::update(float _frameTime) {
 	}
 #pragma endregion
 
-
+	bool passing1Min = (gameMaster->getGameTime() <= 60.0f);
 	//テロップマネージャーの更新
 	telopManager->update(frameTime);
 	//テロップ発生フラグ
@@ -792,7 +849,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.1 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10 ))
 	{
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
+		if(!passing1Min)telopManager->playOrder(telopManagerNS::TELOP_TYPE0);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_10);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_10);
 	}
@@ -800,7 +857,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.3 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30))
 	{
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE1);
+		if (!passing1Min)telopManager->playOrder(telopManagerNS::TELOP_TYPE1);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_30);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_30);
 	}
@@ -808,7 +865,7 @@ void Game::update(float _frameTime) {
 	if (treeManager->getGreeningRate() >= 0.5 &&
 		!gameMaster->whetherAchieved(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50))
 	{
-		telopManager->playOrder(telopManagerNS::TELOP_TYPE2);
+		if (!passing1Min)telopManager->playOrder(telopManagerNS::TELOP_TYPE2);
 		gameMaster->setProgress(gameMasterNS::ACHIEVEMENT_GREENING_RATE_50);
 		SerialCommunicationNS::send(SerialCommunicationNS::GREENING_50);
 	}
@@ -998,6 +1055,9 @@ void Game::render3D(Camera* currentCamera) {
 		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	}
 	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+
+	//遠景の描画
+	//viewRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)

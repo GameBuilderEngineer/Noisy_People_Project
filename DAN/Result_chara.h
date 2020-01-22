@@ -33,6 +33,6 @@ public:
 	~Result_Chara();	//デストラクタ
 	void initialize();
 	void render();
-	void update();
+	void update(float flametime);
 private:
 };

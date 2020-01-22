@@ -2,7 +2,7 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-
+#define TREE_TABLE_SIZE 20
 #include "base.h"
 #include <winsock.h>
 #include "GameMaster.h"
@@ -25,7 +25,7 @@ typedef struct
 	float timer;
 	int treeMax;
 	bool sceneReset;
-	TreeTable treeTable[270];
+	TreeTable treeTable[TREE_TABLE_SIZE];
 }PACKAGE;
 
 //ƒNƒ‰ƒX

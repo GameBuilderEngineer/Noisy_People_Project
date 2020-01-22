@@ -63,10 +63,10 @@ void Greening_Chara::render()
 //==========================================
 //XV
 //==========================================
-void Greening_Chara::update(int playerType)
+void Greening_Chara::update(int playerType, float flametime)
 {
 	if (BasicUI::position.y > END_POS_GREENING)
 	{
-		BasicUI::changePostion(greening, slideUp);
+		BasicUI::changePostion(greening, slideUp,flametime);
 	}
 }

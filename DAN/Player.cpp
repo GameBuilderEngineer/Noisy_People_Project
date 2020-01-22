@@ -786,6 +786,10 @@ bool Player::shot()
 		return false;
 	}
 
+	//EDŽž‘€ì‚ðŽó•t‚¯‚È‚¢
+	if (!whetherValidOperation(ENABLE_SHOT))return false;
+
+
 	//Ž€–SŽž‘€ì‚ðŽó‚¯•t‚¯‚È‚¢
 	switch (infomation.playerType)
 	{
@@ -1064,6 +1068,8 @@ bool Player::executionVision()
 //===================================================================================================================================
 bool Player::vision()
 {
+	if (!whetherValidOperation(ENABLE_VISION))	return false;
+
 	if (!input->wasKeyPressed(keyTable.vision) &&
 		!input->getController()[infomation.playerType]->wasButton(BUTTON_VISION))return false;
 
@@ -1092,6 +1098,8 @@ bool Player::cancelVision()
 //===================================================================================================================================
 bool Player::skyVision()
 {
+	if (!whetherValidOperation(ENABLE_SKY_VISION))	return false;
+
 	//“ü—ÍŒŸ’m
 	if (!input->wasKeyPressed(keyTable.skyVision) &&
 		!input->getController()[infomation.playerType]->wasButton(BUTTON_SKY_VISION))return false;
@@ -1285,7 +1293,6 @@ void Player::reset()
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
 	Object::update();
-	hp = MAX_HP;
 }
 #pragma endregion
 

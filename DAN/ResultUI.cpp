@@ -155,7 +155,6 @@ void ResultUI::update(float flameTime,bool texStart)
 {
 	if (texStart==true)
 	{
-
 		time += flameTime;
 
 	//フェイズの更新
@@ -219,8 +218,8 @@ void ResultUI::update(float flameTime,bool texStart)
 		gameMaster->wasFinishVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
 
-		uiCharacter01->update(resultPhase,PLAYER_01);	//プレイヤー１の文字更新
-		uiCharacter02->update(resultPhase,PLAYER_02);	//プレイヤー１の文字更新
+		uiCharacter01->update(resultPhase,PLAYER_01,time);	//プレイヤー１の文字更新
+		uiCharacter02->update(resultPhase,PLAYER_02,time);	//プレイヤー１の文字更新
 		uiTexture.update(resultPhase);		//テクスチャの更新
 	}
 	

@@ -7,7 +7,7 @@
 #include "networkClient.h"
 #include "ImguiManager.h"
 
-TreeTable NETWORK_CLIENT::treeTable[270] = { 0 };
+TreeTable NETWORK_CLIENT::treeTable[TREE_TABLE_SIZE] = { 0 };
 D3DXVECTOR3 NETWORK_CLIENT::pos1P = D3DXVECTOR3(0, 0, 0);
 D3DXVECTOR3 NETWORK_CLIENT::pos2P = D3DXVECTOR3(0, 0, 0);
 bool NETWORK_CLIENT::record1P = false;
@@ -259,13 +259,13 @@ void NETWORK_CLIENT::send(float time)
 	tmpPackage.pos2P = pos2P;
 	tmpPackage.record2P = record2P;
 	tmpPackage.networkTester = true;
-	tmpPackage.treeMax = 300;
+	tmpPackage.treeMax = TREE_TABLE_SIZE;
 	tmpPackage.sceneReset = onResetDisplay;
 	onResetDisplay = false;
-	//if (tmpPackage.treeMax > 0)
-	//{
-	memcpy(tmpPackage.treeTable, treeTable, sizeof(treeTable));
-	//}
+	if (tmpPackage.treeMax > 0)
+	{
+		memcpy(tmpPackage.treeTable, treeTable, sizeof(treeTable));
+	}
 	tmpPackage.timer = time;
 
 	//PACKAGE‚Ìî•ñ‚Ì‚Ý
@@ -331,6 +331,7 @@ void NETWORK_CLIENT::recordTreeTable(const TreeTable inTreeTable, int tableNo)
 {
 	//Ú‘±‚ÉŽ¸”s‚µ‚Ä‚¢‚é‚Ì‚ÅA‹L˜^‚ðs‚í‚È‚¢
 	if (!success)return;
+	if (tableNo >= TREE_TABLE_SIZE)return;
 	treeTable[tableNo] = inTreeTable;
 }
 
