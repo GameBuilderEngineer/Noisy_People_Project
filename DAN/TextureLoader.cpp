@@ -83,12 +83,14 @@ TextureLoader::TextureLoader()
 	textureName[UI_BUTTON_VISION] = { "vision.png" };
 	textureName[UI_BUTTON_SV] = { "Sky_Vision.png" };
 	textureName[UI_BUTTON_SHIFT] = { "shift.png" };
+	textureName[UI_BUTTON_BOX] = { "CommandBox.png" };
 	textureName[UI_STATUSFRAME_P1] = { "Status_Frame_1.png" };
 	textureName[UI_STATUSFRAME_P2] = { "Status_Frame_2.png" };
 	textureName[UI_HP_GUAGE_P1] = { "HPGuage1.png" };
 	textureName[UI_HP_GUAGE_P2] = { "HPGuage2.png" };
 	textureName[UI_HP_GUAGE_EMP_P1]={ "HPGuage_Emp1.png" };
 	textureName[UI_HP_GUAGE_EMP_P2] = { "HPGuage_Emp2.png" };
+	textureName[UI_HP_GUAGE_ENEMY] = { "HPGuage1.png" };
 	textureName[UI_ICON_P1] = { "Chara_1.png" };
 	textureName[UI_ICON_P2] = { "Chara_2.png" };
 	textureName[UI_EN_GUAGE_EMP_P1] = { "EnGuage_Empty_1.png" };
@@ -117,6 +119,7 @@ TextureLoader::TextureLoader()
 	// ResultUIÇÃï∂éöÇ‚ãLçÜ
 	textureName[RESULT] = { "Result.png" };
 	textureName[RESULT_PLAYER] = { "Player_No.png" };
+	textureName[RESULT_GREENIG] = { "Greening_Rate.png" };
 	textureName[RESULT_RYOKUKA] = { "Ryokuka_Ritsu.png" };
 	textureName[RESULT_PERSENT] = { "Percent.png" };
 	textureName[RESULT_DEFEAT] = { "Defeated_Counts.png" };
@@ -131,6 +134,7 @@ TextureLoader::TextureLoader()
 	textureName[RESULT_CHARA_A] = { "Chara_A.png" };
 	textureName[RESULT_CHARA_B] = { "Chara_B.png" };
 	textureName[RESULT_NEXT] = { "Next.png" };
+	textureName[RESULT_TO_TITLE] = { "Back_to_Title.png" };
 
 	//ResultUIÇÃÉâÉìÉN
 	textureName[RESULT_EXCELLENT] = { "Excellent.png" };
@@ -143,6 +147,7 @@ TextureLoader::TextureLoader()
 
 	// etc
 	textureName[NUMBER] = { "num.png" };
+	textureName[TARGET] = { "stencil.png" };
 	textureName[DATE_ALPHA] = { "DateAlpha.png" };
 	textureName[OCEAN] = { "sea.png" };
 	//textureName[OCEAN_BUMP]		= { "NormalMap.bmp" };
