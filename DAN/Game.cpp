@@ -86,6 +86,13 @@ void Game::initialize() {
 	faceFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	faceFieldRenderer->registerObject(faceField);
 	faceField->initialize(&D3DXVECTOR3(0, 0, 0));
+	// 遠景
+	distantView = new Object();
+	viewRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DISTANT_VIEW));
+	viewRenderer->registerObject(distantView);
+	distantView->initialize(&D3DXVECTOR3(0, 0, 0));
+	//distantView->scale *= 10.0f;
+
 
 	//player
 	player				= new Player[gameMasterNS::PLAYER_NUM];
@@ -361,6 +368,9 @@ void Game::uninitialize() {
 	SAFE_DELETE(target); 	//ターゲットオブジェクト
 	SAFE_DELETE(damageUI);
 	SAFE_DELETE(markerRenderer);
+	SAFE_DELETE(distantView);
+	SAFE_DELETE(viewRenderer);
+
 }
 
 //===================================================================================================================================
@@ -680,6 +690,10 @@ void Game::update(float _frameTime) {
 	faceField->update();			//オブジェクト
 	faceFieldRenderer->update();	//レンダラー
 
+	//遠景の更新
+	distantView->update();
+	viewRenderer->update();
+
 	//プレイヤーの更新
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
@@ -688,9 +702,34 @@ void Game::update(float _frameTime) {
 		{
 			player[i].reset();
 		}
+		// 死亡時
 		if (player[i].getHp() <= 0)
 		{
-			player[i].reset();
+			player[i].enableOperation(playerNS::DISABLE_OPERATION);
+			if (player1UI->hpGuage->widthSize <= 0)
+			{
+				// リンポーンとペナルティ処理
+				player[i].enableOperation(playerNS::ALL_OPERATION);
+				player[i].reset();
+				player[i].setHp(playerNS::MAX_HP);
+				player[i].setPower(playerNS::COST_SHIFT * 1.5f);
+
+				// ゲージを初期化しちゃうぜ
+				if (i == playerNS::PLAYER1)
+				{
+					player1UI->hpGuage->widthSize = hpGuageNS::WIDTH_HP_GUAGE;
+					player1UI->hpGuage->hpGuage->setSize(hpGuageNS::WIDTH_HP_GUAGE, hpGuageNS::HEIGHT_HP_GUAGE);
+					player1UI->hpGuage->hpGuage->setVertex();
+					player1UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
+				}
+				else
+				{
+					player2UI->hpGuage->widthSize = hpGuageNS::WIDTH_HP_GUAGE;
+					player2UI->hpGuage->hpGuage->setSize(hpGuageNS::WIDTH_HP_GUAGE, hpGuageNS::HEIGHT_HP_GUAGE);
+					player2UI->hpGuage->hpGuage->setVertex();
+					player2UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
+				}
+			}
 		}
 	}
 
@@ -1011,6 +1050,9 @@ void Game::render3D(Camera* currentCamera) {
 		faceFieldRenderer->setStaticMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	}
 	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
+
+	//遠景の描画
+	//viewRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
