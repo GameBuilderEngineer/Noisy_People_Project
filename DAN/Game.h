@@ -121,6 +121,9 @@ private:
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 	Object*							faceField;			//装飾フィールド 
 	StaticMeshRenderer*				faceFieldRenderer;	//装飾フィールドレンダラー
+	Object*							distantView;		//遠景
+	StaticMeshRenderer*				viewRenderer;		//遠景レンダラー
+
 
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面

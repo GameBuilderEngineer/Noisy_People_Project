@@ -108,6 +108,7 @@ namespace staticMeshNS {
 		//NAV_TEST6,
 
 		POWER_UP_ITEM,
+		DISTANT_VIEW,
 
 		MESH_NUM,								//NUM
 	};

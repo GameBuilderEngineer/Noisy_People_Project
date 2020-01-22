@@ -155,7 +155,6 @@ void ResultUI::update(float flameTime,bool texStart)
 {
 	if (texStart==true)
 	{
-
 		time += flameTime;
 
 	//フェイズの更新
