@@ -516,6 +516,8 @@ void AnalogState::update(float frameTime)
 
 			TelopManager* telopManager = TelopManager::get();
 			telopManager->playOrder(telopManagerNS::WITHER);
+			PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Green_Down, false ,NULL,false,NULL };
+			SoundInterface::SE->playSound(&playParameters);	//SEÄ¶
 		}
 	}
 
