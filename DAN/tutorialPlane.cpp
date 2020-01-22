@@ -53,6 +53,8 @@ TutorialPlane::TutorialPlane(const D3DXVECTOR3 position) :InstancingBillboard::I
 	planeStep = TUTORIAL_PLANE_ID::PLANE_ENEMY;
 
 	InstancingBillboard::initialize(*textureNS::reference(textureNS::TUTORIAL_UI_PLANE), 3, 1);
+	setRenderType(InstancingBillboardNS::FOREGROUND_PASS);
+
 	generateInstance(new PlaneInstance(position));
 }
 

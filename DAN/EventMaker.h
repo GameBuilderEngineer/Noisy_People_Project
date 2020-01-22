@@ -49,6 +49,8 @@ public:
 	void makeEventEnemyAttaksTree();
 	// 巨大環境破壊ロボ登場イベントの作成(BOSS_ENTRY)
 	int makeEventBossEntry();
+	// パワーアップアイテム登場イベントの作成(POWER_UP_ITEM)
+	void makeEventPowerUpItem();
 	// 動的作成するエネミーのパラメータを決める
 	enemyNS::ENEMY_TYPE decideSpawnEnemyType();
 	// 襲撃イベント対象デジタルツリーを選定する

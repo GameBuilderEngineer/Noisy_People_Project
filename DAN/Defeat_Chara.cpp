@@ -63,10 +63,10 @@ void Defeat_Chara::render()
 //==========================================
 //XV
 //==========================================
-void Defeat_Chara::update(int playerType)
+void Defeat_Chara::update(int playerType,float flametime)
 {
 	if (BasicUI::position.y > END_POS_DEFEAT)
 	{
-		BasicUI::changePostion(defeat, slideUp);
+		BasicUI::changePostion(defeat, slideUp,flametime);
 	}
 }

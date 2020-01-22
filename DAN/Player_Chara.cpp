@@ -66,7 +66,7 @@ void Player_Chara::render()
 //==========================================
 //XV
 //==========================================
-void Player_Chara::update(int playerType)
+void Player_Chara::update(int playerType, float flametime)
 {
 	switch (playerType)
 	{
@@ -74,7 +74,7 @@ void Player_Chara::update(int playerType)
 		BasicUI::changeUV(player,PLAYER1_UV_VERTEX01, PLAYER1_UV_VERTEX02, PLAYER1_UV_VERTEX03, PLAYER1_UV_VERTEX04);
 		if (BasicUI::position.x > END_POS_PLAYER_01)
 		{
-			BasicUI::changePostion(player, slideLeft);
+			BasicUI::changePostion(player, slideLeft,flametime);
 		}
 		break;
 
@@ -82,7 +82,7 @@ void Player_Chara::update(int playerType)
 		BasicUI::changeUV(player,PLAYER2_UV_VERTEX01, PLAYER2_UV_VERTEX02, PLAYER2_UV_VERTEX03, PLAYER2_UV_VERTEX04);
 		if (BasicUI::position.x > END_POS_PLAYER_02)
 		{
-			BasicUI::changePostion(player, slideLeft);
+			BasicUI::changePostion(player, slideLeft,flametime);
 		}
 		break;
 	}

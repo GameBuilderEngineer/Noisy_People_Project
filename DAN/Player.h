@@ -122,6 +122,8 @@ namespace playerNS{
 
 	enum STATE {
 		NONE,
+		OP,
+		ED,
 		NORMAL,
 		VISION,
 		SKY_VISION,
@@ -146,8 +148,13 @@ namespace playerNS{
 
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
+		//初期ゲームスタート
 		D3DXVECTOR3(0, 20, -180),				//1P
 		D3DXVECTOR3(130, 20, 195)				//2P
+
+		////プレゼン用
+		//D3DXVECTOR3(103, 15, -181),				//1P
+		//D3DXVECTOR3(-181, 35, -97)				//2P
 	};
 
 	// StatusParameter
@@ -444,4 +451,6 @@ public:
 	BulletManager*  getBulletManager();							//バレットマネージャを取得
 	bool			getOnGround();								//接地しているか取得
 	D3DXVECTOR3*	getGroundNormal();							//接地面法線を取得
+	void setHp(int _hp) { hp = _hp; }
+	void setPower(int _pow) { power = _pow; }
 };

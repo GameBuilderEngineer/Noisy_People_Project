@@ -79,7 +79,6 @@ Director::~Director() {
 	//SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
-
 	UninitMoveP();
 	UninitMoveP1();
 
@@ -113,6 +112,11 @@ HRESULT Director::initialize() {
 	imgui = new ImguiManager(wnd);
 #endif // _DEBUG
 
+	//シェーダー読込
+	//Shader
+	shaderLoader = new ShaderLoader;
+	shaderLoader->load(getDevice());
+
 	//シリアル通信クラス
 	serialCommunication = new SerialCommunication();
 
@@ -132,9 +136,7 @@ HRESULT Director::initialize() {
 	input->initialize(instance, window->wnd, true);
 	window->setInput();
 
-	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
-
+	
 	//textureLoader
 	textureLoader = new TextureLoader;
 	textureLoader->load(getDevice());
@@ -145,17 +147,16 @@ HRESULT Director::initialize() {
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(getDevice());
 
-	//シェーダー読込
-	//Shader
-	shaderLoader = new ShaderLoader;
-	shaderLoader->load(getDevice());
-
 	//テキストデータ読込
 	textManager = new TextManager();
 	textManager->initialize();
 
 	//ゲーム管理クラス
 	gameMaster = new GameMaster();
+
+	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
+
 
 	//アニメーション読込クラス
 	//animationLoader = new AnimationLoader();

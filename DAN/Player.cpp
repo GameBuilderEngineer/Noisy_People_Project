@@ -13,6 +13,7 @@
 #include "UtilityFunction.h"
 #include "MoveP.h"
 #include "MoveP1.h"
+#include "OPState.h"
 #include "NormalState.h"
 
 //===================================================================================================================================
@@ -97,8 +98,7 @@ void Player::initialize(PlayerTable info)
 	power = MAX_POWER;							//キャラクター電力確認用
 
 	//通常状態
-	state = new normalNS::NormalState(this);
-	enableOperation(ENABLE_CAMERA);
+	state = new OPStateNS::OPState(this);
 
 	//シューティングアクション
 	bulletManager = new BulletManager;
@@ -194,12 +194,6 @@ void Player::update(float frameTime)
 	{// リセット
 		reset();
 	}
-
-	////リスポーン
-	//if (position.y < -1.0f)
-	//{
-	//	reset();
-	//}
 
 	//物理更新(状態別)
 	state->physics();
@@ -792,6 +786,10 @@ bool Player::shot()
 		return false;
 	}
 
+	//ED時操作を受付けない
+	if (!whetherValidOperation(ENABLE_SHOT))return false;
+
+
 	//死亡時操作を受け付けない
 	switch (infomation.playerType)
 	{
@@ -1070,6 +1068,8 @@ bool Player::executionVision()
 //===================================================================================================================================
 bool Player::vision()
 {
+	if (!whetherValidOperation(ENABLE_VISION))	return false;
+
 	if (!input->wasKeyPressed(keyTable.vision) &&
 		!input->getController()[infomation.playerType]->wasButton(BUTTON_VISION))return false;
 
@@ -1098,6 +1098,8 @@ bool Player::cancelVision()
 //===================================================================================================================================
 bool Player::skyVision()
 {
+	if (!whetherValidOperation(ENABLE_SKY_VISION))	return false;
+
 	//入力検知
 	if (!input->wasKeyPressed(keyTable.skyVision) &&
 		!input->getController()[infomation.playerType]->wasButton(BUTTON_SKY_VISION))return false;
@@ -1291,7 +1293,6 @@ void Player::reset()
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
 	Object::update();
-	hp = MAX_HP;
 }
 #pragma endregion
 

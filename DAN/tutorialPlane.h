@@ -67,4 +67,8 @@ public:
 		(*instanceList->getValue(0))->position = pos;
 		InstancingBillboard::updatePosition();
 	}
+	D3DXVECTOR3 getPos()
+	{
+		return (*instanceList->getValue(0))->position;
+	}
 };

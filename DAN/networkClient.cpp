@@ -7,7 +7,11 @@
 #include "networkClient.h"
 #include "ImguiManager.h"
 
-TreeTable NETWORK_CLIENT::treeTable[20] = { 0 };
+TreeTable NETWORK_CLIENT::treeTable[TREE_TABLE_SIZE] = { 0 };
+D3DXVECTOR3 NETWORK_CLIENT::pos1P = D3DXVECTOR3(0, 0, 0);
+D3DXVECTOR3 NETWORK_CLIENT::pos2P = D3DXVECTOR3(0, 0, 0);
+bool NETWORK_CLIENT::record1P = false;
+bool NETWORK_CLIENT::record2P = false;
 int NETWORK_CLIENT::treeNum = 0;
 bool NETWORK_CLIENT::requestConnection = false;
 bool NETWORK_CLIENT::initialConnection = true;
@@ -250,9 +254,12 @@ void NETWORK_CLIENT::send(float time)
 	PACKAGE tmpPackage;
 	memset(&tmpPackage, 0, sizeof(tmpPackage));
 	tmpPackage.num = 10;
-	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
+	tmpPackage.pos1P = pos1P;
+	tmpPackage.record1P = record1P;
+	tmpPackage.pos2P = pos2P;
+	tmpPackage.record2P = record2P;
 	tmpPackage.networkTester = true;
-	tmpPackage.treeMax = treeNum;
+	tmpPackage.treeMax = TREE_TABLE_SIZE;
 	tmpPackage.sceneReset = onResetDisplay;
 	onResetDisplay = false;
 	if (tmpPackage.treeMax > 0)
@@ -272,6 +279,8 @@ void NETWORK_CLIENT::send(float time)
 	//TreeTableの実体
 	memset(treeTable, 0, sizeof(treeTable));
 	treeNum = 0;	//0クリア
+	record1P = false;
+	record2P = false;
 }
 
 
@@ -299,6 +308,34 @@ void NETWORK_CLIENT::outputGUI()
 }
 
 //===================================================================================================================================
+//【プレイヤー位置情報の記録】
+//===================================================================================================================================
+void NETWORK_CLIENT::recordPlayerPosition(const D3DXVECTOR3 position, int playerNo)
+{
+	switch (playerNo)
+	{
+	case gameMasterNS::PLAYER_1P:
+		pos1P = position;
+		record1P = true;
+		break;
+	case gameMasterNS::PLAYER_2P:
+		pos2P = position;
+		record2P = true;
+		break;
+	}
+}
+//===================================================================================================================================
+//【ツリーテーブルへの記録】
+//===================================================================================================================================
+void NETWORK_CLIENT::recordTreeTable(const TreeTable inTreeTable, int tableNo)
+{
+	//接続に失敗しているので、記録を行わない
+	if (!success)return;
+	if (tableNo >= TREE_TABLE_SIZE)return;
+	treeTable[tableNo] = inTreeTable;
+}
+
+//===================================================================================================================================
 //【送信】
 //===================================================================================================================================
 void NETWORK_CLIENT::setSendTreeTable(const TreeTable inTreeTable)
@@ -306,22 +343,6 @@ void NETWORK_CLIENT::setSendTreeTable(const TreeTable inTreeTable)
 	//接続に失敗しているので、送信を行わない
 	if (!success)return;
 
-	//if (treeNum == NULL)
-	//{
-	//	treeTable = new TreeTable;
-	//	memcpy(treeTable, &inTreeTable, sizeof(TreeTable));
-	//}
-	//else
-	//{
-	//	TreeTable *tmpTreeTable;
-	//	tmpTreeTable = new TreeTable[treeNum];
-	//	memcpy(tmpTreeTable, treeTable, sizeof(TreeTable)*treeNum);
-	//	SAFE_DELETE_ARRAY(treeTable);
-	//	treeTable = new TreeTable[treeNum + 1];
-	//	memcpy(treeTable, tmpTreeTable, sizeof(TreeTable)*treeNum);
-	//	SAFE_DELETE_ARRAY(tmpTreeTable);
-	//	memcpy(&treeTable[treeNum], &inTreeTable, sizeof(TreeTable));
-	//}
 	treeTable[treeNum] = inTreeTable;
 
 	treeNum++;

@@ -51,9 +51,13 @@
 #include "Marker.h"
 #include "DamageUI.h"
 #include "Title.h"
-
-#if 1
+#include "tmpOcean.h"
+#include "PowerUp.h"
+#if 0
 #define CHEAT_PREZEN
+#endif
+#if 1
+#define EASY_MODE
 #endif
 
 //===================================================================================================================================
@@ -101,7 +105,6 @@ namespace gameNS
 class Game : public AbstractScene
 {
 private:
-
 	int								nowRenderingWindow;	//現在の描画ウィンドウ識別子
 
 	//衝突判定
@@ -113,16 +116,18 @@ private:
 
 	//3Dオブジェクト
 	Player*							player;				//プレイヤー
-	StaticMeshRenderer*				maleRenderer;		//男プレイヤーレンダラー
-	StaticMeshRenderer*				femaleRenderer;		//女プレイヤーレンダラー
 
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー
 	Object*							faceField;			//装飾フィールド 
 	StaticMeshRenderer*				faceFieldRenderer;	//装飾フィールドレンダラー
+	Object*							distantView;		//遠景
+	StaticMeshRenderer*				viewRenderer;		//遠景レンダラー
+
 
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面
+	//TmpOcean*						tmpOcean;			//仮海面
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
@@ -233,6 +238,9 @@ public:
 	void test();
 	//void tree4Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
 	void tree8Reregister(Object* tmp);//オブジェクトの分木空間への再登録処理
+
+	//更新処理
+	void updateOP(); //OPの更新
 
 #ifdef _DEBUG
 	virtual void createGUI() override;

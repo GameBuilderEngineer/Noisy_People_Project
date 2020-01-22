@@ -115,25 +115,31 @@ void UIcharacter::render(int resultPhase)
 //XV
 //‚±‚±‹CŽ‚¿ˆ«‚¢â‘Î‘¼‚É‚â‚è‚æ‚¤‚ ‚é‚¯‚ÇŽÀ‘•—Dæ
 //============================
-void UIcharacter::update(int resultPhase,int playerType)
+void UIcharacter::update(int resultPhase,int playerType,float flametime)
 {
 	switch (resultPhase)
 	{
 	case PHASE_01:
-		result->update();
+		result->update(flametime);
 		break;
 	case PHASE_02:
 		greening->update();
 		break;
 	case PHASE_03:
 		greening->update();
-		player->update(playerType);
-		greenChara->update(playerType);
-		greenMoji->update(playerType);
-		defeatChara->update(playerType);
-		defeatMoji->update(playerType);
+		player->update(playerType, flametime);
+		greenChara->update(playerType, flametime);
+		greenMoji->update(playerType, flametime);
+		defeatChara->update(playerType, flametime);
+		defeatMoji->update(playerType, flametime);
 		break;
 	case PHASE_04:
+		greening->update();
+		player->update(playerType, flametime);
+		greenChara->update(playerType, flametime);
+		greenMoji->update(playerType, flametime);
+		defeatChara->update(playerType, flametime);
+		defeatMoji->update(playerType, flametime);
 		break;
 	default:
 		break;

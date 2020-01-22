@@ -34,8 +34,12 @@ TextureLoader::TextureLoader()
 	// Tutorial
 	textureName[TUTORIAL1] = { "Slide_01.png" };
 	textureName[TUTORIAL2] = { "Slide_02.png" };
+	textureName[TUTORIAL3] = { "Slide_03.png"};
 	textureName[TUTORIAL_UI_0] = { "steplist.png" };
 	textureName[TUTORIAL_UI_1] = { "check.png" };
+	textureName[TUTORIAL_UI_PLANE] = { "comment.png" };
+	textureName[TUTORIAL_STANDBY_1] = { "Standby_p1.png" };
+	textureName[TUTORIAL_STANDBY_2] = { "Standby_p2.png" };
 	textureName[TUTORIAL_UI_PLANE] = { "comment.png" };
 
 	// Title
@@ -64,7 +68,9 @@ TextureLoader::TextureLoader()
 	textureName[UI_INFO_MISSION] = { "Info_Mission.png" };
 	textureName[UI_INFO_BOSS] = { "Info_Boss.png" };
 	textureName[UI_INFO_BOSS2] = { "Info_Boss2.png" };
-	textureName[UI_INDO_WITHER] = {"Info_Withering.png"};
+	textureName[UI_INFO_WITHER] = {"Info_Withering.png"};
+	textureName[UI_INFO_WITHER2] = { "Info_Withering2.png" };
+	textureName[UI_INFO_POWERUP] = { "Info_PowerUp.png" };
 	textureName[UI_INFO_BAR] = { "Info_Bar.png" };
 	textureName[UI_MAIN_RETICLE] = { "Reticle_Target.png" };
 	textureName[UI_SUB_RETICLE] = { "Reticle.png" };
@@ -138,6 +144,10 @@ TextureLoader::TextureLoader()
 	// etc
 	textureName[NUMBER] = { "num.png" };
 	textureName[DATE_ALPHA] = { "DateAlpha.png" };
+	textureName[OCEAN] = { "sea.png" };
+	//textureName[OCEAN_BUMP]		= { "NormalMap.bmp" };
+	textureName[OCEAN_BUMP] = { "ocean.png" };
+
 
 	//Finale
 	textureName[FIN] = { "Fin.png" };

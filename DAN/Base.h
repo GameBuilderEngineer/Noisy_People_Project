@@ -183,3 +183,4 @@ void setShaderDirectory();						//シェーダーディレクトリへのセット関数		[用途]シ
 void setSoundDirectory(int endpointVoiceId);	//サウンドディレクトリへのセット関数		[用途]サウンドデータを格納するサウンドディレクトリへカレントディレクトリを切り替える
 void setEffekseerDirectory();					//エフェクシアーディレクトリへのセット関数	[用途]エフェクシアーファイルを格納するシェーダーディレクトリへカレントディレクトリを切り替える
 void setToolsDirectory();						//ツールディレクトリへのセット関数			[用途]ツールデータを格納するツールディレクトリへカレントディレクトリを切り替える
+void setSomethingDirectory(const char* something);

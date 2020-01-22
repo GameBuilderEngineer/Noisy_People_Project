@@ -147,7 +147,7 @@ void TelopManager::initialize()
 		telopNS::COLOR
 	);
 
-	// デジタルツリーが破壊される前に撃退せよ！
+	// 緑化した木が枯らされる前に撃退せよ！
 	telop[BOSS_ENTRY2]->initialize(
 		*textureNS::reference(textureNS::UI_INFO_BOSS2),
 		SpriteNS::CENTER,
@@ -160,7 +160,29 @@ void TelopManager::initialize()
 
 	// デジタルツリーが壊れ周辺が枯れ木に戻った
 	telop[WITHER]->initialize(
-		*textureNS::reference(textureNS::UI_INDO_WITHER),
+		*textureNS::reference(textureNS::UI_INFO_WITHER),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
+
+	// 巨大環境破壊ロボに、周辺を枯れ木に戻された！
+	telop[WITHER_BOSS]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_WITHER2),
+		SpriteNS::CENTER,
+		telopNS::WIDTH,
+		telopNS::MIN_HEIGHT,
+		telopNS::POSITION,
+		telopNS::ROTATION,
+		telopNS::COLOR
+	);
+
+	// ショット強化アイテムが島に投下された！
+	telop[POWER_UP]->initialize(
+		*textureNS::reference(textureNS::UI_INFO_POWERUP),
 		SpriteNS::CENTER,
 		telopNS::WIDTH,
 		telopNS::MIN_HEIGHT,

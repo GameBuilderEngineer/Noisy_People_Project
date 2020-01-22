@@ -28,9 +28,12 @@ namespace textureNS
 		// Tutorial
 		TUTORIAL1,
 		TUTORIAL2,
+		TUTORIAL3,
 		TUTORIAL_UI_0,
 		TUTORIAL_UI_1,
 		TUTORIAL_UI_PLANE,
+		TUTORIAL_STANDBY_1,
+		TUTORIAL_STANDBY_2,
 
 		// Title
 		TITLE_LOGO,
@@ -58,7 +61,9 @@ namespace textureNS
 		UI_INFO_MISSION,
 		UI_INFO_BOSS,
 		UI_INFO_BOSS2,
-		UI_INDO_WITHER,
+		UI_INFO_WITHER,
+		UI_INFO_WITHER2,
+		UI_INFO_POWERUP,
 		UI_INFO_BAR,
 		UI_MAIN_RETICLE,
 		UI_SUB_RETICLE,
@@ -127,6 +132,8 @@ namespace textureNS
 		// etc
 		NUMBER,
 		DATE_ALPHA,
+		OCEAN,
+		OCEAN_BUMP,
 
 		//Finale
 		FIN,

@@ -18,11 +18,21 @@
 class Ocean :public Base
 {
 private:
-	Object* object;
+	Object*								object;
 	LPDIRECT3DVERTEXDECLARATION9		declaration;			//頂点宣言
-	LPDIRECT3DDEVICE9	device;
-	LPD3DXEFFECT		effect;
-	StaticMesh*	staticMesh;
+	LPDIRECT3DDEVICE9					device;
+	LPD3DXEFFECT						effect;
+	StaticMesh*							staticMesh;
+
+	D3DXMATRIX*							worldMatrix;			//ワールドマトリックス配列
+	LPDIRECT3DVERTEXBUFFER9				matrixBuffer;			//ワールドマトリックスバッファ
+
+	LPDIRECT3DTEXTURE9					bumpTexture;
+	D3DXVECTOR2							waveMove;				//波の移動位置
+	float								height;					//波の高さ
+	float								deltaHeight;			//波の増減値
+	D3DXMATRIX							worldInverseTranspose;	//ワールド逆転置行列
+
 
 	bool needUpdate;
 

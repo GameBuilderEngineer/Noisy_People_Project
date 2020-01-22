@@ -25,7 +25,7 @@ namespace bulletNS{
 	const float		EXIST_TIME		= 30.0f;	//存在時間
 	const int		DIGITAL_POWER	= 20;		//デジタルパワー
 	const float		LAUNCH_FACT_TIME = 0.333f;	//発射事実残存時間
-	const float		LOST_DISTANCE	= 400.0f;
+	const float		LOST_DISTANCE	= 500.0f;
 
 	//銃口エフェクト
 	class Muzzle :public effekseerNS::Instance
@@ -91,6 +91,37 @@ namespace bulletNS{
 		};
 	};
 
+	class BulletBody2 :public effekseerNS::Instance
+	{
+	public:
+		D3DXMATRIX* syncMatrix;
+		BulletBody2(D3DXMATRIX* syncMatrix) {
+			this->syncMatrix = syncMatrix;
+			effectNo = effekseerNS::POW_BULLET;
+			scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+		}
+		virtual void update() {
+
+			D3DXMATRIX M = *syncMatrix;
+
+			::Effekseer::Manager*	manager = getEffekseerManager(managerNo)->manager;
+			::Effekseer::Matrix43 matrix;
+			matrix.Value[0][0] = M._11;
+			matrix.Value[0][1] = M._12;
+			matrix.Value[0][2] = M._13;
+			matrix.Value[1][0] = M._21;
+			matrix.Value[1][1] = M._22;
+			matrix.Value[1][2] = M._23;
+			matrix.Value[2][0] = M._31;
+			matrix.Value[2][1] = M._32;
+			matrix.Value[2][2] = M._33;
+			matrix.Value[3][0] = M._41;
+			matrix.Value[3][1] = M._42;
+			matrix.Value[3][2] = M._43;
+			manager->SetMatrix(handle, matrix);
+		};
+	};
+
 }
 
 //===================================================================================================================================
@@ -106,13 +137,13 @@ private:
 	D3DXVECTOR3		initialCollide;			//初期衝突地点
 	D3DXVECTOR3		collidePosition;		//衝突位置
 	int				digitalPower;			//デジタルパワー
-
 	effekseerNS::Instance* effect;			//弾エフェクト
+
 public:
 	int playerNo;
 public:
 //[基本処理]
-	Bullet(Ray shootingRay,int playerNo);
+	Bullet(Ray shootingRay,int playerNo, bool isPowUp);
 	~Bullet();
 	void update(float frameTime);
 	void render();
@@ -143,9 +174,10 @@ private:
 	bool					isLaunched;		//発射したか
 	float					launchFactTime;	//発射事実残存時間（発射した事実をゲーム中に残す時間.更新頻度の低いエネミーセンサにのせるため）
 	float                   powerRate;
-
+	bool					isPowerUp;		// アイテムを取りパワーアップしている
 	PLAY_PARAMETERS shotSE;
 	PLAY_PARAMETERS reroadSE;
+	std::string		currentScene;			//現在のシーン
 
 public:
 
@@ -176,7 +208,7 @@ public:
 	float getPowerRate();
 //[setter]
 	void setPowerRate(float value);
-
+	void setCurrentScene(std::string _scene);
 
 #ifdef _DEBUG
 	//void bulletGUI();

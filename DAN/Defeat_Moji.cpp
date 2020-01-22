@@ -63,10 +63,10 @@ void Defeat_Moji::render()
 //==========================================
 //XV
 //==========================================
-void Defeat_Moji::update(int playerType)
+void Defeat_Moji::update(int playerType, float flametime)
 {
 	if (BasicUI::position.y > END_POS_GEKITAI)
 	{
-		BasicUI::changePostion(defeat, slideUp);
+		BasicUI::changePostion(defeat, slideUp,flametime);
 	}
 }

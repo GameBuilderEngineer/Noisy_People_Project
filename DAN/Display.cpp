@@ -108,6 +108,14 @@ void Display::initialize()
 	//スカイドームの初期化
 	sky = new Sky();
 
+	//マーカー
+	markerRenderer = new MarkerRenderer;
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		playerPosition[i] = D3DXVECTOR3(0, 0, 0);
+		markerRenderer->playerPosition[i] = &playerPosition[i];
+	}
+
 	networkServer = new NETWORK_INTERFACE;
 }
 
@@ -116,6 +124,7 @@ void Display::initialize()
 //===================================================================================================================================
 void Display::uninitialize(void)
 {
+	SAFE_DELETE(markerRenderer);
 	SAFE_DELETE(treeManager);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(testFieldRenderer);
@@ -137,13 +146,20 @@ void Display::update(float _frameTime)
 	//同期タイマー：ゲームプレイ（クライアント）時更新
 	if (package->networkTester == true)
 	{
+		//タイマーの同期
 		syncTimer = package->timer;
+
+		//プレイヤー位置情報の同期
+		if (package->record1P)playerPosition[gameMasterNS::PLAYER_1P] = package->pos1P;
+		if (package->record2P)playerPosition[gameMasterNS::PLAYER_2P] = package->pos2P;
 
 		if (package->treeMax != 0)
 		{
 			//パッケージ内のイベントを呼び出す
 			for (int i = 0; i < package->treeMax; i++)
 			{
+				//記録されていない場合スルー
+				if (!package->treeTable[i].onRecord)continue;
 				//イベント対象のツリー
 				Tree* selectTree = NULL;
 				//イベント対象のツリーを検索する
@@ -161,23 +177,13 @@ void Display::update(float _frameTime)
 				if (selectTree == NULL)continue;
 
 				//イベント別にアクションする
-				switch (package->treeTable[i].eventType)
+				if(package->treeTable[i].greenState != selectTree->getTreeData()->greenState)
 				{
-				case gameMasterNS::TO_DEAD:
 					selectTree->transState();
-					break;
-				case gameMasterNS::TO_GREEN_WITH_ANALOG:
-					selectTree->transState();
-					break;
-				case gameMasterNS::TO_GREEN_WITH_DIGITAL:
-					selectTree->transState();
-					break;
 				}
 			}
-			////パッケージ内のイベントを解放する
-			//SAFE_DELETE_ARRAY(package->treeTable);
-
-
+		////パッケージ内のイベントを解放する
+		//SAFE_DELETE_ARRAY(package->treeTable);
 		}
 
 		bool transition = package->sceneReset;
@@ -197,6 +203,9 @@ void Display::update(float _frameTime)
 
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
+
+	//マーカーの更新
+	markerRenderer->update(frameTime);
 
 	//OFF
 	if (input->wasKeyPressed('0'))
@@ -282,16 +291,21 @@ void Display::render3D(Camera* currentCamera)
 
 	//スカイドームの描画
 	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+
+	//マーカーの描画
+	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+	{
+		markerRenderer->render(i, currentCamera);
+	}
 }
 
 //===================================================================================================================================
 //【2D[UI]描画】
 //===================================================================================================================================
-//void Display::renderUI()
-//{
-//	// リザルトUI
-//	resultUI.render();
-//}
+void Display::renderUI()
+{
+	
+}
 
 //===================================================================================================================================
 //【衝突処理】

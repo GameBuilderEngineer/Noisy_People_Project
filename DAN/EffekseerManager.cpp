@@ -62,6 +62,8 @@ EffekseerManager::EffekseerManager()
 	fileName[FLOWER_SHOWER]		= { L"Flower_Shower.efk" };
 	fileName[FEATHER]			= { L"Feather.efk" };
 	fileName[BOSS_DEATH]		= { L"Boss_Death.efk" };
+	fileName[POW_BULLET]		= { L"Pow_Bullet.efk" };
+	fileName[POW_UP_EFFECT]		= { L"PowUp.efk" };
 
 	instanceList = new LinkedList<::effekseerNS::Instance*>;
 }
@@ -86,10 +88,10 @@ void EffekseerManager::initialize()
 #endif
 
 	// 描画用インスタンスの生成
-	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 20000);
+	renderer = ::EffekseerRendererDX9::Renderer::Create(getDevice(), 30000);
 
 	// エフェクト管理用インスタンスの生成
-	manager = ::Effekseer::Manager::Create(20000);
+	manager = ::Effekseer::Manager::Create(30000);
 
 	// 描画用インスタンスから描画機能を設定
 	manager->SetSpriteRenderer(renderer->CreateSpriteRenderer());

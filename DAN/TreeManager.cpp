@@ -102,6 +102,7 @@ void TreeManager::update(float frameTime)
 
 		bool needSwap = false;
 		int beforeType = tree->getTreeData()->type;
+		int beforeGreenState = tree->getTreeData()->greenState;
 		//状態遷移を行おうとしている場合
 		if (tree->getTransState())
 		{
@@ -112,41 +113,60 @@ void TreeManager::update(float frameTime)
 		//更新
 		tree->update(frameTime);
 
-		//レンダラーの切替
+		TreeData* data = tree->getTreeData();
+		TreeTable in;
+		in.id = data->treeID;
+		in.position = tree->position;
+		in.rotation = tree->quaternion;
+		in.scale = tree->scale;
+		in.modelType = data->model;
+		in.playBacked = false;
+		in.onRecord = true;
+		//プレイヤーNOの記録
+		in.player = tree->playerNo;
+
+		//あとで場合分け
+		in.greenState = data->greenState;
+		
+		//ネットワークの送信情報へ記録
+		NETWORK_CLIENT::recordTreeTable(in,i);
+
+		//ツリーのステート切替イベント発生
 		if (needSwap)
 		{
-
-			TreeData* data = tree->getTreeData();
-			TreeTable in;
-			in.id			= data->treeID;
-			in.position		= tree->position;
-			in.rotation		= tree->quaternion;
-			in.scale		= tree->scale;
-			in.modelType	= data->model;
-			in.playBacked	= false;
-
-			//あとで場合分け
-			in.player		= tree->playerNo;
-
-			//あとで場合分け
-			in.eventType	= gameMasterNS::TO_DEAD;
-			in.eventType	= gameMasterNS::TO_GREEN_WITH_DIGITAL;
-			in.eventType	= gameMasterNS::TO_GREEN_WITH_ANALOG;
+			//イベントのタイプの識別
+			if (beforeGreenState == treeNS::DEAD)
+			{
+				switch (tree->getTreeData()->type)
+				{
+				case treeNS::DIGITAL_TREE:
+					in.eventType = gameMasterNS::TO_GREEN_WITH_DIGITAL;
+					break;
+				case treeNS::ANALOG_TREE:
+					in.eventType = gameMasterNS::TO_GREEN_WITH_ANALOG;
+					break;
+				}
+			}
+			else if (beforeGreenState == treeNS::GREEN){
+				in.eventType = gameMasterNS::TO_DEAD;
+			}
 
 			//ゲームマスターへ記録
 			if (gameMaster)
 			{
-				NETWORK_CLIENT::setSendTreeTable(in);
 				gameMaster->recordTreeTable(in);
 			}
-
 		}
+
+
 
 		//緑化している木をカウント
 		if (treeList[i]->getTreeData()->greenState == treeNS::GREEN)
 		{
 			greeningTreeNum++;
 		}
+
+		
 
 		//デジタルツリーの周囲にエフェクトを発生
 		//if (treeList[i]->getTreeData()->type == treeNS::DIGITAL_TREE)

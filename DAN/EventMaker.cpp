@@ -90,6 +90,67 @@ void EventMaker::update()
 	}
 
 #ifndef CHEAT_PREZEN
+#ifdef EASY_MODE
+	// デジタルツリー襲撃イベント
+	if (data->numBeingAttackedTree == 0 && data->existsBoss == false && data->wasBossEntried == false)
+	{
+		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > 20 + data->ajustTimeEnemyAttaksTree
+			&& data->cntEnemyAttacksTree == 0)
+		{
+			// 最低経過時間チェック
+			data->weightEnemyAttacksTree = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 4.0f, 10.0f);
+			data->weightEnemyAttacksTree *= (1.0f + (float)(rand() % 5 - 2) * 0.1f);	// ランダム補正
+
+			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
+			{
+				data->ajustTimeEnemyAttaksTree = rand() % 10;// ランダムで間隔調整を入れる
+				makeEventEnemyAttaksTree();
+			}
+		}
+
+		if (data->lastTimeEnemyAttaksTree - gameMaster->getGameTime() > 35 + data->ajustTimeEnemyAttaksTree
+			&& data->cntEnemyAttacksTree >= 1 && data->cntEnemyAttacksTree <= 4)
+		{
+			// 最低経過時間チェック
+			data->weightEnemyAttacksTree = fuzzy.grade((float)(data->numDigital - data->numBeingAttackedTree), 4.0f, 10.0f);
+			data->weightEnemyAttacksTree *= (1.0f + (float)(rand() % 5 - 2) * 0.1f);	// ランダム補正
+
+			if (data->weightEnemyAttacksTree > WEIGHT_ENEMY_ATTACKS_TREE)
+			{
+				data->ajustTimeEnemyAttaksTree = rand() % 10;// ランダムで間隔調整を入れる
+				makeEventEnemyAttaksTree();
+			}
+		}
+
+	}
+
+	// 巨大環境破壊ロボイベント
+	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
+	{
+		data->wasBossEntried = true;
+		data->existsBoss = true;
+		makeEventBossEntry();
+	}
+
+	if (gameMaster->getGameTime() < (180 - data->powerUpEntryAdjustTime)
+		&& data->cntPowerUpEntry == 0)
+	{
+		data->cntPowerUpEntry++;
+		makeEventPowerUpItem();
+		data->wasPowerUpEntried = true;
+	}
+
+	if (gameMaster->getGameTime() < (80 - data->powerUpEntryAdjustTime)
+		&& data->cntPowerUpEntry == 1)
+	{
+		data->cntPowerUpEntry++;
+		makeEventPowerUpItem();
+		data->wasPowerUpEntried = true;
+	}
+
+
+#else
+
 	// デジタルツリー襲撃イベント
 	if (data->numBeingAttackedTree == 0)
 	{
@@ -111,9 +172,20 @@ void EventMaker::update()
 	if (gameMaster->getGameTime() < gameMasterNS::GAME_TIME / 2 && data->wasBossEntried == false)
 	{
 		data->wasBossEntried = true;
+		data->existsBoss = true;
 		makeEventBossEntry();
 	}
+
+	if (gameMaster->getGameTime() < (180 - data->powerUpEntryAdjustTime)
+		&& data->wasPowerUpEntried == false)
+	{
+		makeEventPowerUpItem();
+		data->wasPowerUpEntried = true;
+	}
+
+#endif// EASY_MODE
 #endif
+
 }
 
 
@@ -208,6 +280,38 @@ int EventMaker::makeEventBossEntry()
 	opeGenerator->bossEntry(enemySet);
 
 	return enemySet.enemyID;
+}
+
+
+//=============================================================================
+// パワーアップアイテム登場イベントの作成(POWER_UP_ITEM)
+//=============================================================================
+void EventMaker::makeEventPowerUpItem()
+{
+	using namespace itemNS;
+	ItemData itemData;
+	itemData.itemID = itemManager->issueNewItemID();
+	itemData.type = POWER_UP;
+	itemData.defaultPosition = D3DXVECTOR3(0, 450, 0);
+	itemData.defaultDirection = D3DXVECTOR3(0, 0, 0);
+
+	// 以下で落ちたら接地するかを確かめる
+	NavigationMesh* naviMesh = NavigationMesh::getNaviMesh();
+	bool isFinish = false;
+
+	while (isFinish == false)
+	{
+		itemData.defaultPosition.x = rand() % 401 - 200.0f;
+		itemData.defaultPosition.z = rand() % 401 - 200.0f;
+
+		if (naviMesh->isHitGrounding(NULL, NULL, itemData.defaultPosition))
+		{
+			isFinish = true;
+		}
+	}
+
+	telopManager->playOrder(telopManagerNS::POWER_UP);	// テロップ再生
+	itemManager->createItem(itemData);					// アイテム作成
 }
 
 
