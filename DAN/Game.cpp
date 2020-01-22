@@ -706,7 +706,22 @@ void Game::update(float _frameTime) {
 		if (player[i].getHp() <= 0)
 		{
 			player[i].enableOperation(playerNS::DISABLE_OPERATION);
-			if (player1UI->hpGuage->widthSize <= 0)
+
+			if (player1UI->hpGuage->widthSize <= 0 && i == playerNS::PLAYER1)
+			{
+
+				// リンポーンとペナルティ処理
+				player[i].enableOperation(playerNS::ALL_OPERATION);
+				player[i].reset();
+				player[i].setHp(playerNS::MAX_HP);
+				player[i].setPower(playerNS::COST_SHIFT * 1.5f);
+
+				player1UI->hpGuage->widthSize = hpGuageNS::WIDTH_HP_GUAGE;
+				player1UI->hpGuage->hpGuage->setSize(hpGuageNS::WIDTH_HP_GUAGE, hpGuageNS::HEIGHT_HP_GUAGE);
+				player1UI->hpGuage->hpGuage->setVertex();
+				player1UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
+			}
+			else if((player2UI->hpGuage->widthSize <= 0 && i == playerNS::PLAYER2))
 			{
 				// リンポーンとペナルティ処理
 				player[i].enableOperation(playerNS::ALL_OPERATION);
@@ -714,21 +729,11 @@ void Game::update(float _frameTime) {
 				player[i].setHp(playerNS::MAX_HP);
 				player[i].setPower(playerNS::COST_SHIFT * 1.5f);
 
-				// ゲージを初期化しちゃうぜ
-				if (i == playerNS::PLAYER1)
-				{
-					player1UI->hpGuage->widthSize = hpGuageNS::WIDTH_HP_GUAGE;
-					player1UI->hpGuage->hpGuage->setSize(hpGuageNS::WIDTH_HP_GUAGE, hpGuageNS::HEIGHT_HP_GUAGE);
-					player1UI->hpGuage->hpGuage->setVertex();
-					player1UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
-				}
-				else
-				{
-					player2UI->hpGuage->widthSize = hpGuageNS::WIDTH_HP_GUAGE;
-					player2UI->hpGuage->hpGuage->setSize(hpGuageNS::WIDTH_HP_GUAGE, hpGuageNS::HEIGHT_HP_GUAGE);
-					player2UI->hpGuage->hpGuage->setVertex();
-					player2UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
-				}
+				player2UI->hpGuage->initialize();
+				//player2UI->hpGuage->widthSize = 0;
+				//player2UI->hpGuage->hpGuage->setSize(0, hpGuageNS::HEIGHT_HP_GUAGE);
+				//player2UI->hpGuage->hpGuage->setVertex();
+				player2UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
 			}
 		}
 	}
