@@ -93,6 +93,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 	}
 	else if (treeData.type == DIGITAL_TREE) 
 	{
+		playDigitalEffect();
 		state = new DigitalState(this);
 		disableAroundGreening();//Å‰‚Í—Î‰»ˆ—‚ğ‚µ‚È‚¢
 	}
