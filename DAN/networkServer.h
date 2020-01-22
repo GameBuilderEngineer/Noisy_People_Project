@@ -2,7 +2,7 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#define TREE_TABLE_SIZE 20
+#define TREE_TABLE_SIZE 270
 #include "base.h"
 #include <winsock.h>
 #include "GameMaster.h"
