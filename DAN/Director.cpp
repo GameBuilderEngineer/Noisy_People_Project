@@ -312,6 +312,18 @@ void Director::run(HINSTANCE _instance) {
 //===================================================================================================================================
 void Director::mainLoop() {
 	
+	bool resetFlag = false;
+	if (input->getController()[0]->isButton(virtualControllerNS::BUTTONS::HOME) &&
+		input->getController()[0]->wasButton(virtualControllerNS::BUTTONS::SPECIAL_SUB))
+	{
+		resetFlag = true;
+	}
+	else if (input->getController()[1]->isButton(virtualControllerNS::BUTTONS::HOME) &&
+		input->getController()[1]->wasButton(virtualControllerNS::BUTTONS::SPECIAL_SUB))
+	{
+		resetFlag = true;
+	}
+
 	//ƒŠƒZƒbƒg
 	if (input->wasKeyPressed(VK_F5))
 	{

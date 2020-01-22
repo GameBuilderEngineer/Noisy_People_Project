@@ -116,7 +116,7 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 //	d3dpp.MultiSampleType			= D3DMULTISAMPLE_NONE;
 
 #ifdef _DEBUG
-#if 1
+#if 0
 	fullScreen = false;
 #else
 	fullScreen = true;
