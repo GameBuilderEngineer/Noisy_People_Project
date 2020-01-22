@@ -55,6 +55,9 @@ enum SE_LIST
 	SE_TUTORIAL_CLEAR,
 	SE_TUTORIAL_END,
 	SE_TUTORIAL_STEP_CLEAR,
+	SE_GetPowerUpItem,
+	SE_Green_Down,
+	SE_SetPowerUpItem,
 	SE_MAX
 };
 
@@ -72,7 +75,8 @@ static const char *SEPathList[SE_LIST::SE_MAX] = {
 	"SE_StartGame.wav","SE_AnnounceTelop.wav","SE_Telop.wav","SE_TimeUp.wav",
 	"SE_Bird0.wav","SE_Bird1.wav","SE_Wind.wav","SE_Result.wav","SE_HurryUp.wav",
 	"SE_CountDown.wav", "SE_BossSpawning.wav","SE_Score2.wav",
-	"Tutorial_Clear.wav","Tutorial_End.wav","Tutorial_Step_Clear.wav"
+	"Tutorial_Clear.wav","Tutorial_End.wav","Tutorial_Step_Clear.wav",
+	"SE_GetPowerUpItem.wav","SE_Green_Down.wav","SE_SetPowerUpItem.wav"
 };
 
 //===================================================================================================================================

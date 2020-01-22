@@ -270,6 +270,8 @@ void Bear::updateDeadArea(float frameTime)
 		// 枯木時間終了
 		if (aroundDeadTimer > AROUND_DEAD_TIME / 2 && wasTelopDisplayed == false)
 		{// タイミングを適当に合わせているだけ
+			PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Green_Down};
+			SoundInterface::SE->playSound(&playParameters);	//SE再生
 			TelopManager* telopManager = TelopManager::get();
 			telopManager->playOrder(telopManagerNS::WITHER_BOSS);
 			wasTelopDisplayed = true;

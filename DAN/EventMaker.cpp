@@ -312,6 +312,11 @@ void EventMaker::makeEventPowerUpItem()
 
 	telopManager->playOrder(telopManagerNS::POWER_UP);	// テロップ再生
 	itemManager->createItem(itemData);					// アイテム作成
+	//saisei ItemSet
+	//SE_SetPowerUpItem
+	PLAY_PARAMETERS	playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_SetPowerUpItem };
+	SoundInterface::SE->playSound(&playParameters);
+
 }
 
 
