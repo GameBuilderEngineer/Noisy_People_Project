@@ -196,6 +196,8 @@ void Tutorial::initialize()
 	const int treeMaxW = 5;
 	const int treeMaxH = 2;
 
+	//1PツリーID:0～9(ANALOG),20(DIGITAL)
+	//2PツリーID:10～19(ANALOG),21(DIGITAL)
 	for (int j = 0; j < 2; j++)
 	{
 		for (int i = 0; i < treeMaxH; i++)
@@ -856,73 +858,84 @@ void Tutorial::collisions()
 
 	//ビジョン|スカイビジョン状態の時
 	//プレイヤー[シフトレイ]とデジタルツリー
-	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
+
+	//1P用シフトレイの衝突判定
+	for(int no = 0; no<gameMasterNS::PLAYER_NUM;no++)
 	{
 		//シフト操作の無効化(初期値)
-		player[i].disableOperation(playerNS::ENABLE_SHIFT);
+		player[no].disableOperation(playerNS::ENABLE_SHIFT);
 		//選択ライトのOFF
-		player[i].shownSelectLight(false);
-
+		player[no].shownSelectLight(false);
 
 		//選択されたデジタルツリー
 		Tree* selectTree = NULL;
+
 		//リストの取得
 		std::vector<Tree*> list = treeManager->getTreeList();
 
 		//ビジョン時スルー&選択ライトエフェクトをOFFにする
-		if (player[i].getState() != playerNS::VISION &&
-			player[i].getState() != playerNS::SKY_VISION)
+		if (player[no].getState() != playerNS::VISION &&
+			player[no].getState() != playerNS::SKY_VISION)
 		{
 			//選択解除
-			for (int num = 0; num < list.size(); num++)
+			for (int num = 0; num < 10; num++)
 			{
 				Tree* tree = list[num];
 				//デジタルツリーでない場合continue
 				if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
 				//選択されていない状態にする
-				tree->switchingSelected(false, i);
+				tree->switchingSelected(false, no);
 			}
-			continue;
 		}
-
-		//衝突判定
-		for (int num = 0; num < list.size(); num++)
-		{
-			Tree* tree = list[num];
-			//デジタルツリーの場合
-			if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
-			//選択されていない状態にする
-			tree->switchingSelected(false, i);
-
-			//カリング処理
-			//カメラ視野角内の場合
-			D3DXVECTOR3 center = tree->center;
-			float radius = tree->radius;
-			if (!UtilityFunction::culling(
-				center, radius, camera[i].view, camera[i].fieldOfView,
-				camera[i].nearZ, camera[i].farZ, camera[i].aspect))continue;
-
-			//シフトレイの更新
-			Cylinder treeCylinder;
-			treeCylinder.centerLine.start = tree->position;
-			treeCylinder.centerLine.end = tree->position + tree->getAxisY()->direction*10000.0f;
-			treeCylinder.height = tree->size.y / 2;
-			treeCylinder.radius = tree->size.x;
-			//衝突時
-			if (player[i].collideShiftRay(treeCylinder))
+		else {
+			//衝突対象ID
+			int id[22] =
 			{
-				//選択候補として保存する。
-				selectTree = tree;
-			}
-		}
+				0,1,2,3,4,5,6,7,8,9,20,
+				10,11,12,13,14,15,16,17,18,19,21
+			};
 
-		//選択されたデジタルツリーへの処理を行う
-		if (selectTree)
-		{
-			selectTree->switchingSelected(true, i);
-			player[i].shownSelectLight(true);
+			//衝突判定
+			for (int num = 0; num < 11; num++)
+			{
+				Tree* tree;
+				tree = list[id[num+no*11]];
+				//デジタルツリーの場合
+				if (tree->getTreeData()->type != treeNS::DIGITAL_TREE)continue;
+				//選択されていない状態にする
+				tree->switchingSelected(false, no);
+
+				//カリング処理
+				//カメラ視野角内の場合
+				D3DXVECTOR3 center = tree->center;
+				float radius = tree->radius;
+				if (!UtilityFunction::culling(
+					center, radius, camera[no].view, camera[no].fieldOfView,
+					camera[no].nearZ, camera[no].farZ, camera[no].aspect))continue;
+
+				//シフトレイの更新
+				Cylinder treeCylinder;
+				treeCylinder.centerLine.start = tree->position;
+				treeCylinder.centerLine.end = tree->position + tree->getAxisY()->direction*10000.0f;
+				treeCylinder.height = tree->size.y / 2;
+				treeCylinder.radius = tree->size.x;
+				//衝突時
+				if (player[no].collideShiftRay(treeCylinder))
+				{
+					//選択候補として保存する。
+					selectTree = tree;
+				}
+			}
+
+			//選択されたデジタルツリーへの処理を行う
+			if (selectTree)
+			{
+				selectTree->switchingSelected(true, no);
+				player[no].shownSelectLight(true);
+			}
 		}
 	}
+
 }
 
 //===================================================================================================================================

@@ -872,22 +872,24 @@ bool Player::collideShiftRay(Cylinder target)
 			volumeRayFromCamera.centerLine.start,
 			volumeRayFromCamera.centerLine.end,
 			target.centerLine.start);
+	//カメラの始点と同一であれば、終点と最も近い点から算出する
 	//カメラの始点と同一であれば、失敗
-	if (volumeRayFromCamera.centerLine.start == nearest)
-	{
-		return false;
-	}
+	//if (volumeRayFromCamera.centerLine.start == nearest)
+	//{
+	//	return false;
+	//}
 	//カメラからのレイ上での距離
 	float distanceOnRay = Base::between2VectorLength(nearest, cameraGaze);
-
+	
 	//円柱間の距離
 	float distance = Base::between2LineDistance(target.centerLine, volumeRayFromCamera.centerLine);
-
 	//円柱同士の衝突時距離
 	float radiusDistance = target.radius + volumeRayFromCamera.radius;
 
 	if (distance <= radiusDistance)
 	{
+		testDis1 = distance;
+		testRad2 = radiusDistance;
 		D3DXVECTOR3 shiftDirection;
 		//デジタルシフト有効でない場合：初期シフト位置の設定
 		if (!whetherValidOperation(ENABLE_SHIFT))
@@ -1240,6 +1242,8 @@ void Player::outputGUI()
 		ImGui::Text(nowCameraTransing ? "nowCameraTransing:ON" : "nowCameraTransing:OFF");
 		ImGui::Text("CameraTransTime : %.02f / %.02f",
 			cameraTransitionTimer, cameraTransitionTime);
+		ImGui::Text("[cameraGaze] start(%.02f,%.02f,%.02f)",
+			cameraGaze.x, cameraGaze.y, cameraGaze.z);
 		//デジタルシフトレイ
 		ImGui::Text("[shiftRay] start(%.02f,%.02f,%.02f):distance(%.02f)",
 			shiftRay.start.x, shiftRay.start.y, shiftRay.start.z,
@@ -1248,6 +1252,8 @@ void Player::outputGUI()
 			shiftLine.start.x, shiftLine.start.y, shiftLine.start.z,
 			shiftLine.end.x, shiftLine.end.y, shiftLine.end.z);
 		ImGui::Text("[shiftDistance] %.02f", shiftDistance);
+		ImGui::Text("[betweenLineDistance] %.02f", testDis1);
+		ImGui::Text("[betweenSumRadius] %.02f", testRad2);
 
 		//操作有効フラグ
 		//シフト

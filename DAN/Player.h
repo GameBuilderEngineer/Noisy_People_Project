@@ -319,7 +319,8 @@ private:
 	Ray							shiftRay;						//デジタルシフトレイ
 	float						shiftDistance;
 	D3DXVECTOR3					shiftPosition;
-
+	float						testDis1;
+	float						testRad2;
 
 	//再生パラメータ
 	PLAY_PARAMETERS shiftStartSE;
