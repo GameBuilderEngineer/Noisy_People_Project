@@ -1072,7 +1072,7 @@ void Game::render3D(Camera* currentCamera) {
 	//DrawEquipment();
 
 	//ŠC–Ê‚Ì•`‰æ
-	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 	// ƒGƒlƒ~[‚Ì•`‰æ
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 

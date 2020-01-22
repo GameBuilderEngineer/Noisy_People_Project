@@ -61,9 +61,6 @@
     <Filter Include="Game Layer\Scene\Splash\SplashSprite">
       <UniqueIdentifier>{4a0998f3-ccab-4b12-9f18-62afe5467eb7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Player">
-      <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tools Layer">
       <UniqueIdentifier>{d0cb7f55-79d9-4f19-bed5-90758acaa297}</UniqueIdentifier>
     </Filter>
@@ -310,35 +307,8 @@
     <Filter Include="Constant Layer\Sound\WaveBall">
       <UniqueIdentifier>{de30d108-8960-4bd0-8369-8236a6a6b381}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Player\State">
-      <UniqueIdentifier>{664fc8fa-2e71-4d1e-9e7d-71b1118fd7b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\State\DigitalShiftState">
-      <UniqueIdentifier>{98d371f2-8839-48d4-9d24-42e3827ab090}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\State\NormalState">
-      <UniqueIdentifier>{1dc0dacc-e6ae-4dd0-bfbe-a825349f46f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\State\SkyVisionState">
-      <UniqueIdentifier>{3defbaa2-c089-4688-8fea-df82a12dc227}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\State\VisionState">
-      <UniqueIdentifier>{2f8a18bc-f623-4831-930f-3f8d43e67bb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\OtherObject">
-      <UniqueIdentifier>{227ecf82-d0ce-4cf2-bbca-12aba10cdf13}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\OtherObject\Bullet">
-      <UniqueIdentifier>{83331455-372c-43e8-b5da-cc017d64c561}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\Effect">
-      <UniqueIdentifier>{95c3a96b-b2c5-44ac-a5cd-564022ef5073}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\GameUI\PlayerUI">
       <UniqueIdentifier>{c4a17d3a-65fb-442e-a2b6-2d471a197331}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\Player\State\DeathState">
-      <UniqueIdentifier>{fbfae732-4b57-444b-b50b-4f490b25165b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\Collision\Cylinder">
       <UniqueIdentifier>{4e7b6768-8cad-46b1-85f4-0ca83835b231}</UniqueIdentifier>
@@ -388,11 +358,41 @@
     <Filter Include="Game Layer\FinaleEffect">
       <UniqueIdentifier>{25e515a2-53cb-489d-b1ec-40416cfff498}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Player\State\OPState">
+    <Filter Include="Game Layer\Ocean\Player">
+      <UniqueIdentifier>{bb356c6e-8ab7-4b34-9e70-9c75e683f750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\State">
+      <UniqueIdentifier>{664fc8fa-2e71-4d1e-9e7d-71b1118fd7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\State\DigitalShiftState">
+      <UniqueIdentifier>{98d371f2-8839-48d4-9d24-42e3827ab090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\State\NormalState">
+      <UniqueIdentifier>{1dc0dacc-e6ae-4dd0-bfbe-a825349f46f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\State\SkyVisionState">
+      <UniqueIdentifier>{3defbaa2-c089-4688-8fea-df82a12dc227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\State\VisionState">
+      <UniqueIdentifier>{2f8a18bc-f623-4831-930f-3f8d43e67bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\State\DeathState">
+      <UniqueIdentifier>{fbfae732-4b57-444b-b50b-4f490b25165b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\State\OPState">
       <UniqueIdentifier>{4a16b2c9-774f-4653-93bb-4eaa885ecdd2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Player\State\EDState">
+    <Filter Include="Game Layer\Ocean\Player\State\EDState">
       <UniqueIdentifier>{f05b29c7-453d-438b-afca-8d47ffc4d7ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\OtherObject">
+      <UniqueIdentifier>{227ecf82-d0ce-4cf2-bbca-12aba10cdf13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\OtherObject\Bullet">
+      <UniqueIdentifier>{83331455-372c-43e8-b5da-cc017d64c561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Ocean\Player\Effect">
+      <UniqueIdentifier>{95c3a96b-b2c5-44ac-a5cd-564022ef5073}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -659,7 +659,7 @@
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Game Layer\Player\OtherObject\Bullet</Filter>
+      <Filter>Game Layer\Ocean\Player\OtherObject\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>Game Layer\Enemy\StateMachine</Filter>
@@ -740,7 +740,7 @@
       <Filter>Game Layer\TestPlane</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Game Layer\Player</Filter>
+      <Filter>Game Layer\Ocean\Player</Filter>
     </ClCompile>
     <ClCompile Include="HPguageP2.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
@@ -749,19 +749,19 @@
       <Filter>Game Layer\Tree</Filter>
     </ClCompile>
     <ClCompile Include="NormalState.cpp">
-      <Filter>Game Layer\Player\State\NormalState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\NormalState</Filter>
     </ClCompile>
     <ClCompile Include="DebugBox.cpp">
       <Filter>Constant Layer\Collision\Box</Filter>
     </ClCompile>
     <ClCompile Include="DigitalShiftState.cpp">
-      <Filter>Game Layer\Player\State\DigitalShiftState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\DigitalShiftState</Filter>
     </ClCompile>
     <ClCompile Include="VisionState.cpp">
-      <Filter>Game Layer\Player\State\VisionState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\VisionState</Filter>
     </ClCompile>
     <ClCompile Include="SkyVisionState.cpp">
-      <Filter>Game Layer\Player\State\SkyVisionState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\SkyVisionState</Filter>
     </ClCompile>
     <ClCompile Include="ElectGuageEmp.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
@@ -788,7 +788,7 @@
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClCompile>
     <ClCompile Include="DigitalShiftEffect.cpp">
-      <Filter>Game Layer\Player\Effect</Filter>
+      <Filter>Game Layer\Ocean\Player\Effect</Filter>
     </ClCompile>
     <ClCompile Include="TreeEffect.cpp">
       <Filter>Game Layer\Tree</Filter>
@@ -797,7 +797,7 @@
       <Filter>Constant Layer\Collision\Cylinder</Filter>
     </ClCompile>
     <ClCompile Include="DeathState.cpp">
-      <Filter>Game Layer\Player\State\DeathState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\DeathState</Filter>
     </ClCompile>
     <ClCompile Include="ResultBG.cpp">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
@@ -914,7 +914,7 @@
       <Filter>Game Layer\FinaleEffect</Filter>
     </ClCompile>
     <ClCompile Include="PlayerEffect.cpp">
-      <Filter>Game Layer\Player\Effect</Filter>
+      <Filter>Game Layer\Ocean\Player\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Photograph.cpp" />
     <ClCompile Include="Powerup.cpp">
@@ -925,7 +925,7 @@
     </ClCompile>
     <ClCompile Include="tmpOcean.cpp" />
     <ClCompile Include="OPState.cpp">
-      <Filter>Game Layer\Player\State\OPState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\OPState</Filter>
     </ClCompile>
     <ClCompile Include="ModeFlag.cpp">
       <Filter>Game Layer\Scene\Game</Filter>
@@ -1041,7 +1041,7 @@
       <Filter>Game Layer\Scene\Splash\SplashSprite</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Game Layer\Player</Filter>
+      <Filter>Game Layer\Ocean\Player</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Constant Layer\Object</Filter>
@@ -1224,7 +1224,7 @@
       <Filter>Constant Layer\SkinMeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>Game Layer\Player\OtherObject\Bullet</Filter>
+      <Filter>Game Layer\Ocean\Player\OtherObject\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
       <Filter>Game Layer\Enemy\StateMachine</Filter>
@@ -1308,19 +1308,19 @@
       <Filter>Game Layer\Tree</Filter>
     </ClInclude>
     <ClInclude Include="NormalState.h">
-      <Filter>Game Layer\Player\State\NormalState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\NormalState</Filter>
     </ClInclude>
     <ClInclude Include="DebugBox.h">
       <Filter>Constant Layer\Collision\Box</Filter>
     </ClInclude>
     <ClInclude Include="DigitalShiftState.h">
-      <Filter>Game Layer\Player\State\DigitalShiftState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\DigitalShiftState</Filter>
     </ClInclude>
     <ClInclude Include="VisionState.h">
-      <Filter>Game Layer\Player\State\VisionState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\VisionState</Filter>
     </ClInclude>
     <ClInclude Include="SkyVisionState.h">
-      <Filter>Game Layer\Player\State\SkyVisionState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\SkyVisionState</Filter>
     </ClInclude>
     <ClInclude Include="ElectGuageeEmp.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
@@ -1347,7 +1347,7 @@
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClInclude>
     <ClInclude Include="DigitalShiftEffect.h">
-      <Filter>Game Layer\Player\Effect</Filter>
+      <Filter>Game Layer\Ocean\Player\Effect</Filter>
     </ClInclude>
     <ClInclude Include="TreeEffect.h">
       <Filter>Game Layer\Tree</Filter>
@@ -1356,7 +1356,7 @@
       <Filter>Constant Layer\Collision\Cylinder</Filter>
     </ClInclude>
     <ClInclude Include="DeathState.h">
-      <Filter>Game Layer\Player\State\DeathState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\DeathState</Filter>
     </ClInclude>
     <ClInclude Include="ResultBG.h">
       <Filter>Game Layer\Scene\Result\ResultUI</Filter>
@@ -1473,7 +1473,7 @@
       <Filter>Game Layer\FinaleEffect</Filter>
     </ClInclude>
     <ClInclude Include="PlayerEffect.h">
-      <Filter>Game Layer\Player\Effect</Filter>
+      <Filter>Game Layer\Ocean\Player\Effect</Filter>
     </ClInclude>
     <ClInclude Include="tmpOcean.h" />
     <ClInclude Include="Photograph.h" />
@@ -1484,7 +1484,7 @@
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClInclude>
     <ClInclude Include="OPState.h">
-      <Filter>Game Layer\Player\State\OPState</Filter>
+      <Filter>Game Layer\Ocean\Player\State\OPState</Filter>
     </ClInclude>
     <ClInclude Include="ModeFlag.h">
       <Filter>Game Layer\Scene\Game</Filter>

@@ -20,6 +20,7 @@
 #include "SoundBase.h"
 #include "Finaletex.h"
 #include "FinaleEffect.h"
+#include "Ocean.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -58,6 +59,8 @@ private:
 	StaticMeshRenderer*		finaleFieldRenderer;
 	//スカイドーム
 	Sky* sky;
+	Ocean*		ocean;				//海面
+
 	//ターゲットオブジェクト
 	Object* target;
 	//ツリーマネージャー

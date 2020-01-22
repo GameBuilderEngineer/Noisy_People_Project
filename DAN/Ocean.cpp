@@ -119,7 +119,7 @@ void Ocean::update()
 	object->update();
 
 	//波の移動
-	waveMove.x += 0.001f;
+	waveMove.x += 0.0001f;
 
 	//波の高さ増減
 	height += deltaHeight;
@@ -195,11 +195,11 @@ void Ocean::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPos
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
 		//effect->SetFloatArray("diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
-		//effect->SetTexture("textureDecal", *textureNS::reference(textureNS::OCEAN));
+		effect->SetTexture("textureDecal", *textureNS::reference(textureNS::OCEAN));
 		effect->SetTexture("normalMap", bumpTexture);
 
 		//シェーダー更新
-		//effect->CommitChanges();
+		effect->CommitChanges();
 
 		effect->BeginPass(0);
 		//Drawコール

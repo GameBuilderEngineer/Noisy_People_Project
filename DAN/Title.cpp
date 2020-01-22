@@ -99,6 +99,8 @@ void Title::initialize()
 
 	//スカイドーム
 	sky = new Sky();
+	//海面の初期化
+	ocean = new Ocean();
 
 	//WaveBall
 	//waveBall = new WaveBall;
@@ -156,6 +158,7 @@ void Title::uninitialize(void)
 	
 	//スカイフィールド
 	SAFE_DELETE(sky);
+	SAFE_DELETE(ocean);
 
 	//WaveBall
 	//SAFE_DELETE(waveBall);
@@ -179,7 +182,8 @@ void Title::update(float _frameTime)
 
 	//スカイフィールドの更新
 	sky->update();
-	
+	//海面の更新
+	ocean->update();
 	//タイトルフィールド（テスト）
 	titleField->update();	//オブジェクト
 	titleFieldRenderer->update();
@@ -645,6 +649,8 @@ void Title::render3D(Camera* _currentCamera)
 
 	//スカイフィールドの描画
 	sky->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
+	//海面の描画
+	ocean->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
 	//ツリーの描画
 	treeManager->render(_currentCamera);
