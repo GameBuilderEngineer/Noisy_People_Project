@@ -325,7 +325,7 @@ void Director::mainLoop() {
 	}
 
 	//ƒŠƒZƒbƒg
-	if (input->wasKeyPressed(VK_F5))
+	if (input->wasKeyPressed(VK_F5) || resetFlag)
 	{
 		scene->changeScene(SceneList::SPLASH);
 		changeNextScene();
