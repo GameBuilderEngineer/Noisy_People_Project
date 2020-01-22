@@ -92,6 +92,8 @@ void Finale::initialize()
 
 	//スカイドーム
 	sky = new Sky();
+	//海面の初期化
+	ocean = new Ocean();
 
 	cameraAxisZ = D3DXVECTOR3(0, 0, 0);
 	fixedAxisZ = D3DXVECTOR3(0, 0, 0);
@@ -147,6 +149,8 @@ void Finale::uninitialize(void)
 	//スカイドーム
 	SAFE_DELETE(sky);
 
+	SAFE_DELETE(ocean);
+
 	//ターゲットオブジェクト
 	SAFE_DELETE(target);
 
@@ -174,6 +178,9 @@ void Finale::update(float _frameTime)
 
 	//スカイフィールドの更新
 	sky->update();
+
+	//海面の更新
+	ocean->update();
 
 	target->update();
 
@@ -383,6 +390,9 @@ void Finale::render3D(Camera* _currentCamera)
 
 	//スカイフィールドの描画
 	sky->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
+
+	//海面の描画
+	ocean->render(_currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
 	//ツリーの描画
 	treeManager->render(_currentCamera);

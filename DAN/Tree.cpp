@@ -93,6 +93,7 @@ Tree::Tree(treeNS::TreeData _treeData)
 	}
 	else if (treeData.type == DIGITAL_TREE) 
 	{
+		playDigitalEffect();
 		state = new DigitalState(this);
 		disableAroundGreening();//Å‰‚Í—Î‰»ˆ—‚ğ‚µ‚È‚¢
 	}
@@ -516,6 +517,8 @@ void AnalogState::update(float frameTime)
 
 			TelopManager* telopManager = TelopManager::get();
 			telopManager->playOrder(telopManagerNS::WITHER);
+			PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Green_Down, false ,NULL,false,NULL };
+			SoundInterface::SE->playSound(&playParameters);	//SEÄ¶
 		}
 	}
 

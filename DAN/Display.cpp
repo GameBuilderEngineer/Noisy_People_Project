@@ -107,6 +107,8 @@ void Display::initialize()
 
 	//スカイドームの初期化
 	sky = new Sky();
+	//海面の初期化
+	ocean = new Ocean();
 
 	//マーカー
 	markerRenderer = new MarkerRenderer;
@@ -131,6 +133,7 @@ void Display::uninitialize(void)
 	SAFE_DELETE(testField);
 	SAFE_DELETE(networkServer);
 	SAFE_DELETE(sky);
+	SAFE_DELETE(ocean);
 }
 
 //===================================================================================================================================
@@ -200,7 +203,8 @@ void Display::update(float _frameTime)
 
 	//スカイドームの更新
 	sky->update();
-
+	//海面の更新
+	ocean->update();
 	//ツリーマネージャーの更新
 	treeManager->update(frameTime);
 
@@ -291,6 +295,8 @@ void Display::render3D(Camera* currentCamera)
 
 	//スカイドームの描画
 	sky->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	//海面の描画
+	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
 	//マーカーの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)

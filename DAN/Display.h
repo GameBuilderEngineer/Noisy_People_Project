@@ -15,6 +15,7 @@
 #include "networkServer.h"
 #include "Sky.h"
 #include "Marker.h"
+#include "Ocean.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -42,6 +43,7 @@ private:
 	TreeManager*					treeManager;		//ツリー
 	Sky*							sky;				//スカイドーム
 	MarkerRenderer*					markerRenderer;		//マーカーレンダラー
+	Ocean*		ocean;				//海面
 
 	//プレイヤー位置情報
 	D3DXVECTOR3						playerPosition[gameMasterNS::PLAYER_NUM];

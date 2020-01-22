@@ -1072,7 +1072,7 @@ void Game::render3D(Camera* currentCamera) {
 	//DrawEquipment();
 
 	//海面の描画
-	//ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 	// エネミーの描画
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
@@ -1448,7 +1448,7 @@ void Game::collisions()
 					player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
 				{
 					player[j].powerup(2.0f);//パワーアップ
-					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
+					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_GetPowerUpItem, false ,NULL,false,NULL };
 					SoundInterface::SE->playSound(&playParameters);	//SE再生
 					// エフェクト再生 うまくいかん！うんちっち
 					((Powerup*)itemList[i])->powUpEffect = new PowUpEffect(&player[j].position);

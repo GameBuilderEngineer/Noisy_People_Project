@@ -23,6 +23,7 @@
 
 #include "WaveBall.h"
 #include "Sky.h"
+#include "Ocean.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -86,6 +87,8 @@ private:
 	StaticMeshRenderer*		titleFieldRenderer;	
 	//スカイドーム
 	Sky* sky;
+	Ocean*		ocean;				//海面
+
 	//ターゲットオブジェクト
 	Object* target;
 	TitleUI titleUI;					//タイトルUI

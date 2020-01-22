@@ -20,8 +20,8 @@ sampler textureSampler = sampler_state
     MagFilter = LINEAR;
     MipFilter = NONE;
 
-    AddressU = Clamp;
-    AddressV = Clamp;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 sampler normalSampler = sampler_state
 {
@@ -156,19 +156,19 @@ float4 PS(VS_OUT In) : COLOR
 	//④合成する
 	//return tex2D(textureSampler, In.localUV)*max(ambient,dot(normal,In.light))+S;
 
-	float4 colorValue		= (float4)0;
-	float3 light			= (float3)0;
-	float3 reflectVector	= (float3)0;
-	float3 normalVector		= (float3)0;
-	float3 sightVector		= (float3)0;
+	//float4 colorValue		= (float4)0;
+	//float3 light			= (float3)0;
+	//float3 reflectVector	= (float3)0;
+	//float3 normalVector		= (float3)0;
+	//float3 sightVector		= (float3)0;
 
-	colorValue = float4(0.2, 0.2, 0.7, 1);							//青
+	//colorValue = float4(0.2, 0.2, 0.7, 1);							//青
 
-	light = lightDirection.xyz;
+	//light = lightDirection.xyz;
 
-	normalVector = tex2D(normalSampler, In.bumpUV).xyz;
-	normalVector.y = (1 - normalVector.y) * height;
-	normalVector = normalVector * 2 - 1;
+	//normalVector = tex2D(normalSampler, In.bumpUV).xyz;
+	//normalVector.y = (1 - normalVector.y) * height;
+	//normalVector = normalVector * 2 - 1;
 	//normal = normalVector;
 	//normal			= tex2D( normalSampler, In.bumpUV).xyz;	//バンプテクスチャの読み取り
 	//normal.y		= (1-normal.y)*height;					//波の高さの設定
@@ -187,29 +187,29 @@ float4 PS(VS_OUT In) : COLOR
 	//反射ベクトルを算出する
 	//reflect関数:反射ベクトルvを返す 
 	//→ i:入射ベクトル,n:サーフェス法線 reflect(i,n){ v = i - 2*dot(i,n)*n }
-	reflectVector	= reflect(-normalize(In.eye), normalVector);
+	//reflectVector	= reflect(-normalize(In.eye), normalVector);
 	
 	//視線ベクトル
-	sightVector = In.eye - eyePosition;
+	//sightVector = In.eye - eyePosition;
 
 	//色の演算
 	//反射強度
 	//float4 intensity = dot(light, normal);							//ディフューズ項
 	//float4 intensity;// = bright;							//ディフューズ項
 	//					+ pow(dot(reflectVector,sightVector),12);	// スペキュラー項(照明モデルは　フォン phong)
-	float4 intensity = dot(light, normalVector);
-		+ pow(dot(reflectVector, sightVector), 12);
-	intensity += colorValue;
-	return intensity;
+	//float4 intensity = dot(light, normalVector);
+	//	+ pow(dot(reflectVector, sightVector), 12);
+	//intensity += colorValue;
+	//return intensity;
 	//intensity = color * bright;
 	//intensity.xyz += specular;
 
 	//return intensity; 
 
 	//float4 texel = tex2D(normalSampler, In.bumpUV);
-	//float4 texel = tex2D(normalSampler, In.uv);
-	//float4 finalColor = texel;// *In.diffuse;
-	//return finalColor;
+	float4 texel = tex2D(textureSampler, In.bumpUV);
+	float4 finalColor = texel;// *In.diffuse;
+	return finalColor;
 
 }
 ///////////////////////////////////////////////////////////////////////////////////

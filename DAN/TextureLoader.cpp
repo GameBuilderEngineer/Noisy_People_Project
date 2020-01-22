@@ -149,7 +149,7 @@ TextureLoader::TextureLoader()
 	textureName[NUMBER] = { "num.png" };
 	textureName[TARGET] = { "stencil.png" };
 	textureName[DATE_ALPHA] = { "DateAlpha.png" };
-	textureName[OCEAN] = { "sea.png" };
+	textureName[OCEAN] = { "ocean.png" };
 	//textureName[OCEAN_BUMP]		= { "NormalMap.bmp" };
 	textureName[OCEAN_BUMP] = { "ocean.png" };
 
