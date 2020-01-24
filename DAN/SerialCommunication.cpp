@@ -15,7 +15,7 @@ SerialCommunication::SerialCommunication()
 	//COMポートハンドルの取得
 	//ポートをファイルとみなしてCreateFile()関数でオープンしてハンドルを取得する
 	arduino = CreateFile(
-		"\\\\.\\COM4",						//ポートの名前：どのポートを開くのか
+		"\\\\.\\COM3",						//ポートの名前：どのポートを開くのか
 		GENERIC_WRITE, 						//アクセスモード：通常送受信ともするので読み書き両方を指定
 		0,									//共有モード：通常0に設定　再オープン禁止
 		NULL, 								//セキュリティアトリビュート：通常ではNULLに設定

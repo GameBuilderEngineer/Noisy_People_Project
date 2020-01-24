@@ -141,6 +141,14 @@ void UIcharacter::update(int resultPhase,int playerType,float flametime)
 		defeatChara->update(playerType, flametime);
 		defeatMoji->update(playerType, flametime);
 		break;
+	case PHASE_05:
+		greening->update();
+		player->update(playerType, flametime);
+		greenChara->update(playerType, flametime);
+		greenMoji->update(playerType, flametime);
+		defeatChara->update(playerType, flametime);
+		defeatMoji->update(playerType, flametime);
+		break;
 	default:
 		break;
 	}
