@@ -70,7 +70,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[DIGITAL_SPHERE]						= { "digitalSphere.x" };
 
 	fileName[POWER_UP_ITEM]							= { "powup.x" };
-	fileName[DISTANT_VIEW] = { "Far_Island.x" };
+	fileName[DISTANT_VIEW]							= { "Far_Island.x" };
 
 }
 
