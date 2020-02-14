@@ -177,21 +177,10 @@ void InstancingBillboard::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVEC
 	int instanceNum = getInstanceNum();
 	if (instanceNum <= 0)return;
 
-
-	//Z深度バッファ
-	//device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	//device->SetRenderState(D3DRS_ZENABLE, TRUE);
-
-	//αテスト
-	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
-	//device->SetRenderState(D3DRS_ALPHAREF, 0x00);
-
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	// αソースカラーの指定
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	//加算合成を行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
@@ -268,20 +257,11 @@ void InstancingBillboard::render(Camera* camera)
 	if (!onRender)return;
 	int instanceNum = getInstanceNum();
 	if (instanceNum <= 0)return;
-	//Z深度バッファ
-	//device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	//device->SetRenderState(D3DRS_ZENABLE, TRUE);
-
-	//αテスト
-	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
-	//device->SetRenderState(D3DRS_ALPHAREF, 0x00);
 
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	// αソースカラーの指定
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	//加算合成を行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 

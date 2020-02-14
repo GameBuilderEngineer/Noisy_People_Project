@@ -158,15 +158,9 @@ private:
 	StaticMeshRenderer* testFieldRenderer;
 	//ターゲット
 	Object* target;
-	//撮影カメラ確認用
-	//Object* cameraObject;
-	//StaticMeshRenderer* cameraObjectRenderer;
 
 	//エネミーツール
 	ENEMY_TOOLS *enemyTools;
-
-
-
 
 	int stateCamera;						//カメラステータス
 	float frameDegree = 1.0f / 10.0f;		//自動速度
@@ -206,7 +200,6 @@ private:
 
 	float photoTime = 5.0f;
 	float photoTimer = 5.0f;
-	//float rate;
 	bool bezier = false;
 
 public:

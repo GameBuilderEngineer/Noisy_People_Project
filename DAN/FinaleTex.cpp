@@ -57,7 +57,7 @@ void FinaleTex::update()
 {
 	if (alpha < 255)
 	{
-		alpha += ALPHA_SPEED;
+		alpha += (int)ALPHA_SPEED;
 		fin->setAlphaAllVertex(alpha);
 		fin->render();
 	}

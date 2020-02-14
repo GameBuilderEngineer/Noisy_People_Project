@@ -10,7 +10,6 @@
 //【インクルード】
 //===================================================================================================================================
 #include "AbstractScene.h"
-//#include "Splash2D.h"
 #include "Sprite.h"
 #include "SplashSprite.h"
 #include "Sound.h"

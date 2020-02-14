@@ -14,9 +14,6 @@
 #include "StaticMeshRenderer.h"
 #include "TreeManager.h"
 #include "GameMaster.h"
-//#include "Sprite.h"
-//#include "UIResult.h"
-//#include "SceneEffect.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -45,6 +42,7 @@ private:
 	InstancingBillboard*				backGround;			//背景
 	InstancingBillboardNS::Instance*	backGroundInstance;
 	float								backGroundDistance;
+
 	//フィールド
 	Object*							testField;			//フィールド
 	StaticMeshRenderer*				testFieldRenderer;	//フィールドレンダラー

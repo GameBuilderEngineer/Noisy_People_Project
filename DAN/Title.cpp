@@ -79,15 +79,12 @@ void Title::initialize()
 	// Camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//camera->setGaze(D3DXVECTOR3(0, 100, 0));
-	//camera->setRelative(D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f));	//※元の値※
 	camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, 1.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
 	camera->setTarget(&target->position);
 	camera->setGazeDistance(20.0f);
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 10);
-	camera->setViewProjection();
-	
+	camera->setViewProjection();	
 
 	//エフェクシアーの設定
 	effekseerNS::setProjectionMatrix(0,
@@ -101,9 +98,6 @@ void Title::initialize()
 	sky = new Sky();
 	//海面の初期化
 	ocean = new Ocean();
-
-	//WaveBall
-	//waveBall = new WaveBall;
 
 	// Light
 	light = new Light;
@@ -160,9 +154,6 @@ void Title::uninitialize(void)
 	SAFE_DELETE(sky);
 	SAFE_DELETE(ocean);
 
-	//WaveBall
-	//SAFE_DELETE(waveBall);
-
 	// タイトルUI
 	titleUI.uninitialize();
 
@@ -197,8 +188,6 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(0.0f);
 		SoundInterface::BGM->setEndPointVoiceVolume(0.0f);
 		SoundInterface::S3D->setEndPointVoiceVolume(0.0f);
-		//waveBall->setVolume(0.0f);
-		//waveBall->setOnCol(false);
 	}
 	//ミュート解除
 	if (input->isKeyDown('N'))
@@ -206,8 +195,6 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(1.0f);
 		SoundInterface::BGM->setEndPointVoiceVolume(1.0f);
 		SoundInterface::S3D->setEndPointVoiceVolume(1.0f);
-		//waveBall->setVolume(1.0f);
-		//waveBall->setOnCol(true);
 	}
 	//10%(test)
 	if (input->isKeyDown('B'))
@@ -215,8 +202,6 @@ void Title::update(float _frameTime)
 		SoundInterface::SE->setEndPointVoiceVolume(0.1f);
 		SoundInterface::BGM->setEndPointVoiceVolume(0.1f);
 		SoundInterface::S3D->setEndPointVoiceVolume(0.1f);
-		//waveBall->setVolume(0.1f);
-		//waveBall->setOnCol(true);
 	}
 
 	// タイトルUI
@@ -438,7 +423,6 @@ void Title::update(float _frameTime)
 		{
 			camera->relativeQuaternion = tmpCameraQ;
 			camera->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
-			//camera->rotation(fixedAxisX, degreeX);
 		}
 
 		if (moveTimer <= 0)
@@ -484,7 +468,6 @@ void Title::update(float _frameTime)
 			degreeTimer = 3.0f;
 			degreeTime = degreeTimer;
 			stateCamera++;
-			//次ステート用に角度調整
 			
 			//カメラの相対位置を一時保存
 			tmpCameraQ = camera->relativeQuaternion;
@@ -559,19 +542,6 @@ void Title::update(float _frameTime)
 
 		break;
 	case CAMERA9:
-
-		//stateCamera = CAMERA0;
-		//target->initialize(&D3DXVECTOR3(-34.0f, 160.0f, 20));		//ターゲットの初期位置設定
-		//camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, 20.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
-		/*moveTimer -= frameTime;
-		degreeTimer -= frameTime;
-		rate = moveTimer / moveTime;
-
-		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(0, 0, 0), 1.0f - rate);
-		if (degreeTimer <= 0)
-		{
-			stateCamera++;
-		}*/
 		break;
 	default:
 		break;
@@ -640,10 +610,6 @@ void Title::render()
 //============================================================================================================================================
 void Title::render3D(Camera* _currentCamera)
 {
-
-	//エフェクト（インスタンシング）テスト
-	//testEffect->render(_currentCamera.view, _currentCamera.projection, _currentCamera.position);
-	
 	//タイトルフィールド（テスト）
 	titleFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), _currentCamera->view, _currentCamera->projection, _currentCamera->position);
 
@@ -655,18 +621,6 @@ void Title::render3D(Camera* _currentCamera)
 	//ツリーの描画
 	treeManager->render(_currentCamera);
 
-
-	// タイトルプレイヤー描画
-	//player[0].toonRender
-	//(
-	//	_direct3D9->device,
-	//	_currentCamera.view,
-	//	_currentCamera.projection,
-	//	_currentCamera.position,
-	//	*shaderLoader->getEffect(shaderNS::TOON),
-	//	*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-	//	*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-
 }
 
 //============================================================================================================================================
@@ -674,21 +628,8 @@ void Title::render3D(Camera* _currentCamera)
 //============================================================================================================================================
 void Title::render2D()
 {
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
-	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
-
-	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-
 	// タイトルUI
 	titleUI.render();
-
-#if _DEBUG
-	//WaveBall
-	//waveBall->draw();
-#endif
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -749,7 +690,6 @@ void Title::createGUI()
 	if (backUpTmpVolume != tmpVolume)
 	{
 		backUpTmpVolume = tmpVolume;
-		//waveBall->setVolume(tmpVolume);
 	}
 
 	ImGui::Text("controller1 LStick(%.02f,%.02f)", 

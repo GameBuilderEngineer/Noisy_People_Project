@@ -246,22 +246,8 @@ void Tutorial::initialize()
 		plane[i] = new TutorialPlane(enemyPlanePos);
 	}
 
-
-
 	//UI
 	tutorialUI = new TutorialUI;
-
-	////固定されたUI
-	//fixedUI = new FixedUI;
-	//fixedUI->initialize();
-
-	////プレイヤー1周りのUI
-	//player1UI = new Player1UI;
-	//player1UI->initialize(&player[gameMasterNS::PLAYER_1P]);
-
-	////プレイヤー２周りのUI
-	//player2UI = new Player2UI;
-	//player2UI->initialize(&player[gameMasterNS::PLAYER_2P]);
 
 	//レティクル
 	reticle = new Reticle();
@@ -273,11 +259,6 @@ void Tutorial::initialize()
 
 	// チュートリアル2D初期化
 	tutorialTex.initialize();
-
-#ifdef _DEBUG
-	//enemyManager->setDebugEnvironment(camera, &player[gameMasterNS::PLAYER_1P]);
-	//playerSelect = gameMasterNS::PLAYER_1P;
-#endif
 }
 
 //===================================================================================================================================
@@ -296,9 +277,6 @@ void Tutorial::uninitialize()
 	SAFE_DELETE(sky);
 	SAFE_DELETE(tutorialUI);
 	SAFE_DELETE(reticle);
-	//SAFE_DELETE(fixedUI);
-	//SAFE_DELETE(player1UI);
-	//SAFE_DELETE(player2UI);
 	SAFE_DELETE(damageUI);
 
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -324,9 +302,6 @@ void Tutorial::update(float _frameTime)
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A))
 	{
-		// サウンドの再生
-		//sound->play(soundNS::TYPE::SE_PAPER, soundNS::METHOD::PLAY);
-
 		//チュートリアルを次へ
 		tutorialTex.nextPage++;
 		if(tutorialTex.nextPage < 2)return;
@@ -413,13 +388,6 @@ void Tutorial::update(float _frameTime)
 		camera[i].update();
 	}
 
-	//固定UIの更新
-	//fixedUI->update(tutorialTimer);
-
-	////プレイヤー周りのUIの更新
-	//player1UI->update(treeManager->getGreeningRate() * 100);
-	//player2UI->update(treeManager->getGreeningRate() * 100);
-
 	//レティクルの更新
 	reticle->update(frameTime);
 
@@ -497,7 +465,6 @@ void Tutorial::update(float _frameTime)
 			if (input->getController()[i]->wasButton(virtualControllerNS::Y) ||
 				input->wasKeyPressed(VK_LSHIFT) || input->wasKeyPressed(VK_RSHIFT))
 			{
-				//if (i == PLAYER1 && input->wasKeyPressed(VK_LSHIFT) || i == PLAYER2 && input->wasKeyPressed(VK_RSHIFT))
 				{
 					step[i]++;
 					planeStep[i]++;
@@ -522,17 +489,12 @@ void Tutorial::update(float _frameTime)
 				tempRay.initialize(player[i].position, plane[i]->getPos() - player[i].position);
 				tempRay.distance = between2VectorLength(plane[i]->getPos(), player[i].position);
 				tempRay.direction = Base::slip(tempRay.direction, D3DXVECTOR3(0,1,0));
-				//D3DXVec3Normalize(&tempRay.direction, &tempRay.direction);
 				D3DXMATRIX tempRot;
 				D3DXMatrixRotationYawPitchRoll(&tempRot, 0.5f, 0.0f, 0.0f);
 				D3DXVec3TransformCoord(&tempRay.direction, &tempRay.direction, &tempRot);
-				
 				plane[i]->setPos(D3DXVECTOR3(0,plane[i]->getPos().y,0) + player[i].position + tempRay.direction + D3DXVECTOR3(0, 80, 0));
-
-
 			}
 			break;
-
 		case tutorialUINS::TUTORIAL_STEP::TUTORIAL_STEP_5:
 
 			// レイ
@@ -579,10 +541,6 @@ void Tutorial::update(float _frameTime)
 
 			if (!play[i])
 			{
-				//const D3DXVECTOR3 FIN_POS[2] = { D3DXVECTOR3(525, 25, 25),D3DXVECTOR3(-525, 25, 25) };
-				// 7.14
-				//distance = D3DXVec3Length(&(FIN_POS[i] - *player[i].getPosition()));
-
 				if (
 					(player[i].center.x < FIN_POS[i].x + 4.0f && player[i].center.x > FIN_POS[i].x - 4.0f)
 					&& (player[i].center.z < FIN_POS[i].z + 4.0f && player[i].center.z > FIN_POS[i].z - 4.0f)
@@ -722,21 +680,11 @@ void Tutorial::renderUI()
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-	//固定UIの描画
-	//fixedUI->getTimerFlame()->render();
-	//fixedUI->getTimer()->render();
-
 	//UI
 	if (tutorialTex.nextPage >= 2)
 	{
 		tutorialUI->render();
 	}
-
-	////プレイヤー1周りのUIの描画
-	//player1UI->render(gameMaster->getGameTime());
-
-	////プレイヤー2周りのUIの描画
-	//player2UI->render(gameMaster->getGameTime());
 
 	//レティクルの描画
 	reticle->render2D(&player[gameMasterNS::PLAYER_1P]);
@@ -776,6 +724,7 @@ void Tutorial::collisions()
 		for (int num = 0; num < player[i].getShootingNum(); num++)
 			tree8Reregister(player[i].getBullet(num));
 	}
+
 	//敵の登録
 	for (int i = 0; i < enemyManager->getEnemyList().size(); i++)
 	{
@@ -793,6 +742,7 @@ void Tutorial::collisions()
 			}
 		}
 	}
+
 	//木の登録
 	for (int i = 0; i < treeManager->getTreeList().size(); i++)
 	{
@@ -858,7 +808,6 @@ void Tutorial::collisions()
 
 	//ビジョン|スカイビジョン状態の時
 	//プレイヤー[シフトレイ]とデジタルツリー
-
 	//1P用シフトレイの衝突判定
 	for(int no = 0; no<gameMasterNS::PLAYER_NUM;no++)
 	{

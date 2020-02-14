@@ -269,11 +269,6 @@ bool CollisionManager::playerAndPlayer(Player* player1, Player* player2)
 //===================================================================================================================================
 bool CollisionManager::playerAndBullet(Player* player, Bullet* bullet)
 {
-	//bool hit = false;
-
-	//float distance = Base::between2VectorLength(player->position, bullet->position);
-	//float correct = player->radius + bullet->radius;
-
 	if(collisionSphere(player,bullet))
 	{
 		if (bullet->collide(player->getMesh(), player->matrixWorld))
@@ -340,7 +335,7 @@ bool CollisionManager::playerAndMapObject(Player* player, MapObject* mapObject)
 	D3DXMATRIX matrix;
 
 	// 接地
-	mesh = mapObject->box->mesh;	// BOXのメッシュなら乗る 本来のメッシュだとガタガタ
+	mesh = mapObject->box->mesh;	// TODO:BOXのメッシュなら乗る 本来のメッシュだとガタガタ
 	matrix = mapObject->matrixCenter;
 	if (player->grounding(mesh, matrix))
 	{
@@ -351,7 +346,7 @@ bool CollisionManager::playerAndMapObject(Player* player, MapObject* mapObject)
 	}
 
 	// めり込み補正
-	// あまりうまくいっていない
+	// TODO:あまりうまくいっていない
 	mesh = mapObject->getStaticMesh()->mesh;
 	matrix = mapObject->matrixWorld;
 	player->insetCorrection(objectNS::AXIS_X, player->size.x / 2, mesh, matrix);
@@ -360,7 +355,6 @@ bool CollisionManager::playerAndMapObject(Player* player, MapObject* mapObject)
 	player->insetCorrection(objectNS::AXIS_RZ, player->size.z / 2, mesh, matrix);
 	return true;
 }
-
 
 //===================================================================================================================================
 //【プレイヤー<-> エネミーバレット】
@@ -419,7 +413,6 @@ bool CollisionManager::bulletAndTree(Bullet* bullet, Tree* tree)
 	if (collisionCylinder(bullet, tree))
 	{
 		hit = true;
-		//hit = bullet->collide(tree->getMesh(), tree->matrixWorld);
 	}
 
 	if (hit)

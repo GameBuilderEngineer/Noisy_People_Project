@@ -87,24 +87,23 @@ private:
 	//操作
 	float						reverseValueXAxis;				//操作X軸
 	float						reverseValueYAxis;				//操作Y軸
-	bool							isExecutingMoveOperation;		// 移動操作中フラグ
-	bool							onFly;							// 飛ぶフラグ
-	bool							jumping;							// ジャンプ中フラグ
+	bool						isExecutingMoveOperation;		// 移動操作中フラグ
+	bool						onFly;							// 飛ぶフラグ
+	bool						jumping;						// ジャンプ中フラグ
 
 	// 衝突
-	BoundingSphere				bodyCollide;						// 球コリジョン
+	BoundingSphere				bodyCollide;					// 球コリジョン
 	float						difference;						//フィールド補正差分
 	bool						onGround;						//接地判定
 
 	// 汎用
-	LPDIRECT3DDEVICE9			device;						// Direct3Dデバイス
-	Input*						input;						// 入力系
-	Camera*						camera;						// 操作するカメラへのポインタ
+	LPDIRECT3DDEVICE9			device;							// Direct3Dデバイス
+	Input*						input;							// 入力系
+	Camera*						camera;							// 操作するカメラへのポインタ
 	D3DXVECTOR3					centralPosition;				// 中心座標
-	D3DXMATRIX					centralMatrixWorld;			// 中心座標ワールドマトリクス
+	D3DXMATRIX					centralMatrixWorld;				// 中心座標ワールドマトリクス
 
 	// その他
-
 	D3DXVECTOR3					PositionYeah;
 
 public:
@@ -124,22 +123,22 @@ public:
 	//操作
 	void moveOperation();											// 移動操作
 	void controlCamera(float frameTime);							// カメラ操作
-	bool grounding(LPD3DXMESH mesh, D3DXMATRIX matrix);				//接地処理
+	bool grounding(LPD3DXMESH mesh, D3DXMATRIX matrix);				// 接地処理
 
 	// アクション
 	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);//移動
 
 	// その他
-	virtual void outputGUI() override;							// ImGUI
-	void reset();												// リセット
-	void resetMesh(int meshId);									// メッシュのリセット
-	int	 staticMeshNo;				// メッシュのID
+	virtual void outputGUI() override;								// ImGUI
+	void reset();													// リセット
+	void resetMesh(int meshId);										// メッシュのリセット
+	int	 staticMeshNo;												// メッシュのID
 
 	//setter
-	void setCamera(Camera* _camera);							//操作対象カメラのセット
+	void setCamera(Camera* _camera);								//操作対象カメラのセット
 
 	//getter
 	int getState();
-	BoundingSphere* getBodyCollide();							//球コリジョンの取得
+	BoundingSphere* getBodyCollide();								//球コリジョンの取得
 	D3DXVECTOR3*	getPositionYeah() { return&PositionYeah; };
 };

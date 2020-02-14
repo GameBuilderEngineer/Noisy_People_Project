@@ -139,7 +139,6 @@ Reticle::Reticle()
 	//ƒŒƒeƒBƒNƒ‹3D
 	{using namespace Reticle3DNS;
 		billboard = new InstancingBillboard();
-		//billboard->initialize(*textureNS::reference(textureNS::UI_MAIN_RETICLE),NUM_U-1,NUM_V-1);
 		billboard->initialize(*textureNS::reference(textureNS::UI_MAIN_RETICLE));
 		billboard->generateInstance(new Reticle3D(D3DXVECTOR3(0, 0, 0), D3DXVECTOR2(UNIT_U * 0, UNIT_V * 0)));
 		billboard->setRenderType(InstancingBillboardNS::FOREGROUND_PASS|InstancingBillboardNS::FIXED_SIZE_PASS);

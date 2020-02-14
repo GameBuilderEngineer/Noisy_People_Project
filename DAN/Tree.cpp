@@ -42,10 +42,6 @@ Tree::Tree(treeNS::TreeData _treeData)
 	leaf.position = treeData.initialPosition;
 	leaf.onActive = false;//初期値は非アクティブ
 
-
-	// treeData.initialDirectionを基にした向き転換
-	//postureControl(axisZ.direction, treeData.initialDirection, 1.0f);
-
 	// treeData.sizeを基にした拡大縮小
 	switch (treeData.size)
 	{
@@ -71,10 +67,6 @@ Tree::Tree(treeNS::TreeData _treeData)
 
 	// 重力付与
 	this->onGravity = true;
-
-	//// スケール変更
-	//trunk.scale *= 0.4f;
-	//leaf.scale *= 0.4f;
 
 	//現在は緑化中でない
 	nowAroundGreening = false;
@@ -130,10 +122,6 @@ void Tree::update(float frameTime)
 	if (this->onGravity)
 	{
 		D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
-		//this->setGravity(gravityDirection, 9.8f);
-		//this->speed += this->acceleration * frameTime;
-		//this->position += this->speed * frameTime;
-		//grounding();うんこぶりぶりざえもんプップスープップスー
 	}
 
 	//状態別更新

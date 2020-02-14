@@ -69,16 +69,12 @@ Director::~Director() {
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
 	SAFE_DELETE(soundInterface);
-	SAFE_DELETE(textManager);
 	SAFE_DELETE(fader);
 	SAFE_DELETE(effekseerManager[0]);
 	SAFE_DELETE(effekseerManager[1]);
 	SAFE_DELETE(effekseerManager[2]);
 	SAFE_DELETE(gameMaster);
 	SAFE_DELETE(serialCommunication);
-	//SAFE_DELETE(animationLoader);
-	//thread_a->join();
-	//SAFE_DELETE(thread_a);
 	UninitMoveP();
 	UninitMoveP1();
 
@@ -91,6 +87,7 @@ Director::~Director() {
 //【初期化】
 //===================================================================================================================================
 HRESULT Director::initialize() {
+
 	//window
 	window = new Window;
 	if (!window)return E_FAIL;
@@ -107,7 +104,6 @@ HRESULT Director::initialize() {
 	MFAIL(d3d->initialize(wnd), "Direct3D初期化失敗");
 
 #ifdef _DEBUG
-	//thread_a = new std::thread(threadA);
 	SetForegroundWindow(wnd);
 	imgui = new ImguiManager(wnd);
 #endif // _DEBUG
@@ -136,7 +132,6 @@ HRESULT Director::initialize() {
 	input->initialize(instance, window->wnd, true);
 	window->setInput();
 
-	
 	//textureLoader
 	textureLoader = new TextureLoader;
 	textureLoader->load(getDevice());
@@ -147,20 +142,12 @@ HRESULT Director::initialize() {
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(getDevice());
 
-	//テキストデータ読込
-	textManager = new TextManager();
-	textManager->initialize();
-
 	//ゲーム管理クラス
 	gameMaster = new GameMaster();
 
 	InitMoveP(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), true);
 
-
-	//アニメーション読込クラス
-	//animationLoader = new AnimationLoader();
-	//animationLoader->initialize(d3d->device);
 	bool debugMode = false;
 #ifdef _DEBUG
 	if (MessageBox(0, "はい(Y):Debugモード\nいいえ(N):次へ", "デバッグシーンへ遷移しますか？", MB_YESNO | MB_TOPMOST) == IDYES)
@@ -204,6 +191,7 @@ HRESULT Director::initialize() {
 		}
 	}
 
+	//ゲームマスターのポインタの設定
 	scene->setGameMaster(gameMaster);
 	scene->initialize();
 
@@ -226,33 +214,35 @@ HRESULT Director::initialize() {
 		i--;
 	}
 #endif
-	////メモリ解放テスト
-	////削除（これは今シーン扱いたいから書いたもの）
-	//scene->uninitialize();
-	//SAFE_DELETE(scene);
+#if 0
+	//メモリ解放テスト
+	//削除（これは今シーン扱いたいから書いたもの）
+	scene->uninitialize();
+	SAFE_DELETE(scene);
 
-	//int i = 100000;					//この回数繰り返す
-	//while (i >= 0)					//0回になったら終了
-	//{
-	//	scene = new Splash();		//新たにシーン作成
-	//	
-	//	//ここから↓
+	int i = 100000;					//この回数繰り返す
+	while (i >= 0)					//0回になったら終了
+	{
+		scene = new Splash();		//新たにシーン作成
+		
+		//ここから↓
 
-	//	scene->initialize();		//初期化
+		scene->initialize();		//初期化
 
-	//	scene->update(1.0/60.0);	//更新
+		scene->update(1.0/60.0);	//更新
 
-	//	scene->uninitialize();		//終了
+		scene->uninitialize();		//終了
 
-	//	//ここまでに一連の処理を書いて実験する
-	//
-	//	SAFE_DELETE(scene);			//削除
-	//	i--;//カウント減
-	//}
+		//ここまでに一連の処理を書いて実験する
+	
+		SAFE_DELETE(scene);			//削除
+		i--;//カウント減
+	}
 
-	////新規作成（これは今シーン扱いたいから書いたもの）
-	//scene = new Splash();
-	//scene->initialize();
+	//新規作成（これは今シーン扱いたいから書いたもの）
+	scene = new Splash();
+	scene->initialize();
+#endif
 #pragma endregion
 
 	// 高分解能タイマーの準備を試みる
@@ -268,7 +258,6 @@ HRESULT Director::initialize() {
 
 	return S_OK;
 }
-
 
 //===================================================================================================================================
 //【基本処理】
@@ -354,14 +343,6 @@ void Director::mainLoop() {
 //===================================================================================================================================
 void Director::update() {
 	input->update(window->windowActivate);
-	//フルスクリーン切替
-	//if (input->isKeyDown(VK_LMENU) && input->wasKeyPressed(VK_RETURN))
-	//{
-	//	bool fullScreen = !d3d->fullScreen;
-	//	imgui->reset();
-	//	d3d->changeDisplayMode(fullScreen);
-	//	window->changeDisplayMode(fullScreen);
-	//}
 #ifdef _DEBUG
 	memory->update();
 	imgui->beginFrame();
@@ -411,8 +392,7 @@ void Director::update() {
 		}
 	}
 #endif // _DEBUG
-
-
+	
 	effekseerManager[0]->update();
 	effekseerManager[1]->update();
 	effekseerManager[2]->update();
@@ -440,7 +420,6 @@ void Director::update() {
 		fader->outputGUI();
 		imgui->endImGui();
 	}
-
 #endif // _DEBUG
 }
 
@@ -638,9 +617,3 @@ void Director::changeNextScene() {
 	currentSceneName = scene->getSceneName();		//現在シーン名の取得
 }
 
-//void threadA()
-//{
-//	while (roop)
-//	{
-//	}
-//}

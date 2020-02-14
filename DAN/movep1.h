@@ -40,7 +40,7 @@ typedef struct
 	D3DXVECTOR3			Pos;				// 座標
 	D3DXVECTOR3			Scl;				// 大きさ(スケール)
 	D3DXVECTOR3			Rot;				// 回転
-	D3DXQUATERNION		Quaternion;				// 回転
+	D3DXQUATERNION		Quaternion;			// 回転
 	D3DXANIMATION		*Animation;			// アニメーション
 	float				ActionSpeed;		// 全体アクションの速度
 	float				fTimeDelta = 0.0f;

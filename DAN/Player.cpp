@@ -118,8 +118,6 @@ void Player::initialize(PlayerTable info)
 	
 
 	//再生パラメータの作成
-	//memset(playParameters, 0, sizeof(playParameters));
-	//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 	shiftStartSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_ShiftStart, false ,NULL,true,infomation.playerType };
 	shiftFinishSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_ShiftFinish, false ,NULL,true,infomation.playerType };
 	visionSE = { ENDPOINT_VOICE_LIST::ENDPOINT_S3D, S3D_LIST::S3D_Vision, false ,NULL,true,infomation.playerType };
@@ -714,7 +712,6 @@ void Player::respawn()
 	//reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
 	//Object::update();
 }
-
 #pragma endregion
 
 //[アクション]
@@ -841,9 +838,6 @@ bool Player::digitalShift()
 	//カメラ遷移を開始
 	startTransitionCamera(SKY_TRANSITION_TIME, cameraGaze, nextGaze);
 
-	//デジタルシフトの開始エフェクトを再生
-	//digitalShiftEffect->play(DigitalShiftEffectNS::START_SHIFT, center);
-
 	//ボイス再生
 	SoundInterface::S3D->playSound(&voiceShift[rand() % NUM_SHIFT_VOICE]);
 
@@ -872,12 +866,7 @@ bool Player::collideShiftRay(Cylinder target)
 			volumeRayFromCamera.centerLine.start,
 			volumeRayFromCamera.centerLine.end,
 			target.centerLine.start);
-	//カメラの始点と同一であれば、終点と最も近い点から算出する
-	//カメラの始点と同一であれば、失敗
-	//if (volumeRayFromCamera.centerLine.start == nearest)
-	//{
-	//	return false;
-	//}
+
 	//カメラからのレイ上での距離
 	float distanceOnRay = Base::between2VectorLength(nearest, cameraGaze);
 	
@@ -1039,9 +1028,6 @@ bool Player::executionDigitalShift()
 	//センターも同時に更新
 	center = position + D3DXVECTOR3(0.0f, size.y / 2, 0.0f);
 
-	//デジタルシフトの終了エフェクトを再生
-	//digitalShiftEffect->play(DigitalShiftEffectNS::END_SHIFT, center);
-
 	return true;
 }
 
@@ -1050,8 +1036,6 @@ bool Player::executionDigitalShift()
 //===================================================================================================================================
 bool Player::executionSkyVision()
 {
-
-
 	return true;
 }
 
@@ -1060,8 +1044,6 @@ bool Player::executionSkyVision()
 //===================================================================================================================================
 bool Player::executionVision()
 {
-
-
 	return true;
 }
 
@@ -1279,7 +1261,6 @@ void Player::outputGUI()
 		ImGui::Checkbox("onGravity", &onGravity);										//重力有効化フラグ
 		ImGui::Checkbox("onActive", &onActive);											//アクティブ化フラグ
 	
-		//ImGui::Text("digitalPower = %f", bulletManager->digital )
 	}
 #endif // _DEBUG
 }

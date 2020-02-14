@@ -79,8 +79,6 @@ void DigitalShiftEffect::updateSelectLight(D3DXVECTOR3 position)
 {
 	if (selectLight == NULL)return;
 
-	//effekseerNS
-
 }
 
 //===================================================================================================================================

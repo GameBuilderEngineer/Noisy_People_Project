@@ -14,13 +14,10 @@
 #include "Sound.h"
 #include "SoundBase.h"
 #include "UtilityFunction.h"
-//#include "SceneEffect.h"
 #include "TitleUI.h"
-
 #include "Object.h"
 #include "StaticMeshRenderer.h"
 #include "TreeManager.h"
-
 #include "WaveBall.h"
 #include "Sky.h"
 #include "Ocean.h"
@@ -62,7 +59,6 @@ namespace titleNS
 		TITLE_STATE_MAX,
 	};
 	const float TITLE_CAMERA_SPEED = 1.0f;
-	//const D3DXVECTOR3 firstEndPoint()
 
 	//プレイヤー初期位置
 	const D3DXVECTOR3 PLAYER_POSITION = D3DXVECTOR3(0, 100, 0);
@@ -81,48 +77,19 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
-	//WaveBall *waveBall;
+
 	//フィールド
 	Object*					titleField;
 	StaticMeshRenderer*		titleFieldRenderer;	
+
 	//スカイドーム
 	Sky* sky;
 	Ocean*		ocean;				//海面
 
-	//ターゲットオブジェクト
-	Object* target;
-	TitleUI titleUI;					//タイトルUI
-
-	TreeManager* treeManager;
-	int selectStateMemory;
-
-	int titleState;
-
-	int stateCamera;						//カメラステータス
-	float frameDegree = 1.0f / 10.0f;		//自動速度
-	float inputDegree = 2.0f;				//入力速度
-	
-	float moveTime;				//終点までの時間
-	float moveTimer;			//移動タイマー
-	D3DXVECTOR3 startPos;		//ラープ始点
-
-	
-	float rate;
-	float rateY;
-	float rateX;
-	float degreeY;
-	float degreeX;
-	float degreeTimer;
-	float degreeTime;
-	float distance;
-	float moveDistance;
-	//D3DXVECTOR3 P0_1;
-	//D3DXVECTOR3 P1_2;
-
 	//ネットワーク
 	NETWORK_CLIENT* networkClient;
 
-	//カメラの軸取得変数
+	//カメラの変数
 	D3DXVECTOR3 cameraAxisX;			//カメラ回転軸X
 	D3DXVECTOR3 cameraAxisY;			//カメラ回転軸Y
 	D3DXVECTOR3 cameraAxisZ;			//カメラ回転軸Z
@@ -134,6 +101,26 @@ private:
 	D3DXVECTOR3 targetDistance;
 	D3DXVECTOR3 newRelative;
 	bool measurement = true;
+	Object* target;						//ターゲットオブジェクト
+	TitleUI titleUI;					//タイトルUI
+	TreeManager* treeManager;
+	int selectStateMemory;
+	int titleState;
+	int stateCamera;					//カメラステータス
+	float frameDegree = 1.0f / 10.0f;	//自動速度
+	float inputDegree = 2.0f;			//入力速度
+	float moveTime;						//終点までの時間
+	float moveTimer;					//移動タイマー
+	D3DXVECTOR3 startPos;				//ラープ始点
+	float rate;
+	float rateY;
+	float rateX;
+	float degreeY;
+	float degreeX;
+	float degreeTimer;
+	float degreeTime;
+	float distance;
+	float moveDistance;
 
 public:
 	Title(void);

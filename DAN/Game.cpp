@@ -6,7 +6,8 @@
 //===================================================================================================================================
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// ※対応後に決してください（by 中込）
+// TODO:2020/02/10：未実装
+// ※対応後に消してください（by 中込）
 // プレイヤーの初期位置は、プレイヤー間で重複なくランダムに4か所から選定されます。
 // ①南の平野(-43, 8, -236), ②西の岬(-265, 54, 26), ③北の平野(142, 13, 246), ④東の狭い所(311, 13, -65)
 // 伊達山方向を正面に、各y座標より10m上にスポーンします。リスポーンのためにその回の初期位置を記録しておく
@@ -24,8 +25,12 @@
 //===================================================================================================================================
 using namespace gameNS;
 
+//===================================================================================================================================
+//【グローバル変数】
+//===================================================================================================================================
 bool FirstInit = true;
 bool reticleFlag = false;
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -34,6 +39,7 @@ Game::Game()
 	//線形４分木空間分割管理クラス
 	//linear4TreeManager = new Linear4TreeManager<Object>;
 	//linear4TreeManager->initialize(5, -1000, 1000, 1000, -1000);	
+
 	//線形８分木空間分割管理クラス
 	linear8TreeManager = new Linear8TreeManager<Object>;
 	linear8TreeManager->initialize(5, D3DXVECTOR3(-3000, -2000, -3000), D3DXVECTOR3(3000, 3000, 3000));
@@ -64,7 +70,6 @@ Game::~Game()
 	SoundInterface::S3D->uninitSoundStop();
 }
 
-//#define SAMPLE_NAVI	// ビルドスイッチ　このdefine周辺は近々で消しますが一旦残しておいてもらえると助かります中込
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
@@ -72,27 +77,21 @@ void Game::initialize() {
 
 	//衝突判定フィールド
 	testField = new Object();
-#ifdef SAMPLE_NAVI
-	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
-	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::NAV_TEST1));
-#else
-	//testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
 	testFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
-#endif
 	testFieldRenderer->registerObject(testField);
 	testField->initialize(&D3DXVECTOR3(0, 0, 0));
+
 	// 装飾フィールド
 	faceField = new Object();
 	faceFieldRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_FACE));
 	faceFieldRenderer->registerObject(faceField);
 	faceField->initialize(&D3DXVECTOR3(0, 0, 0));
+
 	// 遠景
 	distantView = new Object();
 	viewRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::DISTANT_VIEW));
 	viewRenderer->registerObject(distantView);
 	distantView->initialize(&D3DXVECTOR3(0, 0, 0));
-	//distantView->scale *= 10.0f;
-
 
 	//player
 	player				= new Player[gameMasterNS::PLAYER_NUM];
@@ -102,44 +101,27 @@ void Game::initialize() {
 	target->initialize(&D3DXVECTOR3(247.0f, 38.0f, 181.0f));		//ターゲットの初期位置設定
 
 	//オープニングカメラ
-	stateCamera = CAMERA0;		//初期フォトグラフ
-
 	cameraOP = new Camera;
 	//カメラの設定
 	cameraOP->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	cameraOP->setRelative(D3DXQUATERNION(0.0f, 0.0f, 1.0f, 0.0f));
 	cameraOP->setTarget(&target->position);
 	cameraOP->setGazeDistance(20.0f);
-	//cameraOP->setGaze(D3DXVECTOR3(0, 0, 0));
 	cameraOP->setUpVector(D3DXVECTOR3(0, 1, 0));
 	cameraOP->setFieldOfView((D3DX_PI) / 18 * 10);
 	cameraOP->setViewProjection();
 	cameraOP->setLimitRotationTop(0.1f);
 	cameraOP->setLimitRotationBottom(0.1f);
 	cameraOP->updateOrtho();
-	
 	//カメラ操作変数
+	stateCamera = CAMERA0;		//初期フォトグラフ
 	cameraAxisZ = D3DXVECTOR3(0, 0, 0);
 	fixedAxisZ = D3DXVECTOR3(0, 0, 0);
 	cameraAxisX = D3DXVECTOR3(0, 0, 0);
 	cameraAxisY = D3DXVECTOR3(0, 0, 0);
 	fixedAxisX = D3DXVECTOR3(0, 0, 0);
 
-	//オープニングカメラ
-	cameraBoss = new Camera;
-	//カメラの設定
-	cameraBoss->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	cameraBoss->setTarget(&testField->position);
-	cameraBoss->setRelative(D3DXVECTOR3(1.5f,3.0f,-3.0f));
-	cameraBoss->setGazeDistance(500.0f);
-	cameraBoss->setGaze(D3DXVECTOR3(0, 0, 0));
-	cameraBoss->setUpVector(D3DXVECTOR3(0, 1, 0));
-	cameraBoss->setFieldOfView((D3DX_PI / 180) * 90);
-	cameraBoss->setLimitRotationTop(0.1f);
-	cameraBoss->setLimitRotationBottom(0.1f);
-	cameraBoss->updateOrtho();
-
-
+	//プレイヤーカメラ
 	//camera
 	camera = new Camera[gameMasterNS::PLAYER_NUM];
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
@@ -157,7 +139,6 @@ void Game::initialize() {
 		camera[i].setFieldOfView( (D3DX_PI/180) * 90);
 		camera[i].setLimitRotationTop(0.1f);
 		camera[i].setLimitRotationBottom(0.3f);
-		camera[i].updateOrtho();
 		
 		//プレイヤーの設定
 		PlayerTable infomation;
@@ -174,6 +155,7 @@ void Game::initialize() {
 			player[i].initialize(infomation);
 			break;
 		}
+
 		//カメラポインタのセット
 		player[i].setCamera(&camera[i]);
 
@@ -201,6 +183,7 @@ void Game::initialize() {
 
 	//スカイドームの初期化
 	sky = new Sky();
+
 	//海面の初期化
 	ocean = new Ocean();
 
@@ -209,14 +192,11 @@ void Game::initialize() {
 	InitMoveP1(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.003f, 0.003f, 0.003f), FirstInit);
 
 	FirstInit = false;
-	//InitEquipment(TRUE);
 
 	// ナビゲーションAI（ナビゲーションAIはエネミー関係クラスより先に初期化する）
 #ifdef SAMPLE_NAVI
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::SAMPLE_NAVMESH));
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::NAV_TEST1));
 #else
-	//naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL_NAVIMESH));
 	naviMesh = new NavigationMesh(staticMeshNS::reference(staticMeshNS::DATE_ISLAND_FINAL));
 #endif
 	naviMesh->initialize();
@@ -272,10 +252,6 @@ void Game::initialize() {
 	reticle = new Reticle();
 	reticle->setAimingPosition1(player[gameMasterNS::PLAYER_1P].getAiming());
 	reticle->setAimingPosition2(player[gameMasterNS::PLAYER_2P].getAiming());
-
-	//Sprite実験
-	spriteGauge = new SpriteGauge;
-	spriteGauge->initialize();
 
 	//Network
 	networkClient = new NETWORK_CLIENT;
@@ -344,7 +320,6 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(player);
 	SAFE_DELETE_ARRAY(camera);
 	SAFE_DELETE(cameraOP);
-	SAFE_DELETE(cameraBoss);
 	SAFE_DELETE(light);
 	SAFE_DELETE(testField);
 	SAFE_DELETE(testFieldRenderer);
@@ -359,7 +334,6 @@ void Game::uninitialize() {
 	SAFE_DELETE(mapObjectManager);
 	SAFE_DELETE(telopManager);
 	SAFE_DELETE(aiDirector);
-	SAFE_DELETE(spriteGauge);
 	SAFE_DELETE(reticle);
 	SAFE_DELETE(fixedUI);
 	SAFE_DELETE(player1UI);
@@ -367,12 +341,11 @@ void Game::uninitialize() {
 	SAFE_DELETE(countUI);
 	SAFE_DELETE(networkClient);
 	SAFE_DELETE(announcement);
-	SAFE_DELETE(target); 	//ターゲットオブジェクト
+	SAFE_DELETE(target);
 	SAFE_DELETE(damageUI);
 	SAFE_DELETE(markerRenderer);
 	SAFE_DELETE(distantView);
 	SAFE_DELETE(viewRenderer);
-
 }
 
 //===================================================================================================================================
@@ -565,6 +538,7 @@ void Game::update(float _frameTime) {
 		gameMaster->wasStartVoicePlayed[gameMasterNS::PLAYER_2P] = true;
 	}
 
+	//OPカメラの変数更新
 	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
 	cameraAxisZ = cameraOP->getAxisZ();
 	fixedAxisZ = Base::slip(cameraAxisZ, cameraOP->upVector);	//カメラの傾きに対応
@@ -576,7 +550,7 @@ void Game::update(float _frameTime) {
 	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
 
-	
+	//OPカメラの状態別更新
 	switch (stateCamera)
 	{
 	case CAMERA0:
@@ -588,7 +562,6 @@ void Game::update(float _frameTime) {
 			degreeTime = 2.5f;
 			degreeTimer = degreeTime;
 			stateCamera++;
-			
 			cameraOP->rotation(D3DXVECTOR3(0, 1, 0), 90.0f);
 			cameraOP->rotation(fixedAxisX, -55.0f);
 			//カメラの相対位置を一時保存
@@ -596,23 +569,15 @@ void Game::update(float _frameTime) {
 		}
 		break;
 	case CAMERA1:
-		
 		moveTimer -= frameTime;
 		rate = moveTimer / moveTime;
-		
 		degreeTimer -= frameTime;
 		rateX = degreeTimer / degreeTime;
-
 		degreeX = UtilityFunction::lerp(0, 30, 1.0f - rateX);
 		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(247.0f, 122.0f, 181.0f), 1.0f - rate);
-		
 		cameraOP->relativeQuaternion = tmpCameraQ;
-		if (degreeTimer > 0)
-		{
-			//前のカメラの相対位置に補正する
-			cameraOP->rotation(fixedAxisX, degreeX);
-		}
-
+		//前のカメラの相対位置に補正する
+		if (degreeTimer > 0)cameraOP->rotation(fixedAxisX, degreeX);
 		if (moveTimer <= 0)
 		{
 			target->position = D3DXVECTOR3(105.0f, 73.0f, -250.0);
@@ -622,7 +587,6 @@ void Game::update(float _frameTime) {
 			degreeTime = 2.5f;
 			degreeTimer = degreeTime;
 			stateCamera++;
-			//stateCamera++;
 			//カメラの相対位置を一時保存
 			cameraOP->rotation(D3DXVECTOR3(0, 1, 0), 90.0f);
 			cameraOP->rotation(fixedAxisX, -30.0f);
@@ -630,22 +594,18 @@ void Game::update(float _frameTime) {
 		}	
 		break;
 	case CAMERA2:
-	
 		moveTimer -= frameTime;
 		degreeTimer -= frameTime;
 		rate = moveTimer / moveTime;
 		rateY = degreeTimer / degreeTime;
-
 		D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-64.0f, 73.0f, -232.0f), 1.0f - rate);
 		degreeY = UtilityFunction::lerp(0, 20.0f, 1.0f - rateY);
-		//target->position = Title::BezierCurve(startPos, D3DXVECTOR3(-250.0f, 63.0f, -200.0), D3DXVECTOR3(-185.0f, 40.0f, 80.0f), rate);
 		if (degreeTimer > 0)
 		{
 			//前のカメラの相対位置に補正する
 			cameraOP->relativeQuaternion = tmpCameraQ;
 			cameraOP->rotation(D3DXVECTOR3(0, 1, 0), degreeY);
 		}
-
 		if (moveTimer <= 0)
 		{
 			target->position = D3DXVECTOR3(-18.0f, 167.0f, 27.0f);
@@ -655,10 +615,8 @@ void Game::update(float _frameTime) {
 			degreeTimer = 5.0f;
 			degreeTime = degreeTimer;
 			cameraOP->setGazeDistance(100.0f);
-			//stateCamera = CAMERA9;
 			stateCamera++;
 			//次ステート用に角度調整
-			//cameraOP->rotation(D3DXVECTOR3(0, 1, 0), 180.0f);
 			cameraOP->rotation(fixedAxisX, 35.0f);
 			//カメラの相対位置を一時保存
 			tmpCameraQ = cameraOP->relativeQuaternion;
@@ -666,23 +624,11 @@ void Game::update(float _frameTime) {
 		break;
 	case CAMERA3:
 		moveTimer -= frameTime;
-		//degreeTimer -= frameTime;
-		//rate = moveTimer / moveTime;
 		cameraOP->rotation(D3DXVECTOR3(0, 1, 0), -frameDegree);
-		
-		if (moveTimer <= 0)
-		{
-			stateCamera++;
-		}
-
+		if (moveTimer <= 0)	stateCamera++;
 		break;
-
-	case CAMERA4:
-		
-		break;
-
-	default:
-		break;
+	case CAMERA4:break;
+	default:break;
 	}
 	
 	//テストフィールドの更新
@@ -709,16 +655,13 @@ void Game::update(float _frameTime) {
 		if (player[i].getHp() <= 0)
 		{
 			player[i].enableOperation(playerNS::DISABLE_OPERATION);
-
 			if (player1UI->hpGuage->widthSize <= 0 && i == playerNS::PLAYER1)
 			{
-
-				// リンポーンとペナルティ処理
+				// リスポーンとペナルティ処理
 				player[i].enableOperation(playerNS::ALL_OPERATION);
 				player[i].reset();
 				player[i].setHp(playerNS::MAX_HP);
 				player[i].setPower(playerNS::COST_SHIFT * 1.5f);
-
 				player1UI->hpGuage->widthSize = hpGuageNS::WIDTH_HP_GUAGE;
 				player1UI->hpGuage->hpGuage->setSize(hpGuageNS::WIDTH_HP_GUAGE, hpGuageNS::HEIGHT_HP_GUAGE);
 				player1UI->hpGuage->hpGuage->setVertex();
@@ -726,16 +669,12 @@ void Game::update(float _frameTime) {
 			}
 			else if((player2UI->hpGuage->widthSize <= 0 && i == playerNS::PLAYER2))
 			{
-				// リンポーンとペナルティ処理
+				// リスポーンとペナルティ処理
 				player[i].enableOperation(playerNS::ALL_OPERATION);
 				player[i].reset();
 				player[i].setHp(playerNS::MAX_HP);
 				player[i].setPower(playerNS::COST_SHIFT * 1.5f);
-
 				player2UI->hpGuage->initialize();
-				//player2UI->hpGuage->widthSize = 0;
-				//player2UI->hpGuage->hpGuage->setSize(0, hpGuageNS::HEIGHT_HP_GUAGE);
-				//player2UI->hpGuage->hpGuage->setVertex();
 				player2UI->electGuage->widthSize = electGuageNS::WIDTH_EN_GUAGE * (playerNS::COST_SHIFT * 1.5f / playerNS::MAX_POWER);
 			}
 		}
@@ -770,8 +709,8 @@ void Game::update(float _frameTime) {
 	// マップオブジェクトの更新
 	mapObjectManager->update(frameTime);
 
+	//(1P)アニメーションモデルとプレイヤーの場所と回転の連携
 	UpdateMoveP(frameTime);
-	//キャラクターの場所と回転の連携
 	MOVEP *mp = GetMovePAdr();
 	mp->Pos = player[gameMasterNS::PLAYER_1P].position;
 	D3DXQUATERNION q = player[gameMasterNS::PLAYER_1P].quaternion;
@@ -781,8 +720,8 @@ void Game::update(float _frameTime) {
 		mp->Quaternion = q;
 	}
 	
+	//(2P)アニメーションモデルとプレイヤーの場所と回転の連携
 	UpdateMoveP1(frameTime);
-	//キャラクターの場所と回転の連携
 	MOVEP1 *mp1 = GetMoveP1Adr();
 	mp1->Pos = player[gameMasterNS::PLAYER_2P].position;
 	D3DXQUATERNION q1 = player[gameMasterNS::PLAYER_2P].quaternion;
@@ -791,12 +730,6 @@ void Game::update(float _frameTime) {
 	{
 		mp1->Quaternion = q1;
 	}
-	//UpdateEquipment();
-	//SWORD *Gun = GetSword("MoveP1");
-	//D3DXQUATERNION q2 = player[gameMasterNS::PLAYER_1P].quaternion;
-	//Base::anyAxisRotation(&q2, D3DXVECTOR3(0, 1, 0), 270);
-	//Gun->Quaternion = q2;
-
 
 	//エフェクシアーのテスト
 #pragma region EffekseerTest
@@ -875,6 +808,7 @@ void Game::update(float _frameTime) {
 
 	//スカイドームの更新
 	sky->update();
+
 	//海面の更新
 	ocean->update();
 	
@@ -889,9 +823,6 @@ void Game::update(float _frameTime) {
 	{
 		cameraOP->update();
 	}
-
-	//ボスカメラの更新
-	//cameraBoss->update();
 
 	//固定UIの更新
 	fixedUI->update(gameMaster->getGameTime());
@@ -955,11 +886,11 @@ void Game::update(float _frameTime) {
 	networkClient->send(gameMaster->getGameTime());
 
 	//フェーダーテスト
-	if (input->wasKeyPressed('P'))
-	{
+	//if (input->wasKeyPressed('P'))
+	//{
 		//getFader()->setShader(faderNS::NORMAL);
 		//getFader()->start();
-	}
+	//}
 
 	//リザルトへ強制遷移
 	//後でプレゼンテーションフラグ判定を追加
@@ -994,8 +925,6 @@ void Game::render()
 		renderUI();
 		return;
 	}
-	//ボスカメラ
-	//cameraBoss->renderReady();
 
 	//1Pカメラ・ウィンドウ・エフェクシアーマネージャー
 	nowRenderingWindow = gameMasterNS::PLAYER_1P;
@@ -1059,9 +988,6 @@ void Game::render3D(Camera* currentCamera) {
 	}
 	faceFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
-	//遠景の描画
-	//viewRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
-
 	// プレイヤーの他のオブジェクトの描画
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 		player[i].otherRender(currentCamera->view, currentCamera->projection, currentCamera->position);
@@ -1069,10 +995,10 @@ void Game::render3D(Camera* currentCamera) {
 	//アニメーションモデルの描画
 	DrawMoveP();
 	DrawMoveP1();
-	//DrawEquipment();
 
 	//海面の描画
 	ocean->render(currentCamera->view, currentCamera->projection, currentCamera->position);
+
 	// エネミーの描画
 	enemyManager->render(currentCamera->view, currentCamera->projection, currentCamera->position);
 
@@ -1148,18 +1074,9 @@ void Game::renderUI()
 		return;
 	}
 
-
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
-
-	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
-
-	//Sprite実験
-	//spriteGauge->render();
-	//telop->render();
 
 	// テロップマネージャーの描画
 	telopManager->render();
@@ -1302,7 +1219,6 @@ void Game::collisions()
 	// 風との当たり判定
 	windManager->windCollision(player);
 
-
 	//カメラとフィールド
 	for (int i = 0; i < gameMasterNS::PLAYER_NUM; i++)
 	{
@@ -1338,7 +1254,6 @@ void Game::collisions()
 		player[i].disableOperation(playerNS::ENABLE_SHIFT);
 		//選択ライトのOFF
 		player[i].shownSelectLight(false);
-
 
 		//選択されたデジタルツリー
 		Tree* selectTree = NULL;
@@ -1400,27 +1315,8 @@ void Game::collisions()
 		}
 	}
 
-
-
 	// プレイヤーとアイテム
 	std::vector<Item*> itemList = itemManager->getItemList();
-	//for (size_t i = 0; i < itemList.size(); i++)
-	//{	
-	//	for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
-	//	{
-	//		if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
-	//			player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
-	//		{
-	//			player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
-	//			//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
-	//			PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL};
-	//			SoundInterface::SE->playSound(&playParameters);	//SE再生
-	//			//itemManager->destroyAllItem();					//デリート(今は全消し)
-	//			itemManager->destroyItem(itemList[i]->getItemData()->itemID);					//デリート(今は全消し)
-	//		}
-	//	}
-	//}
-
 	for (size_t i = 0; i < itemList.size(); i++)
 	{
 		for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
@@ -1433,16 +1329,12 @@ void Game::collisions()
 					player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
 				{
 					player[j].addpower(batteryNS::RECOVERY_POWER);	//電力加算
-					//FILTER_PARAMETERS filterParameters = { XAUDIO2_FILTER_TYPE::LowPassFilter, 0.25f, 1.5f };
 					PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
 					SoundInterface::SE->playSound(&playParameters);	//SE再生
-					//itemManager->destroyAllItem();					//デリート(今は全消し)
 					itemManager->destroyItem(itemList[i]->getItemData()->itemID);					//デリート(今は全消し)
 				}
 				break;
-			case EXAMPLE:
-				
-				break;
+			case EXAMPLE:break;
 			case POWER_UP:
 				if (itemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
 					player[j].getRadius(), *itemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
@@ -1453,35 +1345,12 @@ void Game::collisions()
 					// エフェクト再生 うまくいかん！うんちっち
 					((Powerup*)itemList[i])->powUpEffect = new PowUpEffect(&player[j].position);
 					effekseerNS::play(0, ((Powerup*)itemList[i])->powUpEffect);
-
 					itemManager->destroyItem(itemList[i]->getItemData()->itemID);
 				}
 				break;
 			}
-			
 		}
 	}
-	/*if (itemList[i]->getItemData()->itemID == _itemID)
-	{
-	}*/
-
-	////パワーアップ
-	//std::vector<Item*> powerupItemList = itemManager->getItemList();
-	//for (size_t i = 0; i < powerupItemList.size(); i++)
-	//{
-	//	for (int j = 0; j < gameMasterNS::PLAYER_NUM; j++)
-	//	{
-	//		if (powerupItemList[i]->sphereCollider.collide(player[j].getBodyCollide()->getCenter(),
-	//			player[j].getRadius(), *powerupItemList[i]->getMatrixWorld(), *player[j].getMatrixWorld()))
-	//		{
-	//			player[j].powerup(2.0f);//パワーアップ
-	//			PLAY_PARAMETERS playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_SE, SE_LIST::SE_Getlem, false ,NULL,false,NULL };
-	//			SoundInterface::SE->playSound(&playParameters);	//SE再生
-	//			itemManager->destroyItem(powerupItemList[i]->getItemData()->itemID);
-	//		}
-	//	}
-	//}
-
 }
 
 //===================================================================================================================================
@@ -1504,7 +1373,6 @@ void Game::createGUI()
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("count = %d", count);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	ImGui::Text("collisionNum:%d", collisionNum);
 	if (ImGui::CollapsingHeader("CollisionList"))
 	{
@@ -1541,16 +1409,12 @@ void Game::test()
 	{
 		itemNS::ItemData power = { itemManager->issueNewItemID(),itemNS::POWER_UP, *player->getPosition() };
 		itemManager->createItem(power);
-		//itemNS::ItemData unko = { itemManager->issueNewItemID(), itemNS::BATTERY, *player->getPosition() };
-		//itemManager->createItem(unko);
 	}
 	if (input->wasKeyPressed('M'))
 	{
 		itemNS::ItemData power = { itemManager->issueNewItemID(),itemNS::POWER_UP, *player->getPosition() };
 		itemManager->createItem(power);
 	}
-	// 3Dモデル表示確認用（アイテムの更新）
-
 
 	if (input->wasKeyPressed('9'))
 	{
@@ -1570,19 +1434,18 @@ void Game::test()
 	//	mapObjectManager->createMapObject(mapObjectData);
 	//}
 
-
 	//if (input->wasKeyPressed('6'))
 	//{
 	//	aiDirector->eventMaker.makeEventSpawningEnemyAroundPlayer(0);
 
 	//	//aiDirector->eventMaker.makeEventEnemyAttaksTree();
 	//}
+
 	if (input->wasKeyPressed('Z'))
 	{
 		//player->position = D3DXVECTOR3(20, 5, 0);
 		//((Powerup*)itemList[i])->powUpEffect = 
 		effekseerNS::play(0, new PowUpEffect(&player[0].position));
-
 	}
 
 	// ツリーマネージャのテスト
@@ -1598,6 +1461,7 @@ void Game::test()
 		treeData.initialPosition = *player->getPosition();
 		treeManager->createTree(treeData);
 	}
+
 	if (input->wasKeyPressed('3'))	// 全破棄
 	{
 		treeManager->destroyAllTree();

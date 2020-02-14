@@ -245,7 +245,8 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 	for (int i = 0; i < objectList->nodeNum; i++)
 	{	
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		//ここで止まるバグあり(2019/11/24)
+		//TODO:ここで止まるバグあり(2019/11/24)
+		//最後まで一番良い手法見つからず。でもバグ出てない(2020/02/07)
 		//記：菅野
 		//おそらくバレットのサイクルに問題あり(←11/25書き換えたので問題なさそう？)
 		//他のクラスなどでここで停止するバグがあった場合は菅野へ報告してください。
@@ -270,19 +271,9 @@ void StaticMeshRenderer::unRegisterObjectByID(int id)
 //===================================================================================================================================
 void StaticMeshRenderer::unRegisterObject(int i)
 {
-	//if (*objectList->getValue(i)) 
-	//{
-	//有効値ならタイマーチェック後解除処理
 	if ((*objectList->getValue(i))->existenceTimer > 0)return;	//タイマーチェック
 	objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
 	didUnRegister = true;
-	//}
-	//else
-	//{
-	//	//有効値でなければ自動的に解除
-	//	objectList->remove(objectList->getNode(i));					//リスト内のオブジェクトポインタを削除
-	//	didUnRegister = true;
-	//}
 }
 
 //===================================================================================================================================

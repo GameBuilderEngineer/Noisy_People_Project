@@ -307,7 +307,6 @@ void EffekseerManager::end()
 //===================================================================================================================================
 void EffekseerManager::render()
 {
-	//manager->CalcCulling(renderer->GetCameraProjectionMatrix(), false);//ƒJƒŠƒ“ƒO‚ÌŒvŽZ
 	begin();
 	manager->Draw();
 	end();

@@ -24,9 +24,7 @@ HRESULT InitEquipment(bool FirstInit)
 	// 位置・回転・スケールの初期設定
 	PlayerSword.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	PlayerSword.Rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//PlayerSword.Rot = D3DXVECTOR3(0.0f, 0.0f, D3DXToRadian(90.0f));
 	PlayerSword.Scale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
-
 
 	// 初めて初期化
 	if (FirstInit == true)
@@ -105,8 +103,6 @@ void UpdateEquipment(void)
 	PlayerSword.Pos.x = PlayerSwordMatrix._41 ;
 	PlayerSword.Pos.y = PlayerSwordMatrix._42  ;
 	PlayerSword.Pos.z = PlayerSwordMatrix._43 ;
-	//PlayerSword.Rot = D3DXVECTOR3(0.0f, MoveP->Rot.y - D3DXToRadian(90.0f), 0.0f);
-
 
 	return;
 }
@@ -126,15 +122,9 @@ void DrawEquipment(void)
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&PlayerSword.WorldMatrix);
 
-	//Device->SetRenderState(D3DRS_LIGHTING, FALSE);
-
 	// スケールを反映
 	D3DXMatrixScaling(&ScaleMatrix, PlayerSword.Scale.x, PlayerSword.Scale.y, PlayerSword.Scale.z);
 	D3DXMatrixMultiply(&PlayerSword.WorldMatrix, &PlayerSword.WorldMatrix, &ScaleMatrix);
-
-	//// 回転を反映
-	//D3DXMatrixRotationYawPitchRoll(&RotMatrix, PlayerSword.Rot.y, PlayerSword.Rot.x, PlayerSword.Rot.z);
-	//D3DXMatrixMultiply(&PlayerSword.WorldMatrix, &PlayerSword.WorldMatrix, &RotMatrix);
 
 	D3DXMatrixRotationQuaternion(&RotMatrix, &PlayerSword.Quaternion);
 	D3DXMatrixMultiply(&PlayerSword.WorldMatrix, &PlayerSword.WorldMatrix, &RotMatrix);
@@ -142,10 +132,6 @@ void DrawEquipment(void)
 	// 移動を反映
 	D3DXMatrixTranslation(&TransMatrix, PlayerSword.Pos.x, PlayerSword.Pos.y, PlayerSword.Pos.z);
 	D3DXMatrixMultiply(&PlayerSword.WorldMatrix, &PlayerSword.WorldMatrix, &TransMatrix);
-
-	//// 剣を握るボーンのマトリクスを探す
-	//PlayerSwordMatrix = GetBoneMatrix(MoveP1->Animation, "mixamorig_LeftHand");
-	//D3DXMatrixMultiply(&PlayerSword.WorldMatrix, &PlayerSword.WorldMatrix, &PlayerSwordMatrix);
 
 	// ワールドマトリックスの設定
 	Device->SetTransform(D3DTS_WORLD, &PlayerSword.WorldMatrix);
@@ -168,15 +154,8 @@ void DrawEquipment(void)
 		PlayerSword.Mesh->DrawSubset(nCntMat);
 	}
 
-	//Device->SetTexture(0,NULL);
-
-	//PlayerSword.Mesh->DrawSubset(0);
-
 	// マテリアルをデフォルトに戻す
 	Device->SetMaterial(&DefaultMat);
-
-	//Device->SetRenderState(D3DRS_LIGHTING, TRUE);
-
 
 	return;
 }
@@ -221,12 +200,6 @@ HRESULT SafeLoadModelTexture(LPDIRECT3DTEXTURE9	*Texture, LPD3DXBUFFER MaterialB
 			TextureName,							// ファイルの名前
 			&Texture[i]);							// 読み込むメモリー
 
-													//if (Texture[i] == NULL)
-													//{
-													//	sprintf(Message, "Load %s Texture Failed , Or This Model Didnt Have Texture!", ErrorSrc);
-													//	MessageBox(0, Message, "Error", 0);
-													//	return E_FAIL;
-													//}
 	}
 
 	return S_OK;

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // バッテリークラス [Battery.h]
-// Author : 
-// 作成開始日 : 2019/  /  
+// Author : 新里
+// 作成開始日 : 2019/10/15  
 //-----------------------------------------------------------------------------
 #pragma once
 #include"Item.h"
@@ -27,7 +27,6 @@ public:
 	static void initialize(StaticMesh* staticMesh);
 	virtual void update(float frameTime);
 	virtual void render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	//bool sphereCollide(D3DXVECTOR3 targetCenter, float targetRadius, D3DXMATRIX targetMatrix) override;
 
 	// Getter
 

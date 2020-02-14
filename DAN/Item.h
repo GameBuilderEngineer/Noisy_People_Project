@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // アイテム基底クラス [Item.h]
-// Author : 
-// 作成開始日 : 2019/  /
+// Author : 新里&中込
+// 作成開始日 : 2019/10/15
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Object.h"
@@ -50,24 +50,6 @@ namespace itemNS
 			Instance::update();
 		};
 	};
-
-	/*class ItemDestroyEffect :public effekseerNS::Instance
-	{
-	public:
-		D3DXVECTOR3* syncPosition;
-		ItemDestroyEffect(int no, D3DXVECTOR3* sync)
-		{
-			syncPosition = sync;
-			managerNo = no;
-			effectNo = effekseerNS::DROP_ITEM;
-		}
-		virtual void update()
-		{
-			position = *syncPosition;
-			Instance::update();
-		}
-	};*/
-
 }
 
 
@@ -81,9 +63,7 @@ protected:
 	LPD3DXMESH	attractorMesh;				// 重力（引力）発生メッシュ
 	D3DXMATRIX*	attractorMatrix;			// 重力（引力）発生オブジェクトマトリックス
 
-
 	itemNS::ItemEffect* itemEffect;
-	//itemNS::ItemDestroyEffect* itemDestroyEffect;
 
 	// Static
 	static int numOfItem;					// アイテムオブジェクトの総数

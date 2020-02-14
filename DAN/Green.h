@@ -14,10 +14,10 @@
 //=========================================
 namespace greenNS
 {
-	const int WIDTH_GREEN = (512 * WINDOW_WIDTH / 1920);	//電力タンクの横幅
-	const int HEIGHT_GREEN = (64 * WINDOW_HEIGHT / 1080);//電力タンクの縦幅
-	const D3DXVECTOR3 GREEN_POSTION = D3DXVECTOR3(220.0f * WINDOW_WIDTH / 1920, 190.0f * WINDOW_HEIGHT / 1080, 0.0f);//タンクのポジション
-	const D3DXVECTOR3 GREEN_POSTION_P2 = D3DXVECTOR3(1690.0f * WINDOW_WIDTH / 1920, 190.0f * WINDOW_HEIGHT / 1080, 0.0f);//タンクのポジション
+	const int WIDTH_GREEN = (512 * WINDOW_WIDTH / 1920);	//横幅
+	const int HEIGHT_GREEN = (64 * WINDOW_HEIGHT / 1080);	//縦幅
+	const D3DXVECTOR3 GREEN_POSTION = D3DXVECTOR3(220.0f * WINDOW_WIDTH / 1920, 190.0f * WINDOW_HEIGHT / 1080, 0.0f);//ポジション
+	const D3DXVECTOR3 GREEN_POSTION_P2 = D3DXVECTOR3(1690.0f * WINDOW_WIDTH / 1920, 190.0f * WINDOW_HEIGHT / 1080, 0.0f);//ポジション
 	const float ALPHA_MAX = 255.0f;
 	const float ALPHA_MIN = 0.0f;
 }

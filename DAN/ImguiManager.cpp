@@ -113,10 +113,6 @@ void ImguiManager::update()
 //===================================================================================================================================
 void ImguiManager::render()
 {
-	//getDevice()->SetRenderState(D3DRS_ZENABLE, false);
-	//getDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-	//getDevice()->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
-
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
@@ -158,7 +154,7 @@ D3DCOLOR ImguiManager::getClearColor()
 }
 
 //===================================================================================================================================
-//ÅyÅz
+//ÅyÉfÉoÉCÉXÉçÉXÉgÅz
 //===================================================================================================================================
 void ImguiManager::reset()
 {

@@ -23,7 +23,6 @@ using namespace TreeEffectNS;
 MarkerInstance::MarkerInstance(Tree* owner) : InstancingBillboardNS::Instance()
 {
 	//初期値の設定
-	//this->position	= position + D3DXVECTOR3((float)(rand() % 6 - 3), 0.0f, (float)(rand() % 6 - 3));
 	this->tree = owner;
 	position = tree->center;
 	position.y += tree->size.y / 2;
@@ -43,34 +42,18 @@ MarkerInstance::MarkerInstance(Tree* owner) : InstancingBillboardNS::Instance()
 		position.y += 14.0f;
 		break;
 	}
-	//rotation = D3DXVECTOR3((float)(rand() % 20 - 10), (float)(rand() % 20 - 10), (float)(rand() % 20 - 10));
 	rotation = D3DXVECTOR3(0, 0, 0);
-	//instance.scale				= D3DXVECTOR2((float)(rand() % 20 + 1), (float)(rand() % 20 + 1));
-	//speed = D3DXVECTOR3(0, 3.0f, 0.0f);
 
 	changeColor();
-	//limitTime = (float)(rand() % 30);
-	//uv.x = 0.25f*sinf(limitTime * 4);
-	//uv.y = 0.25f*cosf(limitTime * 4);
 }
+
 //===================================================================================================================================
 //【マーカーインスタンスクラス：更新】
 //===================================================================================================================================
 void MarkerInstance::update(float frameTime)
 {
-	//lifeTimer += frameTime;
 	if (lifeTimer >= limitTime)return;
-	//カラー
-	//color.r = sinf(lifeTimer * 8);
-	//color.g = cosf(lifeTimer * 4);
-	//color.b = sinf(limitTime);
-	//color.a = 1.0f - (lifeTimer / limitTime);
 	changeColor();
-
-	//UV
-	//float time = limitTime - lifeTimer;
-	//uv.x = 0.25f*sinf(time * 1.5);
-	//uv.y = 0.25f*cosf(time * 0.5);
 
 	//位置
 	position = tree->center;
@@ -94,8 +77,8 @@ void MarkerInstance::update(float frameTime)
 	{
 		position.y += 14.0f;
 	}
-	//position += speed * frameTime;
 }
+
 //===================================================================================================================================
 //【マーカーインスタンスクラス：状態別色変更】
 //===================================================================================================================================
@@ -122,13 +105,11 @@ void MarkerInstance::changeColor()
 SignInstance::SignInstance(Tree* owner) : InstancingBillboardNS::Instance()
 {
 	//初期値の設定
-	//this->position	= position + D3DXVECTOR3((float)(rand() % 6 - 3), 0.0f, (float)(rand() % 6 - 3));
 	this->tree = owner;
 	position = tree->center;
-	//rotation = D3DXVECTOR3((float)(rand() % 20 - 10), (float)(rand() % 20 - 10), (float)(rand() % 20 - 10));
 	rotation = D3DXVECTOR3(0, 0, 0);
-	//instance.scale				= D3DXVECTOR2((float)(rand() % 20 + 1), (float)(rand() % 20 + 1));
 	scale = D3DXVECTOR2(1.0f*4.0f, 1.125f*4.0f);
+
 	switch (owner->getTreeData()->size)
 	{
 	case treeNS::STANDARD:
@@ -148,29 +129,17 @@ SignInstance::SignInstance(Tree* owner) : InstancingBillboardNS::Instance()
 	}
 
 
-	//speed = D3DXVECTOR3(0, 3.0f, 0.0f);
 	changeColor();
-	//limitTime = (float)(rand() % 30);
-	//uv.x = 0.25f*sinf(limitTime * 4);
-	//uv.y = 0.25f*cosf(limitTime * 4);
 }
+
 //===================================================================================================================================
 //【標識インスタンスクラス：更新】
 //===================================================================================================================================
 void SignInstance::update(float frameTime)
 {
-	//lifeTimer += frameTime;
 	if (lifeTimer >= limitTime)return;
-	//カラー
-	//color.r = sinf(lifeTimer * 8);
-	//color.g = cosf(lifeTimer * 4);
-	//color.b = sinf(limitTime);
-	//color.a = 1.0f - (lifeTimer / limitTime);
+
 	changeColor();
-	//UV
-	//float time = limitTime - lifeTimer;
-	//uv.x = 0.25f*sinf(time * 1.5);
-	//uv.y = 0.25f*cosf(time * 0.5);
 	
 	//位置
 	position = tree->center;
@@ -189,7 +158,6 @@ void SignInstance::update(float frameTime)
 		break;
 	}
 
-	//position += speed * frameTime;
 }
 
 //===================================================================================================================================
@@ -249,14 +217,11 @@ TreeEffect::~TreeEffect()
 //===================================================================================================================================
 void TreeEffect::update(float frameTime)
 {
-	//エフェクトの発生
-	//effectCycle += frameTime;
 	//更新
 	marker->update(frameTime);
 	sign->update(frameTime);
 
 	resetEffectCycle();
-
 }
 
 //===================================================================================================================================
@@ -299,8 +264,6 @@ void TreeEffect::disableRender()
 	sign->disableRender();
 }
 
-
-
 //===================================================================================================================================
 //【標準エフェクト】
 //===================================================================================================================================
@@ -319,8 +282,7 @@ void TreeEffect::resetEffectCycle()
 //===================================================================================================================================
 void TreeEffect::playStandardEffect(D3DXVECTOR3* position)
 {
-	//TreeEffectNS::DigitTree* instance = new TreeEffectNS::DigitTree(position);
-	//effekseerNS::play(instance);
+
 }
 
 //===================================================================================================================================

@@ -94,7 +94,7 @@ public:
 	void setRadius(float _radius);												// 半径を設定（回転中心軸なら頂点座標に反映）
 
 	// Getter
-	SpriteNS::Vertex2D*	getVertexPointer();			// 頂点情報のポインタを取得
+	SpriteNS::Vertex2D*	getVertexPointer();				// 頂点情報のポインタを取得
 	D3DXVECTOR3				getPosition();				// 座標取得
 	D3DXVECTOR3*			getPositionPointer();		// 座標のポインタを取得
 	D3DXVECTOR3				getRotation();				// 回転を取得

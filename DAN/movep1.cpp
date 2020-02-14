@@ -27,10 +27,6 @@ HRESULT InitMoveP1(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
 
-	////必要 1
-	//MoveP1.pAllocateHier = new CAllocateHierarchy();
-	////必要 1
-
 	//初期設定
 	MoveP1.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	MoveP1.Rot = Rot;
@@ -44,7 +40,6 @@ HRESULT InitMoveP1(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 	// 初めて初期化
 	if (!initializedMoveP1)
 	{
-		//※ここに移動してみた
 		//必要 1
 		MoveP1.pAllocateHier = new CAllocateHierarchy();
 
@@ -171,7 +166,7 @@ void UpdateMoveP1(float f_TimeDelta)
 	if (!MoveP1.IsChange)
 	{
 		MoveP1.IsChangeRun = false;
-		MoveP1.Animation->NextAnimID = MoveP1_Idle;//※ここでAnimationのアドレスエラー
+		MoveP1.Animation->NextAnimID = MoveP1_Idle;
 
 		if (MoveP1.IsGround)
 		{
@@ -242,12 +237,6 @@ void UpdateMoveP1(float f_TimeDelta)
 		MoveP1.Animation->NextAnimID = MoveP1_JumpFire;
 	}
 
-	//if (input->isKeyDown('Q'))
-	//{
-	//	MoveP1.Animation->NextAnimID = MoveP1_Die;
-	//	MoveP1.IsDie = true;
-	//}
-
 	if (MoveP1.IsDeath)
 	{
 		MoveP1.Animation->AnimController->SetTrackPosition(0, 3.8f);
@@ -273,8 +262,6 @@ void UpdateMoveP1(float f_TimeDelta)
 		wi1 += 0.01f;
 	}
 
-
-
 	MoveP1AnimeCur();
 	MoveP1AnimeNext();
 
@@ -288,6 +275,7 @@ void UpdateMoveP1(float f_TimeDelta)
 	MoveP1.RHandPos = D3DXVECTOR3(MoveP1.RHand._41, MoveP1.RHand._42, MoveP1.RHand._43);
 	MoveP1.LHand = GetBoneMatrix(MoveP1.Animation, "mixamorig_LeftHand");
 	MoveP1.LHandPos = D3DXVECTOR3(MoveP1.LHand._41, MoveP1.LHand._42, MoveP1.LHand._43);
+
 	// アニメーションを更新 
 	//必ず入れてください、さもないと、動画が動けない
 	UpdateAnimation(MoveP1.Animation, f_TimeDelta * MoveP1.ActionSpeed);
@@ -315,15 +303,9 @@ void DrawMoveP1()
 	D3DXMatrixScaling(&mtxScl, MoveP1.Scl.x, MoveP1.Scl.y, MoveP1.Scl.z);
 	D3DXMatrixMultiply(&MoveP1.WorldMatrix, &MoveP1.WorldMatrix, &mtxScl);
 
-	// 回転を反映
-	//D3DXMatrixRotationYawPitchRoll(&mtxRot, MoveP1.Rot.y, MoveP1.Rot.x, MoveP1.Rot.z);
-	//D3DXMatrixMultiply(&MoveP1.WorldMatrix, &MoveP1.WorldMatrix, &mtxRot);
-
-
 	D3DXMatrixRotationQuaternion(&mtxRot, &MoveP1.Quaternion);
 	D3DXMatrixMultiply(&MoveP1.WorldMatrix, &MoveP1.WorldMatrix, &mtxRot);
-
-
+	
 	// 移動を反映
 	D3DXMatrixTranslation(&mtxTranslate, MoveP1.Pos.x, MoveP1.Pos.y, MoveP1.Pos.z);
 	D3DXMatrixMultiply(&MoveP1.WorldMatrix, &MoveP1.WorldMatrix, &mtxTranslate);

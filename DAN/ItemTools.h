@@ -30,22 +30,22 @@
 typedef struct	//ITEMチャンク
 {
 	char chunkId[ITEM_CHUNK_ID];	//チャンクID
-	short size;				//サイズ
-	short itemMax;			//アイテムの数
+	short size;						//サイズ
+	short itemMax;					//アイテムの数
 }ITEM_ITEM;
 
 typedef struct	//IFMTチャンク
 {
 	char chunkId[ITEM_CHUNK_ID];	//チャンクID
-	short size;				//このチャンクのサイズ
-	short itemId;			//アイテムのID
-	short itemType;			//アイテムの種類
-	float posX;				//アイテムの生成位置(X)
-	float posY;				//アイテムの生成位置(Y)
-	float posZ;				//アイテムの生成位置(Z)
-	float dirX;				//アイテムの向き(X)
-	float dirY;				//アイテムの向き(Y)
-	float dirZ;				//アイテムの向き(Z)
+	short size;						//このチャンクのサイズ
+	short itemId;					//アイテムのID
+	short itemType;					//アイテムの種類
+	float posX;						//アイテムの生成位置(X)
+	float posY;						//アイテムの生成位置(Y)
+	float posZ;						//アイテムの生成位置(Z)
+	float dirX;						//アイテムの向き(X)
+	float dirY;						//アイテムの向き(Y)
+	float dirZ;						//アイテムの向き(Z)
 }ITEM_IFMT;
 
 typedef struct	//ITEMファイル構造体

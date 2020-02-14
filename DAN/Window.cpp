@@ -198,7 +198,7 @@ BOOL Window::setWindowCenter(HWND _windowHandle)
 		windowPositionY,								//	ウィンドウ左上隅の"Y"座標を指定：縦方向の位置 Y
 		windowSizeX + (windowSizeX - clientRect.right),	//	ウィンドウの横幅を指定 X
 		windowSizeY + (windowSizeY - clientRect.bottom),//	ウィンドウの縦幅を指定 Y
-		(SWP_NOZORDER | SWP_NOOWNERZORDER)	//	ウィンドウ位置のオプション：ウィンドウのサイズや、位置の変更に関するフラグを指定
+		(SWP_NOZORDER | SWP_NOOWNERZORDER)				//	ウィンドウ位置のオプション：ウィンドウのサイズや、位置の変更に関するフラグを指定
 	);
 
 

@@ -27,7 +27,6 @@ TmpObject::TmpObject()
 
 	onGravity = false;
 	activation();
-	//onGround = false;						//接地判定
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onFly = true;							//飛ぶフラグ
@@ -57,8 +56,7 @@ void TmpObject::initialize(int tmpObjectType, int modelType)
 	Object::initialize(&(D3DXVECTOR3)START_POSITION);
 
 	bodyCollide.initialize(&position, staticMeshNS::reference(staticMeshNS::WOLF)->mesh);	// コライダの初期化
-	//ItemListboxMesh = 0;									// メッシュの種類(リストボックス)
-	staticMeshNo = staticMeshNS::WOLF;				// メッシュのID
+	staticMeshNo = staticMeshNS::WOLF;						// メッシュのID
 	radius = bodyCollide.getRadius();						// メッシュ半径を取得
 	centralPosition = position + bodyCollide.getCenter();	// 中心座標を設定
 	D3DXMatrixIdentity(&centralMatrixWorld);				// 中心座標ワールドマトリクスを初期化
@@ -71,9 +69,7 @@ void TmpObject::initialize(int tmpObjectType, int modelType)
 void TmpObject::update(float frameTime)
 {
 	// 事前処理
-	//friction = 1.0f;
 	isExecutingMoveOperation = false;
-	//onFly = false;
 	centralPosition = position + bodyCollide.getCenter();
 	acceleration *= 0.0f;
 
@@ -132,8 +128,6 @@ void TmpObject::update(float frameTime)
 	PositionYeah = position;
 	PositionYeah.y += 1.7f;
 
-	// 姿勢制御
-	//axisZ.direction = camera->getDirectionZ();
 }
 
 //===================================================================================================================================
@@ -214,12 +208,6 @@ void TmpObject::moveOperation()
 //===================================================================================================================================
 bool TmpObject::grounding(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
-	//飛ぶ時、接地処理しない
-	//if (onFly)
-	//{
-	//	onGround = false;
-	//	return false;
-	//}
 
 	//重力方向、レイを設定
 	D3DXVECTOR3 gravityDirection = D3DXVECTOR3(0, -1, 0);
@@ -247,9 +235,6 @@ bool TmpObject::grounding(LPD3DXMESH mesh, D3DXMATRIX matrix)
 //===================================================================================================================================
 void TmpObject::controlCamera(float frameTime)
 {
-	////操作軸反転操作
-	//if (input->wasKeyPressed(keyTable.reverseCameraX))reverseValueXAxis *= -1;
-	//if (input->wasKeyPressed(keyTable.reverseCameraY))reverseValueYAxis *= -1;
 	//マウス操作
 	camera->rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValueXAxis));
 	camera->rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValueYAxis));
@@ -286,9 +271,6 @@ void TmpObject::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
 	speed = moveDirection* MOVE_ACC;
 
-	//}
-	//姿勢制御
-	//postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 #pragma endregion
 
@@ -300,8 +282,6 @@ void TmpObject::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3
 void TmpObject::outputGUI()
 {
 #ifdef _DEBUG
-
-	//ImGui::Text(sceneName.c_str());
 
 	if (ImGui::CollapsingHeader("TmpObjectInformation"))
 	{

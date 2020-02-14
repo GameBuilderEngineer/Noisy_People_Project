@@ -108,18 +108,6 @@ void Create::initialize() {
 	tmpObjRenderer = new StaticMeshRenderer(staticMeshNS::reference(staticMeshNS::WOLF));
 	tmpObjRenderer->registerObject(tmpObject);
 
-	////枯木の初期化
-	//deadTree = new DeadTree();
-	////木Aの初期化
-	//treeA = new TreeTypeA();
-	////木Bの初期化
-	//treeB = new TreeTypeB();
-	////石の初期化
-	//stone = new Stone();
-
-	////エフェクト（インスタンシング）テスト
-	//testEffect = new TestEffect();
-
 	//ツール
 	ToolsListboxType = TOOLS_TYPE::TOOLS_NONE;
 }
@@ -134,12 +122,6 @@ void Create::uninitialize() {
 	SAFE_DELETE(testFieldRenderer);
 
 	SAFE_DELETE(tmpObjRenderer);
-
-//	SAFE_DELETE(deadTree);
-//	SAFE_DELETE(treeA);
-//	SAFE_DELETE(treeB);
-//	SAFE_DELETE(stone);
-//	SAFE_DELETE(testEffect);
 }
 
 //===================================================================================================================================
@@ -154,9 +136,6 @@ void Create::update(float _frameTime) {
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
 	if (frameTime > 0.10)return;
-
-	////エフェクト（インスタンシング）テスト
-	//testEffect->update(frameTime);
 
 	//テストフィールドの更新
 	testField->update();
@@ -181,15 +160,6 @@ void Create::update(float _frameTime) {
 
 	//カメラの更新
 	tmpObjRenderer->update();
-
-	////枯木の更新
-	//deadTree->update();
-	////木Aの更新
-	//treeA->update();
-	////木Bの更新
-	//treeB->update();
-	////石の更新
-	//stone->update();
 
 	//カメラの更新
 	camera->update();
@@ -247,22 +217,11 @@ void Create::render3D(Camera currentCamera) {
 	testField->setAlpha(0.1f);
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	////エフェクト（インスタンシング）テスト
-	//testEffect->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-
 	// プレイヤーの描画
 	tmpObjRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera.view, currentCamera.projection, currentCamera.position);
 	// プレイヤーの他のオブジェクトの描画
 	tmpObject->otherRender(currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	////枯木の描画
-	//deadTree->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	////木Aの描画
-	//treeA->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	////木Bの描画
-	//treeB->render(currentCamera.view, currentCamera.projection, currentCamera.position);
-	////石の描画
-	//stone->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	//ツールの描画
 	enemyTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
 	itemTools->render(currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -274,14 +233,6 @@ void Create::render3D(Camera currentCamera) {
 //【UI/2D描画】
 //===================================================================================================================================
 void Create::renderUI() {
-
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);						// αブレンドを行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);				// αソースカラーの指定
-	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);			// αデスティネーションカラーの指定
-
-	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -309,7 +260,6 @@ void Create::createGUI()
 	ImGui::Text(sceneName.c_str());
 	ImGui::Text("sceneTime = %f", sceneTimer);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	tmpObject->outputGUI();			//プレイヤー
@@ -369,12 +319,6 @@ void Create::collideGUI()
 {
 	bool tmpButton = false;
 	ImGui::Checkbox("Test Network", &tmpButton);
-	//if (tmpButton)
-	//{
-	//	NETWORK_CLIENT *client = new NETWORK_CLIENT;
-	//	client->send();
-	//	SAFE_DELETE(client);
-	//}
 
 	//当たり判定
 	ImGui::Text("Enemy:");

@@ -30,7 +30,6 @@
 //思いつきで書いてるんで、絶対ではないし、疑問点や問題点がある場合は必ず相談してください。
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
 //===================================================================================================================================
 //【インクルード】
 //===================================================================================================================================
@@ -185,8 +184,7 @@ void Display::update(float _frameTime)
 					selectTree->transState();
 				}
 			}
-		////パッケージ内のイベントを解放する
-		//SAFE_DELETE_ARRAY(package->treeTable);
+
 		}
 
 		bool transition = package->sceneReset;
@@ -274,12 +272,6 @@ void Display::render()
 		camera->upVector);
 	effekseerNS::render(0);
 
-	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);			// αブレンドをつかう
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// αソースカラーの指定
-	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
-
-	//UI
-	//renderUI();
 }
 
 //===================================================================================================================================

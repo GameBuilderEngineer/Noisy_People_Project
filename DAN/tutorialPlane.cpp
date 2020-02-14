@@ -27,7 +27,6 @@ PlaneInstance::PlaneInstance(D3DXVECTOR3 position) : InstancingBillboardNS::Inst
 	this->position = position;
 	this->rotation = D3DXVECTOR3(0, 0, 0);
 	this->scale = D3DXVECTOR2(5.0f, 4.0f);
-	//this->speed = D3DXVECTOR3(0, 360.0f / 900.0f, 0);
 	this->limitTime = 1.0f;
 	this->uv.x = (1.0f / 4.0f) * 0.0f;
 	this->uv.y = (1.0f / 2.0f) * 0.0f;
@@ -40,7 +39,6 @@ PlaneInstance::PlaneInstance(D3DXVECTOR3 position) : InstancingBillboardNS::Inst
 //===================================================================================================================================
 void PlaneInstance::update(float frameTime)
 {
-	//lifeTimer += frameTime;
 	if (lifeTimer >= limitTime)return;
 }
 

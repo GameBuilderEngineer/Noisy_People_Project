@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//【DebugScene.cpp】
+// [作成者]HAL東京GP12A332 新里
+// [作成日]2019/11/15
+// [更新日]2019/12/23
+//===================================================================================================================================
 #include "DebugScene.h"
 #include "CollisionManager.h"
 
@@ -195,19 +201,6 @@ void DebugScene::render3D(Camera* currentCamera) {
 	//テストフィールドの描画
 	testFieldRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
 
-	//// プレイヤーの描画
-	//maleRenderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), currentCamera->view, currentCamera->projection, currentCamera->position);
-
-	//// ツリーの描画
-	//if (player[nowRenderingWindow].getState() == playerNS::STATE::VISION ||
-	//	player[nowRenderingWindow].getState() == playerNS::STATE::SKY_VISION)
-	//{
-	//	treeManager->switchingVisionView(nowRenderingWindow);
-	//}
-	//else {
-	//	treeManager->switchingNormalView(nowRenderingWindow);
-	//}
-	//treeManager->render(currentCamera);
 }
 
 

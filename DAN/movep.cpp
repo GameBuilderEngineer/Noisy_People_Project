@@ -27,11 +27,6 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
 
-	////必要 1
-	//MoveP.pAllocateHier = new CAllocateHierarchy();
-	////必要 1
-
-
 	//初期設定
 	MoveP.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	MoveP.Rot = Rot;
@@ -43,7 +38,6 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 
 
 	// 初めて初期化
-	//if (FirstInit == true)
 	if(!initializedMoveP)
 	{
 		//必要 1
@@ -70,48 +64,6 @@ HRESULT InitMoveP(D3DXVECTOR3 Rot, D3DXVECTOR3 Scl, bool FirstInit)
 				//.X中のAnimationSet の後ろの名前は動作の名前です
 				//それを確認して、編成する
 				//									   SetName		AnimSet ShiftTime CurWeightTime
-			//case MoveP_Idle:
-			//	MoveP.Animation->AnimData[Set_No] = { "Idle",			NULL, 0.3f,	0.0f };
-			//	break;
-			//case MoveP_Run:
-			//	MoveP.Animation->AnimData[Set_No] = { "Runing",		NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_FireIdle:
-			//	MoveP.Animation->AnimData[Set_No] = { "FireIdle",		NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_FireRun:
-			//	MoveP.Animation->AnimData[Set_No] = { "FireRun",	NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_Jump:
-			//	MoveP.Animation->AnimData[Set_No] = { "SmallJump",		NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_JumpFire:
-			//	MoveP.Animation->AnimData[Set_No] = { "JumpFire",		NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_Die:
-			//	MoveP.Animation->AnimData[Set_No] = { "Death",	NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_WalkRight:
-			//	MoveP.Animation->AnimData[Set_No] = { "WalkRight",	NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_WalkLeft:
-			//	MoveP.Animation->AnimData[Set_No] = { "WalkLeft",	NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_WalkBackwards:
-			//	MoveP.Animation->AnimData[Set_No] = { "WalkBackwards",	NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_WalkBackward:
-			//	MoveP.Animation->AnimData[Set_No] = { "WalkBackward",	NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_WalkStrafeLeft:
-			//	MoveP.Animation->AnimData[Set_No] = { "WalkStrafeLeft",	NULL, 0.1f,	0.0f };
-			//	break;
-			//case MoveP_WalkStrafeRight:
-			//	MoveP.Animation->AnimData[Set_No] = { "WalkStrafeRight",	NULL, 0.1f,	0.0f };
-			//	break;
-
-
-
 			case MoveP_Idle:
 				MoveP.Animation->AnimData[Set_No] = { "Idle",			NULL, 0.3f,	0.0f };
 				break;
@@ -248,12 +200,8 @@ void UpdateMoveP(float f_TimeDelta)
 				MoveP.IsRun = false;
 			}
 		}
-		//if (MoveP.IsRun)
-		//{
-		//	MoveP.Animation->NextAnimID = MoveP_Run;
-		//}
-
 	}
+
 	if (MoveP.IsChange)
 	{
 		MoveP.IsRun = false;
@@ -295,12 +243,6 @@ void UpdateMoveP(float f_TimeDelta)
 		MoveP.Animation->NextAnimID = MoveP_JumpFire;
 	}
 
-	//if (input->isKeyDown('Q'))
-	//{
-	//	MoveP.Animation->NextAnimID = MoveP_Die;
-	//	MoveP.IsDie = true;
-	//}
-
 	if (MoveP.IsDeath)
 	{
 		MoveP.Animation->AnimController->SetTrackPosition(0, 3.8f);
@@ -326,7 +268,6 @@ void UpdateMoveP(float f_TimeDelta)
 		wi += 0.01f;
 	}
 
-
 	MovePAnimeCur();
 	MovePAnimeNext();
 
@@ -344,7 +285,6 @@ void UpdateMoveP(float f_TimeDelta)
 	//必ず入れてください、さもないと、動画が動けない
 	UpdateAnimation(MoveP.Animation, f_TimeDelta * MoveP.ActionSpeed);
 
-	//MoveP.fTimeDelta = f_TimeDelta;
 }
 
 //=============================================================================
@@ -353,7 +293,6 @@ void UpdateMoveP(float f_TimeDelta)
 void DrawMoveP()
 {
 	LPDIRECT3DDEVICE9 pDevice = getDevice();
-
 
 	//         大きさ　回転　　移動　　　　　カプセル判定　　盾のカプセル　　　　　剣のカプセル
 	D3DXMATRIX mtxScl, mtxRot, mtxTranslate, CapsuleMatrix, CapsuleMatrix_Shield, CapsuleMatrix_Sword;
@@ -369,14 +308,9 @@ void DrawMoveP()
 	D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxScl);
 
 	// 回転を反映
-	//D3DXMatrixRotationYawPitchRoll(&mtxRot, MoveP.Rot.y, MoveP.Rot.x, MoveP.Rot.z);
-	//D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxRot);
-
-
 	D3DXMatrixRotationQuaternion(&mtxRot, &MoveP.Quaternion);
 	D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxRot);
-
-
+	
 	// 移動を反映
 	D3DXMatrixTranslation(&mtxTranslate, MoveP.Pos.x, MoveP.Pos.y, MoveP.Pos.z);
 	D3DXMatrixMultiply(&MoveP.WorldMatrix, &MoveP.WorldMatrix, &mtxTranslate);
@@ -404,197 +338,6 @@ void DrawMoveP()
 //=============================================================================
 void MovePMove(void)
 {
-	//float fDiffRotY;
-	//DIJOYSTATE2 Dijs = GetDijs();
-
-	//if (GetKeyboardPress(DIK_A) || IsButtonPressed(0, BUTTON_LEFT))
-	//{
-	//	if (GetKeyboardPress(DIK_W) || IsButtonPressed(0, BUTTON_UP))
-	//	{// 左前移動
-	//		if (GetKeyboardPress(DIK_LSHIFT) || ((Dijs.lX > -500 && Dijs.lY > -500) && Dijs.lX && Dijs.lY))
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y - D3DX_PI * 0.25f) * MoveP.WalkSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y - D3DX_PI * 0.25f) * MoveP.WalkSpeedPl;
-	//			MoveP.IsWalk = true;
-	//			MoveP.IsRun = false;
-	//		}
-	//		else
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y - D3DX_PI * 0.25f) * MoveP.RunSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y - D3DX_PI * 0.25f) * MoveP.RunSpeedPl;
-	//			MoveP.IsRun = true;
-	//			MoveP.IsWalk = false;
-	//		}
-	//		MoveP.DestAngle.y = Camera->Rot.y - D3DX_PI * 0.25f;
-	//	}
-	//	else if (GetKeyboardPress(DIK_S) || IsButtonPressed(0, BUTTON_DOWN))
-	//	{// 左後移動
-	//		if (GetKeyboardPress(DIK_LSHIFT) || ((Dijs.lX > -500 && Dijs.lY < 500) && Dijs.lX && Dijs.lY))
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y - D3DX_PI * 0.75f) * MoveP.WalkSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y - D3DX_PI * 0.75f) * MoveP.WalkSpeedPl;
-	//			MoveP.IsWalk = true;
-	//			MoveP.IsRun = false;
-	//		}
-	//		else
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y - D3DX_PI * 0.75f) * MoveP.RunSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y - D3DX_PI * 0.75f) * MoveP.RunSpeedPl;
-	//			MoveP.IsRun = true;
-	//			MoveP.IsWalk = false;
-	//		}
-	//		MoveP.DestAngle.y = Camera->Rot.y - D3DX_PI * 0.75f;
-	//	}
-	//	else
-	//	{// 左移動
-	//		if (GetKeyboardPress(DIK_LSHIFT) || (Dijs.lX > -500 && Dijs.lX ))
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y - D3DX_PI * 0.50f) * MoveP.WalkSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y - D3DX_PI * 0.50f) * MoveP.WalkSpeedPl;
-	//			MoveP.IsWalk = true;
-	//			MoveP.IsRun = false;
-	//		}
-	//		else
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y - D3DX_PI * 0.50f) * MoveP.RunSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y - D3DX_PI * 0.50f) * MoveP.RunSpeedPl;
-	//			MoveP.IsRun = true;
-	//			MoveP.IsWalk = false;
-	//		}
-	//		MoveP.DestAngle.y = Camera->Rot.y - D3DX_PI * 0.50f;
-	//	}
-	//}
-	//else if (GetKeyboardPress(DIK_D) || IsButtonPressed(0, BUTTON_RIGHT))
-	//{
-	//	if (GetKeyboardPress(DIK_W) || IsButtonPressed(0, BUTTON_UP))
-	//	{// 右前移動
-	//		if (GetKeyboardPress(DIK_LSHIFT) || ((Dijs.lX < 500 && Dijs.lY > -500) && Dijs.lX && Dijs.lY))
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y + D3DX_PI * 0.25f) * MoveP.WalkSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y + D3DX_PI * 0.25f) * MoveP.WalkSpeedPl;
-	//			MoveP.IsWalk = true;
-	//			MoveP.IsRun = false;
-	//		}
-	//		else
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y + D3DX_PI * 0.25f) * MoveP.RunSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y + D3DX_PI * 0.25f) * MoveP.RunSpeedPl;
-	//			MoveP.IsRun = true;
-	//			MoveP.IsWalk = false;
-	//		}
-
-	//		MoveP.DestAngle.y = Camera->Rot.y + D3DX_PI * 0.25f;
-	//	}
-	//	else if (GetKeyboardPress(DIK_S) || IsButtonPressed(0, BUTTON_DOWN))
-	//	{// 右後移動
-	//		if (GetKeyboardPress(DIK_LSHIFT) || ((Dijs.lX < 500 && Dijs.lY < 500) && Dijs.lX && Dijs.lY))
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y + D3DX_PI * 0.75f) * MoveP.WalkSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y + D3DX_PI * 0.75f) * MoveP.WalkSpeedPl;
-	//			MoveP.IsWalk = true;
-	//			MoveP.IsRun = false;
-	//		}
-	//		else
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y + D3DX_PI * 0.75f) * MoveP.RunSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y + D3DX_PI * 0.75f) * MoveP.RunSpeedPl;
-	//			MoveP.IsRun = true;
-	//			MoveP.IsWalk = false;
-	//		}
-
-	//		MoveP.DestAngle.y = Camera->Rot.y + D3DX_PI * 0.75f;
-	//	}
-	//	else
-	//	{// 右移動
-	//		if (GetKeyboardPress(DIK_LSHIFT) || (Dijs.lX < 500 && Dijs.lX))
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y + D3DX_PI * 0.50f) * MoveP.WalkSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y + D3DX_PI * 0.50f) * MoveP.WalkSpeedPl;
-	//			MoveP.IsWalk = true;
-	//			MoveP.IsRun = false;
-	//		}
-	//		else
-	//		{
-	//			MoveP.Move.x -= sinf(Camera->Rot.y + D3DX_PI * 0.50f) * MoveP.RunSpeedPl;
-	//			MoveP.Move.z -= cosf(Camera->Rot.y + D3DX_PI * 0.50f) * MoveP.RunSpeedPl;
-	//			MoveP.IsRun = true;
-	//			MoveP.IsWalk = false;
-	//		}
-	//		MoveP.DestAngle.y = Camera->Rot.y + D3DX_PI * 0.50f;
-	//	}
-	//}
-	//else if (GetKeyboardPress(DIK_W) || IsButtonPressed(0, BUTTON_UP))
-	//{// 前移動
-	//	if (GetKeyboardPress(DIK_LSHIFT) ||  (Dijs.lY > -500 && Dijs.lY))
-	//	{
-	//		MoveP.Move.x -= sinf(Camera->Rot.y) * MoveP.WalkSpeedPl;
-	//		MoveP.Move.z -= cosf(Camera->Rot.y) * MoveP.WalkSpeedPl;
-	//		MoveP.IsWalk = true;
-	//		MoveP.IsRun = false;
-	//	}
-	//	else
-	//	{
-	//		MoveP.Move.x -= sinf(Camera->Rot.y) * MoveP.RunSpeedPl;
-	//		MoveP.Move.z -= cosf(Camera->Rot.y) * MoveP.RunSpeedPl;
-	//		MoveP.IsRun = true;
-	//		MoveP.IsWalk = false;
-	//	}
-	//	MoveP.DestAngle.y = Camera->Rot.y;
-	//}
-	//else if (GetKeyboardPress(DIK_S) || IsButtonPressed(0, BUTTON_DOWN))
-	//{// 後移動
-	//	if (GetKeyboardPress(DIK_LSHIFT) || (Dijs.lY < 500 && Dijs.lY))
-	//	{
-	//		MoveP.Move.x -= sinf(D3DX_PI + Camera->Rot.y) * MoveP.WalkSpeedPl;
-	//		MoveP.Move.z -= cosf(D3DX_PI + Camera->Rot.y) * MoveP.WalkSpeedPl;
-	//		MoveP.IsWalk = true;
-	//		MoveP.IsRun = false;
-	//	}
-	//	else
-	//	{
-	//		MoveP.Move.x -= sinf(D3DX_PI + Camera->Rot.y) * MoveP.RunSpeedPl;
-	//		MoveP.Move.z -= cosf(D3DX_PI + Camera->Rot.y) * MoveP.RunSpeedPl;
-	//		MoveP.IsRun = true;
-	//		MoveP.IsWalk = false;
-	//	}
-	//	MoveP.DestAngle.y = D3DX_PI + Camera->Rot.y;
-	//}
-	//else
-	//{
-	//	MoveP.IsRun = false;
-	//	MoveP.IsWalk = false;
-	//}
-
-	//// 位置移動
-	//MoveP.Pos.x += MoveP.Move.x;
-	//MoveP.Pos.y += MoveP.Move.y;
-	//MoveP.Pos.z += MoveP.Move.z;
-
-	//// 移動量に慣性をかける
-	//MoveP.Move.x += (0.0f - MoveP.Move.x) * 0.2f;
-	//MoveP.Move.y += (0.0f - MoveP.Move.y) * 0.2f;
-	//MoveP.Move.z += (0.0f - MoveP.Move.z) * 0.2f;
-
-	//// 目的の角度までの差分
-	//fDiffRotY = MoveP.DestAngle.y - MoveP.Rot.y ;
-	//if (fDiffRotY > D3DX_PI)
-	//{
-	//	fDiffRotY -= D3DX_PI * 2.0f;
-	//}
-	//if (fDiffRotY < -D3DX_PI)
-	//{
-	//	fDiffRotY += D3DX_PI * 2.0f;
-	//}
-	//// 目的の角度まで慣性をかける
-	//MoveP.Rot.y += fDiffRotY * 0.2f;
-	//if (MoveP.Rot.y > D3DX_PI)
-	//{
-	//	MoveP.Rot.y -= D3DX_PI * 2.0f;
-	//}
-	//if (MoveP.Rot.y < -D3DX_PI)
-	//{
-	//	MoveP.Rot.y += D3DX_PI * 2.0f;
-	//}
 
 	return;
 }

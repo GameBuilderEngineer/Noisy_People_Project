@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【network.h】
+//【networkClient.cpp】
 // [作成者]HAL東京GP12A332 16 蔡 友剛
 // [作成日]2019/12/05
 // [更新日]2019/12/05
@@ -190,56 +190,7 @@ NETWORK_CLIENT::~NETWORK_CLIENT()
 {
 	closesocket(s);
 	WSACleanup();
-	//if (treeNum != 0)
-	//{
-	//	//SAFE_DELETE_ARRAY(treeTable);
-	//}
 }
-
-////===================================================================================================================================
-////【送信】
-////===================================================================================================================================
-//void NETWORK_CLIENT::send(float time)
-//{
-//	// buf
-//	packageID++;
-//	PACKAGE tmpPackage;
-//	memset(&tmpPackage, 0, sizeof(tmpPackage));
-//	tmpPackage.num = 10;
-//	tmpPackage.tmpPos = D3DXVECTOR3(100, 200, 300);
-//	tmpPackage.networkTester = true;
-//	tmpPackage.treeMax = treeNum;
-//	if (tmpPackage.treeMax > 0)
-//	{
-//		memcpy(tmpPackage.treeTable, treeTable, sizeof(TreeTable)*tmpPackage.treeMax);
-//	}
-//	tmpPackage.timer = time;
-//	
-//	//PACKAGEの情報のみ
-//	char *buf1;	//パッケージ用(PACKAGEの情報のみ)
-//	int sizeOfPackage = sizeof(PACKAGE) - (sizeof(TreeTable*));
-//	buf1 = (char *)malloc(sizeOfPackage);
-//	memcpy(buf1, &tmpPackage, sizeOfPackage);
-//	nRtn = sendto(s, buf1, sizeOfPackage, 0,
-//		(LPSOCKADDR)&addrin, sizeof(addrin));
-//	free(buf1);
-//
-//	//TreeTableの実体
-//	if (tmpPackage.treeMax > 0)
-//	{
-//		//TreeTableの実体
-//		char *buf2; //パッケージ用(TreeTableの実体)
-//		int sizeOfTreeTable = sizeof(TreeTable)*tmpPackage.treeMax;
-//		buf2 = (char *)malloc(sizeOfTreeTable);
-//		memcpy(buf2, tmpPackage.treeTable, sizeOfTreeTable);
-//		nRtn = sendto(s, buf2, sizeOfTreeTable, 0,
-//			(LPSOCKADDR)&addrin, sizeof(addrin));
-//		free(buf2);
-//
-//		memset(treeTable, 0, sizeof(treeTable));
-//		treeNum = 0;	//0クリア
-//	}
-//}
 
 //===================================================================================================================================
 //【送信】

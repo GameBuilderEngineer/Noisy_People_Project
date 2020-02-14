@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【Photograph.h】
+//【Photograph.cpp】
 // [作成者]HAL東京GP12A332 21 新里 将士
 // [作成日]2019/12/26
 // [更新日]2019/12/26
@@ -51,23 +51,6 @@ void Photograph::initialize()
 	target->initialize(&D3DXVECTOR3(0, 0, 0));
 
 	//撮影カメラ
-	//camera = new Camera;
-	//camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	///*camera->setTargetX(&tmpObject->getAxisX()->direction);
-	//camera->setTargetY(&tmpObject->getAxisY()->direction);
-	//camera->setTargetZ(&tmpObject->getAxisZ()->direction);*/
-	//camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, 1.0f, 0.0f));
-	//camera->setTarget(&target->position);
-	////camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	//camera->setGazeDistance(10.0f);
-	//camera->setRelativeGaze(D3DXVECTOR3(0, 0, 0));
-	//camera->setUpVector(D3DXVECTOR3(0, 1, 0));
-	//camera->setFieldOfView((D3DX_PI) / 18 * 9);
-	//camera->setViewProjection();
-	//camera->setLimitRotationTop(0.1f);
-	//camera->setLimitRotationBottom(0.1f);
-	//camera->updateOrtho();
-
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	camera->setTarget(tmpObject->getPositionYeah());
@@ -80,11 +63,8 @@ void Photograph::initialize()
 	camera->setRelativeGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 	camera->setFieldOfView((D3DX_PI) / 18 * 9);
-	//camera->setViewProjection();
 	camera->setLimitRotationTop(0.1f);
 	camera->setLimitRotationBottom(0.1f);
-	//camera->updateOrtho();
-
 
 	//俯瞰カメラ
 	topView = new Camera;
@@ -163,8 +143,6 @@ void Photograph::update(float _frameTime)
 	//処理落ち対策
 	if (frameTime > 0.10)return;
 
-	
-
 	//テストフィールドの更新
 	testField->update();
 	testFieldRenderer->update();
@@ -188,10 +166,6 @@ void Photograph::update(float _frameTime)
 		}
 	}
 
-
-
-
-
 	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
 	cameraAxisZ = camera->getAxisZ();
 	fixedAxisZ = Base::slip(cameraAxisZ, camera->upVector);	//カメラの傾きに対応
@@ -202,114 +176,6 @@ void Photograph::update(float _frameTime)
 	D3DXVec3Cross(&Y, &fixedAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&cameraAxisY, &cameraAxisZ, &cameraAxisX);
 	D3DXVec3Cross(&fixedAxisX, &cameraAxisY, &cameraAxisZ);
-	
-	//俯瞰カメラと撮影カメラの切り替え
-	//if (onTopView == true)
-	//{
-	//	//ターゲットオブジェクトの更新
-	//	tmpObject->update(frameTime);
-	//	LPD3DXMESH mesh = testFieldRenderer->getStaticMesh()->mesh;
-	//	D3DXMATRIX matrix = testField->matrixWorld;
-
-	//	if (input->wasKeyPressed('G'))
-	//	{
-	//		tmpObject->grounding(mesh, matrix);
-	//	}
-	//	tmpObjRenderer->update();
-	//	//俯瞰カメラの更新
-	//	topView->update();
-	//}
-	//else if (onTopView == false)
-	//{
-
-
-	//	//カメラ移動
-	//	if (input->isKeyDown('W'))
-	//	{
-	//		fixedAxisZ *= 1.0f;
-	//		target->position += fixedAxisZ;
-	//	}
-	//	if (input->isKeyDown('S'))
-	//	{
-	//		fixedAxisZ *= -1.0f;
-	//		target->position += fixedAxisZ;
-	//	}
-	//	if (input->isKeyDown('A'))
-	//	{
-	//		cameraAxisX *= -1.0f;
-	//		target->position += cameraAxisX;
-	//	}
-	//	if (input->isKeyDown('D'))
-	//	{
-	//		cameraAxisX *= 1.0f;
-	//		target->position += cameraAxisX;
-	//	}
-	//	if (input->isKeyDown('Q'))
-	//	{
-	//		Y *= 1.0f;
-	//		target->position += camera->upVector;
-	//	}
-	//	if (input->isKeyDown('E'))
-	//	{
-	//		Y *= 1.0f;
-	//		target->position -= camera->upVector;
-
-	//	}
-
-	//	//カメラ回転
-	//	//camera->rotation(D3DXVECTOR3(0, -1, 0), degree);
-	//	//Y軸
-	//	if (input->isKeyDown(VK_RIGHT))
-	//	{
-	//		
-	//		camera->rotation(camera->upVector, inputDegree);
-	//		//target->quaternion.y += 5.0f;
-	//	}
-	//	if (input->isKeyDown(VK_LEFT))
-	//	{
-	//		camera->rotation(-camera->upVector, inputDegree);
-	//		//target->quaternion.y -= 5.0f;
-	//	}
-	//	//X軸
-	//	if (input->isKeyDown(VK_UP))
-	//	{
-	//		camera->rotation(-fixedAxisX, inputDegree);
-	//	}
-	//	if (input->isKeyDown(VK_DOWN))
-	//	{
-	//		camera->rotation(fixedAxisX, inputDegree);
-	//	}
-	//	//ズーム
-	//	if (input->isKeyDown('Z'))
-	//	{
-	//		camera->relativeQuaternion -= camera->relativeQuaternion * 0.05f;
-	//	}
-	//	if (input->isKeyDown('X'))
-	//	{
-	//		camera->relativeQuaternion += camera->relativeQuaternion * 0.05f;
-	//	}
-
-	//	if (input->wasKeyPressed('P'))
-	//	{
-	//		getFader()->setShader(faderNS::NORMAL);
-	//		getFader()->start();
-	//	}
-
-	//	if (input->wasKeyPressed(VK_SPACE))
-	//	{
-	//		/*effekseerNS::Instance* instance = new effekseerNS::Instance();
-	//		instance->position = D3DXVECTOR3(camera->position.x, camera->position.y, camera->position.z + 200);
-	//		*/
-	//		PointEffect* pointEffect = new photographNS::PointEffect(0,&cameraObject->position);
-	//		//pointEffect->position = camera->position;
-	//		effekseerNS::play(0, pointEffect);
-	//	}
-	//	//ターゲットカメラの更新
-	//	camera->update();
-	//	cameraObject->position = camera->position;
-	//	cameraObject->update();
-	//	cameraObjectRenderer->update();
-	//}
 
 	//ターゲットオブジェクトの更新
 	tmpObject->update(frameTime);
@@ -446,11 +312,10 @@ void Photograph::createGUI()
 	ImGui::SliderFloat3("StartPoint ", startPoint, limitBottom, limitTop);
 	ImGui::SliderFloat3("EndPoint", endPoint, limitBottom, limitTop);
 	ImGui::SliderFloat3("CurvePoint", curvePoint, limitBottom, limitTop);
-	//ImGui::Text("node:%d", testEffect->getList().nodeNum);
 	testField->outputGUI();			//テストフィールド
 	camera->outputGUI();			//カメラ
 	tmpObject->outputGUI();			//プレイヤー
-	cameraObject->outputGUI();			//カメラターゲット
+	cameraObject->outputGUI();		//カメラターゲット
 	toolsGUI();
 }
 
@@ -565,6 +430,7 @@ void Photograph::outputEndPointGUI(int GUIid, D3DXVECTOR3* pos)
 		}
 	}
 }
+
 //===================================================================================================================================
 //【ImGUIへの出力(CurvePoint)】
 //===================================================================================================================================

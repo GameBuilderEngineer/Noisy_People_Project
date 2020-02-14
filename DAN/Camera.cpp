@@ -79,7 +79,6 @@ void Camera::update()
 	setViewProjection();
 }
 
-
 //===================================================================================================================================
 //【カメラの描画準備】
 //===================================================================================================================================
@@ -116,7 +115,6 @@ void Camera::rotation(D3DXVECTOR3 axis,float degree)
 	relativeQuaternion = temporaryQ;
 }
 
-
 //===================================================================================================================================
 //【回転時、相対位置ベクトルに高さ（上方向）制限をセットする】
 //===================================================================================================================================
@@ -150,7 +148,6 @@ void Camera::disableLimit(int limitParameter)
 {
 	limit &= ~limitParameter;
 }
-
 
 //===================================================================================================================================
 //【ターゲット位置をロックオンする】
@@ -199,7 +196,6 @@ bool Camera::insetCorrection(LPD3DXMESH mesh, D3DXMATRIX matrix)
 //===================================================================================================================================
 bool Camera::sphereCollide(D3DXVECTOR3 position, float radius)
 {
-
 	return false;
 }
 
@@ -208,7 +204,6 @@ bool Camera::sphereCollide(D3DXVECTOR3 position, float radius)
 //===================================================================================================================================
 bool Camera::rayCollide(LPD3DXMESH mesh, D3DXMATRIX matrix)
 {
-
 	return false;
 }
 
@@ -255,7 +250,6 @@ void Camera::outputGUI()
 #endif // _DEBUG
 }
 
-
 //===================================================================================================================================
 //【正射影行列を更新する】
 //===================================================================================================================================
@@ -277,6 +271,7 @@ void Camera::setAspect(DWORD _windowWidth, DWORD _windowHeight)
 	windowHeight = _windowHeight;
 	aspect = (FLOAT)windowWidth / (FLOAT)windowHeight;
 }
+//視野角の設定
 void Camera::setFieldOfView(float value)
 {
 	fieldOfView = value;
@@ -291,13 +286,11 @@ HRESULT Camera::setViewProjection()
 }
 void Camera::setNearZ(float value) { nearZ = value; }
 void Camera::setFarZ(float value) { farZ = value; }
-
-void Camera::GetViewMaatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world)
+void Camera::GetViewMatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world)
 {
 	D3DXMATRIX CameraW;
-	//カメラの姿勢をワールド変換（綾子関係処理）
+	//カメラの姿勢をワールド変換
 	D3DXMatrixMultiply(&CameraW, &view, world);
-
 	//ビュー変換行列作成
 	D3DXMatrixLookAtLH(
 		viewOut,
@@ -306,7 +299,6 @@ void Camera::GetViewMaatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world)
 		&D3DXVECTOR3(CameraW._21, CameraW._23, CameraW._23)
 	);
 }
-
 
 //===================================================================================================================================
 //【getter】

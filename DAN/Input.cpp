@@ -155,7 +155,6 @@ void Input::keyDown(WPARAM wParam)
 		}
 		// keysDown配列を更新
 		keysDown[wParam] = true;
-		// keysPressed配列を更新
 	}
 }
 

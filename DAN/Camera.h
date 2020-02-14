@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【Camera.cpp】
+//【Camera.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/09/20
 // [更新日]2019/12/11
@@ -95,7 +95,7 @@ public:
 	void lockOn(D3DXVECTOR3 lockOnTarget,float frameTime);
 
 	//タイトル操作 ターゲットに追従
-	void GetViewMaatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world);
+	void GetViewMatrix(D3DXMATRIX* viewOut, D3DXMATRIX* world);
 
 	//注視点間距離の補正
 	void setGazeDistance(float newValue);

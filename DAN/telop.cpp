@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// テロップクラス [Telop.h]
+// テロップクラス [Telop.cpp]
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/17
 //-----------------------------------------------------------------------------
@@ -71,6 +71,7 @@ void Telop::update(float _frameTime)
 		announceTimer += _frameTime;
 		Telop::telopAnnounce();
 		break;
+
 	case OPEN://オープン
 		
 		telopTimer += _frameTime;		//シーンタイムの更新
@@ -87,6 +88,7 @@ void Telop::update(float _frameTime)
 		}
 
 		break;
+
 	case DISPLAY:	
 
 		//表示待機　
@@ -94,44 +96,33 @@ void Telop::update(float _frameTime)
 		Telop::display();
 		
 		break;
+
 	case CLOSE:		
 
 		//クローズ
 		if (telopFlag)
 		{
 			Telop::close();
-			//telopFlag = false;
 		}
 		if (barFlag)
 		{
 			Telop::closeBar();
-			//barFlag = false;
 		}
-		
-		////オープンへ遷移
-		//if (telopFlag)
-		//{
-		//	telopFlag = false;
-		//	state = OPEN;
-		//	telopTimer = 0.0f;
-		//}		
 		break;
+
 	case END:
 		//オープンへ遷移
 		if (telopFlag)
 		{
-			//telopFlag = false;
 			state = ANNOUNCE;
 			telopTimer = 0.0f;
 		}
 		if (barFlag)
 		{
-			//telopFlag = false;
 			state = ANNOUNCE;
 			telopTimer = 0.0f;
 		}
 	}
-
 
 	//サイズの更新
 	if (telopFlag)

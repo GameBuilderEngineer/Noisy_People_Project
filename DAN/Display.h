@@ -1,5 +1,5 @@
 //===================================================================================================================================
-//【Display .h】
+//【Display.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/12/10
 // [更新日]2019/12/10
@@ -43,7 +43,7 @@ private:
 	TreeManager*					treeManager;		//ツリー
 	Sky*							sky;				//スカイドーム
 	MarkerRenderer*					markerRenderer;		//マーカーレンダラー
-	Ocean*		ocean;				//海面
+	Ocean*							ocean;				//海面
 
 	//プレイヤー位置情報
 	D3DXVECTOR3						playerPosition[gameMasterNS::PLAYER_NUM];

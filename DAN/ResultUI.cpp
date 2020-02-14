@@ -55,9 +55,6 @@ void ResultUI::initialize()
 	//フェイズの初期化(第一フェイズで)
 	resultPhase = PHASE_01;
 
-	//全体緑化率
-	//greenigPersent = 0;
-
 	//緑化本数
 	greeningNum01 = 0;
 	greeningNum02 = 0;
@@ -66,9 +63,9 @@ void ResultUI::initialize()
 	defeat01 = 0;
 	defeat02 = 0;
 
-	//ランクの確定(仮)
-	score01 = 0;//全体緑化率+緑化本数割る１０+撃破数(仮）
-	score02 = 0;//全体緑化率+緑化本数割る１０+撃破数(仮）
+	//ランクの確定
+	score01 = 0;//全体緑化率+緑化本数割る１０+撃破数
+	score02 = 0;//全体緑化率+緑化本数割る１０+撃破数
 
 	rank01 = 0;
 	rank02 = 0;
@@ -108,7 +105,7 @@ void ResultUI::render(bool texFlag)
 
 		rank01 = decisionRank(greenigPersent, greeningNum01, defeat01);
 		rank02 = decisionRank(greenigPersent, greeningNum02, defeat02);
-		//resultBG->render();					//リザルト背景の描画
+
 		uiTexture.render(resultPhase);		//テクスチャの描画
 		uiCharacter01->render(resultPhase);	//プレイヤー１の文字描画
 		uiCharacter02->render(resultPhase);	//プレイヤー2の文字描画

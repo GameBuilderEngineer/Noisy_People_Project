@@ -57,13 +57,6 @@ void OPState::update(float frameTime)
 {
 	this->frameTime = frameTime;
 	stateTimer += frameTime;
-
-	//ó‘Ô‘JˆÚ
-	//if (shiftTimer > SHIFT_TIME)
-	//{
-	//	player->transState(NORMAL); return;//’Êíó‘Ô‚É–ß‚é
-	//}
-
 }
 
 //===================================================================================================================================

@@ -78,8 +78,6 @@ TutorialUI::TutorialUI()
 void TutorialUI::setStep(int playerID, int inStep)
 {
 	step[playerID] = inStep;
-	//tutorialSpriteArray[playerID][step[playerID]]->setPosition(arrayPos[playerID][step[playerID]]);
-	//tutorialSpriteArray[playerID][step[playerID]]->setVertex();
 }
 
 //===================================================================================================================================

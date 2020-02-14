@@ -68,9 +68,6 @@ private:
 	//選択表示ライトリスト
 	bool onPlayedSelectLight;
 	DigitalShiftEffectNS::SelectLight* selectLight;
-	//LinkedList<Object*>*	selectLightList;
-	//StaticMeshRenderer*		selectLightRenderer;
-	//::Effekseer::Handle		selectLight;
 
 	//同期位置リスト
 	std::vector<D3DXVECTOR3*> syncPositionList;
@@ -99,7 +96,7 @@ public:
 
 	//オブジェクト生成
 	void createDigitalSphere(D3DXVECTOR3 position, float runTime);
-	//Object* createSelectLight(D3DXVECTOR3 position);
+
 	//エフェクトインスタンス生成/削除
 	void createSelectLight(D3DXVECTOR3* position);
 	void deleteSelectLight();

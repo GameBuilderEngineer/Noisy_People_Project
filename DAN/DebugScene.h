@@ -1,6 +1,8 @@
 //===================================================================================================================================
-//! このヘッダは
-//!　ゲームシーンのコピー
+//【DebugScene.h】
+// [作成者]HAL東京GP12A332 新里
+// [作成日]2019/11/15
+// [更新日]2019/12/23
 //===================================================================================================================================
 #pragma once
 
@@ -29,7 +31,6 @@
 #include "MapObjectManager.h"
 #include "Telop.h"
 #include "Sky.h"
-#include "SpriteGauge.h"
 #include "Battery.h"
 #include "Timer.h"
 #include "Reticle.h"
@@ -45,7 +46,6 @@
 #include "TelopManager.h"
 #include "Player1UI.h"
 #include "Player2UI.h"
-//#include "Text.h"
 #include "networkClient.h"
 #include "CountUI.h"
 #include "Announcement.h"
@@ -96,11 +96,6 @@ private:
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
 
-	//ビルボード
-	//TestEffect*						testEffect;		//インスタンシングビルボードテスト
-	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
-	Advertisement*					ad;					//開発中広告
-
 	EnemyManager*					enemyManager;		// エネミーマネージャー
 	TreeManager*					treeManager;		// ツリーマネージャー
 	ItemManager*					itemManager;		// アイテムマネージャー
@@ -111,7 +106,6 @@ private:
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 
 	//UI
-	SpriteGauge*					spriteGauge;		//Sprite実験
 	Reticle*						reticle;			//レティクル
 	TelopManager*					telopManager;		//テロップマネジャー
 	FixedUI*						fixedUI;			//固定されたUI

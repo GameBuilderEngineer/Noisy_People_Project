@@ -185,9 +185,6 @@ BulletManager::BulletManager()
 //===================================================================================================================================
 BulletManager::~BulletManager()
 {
-	//レンダラーの解除/終了
-	//renderer->allUnRegister();
-	//SAFE_DELETE(renderer);
 	//バレットリストの削除
 	bulletList->terminate();
 	SAFE_DELETE(bulletList);
@@ -218,10 +215,6 @@ void BulletManager::update(float frameTime)
 			bullet->destroy();
 		}
 	}
-
-	//レンダラーの更新
-	//実体が消える前に解除処理を先行する
-	//renderer->update();
 
 	//各バレットの削除処理
 	for (int i = 0; i < bulletList->nodeNum; i++)
@@ -275,7 +268,6 @@ void BulletManager::render(D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 c
 	{
 		(*bulletList->getValue(i))->render();
 	}
-	//renderer->render(*shaderNS::reference(shaderNS::INSTANCE_STATIC_MESH), view, projection, cameraPosition);
 }
 
 //===================================================================================================================================
@@ -306,9 +298,6 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 	//リストの更新[追加による対応]
 	bulletList->listUpdate();
 
-	//レンダラーへの登録
-	//renderer->registerObject(newBullet);
-
 	//残段数の減算
 	remaining--;
 
@@ -318,7 +307,6 @@ bool BulletManager::launch(Ray shootingRay,int playerNo)
 	//サウンドの再生
 	SoundInterface::SE->playSound(&shotSE);
 	
-
 	//ゲーム中に発射事実を残す
 	isLaunched = true;
 	launchFactTime = 0.0f;
@@ -360,6 +348,7 @@ Bullet* BulletManager::getBullet(int i) { return *bulletList->getValue(i); }
 int BulletManager::getNum() { return bulletList->nodeNum; }
 bool BulletManager::getIsLaunched() { return isLaunched; }
 float BulletManager::getPowerRate() { return powerRate; }
+
 //===================================================================================================================================
 //【setter：バレットマネージャー】
 //===================================================================================================================================
@@ -374,17 +363,3 @@ void BulletManager::setCurrentScene(std::string scene)
 	currentScene = scene;
 }
 
-////===================================================================================================================================
-////【GUI作成処理】
-////===================================================================================================================================
-//#ifdef _DEBUG
-//void BulletManager::bulletGUI()
-//{
-//	//float ditpw = Bullet::getDigitalPower();
-//	//ImGui::Text("digitalPower = %f", &Bullet::getDigitalPower());
-//	ImGui::Text("powerRate= %f", powerRate);
-//}
-//#endif
-//
-//
-//#pragma endregion

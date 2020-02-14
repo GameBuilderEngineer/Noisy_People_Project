@@ -28,8 +28,6 @@
 #include "Reticle.h"
 #include "FixedUI.h"
 
-
-
 //===================================================================================================================================
 //【マクロ定義】
 //===================================================================================================================================
@@ -114,9 +112,6 @@ private:
 	//UI
 	TutorialUI *tutorialUI;
 	Reticle*						reticle;			//レティクル
-	//FixedUI*						fixedUI;			//固定されたUI
-	//Player1UI*						player1UI;			//プレイヤー周りのUI
-	//Player2UI*						player2UI;			//プレイヤー２周りのUI
 	MarkerRenderer*					markerRenderer;		//マーカー
 	DamageUI*						damageUI;			//ダメージUI
 
@@ -131,7 +126,6 @@ public:
 	virtual void uninitialize() override;
 	void render3D(Camera* currentCamera);
 	void renderUI();
-
 	void tree8Reregister(Object* tmp);
 
 #ifdef _DEBUG

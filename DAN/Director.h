@@ -20,13 +20,10 @@
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
-#include "TextManager.h"
 #include "GameMaster.h"
 #include "Fader.h"
 #include "EffekseerManager.h"
 #include "SerialCommunication.h"
-//#include "AnimationLoader.h"
-//#include <thread>
 #include "Sound.h"
 
 //===================================================================================================================================
@@ -49,7 +46,6 @@ public:
 #ifdef _DEBUG
 	MemoryViewer*		memory;
 	ImguiManager*		imgui;					//imguiマネージャークラス
-	//std::thread*		thread_a;
 	bool				onGUI;					//GUI表示フラグ
 #endif // _DEBUG
 
@@ -63,12 +59,10 @@ public:
 	StaticMeshLoader*		staticMeshLoader;		//スタティックメッシュ読込クラス
 	ShaderLoader*			shaderLoader;			//シェーダー読込クラス
 	SoundInterface*			soundInterface;			//サウンドのインターフェースクラス
-	TextManager*			textManager;			//テキストデータ読込クラス
 	Fader*					fader;					//フェーダー(イン・アウト)クラス
 	EffekseerManager*		effekseerManager[3];	//エフェクシアーマネージャー
 	GameMaster*				gameMaster;				//ゲーム運営クラス
 	SerialCommunication*	serialCommunication;	//シリアル通信クラス
-	//AnimationLoader*		animationLoader;		//アニメーション読込クラス
 	std::string*			currentSceneName;		//現在のシーンの名前
 	int						fpsMode;				//フレームレート状態変数
 	int						fixedFps;				//固定フレームレート値
@@ -94,4 +88,3 @@ public:
 	void fixFPS();								//固定FPS補正
 	void changeNextScene();						//シーンの切り替え
 };
-//void threadA();

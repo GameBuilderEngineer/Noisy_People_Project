@@ -28,7 +28,6 @@
 #include "MapObjectManager.h"
 #include "Telop.h"
 #include "Sky.h"
-#include "SpriteGauge.h"
 #include "Battery.h"
 #include "Timer.h"
 #include "Reticle.h"
@@ -44,14 +43,12 @@
 #include "TelopManager.h"
 #include "Player1UI.h"
 #include "Player2UI.h"
-//#include "Text.h"
 #include "networkClient.h"
 #include "CountUI.h"
 #include "Announcement.h"
 #include "Marker.h"
 #include "DamageUI.h"
 #include "Title.h"
-#include "tmpOcean.h"
 #include "PowerUp.h"
 #if 0
 #define CHEAT_PREZEN
@@ -127,14 +124,9 @@ private:
 
 	Sky*							sky;				//スカイドーム
 	Ocean*							ocean;				//海面
-	//TmpOcean*						tmpOcean;			//仮海面
 
 	StaticMeshRenderer*				MoveP;
 	MOVEP*							MoveP1;
-
-	//ビルボード
-	//TestEffect*						testEffect;		//インスタンシングビルボードテスト
-	TestPlane*						samplePlane;		//ディスプレイ用プレーンサンプル
 
 	EnemyManager*					enemyManager;		// エネミーマネージャー
 	TreeManager*					treeManager;		// ツリーマネージャー
@@ -145,7 +137,6 @@ private:
 	NavigationMesh*					naviMesh;			// ナビゲーションメッシュ
 
 	//UI
-	SpriteGauge*					spriteGauge;		//Sprite実験
 	Reticle*						reticle;			//レティクル
 	TelopManager*					telopManager;		//テロップマネジャー
 	FixedUI*						fixedUI;			//固定されたUI

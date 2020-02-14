@@ -46,9 +46,6 @@
     <Filter Include="Loader Layer\StaticMeshLoader">
       <UniqueIdentifier>{bcd5ab4a-5f6e-4227-a090-1168f54d2fc9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader Layer\TextLoader">
-      <UniqueIdentifier>{bc7abbe0-f26f-45ff-a60d-a8eb8b79ddb8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Loader Layer\TextureLoader">
       <UniqueIdentifier>{484d792e-e9dd-4432-bde3-fb8d167f0958}</UniqueIdentifier>
     </Filter>
@@ -82,14 +79,8 @@
     <Filter Include="Game Layer\Tlop">
       <UniqueIdentifier>{06216772-8b7e-4fe7-8c4b-58c99e54a67c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Stone">
-      <UniqueIdentifier>{3b746731-6ed9-423f-a31a-f750ed5e43ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Tree">
       <UniqueIdentifier>{7f5b9b64-5296-48ad-96c6-8061de1bebb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\TestEffect">
-      <UniqueIdentifier>{5a3fa736-39c2-416f-a2b9-563a619ee044}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Layer\Sky">
       <UniqueIdentifier>{37485a13-b7c2-4de1-b39d-b550dff2fc37}</UniqueIdentifier>
@@ -202,9 +193,6 @@
     <Filter Include="Constant Layer\InstancingBillboad">
       <UniqueIdentifier>{c7fc4d22-60cc-438c-9022-a2683d4c6534}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\SelectItem">
-      <UniqueIdentifier>{6ebe25ac-c757-49a9-8891-66d344020c7a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\LinkedList">
       <UniqueIdentifier>{5629ac4e-cfd9-4b55-82b7-e9102a7b5e8d}</UniqueIdentifier>
     </Filter>
@@ -223,9 +211,6 @@
     <Filter Include="Constant Layer\Sound\3D">
       <UniqueIdentifier>{4217904f-bd91-439e-8805-afa05d372347}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Text">
-      <UniqueIdentifier>{6ecb2fe8-bfbd-4ccc-80aa-ccc4db4f02f4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Constant Layer\Effekseer">
       <UniqueIdentifier>{e49c7731-b0af-4124-b614-501370a0edcc}</UniqueIdentifier>
     </Filter>
@@ -237,9 +222,6 @@
     </Filter>
     <Filter Include="Constant Layer\Window">
       <UniqueIdentifier>{ecc2556b-7a62-4a1e-9d86-d0af6de44857}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Layer\TestPlane">
-      <UniqueIdentifier>{894de7c2-d832-4250-9290-aa96ae0df910}</UniqueIdentifier>
     </Filter>
     <Filter Include="Constant Layer\LinearTreeCell">
       <UniqueIdentifier>{c0a6d1a3-e57e-41d9-a77e-de4fdf678641}</UniqueIdentifier>
@@ -286,9 +268,6 @@
     <Filter Include="Game Layer\MapObject">
       <UniqueIdentifier>{a583c9e0-b07d-4db7-9164-83c3fb26a395}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Collision\AxisAlinedBoundingBox">
-      <UniqueIdentifier>{7987e540-3b47-4ee8-ae2c-ef5d997eb416}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\GameUI\Guage">
       <UniqueIdentifier>{5bb8b9a2-f308-41f1-a6dd-48e0aee779fd}</UniqueIdentifier>
     </Filter>
@@ -304,14 +283,8 @@
     <Filter Include="Game Layer\Scene\DebugScene">
       <UniqueIdentifier>{09a2ad63-61ff-45ec-b780-9fc1dec511e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Constant Layer\Sound\WaveBall">
-      <UniqueIdentifier>{de30d108-8960-4bd0-8369-8236a6a6b381}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\GameUI\PlayerUI">
       <UniqueIdentifier>{c4a17d3a-65fb-442e-a2b6-2d471a197331}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Layer\Collision\Cylinder">
-      <UniqueIdentifier>{4e7b6768-8cad-46b1-85f4-0ca83835b231}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Layer\Network">
       <UniqueIdentifier>{a4c35686-eed5-4a24-81e5-9399c4fbad0a}</UniqueIdentifier>
@@ -382,9 +355,6 @@
     <Filter Include="Game Layer\Ocean\Player\State\OPState">
       <UniqueIdentifier>{4a16b2c9-774f-4653-93bb-4eaa885ecdd2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Layer\Ocean\Player\State\EDState">
-      <UniqueIdentifier>{f05b29c7-453d-438b-afca-8d47ffc4d7ce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Layer\Ocean\Player\OtherObject">
       <UniqueIdentifier>{227ecf82-d0ce-4cf2-bbca-12aba10cdf13}</UniqueIdentifier>
     </Filter>
@@ -393,6 +363,12 @@
     </Filter>
     <Filter Include="Game Layer\Ocean\Player\Effect">
       <UniqueIdentifier>{95c3a96b-b2c5-44ac-a5cd-564022ef5073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\Scene\PhotoGraph">
+      <UniqueIdentifier>{94a1b4d9-0614-414f-b251-06f7a6bf6e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Layer\MemoryDebug">
+      <UniqueIdentifier>{d296ef0f-cceb-45ab-8f78-e7080a05ff25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -555,19 +531,7 @@
     <ClCompile Include="telop.cpp">
       <Filter>Game Layer\Tlop</Filter>
     </ClCompile>
-    <ClCompile Include="Stone.cpp">
-      <Filter>Game Layer\Stone</Filter>
-    </ClCompile>
-    <ClCompile Include="TestEffect.cpp">
-      <Filter>Game Layer\TestEffect</Filter>
-    </ClCompile>
     <ClCompile Include="TestEffect.cpp" />
-    <ClCompile Include="TextManager.cpp">
-      <Filter>Loader Layer\TextLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Constant Layer\Text</Filter>
-    </ClCompile>
     <ClCompile Include="CreditTex.cpp">
       <Filter>Game Layer\Scene\Credit</Filter>
     </ClCompile>
@@ -585,9 +549,6 @@
     </ClCompile>
     <ClCompile Include="exampleItem.cpp">
       <Filter>Game Layer\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteGauge.cpp">
-      <Filter>Constant Layer\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="EffekseerManager.cpp">
       <Filter>Constant Layer\Effekseer</Filter>
@@ -625,14 +586,8 @@
     <ClCompile Include="StaticMeshRenderer.cpp">
       <Filter>Constant Layer\StaticMeshRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryDebug.cpp">
-      <Filter>Game Layer</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Constant Layer\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="TestPlane.cpp">
-      <Filter>Game Layer\TestPlane</Filter>
     </ClCompile>
     <ClCompile Include="LinearTreeCell.cpp">
       <Filter>Constant Layer\LinearTreeCell</Filter>
@@ -660,9 +615,6 @@
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Game Layer\Ocean\Player\OtherObject\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Game Layer\Enemy\StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="StateMachine.cpp">
       <Filter>Game Layer\Enemy\StateMachine</Filter>
@@ -703,9 +655,6 @@
     <ClCompile Include="TelopManager.cpp">
       <Filter>Game Layer\Tlop</Filter>
     </ClCompile>
-    <ClCompile Include="TestEffectOccurrence.cpp">
-      <Filter>Game Layer\TestEffect</Filter>
-    </ClCompile>
     <ClCompile Include="StatusFrame.cpp">
       <Filter>Game Layer\GameUI</Filter>
     </ClCompile>
@@ -721,9 +670,6 @@
     <ClCompile Include="MapObjectManager.cpp">
       <Filter>Game Layer\MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
-    </ClCompile>
     <ClCompile Include="HPguage.cpp">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClCompile>
@@ -735,9 +681,6 @@
     </ClCompile>
     <ClCompile Include="ButtonUI.cpp">
       <Filter>Game Layer\GameUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Advertisement.cpp">
-      <Filter>Game Layer\TestPlane</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Game Layer\Ocean\Player</Filter>
@@ -778,9 +721,6 @@
     <ClCompile Include="DebugScene.cpp">
       <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClCompile>
-    <ClCompile Include="WaveBall.cpp">
-      <Filter>Constant Layer\Sound\WaveBall</Filter>
-    </ClCompile>
     <ClCompile Include="Player1UI.cpp">
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClCompile>
@@ -792,9 +732,6 @@
     </ClCompile>
     <ClCompile Include="TreeEffect.cpp">
       <Filter>Game Layer\Tree</Filter>
-    </ClCompile>
-    <ClCompile Include="Cylinder.cpp">
-      <Filter>Constant Layer\Collision\Cylinder</Filter>
     </ClCompile>
     <ClCompile Include="DeathState.cpp">
       <Filter>Game Layer\Ocean\Player\State\DeathState</Filter>
@@ -916,19 +853,23 @@
     <ClCompile Include="PlayerEffect.cpp">
       <Filter>Game Layer\Ocean\Player\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Photograph.cpp" />
     <ClCompile Include="Powerup.cpp">
       <Filter>Game Layer\Item</Filter>
     </ClCompile>
     <ClCompile Include="BearGauge.cpp">
       <Filter>Game Layer\Enemy\Bear</Filter>
     </ClCompile>
-    <ClCompile Include="tmpOcean.cpp" />
     <ClCompile Include="OPState.cpp">
       <Filter>Game Layer\Ocean\Player\State\OPState</Filter>
     </ClCompile>
     <ClCompile Include="ModeFlag.cpp">
       <Filter>Game Layer\Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Photograph.cpp">
+      <Filter>Game Layer\Scene\PhotoGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryDebug.cpp">
+      <Filter>Game Layer\MemoryDebug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1103,18 +1044,6 @@
     <ClInclude Include="telop.h">
       <Filter>Game Layer\Tlop</Filter>
     </ClInclude>
-    <ClInclude Include="TextManager.h">
-      <Filter>Loader Layer\TextLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Constant Layer\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Stone.h">
-      <Filter>Game Layer\Stone</Filter>
-    </ClInclude>
-    <ClInclude Include="TestEffect.h">
-      <Filter>Game Layer\TestEffect</Filter>
-    </ClInclude>
     <ClInclude Include="CreditTex.h">
       <Filter>Game Layer\Scene\Credit</Filter>
     </ClInclude>
@@ -1187,17 +1116,8 @@
     <ClInclude Include="exampleItem.h">
       <Filter>Game Layer\Item</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteGauge.h">
-      <Filter>Constant Layer\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="MemoryDebug.h">
-      <Filter>Game Layer</Filter>
-    </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Constant Layer\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="TestPlane.h">
-      <Filter>Game Layer\TestPlane</Filter>
     </ClInclude>
     <ClInclude Include="LinearTreeCell.h">
       <Filter>Constant Layer\LinearTreeCell</Filter>
@@ -1262,9 +1182,6 @@
     <ClInclude Include="TelopManager.h">
       <Filter>Game Layer\Tlop</Filter>
     </ClInclude>
-    <ClInclude Include="TestEffectOccurrence.h">
-      <Filter>Game Layer\TestEffect</Filter>
-    </ClInclude>
     <ClInclude Include="StatusFrame.h">
       <Filter>Game Layer\GameUI</Filter>
     </ClInclude>
@@ -1283,9 +1200,6 @@
     <ClInclude Include="MapObjectManager.h">
       <Filter>Game Layer\MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Constant Layer\Collision\AxisAlinedBoundingBox</Filter>
-    </ClInclude>
     <ClInclude Include="HPguage.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
     </ClInclude>
@@ -1297,9 +1211,6 @@
     </ClInclude>
     <ClInclude Include="ButtonUI.h">
       <Filter>Game Layer\GameUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Advertisement.h">
-      <Filter>Game Layer\TestPlane</Filter>
     </ClInclude>
     <ClInclude Include="HPguageP2.h">
       <Filter>Game Layer\GameUI\Guage</Filter>
@@ -1337,9 +1248,6 @@
     <ClInclude Include="DebugScene.h">
       <Filter>Game Layer\Scene\DebugScene</Filter>
     </ClInclude>
-    <ClInclude Include="WaveBall.h">
-      <Filter>Constant Layer\Sound\WaveBall</Filter>
-    </ClInclude>
     <ClInclude Include="Player1UI.h">
       <Filter>Game Layer\GameUI\PlayerUI</Filter>
     </ClInclude>
@@ -1351,9 +1259,6 @@
     </ClInclude>
     <ClInclude Include="TreeEffect.h">
       <Filter>Game Layer\Tree</Filter>
-    </ClInclude>
-    <ClInclude Include="Cylinder.h">
-      <Filter>Constant Layer\Collision\Cylinder</Filter>
     </ClInclude>
     <ClInclude Include="DeathState.h">
       <Filter>Game Layer\Ocean\Player\State\DeathState</Filter>
@@ -1475,8 +1380,6 @@
     <ClInclude Include="PlayerEffect.h">
       <Filter>Game Layer\Ocean\Player\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="tmpOcean.h" />
-    <ClInclude Include="Photograph.h" />
     <ClInclude Include="Powerup.h">
       <Filter>Game Layer\Item</Filter>
     </ClInclude>
@@ -1488,6 +1391,12 @@
     </ClInclude>
     <ClInclude Include="ModeFlag.h">
       <Filter>Game Layer\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Photograph.h">
+      <Filter>Game Layer\Scene\PhotoGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryDebug.h">
+      <Filter>Game Layer\MemoryDebug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

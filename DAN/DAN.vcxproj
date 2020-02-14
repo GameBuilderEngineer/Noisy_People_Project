@@ -145,10 +145,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="3DSound.h" />
-    <ClInclude Include="AABB.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="ActionEventSeting.h" />
-    <ClInclude Include="Advertisement.h" />
     <ClInclude Include="AIDirector.h" />
     <ClInclude Include="AllocateHierarchy.h" />
     <ClInclude Include="Announcement.h" />
@@ -161,7 +159,6 @@
     <ClInclude Include="ModeFlag.h" />
     <ClInclude Include="OPState.h" />
     <ClInclude Include="Photograph.h" />
-    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DamageUI.h" />
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="Defeat_Chara.h" />
@@ -186,7 +183,6 @@
     <ClInclude Include="Mark.h" />
     <ClInclude Include="Persent.h" />
     <ClInclude Include="SerialCommunication.h" />
-    <ClInclude Include="tmpOcean.h" />
     <ClInclude Include="TreeEffect.h" />
     <ClInclude Include="ElectGuage.h" />
     <ClInclude Include="ElectGuageeEmp.h" />
@@ -286,20 +282,13 @@
     <ClInclude Include="Splash.h" />
     <ClInclude Include="SplashSprite.h" />
     <ClInclude Include="Sprite.h" />
-    <ClInclude Include="SpriteGauge.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StateType.h" />
     <ClInclude Include="StaticMeshLoader.h" />
     <ClInclude Include="StaticMeshRenderer.h" />
-    <ClInclude Include="Stone.h" />
     <ClInclude Include="telop.h" />
     <ClInclude Include="TelopManager.h" />
-    <ClInclude Include="TestEffect.h" />
-    <ClInclude Include="TestEffectOccurrence.h" />
-    <ClInclude Include="TestPlane.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Tiger.h" />
     <ClInclude Include="Timer.h" />
@@ -323,7 +312,6 @@
     <ClInclude Include="VertexAccessor.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="VisionState.h" />
-    <ClInclude Include="WaveBall.h" />
     <ClInclude Include="WholeGreening.h" />
     <ClInclude Include="Wind.h" />
     <ClInclude Include="Window.h" />
@@ -332,10 +320,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DSound.cpp" />
-    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="ActionEventSeting.cpp" />
-    <ClCompile Include="Advertisement.cpp" />
     <ClCompile Include="AIDirector.cpp" />
     <ClCompile Include="AllocateHierarchy.cpp" />
     <ClCompile Include="Announcement.cpp" />
@@ -348,7 +334,6 @@
     <ClCompile Include="ModeFlag.cpp" />
     <ClCompile Include="OPState.cpp" />
     <ClCompile Include="Photograph.cpp" />
-    <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DamageUI.cpp" />
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="Defeat_Chara.cpp" />
@@ -373,7 +358,6 @@
     <ClCompile Include="SaiDelayReverb.cpp" />
     <ClCompile Include="SaiFadeIn.cpp" />
     <ClCompile Include="SerialCommunication.cpp" />
-    <ClCompile Include="tmpOcean.cpp" />
     <ClCompile Include="TreeEffect.cpp" />
     <ClCompile Include="ElectGuage.cpp" />
     <ClCompile Include="ElectGuageEmp.cpp" />
@@ -402,7 +386,6 @@
     <ClCompile Include="Result_chara.cpp" />
     <ClCompile Include="SkyVisionState.cpp" />
     <ClCompile Include="DebugScene.cpp" />
-    <ClCompile Include="WaveBall.cpp" />
     <ClCompile Include="StatusFrame.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="MapObject.cpp" />
@@ -468,20 +451,12 @@
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="SplashSprite.cpp" />
     <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="SpriteGauge.cpp" />
-    <ClCompile Include="State.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateType.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
     <ClCompile Include="StaticMeshRenderer.cpp" />
-    <ClCompile Include="Stone.cpp" />
     <ClCompile Include="telop.cpp" />
     <ClCompile Include="TelopManager.cpp" />
-    <ClCompile Include="TestEffect.cpp" />
-    <ClCompile Include="TestEffectOccurrence.cpp" />
-    <ClCompile Include="TestPlane.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Tiger.cpp" />
     <ClCompile Include="Timer.cpp" />

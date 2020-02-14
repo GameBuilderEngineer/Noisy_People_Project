@@ -10,7 +10,6 @@
 #include "TextureLoader.h"
 #include "Input.h"
 #include "VirtualController.h"
-//#include "UIcharacter.h"
 
 //============================
 //–¼‘O‹óŠÔ ’è”

@@ -54,7 +54,6 @@ void Finale::initialize()
 {
 	//ターゲットオブジェクト
 	target = new Object;
-	//target->initialize(&D3DXVECTOR3(0.0f, 100.0f, -150));		//ターゲットの初期位置設定
 	target->initialize(&D3DXVECTOR3(0.0f, 20.0f, -300));		//ターゲットの初期位置設定
 
 	//初期フォトグラフ
@@ -62,8 +61,6 @@ void Finale::initialize()
 	// Camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	//camera->setGaze(D3DXVECTOR3(0, 100, 0));
-	//camera->setRelative(D3DXQUATERNION(0.0f, 20.0f, -40.0f, 0.0f));	//※元の値※
 	camera->setRelative(D3DXQUATERNION(0.0f, 0.0f, -1.0f, 0.0f));   //※ターゲットの初期位置に足される形になっている
 	camera->setTarget(&target->position);
 	camera->setGazeDistance(500.0f);
@@ -135,7 +132,6 @@ void Finale::uninitialize(void)
 	// サウンドの停止
 	SoundInterface::BGM->uninitSoundStop();
 
-
 	// ライト
 	SAFE_DELETE(light);
 
@@ -184,28 +180,6 @@ void Finale::update(float _frameTime)
 
 	target->update();
 
-
-	// カメラ
-	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
-	//camera[0].update();
-
-	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateFinale();
-
-	//バーの移動
-	//if(input->wasKeyPressed()
-
-
-	/*if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
-	{
-		changeScene(nextScene);
-	}*/
-
-	
-
-	//Base::anyAxisRotationSlerp(&cameraQ,D3DXVECTOR3(13.2f, 6.0f, -13.0f),);
-
 	//注視オブジェクトとカメラの二点間ベクトル（カメラZ軸ベクトル）
 	cameraAxisZ = camera->getAxisZ();
 	fixedAxisZ = Base::slip(cameraAxisZ, camera->upVector);	//カメラの傾きに対応
@@ -242,7 +216,6 @@ void Finale::update(float _frameTime)
 
 			distance = UtilityFunction::lerp(500, 20, 1.0f - rate);
 			camera->setGazeDistance(distance);
-			//D3DXVec3Lerp(&target->position, &D3DXVECTOR3(0.0f, 100.0f, -150), &D3DXVECTOR3(0.0f, 20.0f, -300), 1.0f - rate);
 			if (moveTimer <= 0)
 			{
 				target->position = D3DXVECTOR3(0.0f, 20.0f, -300);
@@ -270,7 +243,6 @@ void Finale::update(float _frameTime)
 			rateY = degreeTimer / degreeTime;
 			degreeY = UtilityFunction::lerp(0, 380, 1.0 - rateY);
 			
-			//D3DXVec3Lerp(&target->position, &startPos, &D3DXVECTOR3(-34.0f, 180.0f, -135.0f), 1.0f - rate);
 			BezierPoint1 = Title::BezierCurve(startPos, D3DXVECTOR3(-1500, 800, -150), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);//丘上
 			BezierPoint2 = Title::BezierCurve(startPos, D3DXVECTOR3(-4000, -2700, 0), D3DXVECTOR3(-70.0f, 150.0f, -370), rate);//橋下
 			D3DXVec3Lerp(&Curve1, &BezierPoint1, &BezierPoint2, 1.0f - rate);
@@ -307,15 +279,7 @@ void Finale::update(float _frameTime)
 				startPos = target->position;
 				moveTime = 5.0f;//待機
 				moveTimer = moveTime;
-				//degreeTimer = 6.0f;
-				//degreeTime = degreeTimer;
-				////カメラの相対位置を一時保存
-				//camera->rotation(D3DXVECTOR3(0, 1, 0), 55.0f);
-				//camera->rotation(fixedAxisX, 45.0f);
-				//tmpCameraQ = camera->relativeQuaternion;
 				stateCamera++;
-
-
 			}
 		}
 		break;

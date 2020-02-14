@@ -89,34 +89,8 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	d3dppFullScreen.AutoDepthStencilFormat		= D3DFMT_D24S8;
 	d3dppFullScreen.MultiSampleType				= D3DMULTISAMPLE_NONE;
 
-
-//	D3DPRESENT_PARAMETERS d3dpp;
-//	ZeroMemory(&d3dpp, sizeof(d3dpp));
-//	d3dpp.BackBufferFormat			= dMode.Format;
-//	d3dpp.BackBufferCount			= 1;
-//	d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
-//#ifdef _DEBUG
-//#if 1
-//	d3dpp.Windowed					= true;
-//	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
-//#else
-//	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
-//	d3dpp.Windowed = false;
-//	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-//#endif
-//#else
-//	d3dpp.FullScreen_RefreshRateInHz = dMode.RefreshRate;
-//	d3dpp.Windowed					= false;
-//	d3dpp.PresentationInterval		= D3DPRESENT_INTERVAL_DEFAULT;
-//#endif // _DEBUG
-//	d3dpp.BackBufferWidth			= WINDOW_WIDTH;
-//	d3dpp.BackBufferHeight			= WINDOW_HEIGHT;
-//	d3dpp.EnableAutoDepthStencil	= true;
-//	d3dpp.AutoDepthStencilFormat	= D3DFMT_D24S8;
-//	d3dpp.MultiSampleType			= D3DMULTISAMPLE_NONE;
-
 #ifdef _DEBUG
-#if 0
+#if 1
 	fullScreen = false;
 #else
 	fullScreen = true;
@@ -183,7 +157,6 @@ void Direct3D9::showFPS()
 	static INT frames = 0, FPS = 0;
 	static LARGE_INTEGER frq = { 0 }, previous = { 0 }, current = { 0 };
 	DOUBLE time = 0;
-	//char sz[11] = { 0 };
 
 	QueryPerformanceFrequency(&frq);
 

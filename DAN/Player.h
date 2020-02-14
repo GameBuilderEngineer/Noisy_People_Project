@@ -140,12 +140,6 @@ namespace playerNS{
 
 	const int POSITION_PATTERN = 5;
 
-	//const StartPosition START_POSITION[POSITION_PATTERN] =
-	//{
-	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)},
-	//	{D3DXVECTOR3(0, 20, -180),D3DXVECTOR3(130, 20, 195)}
-	//};
-
 	const D3DXVECTOR3 START_POSITION[gameMasterNS::PLAYER_NUM] =
 	{
 		//初期ゲームスタート
@@ -153,8 +147,8 @@ namespace playerNS{
 		D3DXVECTOR3(130, 20, 195)				//2P
 
 		////プレゼン用
-		//D3DXVECTOR3(103, 15, -181),				//1P
-		//D3DXVECTOR3(-181, 35, -97)				//2P
+		//D3DXVECTOR3(103, 15, -181),			//1P
+		//D3DXVECTOR3(-181, 35, -97)			//2P
 	};
 
 	// StatusParameter
@@ -164,7 +158,6 @@ namespace playerNS{
 	const int	AUTO_RECOVERY_POWER			= (int)((float)FULL_POWER/10.0f);		//自動回復電力（1秒あたりの回復量:30秒で1本分全回復）
 	const int	MIN_POWER					= 0;									//電力ゲージ最低値
 	const float INVINCIBLE_TIME				= 3.0f;									//無敵時間
-
 
 	//CameraParameter
 	const D3DXVECTOR3 CAMERA_GAZE			= D3DXVECTOR3(1.0f,1.5f,0.0f);
@@ -428,7 +421,6 @@ public:
 	void	setValidOperation(int value);						//有効操作の設定
 	void	enableOperation(int value);							//操作を有効にする
 	void	disableOperation(int value);						//操作を無効にする
-	//void resetOnGround() { onGround = false;  jumping = true; }	//
 
 	//getter
 	int getHp();												// HPの取得

@@ -72,9 +72,9 @@ private:
 	float frameDegree = 1.0f / 10.0f;		//自動速度
 	float inputDegree = 2.0f;				//入力速度
 
-	float moveTime;				//終点までの時間
-	float moveTimer;			//移動タイマー
-	D3DXVECTOR3 startPos;		//ラープ始点
+	float moveTime;							//終点までの時間
+	float moveTimer;						//移動タイマー
+	D3DXVECTOR3 startPos;					//ラープ始点
 
 	FinaleEffect* finaleEffect;
 

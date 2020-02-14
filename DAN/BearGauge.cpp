@@ -1,6 +1,6 @@
 //===================================================================================================================================
 //【BearGauge.cpp】
-// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成者]HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // [作成日]2019/10/29
 // [更新日]2019/10/29
 //===================================================================================================================================
@@ -51,8 +51,6 @@ void BearGaugeInstance::update(float frameTime, D3DXMATRIX* _worldMatrix, int hi
 	if (scale.x < 0.4 * SCALE_X) color = D3DCOLOR_RGBA(255, 255, 0, 255);
 	if (scale.x < 0.2 * SCALE_X) color = D3DCOLOR_RGBA(255, 0, 0, 255);
 }
-/////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
 
 // 静的メンバ
 BearGauge* BearGauge::pointer = NULL;
@@ -66,7 +64,6 @@ BearGauge::BearGauge(int hitPoint1, int hitPoint2, int hitPoint3) :InstancingBil
 
 	using namespace InstancingBillboardNS;
 	InstancingBillboard::initialize(*textureNS::reference(textureNS::UI_HP_GUAGE_ENEMY),0,0);
-	//setRenderType(FOREGROUND_PASS | OFF_BILLBOARD_PASS);
 
 	instancePointer[HP] =  new BearGaugeInstance(D3DXVECTOR3(0, 50, 0), hitPoint1);
 	instancePointer[LEFT_ARM] = new BearGaugeInstance(D3DXVECTOR3(-20, 0, 0), hitPoint2);

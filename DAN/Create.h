@@ -52,7 +52,7 @@ class Create : public AbstractScene
 {
 private:
 
-	//hukankamera
+	//俯瞰カメラ
 	Camera* topView;
 	bool onTopView;
 	//仮オブジェクト
@@ -74,14 +74,6 @@ private:
 	//マップオブジェクトツール
 	MPOJ_TOOLS *mapObjTools;
 
-	//枯木
-	DeadTree* deadTree;
-	//木Ａ
-	TreeTypeA* treeA;
-	//木B
-	TreeTypeB* treeB;
-	//石
-	Stone* stone;
 
 public:
 	Create();

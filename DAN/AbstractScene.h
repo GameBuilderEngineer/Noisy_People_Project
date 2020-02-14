@@ -23,7 +23,6 @@
 #include "GameMaster.h"
 #include "SerialCommunication.h"
 #include "ModeFlag.h"
-//#include "TextManager.h"
 
 //===================================================================================================================================
 //【名前空間】
@@ -42,7 +41,7 @@ namespace SceneList
 		RESULT,			//リザルト
 		FINALE,			//フィナーレ
 		CREATE,			//クリエイト
-		DISPLAY,	//ディスプレイ
+		DISPLAY,		//ディスプレイ
 		PHOTOGRAPH,		//フォトグラフ
 	};
 }

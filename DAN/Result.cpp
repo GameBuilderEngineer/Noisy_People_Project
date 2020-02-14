@@ -103,12 +103,6 @@ void Result::initialize()
 
 	// UIにゲームマスターを渡しておく
 	resultUI.gameMaster = gameMaster;
-	// サウンドの再生
-	//PLAY_PARAMETERS playParameters = { 0 };//同時に再生したい数
-	////再生する曲の指定サウンドID,ループ,スピードNULLでしない,基本false,基本NULL,フィルターを使うか使わないか
-	//playParameters = { ENDPOINT_VOICE_LIST::ENDPOINT_BGM, BGM_LIST::BGM_Game, true,1.1f,false,NULL };//BGMの設定
-	////再生
-	//SoundInterface::BGM->playSound(&playParameters);;
 
 	//背景ビルボード
 	backGround = new InstancingBillboard();

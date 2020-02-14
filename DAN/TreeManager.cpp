@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// ツリー管理クラス [Tree.cpp]
+// ツリー管理クラス [TreeManager.cpp]
 // Author : HAL東京昼間部 2年制ゲーム学科 GP12A332 32 中込和輝
 // 作成開始日 : 2019/10/4
 //-----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ void TreeManager::update(float frameTime)
 		//プレイヤーNOの記録
 		in.player = tree->playerNo;
 
-		//あとで場合分け
+		//緑化状態
 		in.greenState = data->greenState;
 		
 		//ネットワークの送信情報へ記録
@@ -165,15 +165,6 @@ void TreeManager::update(float frameTime)
 		{
 			greeningTreeNum++;
 		}
-
-		
-
-		//デジタルツリーの周囲にエフェクトを発生
-		//if (treeList[i]->getTreeData()->type == treeNS::DIGITAL_TREE)
-		//{
-		//	//エフェクトの生成
-		//	treeEffect->generateInstance(treeList[i]->position);
-		//}
 	}
 
 
@@ -200,23 +191,6 @@ void TreeManager::render(Camera* camera)
 		treeList[i]->render();
 	}
 #endif // _DEBUG
-
-	//カリング処理
-	//for (size_t i = 0; i < treeList.size(); i++)
-	//{
-	//	Tree* tree = treeList[i];
-	//	D3DXVECTOR3 center = tree->position;
-	//	float radius = tree->radius;
-	//	if (UtilityFunction::culling(
-	//		center, radius, camera[i].view, camera[i].fieldOfView,
-	//		camera[i].nearZ, camera[i].farZ, camera[i].aspect))
-	//	{
-	//		tree->culling = false;//カリングしない
-	//	}
-	//	else {
-	//		tree->culling = true;//カリングする
-	//	}
-	//}
 	
 	//全描画解除
 	allUnRegister();

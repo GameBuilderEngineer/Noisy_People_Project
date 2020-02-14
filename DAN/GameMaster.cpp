@@ -35,7 +35,6 @@ GameMaster::GameMaster()
 		ZeroMemory(&playerInformation[i], sizeof(PlayerTable));
 	}
 	treeNum				= 0;
-	//conversionOrder		= NULL;
 	input				= getInput();
 	gameTimerStop		= false;
 #ifdef _DEBUG
@@ -48,7 +47,7 @@ GameMaster::GameMaster()
 //===================================================================================================================================
 GameMaster::~GameMaster()
 {
-	//SAFE_DELETE_ARRAY(conversionOrder);
+
 }
 
 //===================================================================================================================================
@@ -82,10 +81,7 @@ void GameMaster::update(float frameTime)
 		{
 			gameTimerStop = !gameTimerStop;
 		}
-
 #endif // _DEBUG
-
-
 	}
 }
 
@@ -405,7 +401,7 @@ void GameMaster::discardConversionOrder() {
 //===================================================================================================================================
 //ÅysetterÅz
 //===================================================================================================================================
-void GameMaster::setConversionOrder(int* newValue) {} // conversionOrder = newValue; };
+void GameMaster::setConversionOrder(int* newValue) {} 
 void GameMaster::setProgress(int achievement) { progress |= achievement; }
 void GameMaster::addKillEnemyNum(int playerNo) { killEnemyNum[playerNo]++; }
 //===================================================================================================================================

@@ -157,38 +157,6 @@ namespace PlayerEffectNS
 		};
 	};
 
-	//class DigitaTreeNearEffect :public effekseerNS::Instance
-	//{
-	//public:
-	//	D3DXMATRIX* syncMatrix;
-	//	DigitaTreeNearEffect(D3DXMATRIX* sync, int no = 0) {
-	//		syncMatrix = sync;
-	//		managerNo = no;
-	//		effectNo = effekseerNS::DIGIT_TREE_NEAR;
-	//		scale = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
-	//	}
-	//	virtual void update() {
-	//		D3DXMATRIX M = *syncMatrix;
-
-	//		::Effekseer::Manager*	manager = getEffekseerManager(managerNo)->manager;
-	//		::Effekseer::Matrix43 matrix;
-	//		matrix.Value[0][0] = M._11;
-	//		matrix.Value[0][1] = M._12;
-	//		matrix.Value[0][2] = M._13;
-	//		matrix.Value[1][0] = M._21;
-	//		matrix.Value[1][1] = M._22;
-	//		matrix.Value[1][2] = M._23;
-	//		matrix.Value[2][0] = M._31;
-	//		matrix.Value[2][1] = M._32;
-	//		matrix.Value[2][2] = M._33;
-	//		matrix.Value[3][0] = M._41;
-	//		matrix.Value[3][1] = M._42;
-	//		matrix.Value[3][2] = M._43;
-	//		manager->SetScale(handle, scale.x, scale.y, scale.z);
-	//		manager->SetMatrix(handle, matrix);
-	//	};
-	//};
-
 	enum EFFECT_LIST
 	{
 		DIGIT_MODE,

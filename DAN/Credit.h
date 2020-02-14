@@ -10,7 +10,6 @@
 //【インクルード】
 //===================================================================================================================================
 #include "AbstractScene.h"
-//#include "Credit2D.h"
 #include "CreditTex.h"
 
 //===================================================================================================================================
@@ -45,7 +44,6 @@ public:
 	virtual void AI() override;
 	virtual void uninitialize() override;
 
-	//void render3D();
 	void renderUI(LPDIRECT3DDEVICE9 device);
 
 

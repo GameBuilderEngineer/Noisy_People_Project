@@ -84,8 +84,8 @@ class TreeEffect :public Base
 {
 private:
 	InstancingBillboard* marker;	//状態マーカー
-	InstancingBillboard* sign;		//
-	float effectCycle;							//エフェクト周期
+	InstancingBillboard* sign;		
+	float effectCycle;				//エフェクト周期
 
 
 
