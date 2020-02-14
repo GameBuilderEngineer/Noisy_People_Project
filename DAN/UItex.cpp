@@ -148,8 +148,16 @@ void UItexture::update(int resultPhase)
 		break;
 
 	case PHASE_02:
+		if (pos[LINE].x < END_POS_LINE)
+		{
+			slideRight(LINE);
+		}
 		break;
 	case PHASE_03:
+		if (pos[LINE].x < END_POS_LINE)
+		{
+			slideRight(LINE);
+		}
 		if (pos[FLAME01].y > END_POS_FLAME)
 		{
 			slideUp(FLAME01);
@@ -162,8 +170,36 @@ void UItexture::update(int resultPhase)
 		}
 		break;
 	case PHASE_04:
+		if (pos[LINE].x < END_POS_LINE)
+		{
+			slideRight(LINE);
+		}
+		if (pos[FLAME01].y > END_POS_FLAME)
+		{
+			slideUp(FLAME01);
+			slideUp(FLAME02);
+		}
+		if (pos[CHARA_A].y > END_POS_CHARA_A)
+		{
+			slideUp(CHARA_A);
+			slideUp(CHARA_B);
+		}
 		break;
 	case PHASE_05:
+		if (pos[LINE].x < END_POS_LINE)
+		{
+			slideRight(LINE);
+		}
+		if (pos[FLAME01].y > END_POS_FLAME)
+		{
+			slideUp(FLAME01);
+			slideUp(FLAME02);
+		}
+		if (pos[CHARA_A].y > END_POS_CHARA_A)
+		{
+			slideUp(CHARA_A);
+			slideUp(CHARA_B);
+		}
 		if (pos[NEXT].x > END_POS_NEXT)
 		{
 			slideLeft(NEXT);
